@@ -1,7 +1,7 @@
 # What is axiom.top
   <br>
   
-[axiom.top](../axiom.php) is a website for symbolic	semi-mechanized axiomatized theorem-proving system, the [github project](https://github.com/cosmosZhou/sympy) of which is based on open-source symbolic computation project of [sympy](https://github.com/sympy/sympy) and 
+[axiom.top](../index.php) is a website for symbolic	semi-mechanized axiomatized theorem-proving system, the [github project](https://github.com/cosmosZhou/sympy) of which is based on open-source symbolic computation project of [sympy](https://github.com/sympy/sympy) and 
 [Maxima](http://maxima.sourceforge.net), its main terminology is defined according to the naming conventions of the commercial algebraic system 
 [Mathematica](https://reference.wolfram.com/language/index.html.en?source=footer). It's main ideals are: semi-mechanization, axiomatization, and the pursuit of logic correctness. At present, it can be used in conducting semi-automatic proving for theorems from mathematics textbook.  
 
@@ -18,7 +18,7 @@ during the processing of conducting reasoning, in accordance with the statements
 Each theorem is proved according to the assumptions and correctness of some previously proved theorems or axioms. In this project, each mathematical problem will be expressed as a [Python](https://www.python.org/) statement which is precisely defined with no ambiguity which can emerge when one use natural language to express a mathematical problem.  
 
 
-This system is comprised of three basic elements: [Symbol](../axiom.php?symbol=Symbol), [Function](../axiom.php?symbol=Function), Theorem; 
+This system is comprised of three basic elements: [Symbol](../index.php?symbol=Symbol), [Function](../index.php?symbol=Function), Theorem; 
 * Symbol is an identifier composed of a series of alphabets and digits. Its naming convention is the same as that of [Python](https://www.python.org/) programming language.   
 It is used to define any abstract mathematical symbol or variable, for instance:     
 n = Symbol(integer=True, positive=True, random=True, odd=True), denotes an odd positive random variable,  
@@ -41,7 +41,7 @@ f = Function(real=True, continuous=True) denotes a real-valued function continuo
 f = Function(real=True, differentiable=True) denotes a real-valued function differentiable at any given point;    
 f = Function(measurable=True, domain=Interval(0, 1)) denotes a measurable real-valued function whose value lies within domain [0, 1];    
 f = Function(real=True, integrable=True) denotes a real-valued function Lebesgue-integrable at any given interval;    
-as well as system built-in function, such as [cos](../axiom.php?symbol=cos)(x), [sin](../axiom.php?symbol=sin)(x), [tan](../axiom.php?symbol=tan)(x), [log](../axiom.php?symbol=log)(x), [exp](../axiom.php?symbol=exp)(x), and some more complex operators [Sum](../axiom.php?symbol=Sum)\[k:a:b\](h\[k\]), [Product](../axiom.php?symbol=Product)\[k:a:b\](h\[k\]), [ForAll](../axiom.php?symbol=All)\[k:a:b\](h\[k\] > t\[k\]), [Exists](../axiom.php?symbol=Any)\[k:a:b\](h\[k\] > t\[k\]), etc.  
+as well as system built-in function, such as [cos](../index.php?symbol=cos)(x), [sin](../index.php?symbol=sin)(x), [tan](../index.php?symbol=tan)(x), [log](../index.php?symbol=log)(x), [exp](../index.php?symbol=exp)(x), and some more complex operators [Sum](../index.php?symbol=Sum)\[k:a:b\](h\[k\]), [Product](../index.php?symbol=Product)\[k:a:b\](h\[k\]), [ForAll](../index.php?symbol=All)\[k:a:b\](h\[k\] > t\[k\]), [Exists](../index.php?symbol=Any)\[k:a:b\](h\[k\] > t\[k\]), etc.  
 All these functions will not perform any float-point calculations as usual, since during the process of mathematical proving, any involvement of calculations with float-point values will yield a logic error in pure mathematics.    
 Every value in mathematical proving is in strict sense mathematical value, there is no concept of approximate values like float-pointing values;      
 
@@ -49,7 +49,7 @@ Every value in mathematical proving is in strict sense mathematical value, there
 * Theorem denotes a theorem that is provable or an axiom that is unprovable ;      
 The inputs of theorems must be expression(s) or condition(s), its outputs are necessarily condition(s). It is stored in a mysql database as a theorem knowledge bank. Its main usage is as follows: Theorem.apply(...); for instance:    
 a, b, c = Symbol(complex=True)  
-[algebra.poly_is_zero.imply.et.infer.cubic.apply](../axiom.php?module=algebra.poly_is_zero.imply.et.infer.cubic)(Equal(x ** 3 + a * x ** 2 + b * x + c, 0), x=x), denotes the determination process of a cubic equation within the domain of Complexes.     
+[algebra.poly_is_zero.imply.et.infer.cubic.apply](../index.php?module=algebra.poly_is_zero.imply.et.infer.cubic)(Equal(x ** 3 + a * x ** 2 + b * x + c, 0), x=x), denotes the determination process of a cubic equation within the domain of Complexes.     
 
 The number system set is defined as  
 [prime](https://en.wikipedia.org/wiki/Prime_number) ⊂ [natural](https://en.wikipedia.org/wiki/Natural_number) ⊂ [integer](https://en.wikipedia.org/wiki/Integer) ⊂ extended_integer  
@@ -71,31 +71,31 @@ extended_integer ⊂ extended_rational ⊂ [extended_real](https://en.wikipedia.
 As of this writing, <label id=count>____</label> theorems have been recored in the theorem repertoire, which can be applied in semi-mechanized axiomatized system of mathematical theorem proving.  
 It is mainly comprising of :  	
 	
-* [algebra](../axiom.php?module=algebra) refers to elementary algebra, which mainly delves into equations transformation、symbol substitution techniques, finite series [∑ telescoping](../axiom.php?module=algebra.sum.to.add.telescope)、∏ product telescoping, the property of transitivity for inequalities, solving [simple equations](../axiom.php?module=algebra.poly_is_zero.imply.et.infer.simple_equation), [quadratic equations](../axiom.php?module=algebra.poly_is_zero.imply.et.infer.quadratic), [cubic equations](../axiom.php?module=algebra.poly_is_zero.imply.et.infer.cubic) and [quartic equations](../axiom.php?module=algebra.poly_is_zero.imply.et.infer.quartic), common properties of some elementary functions, as well as the proof of [mathematical induction method](../axiom.php?module=algebra.ne_zero.infer.imply.ne_zero.induct);   
-* [sets](../axiom.php?module=sets) refers to sets theory, which is the core foundation of the theories of whole mathematical proving and analysis. It involves lots of propositions using the terminologies like 
+* [algebra](../index.php?module=algebra) refers to elementary algebra, which mainly delves into equations transformation、symbol substitution techniques, finite series [∑ telescoping](../index.php?module=algebra.sum.to.add.telescope)、∏ product telescoping, the property of transitivity for inequalities, solving [simple equations](../index.php?module=algebra.poly_is_zero.imply.et.infer.simple_equation), [quadratic equations](../index.php?module=algebra.poly_is_zero.imply.et.infer.quadratic), [cubic equations](../index.php?module=algebra.poly_is_zero.imply.et.infer.cubic) and [quartic equations](../index.php?module=algebra.poly_is_zero.imply.et.infer.quartic), common properties of some elementary functions, as well as the proof of [mathematical induction method](../index.php?module=algebra.ne_zero.infer.imply.ne_zero.induct);   
+* [sets](../index.php?module=sets) refers to sets theory, which is the core foundation of the theories of whole mathematical proving and analysis. It involves lots of propositions using the terminologies like 
 ForAll, Exists, Element, Subset, for example: 
-the proof of [inclusion-exclusion principle](../axiom.php?module=sets/imply/eq/principle/inclusion_exclusion/basic). It can be so said that: set theory is the fundamental grammar of automatic theorem proving.  
-* [geometry](../axiom.php?module=geometry) is comprised of junior-middle school 
-[plane geometry](../axiom.php?module=geometry/plane), trigonometry and senior-middle school
-[solid geometry](../axiom.php?module=geometry/solid), some trigonometric identities, for instance:  
-[addition principle of cosine](../axiom.php?module=geometry.cos.to.add.principle.add), [product principle of trigonometry](../axiom.php?module=geometry.mul.to.add.sin), and so on.   
-* [calculus](../axiom.php?module=calculus) comprises :   
-[the definition of limit](../axiom.php?module=calculus/eq/to/any_all/limit_definition) and its fundamental theories which is the theoretical basis of calculus.  
-operational properties of [infinite series](../axiom.php?module=calculus.eq.imply.eq.series.infinite.coefficient); 
-proof of [integration by parts](../axiom.php?module=calculus.integral.to.add.by_parts);  
+the proof of [inclusion-exclusion principle](../index.php?module=sets/imply/eq/principle/inclusion_exclusion/basic). It can be so said that: set theory is the fundamental grammar of automatic theorem proving.  
+* [geometry](../index.php?module=geometry) is comprised of junior-middle school 
+[plane geometry](../index.php?module=geometry/plane), trigonometry and senior-middle school
+[solid geometry](../index.php?module=geometry/solid), some trigonometric identities, for instance:  
+[addition principle of cosine](../index.php?module=geometry.cos.to.add.principle.add), [product principle of trigonometry](../index.php?module=geometry.mul.to.add.sin), and so on.   
+* [calculus](../index.php?module=calculus) comprises :   
+[the definition of limit](../index.php?module=calculus/eq/to/any_all/limit_definition) and its fundamental theories which is the theoretical basis of calculus.  
+operational properties of [infinite series](../index.php?module=calculus.eq.imply.eq.series.infinite.coefficient); 
+proof of [integration by parts](../index.php?module=calculus.integral.to.add.by_parts);  
 determination of some integral for certain transcendental functions;  
-* [discrete](../axiom.php?module=discrete) section is comprised of number theory, discrete mathematics, combinatorics, linear algebra, some basic counting techniques involving permutations(such as 
-[permutations](../axiom.php?module=discrete.abs_cup.to.factorial), combinatoric induction for [second Stirling Number](../axiom.php?module=discrete.stirling2.to.add.recurrence),  
-derivation for [Catalan Number](../axiom.php?module=discrete.eq.eq.imply.eq.catalan.recurrence)， 
-basics of [continued fraction](../axiom.php?module=discrete.add.to.pow.HK.recurrence); as well as propositons of determinant of matrix.  
-* [stats](../axiom.php?module=stats) refers to statistics and probability theory, comprising: the derivation of the probability density formula of some common distribution (such as, binomial distribution, Gaussian distribution, poisson distribution, die distribution, Χ<sup>2</sup>distribution)，as well as propositions related to [Bayes theorem](../axiom.php?module=stats/probability/to/mul);  
-* [keras](../axiom.php?module=keras) section is related to the mathematical theories behind the contemporary deep learning / machine learning techniques, including the mathematical modeling used in natural language processing / understanding, like the forward inference or backward propagation formula of 
+* [discrete](../index.php?module=discrete) section is comprised of number theory, discrete mathematics, combinatorics, linear algebra, some basic counting techniques involving permutations(such as 
+[permutations](../index.php?module=discrete.abs_cup.to.factorial), combinatoric induction for [second Stirling Number](../index.php?module=discrete.stirling2.to.add.recurrence),  
+derivation for [Catalan Number](../index.php?module=discrete.eq.eq.imply.eq.catalan.recurrence)， 
+basics of [continued fraction](../index.php?module=discrete.add.to.pow.HK.recurrence); as well as propositons of determinant of matrix.  
+* [stats](../index.php?module=stats) refers to statistics and probability theory, comprising: the derivation of the probability density formula of some common distribution (such as, binomial distribution, Gaussian distribution, poisson distribution, die distribution, Χ<sup>2</sup>distribution)，as well as propositions related to [Bayes theorem](../index.php?module=stats/probability/to/mul);  
+* [keras](../index.php?module=keras) section is related to the mathematical theories behind the contemporary deep learning / machine learning techniques, including the mathematical modeling used in natural language processing / understanding, like the forward inference or backward propagation formula of 
 [LSTM](https://www.mitpressjournals.org/doi/pdf/10.1162/089976600300015015),
 [BERT](https://arxiv.org/abs/1706.03762),
 [TEXT-CNN](https://arxiv.org/pdf/1408.5882.pdf),
 Conditional Random Field [CRF](https://arxiv.org/abs/1603.01360), 
 and partial proof of KMeans
-[clustering convergence](../axiom.php?module=sets.el.notin.le.imply.le.st.variance). Probability theory provides the fundamental theoretical basis for machine learning so that this contemporary technique can be  explainable.  
+[clustering convergence](../index.php?module=sets.el.notin.le.imply.le.st.variance). Probability theory provides the fundamental theoretical basis for machine learning so that this contemporary technique can be  explainable.  
 * In the near future sections for physics, chemistry, biology and their sub-divisions will be established to reveal the development of scientific discoveries that were successful due to application of mathematical analysis.  
 <br><br>
 -------
