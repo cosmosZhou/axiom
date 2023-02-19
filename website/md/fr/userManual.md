@@ -136,10 +136,10 @@ Take windows system as an example:
 </li>
 <br>
 <li>use git to download the python source codes: <br> git clone
-	--depth=1 <a href=https://github.com/cosmosZhou/sympy.git>https://github.com/cosmosZhou/sympy.git</a>
+	--depth=1 <a href=https://github.com/cosmosZhou/axiom.git>https://github.com/cosmosZhou/axiom.git</a>
 </li>
 <br>
-<li>enter the sympy folder: <br>cd sympy
+<li>enter the axiom folder: <br>cd axiom
 </li>
 <br>
 <li>execute run, wherein debug=1 means output debugging information,
@@ -158,7 +158,7 @@ Take windows system as an example:
 </li>
 <br>
 <li>start the Chrome, or Edge/IE browser, input at the browser address
-	bar:<br> <a href='../axiom.php'>http://localhost/sympy/axiom.php</a><br>Now
+	bar:<br> <a href='../index.php'>http://localhost/axiom/index.php</a><br>Now
 	the visualized theorem library is instantiated. Then we can directly
 	access this theorem library at localhost.
 </li>

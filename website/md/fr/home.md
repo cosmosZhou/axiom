@@ -105,5 +105,5 @@ Ce nouveau système de démonstration de théorème axiomatisé semi-mécanisé 
 <br><br>
 
 <script type=module>
-	$('#count').innerHTML = await get("/sympy/php/request/count.php");
+	$('#count').innerHTML = await get("/axiom/php/request/count.php");
 </script>

@@ -1,7 +1,7 @@
 # 什么是axiom.top  
   <br>
 
-[axiom.top](../index.php)是一个基于数学定理知识库、用于证明数学命题的网站，此[github工程](https://github.com/cosmosZhou/sympy)主要依靠开源符号计算项目 
+[axiom.top](../index.php)是一个基于数学定理知识库、用于证明数学命题的网站，此[github工程](https://github.com/cosmosZhou/axiom)主要依靠开源符号计算项目 
 [sympy](https://github.com/sympy/sympy) 和 
 [Maxima](http://maxima.sourceforge.net) 改写, 其中函数命名主要参考数学软件语言
 [Mathematica](https://reference.wolfram.com/language/index.html.en?source=footer)

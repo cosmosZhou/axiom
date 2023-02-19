@@ -134,7 +134,7 @@ export default {
 		},
 		
 		async debug(){
-			console.log("debug in sympy.vue");
+			console.log("debug in axiom.vue");
 			var user = axiom_user();
 			var [[port]] = await form_post('php/request/mysql/select.php', {sql: `select port from tbl_login_py where user = '${user}'`});
 			port = parseInt(port);

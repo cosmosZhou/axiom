@@ -103,5 +103,5 @@ This newly emerged semi-mechanized axiomatized theorem-proving system can simpli
 <br><br>
 
 <script type=module>
-	$('#count').innerHTML = await get("/sympy/php/request/count.php");
+	$('#count').innerHTML = await get("/axiom/php/request/count.php");
 </script>

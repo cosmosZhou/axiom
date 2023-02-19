@@ -207,16 +207,16 @@ switch ($lang) {
 </body>
 </html>
 
-<script	src="/sympy/static/unpkg.com/highlight.js/8.8.0/highlight.min.js"></script>
-<script src="/sympy/static/unpkg.com/marked@2.1.3/marked.min.js"></script>
-<script src="/sympy/static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
-<script src="/sympy/static/unpkg.com/qs@6.10.2/dist/qs.js"></script>
-<script src="/sympy/static/js/std.js"></script>
+<script	src="/axiom/static/unpkg.com/highlight.js/8.8.0/highlight.min.js"></script>
+<script src="/axiom/static/unpkg.com/marked@2.1.3/marked.min.js"></script>
+<script src="/axiom/static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
+<script src="/axiom/static/unpkg.com/qs@6.10.2/dist/qs.js"></script>
+<script src="/axiom/static/js/std.js"></script>
 <script type=module>
 
 hljs.initHighlightingOnLoad();
 
-var url = `/sympy/website/md/<?php echo "$lang/$section.md" ?>`;
+var url = `/axiom/website/md/<?php echo "$lang/$section.md" ?>`;
 
 var text = await get(url);
 url = url.slice(0, -3);

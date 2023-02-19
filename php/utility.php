@@ -35,7 +35,6 @@ function php_to_py($php)
 {
     // error_log("php file = $php");
     $py = str_replace('.php', '.py', $php);
-    // $py = str_replace('latex', 'sympy', $py);
     if (! file_exists($py)) {
         $py = str_replace('.php', '/__init__.py', $php);
     }
@@ -808,7 +807,6 @@ function run($py)
     $logs[] = "module = " . str_replace(".", "/", $module);
     $user = basename(dirname(dirname(__file__)));
     if (\std\is_linux()) {
-        // $array = file_get_contents("http://localhost:8000/sympy/run.py?module=$module");
         $array = file_get_contents("https://www.axiom.top/$user/run.py?module=$module");
         $array = explode("\n", $array);
     } else {

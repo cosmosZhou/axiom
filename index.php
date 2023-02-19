@@ -43,6 +43,10 @@ switch (count($key)) {
             case "module":
                 $module = $_GET['module'];
                 break;
+            case "axiom":
+                $sympy = $_GET['axiom'];
+                require_once 'php/sympy.php';
+                exit();
             case "sympy":
                 $sympy = $_GET['sympy'];
                 require_once 'php/sympy.php';

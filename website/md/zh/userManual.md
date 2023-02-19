@@ -115,10 +115,10 @@ DocumentRoot设定为所需的工程(网页)文件夹目录。<br>
 </li>
 <br>
 <li>使用git下载python工程源代码： <br> git clone --depth=1 <a
-	href=https://github.com/cosmosZhou/sympy.git>https://github.com/cosmosZhou/sympy.git</a>
+	href=https://github.com/cosmosZhou/axiom.git>https://github.com/cosmosZhou/axiom.git</a>
 </li>
 <br>
-<li>进入sympy文件夹：<br>cd sympy
+<li>进入axiom文件夹：<br>cd axiom
 </li>
 <br>
 <li>执行run命令，其中debug=1表示输出调试信息，debug=0表示不输出调试信息：<br>python run.py debug=1
@@ -132,7 +132,7 @@ DocumentRoot设定为所需的工程(网页)文件夹目录。<br>
 
 </li>
 <br>
-<li>打开Chrome或者Edge/IE浏览器，在浏览器地址栏输入：<br> <a href='../axiom'>http://localhost/sympy/axiom.php</a>
+<li>打开Chrome或者Edge/IE浏览器，在浏览器地址栏输入：<br> <a href='../axiom'>http://localhost/axiom/index.php</a>
 	<br>即可启动软件网站可视化定理库，这样就可以在本地环境下直接访问可视化定理库了
 </li>
 <br>
