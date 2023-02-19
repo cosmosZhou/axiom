@@ -64,7 +64,7 @@ switch ($lang) {
         break;
 
     case 'zh':
-        $title = '机械化定理库';
+        $title = '公理化定理库';
         $home = '网站主页';
         $faq = '常见问题';
         $bugReport = '故障报告';
