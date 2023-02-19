@@ -37,7 +37,7 @@ def __getitem__(self, indices):
     return Indexed(self, indices)
 
 
-mean = Function.mean(shape=property(lambda self: self.args[1].shape[1:]), real=True, eval=mean, __getitem__=__getitem__)
+mean = Function(shape=property(lambda self: self.args[1].shape[1:]), real=True, eval=mean, __getitem__=__getitem__)
 
 
 # c is a list of vectors, (k, n)
@@ -48,7 +48,7 @@ def cluster(w, x):
     return Lamda[i:k](conditionset(j, Equal(ArgMin[i](Norm(x[j] - mean(w[i], x))), i)))
 
 
-cluster = Function.cluster(eval=cluster, __getitem__=__getitem__)
+cluster = Function(eval=cluster, __getitem__=__getitem__)
 
 
 @prove

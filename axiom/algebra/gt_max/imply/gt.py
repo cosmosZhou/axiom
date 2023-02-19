@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(gt, index=0):
-    x, args = gt.of(Greater[Expr, Max])
+    x, args = gt.of(Expr > Max)
     y = args[index]
 
     return Greater(x, y)

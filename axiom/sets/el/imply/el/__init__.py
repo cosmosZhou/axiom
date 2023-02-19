@@ -1,4 +1,3 @@
-from . import cartesian_space
 from . import complement
 from . import imageset
 from . import neg
@@ -17,3 +16,5 @@ from . import left_close
 from . import floor
 from . import finiteset
 from . import st
+from . import swapMatrix
+from . import cartesianSpace

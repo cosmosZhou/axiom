@@ -36,7 +36,8 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs().expr.simplify()
 
     Eq << Eq[-1].this.find(Sum).apply(discrete.sum_binom.to.mul.difference)
-    Eq << Eq[-1].this.lhs().find(Difference).apply(discrete.difference.to.zero)
+    
+    Eq << Eq[-1].this.find(Lamda[Mul])().find(Difference).apply(discrete.difference.to.zero)
 
     
     

@@ -39,6 +39,7 @@ def prove(Eq):
     y = Symbol(real=True, shape=(oo,))
     Eq << apply(Equal(x, y[:n + 1]))
 
+    print(BlockMatrix([Identity(n), ZeroMatrix(n)]).T.shape)
     Eq << Eq[-2] @ BlockMatrix([Identity(n), ZeroMatrix(n)]).T
 
     Eq << Eq[-1].this.lhs.expand()

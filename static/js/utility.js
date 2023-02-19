@@ -38,7 +38,7 @@ function underline_all_theorems() {
 		// console.log('statement = ' + statement);
 		var index = 0;
 		var previousTheoremLength = 0;
-		for (let theorem of statement.matchAll(/(?:algebra|sets|calculus|discrete|geometry|keras|stats|patent)(?:\.\w+)+/g)) {
+		for (let theorem of statement.matchAll(/(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+/g)) {
 			theorem = theorem[0];
 			if (theorem.endsWith('.apply')) {
 				theorem = theorem.substring(0, theorem.length - 6);
@@ -53,7 +53,7 @@ function underline_all_theorems() {
 			var a = document.createElement('a');
 
 			a.style.marginLeft = '%spx'.format((index - previousIndex - previousTheoremLength) * char_width);
-			a.href = "/sympy/axiom.php/%s".format(theorem.replace(/\./g, "/"));
+			a.href = "/axiom/index.php/%s".format(theorem.replace(/\./g, "/"));
 			a.innerHTML = "-".repeat(theorem.length);
 
 			if (!previousIndex) {
@@ -125,7 +125,7 @@ function hint(cm, options) {
 		text = text.slice(0, cur.ch);
 		var prefix = text.match(/[\w.]+$/)[0];
 
-		var sympy = sympy_user();
+		var sympy = axiom_user();
 		var url = `/${sympy}/php/request/`;
 
 		var kwargs;
@@ -236,7 +236,6 @@ function hint(cm, options) {
 						case 'keras':
 						case 'sets':
 						case 'stats':
-						case 'patent':
 							url += `suggest.php`;
 							break;
 						default:
@@ -267,11 +266,9 @@ function hint(cm, options) {
 	});
 }
 
-function sympy_user() {
-	var href = location.href;
-	return href.match(/([^\/]+)\/(?:axiom.php|run.py|php\/\w+\.php)\b/)[1];
+function axiom_user() {
+	return location.href.match(/([^\/]+)\/((?:index.php|run.py|php\/\w+\.php|\?)\b|$)/)[1];
 }
-
 
 function extraKeys() {
 	function open(cm, ch) {
@@ -432,13 +429,13 @@ function find_and_jump(event) {
 	console.log('module = ' + module);
 	var href;
 	var indexOfDot = module.lastIndexOf('.');
-	var user = sympy_user();
+	var user = axiom_user();
 	if (indexOfDot >= 0) {
 		if (module.slice(indexOfDot + 1) == 'apply') {
 			module = module.slice(0, indexOfDot);
 			module += "&apply=0";
 		}
-		href = `/${user}/axiom.php?module=${module}`;
+		href = `/${user}/index.php?module=${module}`;
 	}
 	else {
 		switch (module) {
@@ -449,11 +446,10 @@ function find_and_jump(event) {
 			case 'keras':
 			case 'sets':
 			case 'stats':
-			case 'patent':
-				href = `/${user}/axiom.php?module=${module}`;
+				href = `/${user}/index.php?module=${module}`;
 				break;
 			default:
-				href = `/${user}/axiom.php?symbol=${module}`;
+				href = `/${user}/index.php?symbol=${module}`;
 		}
 	}
 

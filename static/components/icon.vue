@@ -284,7 +284,7 @@ export default {
 				folder = folder.slice(0, -1);
 			}
 			
-			var sympy = sympy_user();
+			var sympy = axiom_user();
 			
 			var self = this.$parent;
 			var data = {};

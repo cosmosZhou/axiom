@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self):
     p = self.of(Pow[-1, Expr])
-    n, *_ = p.free_symbols
+    n = next(iter(p.free_symbols))
     p = p.as_poly(n)
     assert p.degree() == 2
     c = p.nth(0)

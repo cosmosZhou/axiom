@@ -92,7 +92,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum).apply(discrete.sum.to.matmul)
 
-    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.piece)
+    Eq << Eq[-1].this.rhs.apply(algebra.lamda.to.piece)
 
     Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda_matmul.to.matmul)
 
@@ -113,20 +113,18 @@ def prove(Eq):
     Eq << Eq[-1].this.rhs.apply(algebra.lamda_piece.to.block)
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.mul)
-
-    Eq << Eq[-1].this.find(BlockMatrix[~Lamda]).apply(algebra.lamda.to.mul)
-
-    Eq << Eq[-1].this.find(Lamda[Pow]).apply(algebra.lamda.to.pow)
+    
+    Eq << Eq[-1].this.find(Lamda[Mul[OneMatrix]]).apply(algebra.lamda.to.mul)
 
     Eq << Eq[-1].this.find(Lamda[Pow]).apply(algebra.lamda.to.pow)
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.reducedSum)
 
+    Eq << Eq[-1].this.find(Lamda[Pow]).apply(algebra.lamda.to.pow)
+    
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.reducedSum)
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.z_def, Eq[-1])
-
-    
 
 
 if __name__ == '__main__':

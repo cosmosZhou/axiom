@@ -23,7 +23,7 @@ def prove(Eq):
     A, B = Symbol(etype=dtype.integer)
 
     f = Function(etype=dtype.integer)
-    g = Function.g()
+    g = Function(complex=True)
     h = Function(complex=True)
 
     Eq << apply(Equivalent(Element(i, A) & Element(j, f(i)), Element(j, B) & Equal(i, g(j))), h(i, j))

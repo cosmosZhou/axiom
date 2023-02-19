@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(given):
     from axiom.algebra.eq.imply.ne_zero.domain_definition import find_denominator
-    num, rhs = given.of(LessEqual[Abs, Expr])
+    num, rhs = given.of(Abs <= Expr)
     den = find_denominator(num)
 
     return Unequal(den, 0)

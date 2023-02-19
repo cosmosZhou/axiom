@@ -45,12 +45,12 @@ export default {
    		},
    		
    		user(){
-   			return sympy_user();	
+   			return axiom_user();	
    		},
    		
    		action(){
    			var module = this.module.replace(/\./g, '/');
-   			return `/${this.user}/axiom.php?module=${module}`;
+   			return `/${this.user}/index.php?module=${module}`;
    		},
 	},
 	

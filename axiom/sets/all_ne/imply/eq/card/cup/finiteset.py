@@ -23,8 +23,9 @@ def prove(Eq):
     x = Symbol(shape=(oo,), etype=dtype.integer, finiteset=True)
     Eq << apply(All[j:i, i:n](Unequal(x[i], x[j])))
 
-    f = Function(real=True)
-    f[a] = S.One
+    @Function(real=True)    
+    def f(x):
+        return S.One
     
     Eq << algebra.all_ne.imply.eq.sum.double_limits.apply(Eq[0], Sum[a:Eq[1].lhs.arg](f(a)))
 

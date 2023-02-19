@@ -2,7 +2,9 @@
 #!/home/lizhi/python/bin/python
 
 import os, sys, re
-from sympy.utilities.misc import Text
+from std import batch_map, rindex
+
+from std.file import Text
 
 try:
     import axiom
@@ -71,7 +73,7 @@ def readFolder(rootdir, sufix='.py'):
         if path.endswith(sufix):
             name = name[:-len(sufix)]
             if name == '__init__':
-                line = Text(path).readline()                                
+                line = Text(path).readline()
                 if not line:
                     
                     lines = Text(path).readlines()
@@ -103,13 +105,20 @@ def readFolder(rootdir, sufix='.py'):
                 if re.match('from *\. *import +\w+', line):
                     continue
 
-                path = path[:-len(sufix) - len('/__init__')]                
+                path = path[:-len(sufix) - len('/__init__')]
+                if not any(name not in ('__pycache__', '__init__.py') for name in os.listdir(path)):
+                    __init__ = path + '/__init__.py'
+                    print(__init__, "has no children, thus reducing to a normal module file.")
+                    try:
+                        os.rename(__init__, path + '.py')
+                    except PermissionError as e:
+                        print(e)
             else: 
                 path = path[:-len(sufix)]
 
             paths = re.split(r'[\\/]+', path)
 #             print(path)
-            index = paths.index('axiom')
+            index = rindex(paths, 'axiom')
 
             package = '.'.join(paths[index + 1:])
 
@@ -199,12 +208,11 @@ def prove_with_timing(module, **kwargs):
     lapse = time.time()
     state, latex = module.prove(**kwargs)
     lapse = time.time() - lapse    
-    return state, lapse, latex            
+    return state, lapse, latex
 
 
 def tackle_type_error(package, debug=True):
-    from sympy import FunctionClass
-    if not isinstance(import_module(package), FunctionClass):
+    if not import_module(package).is_FunctionClass:
         return
     
     print("package =", package)
@@ -381,9 +389,9 @@ def post_process(result, truncate=False):
         data.append((user, package, state, lapse, latex))
             
         if state is RetCode.plausible: 
-            Globals.plausible.append((file, f"http://localhost/{user}/axiom.php?module={package}"))
+            Globals.plausible.append((file, f"http://localhost/{user}/index.php?module={package}"))
         elif state is RetCode.failed:
-            Globals.failed.append((file, f"http://localhost/{user}/axiom.php?module={package}"))            
+            Globals.failed.append((file, f"http://localhost/{user}/index.php?module={package}"))            
         else:
             continue
         
@@ -397,12 +405,8 @@ def process_debug(packages):
 @process.register(tuple) 
 def _(items, debug=False, parallel=True):  # @DuplicatedSignature
     proc = process_debug if debug else process 
-    if parallel: 
-        from multiprocessing import Pool
-        processes = cpu_count()
-        with Pool(processes=processes) as pool:
-#         with Pool(processes=cpu_count() * 2) as pool:
-            return pool.map(proc, items)
+    if parallel:        
+        return batch_map(proc, items, processes=cpu_count()) 
     else:
         return map(proc, items)
 
@@ -507,7 +511,7 @@ def run_with_module(*modules, debug=True):
                     else: 
                         continue
                 
-            yield package, file, state, lapse, latex                        
+            yield package, file, state, lapse, latex
 
     for args in post_process(generator()):
         print('\v'.join((str(arg) for arg in args)).encode(encoding='utf8'))

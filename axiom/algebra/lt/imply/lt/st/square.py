@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    dx, dy = given.of(Less[Expr ** 2, Expr ** 2])
+    dx, dy = given.of(Expr ** 2 < Expr ** 2)
 
     y2, x01_mean = dx.of(Expr - Expr)
     _y2, y01_mean = dy.of(Expr - Expr)

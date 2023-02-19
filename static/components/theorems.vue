@@ -38,8 +38,7 @@ export default {
 		
 		path(){
 			var href = location.href;
-			return href.match(/\/axiom\.php\?module=((?:\w+[.\/])+)(\w+)[.\/]?(?:#\w+)?$/)[1];
-			//return href.match(/\/axiom.php(\/.*)\/(\w+)\/*$/)[1];
+			return href.match(/\/(index\.php)?\?module=((?:\w+[.\/])+)(\w+)[.\/]?(?:#\w+)?$/)[1];
 		},
 		
 		focusedElement(){

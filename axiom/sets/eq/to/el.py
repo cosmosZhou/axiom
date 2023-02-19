@@ -15,7 +15,7 @@ def apply(given):
 @prove
 def prove(Eq):
     x = Symbol(integer=True)
-    f = Function.f()
+    f = Function(complex=True)
 
     Eq << apply(Equal(f(x), x))
 

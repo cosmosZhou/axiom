@@ -5,7 +5,7 @@
 		<searchForm v-if="issearch" :keyword=keyword :caseSensitive=caseSensitive :wholeWord=wholeWord :regularExpression=regularExpression :nlp=nlp></searchForm>		
 		<ul>
 			<li v-for="(content, section) in repertoire">
-				<a :href="'/%s/axiom.php?module=%s'.format(user, section)">
+				<a :href="'/%s/index.php?module=%s'.format(user, section)">
 					{{section}}
 				</a>
 				<ul>
@@ -15,7 +15,7 @@
 						</font>
 						<ul>
 							<li v-for="axiom in axioms">
-								<a :href="'/%s/axiom.php?module=%s'.format(user, axiom)">
+								<a :href="'/%s/index.php?module=%s'.format(user, axiom)">
 									{{axiom}}
 								</a>
 							</li>
@@ -40,7 +40,7 @@
 			</tr>	
 		</table>
 		most recent <input size=2 v-model=topk @change=change_input>axioms updated:
-		<a v-for="axiom of recentAxioms" :href="'/%s/axiom.php?module=%s'.format(user, axiom)">
+		<a v-for="axiom of recentAxioms" :href="'/%s/index.php?module=%s'.format(user, axiom)">
 			<p>{{axiom}}</p>
 		</a>
 		<br>
@@ -59,7 +59,7 @@ export default {
 	
 	computed: {
 		user(){
-			return sympy_user();
+			return axiom_user();
 		},	
 	},
 	
@@ -86,7 +86,7 @@ export default {
 			if (state == 'total'){
 				return `/${this.user}/run.py`;
 			}
-			return `/${this.user}/axiom.php?state=${state}`;
+			return `/${this.user}/index.php?state=${state}`;
 		},
 	
 		keydown(event){

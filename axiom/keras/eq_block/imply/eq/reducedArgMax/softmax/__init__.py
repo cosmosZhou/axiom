@@ -174,3 +174,5 @@ if __name__ == '__main__':
 # created on 2022-01-03
 # updated on 2022-01-28
 from . import tf
+from . import lower_triangle
+from . import upper_triangle

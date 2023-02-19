@@ -15,9 +15,10 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(x ** 3, Interval(m, M, right_open=True), x)
 
-    f = Function(real=True)
-    f[x] = x ** 3
-    
+    @Function(real=True)
+    def f(x):
+        return x ** 3
+ 
     Eq << Equal(f(x), -f(-x), plausible=True)
 
     Eq << Eq[-1].this.lhs.defun()
@@ -30,7 +31,11 @@ def prove(Eq):
 
     Eq << -Eq[-1].this.find(f).defun().reversed
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-09-18
+# updated on 2022-09-20

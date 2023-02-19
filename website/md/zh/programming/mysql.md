@@ -416,3 +416,20 @@ The server requested authentication method unknown to the client [caching_sha2_p
 alter user 'root'@'localhost' identified by '123456'; flush privileges;  
 alter user 'root'@'localhost' identified with mysql_native_password by '123456'; flush privileges;  
 ALTER USER 'root' IDENTIFIED WITH mysql_native_password BY '123456';  
+
+
+### 表空间优化  
+
+alter table tbl_test engine=InnoDB  
+
+optimize table tbl_test  
+
+ALTER TABLE tbl_test FORCE  
+
+### Timeout exceeded in regular expression match  
+
+show variables like 'regexp_time_limit';  
+
+SET global regexp_time_limit = 512;   
+
+show variables like 'regexp_stack_limit';  

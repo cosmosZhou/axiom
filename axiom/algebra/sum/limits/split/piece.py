@@ -46,9 +46,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.bool)
 
-    Eq << Eq[-1].this.lhs.expr.args[0].expr.args[1].apply(algebra.bool.to.mul)
-    Eq << Eq[-1].this.lhs.expr.args[1].expr.args[1].apply(algebra.bool.to.mul)
-    Eq << Eq[-1].this.lhs.expr.args[2].expr.args[1].apply(algebra.bool.to.mul)
+    Eq << Eq[-1].this.find(Bool[And]).apply(algebra.bool.to.mul)
+    
+    Eq << Eq[-1].this.find(Bool[And]).apply(algebra.bool.to.mul)
+    
+    Eq << Eq[-1].this.find(Bool[And]).apply(algebra.bool.to.mul)
 
     Eq << Sum(Eq[-1].lhs.expr, Eq[-1].lhs.limits[0]).this.apply(algebra.sum.to.piece)
 

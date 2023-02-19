@@ -40,12 +40,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(discrete.matmul.to.lamda)
 
-    Eq << Eq[-1].this.rhs.expr.args[1].expr.apply(algebra.add.to.piece)
+    Eq << Eq[-1].this.rhs.expr.args[2].expr.apply(algebra.add.to.piece)
 
-    Eq << Eq[-1].this.rhs().expr.args[2]().expr.simplify(wrt=Eq[-1].rhs.variable)
+    Eq << Eq[-1].this.rhs().expr.args[1]().expr.simplify(wrt=Eq[-1].rhs.variable)
+
+    Eq << Eq[-1].this.find(Lamda)().find(Element).simplify()
 
     Eq << Eq[-1].this.rhs().expr.args[1]().expr.simplify()
-
 
 if __name__ == '__main__':
     run()

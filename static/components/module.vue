@@ -135,12 +135,12 @@ export default {
 		
 		async debug(){
 			console.log("debug in sympy.vue");
-			var user = sympy_user();
+			var user = axiom_user();
 			var [[port]] = await form_post('php/request/mysql/select.php', {sql: `select port from tbl_login_py where user = '${user}'`});
 			port = parseInt(port);
 			
 			var href = location.href;
-			href = href.match(/(.+)\/[^\/]+\/(?:axiom.php|run.py|php\/\w+\.php)\b/)[1];
+			href = href.match(/(.+)\/[^\/]+\/(?:index.php|run.py|php\/\w+\.php)\b/)[1];
 			location.href = `${href}:${port}/debug?module=${this.module}`;
 		},    	
 

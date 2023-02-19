@@ -6,17 +6,8 @@ from util import *
 
 @apply
 def apply(given):
-    x_y, a = given.of(Equal)
-    x, y = x_y.of(FiniteSet)
-    a0, a1 = a.of(FiniteSet)
-
-    a, zero = a0.of(Indexed)
-    a, one = a1.of(Indexed)
-
-    assert zero.is_zero
-    assert one.is_One
-
-    return Equal(Matrix([x, y]), Matrix([a[1 - KroneckerDelta(a0, x)], a[KroneckerDelta(a0, x)]]))
+    (x, y), ((a, S[0]), (S[a], S[1])) = given.of(Equal[FiniteSet, FiniteSet[Indexed, Indexed]])
+    return Equal(Matrix([x, y]), Matrix([a[1 - KroneckerDelta(a[0], x)], a[KroneckerDelta(a[0], x)]]))
 
 
 @prove

@@ -54,7 +54,7 @@ def inner_prod(A, B, deep=False):
 
                             elif a.is_OneMatrix or a.is_BlockMatrix and all(one.is_OneMatrix or one.is_One for one in a.args):
                                 if b.is_BlockMatrix:
-                                    arg = BlockMatrix[1]([OneMatrix(*b.shape + a.shape) * b for b in b.args])
+                                    arg = BlockMatrix[1]([OneMatrix(*a.shape + b.shape) * b for b in b.args]).T
                                 else:
                                     arg = OneMatrix(*b.shape + a.shape) * b
 

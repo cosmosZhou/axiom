@@ -30,6 +30,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, index=0, invert=True)
 
+    Eq << Eq[-1].this.apply(algebra.ou.given.infer, -1)
+
+
+
+
 
 if __name__ == '__main__':
     run()
@@ -38,3 +43,4 @@ if __name__ == '__main__':
 from . import push_front
 from . import pop_back
 # created on 2020-03-17
+# updated on 2022-09-20

@@ -11,7 +11,7 @@ def apply(given):
     return Or(lower_bound, upper_bound)
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import sets
 

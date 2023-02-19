@@ -16,9 +16,9 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Sum[x:A, y:B](f(x, y)))
 
-    Eq << Eq[0].this.rhs.expr.args[1].apply(algebra.bool.to.mul)
+    Eq << Eq[0].this.find(Bool).apply(algebra.bool.to.mul)
 
-    Eq << Sum[x](Eq[-1].rhs.expr).this.expr.args[1].apply(algebra.bool.to.piece)
+    Eq << Sum[x](Eq[-1].rhs.expr).this.find(Bool).apply(algebra.bool.to.piece)
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.mul)
 
@@ -28,8 +28,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expr.args[0].apply(algebra.bool.to.piece)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-02-19
+# updated on 2022-10-04

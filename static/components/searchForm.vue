@@ -20,11 +20,11 @@ export default {
 
 	computed: {
 		user(){
-			return sympy_user();	
+			return axiom_user();	
 		}, 
 		
 		action(){
-			return `/${this.user}/axiom.php`;
+			return `/${this.user}/index.php`;
 		},
 	},
 	

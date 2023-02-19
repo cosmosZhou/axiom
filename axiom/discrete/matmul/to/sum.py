@@ -6,10 +6,9 @@ def apply(self, var=None):
     A, B = self.of(MatMul)
     kwargs = {'var': var, 'generator': self}
 
-    from axiom.discrete.matmul.to.lamda import generate_k_limit
     assert len(A.shape) == 1
     assert len(B.shape) == 1
-    k_limit = generate_k_limit(A, B, **kwargs)
+    k_limit = MatMul.generate_k_limit(A, B, **kwargs)
     k, *_ = k_limit
     rhs = Sum(A[k] * B[k], k_limit).simplify()
     return Equal(self, rhs, evaluate=False)

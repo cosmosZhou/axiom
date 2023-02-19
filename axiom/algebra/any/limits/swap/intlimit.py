@@ -7,7 +7,7 @@ def apply(self):
     return Equivalent(self, limits_swap(Any, self))
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import algebra, sets
     

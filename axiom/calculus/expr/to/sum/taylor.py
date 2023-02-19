@@ -7,7 +7,7 @@ def apply(fx, a, x=None, n=None):
         n = fx.generate_var(a.free_symbols, integer=True)
 
     if x is None:
-        x, *_ = fx.free_symbols
+        x = next(iter(fx.free_symbols))
     else:
         assert x in fx.free_symbols
 

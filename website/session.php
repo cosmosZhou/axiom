@@ -25,6 +25,6 @@ foreach (\mysql\select("select password from tbl_login_py where user = '$user'")
 	var user = `<?php echo $user?>`;
 	var href = location.href;
 	href = href.match(/(.+)\/sympy\/website\/session\b/)[1]; 
-	href = `${href}/${user}/axiom.php`;
+	href = `${href}/${user}/index.php`;
 	location.href = href;
 </script>

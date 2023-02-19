@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(lt, index=-1):
-    x, args = lt.of(Less[Expr, Min])
+    x, args = lt.of(Expr < Min)
     first = args[:index]
     second = args[index:]
 

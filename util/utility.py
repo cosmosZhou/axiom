@@ -7,7 +7,8 @@ from sympy.core.inference import Inference, process_options, equivalent_ancestor
 from _collections import deque, defaultdict
 from util.search import py_to_module
 from os.path import dirname, basename
-from util.std import json_encode, skip_first_permutation
+from std import json_encode
+from std.heap import skip_first_permutation
 from datetime import datetime
 import time
 
@@ -574,7 +575,7 @@ def analyze_results_from_run(lines, latex=True):
         return state, latex
     
 
-from sympy.utilities.misc import Text
+from std.file import Text
 
 
 def from_axiom_import(py, section, eqs):
@@ -608,7 +609,7 @@ def from_axiom_import(py, section, eqs):
 def _prove(func, debug=True, **_):
     py = func.__code__.co_filename
     
-    website = f"http://localhost/{basename(dirname(dirname(__file__)))}/axiom.php?module={py_to_module(py, '.')}"
+    website = f"http://localhost/{basename(dirname(dirname(__file__)))}/index.php?module={py_to_module(py, '.')}"
     
     eqs = Eq(debug=debug)
     
@@ -624,7 +625,7 @@ def _prove(func, debug=True, **_):
     except AttributeError as e:
         messages = source_error()
         
-        m = re.match("^module 'sympy(?:\.\w+)*\.(algebra|sets|calculus|discrete|geometry|keras|stats|patent)(?:\.\w+)*' has no attribute '(\w+)'$", str(e))
+        m = re.match("^module 'sympy(?:\.\w+)*\.(algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)*' has no attribute '(\w+)'$", str(e))
         if m: 
             import_axiom = False
             if m[2] == 'func':
@@ -646,7 +647,7 @@ def _prove(func, debug=True, **_):
             if t == 'function':
                 * _, statement = messages            
                 statement = statement.strip()
-                m = re.search('(?:algebra|sets|calculus|discrete|geometry|keras|stats|patent)(?:\.\w+)+', statement)
+                m = re.search('(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+', statement)
                 if m:
                     section, *_ = m[0].split('.')
                     return from_axiom_import(py, section, eqs)
@@ -1024,7 +1025,7 @@ def imply(apply, **kwargs):
                     if _simplify and len(args) == 1 and \
                     (statement.is_Equal or statement.is_Equivalent) \
                     and args[0] is statement.lhs:
-                        _simplify = False                
+                        _simplify = False
             else: 
                 if isinstance(given, tuple):
                     is_not_False = all(g.plausible is not False for g in given)

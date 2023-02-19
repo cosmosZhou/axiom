@@ -27,9 +27,9 @@ def prove(Eq):
     x, y = Symbol(real=True)
     Eq << apply(abs(x) * abs(y))
 
-    Eq << Eq[-1].this.lhs.args[0].apply(algebra.abs.to.piece)
+    Eq << Eq[-1].this.lhs.find(Abs).apply(algebra.abs.to.piece)
 
-    Eq << Eq[-1].this.lhs.args[1].apply(algebra.abs.to.piece)
+    Eq << Eq[-1].this.lhs.find(Abs).apply(algebra.abs.to.piece)
 
     Eq << Eq[-1].this.lhs.apply(algebra.mul_piece.to.piece)
 

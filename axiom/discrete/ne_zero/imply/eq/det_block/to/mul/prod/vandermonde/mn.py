@@ -39,10 +39,6 @@ def prove(Eq):
     j, i = Eq[-1].find(Lamda[Tuple[2]]).variables
     Eq << (Eq[-1].lhs.arg @ Lamda[j:m, i:m](Eq[2].lhs ** j * KroneckerDelta(i, j))).this.apply(discrete.matmul.to.lamda)
 
-    Eq << Eq[-1].this.rhs().find(Element).simplify()
-
-    Eq << Eq[-1].this.rhs().find(Element).simplify()
-
     Eq << Eq[-1].this.rhs.find(Mul ** Symbol).apply(algebra.pow.to.mul.split.base)
 
     Eq << Eq[-1].this.rhs.apply(algebra.lamda_piece.to.block)

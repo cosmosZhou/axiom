@@ -277,14 +277,6 @@ cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2 # after
 cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -B 2 # before
 cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -C 2 # both
 
-question: how to view infor for python?
-solution: 
-python -V
-whereis python
-python
-python  --version
-which python
-
 install dependencies before install python3.6!!!
 sudo apt-get install sqlite3
 sudo apt-get install libsqlite3-dev  
@@ -311,46 +303,9 @@ sudo ln -s /home/zlz/local/python3/bin/pip3.5  /usr/bin/pip3
 sudo ln -s /home/zlz/local/python3/bin/gunicorn  /usr/bin/gunicorn
 
 
-question: how to install tensorflow?
-solution: 
-tar -zxvf setuptools-19.6.tar.gz
-cd setuptools-19.6/
-python3 setup.py build
-python3 setup.py install
-tar -zxvf pip-18.1.tar.gz 
-cd pip-18.1/
-python3 setup.py build
-python3 setup.py install
-pip3 --version
-sudo rm /usr/bin/pip3
-sudo ln -n /home/zlz/local/python3/bin/pip /usr/bin/pip3
-
 change tensorflow_gpu-1.8.0-cp35-cp35m-manylinux1_x86_64.whl into tensorflow_gpu-1.8.0-cp35-cp35m-linux_x86_64.whl
 and then
 pip3 install tensorflow_gpu-1.8.0-cp35-cp35m-linux_x86_64.whl
-
-hint:
-import pip; 
-print(pip.pep425tags.get_supported())
-
-install all the dependent packages:
-absl-py>=0.1.6 (from tensorflow-gpu==1.8.0) (0.6.1)
-gast>=0.2.0 (from tensorflow-gpu==1.8.0) (0.2.0)
-numpy>=1.13.3 (from tensorflow-gpu==1.8.0) (1.15.4)
-grpcio>=1.8.6 (from tensorflow-gpu==1.8.0) (1.17.0)
-termcolor>=1.1.0 (from tensorflow-gpu==1.8.0) (1.1.0)
-astor>=0.6.0 (from tensorflow-gpu==1.8.0) (0.7.1)
-protobuf>=3.4.0 (from tensorflow-gpu==1.8.0) (3.6.1)
-six>=1.10.0 (from tensorflow-gpu==1.8.0) (1.12.0)
-
-wheel>=0.26 (from tensorflow-gpu==1.8.0) (0.32.3)
-setuptools (from protobuf>=3.4.0->tensorflow-gpu==1.8.0) (28.8.0)
-werkzeug>=0.11.10 (from tensorboard<1.9.0,>=1.8.0->tensorflow-gpu==1.8.0) (0.14.1)
-markdown>=2.6.8 (from tensorboard<1.9.0,>=1.8.0->tensorflow-gpu==1.8.0) (3.0.1)
-html5lib==0.9999999 (from tensorboard<1.9.0,>=1.8.0->tensorflow-gpu==1.8.0) (0.9999999)
-bleach==1.5.0 (from tensorboard<1.9.0,>=1.8.0->tensorflow-gpu==1.8.0) (1.5.0)
-tensorboard<1.9.0,>=1.8.0 (from tensorflow-gpu==1.8.0) (1.8.0)
-
 
 https://developer.nvidia.com/rdp/cudnn-download
 
@@ -499,4 +454,18 @@ https://dc.console.aliyun.com/next/index#/domain/details/cert-print?saleId=S2020
 
 软件著作权  
 https://tm.aliyun.com/channel/copyright/new?spm=a2cmq.17629970.0.0.f0d079fe3HRL3T  
+
+在Linux中，按上下左右键变成^[[A^[[B^[[C^[[D？
+solution:  
+尝试用 bash 即可解决；  
+出现上述问题的时候，命令行只显示一个提示符：  
+$  
+1、可以直接输入：  
+bash  
+使用 bash 模式输入命令；  
+2、输入：  
+chsh  
+在Login Shell [*]后输入  
+/bin/bash  
+即可，以后每次连接都会使用 bash ；  
 

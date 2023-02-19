@@ -120,14 +120,34 @@ pydef设置：
 
 以下介绍安装深度学习库cuda, cudnn, tensorflow-gpu, keras等  
 
-### GPU显卡
+### GPU显卡驱动安装
 lspci | grep -i vga  
 或者  
 nvidia-smi  
-如果没有，  
+
+下载显卡驱动：  
+https://www.nvidia.com/Download/index.aspx
+
+sudo chmod a+x NVIDIA-Linux-x86_64-515.76.run
+sudo sh NVIDIA-Linux-x86_64-515.76.run -no-x-check -no-opengl-files -no-nouveau-check
+
+或者使用命令直接安装：  
+sudo apt-get install nvidia-460 nvidia-settings nvidia-modprobe   
+
+如果安装驱动后, nvidia-smi显示CUDA Version: N/A  
+需要安装一个依赖：  
+sudo apt-get install libcuda1-460  
+460为nvidia-smi打印的驱动版本号  
+
 如果你的服务器没有GPU显卡，则cuda, cudnn安装可以略过。  
 如果有则会输出以下信息：  
 ![nvidia-smi](python/nvidia-smi.png)  
+
+查看每个GPU的型号：  
+nvidia-smi -L  
+比如：  
+GPU 0: GeForce RTX 2080 Ti (UUID: GPU-476f643c-b9e9-6833-539b-928d62700697)  
+GPU 1: GeForce RTX 2080 Ti (UUID: GPU-a6e7564b-619a-15e3-653f-353de421a605)  
 
 实时显示GPU使用情况：  
 Linux:  
@@ -142,6 +162,25 @@ nvidia-smi –l 5 #每隔5秒刷新一次
 CUDA(ComputeUnified Device Architecture)，是显卡厂商NVIDIA推出的运算平台。 CUDA是一种由NVIDIA推出的通用并行计算架构，该架构使GPU能够解决复杂的计算问题。  
 下载地址：  
 https://developer.nvidia.com/cuda-toolkit-archive  
+
+比如下载cuda-11.1  
+https://developer.nvidia.com/cuda-11.1.0-download-archive?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=2004&target_type=runfilelocal  
+比如下载cuda-11.2  
+https://developer.nvidia.com/cuda-11.2.0-download-archive?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=2004&target_type=runfilelocal  
+
+wget https://developer.download.nvidia.com/compute/cuda/11.2.0/local_installers/cuda_11.2.0_460.27.04_linux.run  
+sudo sh cuda_11.2.0_460.27.04_linux.run  
+
+add /usr/local/cuda-11.2/lib64 to /etc/ld.so.conf and run ldconfig as root  
+例如：  
+sudo vim /etc/ld.so.conf   
+include /etc/ld.so.conf.d/*.conf  
+/usr/local/cuda-11.2/lib64  
+
+linux 安装 cuda:  
+https://blog.csdn.net/weixin_45811857/article/details/124457280  
+https://blog.csdn.net/qq_46277596/article/details/122332496?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-122332496-blog-115225181.pc_relevant_multi_platform_whitelistv3&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-122332496-blog-115225181.pc_relevant_multi_platform_whitelistv3&utm_relevant_index=1 
+
 根据需要安装不同版本的，我安装的是CUDA9，但是linux上安装的是CUDA10  
 把以下路径添加到环境变量path中：  
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.0\bin  
@@ -188,34 +227,17 @@ https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#install-window
 ![cudnn-installation-unzip](python/cudnn-installation-unzip.png)  
 解压后将解压文件夹（cuda）中的所有文件复制到v10.0文件夹即可！  
 
+linux环境下安装：  
+wget https://developer.nvidia.com/compute/machine-learning/cudnn/secure/8.2.0.53/11.3_04222021/cudnn-11.3-linux-x64-v8.2.0.53.tgz  
+tar -zxvf cudnn-11.3-linux-x64-v8.2.0.53.tgz   
+sudo cp cuda/include/* /usr/local/cuda-11.2/include/
+sudo cp cuda/lib64/* /usr/local/cuda-11.2/lib64/  
+sudo chmod a+r /usr/local/cuda-11.2/include/*  
+sudo chmod a+r /usr/local/cuda-11.2/lib64/*  
+rm -rf cuda
+
 ### tensorflow安装
-
-如果cuda安装10.0的版本的，那么tensorflow-gpu就是1.13版本的；使用pip3 install tensorflow-gpu==1.13.1安装  
-如果cuda安装9.0的版本的，那么tensorflow-gpu就是1.11版本的；使用pip3 install tensorflow-gpu==1.11.0安装  
-如果不使用gpu并行运算的，pip3 install tensorflow安装  
-（如果报错则用pip3 install tensorflow=='1.11.0'）  
-安装tensorflow之后要使用python3终端工具查看tensorflow是否可用：  
-输入以下验证指令：  
-import tensorflow as tf  
-a = tf.constant(1)  
-b = tf.constant(1)  
-sess = tf.Session()  
-sess.run(a - b)  
-sess.close()  
-如果正常则会出现以下结果：  
-
-![tensorflow-test](python/tensorflow-test.png)  
-
-如果报错：  
-ImportError: libcublas.so.10.0: cannot open shared object file: No such file or directory  
-输入指令：  
-echo $PATH  
-
-![echo-path](python/echo-path.png)  
-
-发现/usr/local/cuda-10.0/bin没有在path列表中。  
-返回至本章第2节添加环境变量即可。  
-
+pip install tensorflow-gpu  
 如果出现：  
 ImportError: /lib64/libc.so.6: version `GLIBC_2.17' not found   
 wget https://ftp.gnu.org/gnu/glibc/glibc-2.17.tar.gz  
@@ -387,3 +409,25 @@ http://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v4.1.0.2019031
 https://github.com/simonflueckiger/tesserocr-windows_build/releases  
 下载链接  
 pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/download/tesserocr-v2.5.2-tesseract-4.1.1/tesserocr-2.5.2-cp36-cp36m-win_amd64.whl  
+
+
+# pypirc
+
+打开%USERPROFILE%  
+新建.pypirc文件
+写入如下信息：
+
+[distutils]
+index-servers =
+    pypi
+    nexus
+
+[pypi]
+repository: https://upload.pypi.org/legacy/
+username: your-username
+password: your-password
+
+[nexus]
+repository: http://pypi.nexus.your-company.com/repository/pypi-internal/
+username: your-username
+password: your-password

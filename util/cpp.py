@@ -2,7 +2,7 @@ from ctypes import *
 
 import numpy as np
 import os
-from util.std import is_Linux, cstring
+from std import is_Linux, cstring
 
 ctypes2numpy = {"?": np.bool,
           "c": np.char,

@@ -65,7 +65,7 @@ def prove(Eq):
     Eq << Eq[-1].subs(Eq[0])
 
     Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (i,))
-
+    
     Eq << Eq[-1].subs(Eq.y_def)
 
     

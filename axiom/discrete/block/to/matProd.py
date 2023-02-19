@@ -40,18 +40,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(MatMul).apply(discrete.matmul.to.matProd.push_back)
 
-    Eq << Eq[-1].this.rhs.find(MatProduct).apply(discrete.matProd.limits.subs.offset, -1)
-
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=m, start=1)
-
-
-
 
 
 if __name__ == '__main__':
     run()
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 # created on 2020-08-31
-# updated on 2021-12-13
+# updated on 2022-09-20

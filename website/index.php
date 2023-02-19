@@ -60,6 +60,7 @@ switch ($lang) {
         $userManual = 'Manuel';
         $signIn = 'Connexion';
         $signUp = "S'enregistrer";
+        $programmingReference = "consulter des programmation";
         break;
 
     case 'zh':
@@ -82,6 +83,7 @@ switch ($lang) {
         $userManual = '操作手册';
         $signIn = '登陆';
         $signUp = '注册';
+        $programmingReference = "编程参考";
         break;
     default:
     case 'en':
@@ -106,7 +108,8 @@ switch ($lang) {
         
         $userManual = 'User Manual';
         $signIn = 'Sign In';
-        $signUp = 'Sign UP';        
+        $signUp = 'Sign UP';
+        $programmingReference = "Programming Reference";
         break;
 }
 ?>
@@ -190,6 +193,10 @@ switch ($lang) {
 				<div class='sidebar_body'>
 					<a href="index.php?lang=<?php echo $lang ?>&section=userManual"
 						title="<?php echo $userManual ?>"><?php echo $userManual ?></a>
+				</div>
+				<div class='sidebar_body'>
+					<a href="md.php/<?php echo $lang ?>/programming"
+						title="<?php echo $programmingReference ?>"><?php echo $programmingReference ?></a>
 				</div>
 			</div>
 

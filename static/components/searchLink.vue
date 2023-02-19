@@ -1,5 +1,4 @@
 <template>
-	
 	<a v-if="mode == 'a'" v-focus tabindex=2 :href=href @contextmenu.prevent=contextmenu @keydown=keydown_a>
        	{{module}}
        	<searchContextmenu v-if='showContextmenu' :left=left :top=top></searchContextmenu>
@@ -32,11 +31,11 @@ export default {
 	
 	computed: {
 		user(){
-			return sympy_user();
+			return axiom_user();
 		},
 		
 		href(){
-			return `/${this.user}/axiom.php?module=${this.module}`;
+			return `/${this.user}/index.php?module=${this.module}`;
 		},			
 	},
 	

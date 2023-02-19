@@ -40,7 +40,7 @@ export default {
 		remove(){
 			console.log("this.module = " + this.module);
 			var href = location.href;
-			var m = href.match(/\/([^\/]+)\/axiom\.php\?module(.+)/);
+			var m = href.match(/\/([^\/]+)\/(index\.php)?\?module(.+)/);
 			var user = m[1];
 			var section = m[2];
 			if (section.endsWith('.')){

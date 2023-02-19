@@ -25,7 +25,7 @@ def apply(given):
         return Element(x, FiniteSet(*rhs))
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import sets
 

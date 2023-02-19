@@ -1,7 +1,7 @@
 from util import *
 
 
-def convert(self, i=None, deep=False):
+def convert(self, i=None, deep=False, simplify=True):
     [*args] = self.of(Mul)
     if i is None:
         for i, arg in enumerate(args):
@@ -18,14 +18,18 @@ def convert(self, i=None, deep=False):
         _args[i] = e
         prod = Mul(*_args)
         if deep and prod.is_Mul:
-            prod = convert(prod, deep=deep)
+            prod = convert(prod, deep=deep, simplify=simplify)
         summand.append(prod)
-    return Add(*summand).simplify()
+        
+    summand = Add(*summand)
+    if simplify:
+        summand = summand.simplify()
+    return summand
     
 
 @apply
-def apply(self, i=None, deep=False):
-    rhs = convert(self, i, deep=deep)
+def apply(self, i=None, deep=False, *, simplify=True):
+    rhs = convert(self, i, deep=deep, simplify=simplify)
     return Equal(self, rhs, evaluate=False)
 
 

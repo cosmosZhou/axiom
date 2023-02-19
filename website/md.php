@@ -1,7 +1,6 @@
 <?php
 
-
-$PATH_INFO = $_SERVER["PATH_INFO"];
+$PATH_INFO = isset($_SERVER["PATH_INFO"])? $_SERVER["PATH_INFO"]: '';
 
 if (preg_match('/(\w+)\/.+\.md/', $PATH_INFO, $m)) {
     $lang = $m[1];
@@ -11,11 +10,24 @@ if (preg_match('/(\w+)\/.+\.md/', $PATH_INFO, $m)) {
     $path = dirname(__file__) . "/md$PATH_INFO";
     $prefix = std\startsWith($PATH_INFO, '/')? substr($PATH_INFO, 1): $PATH_INFO;
     
-    $index = strrpos($prefix, '/');
-    if ($index !== false){
-        $prefix = substr($prefix, $index + 1);
-    }
+    error_log("prefix = $prefix");
     
+    $index = strrpos($prefix, '/');
+    if ($index !== false) {
+        $_prefix = substr($prefix, $index + 1);
+        if ($_prefix) {
+            $prefix = $_prefix;
+        }
+        else {
+            $prefix = $_SERVER["REQUEST_URI"];
+            if (std\endsWith($prefix, '/'))
+                $prefix = std\slice($prefix, 0, -1);
+        }
+    }
+    elseif (!$prefix)
+        $prefix = "md.php";
+    
+    error_log("prefix = $prefix");
     foreach (scandir($path) as $name) {
         switch ($name) {
             case ".":
@@ -70,14 +82,14 @@ body {
 
 </html>
 
-<script src="/sympy/static/unpkg.com/highlight.js/8.8.0/highlight.min.js"></script>
-<script src="/sympy/static/unpkg.com/marked@2.1.3/marked.min.js"></script>
-<script src="/sympy/static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
-<script src="/sympy/static/unpkg.com/qs@6.10.2/dist/qs.js"></script>
-<script src="/sympy/static/js/std.js"></script>
+<script src="/axiom/static/unpkg.com/highlight.js/8.8.0/highlight.min.js"></script>
+<script src="/axiom/static/unpkg.com/marked@2.1.3/marked.min.js"></script>
+<script src="/axiom/static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
+<script src="/axiom/static/unpkg.com/qs@6.10.2/dist/qs.js"></script>
+<script src="/axiom/static/js/std.js"></script>
 <script> 
 	hljs.initHighlightingOnLoad();
-	var url = `/sympy/website/md<?php echo $PATH_INFO ?>`;
+	var url = `/axiom/website/md<?php echo $PATH_INFO ?>`;
 	get(url).then(text =>{
     	url = url.slice(0, -3);
     	var newText = [];

@@ -26,7 +26,7 @@ export default {
     components : {smallPackage},
 
     async created(){
-        var sympy = sympy_user();
+        var sympy = axiom_user();
 		var packages = await get(`/${sympy}/php/request/scandir.php`, {folder: this.path});
 		this.packages = packages;
     	console.log("in created(){: ", this.packages);
@@ -47,13 +47,13 @@ export default {
             var self = event.target;
             switch (self.className){
             case 'confirm':
-                var oldFile = location.href.match(/\/axiom.php\/(.+)/)[1];
+                var oldFile = location.href.match(/\/index.php\/(.+)/)[1];
                 if (!oldFile.endsWith('/')){
                     oldFile += '/';
                 }
                 oldFile += this.theorem;
                 
-                var user = sympy_user();
+                var user = axiom_user();
                 var params = {
                     theorem: oldFile.replaceAll('/', '.'), 
                     dest: this.path.replaceAll('/', '.').substring(1),

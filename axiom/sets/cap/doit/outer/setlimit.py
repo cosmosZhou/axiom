@@ -17,9 +17,10 @@ def prove(Eq):
     s = Function(etype=dtype.real)
     Eq << apply(Cap[t:i, i:g(i, j) > 0:s(i), j:f(i, j) > 0, i:{a}](x[i, j]))
 
-    u = Function(etype=dtype.real)
-    u[a] = Cap[t:i, i:g(i, j) > 0:s(a), j:f(a, j) > 0](x[i, j])
-
+    @Function(etype=dtype.real)
+    def u(a):
+        return Cap[t:i, i:g(i, j) > 0:s(a), j:f(a, j) > 0](x[i, j])
+ 
     Eq << u(i).this.defun()
 
     Eq << sets.eq.imply.eq.cap.apply(Eq[-1], (i, {a}))

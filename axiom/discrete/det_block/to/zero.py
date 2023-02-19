@@ -26,17 +26,19 @@ def apply(self):
 
 @prove(proved=False)
 def prove(Eq):
+    from axiom import algebra
+
     n = Symbol(integer=True, positive=True)
     A = Symbol(complex=True, shape=(n, n - 1))
     B = Symbol(complex=True, shape=(n, n + 1))
     C = Symbol(complex=True, shape=(n, n - 1))
     Eq << apply(Determinant(BlockMatrix([[A, B],[C, ZeroMatrix(n, n + 1)]])))
 
-    
+    #algebra.gt.imply.lt.add.min
     
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-10-14
-# updated on 2021-11-23
+# updated on 2022-07-12

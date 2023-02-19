@@ -15,7 +15,10 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(x ** 2, Interval(m, M, right_open=True), x)
 
-    f = Function(real=True, eval=lambda x: x ** 2)
+    @Function(real=True)
+    def f(x):
+        return x ** 2
+
     Eq << Equal(f(x), f(-x), plausible=True)
 
     Eq << Eq[-1].this.lhs.defun()

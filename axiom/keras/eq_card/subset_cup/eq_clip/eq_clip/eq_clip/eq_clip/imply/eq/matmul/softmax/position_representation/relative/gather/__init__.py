@@ -70,3 +70,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-01-11
+from . import indexed

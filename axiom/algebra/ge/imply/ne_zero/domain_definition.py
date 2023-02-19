@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    (num, den), rhs = given.of(GreaterEqual[Expr / Expr, Expr])
+    (num, den), rhs = given.of(Expr / Expr >= Expr)
 
     return Unequal(den, 0)
 

@@ -51,8 +51,7 @@ def prove(Eq):
 
     Eq << algebra.ge_zero.imply.ge.apply(Eq[-1])
 
-    t = Function(real=True)
-    t[k] = (sigma[k](x[:n]) / binomial(n, k)) ** (1 / k)
+    t = Function(real=True, eval=lambda k: (sigma[k](x[:n]) / binomial(n, k)) ** (1 / k)) 
     k_ = Symbol("k", domain=Range(2, n))
     
     Eq << t(k_).this.defun()

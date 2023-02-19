@@ -109,8 +109,6 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda).apply(keras.lamda_softmax.to.softmax)
 
-    Eq << Eq[-1].this.find(Lamda[Mul]).apply(algebra.lamda.to.mul)
-
     Eq << Eq[-1].this.find(Lamda[MatMul]).apply(discrete.lamda_matmul.to.matmul)
 
     Eq << Eq[-1].this.find(Transpose[Lamda]).apply(algebra.transpose_lamda.to.lamda)

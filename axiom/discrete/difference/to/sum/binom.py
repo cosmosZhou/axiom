@@ -48,7 +48,7 @@ def prove(Eq):
 
     Eq << Add(*Eq.split.rhs.args[2:]).this.apply(algebra.add.to.sum)
 
-    Eq << Eq[-1].this.rhs.expr.collect(Mul(*Eq[-1].rhs.expr.args[0].args[:-1]))
+    Eq << Eq[-1].this.rhs.expr.collect(Mul(*Eq[-1].rhs.expr.args[0].args[::2]))
 
     Eq << discrete.binom.to.add.Pascal.apply(Binomial(n + 1, i))
 

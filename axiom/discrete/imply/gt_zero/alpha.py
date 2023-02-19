@@ -24,7 +24,7 @@ def alpha_step(*args):
             return x + 1 / alpha(*args)
 
 
-alpha = Function.alpha(eval=alpha_step, shape=())
+alpha = Function(eval=alpha_step, shape=())
 
 
 @apply

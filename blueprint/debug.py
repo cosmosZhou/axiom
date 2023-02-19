@@ -5,7 +5,7 @@ from axiom import *
 import json, re
 from flask.blueprints import Blueprint
 from os.path import dirname
-from util.std import json_encode
+from std import json_encode
  
 debug = Blueprint('debug', __name__) 
 

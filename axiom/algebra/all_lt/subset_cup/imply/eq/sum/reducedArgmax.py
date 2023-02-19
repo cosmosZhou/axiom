@@ -9,18 +9,14 @@ def apply(all_lt, subset, f):
     return Equal(Sum[j:d[j] < i:Range(m)](f(i, j)).simplify(), Sum[j:ReducedArgMax(d - i - n * Lamda[j:m](Bool(d[j] >= i))):m](f(i, j)))
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     n, m = Symbol(integer=True, positive=True)
-    A = Symbol(shape=(n, m), real=True)
     d = Symbol(shape=(m,), integer=True)
     i, j = Symbol(integer=True)
     s = d[:m].cup_finiteset(j)
     f = Function(real=True)
-    Eq << apply(
-        All[j:i, i:m](d[j] < d[i]),
-        Subset(s, Range(n)),
-        f)
+    Eq << apply(All[j:i, i:m](d[j] < d[i]), Subset(s, Range(n)), f)
 
     
 

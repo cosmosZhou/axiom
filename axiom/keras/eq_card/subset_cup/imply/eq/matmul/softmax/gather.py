@@ -105,8 +105,6 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda).apply(keras.lamda_softmax.to.softmax)
 
-    Eq << Eq[-1].this.find(Lamda[Mul]).apply(algebra.lamda.to.mul)
-
     Eq << Eq[-1].this.find(Transpose[~Lamda]).limits_subs(k, j)
 
     Eq << Eq[-1].this.find(Lamda).limits_subs(i, j)

@@ -11,7 +11,7 @@ def apply(given):
     return Element(Maxima[z:a:b](f), Reals)
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import calculus, algebra
 

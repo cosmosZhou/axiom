@@ -14,7 +14,7 @@ def apply(complement):
     return Equal(complement, conditionset(n, Equal(n % 2, 1), U))
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import sets, algebra
     U = Symbol(etype=dtype.integer, given=True)

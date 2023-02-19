@@ -18,7 +18,7 @@ def apply(x, d, w=None):
     return Equal(Lamda[k:n](x[(Lamda[k:n](k) @ multiplier)[k]]), x @ multiplier)
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import discrete, algebra
     n = Symbol(domain=Range(2, oo))

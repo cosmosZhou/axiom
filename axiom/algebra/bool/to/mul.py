@@ -3,10 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    assert self.is_Bool
-    et = self.of(Bool)
-    eqs = et.of(And)
-
+    eqs = self.of(Bool[And])
     return Equal(self, Mul(*(Bool(eq)for eq in eqs)))
 
 

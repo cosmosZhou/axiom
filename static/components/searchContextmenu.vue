@@ -69,7 +69,7 @@ export default {
             parent.left = -1;
             
             var href = location.href;
-            var subFolder = href.match(/\/axiom.php(\/.*)\/(\w+)\/*$/)[2];
+            var subFolder = href.match(/\/index.php(\/.*)\/(\w+)\/*$/)[2];
             
             var indexFocused = parent.focusedIndex;
             

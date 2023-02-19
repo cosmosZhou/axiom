@@ -20,7 +20,7 @@ def prove(Eq):
     Eq << apply(Det(BlockMatrix([Lamda[j:n + 2](r ** j), Lamda[j:n + 2](j * r ** j), Lamda[j:n + 2, i:n](j ** i)])))
 
     #reference:
-    #http://localhost/sympy/axiom.php?module=discrete.det_block.to.mul.prod.vandermonde.st.lamda.pow
+    #http://localhost/axiom/index.php?module=discrete.det_block.to.mul.prod.vandermonde.st.lamda.pow
     j, i = Eq[0].lhs.arg.args[2].variables
     E = Lamda[j:n + 2, i:n + 2]((-1) ** (j - i) * binomial(j, i))
     Eq << (Eq[0].lhs.arg @ E).this.apply(discrete.matmul.to.block)

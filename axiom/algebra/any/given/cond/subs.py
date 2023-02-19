@@ -18,10 +18,8 @@ def apply(self, old, new):
             if not domain.is_set:
                 domain = old.domain_conditioned(domain)
             if new.is_symbol:
-                _eval_domain_defined = self.expr.domain_defined(new)
-                if _eval_domain_defined in domain:
-                    ...
-                else:
+                domain_defined = self.expr.domain_defined(new)
+                if domain_defined not in domain:
                     eqs.append(Element(new, domain))
             else:
                 eqs.append(Element(new, domain))

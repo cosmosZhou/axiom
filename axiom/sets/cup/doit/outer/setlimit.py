@@ -16,8 +16,10 @@ def prove(Eq):
     f, g = Function(real=True)
     Eq << apply(Cup[i:g(i, j) > 0, j:f(i, j) > 0, i:{a}](x[i, j]))
 
-    u = Function(etype=dtype.real)
-    u[a] = Cup[i:g(i, j) > 0, j:f(a, j) > 0](x[i, j])
+    @Function(etype=dtype.real)
+    def u(a):
+        return Cup[i:g(i, j) > 0, j:f(a, j) > 0](x[i, j])
+     
     Eq << u(i).this.defun()
 
     Eq << sets.eq.imply.eq.cup.apply(Eq[-1], (i, {a}))
@@ -26,8 +28,11 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2021-02-06
+# updated on 2022-09-20

@@ -36,11 +36,11 @@ def apply(piecewise, index=None, reverse=False):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     k = Symbol(integer=True, positive=True)
     x, y = Symbol(real=True, shape=(k,))
     A = Symbol(etype=dtype.real * k)
     g, f, h = Function(shape=(), real=True)
-
     Eq << apply(Piecewise((g(x), Equal(x, y) & (h(y) > 0)), (f(x), Element(y, A)), (h(x), True)))
 
     p = Symbol(Eq[0].lhs)
@@ -58,12 +58,14 @@ def prove(Eq):
 
     Eq << Eq[0].this.rhs.apply(algebra.piece.invert)
 
-    Eq << Eq[-1].this.rhs.subs(Eq[-2])
+    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[1], Eq[-2])
 
-    Eq << Eq[-1].this.rhs.subs(Eq[1])
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-02-04
+# updated on 2022-10-04

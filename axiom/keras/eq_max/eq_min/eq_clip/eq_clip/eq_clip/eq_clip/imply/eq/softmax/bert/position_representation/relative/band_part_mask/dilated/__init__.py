@@ -100,3 +100,4 @@ if __name__ == '__main__':
 # created on 2021-12-27
 from . import compact
 # updated on 2022-03-30
+from . import indexed

@@ -17,9 +17,7 @@ def prove(Eq):
 
     Eq.initial = Eq[-1].subs(n, 1)
 
-    Eq << Eq.initial.this.lhs.doit()
-
-    Eq << Eq[-1].this.rhs.expand()
+    Eq << Eq.initial.this.rhs.expand()
 
     Eq.induct = Eq[0].subs(n, n + 1)
 
@@ -93,9 +91,13 @@ def prove(Eq):
 
     Eq << discrete.det.to.sum.expansion_by_minors.apply(Det(Eq.column_transformation.rhs), i=i).this.rhs.simplify(deep=True)
 
-    Eq << Eq[-1].this.find(Mul, Piecewise, Add).apply(algebra.add.to.piece)
-
-    Eq << Eq[-1].this.find(Mul, Piecewise, Add).apply(algebra.add.to.piece)
+    Eq << Eq[-1].this.rhs.find(Add[Lamda]).apply(algebra.add.to.lamda)
+    
+    Eq << Eq[-1].this.rhs.find(Add[Piecewise]).apply(algebra.add.to.piece)
+    
+    Eq << Eq[-1].this.rhs.find(Add[Lamda]).apply(algebra.add.to.lamda)
+    
+    Eq << Eq[-1].this.rhs.find(Add[Piecewise]).apply(algebra.add.to.piece)
 
     Eq << Eq[-1].this.find(Mul, Det).doit()
 
@@ -120,8 +122,8 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
@@ -131,4 +133,4 @@ if __name__ == '__main__':
 # https://mathworld.wolfram.com/DeterminantExpansionbyMinors.html
 # https://mathworld.wolfram.com/Minor.html
 # created on 2020-10-04
-# updated on 2021-11-21
+# updated on 2022-09-20

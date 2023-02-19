@@ -3,18 +3,14 @@ from util import *
 
 @apply
 def apply(given, piecewise):
-    assert given.is_Element
-    x, S = given.args
-
+    x, U = given.of(Element)
     ec = piecewise.of(Piecewise)
-    _x, s = ec[0].cond.of(Element)
-    assert s in S
-    assert x == _x
+    S[x], s = ec[0].cond.of(Element)
+    assert s in U
     f = ec[0].expr
-
     g = ec[1].expr
 
-    return Equal(piecewise, Piecewise((g, Element(x, S - s)), (f, True)).simplify())
+    return Equal(piecewise, Piecewise((g, Element(x, U - s)), (f, True)).simplify())
 
 
 @prove

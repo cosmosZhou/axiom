@@ -51,8 +51,6 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expr.expr.expand()
 
-    Eq << Eq[-1].this.rhs().expr.simplify()
-
     Eq << Eq[-1].this.rhs.apply(algebra.add.to.lamda)
 
     Eq << Eq[-1].this.rhs.expr.apply(algebra.add.to.piece)

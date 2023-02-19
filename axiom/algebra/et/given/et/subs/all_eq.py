@@ -8,7 +8,7 @@ def apply(imply, simplify=True):
     (old, new), *limits = all_eq.of(All[Equal])
     limits = tuple(limits)
 
-    for expr in cond.findall(ExprWithLimits):
+    for expr in cond.finditer(ExprWithLimits):
         if expr.expr._has(old) and expr.limits == limits:
             break
     else:

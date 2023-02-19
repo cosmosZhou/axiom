@@ -28,7 +28,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.mul)
 
-    Eq << Eq[-1].this.find(Det).apply(discrete.det_mul.to.mul.prod.st.lamda)
+    Eq << Eq[-1].this.find(Det).apply(discrete.det_mul.to.mul.prod)
 
     Eq << Eq[-1].this.find(Product).apply(algebra.prod.to.pow.sum)
 

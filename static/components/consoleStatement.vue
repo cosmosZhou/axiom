@@ -23,7 +23,7 @@ export default {
 		},
 		
 		user(){
-			return sympy_user();				
+			return axiom_user();				
 		},
 		
 		hash(){

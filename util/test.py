@@ -4,7 +4,7 @@ from run import project_directory
 from util.cpp import instance as lib, vector
 from ctypes import c_char_p, c_void_p
 from _ctypes import Structure
-from sympy.utilities.misc import Text
+from std.file import Text
 import re
 
 

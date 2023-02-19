@@ -28,14 +28,15 @@ def prove(Eq):
     Eq << apply(Det(a * X))
 
     i = Symbol(integer=True)
-    f = Function(complex=True)
-    f[i] = a
-    
+    @Function(complex=True)
+    def f(i):
+        return a
+
     Eq << (X * Lamda[i:n](f(i))).this.find(f).defun()
 
     Eq << Eq[0].subs(Eq[-1].reversed)
 
-    Eq << Eq[-1].this.lhs.apply(discrete.det_mul.to.mul.prod.st.lamda)
+    Eq << Eq[-1].this.lhs.apply(discrete.det_mul.to.mul.prod)
 
     Eq << Eq[-1].this.find(f).defun()
 

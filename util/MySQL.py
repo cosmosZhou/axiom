@@ -6,7 +6,7 @@ import configparser
 import time
 
 import os
-from util.std import json_encode, eol_convert
+from std import json_encode, eol_convert
 
 class Database:
 

@@ -29,3 +29,4 @@ from . import log_reducedSum
 from . import lt
 from . import ge
 from . import all_lt
+from . import eq_sqrt

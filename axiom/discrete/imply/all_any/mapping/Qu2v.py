@@ -6,7 +6,7 @@ def apply(n, u, v):
     from axiom.discrete.imply.all_et.mapping.Qu2v import predefined_symbols
     Q, w, x = predefined_symbols(n)
     j = w.definition.variables[0]
-    x_quote = Symbol("x'", w[n, j] @ x[:n + 1])
+    x_quote = Symbol(w[n, j] @ x[:n + 1])
     return All[x[:n + 1]:Q[u]](Any[j:0:n + 1](Element(x_quote, Q[v])))
 
 

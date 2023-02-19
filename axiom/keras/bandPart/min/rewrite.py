@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(-Min).apply(algebra.mul.to.max)
 
-    Eq << Eq[-1].this.find(GreaterEqual[Add, Max]).apply(algebra.ge_max.to.et.ge)
+    Eq << Eq[-1].this.find(Add >= Max).apply(algebra.ge_max.to.et.ge)
 
 
 

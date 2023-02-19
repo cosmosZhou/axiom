@@ -20,14 +20,16 @@ def swap(p, *indices):
     i, j = Symbol(integer=True)
     w = Symbol(Lamda[j, i](SwapMatrix(n, i, j)))
 
-    (i,), (j,) = indices
+    [i], [j] = indices
     k = Symbol(integer=True)
 
-    d = Lamda[k:n](k) @ w[i, j]
-    return Lamda[k:n](p[d[k]])
+#     d = w[i, j] @ Lamda[k:n](k) 
+    dk = Lamda[k:n](k) @ w[i, j, k] 
+    return Lamda[k:n](p[dk])
+#     return Lamda[k:n](p[d[k]])
 
 
-swap = Function.swap(eval=swap)
+swap = Function(eval=swap)
 
 
 @prove

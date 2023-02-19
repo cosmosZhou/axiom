@@ -6,7 +6,7 @@
             <template v-if=given.latex>
                 <hr>
                 <h3 title='callee hierarchy'>
-                    <a style='font-size: inherit' :href="'/%s/axiom.php?callee=%s'.format(user, module)">
+                    <a style='font-size: inherit' :href=`/${user}/index.php?callee=${module}`>
                         <font color=blue>{{given_hint}}:</font>
                     </a>
                 </h3>
@@ -16,7 +16,7 @@
             <template v-if=where>
                 <hr>
                 <h3 title='caller hierarchy'>
-                    <a style='font-size: inherit' :href="'/%s/axiom.php?caller=%s'.format(user, module)">
+                    <a style='font-size: inherit' :href=`/${user}/index.php?caller=${module}`>
                         <font color=blue>where:</font>
                     </a>
                 </h3>
@@ -25,7 +25,7 @@
 
             <hr>
             <h3 title='callee hierarchy'>
-                <a style='font-size: inherit' :href="'/%s/axiom.php?callee=%s'.format(user, module)">
+                <a style='font-size: inherit' :href=`/${user}/index.php?callee=${module}`>
                     <font color=blue>{{imply_hint}}:</font>
                 </a>
             </h3>
@@ -33,7 +33,7 @@
 
             <hr>
             <h3 title='caller hierarchy'>
-                <a style='font-size: inherit' :href="'/%s/axiom.php?caller=%s'.format(user, module)">
+                <a style='font-size: inherit' :href=`/${user}/index.php?caller=${module}`>
                     <font color=blue>prove:</font>
                 </a>
             </h3>
@@ -101,7 +101,7 @@ export default {
     
     computed: {
         user(){
-            return sympy_user();
+            return axiom_user();
         },
 
         numOfRequisites(){
@@ -122,10 +122,6 @@ export default {
             if (this.module.indexOf('.given.') >= 0)
                 return 'imply';
             return 'given';
-        },
-        
-        module(){
-        	return location.href.match(/axiom\.php\?module=([\/\w.]+)/)[1];
         },
         
         hash(){
@@ -180,7 +176,7 @@ export default {
                 }
                 else{
                     var href = location.href;
-                    href = href.match(/(.+\/axiom.php\?module=).+/)[1];                    
+                    href = href.match(/(.+\/index.php\?module=).+/)[1];                    
                     href += `${module}#${line}`;
                     window.open(href);
                 }
@@ -189,7 +185,7 @@ export default {
             	var file = error.file;
             	var line = error.line;
             	var href = location.href;
-                href = href.match(/(.+\/axiom.php\?).+/)[1];
+                href = href.match(/(.+\/index.php\?).+/)[1];
                 var index = file.indexOf('.');
                 var key = file.slice(0, index);
                 var value = file.slice(index + 1);

@@ -3,7 +3,7 @@ from util import *
 
 @apply(given=None)
 def apply(given, index=-1):
-    x, args = given.of(Less[Expr, Min])
+    x, args = given.of(Expr < Min)
     if index is None:
         eqs = [x < arg for arg in args]
     else:

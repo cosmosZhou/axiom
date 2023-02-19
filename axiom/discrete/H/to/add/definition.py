@@ -13,7 +13,7 @@ def H_step(x):
                      (H(x[:n - 1]) * x[n - 1] + H(x[:n - 2]), True))
 
 
-H = Function.H(integer=True, eval=H_step, shape=())
+H = Function(integer=True, eval=H_step, shape=())
 
 
 @apply

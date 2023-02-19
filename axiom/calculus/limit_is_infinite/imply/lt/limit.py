@@ -16,7 +16,7 @@ def apply(eq_limit):
     return Limit[epsilon:0:-1](fx1) < fx
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import calculus, algebra, sets
 

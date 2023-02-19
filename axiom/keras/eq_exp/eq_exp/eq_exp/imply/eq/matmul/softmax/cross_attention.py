@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(eq_D, eq_Ah, eq_Al, V):
     # diagonal part
-    ((K, Q), d_z), D = eq_D.of(Equal[Transpose[OneMatrix * Exp[ReducedSum[Mul] * Expr ** (-S.One / 2)]]])
+    (d_z, (K, Q)), D = eq_D.of(Equal[Transpose[OneMatrix * Exp[ReducedSum[Mul] * Expr ** (-S.One / 2)]]])
     n, S[d_z] = Q.shape
     # upper part
     (((S[Q], (S[0], h)), (S[K], (S[h], S[n]))), S[1 / sqrt(d_z)]), Ah = eq_Ah.of(Equal[Exp[Mul[Sliced @ Transpose[Sliced]]]])
@@ -36,7 +36,6 @@ def prove(Eq):
         Equal(Al, exp(Q[h:n] @ K[:h].T / sqrt(d_z))), V)
 
     i = Symbol(domain=Range(n))
-    j = Symbol(integer=True)
     a = Symbol(Eq[-1].find(Mul[MatMul]))
     Eq.a_def = a.this.definition
 
@@ -109,10 +108,12 @@ def prove(Eq):
 
     Eq << Eq.divisor_definition * OneMatrix(d_z)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul.to.add)
-
+    Eq << Eq[-1].this.rhs.apply(algebra.mul.to.add, simplify=None)
+    
     Eq << Eq[-1].this.rhs.subs(Eq.lower_part, Eq.upper_part, Eq.diagonal_part)
-
+    
+    Eq << Eq[-1].this.rhs.simplify()
+    
     Eq.zi_definition = algebra.eq.cond.imply.cond.subs_with_expand_dims.apply(Eq[-1], Eq.zi_definition)
 
     Eq << Eq.zi_definition.find(MatMul).this.apply(discrete.matmul.to.lamda)
@@ -171,19 +172,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.mul)
 
-    Eq << Eq[-1].this.find(~Lamda * Lamda).apply(algebra.lamda.to.pow)
+    Eq << Eq[-1].this.find(Lamda[Pow]).apply(algebra.lamda.to.pow)
 
     Eq << Eq[-1].this.find(Lamda[Mul]).apply(algebra.lamda.to.mul)
 
-    Eq << Eq[-1].this.find(~Lamda * Lamda).apply(algebra.lamda.to.pow)
-
-    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.add)
+    Eq << Eq[-1].this.find(Lamda[Pow]).apply(algebra.lamda.to.pow)
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.add)
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.reducedSum)
-
-    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.add)
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.add)
 

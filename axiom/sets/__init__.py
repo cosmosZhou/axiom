@@ -97,3 +97,5 @@ from . import supset_cup
 from . import notin_intersect
 from . import notin_complement
 from . import is_real
+from . import infer_el
+from . import infer_subset

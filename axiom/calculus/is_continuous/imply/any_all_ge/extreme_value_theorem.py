@@ -11,10 +11,8 @@ def apply(given):
     return Any[xi:a:b](All[z:a:b](f >= _f))
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
-    from axiom import calculus
-
     a = Symbol(real=True)
     b = Symbol(real=True, domain=Interval(a, oo, left_open=True))
     f = Function(real=True)

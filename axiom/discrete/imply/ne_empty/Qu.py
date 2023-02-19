@@ -32,19 +32,25 @@ def prove(Eq):
     Eq <<= Eq[-1] & Eq[-3]
 
     x = Eq[0].rhs.variable.base
-    Eq << Any[x[:n + 1]](Element(x[:n + 1], Q[_t]), plausible=True)
+    Eq.plausible = Any[x[:n + 1]](Element(x[:n + 1], Q[_t]), plausible=True)
 
-    Eq << Eq[-1].this.expr.rhs.definition
+    Eq << Eq.plausible.this.expr.rhs.definition
 
     Eq << algebra.any.given.any.subs.apply(Eq[-1], x[:n + 1], a, simplify=None)
 
     Eq << algebra.any.given.cond.apply(Eq[-1])
 
-    Eq << sets.any_el.imply.ne_empty.apply(Eq[-3])
+    Eq << Eq[-1].this.args[0].apply(sets.el.given.subset.cup.finiteset)
 
+    Eq << Eq[-1].this.args[1:].apply(algebra.et.given.et.subs.eq)
+
+    Eq << sets.any_el.imply.ne_empty.apply(Eq.plausible)
     Eq << algebra.cond.imply.all.apply(Eq[-1], _t)
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-11-07
+# updated on 2022-09-20

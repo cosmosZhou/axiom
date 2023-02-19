@@ -419,7 +419,7 @@ function yield_from_py($python_file)
 
 function match_section($statement, &$matches)
 {
-    return preg_match_all('/\b(?:algebra|sets|calculus|discrete|geometry|keras|stats|patent)(?:\.\w+)+/', $statement, $matches, PREG_SET_ORDER);
+    return preg_match_all('/\b(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+/', $statement, $matches, PREG_SET_ORDER);
 }
 
 function insert_section(&$proveCodes)

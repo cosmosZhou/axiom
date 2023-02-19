@@ -111,6 +111,14 @@ cURL support	enabled
 
 ![httpd-vhosts](php/httpd-vhosts.png)  
 
+
+### Fancy directory listings
+打开D:\wamp64\bin\apache\apache2.4.39\conf\httpd.conf   
+添加：  
+Include conf/extra/httpd-autoindex.conf  
+或者去掉前面的注释  
+
+
 ## 安装Xdebug调试器
 参考网址：  
 [Xdebug: Documentation » Upgrading from Xdebug 2 to 3](https://xdebug.org/docs/upgrade_guide)  
@@ -213,6 +221,7 @@ max_input_vars
 
 ![max_input_vars](php/max_input_vars.png)  
 修改成充分大的数值即可。  
+### PHP Fatal error:  Maximum execution time of 120 seconds exceeded  
 修改max_execution_time  
 在php中通过ini_get('max_execution_time')可以得知max_execution_time的值。  
 找到max_execution_time设置的地方：
@@ -223,6 +232,15 @@ max_input_vars
 修改display_errors  
 
 ![display_errors](php/display_errors.png)  
+
+### error : POST Content-Length of 9804009 bytes exceeds the limit of 8388608 bytes
+vim ~/php/etc/php.ini  
+
+或者打开D:\wamp64\bin\apache\apache2.4.39\bin\php.ini
+
+upload_max_filesize = 100M;
+post_max_size = 100M;
+
 
 windows下所做的修改：  
 

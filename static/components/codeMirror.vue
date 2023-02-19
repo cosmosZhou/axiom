@@ -40,7 +40,7 @@ export default {
     	},
     	
         user(){
-            return sympy_user();
+            return axiom_user();
         },
         
         module(){
@@ -195,13 +195,12 @@ export default {
 		                    case 'keras':
 		                    case 'sets':
 		                    case 'stats':
-		                    case 'patent':
 		                        break;
 		                    default:
 		                        var symbol = module;
 		                        module = locate_definition(cm, cursor.line, symbol);
 		                        if (module == null){
-		                            var href = `/sympy/axiom.php?symbol=${symbol}`;
+		                            var href = `/axiom/index.php?symbol=${symbol}`;
 		                            if (refresh)
 		                                location.href = href;
 		                            else
@@ -220,15 +219,14 @@ export default {
 		                    case 'keras':
 		                    case 'sets':
 		                    case 'stats':
-		                    case 'patent':
 		                        break;
 		                    default:
 		                        return;
 		                }
 		            }
 
-		            var user = sympy_user();
-		            var href = `/${user}/axiom.php?module=${module}`;
+		            var user = axiom_user();
+		            var href = `/${user}/index.php?module=${module}`;
 
 		            if (apply)
 		                href += "#apply";
@@ -378,7 +376,7 @@ export default {
                 if (module.match(/\W$/))
                 	module = module.slice(0, -1);
                 
-                var href = `/${self.user}/axiom.php?new=${module}`;
+                var href = `/${self.user}/index.php?new=${module}`;
                 window.open(href);
             },
 
@@ -574,7 +572,7 @@ export default {
                 		text = text.slice(0, cur.ch);
                 		var prefix = text.match(/[\w.]+$/)[0];
 
-                		var sympy = sympy_user();
+                		var sympy = axiom_user();
                 		var url = `/${sympy}/php/request/`;
 
                 		var kwargs;
@@ -670,7 +668,6 @@ export default {
                 						case 'keras':
                 						case 'sets':
                 						case 'stats':
-                						case 'patent':
                 							url += `suggest.php`;
                 							break;
                 						case 'Eq':

@@ -5,7 +5,7 @@ from util import *
 def apply(given, wrt):
     assert wrt.is_symbol
     lhs, rhs = given.of(Equal)
-    x = Dummy.x(**wrt.dtype.dict)
+    x = given.generate_var(exclude=wrt, **wrt.dtype.dict)
     lhs = lhs._subs(2 * wrt + 1, x)
     assert not lhs._has(wrt)
     rhs = rhs._subs(2 * wrt + 1, x)

@@ -1,14 +1,6 @@
 from util import *
 
 
-
-
-
-
-
-
-
-
 @apply
 def apply(x, lamda, w=None):
     n = x.shape[0]
@@ -43,9 +35,9 @@ def prove(Eq):
 
     Eq << (Eq[-1] @ w_quote[i]).this.rhs.subs(Eq[1])
 
-    Eq << Eq[-1].this.rhs.apply(discrete.matmul.to.lamda)
+    Eq << Eq[-1].this.rhs.apply(discrete.matmul.to.lamda, simplify=None)
 
-    Eq << Eq[-1].this.rhs.args[1].expr.expand()
+    Eq << Eq[-1].this.find(Mul).expand()
 
 
 if __name__ == '__main__':

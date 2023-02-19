@@ -9,7 +9,7 @@ def apply(self):
     array = []
     for i in range(i_shape):
         array.append(self[sympify(i)])
-    rhs = BlockMatrix(*array)
+    rhs = BlockMatrix(*array, shape=self.shape)
 
     return Equal(self, rhs, evaluate=False)
 

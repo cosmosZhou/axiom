@@ -26,8 +26,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.args[0].apply(algebra.all.imply.et.split, cond=x > 0)
 
+    Eq << algebra.et.imply.ou.apply(Eq[-1])
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2019-02-11
+# updated on 2022-09-20

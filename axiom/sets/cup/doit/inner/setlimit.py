@@ -16,7 +16,10 @@ def prove(Eq):
     m = Symbol(integer=True, positive=True)
     Eq << apply(Cup[j:{a, b, c, d}, i:m](x[i, j]))
 
-    s = Function(etype=dtype.real, eval=lambda i: Cup[j:{a, b, c, d}](x[i, j]))
+    @Function(etype=dtype.real)
+    def s(i):
+        return Cup[j:{a, b, c, d}](x[i, j])
+     
     Eq << s(i).this.defun()
 
     Eq << sets.eq.imply.eq.cup.apply(Eq[-1], (i, 0, m))

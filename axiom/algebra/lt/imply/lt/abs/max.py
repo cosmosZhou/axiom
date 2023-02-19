@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(given, swap=False):
-    (a, b), M = given.of(Less[Abs[Expr - Expr], Expr])
+    (a, b), M = given.of(Abs[Expr - Expr] < Expr)
 #     |a - b| < M
     if swap:
         a, b = b, a

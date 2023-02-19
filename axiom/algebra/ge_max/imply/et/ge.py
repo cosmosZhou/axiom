@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(given, index=-1):
-    x, args = given.of(GreaterEqual[Expr, Max])
+    x, args = given.of(Expr >= Max)
     first = args[:index]
     second = args[index:]
 

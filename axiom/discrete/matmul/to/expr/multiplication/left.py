@@ -35,9 +35,9 @@ def prove(Eq):
 
     Eq << (w_quote[i] @ Eq[-1]).this.rhs.subs(Eq[0])
 
-    Eq << Eq[-1].this.rhs.apply(discrete.matmul.to.lamda)
+    Eq << Eq[-1].this.rhs.apply(discrete.matmul.to.lamda, simplify=None)
 
-    Eq << Eq[-1].this.rhs.args[1].expr.expand()
+    Eq << Eq[-1].this.find(Mul).expand()
 
 
 if __name__ == '__main__':

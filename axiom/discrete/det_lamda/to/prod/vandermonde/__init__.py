@@ -59,13 +59,13 @@ def prove(Eq):
     Eq.recursion = algebra.all_eq.cond.imply.all.subs.apply(Eq[-1], Eq.recursion)
 
     Eq << Eq.recursion.rhs.args[0].arg.this.apply(algebra.lamda.to.mul)
-
+    
     Eq << Eq[-1].apply(discrete.eq.imply.eq.det)
-
+    
     i = Eq[-1].rhs.args[1].variable
     Eq.determinant = Eq[-1].this.find(Product).apply(algebra.prod.limits.subs.offset, -1)
 
-    k, _ = Eq.determinant.lhs.arg.variables
+    k, _ = Eq.determinant.find(Lamda).variables
     Eq << algebra.eq.imply.eq.subs.apply(Eq[0], a[:n], a[1:n + 1])
 
     Eq << Eq[-1].this.lhs.arg.limits_subs(j, k).this.lhs.arg.limits_subs(i, j).this.rhs.limits_subs(i, i - 1)

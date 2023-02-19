@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    lhs, rhs = given.of(LessEqual[Expr, Expr])
+    lhs, rhs = given.of(Expr <= Expr)
     assert lhs >= 0
     return LessEqual(sqrt(lhs), sqrt(rhs))
 

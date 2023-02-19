@@ -14,7 +14,7 @@ def K_step(x):
                      (K(x[:n - 1]) * x[n - 1] + K(x[:n - 2]), True))
 
 
-K = Function.K(integer=True, eval=K_step, shape=())
+K = Function(integer=True, eval=K_step, shape=())
 
 
 @apply

@@ -7,7 +7,7 @@ def apply(self):
     K = KT.T
     n, d_z = Q.shape
 
-    return Equal(self, Q @ W[:d_z, :d_z] @ K.T + (OneMatrix(d_z, n) * W[d_z][:d_z]).T @ K.T + ((W[:d_z,d_z] @ Q.T) * OneMatrix(n, n)).T + W[d_z, d_z])
+    return Equal(self, Q @ W[:d_z,:d_z] @ K.T + (OneMatrix(n, d_z) * W[d_z][:d_z]) @ K.T + ((W[:d_z, d_z] @ Q.T) * OneMatrix(n, n)).T + W[d_z, d_z])
 
 
 @prove
@@ -41,12 +41,9 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.A_def_expand, Eq[-1])
 
-
-
     Eq << Eq[-1].this.find(MatMul[Add]).apply(discrete.matmul.to.add)
 
     Eq << Eq[-1].this.find(Transpose[~Mul]).apply(algebra.mul.to.add)
-
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[1], Eq[-1])
 

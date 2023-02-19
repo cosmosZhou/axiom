@@ -4,7 +4,7 @@ from util import *
 
 def sigma(x, *limits):
     n = x.shape[0]
-    (k,), *_ = limits
+    [k], *_ = limits
     i = x.generate_var(exclues=k, integer=True, var='i')
     j = x.generate_var(exclues={k, i}, integer=True, var='j')
     d = x.generate_var(exclues={k, i, j}, shape=(oo,), integer=True, var='d')
@@ -13,7 +13,7 @@ def sigma(x, *limits):
                      (Sum[d[:k]:All[j:i, i:k](d[j] < d[i]):CartesianSpace(Range(n), k)](abs(Product[i:k](x[d[i]]))), True))
 
 
-sigma = Function.sigma(eval=sigma, shape=())
+sigma = Function(eval=sigma, shape=())
 
 
 @apply

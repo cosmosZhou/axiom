@@ -21,11 +21,8 @@ def prove(Eq):
     f = Function(real=True, integrable=True)
     Eq << apply(Integral[x:a:b](f(x)), d)
 
-    fp = Function("f^+", real=True)
-    fp[x] = (abs(f(x)) + f(x)) / 2
-    
-    fn = Function("f^-", real=True)
-    fn[x] = (abs(f(x)) - f(x)) / 2
+    fp = Function("f^+", real=True, eval=lambda x: (abs(f(x)) + f(x)) / 2)
+    fn = Function("f^-", real=True, eval=lambda x: (abs(f(x)) - f(x)) / 2)
     
     Eq << fp(x).this.defun()
 

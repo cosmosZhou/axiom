@@ -34,9 +34,10 @@ def prove(Eq):
     
     Eq << apply(a < b, is_continuous(f, a, b), is_differentiable(f, a, b))
 
-    g = Function(real=True)
-    g[x] = (b - a) * f(x) - (f(b) - f(a)) * x
-    
+    @Function(real=True)
+    def g(x):
+        return (b - a) * f(x) - (f(b) - f(a)) * x
+
     Eq.g_definition = g(x).this.defun()
 
     Eq << Eq.g_definition.subs(x, a)
@@ -47,7 +48,8 @@ def prove(Eq):
 
     Eq.equal = Eq[-1].this.rhs.expand()
 
-    Eq.is_continuous = Eq[1]._subs(f, g).copy(plausible=True)
+    [[x, ksi, dir]] = Eq[1].expr.arg.limits
+    Eq.is_continuous = ForAll(Equal(Limit[x:ksi:dir](g(x)), g(ksi)), *Eq[1].limits, plausible=True)
 
     Eq << Eq.is_continuous.this.expr.lhs.expr.defun()
 
@@ -69,7 +71,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.rhs.apply(algebra.mul.distribute)
 
-    Eq.is_differentiable = Eq[2]._subs(f, g).copy(plausible=True)
+    Eq.is_differentiable = ForAll(Element(Derivative[x](g(x)), Reals), *Eq[2].limits, plausible=True)
 
     Eq << Eq.is_differentiable.this.expr.lhs.expr.defun()
 

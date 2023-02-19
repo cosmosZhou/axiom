@@ -1224,6 +1224,9 @@ function slice(&$s, $start, $stop = null)
 {
     if ($stop == null)
         return substr($s, $start);
+    
+    if ($stop < 0)
+        $stop += strlen($s);
     return substr($s, $start, $stop - $start);
 }
 
@@ -1376,6 +1379,7 @@ class TopKHeap{
     
     public function __construct($k){
         $this->k = $k;
+        //Standard PHP Library (SPL) Minimum Heap 
         $this->heap = new SplMinHeap();
     }
     

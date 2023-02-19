@@ -4,8 +4,10 @@ from util import *
 @apply
 def apply(given, G, x, s):
     t = s.definition.variable
-    y = x.definition.variable.base
-    return Infer(t > 0, Equal(s[t], G[y[t], y[t - 1]] + s[t - 1] + x[t, y[t]]))
+    (x_eq, y_eq), (y, i), [S[i]] = x.definition.of(Lamda[Log[Probability[Conditioned]], Tuple[Indexed]])
+    
+    return Infer(t > 0, Equal(s[t], G[y[t], y[t - 1]] + s[t - 1] + x[t, y[t]])), \
+        Equal(s[t], Log(Probability(y_eq.subs(i, 0))) + Sum[i:1:t + 1](G[y[i], y[i - 1]]) + Sum[i:t + 1](x[i, y[i]]))
 
 
 @prove
@@ -24,26 +26,26 @@ def prove(Eq):
     transition_probability = Probability(y[i] | y[i - 1])
     given = Equal(joint_probability_t, Probability(x[0] | y[0]) * Probability(y[0]) * Product[i:1:t + 1](transition_probability * emission_probability))
     y = pspace(y).symbol
-    G = Symbol(Lamda[y[i - 1], y[i]](-log(transition_probability)))
-    s = Symbol(Lamda[t](-log(joint_probability_t)))
-    x = Symbol(Lamda[y[i], i](-log(emission_probability)))
-    Eq.given, (Eq.s_definition, Eq.G_definition, Eq.x_definition), Eq.logits_recursion = apply(given, G, x, s)
+    G = Symbol(Lamda[y[i - 1], y[i]](log(transition_probability)))
+    s = Symbol(Lamda[t](log(joint_probability_t)))
+    x = Symbol(Lamda[y[i], i](log(emission_probability)))
+    Eq.given, (Eq.s_definition, Eq.G_definition, Eq.x_definition), Eq[-2:] = apply(given, G, x, s)
 
     Eq << Eq.s_definition.this.rhs.subs(Eq.given)
 
-    Eq << Eq[-1].this.rhs.args[1].apply(algebra.log.to.add)
+    Eq << Eq[-1].this.rhs.apply(algebra.log.to.add)
 
     Eq << Eq[-1].subs(Eq.x_definition.subs(i, 0).reversed)
 
-    Eq << Eq[-1].this.rhs.args[-1].args[1].apply(algebra.log.to.sum)
+    Eq << Eq[-1].this.find(Log[Product]).apply(algebra.log.to.sum)
 
-    Eq << Eq[-1].this.rhs.args[-1].args[1].expr.apply(algebra.log.to.add)
+    Eq << Eq[-1].this.find(Log[Mul]).apply(algebra.log.to.add)
 
-    Eq << Eq[-1].this.rhs.args[-1].args[1].apply(algebra.sum.to.add)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add)
 
-    Eq << algebra.eq.cond.imply.cond.subs.apply(-Eq.x_definition.reversed, Eq[-1])
+    Eq << algebra.eq.cond.imply.cond.subs.apply(Eq.x_definition.reversed, Eq[-1])
 
-    Eq << algebra.eq.cond.imply.cond.subs.apply(-Eq.G_definition.reversed, Eq[-1])
+    Eq << algebra.eq.cond.imply.cond.subs.apply(Eq.G_definition.reversed, Eq[-1])
 
     Eq << Eq[-1].this.rhs.args[-1].apply(algebra.sum.to.add.push_front)
 
@@ -68,8 +70,10 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.apply(algebra.ne_zero.given.gt_zero)
 
     #reference: Neural Architectures for Named Entity Recognition.pdf
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-12-17
+# updated on 2022-09-18

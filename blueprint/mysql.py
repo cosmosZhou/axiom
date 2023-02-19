@@ -1,7 +1,7 @@
 from flask.blueprints import Blueprint
 from util import MySQL
 from flask.globals import request
-from util.std import json_encode
+from std import json_encode
 
 mysql = Blueprint('mysql', __name__)
 

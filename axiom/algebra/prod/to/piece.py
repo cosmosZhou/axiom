@@ -19,14 +19,11 @@ def apply(self):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     i, j = Symbol(integer=True)
-
     x, y = Symbol(integer=True, given=True)
-
     A, B, C, D = Symbol(etype=dtype.integer, given=True)
-
     f, h = Function(real=True)
-
     Eq << apply(Sum[j:D, i:C](Piecewise((f(i, j), Element(x, A) & Element(y, B)), (h(i, j), True))))
 
     Eq << algebra.eq.given.ou.apply(Eq[0])
@@ -35,8 +32,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, index=0, invert=True)
 
+    Eq << algebra.ou.given.et.apply(Eq[-1])
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-03-10
+# updated on 2022-09-20

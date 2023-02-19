@@ -16,8 +16,9 @@ def prove(Eq):
 
     Eq << apply(Cap[j:{a, b, c, d}, i:m](x[i, j]))
 
-    s = Function(etype=dtype.real)
-    s[i] = Cap[j:{a, b, c, d}](x[i, j])
+    @Function(etype=dtype.real)
+    def s(i):
+        return Cap[j:{a, b, c, d}](x[i, j])
     
     Eq << s(i).this.defun()
 

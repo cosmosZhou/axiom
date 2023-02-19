@@ -6,7 +6,7 @@ from os.path import basename
 from util import MySQL
 import time
 import datetime
-from sympy.utilities.misc import Text
+from std.file import Text
 import re
 
 

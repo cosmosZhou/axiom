@@ -22,7 +22,7 @@ def apply(_Y, Y):
     return Equal(Probability(Equal(_Y[k], y)), Probability(Equal(Y, y)).doit())
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import calculus, algebra
 

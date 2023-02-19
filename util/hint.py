@@ -43,7 +43,7 @@ keywords += ['axiom',
              'uncountable', 
              'zero']
 
-sections = ['algebra', 'calculus', 'discrete', 'geometry', 'keras', 'sets', 'stats', 'patent']
+sections = ['algebra', 'calculus', 'discrete', 'geometry', 'keras', 'sets', 'stats']
 
 from sympy import *
 import sympy

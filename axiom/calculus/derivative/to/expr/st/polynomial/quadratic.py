@@ -31,8 +31,6 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Derivative).apply(calculus.derivative.to.sum)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.lamda.to.add)
-
     Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda.to.matmul)
 
     Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda.to.matmul)

@@ -10,6 +10,7 @@ def apply(lt_zero, is_nonpositive, lt, left_open=True, right_open=True, x=None):
     if x is None:
         x = lt.generate_var(real=True)
 
+    print(x.shape)
     self = Sup[x:Interval(m, M, left_open=left_open, right_open=right_open)](x ** 2 * a)
     return Equal(self, M ** 2 * a)
 

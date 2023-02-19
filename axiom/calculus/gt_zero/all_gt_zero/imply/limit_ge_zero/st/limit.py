@@ -11,7 +11,7 @@ def apply(is_positive, all_is_positive):
     return GreaterEqual(Limit[x:b:-1](fx), 0)
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     b = Symbol(real=True, given=True)
     x = Symbol(real=True)
