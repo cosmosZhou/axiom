@@ -63,6 +63,9 @@ switch (count($key)) {
             case "state":
                 require_once 'php/search.php';
                 exit();
+            case "keyword":
+                require_once 'php/search.php';
+                exit();
         }
         break;
     case 2:
@@ -90,10 +93,11 @@ function is_latex_print($latex, &$res)
     // Eq.given, (Eq.where, Eq.where1), Eq.imply = ...
     // Eq[-2:], (Eq.where, *Eq[-2:]), Eq[-2:] = ...
     // (*Eq[-4:], Eq.eq_s, Eq.eq_x, Eq.eq_G), Eq[-1] = ...
-    
-    while (preg_match('/^(Eq\.\w+|\((Eq\.\w+|\*Eq\[-\d+:\]) *(, *Eq\.\w+)+ *\)|Eq\[-(\d+:|1)\]|\*\w+|\w+)/u', $latex, $match)){
+    // *Eq[-5:], Eq.hypothesis = ...
+
+    while (preg_match('/^(Eq\.\w+|\((Eq\.\w+|\*Eq\[-\d+:\]) *(, *Eq\.\w+)+ *\)|Eq\[-(\d+:|1)\]|\*Eq\[-\d+:\]|\*\w+|\w+)/u', $latex, $match)){
         $res[] = $match[0];
-        $latex = \std\slice($latex, strlen($match[0]));    
+        $latex = \std\slice($latex, strlen($match[0]));
         if (preg_match('/^ *= */', $latex, $matchEqual)){
             return true;
         }
@@ -189,7 +193,7 @@ if (! \std\endsWith($path_info, '/')) {
             insert_into_init(py_to_module($py));
         }
 
-        list ($logs, $data) = run($py);        
+        list ($logs, $data) = run($py);
     }
     else{
         $data = null;
