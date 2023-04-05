@@ -195,19 +195,24 @@ class Eq:
         return plausibles
 
     def index(self, eq, dummy_eq=True):
+        if eq.is_Inference:
+            eq = eq.cond
+
         for k in self.__dict__.keys() - self.slots:
-            v = self.__dict__[k]
-            if eq == v or (dummy_eq and eq.dummy_eq(v)):
-                return k
-        for i, _eq in enumerate(self.list):
+            _eq = self.__dict__[k]
             if _eq.is_Inference:
                 _eq = _eq.cond
-                
-            if eq.is_Inference:
-                eq = eq.cond
-            
+
+            if eq == _eq or (dummy_eq and eq.dummy_eq(_eq)):
+                return k
+
+        for k, _eq in enumerate(self.list):
+            if _eq.is_Inference:
+                _eq = _eq.cond
+
             if _eq == eq or (dummy_eq and eq.dummy_eq(_eq)):
-                return i
+                return k
+
         return -1
 
     def append(self, eq):
@@ -234,6 +239,9 @@ class Eq:
                     return
             else:            
                 assert start < 0
+                if isinstance(rhs[0], tuple):
+                    assert len(rhs) == 1
+                    rhs, = rhs
                 assert -start == len(rhs), f"{-start} == {len(rhs)}, lengths are not compatible! suggested codes are Eq[-{len(rhs)}:] = ..."
                  
             assert not index.stop and index.step is None
@@ -605,21 +613,21 @@ def from_axiom_import(py, section, eqs):
         traceback.print_exc()
         return RetCode.failed, eqs.postprocess()       
     
+def website(py):
+    return f"http://localhost/{basename(dirname(dirname(__file__)))}/?module={py_to_module(py, '.')}"
 
-def _prove(func, debug=True, **_):
+def _prove(func, debug=True, **kwargs):
     py = func.__code__.co_filename
-    
-    website = f"http://localhost/{basename(dirname(dirname(__file__)))}/index.php?module={py_to_module(py, '.')}"
     
     eqs = Eq(debug=debug)
     
     try: 
         func(eqs)
-        
+
         if debug:
-            print(website)
+            print(website(py))
          
-        assert eqs.latex, "empty latex from " + py   
+        assert eqs.latex, "empty latex from " + py
         ret = RetCode.plausible if eqs.plausibles_dict else RetCode.proved
         
     except AttributeError as e:
@@ -686,7 +694,7 @@ def _prove(func, debug=True, **_):
 
         print(json_encode(kwargs))
             
-        print(website)
+        print(website(py))
         ret = RetCode.failed
     except Exception as e: 
         messages = source_error()
@@ -700,7 +708,7 @@ def _prove(func, debug=True, **_):
         else:
             kwargs |= get_error_info(e)
         print(json_encode(kwargs))
-        print(website)
+        print(website(py))
         ret = RetCode.failed
     
     return ret, eqs.postprocess()
@@ -783,7 +791,7 @@ def detect_error_in_apply(py, messages, index=-3):
             kwargs['code'] = code
             
             if pyFile != py:
-                m = re.search(r"\b(axiom[/\\].+)\.py", pyFile)
+                m = re.search(fr"\b{user}[/\\](axiom[/\\].+)\.py", pyFile)
                 if m:
                     file = m[1].replace(os.path.sep, '.')
                     file = file.replace(".__init__", '')
@@ -883,12 +891,16 @@ def slow(func):
         if kwargs.pop('slow', False):
             return _prove(func, **kwargs)
         else:
-            from util import MySQL
+            axiomPath = py_to_module(func.__code__.co_filename, '.')
             try:
-                [[latex]] = MySQL.instance.select(f"select latex from tbl_axiom_py where user = '{user}' and axiom = '{py_to_module(func.__code__.co_filename, '.')}'")            
+                from util import MySQL
+                [[latex]] = MySQL.instance.select(f"select latex from tbl_axiom_py where user = '{user}' and axiom = '{axiomPath}'")            
                 return RetCode.slow, latex
             except ValueError:
                 return _prove(func, **kwargs)
+            except:
+                print(axiomPath, "is too slow to execute, so skipping")
+                return RetCode.slow, ''
     
     return slow
 
@@ -904,7 +916,7 @@ funcptr = {
 
 def prove(*args, **kwargs):
     if args:
-        return lambda **kwargs: _prove(*args, **kwargs)    
+        return lambda **kwargs: _prove(*args, **kwargs)
         
     for key, value in kwargs.items():
         return funcptr[(key, value)]
@@ -1021,11 +1033,23 @@ def imply(apply, **kwargs):
                     statement = tuple(s.copy(plausible=None, evaluate=False) for s in statement)
                 else: 
                     statement = statement.copy(plausible=None, evaluate=False)
-                                    
-                    if _simplify and len(args) == 1 and \
-                    (statement.is_Equal or statement.is_Equivalent) \
-                    and args[0] is statement.lhs:
-                        _simplify = False
+                    from sympy import Basic
+                    if _simplify and sum([isinstance(a, Basic) for a in args]) == 1:
+                        if statement.is_Equal and args[0] is statement.lhs:
+                            lhs, rhs = statement.args
+                            if not lhs.is_random:
+                                if rhs.is_random:
+#                                     print(rhs)
+                                    from sympy.stats.symbolic_probability import Surrogate
+                                    for surrogate in rhs.finditer(Surrogate):
+                                        rhs = rhs._subs(surrogate, surrogate.arg.var)
+                                        
+                                    assert not rhs.is_random
+                                    statement = statement.func(lhs, rhs, evaluate=False)
+
+                            _simplify = False
+                        elif statement.is_Equivalent and args[0] is statement.lhs:
+                            _simplify = False
             else: 
                 if isinstance(given, tuple):
                     is_not_False = all(g.plausible is not False for g in given)
@@ -1134,7 +1158,7 @@ def given(apply, **kwargs):
             else:
                 raise e
             
-        i = 0        
+        i = 0
         if isinstance(args[i], Inference):
             imply, *args = args
         else: 

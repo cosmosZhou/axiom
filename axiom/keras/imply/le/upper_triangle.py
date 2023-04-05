@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(LessEqual).apply(algebra.le_zero.given.le)
 
-    Eq << Eq[-1].this.find(LessEqual[Zero]).apply(algebra.le_zero.given.le)
+    Eq << Eq[-1].this.find(LessEqual[ZeroMatrix]).apply(algebra.le_zero.given.le)
 
     Eq << Eq[-1].this.find(LessEqual[BlockMatrix]).apply(algebra.block_le.given.et.le)
 
@@ -53,3 +53,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-04-01
+# updated on 2023-03-25

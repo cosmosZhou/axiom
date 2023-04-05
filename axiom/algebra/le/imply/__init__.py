@@ -6,7 +6,6 @@ from . import eq
 from . import ou
 
 from . import ge
-from . import ne_zero
 from . import sum_is_zero
 from . import all_le
 from . import gt_zero

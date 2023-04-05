@@ -2,27 +2,38 @@ from util import *
 
 
 @apply(simplify=False)
-def apply(self, factor):
+def apply(self, factor=None):
     num, den = self.of(Expr / Expr)
-    factor = sympify(factor)
+    if factor is None:
+        if factor := num.find((~Expr) ** -1):
+            ...
+        else:
+            factor = den.find((~Expr) ** -1)
+    else:
+        factor = sympify(factor)
+
     assert factor.is_nonzero
 
-    return Equal(self, (num * factor).expand() / (den * factor).expand(), evaluate=False)
+    num *= factor 
+    den *= factor
+    num = num.expand()
+    den = den.expand()
+    return Equal(self, num / den, evaluate=False)
 
 
 @prove
 def prove(Eq):
     a, b = Symbol(real=True)
     c, d = Symbol(real=True, zero=False)
-
     Eq << apply((a + 1 / c) / (b + 1 / d), c * d)
 
-    Eq << (c * d * (b + 1 / d)).this.expand()
+    Eq << Eq[-1].this.lhs.ratsimp()
 
-    Eq << (c * d * (a + 1 / c)).this.expand()
+    
+    
 
-    Eq << Eq[0].subs(Eq[-2].reversed, Eq[-1].reversed)
 
 if __name__ == '__main__':
     run()
 # created on 2020-06-29
+# updated on 2023-04-05

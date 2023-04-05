@@ -3,3 +3,4 @@ from . import cancel
 from . import distribute
 from . import negate
 from . import simplify
+from . import sum

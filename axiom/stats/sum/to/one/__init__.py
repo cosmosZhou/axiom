@@ -3,8 +3,11 @@ from util import *
 
 @apply
 def apply(self):
-    (X, x), (_x, *_) = self.of(Sum[Probability[Equal[Symbol, Symbol]]])
-    assert x == _x
+    args, (x_var, *_) = self.of(Sum[Probability[Equal[Symbol, Symbol]]])
+    if args[-1].is_Tuple:
+        (x, S[x_var]), *weights = args
+    else:
+        x, S[x_var] = args
 
     return Equal(self, 1)
 
@@ -12,11 +15,13 @@ def apply(self):
 @prove(provable=False)
 def prove(Eq):
     x = Symbol(integer=True, random=True)
-    x_ = Symbol('x', integer=True)
-    Eq << apply(Sum[x_](Probability(x)))
+    Eq << apply(Sum[x.var](Probability(x)))
+
+    
 
 
 if __name__ == '__main__':
     run()
 from . import conditioned
 # created on 2021-07-19
+# updated on 2023-03-25

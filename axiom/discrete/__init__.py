@@ -60,3 +60,4 @@ from . import swapMatrix
 from . import matpow
 from . import ge
 from . import eq_lamda_swapMatrix
+from . import imply

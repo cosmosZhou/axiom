@@ -7,10 +7,14 @@ def doit(cls, self, simplify=True):
 
     x = limit[0]
     assert x not in limits_dict(limits)
-    expr = Limit(expr, limit)
-    if simplify:
-        expr = expr.doit()
-
+    if expr._has(x):
+        expr = Limit(expr, limit)
+        if simplify:
+            try:
+                expr = expr.doit()
+            except:
+                ...
+                    
     for i, (x, *ab) in enumerate(limits):
         for j, t in enumerate(ab):
             t = Limit(t, limit)

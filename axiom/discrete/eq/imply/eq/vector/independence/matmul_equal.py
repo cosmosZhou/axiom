@@ -3,26 +3,12 @@ from util import *
 
 @apply
 def apply(given):
-    assert given.is_Equal
-    lhs, rhs = given.args
+    (p_polynomial, x), (S[p_polynomial], y) = given.of(Equal[MatMul[2]])
 
-    assert lhs.is_MatMul
-    p_polynomial, x = lhs.args
-
-    assert rhs.is_MatMul
-    _p_polynomial, y = rhs.args
-
-    assert p_polynomial == _p_polynomial
-
-    assert p_polynomial.is_Lamda
     assert p_polynomial.shape == x.shape == y.shape
     assert len(p_polynomial.shape) == 1
-#     n = p_polynomial.shape[0]
-    k = p_polynomial.variable
-    polynomial = p_polynomial.expr
-    assert polynomial.is_Pow
-
-    b, e = polynomial.as_base_exp()
+    
+    (b, e), (k, *ab) = p_polynomial.of(Lamda[Pow])
     assert not b.has(k)
     assert e.as_poly(k).degree() == 1
 
@@ -50,7 +36,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(discrete.lamda_matmul.to.matmul)
 
-    Eq.statement = Eq[-1].T
+    Eq << Eq[-1].T
+
+    Eq << Eq[-1].this.find(Add[Lamda]).apply(algebra.add.to.lamda).this.find(Pow[Lamda]).apply(algebra.pow.to.lamda, simplify=None)
+
+    Eq.statement = Eq[-1].this.find(Add[Lamda]).apply(algebra.add.to.lamda).this.find(Pow[Lamda]).apply(algebra.pow.to.lamda, simplify=None)
 
     i, k = Eq.statement.lhs.args[1].variables
     j = Symbol(integer=True)
@@ -63,8 +53,9 @@ def prove(Eq):
     j, i = Eq[-1].lhs.arg.variables
     Eq << Eq[-1].this.lhs.arg.limits_subs(i, k)
 
-    Eq << Eq[-1].this.lhs.arg.limits_subs(j, i)
+    Eq << Eq[-1].this.find(Add[~Lamda]).limits_subs(j, i)
 
+    Eq << Eq[-1].this.find(Add[Lamda]).apply(algebra.add.to.lamda).this.find(Pow[Lamda]).apply(algebra.pow.to.lamda, simplify=None)
     Eq << algebra.ne_zero.eq.imply.eq.matrix.apply(Eq[-1], Eq.statement)
 
     
@@ -74,4 +65,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2020-08-21
-# updated on 2022-01-15
+# updated on 2023-03-18

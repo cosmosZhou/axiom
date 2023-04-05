@@ -12,6 +12,8 @@ def apply(self):
                 common_terms = {*e.args}
             else:
                 common_terms &= {*e.args}
+        elif e.is_Zero:
+            ...
         else:
             if common_terms is None:
                 common_terms = {e}

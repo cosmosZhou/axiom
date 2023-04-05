@@ -9,7 +9,19 @@
 主要基于一个德国的开源符号计算项目[ginac](https://www.ginac.de/)，这是个C++数学符号算法库，
 而此数学半机械化推导的算法是基于符号计算展开的。
 当时作者也没有精力学习其它编程语言，限于有限的编程技能，只能首先尝试使用C/C++来写程序，
-也是当时最流行的编程语言。
+也是当时最流行的编程语言。C++的使用，也在很大程度上影响了日后的研发，目前在代码写作的风格上还依稀保留了C++的代码风格，
+例如使用的输出符号：  
+Eq << Equal(a, b)  
+就是借用了C++的重载输出运算符:  
+cout << "Hello World";  
+符号lambda表达式（Lamda[k] (h[k])）的定义在latex输出上也极像C++的lambda表达式：  
+例如C++风格的lambda表达式： [k]{return h[k];}  
+
+在定理证明过程中对数学Object的操作也用了this关键字，也是没用了C++的写作风格。例如  
+Eq << Eq[-1].this.rhs.simplify()  
+
+
+
 ------
 在2016年, 作者发现了其它许多不同编程编写的开源符号计算工程，比如[sympy](https://www.sympy.org/en/index.html), 及其C++子项目 [symengine](https://github.com/symengine/symengine.git)，还有一个Common-Lisp项目[Maxima](http://maxima.sourceforge.net)，一个集成各种符号计算的工具集项目[sagemath](https://www.sagemath.org/)，包含了Maxima, [Maple](https://www.maplesoft.com/products/Maple/),
 Mathematica, [Matlab](https://www.mathworks.com/products/matlab.html), sympy; 以及一些自动化机器证明的资料： [theoremprover-museum](https://theoremprover-museum.github.io/),

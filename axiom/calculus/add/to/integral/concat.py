@@ -1,0 +1,26 @@
+from util import *
+
+
+@apply
+def apply(self):
+    (expr, (x, a, b)), (S[expr], (_x, S[b], c)) = self.of(Integral + Integral)
+
+    return Equal(self, Integral[x:a:c](expr))
+
+
+@prove(provable=False)
+def prove(Eq):
+    from axiom import calculus
+
+    x, a, b, c = Symbol(real=True)
+    f = Function(real=True)
+    Eq << apply(Integral[x:a:b](f(x)) + Integral[x:b:c](f(x)))
+
+    #Eq << Eq[0].this.find(Integral).apply(calculus.integral.to.limit.maxima.Darboux)
+
+    
+
+
+if __name__ == '__main__':
+    run()
+# created on 2023-03-21

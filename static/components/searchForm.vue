@@ -14,7 +14,7 @@
 </template>
 
 <script>
-console.log('importing searchForm.vue');
+console.log('import searchForm.vue');
 export default {
 	props : ['keyword', 'caseSensitive', 'wholeWord', 'regularExpression', 'nlp'],
 

@@ -42,7 +42,7 @@ def prove(Eq):
 
     B, A = Eq[2].rhs.args
     A = Symbol(A)
-    B = Symbol(B.args[1])
+    B = Symbol(B.find(Pow))
     Eq.A, Eq.B = A.this.definition, B.this.definition
 
     Eq << Eq[2].subs(Eq.A.reversed, Eq.B.reversed, Eq.w.reversed)
@@ -92,7 +92,11 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq.mul_ww)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-11-10
+# updated on 2023-04-05

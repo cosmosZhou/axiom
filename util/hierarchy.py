@@ -118,5 +118,3 @@ def update_timestamp():
 if __name__ == '__main__':
     insert_into_hierarchy()
     # update_timestamp()    
-
-# exec(open('./util/hierarchy.py').read())

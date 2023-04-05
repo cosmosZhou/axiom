@@ -5,7 +5,7 @@ from util import *
 def apply(self, n=None, k=None):
     fx, (x, a, b) = self.of(Integral)
     if n is None:
-        n = self.generate_var(integer=True, var='n')
+        n = self.generate_var(integer=True, var='n', positive=True)
 
     if k is None:
         k = self.generate_var(n, integer=True, var='k')
@@ -18,6 +18,7 @@ def apply(self, n=None, k=None):
 def prove(Eq):
     from axiom import calculus
 
+    n = Symbol(integer=True, positive=True)
     x, a = Symbol(real=True)
     b = Symbol(domain=Interval(a, oo, left_open=True))
     f = Function(real=True, continuous=True)
@@ -25,9 +26,13 @@ def prove(Eq):
 
     Eq << Less(a, b, plausible=True)
 
-    Eq << calculus.lt.imply.eq.integral.to.mul.limit.maxima.Darboux.apply(Eq[-1], Eq[0].lhs)
+    Eq << calculus.lt.imply.eq.integral.to.mul.limit.maxima.Darboux.apply(Eq[-1], Eq[0].lhs, n)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-06-07
+# updated on 2023-03-25

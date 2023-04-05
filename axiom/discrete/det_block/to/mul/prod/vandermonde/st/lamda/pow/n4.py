@@ -6,7 +6,6 @@ def apply(self):
     ((r, j), j_limit), ((S[j], (S[r], S[j])), S[j_limit]), ((S[j], (S[r], S[j])), S[j_limit]), ((S[j], (S[r], S[j])), S[j_limit]), ((S[j], i), S[j_limit], (S[i], S[0], n)) = self.of(Det[BlockMatrix[Lamda[Pow], Lamda[Symbol * Pow], Lamda[Symbol ** 2 * Pow], Lamda[Symbol ** 3 * Pow], Lamda[Pow]]])
 
     S[j], S[0], S[n + 4:n > 0] = j_limit
-    #Product[j:4](factorial(j))
     return Equal(self, 12 * r ** Binomial(4, 2) * (1 - r) ** (4 * n) * Product[j:n](factorial(j)))
 
 
@@ -131,7 +130,7 @@ def prove(Eq):
 
     Eq << discrete.eq.imply.eq.det.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(discrete.det.to.mul)
+    Eq << Eq[-1].this.lhs.apply(discrete.det.to.mul, deep=True)
 
     Eq << Eq[-1].this.rhs.apply(discrete.det_block.to.mul)
 
@@ -143,3 +142,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-07-11
+# updated on 2023-03-21

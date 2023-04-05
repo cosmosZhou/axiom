@@ -22,9 +22,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(~Cup | Cup).apply(sets.cup.limits.subs.negate, k, -k - 1)
 
-    Eq << Eq[-1].this.find(Cup).apply(sets.cup.to.interval.infinity.right_open)
+    Eq << Eq[-1].this.find(Cup).apply(sets.cup.to.interval.oo.right_open)
 
-    Eq << Eq[-1].this.find(Cup).apply(sets.cup.to.interval.negative_infinity.right_open)
+    Eq << Eq[-1].this.find(Cup).apply(sets.cup.to.interval.minus_oo.right_open)
 
 
 if __name__ == '__main__':

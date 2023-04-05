@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << -Eq[-1].this.expr
 
-    Eq << Eq[-1].this.apply(algebra.any.limits.negate.infinity)
+    Eq << Eq[-1].this.apply(algebra.any.limits.negate.oo)
 
     Eq << algebra.any.imply.any.limits.subs.offset.apply(Eq[-1], 1)
 

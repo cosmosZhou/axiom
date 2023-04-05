@@ -8,7 +8,7 @@
 </template>
 
 <script>
-console.log('importing icon.vue');
+console.log('import icon.vue');
 var previousKey = '';
 var previousTime = null;	
 export default {
@@ -208,7 +208,7 @@ export default {
 							else
 								self = self.nextElementSibling;
 
-							if (self.textContent.trim().startsWith(key)) {
+							if (self.textContent.trim().match(eval(`/^${key}/i`))) {
 								self.focus();
 								break;
 							}

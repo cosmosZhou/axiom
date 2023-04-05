@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.all_le.imply.le.maxima)
 
-    Eq << algebra.imply.all_ge.maxima.apply(Eq[1].lhs)
+    Eq << algebra.imply.all.maxima_ge.apply(Eq[1].lhs)
 
     Eq << Eq[-1].limits_subs(Eq[-1].variable, Eq[-2].variable)
 

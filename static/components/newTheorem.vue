@@ -11,7 +11,7 @@
 </template>
 
 <script>
-console.log('importing newTheorem.vue');
+console.log('import newTheorem.vue');
 import newInput from "./newInput.vue"
 import newApply from "./newApply.vue"
 import newProve from "./newProve.vue"

@@ -23,8 +23,9 @@ def prove(Eq):
 
 if __name__ == '__main__':
     run()
-from . import negativeInfinity
-from . import infinity
 from . import upper
 from . import lower
 # created on 2020-06-03
+from . import minus_oo
+del oo
+from . import oo

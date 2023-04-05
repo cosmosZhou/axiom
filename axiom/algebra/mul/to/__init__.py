@@ -9,3 +9,4 @@ from . import min
 from . import lamda
 from . import block
 from . import piece
+from . import transpose

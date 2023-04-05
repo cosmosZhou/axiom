@@ -38,5 +38,3 @@ if __name__ == '__main__':
     
     MySQL.instance.execute(f"delete from tbl_suggest_py where user = '{user}'")    
     MySQL.instance.load_data('tbl_suggest_py', data)
-
-#exec(open('./util/suggest.py').read())

@@ -20,7 +20,7 @@ def prove(Eq):
     Eq << apply(Unequal(Probability(x, y), 0))
 
     _y = pspace(y).symbol
-    Eq.y_marginal_probability = stats.integral.to.probability.apply(Integral[_y](Probability(x, y)))
+    Eq.y_marginal_probability = stats.integral.to.prob.apply(Integral[_y](Probability(x, y)))
 
     Eq << stats.ne_zero.imply.gt_zero.apply(Eq[0])
 

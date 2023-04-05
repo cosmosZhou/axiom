@@ -25,3 +25,5 @@ from . import lt
 from . import gt
 from . import ge
 # created on 2018-08-07
+
+del clip

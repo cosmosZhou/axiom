@@ -4,10 +4,7 @@ from util import *
 @apply
 def apply(lt, given):
     a, b = lt.of(Less)
-    (fx, (x, n)), (_x, _a, _b) = given.of(All[Derivative > 0])
-    assert a == _a and b == _b
-    assert n == 1
-    assert x == _x
+    (fx, (x, S[1])), (S[x], S[a], S[b]) = given.of(All[Derivative > 0])
 
     return All[x:Interval(a, b, left_open=True)](Greater(fx, fx._subs(x, a)))
 

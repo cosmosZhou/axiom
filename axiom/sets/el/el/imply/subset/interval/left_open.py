@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << sets.el_interval.imply.le.apply(Eq[0])
 
-    Eq << sets.le.imply.subset.interval.infinity.apply(Eq[-1], left_open=True)
+    Eq << sets.le.imply.subset.interval.oo.apply(Eq[-1], left_open=True)
 
     Eq << sets.subset.imply.subset.intersect.apply(Eq[-1], Interval(-oo, b, right_open=True))
 

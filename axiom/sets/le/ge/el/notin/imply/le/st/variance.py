@@ -16,7 +16,7 @@ def apply(le, ge, contains, notcontains):
 
 @prove
 def prove(Eq):
-    from axiom import sets, algebra
+    from axiom import algebra, sets
 
     y_quote = Symbol(integer=True, given=True)
     x, y = Symbol(integer=True)
@@ -24,14 +24,17 @@ def prove(Eq):
     X, Y = Symbol(etype=dtype.integer, finiteset=True, given=True)
     Eq << apply(abs(t[y_quote] - Sum[x:X](t[x]) / Card(X)) <= abs(t[y_quote] - Sum[y:Y](t[y]) / Card(Y)), Card(Y) >= 2, Element(y_quote, Y), NotElement(y_quote, X))
 
+    Eq << algebra.cond.imply.cond.domain_defined.apply(Eq[0])
+
+    Eq << algebra.et.imply.cond.apply(Eq[-1], 0)
+
     a, b, a_quote, b_quote = Symbol(shape=(oo,), integer=True)
-    Eq << sets.ge_card.imply.any_eq.apply(Eq[1], b)
-
-    Eq << algebra.le.imply.ne_zero.domain_definition.st.abs.apply(Eq[0])
-
     Eq << sets.card_ne_zero.imply.any_eq.apply(Eq[-1], a)
 
-    Eq.any_et = algebra.any.any.imply.any_et.apply(Eq[-1], Eq[-3], simplify=None)
+    
+    Eq << sets.ge_card.imply.any_eq.apply(Eq[1], b)
+
+    Eq.any_et = algebra.any.any.imply.any_et.apply(Eq[-2], Eq[-1], simplify=None)
 
     Eq.abs_complement = sets.el.imply.eq.card.complement.apply(Eq[2])
 
@@ -57,7 +60,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(sets.eq_cup.eq_cup.eq_cup.eq_cup.le.notin.imply.le)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2021-03-25
+# updated on 2023-04-05

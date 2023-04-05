@@ -183,21 +183,31 @@ MathJax = {
               MathJax.startup.defaultReady();
               console.log('MathJax is initialized, and the initial typeset is queued');
               
-            MathJax.startup.promise.then(() => {                    
+              MathJax.startup.promise.then(() => {                    
                   console.log('MathJax initial typesetting complete');
-                  setTimeout(() => {                          
-                      for (let p of document.querySelectorAll('p')){
-                          if (p.innerText.startsWith("\\[")) {
-                              console.log("unfinished work detected!");
-                              console.log(p.innerText);
-                              console.log('trying MathJax.typesetPromise() again;');
-                              MathJax.typesetPromise();
-                              break;
+                  setTimeout(() => {
+                	  var p = document.querySelectorAll('p');
+                	  if (p.length) {
+                          for (let p of document.querySelectorAll('p')){
+                              if (p.innerText.startsWith("\\[")) {
+                                  console.log("unfinished work detected!");
+                                  console.log(p.innerText);
+                                  console.log('trying MathJax.typesetPromise() again;');
+                                  MathJax.typesetPromise();
+                                  break;
+                              }
                           }
-                      }                                                    
-                  }, 700);
-                });                  
-        }
+                      }
+                	  else {
+                    	  console.log("no p tags have been detected!");
+                    	  setTimeout(() => {
+                    		  console.log("MathJax.typesetPromise() due to absence of p tags");
+                    		  MathJax.typesetPromise();
+                    	  }, 1000);
+                	  }
+                  }, 1000);
+              });                  
+         }
       },
 
     tex: {
@@ -232,12 +242,12 @@ for (let i = 0; i < logs.length; ++i){
     var log = logs[i];
     if (log.startsWith('{') && log.endsWith('}')){
     	error.push(JSON.parse(log));
-    	logs.remove(i);
+    	logs.delete(i);
         break;
     }
     
     if (log.startsWith('[') && log.endsWith(']')){
-    	logs.remove(i);
+    	logs.delete(i);
         error = JSON.parse(log);
         break;
     }

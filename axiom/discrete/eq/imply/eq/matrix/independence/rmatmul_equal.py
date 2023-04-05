@@ -3,29 +3,16 @@ from util import *
 
 @apply
 def apply(given):
-    lhs, rhs = given.of(Equal)
-
-    * x, p_polynomial = lhs.of(MatMul)
-
-    * y, _p_polynomial = rhs.of(MatMul)
-
-    assert p_polynomial == _p_polynomial
-
-    assert p_polynomial.is_Lamda
-    assert p_polynomial.shape
-    assert len(p_polynomial.shape) == 1
-
+    (*x, p_polynomial), (*y, S[p_polynomial]) = given.of(Equal[MatMul[2]])
     x = MatMul(*x)
     y = MatMul(*y)
-
-    assert x.shape == y.shape
+    assert len(p_polynomial.shape) == 1
+    
+    (b, e), (k, *ab) = p_polynomial.of(Lamda[Pow])
+    
     assert len(x.shape) == 2
-#     n = p_polynomial.shape[0]
-    k = p_polynomial.variable
-    polynomial = p_polynomial.expr
-    assert polynomial.is_Pow
+    assert x.shape == y.shape
 
-    b, e = polynomial.as_base_exp()
     assert not b.has(k)
     assert e.as_poly(k).degree() == 1
 
@@ -49,11 +36,6 @@ def prove(Eq):
     Eq << Eq[0][i]
 
     Eq << discrete.eq.imply.eq.vector.independence.rmatmul_equal.apply(Eq[-1])
-
-    
-
-    
-    
 
 
 if __name__ == '__main__':

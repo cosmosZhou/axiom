@@ -5,3 +5,4 @@ from . import max
 
 from . import squeeze
 from . import abs
+from . import clip

@@ -5,7 +5,7 @@ from util import *
 def apply(A):
     n = A.shape[0]
     k = Symbol(integer=True)
-    return Equal(det(Sum[k:1:n]((ShiftMatrix(n, 0, n - 1) ** k) @ A)), det(A) * (n - 1) * (-1) ** (n - 1))
+    return Equal(det(Sum[k:1:n]((ShiftMatrix(n, 0, n - 1) ^ k) @ A)), det(A) * (n - 1) * (-1) ** (n - 1))
 
 
 @prove

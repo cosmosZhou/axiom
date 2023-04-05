@@ -39,11 +39,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Add).apply(algebra.add.collect, k / n)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.to.piece.push_front)
+    Eq << Eq[-1].this.rhs.apply(algebra.sum.to.piece.unshift)
 
     Eq << Eq[-1].this.find(GreaterEqual).simplify()
 
-    Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.piece.pop_back)
+    Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.piece.pop)
 
     Eq << Eq[-1].this.find(LessEqual).reversed
 

@@ -88,7 +88,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.sub, 1)
 
-    Eq << (-Eq[-1].rhs.expr.args[0].args[0].expr).this.apply(algebra.mul.to.prod.limits.push_front)
+    Eq << (-Eq[-1].rhs.expr.args[0].args[0].expr).this.apply(algebra.mul.to.prod.limits.unshift)
 
     Eq << Eq[-2].subs(Eq[-1])
 

@@ -44,9 +44,9 @@ def prove(Eq):
 
     Eq.induct = Eq[1].subs(n, n + 1)
 
-    Eq << Eq.induct.this.rhs.find(Sum).apply(algebra.sum.to.add.pop_back)
+    Eq << Eq.induct.this.rhs.find(Sum).apply(algebra.sum.to.add.pop)
 
-    Eq << Eq[-1].this.find(f[~Sum]).apply(algebra.sum.to.add.pop_back)
+    Eq << Eq[-1].this.find(f[~Sum]).apply(algebra.sum.to.add.pop)
 
     Eq.lt, Eq.ge = algebra.cond.given.et.infer.split.apply(Eq[-1], cond=w[n] < 1)
 

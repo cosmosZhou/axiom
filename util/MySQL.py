@@ -36,9 +36,6 @@ class Database:
             kwargs['database'] = database
             self.conn = mysql.connector.connect(**kwargs)
 
-        except Exception as e:
-            print(type(e), e)
-
     @property
     def cursor(self):
         return self.conn.cursor()
@@ -220,122 +217,129 @@ class MySQLConnector(Database):
             except:
                 exit()
 
-
-instance = MySQLConnector()
-
-    
-def select_axiom_lapse_from_tbl_axiom_py(user='root'):
-    try:
-        return {axiom: lapse for axiom, lapse in instance.select("select axiom, lapse from tbl_axiom_py where user='%s'" % user)}
-    except mysql.connector.errors.ProgrammingError as err:
-        print(err.msg)
-        m = re.compile("Table '(\w+)\.([\w_]+)' doesn't exist").search(err.msg)
-        assert m
-        assert m[1] == 'axiom'
-        assert m[2] == 'tbl_axiom_py'
-        sql = '''\
-CREATE TABLE `tbl_axiom_py` (
-  `user` varchar(32) NOT NULL,
-  `axiom` varchar(256) NOT NULL,  
-  `state` enum('proved', 'failed', 'plausible', 'unproved', 'unprovable', 'slow') NOT NULL,
-  `lapse` double default NULL,  
-  `latex` text NOT NULL,
-  PRIMARY KEY (`user`, `axiom`) 
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-PARTITION BY KEY () PARTITIONS 8
-'''
-        instance.execute(sql)
-        sql = '''\
-CREATE TABLE `tbl_hierarchy_py` (
-  `user` varchar(32) NOT NULL,
-  `caller` varchar(256) NOT NULL,
-  `callee` varchar(256) NOT NULL,
-  `count` int DEFAULT '0',
-  PRIMARY KEY (`user`,`caller`,`callee`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-PARTITION BY KEY () PARTITIONS 8
-'''
-        instance.execute(sql)
+    def select_axiom_lapse_from_axiom(self, user='root'):
+        try:
+            return {axiom: lapse for axiom, lapse in self.select("select axiom, lapse from tbl_axiom_py where user='%s'" % user)}
+        except mysql.connector.errors.ProgrammingError as err:
+            print(err.msg)
+            m = re.compile("Table '(\w+)\.([\w_]+)' doesn't exist").search(err.msg)
+            assert m
+            assert m[1] == 'axiom'
+            assert m[2] == 'tbl_axiom_py'
+            sql = '''\
+    CREATE TABLE `tbl_axiom_py` (
+      `user` varchar(32) NOT NULL,
+      `axiom` varchar(256) NOT NULL,  
+      `state` enum('proved', 'failed', 'plausible', 'unproved', 'unprovable', 'slow') NOT NULL,
+      `lapse` double default NULL,  
+      `latex` text NOT NULL,
+      PRIMARY KEY (`user`, `axiom`) 
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+            sql = '''\
+    CREATE TABLE `tbl_hierarchy_py` (
+      `user` varchar(32) NOT NULL,
+      `caller` varchar(256) NOT NULL,
+      `callee` varchar(256) NOT NULL,
+      `count` int DEFAULT '0',
+      PRIMARY KEY (`user`,`caller`,`callee`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+                      
+            sql = '''\
+    CREATE TABLE `tbl_hint_py` (
+      `prefix` varchar(36) NOT NULL,
+      `phrase` varchar(36) NOT NULL,
+      `usage` int DEFAULT '1',
+      PRIMARY KEY (`prefix`,`phrase`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
                   
-        sql = '''\
-CREATE TABLE `tbl_hint_py` (
-  `prefix` varchar(36) NOT NULL,
-  `phrase` varchar(36) NOT NULL,
-  `usage` int DEFAULT '1',
-  PRIMARY KEY (`prefix`,`phrase`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-PARTITION BY KEY () PARTITIONS 8
-'''
-        instance.execute(sql)
-              
-        sql = '''\
-CREATE TABLE `tbl_suggest_py` (
-  `user` varchar(32) NOT NULL,
-  `prefix` varchar(256) NOT NULL,
-  `phrase` varchar(32) NOT NULL,
-  `usage` int DEFAULT '1',
-  PRIMARY KEY (`user`,`prefix`,`phrase`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-PARTITION BY KEY () PARTITIONS 8
-'''
-        instance.execute(sql)
-                
-        sql = '''\
-CREATE TABLE `tbl_login_py` (
-  `user` varchar(32) NOT NULL,
-  `password` varchar(32) NOT NULL,
-  `email` varchar(128) NOT NULL,
-  `port` int DEFAULT '0',
-  `visibility` enum('public','private','protected') NOT NULL,
-  PRIMARY KEY (`user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-PARTITION BY KEY () PARTITIONS 8
-'''
-        instance.execute(sql)
-        
-        sql = "insert into tbl_login_py values('sympy', '123456', 'chenlizhibeing@126.com', 'protected')"
-        instance.execute(sql)
-        
-        sql = '''\
-CREATE TABLE `tbl_debug_py` (  
-  `symbol` varchar(64) NOT NULL,
-  `script` text NOT NULL,
-  `latex` text NOT NULL,
-  PRIMARY KEY (`symbol`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  
-PARTITION BY KEY () PARTITIONS 8
-'''
-        instance.execute(sql)
-        
-        sql = '''\
-CREATE TABLE `tbl_function_py` (
-  `user` varchar(32) NOT NULL,
-  `caller` varchar(256) NOT NULL,
-  `callee` varchar(256) NOT NULL,
-  `func` varchar(64) NOT NULL,
-  PRIMARY KEY (`user`,`caller`,`callee`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci 
-PARTITION BY KEY () 
-PARTITIONS 8
-'''
-        instance.execute(sql)
-        
-        sql = '''\
-CREATE TABLE `tbl_breakpoint_py` (
-  `user` varchar(32) NOT NULL,
-  `module` varchar(256) NOT NULL,  
-  `line` int NOT NULL,
-  PRIMARY KEY (`user`, `module`, `line`) 
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-PARTITION BY KEY () PARTITIONS 8
-'''
-        instance.execute(sql)
-        
-    except Exception as e:
-        print(type(e), e)
-        
-    return {}
+            sql = '''\
+    CREATE TABLE `tbl_suggest_py` (
+      `user` varchar(32) NOT NULL,
+      `prefix` varchar(256) NOT NULL,
+      `phrase` varchar(32) NOT NULL,
+      `usage` int DEFAULT '1',
+      PRIMARY KEY (`user`,`prefix`,`phrase`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+                    
+            sql = '''\
+    CREATE TABLE `tbl_login_py` (
+      `user` varchar(32) NOT NULL,
+      `password` varchar(32) NOT NULL,
+      `email` varchar(128) NOT NULL,
+      `port` int DEFAULT '0',
+      `visibility` enum('public','private','protected') NOT NULL,
+      PRIMARY KEY (`user`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+            
+            sql = "insert into tbl_login_py values('sympy', '123456', 'chenlizhibeing@126.com', 'protected')"
+            self.execute(sql)
+            
+            sql = '''\
+    CREATE TABLE `tbl_debug_py` (  
+      `symbol` varchar(64) NOT NULL,
+      `script` text NOT NULL,
+      `latex` text NOT NULL,
+      PRIMARY KEY (`symbol`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+            
+            sql = '''\
+    CREATE TABLE `tbl_function_py` (
+      `user` varchar(32) NOT NULL,
+      `caller` varchar(256) NOT NULL,
+      `callee` varchar(256) NOT NULL,
+      `func` varchar(64) NOT NULL,
+      PRIMARY KEY (`user`,`caller`,`callee`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci 
+    PARTITION BY KEY () 
+    PARTITIONS 8
+    '''
+            self.execute(sql)
+            
+            sql = '''\
+    CREATE TABLE `tbl_breakpoint_py` (
+      `user` varchar(32) NOT NULL,
+      `module` varchar(256) NOT NULL,  
+      `line` int NOT NULL,
+      PRIMARY KEY (`user`, `module`, `line`) 
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+            
+        except Exception as e:
+            print(type(e), e)
+            
+        return {}
 
+    def url_address(self, package):
+        return f"http://localhost/{user}/index.php?module={package}"
+
+try:
+    instance = MySQLConnector()
+except Exception as e:
+    # print(e)
+    # import traceback
+    # traceback.print_exc()
+    from util.javaScript import LocalJsWriter
+    instance = LocalJsWriter()
 
 user = os.path.basename(os.path.dirname(os.path.dirname(__file__)))
 

@@ -2,20 +2,32 @@ from util import *
 
 
 def doit(Sum, self):
-    xi, * limits, (i, a, b) = self.of(Sum)
+    expr, *limits, (i, a, b) = self.of(Sum)
 
     assert i.is_integer
     diff = b - a
     assert diff == int(diff)
 
-    sgm = Sum.identity(xi)
+    sgm = Sum.identity(expr)
 
     for t in range(diff):
+        
         _limits = []
-        for (j, *ab) in limits:
-            _limits.append((j, *(c._subs(i, a + t) for c in ab)))
+        for x, *ab in limits:
+            if x.is_Sliced:
+                try:
+                    x = x._subs(i, a + t)
+                except Exception as e:
+                    if e.args[0] == 'empty slices':
+                        continue
+                    raise e
+                
+            elif x.is_Indexed or x.is_SlicedIndexed:
+                x = x._subs(i, a + t)
 
-        sgm = Sum.operator(sgm, self.func(xi._subs(i, a + t), *_limits))
+            _limits.append((x, *(c._subs(i, a + t) for c in ab)))
+
+        sgm = Sum.operator(sgm, self.func(expr._subs(i, a + t), *_limits))
     return sgm
 
 

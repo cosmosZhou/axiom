@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << algebra.all_et.imply.et.all.apply(Eq[-1])
 
-    Eq << Eq[-3].this.expr.apply(discrete.eq.eq.imply.eq.permutation.pop_back.interval)
+    Eq << Eq[-3].this.expr.apply(discrete.eq.eq.imply.eq.permutation.pop.interval)
 
     Eq.all_P_quote = Eq[-1] & Eq[-3]
 
@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << algebra.all_et.imply.et.all.apply(Eq[-1])
 
-    Eq << Eq[-3].this.expr.apply(discrete.eq.eq.imply.eq.permutation.push_back)
+    Eq << Eq[-3].this.expr.apply(discrete.eq.eq.imply.eq.permutation.push)
 
     Eq <<= Eq[-1] & Eq[-3]
 

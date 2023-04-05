@@ -31,7 +31,7 @@ def prove(Eq):
 
     Eq << -Eq[0]
 
-    Eq << Eq[-1].this.lhs.apply(calculus.mul.to.derivative)
+    Eq << Eq[-1].this.lhs.apply(calculus.mul.to.grad)
 
     Eq << calculus.gt_zero.eq.imply.ge.Jesson.apply(Eq[-1], Eq[1])
 

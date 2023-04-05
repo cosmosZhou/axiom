@@ -20,15 +20,17 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(MatMul).apply(discrete.matmul_lamda.to.lamda.stirling2.vandermonde)
 
-    Eq << Eq[-1].this.lhs.doit()
+    Eq << Eq[-1].this.lhs.doit(deep=True)
 
     Eq << Eq[-1].this.find(Binomial).apply(discrete.binom.to.mul.fallingFactorial.doit)
 
     Eq << Eq[-1].this.rhs.find(Mul).expand()
+
+    
     
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-01-15
-# updated on 2022-01-18
+# updated on 2023-03-21

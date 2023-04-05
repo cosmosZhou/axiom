@@ -55,11 +55,16 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1])
 
+    Eq << algebra.ou.given.et.collect.apply(Eq[-1])
+
     Eq << algebra.ou.given.eq.abs.apply(Eq[-1])
 
     Eq << algebra.ou.imply.eq.abs.apply(Eq.ou)
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-08-15
+# updated on 2023-04-05

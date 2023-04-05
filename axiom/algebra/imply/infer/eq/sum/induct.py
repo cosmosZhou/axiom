@@ -39,7 +39,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.eq.eq.imply.eq.add)
 
-    Eq << Eq[-1].this.rhs.rhs.apply(algebra.add.to.sum.limits.push_back)
+    Eq << Eq[-1].this.rhs.rhs.apply(algebra.add.to.sum.limits.push)
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
     Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n=n, start=1)

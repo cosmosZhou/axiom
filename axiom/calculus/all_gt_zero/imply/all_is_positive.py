@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq << algebra.all.any.imply.any_et.apply(Eq[-2], Eq[-1])
 
-    Eq << Eq[-1].this.expr.lhs.apply(calculus.derivative.to.limit)
+    Eq << Eq[-1].this.expr.lhs.apply(calculus.grad.to.limit)
 
     Eq << Eq[-1].this.expr.apply(calculus.eq_limit.imply.et.eq_limit)
 

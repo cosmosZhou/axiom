@@ -5,6 +5,7 @@ import os, sys, re
 from std import batch_map, rindex
 
 from std.file import Text
+from os.path import dirname, basename, realpath, isdir, join, sep, abspath, exists
 
 try:
     import axiom
@@ -12,17 +13,18 @@ except ImportError as e:
     from util.utility import source_error
     error_message, line = source_error()
 
-    m = re.fullmatch(r'File "([^"]+(?:\\|/)__init__\.py)", line (\d+), in <module>', error_message)
+    m = re.fullmatch(r'File "([^"]+(?:\\|/)(?:\w+)\.py)", line (\d+), in <module>', error_message)
     assert m, error_message
     file, line_number = m.groups()
 
     line_number = int(line_number) - 1
     print('file =', file)
     print('line_number =', line_number)
+    assert 'site-packages' not in file
 
     file = Text(file)
 
-    lines = file.readlines()    
+    lines = file.readlines()
     del lines[line_number]
 
     file.writelines(lines)
@@ -41,10 +43,8 @@ from functools import singledispatch
 import random
 from util.utility import RetCode
 
-sep = os.path.sep
-
 def axiom_directory():
-    directory = os.path.dirname(__file__)
+    directory = dirname(__file__)
     if not directory:
         return './axiom'
     return directory + '/axiom'
@@ -68,7 +68,7 @@ def readFolder(rootdir, sufix='.py'):
     names = os.listdir(rootdir)
     unused = 0
     for name in names:
-        path = os.path.join(rootdir, name)
+        path = join(rootdir, name)
 
         if path.endswith(sufix):
             name = name[:-len(sufix)]
@@ -126,7 +126,7 @@ def readFolder(rootdir, sufix='.py'):
             
             yield package
 
-        elif os.path.isdir(path):
+        elif isdir(path):
             if name == '__pycache__':
                 unused += 1
             else:
@@ -141,19 +141,18 @@ def readFolder(rootdir, sufix='.py'):
             
 
 def project_directory():
-    return os.path.dirname(axiom_directory())
+    return dirname(axiom_directory())
 
 
 def working_directory():
-    return os.path.dirname(project_directory())
+    return dirname(project_directory())
 
 
 def create_module(package, module):
     print('package =', package)
     print('module =', module)
     
-    dirname = project_directory()
-    __init__ = dirname + sep + package.replace('.', sep) + sep + '__init__.py'
+    __init__ = project_directory() + sep + package.replace('.', sep) + sep + '__init__.py'
     print('editing', __init__)
     
     hit = False
@@ -187,7 +186,7 @@ def run(package, debug=True):
 
     
 def import_module(package):
-    try: 
+    try:
         module = axiom
         for attr in package.split('.'):
             module = getattr(module, attr)
@@ -207,7 +206,7 @@ def import_module(package):
 def prove_with_timing(module, **kwargs):
     lapse = time.time()
     state, latex = module.prove(**kwargs)
-    lapse = time.time() - lapse    
+    lapse = time.time() - lapse
     return state, lapse, latex
 
 
@@ -234,7 +233,7 @@ def tackle_type_error(package, debug=True):
     
 @singledispatch    
 def process(package, debug=False):
-    module = import_module(package)    
+    module = import_module(package)
 #     https://www.geeksforgeeks.org/try-except-vs-if-in-python/
 # We often hear that python always encourages EAFP(
 # "It's easier to ask for forgiveness than permission") 
@@ -277,21 +276,21 @@ def _(packages, debug=False):
     return [process(package, debug=debug) for package in packages]
 
 
-start = time.time()    
+start = time.time()
 
-user = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
+user = basename(dirname(realpath(__file__)))
 assert user, 'user should not be empty!'
 
-def prove(**kwargs): 
-    from util import MySQL
+from util import MySQL
 
+def prove(**kwargs):
     def generator(): 
         rootdir = axiom_directory()
 #         rootdir += r'\algebra\imply\le\abs'
         for name in os.listdir(rootdir):
-            path = os.path.join(rootdir, name)
+            path = join(rootdir, name)
             
-            if os.path.isdir(path):
+            if isdir(path):
                 if name != '__pycache__':
                     yield from readFolder(path)
 
@@ -299,14 +298,13 @@ def prove(**kwargs):
     
 #     taskSet = {*[*taskSet][:100]}
 
-    tasks = MySQL.select_axiom_lapse_from_tbl_axiom_py(user=user)
+    tasks = MySQL.instance.select_axiom_lapse_from_axiom(user=user)
     deleteSet = tasks.keys() - taskSet
     if len(deleteSet) > 1:
         MySQL.instance.execute("delete from tbl_axiom_py where user='%s' and axiom in %s" % (user, tuple(deleteSet)))
     elif len(deleteSet) == 1:
         deleteAxiom, *_ = deleteSet
         MySQL.instance.execute("delete from tbl_axiom_py where user='%s' and axiom = '%s'" % (user, deleteAxiom))
-        
     for key in deleteSet:
         del tasks[key]
     
@@ -347,8 +345,9 @@ def prove(**kwargs):
     
     for array in process(packages, **kwargs):
         data += post_process(array, True)
-        
+
     MySQL.instance.load_data('tbl_axiom_py', data, replace=True, ignore=True)
+
     print('in all %d axioms' % Globals.count)
     print_summary()
 
@@ -388,15 +387,14 @@ def post_process(result, truncate=False):
             
         data.append((user, package, state, lapse, latex))
             
-        if state is RetCode.plausible: 
-            Globals.plausible.append((file, f"http://localhost/{user}/index.php?module={package}"))
+        if state is RetCode.plausible:
+            Globals.plausible.append((file, MySQL.instance.url_address(package)))
         elif state is RetCode.failed:
-            Globals.failed.append((file, f"http://localhost/{user}/index.php?module={package}"))            
+            Globals.failed.append((file, MySQL.instance.url_address(package)))
         else:
             continue
         
     return data
-
 
 def process_debug(packages):
     return process(packages, debug=True)
@@ -413,28 +411,28 @@ def _(items, debug=False, parallel=True):  # @DuplicatedSignature
        
 def listdir(rootdir, sufix='.php'):
     for name in os.listdir(rootdir):
-        path = os.path.join(rootdir, name)
+        path = join(rootdir, name)
 
 #         if path.endswith(sufix):
 #             yield path
-        if os.path.isdir(path):
+        if isdir(path):
             yield from listdir_recursive(path, sufix)
 
 
 def listdir_recursive(rootdir, sufix='.php'):
     for name in os.listdir(rootdir):
-        path = os.path.join(rootdir, name)
+        path = join(rootdir, name)
 
         if path.endswith(sufix):
             yield path
-        elif os.path.isdir(path):
+        elif isdir(path):
             yield from listdir_recursive(path, sufix)
 
 
 def clean(): 
-    for php in listdir(os.path.abspath(axiom_directory())):
+    for php in listdir(abspath(axiom_directory())):
         py = php.replace('.php', '.py')
-        if not os.path.exists(py):
+        if not exists(py):
             print(php)
             os.remove(php)
 
@@ -463,7 +461,7 @@ def run_with_module(*modules, debug=True):
                 state = RetCode.failed                    
                 file = project_directory() + '/' + package.replace('.', '/') + '.py'
                 lapse = None
-                latex = None         
+                latex = None
             else: 
                 try:
                     state, lapse, latex = prove_with_timing(module, debug=debug, slow=True)
@@ -472,10 +470,10 @@ def run_with_module(*modules, debug=True):
                     if re.match("module '[\w.]+' has no attribute 'prove'", str(e)) or re.match("'function' object has no attribute 'prove'", str(e)):
                         from util.search import module_to_py
                         file = module_to_py(package)
-                        __init__ = os.path.dirname(file) + '/__init__.py'
-                        basename = os.path.basename(file)[:-3]
+                        __init__ = dirname(file) + '/__init__.py'
+                        bn = basename(file)[:-3]
                         for line in Text(__init__):
-                            if re.match('from \. import %s' % basename, line):
+                            if re.match('from \. import %s' % bn, line):
                                 for line in run(package, debug=False):
                                     m = re.match(r"seconds costed = (\d+\.\d+)", line)
                                     if m:
@@ -552,7 +550,7 @@ if __name__ == '__main__':
             clean()
 
     debug = kwargs.pop('debug', False)
-    parallel = kwargs.pop('parallel', True)    
+    parallel = kwargs.pop('parallel', not sys.gettrace())
     if not args:
         if kwargs:
             for key, value in kwargs.items():
@@ -622,3 +620,9 @@ clearInterval(ret);
             
     else: 
         run_with_module(*args)
+
+
+# python -c "exec(open('./util/function.py').read())"
+# python -c "exec(open('./util/hierarchy.py').read())"
+# python -c "exec(open('./util/hint.py').read())"
+# python -c "exec(open('./util/suggest.py').read())"

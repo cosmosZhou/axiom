@@ -267,7 +267,7 @@ function hint(cm, options) {
 }
 
 function axiom_user() {
-	return location.href.match(/([^\/]+)\/((?:index.php|run.py|php\/\w+\.php|\?)\b|$)/)[1];
+	return location.href.match(/([^\/]+)\/((?:index\.(?:php|html)|run\.py|php\/\w+\.php|target|\?)\b|$)/)[1];
 }
 
 function extraKeys() {
@@ -465,7 +465,39 @@ async function createApp(component, data, id) {
 		moduleCache: { vue: Vue },
 	
 		async getFile(url) {
-			const res = await fetch(url);
+			var res;
+			try{
+				res = await fetch(url);	
+			}
+			catch(err){
+				var slashIndex = url.lastIndexOf('/');
+				var name = url.slice(slashIndex + 1);
+				
+				var dotIndex = name.lastIndexOf('.');
+				var ext = name.slice(dotIndex + 1);
+				name = name.slice(0, dotIndex);
+
+				switch (ext){
+				case 'js':
+					var text = window.js[name];
+					if (!text) {
+						var names = url.slice(0, -3).split('/').slice(1);
+						names = names.map(name => name.replace(/\W/g, '_'));
+						text = getitem(window.js, ...names);
+						
+						console.log('url = ', url);
+					}
+
+                    return {
+						getContentData(){
+							return text;	
+						}, 
+						type: ".mjs"
+					};
+				case 'vue':
+					return window.vue[name];					
+				}
+			}
 	
 			if (!res.ok)
 				throw Object.assign(new Error(res.statusText + ' ' + url), { res });
@@ -503,8 +535,8 @@ async function createApp(component, data, id) {
 	document.body.appendChild(div);
 	
 	var components = {};
-	components[component] = await loadModule(`static/components/${component}.vue`, options);
-	
+	components[component] = await loadModule(`static/components/${component}.vue`, options);	
+
 	var args = [];
 	for (let key in data){
 		args.push(`:${key}=${key}`);	
@@ -517,7 +549,7 @@ async function createApp(component, data, id) {
 			return data;
 		},
 		
-		template: `<${component} ${args.join(' ')}></${component}>`,
+		template: `<${component} ref=${component} ${args.join(' ')}></${component}>`,
 	};
 	
 	var app = Vue.createApp(App);
@@ -530,4 +562,34 @@ function setAttribute(self, key, value){
 		self = self.$parent;
 	}
 	self.$data[key] = value;
+}
+
+function track_mounted(tag){
+	return {
+		mounted(el, binding){
+			++binding.instance.mounted[tag];
+		},
+		
+		unmounted(el, binding){
+			--binding.instance.mounted[tag];
+			console.assert(binding.instance.mounted[tag] >= 0, "binding.instance.mounted[tag] >= 0");
+		},
+	};
+}
+
+function create_ClipboardJS(tag) {
+	var clipboard = new ClipboardJS(tag);
+
+	clipboard.on('success', function(e) {
+		console.log(e);
+	});
+
+	clipboard.on('error', function(e) {
+		console.log(e);
+	});
+}
+
+async function query(user, token, data) {
+	data.token = token;
+	return await form_post(`query.php?user=${user}`, data);
 }

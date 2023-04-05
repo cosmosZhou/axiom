@@ -7,7 +7,7 @@
 </template>
 
 <script>
-console.log('importing hierarchy.vue');	
+console.log('import hierarchy.vue');	
 
 import hierarchyInformation from "./hierarchyInformation.vue"
 import hierarchyModule from "./hierarchyModule.vue"

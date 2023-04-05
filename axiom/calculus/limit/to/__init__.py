@@ -4,3 +4,4 @@ from . import sum
 from . import one
 from . import prod
 from . import expr
+from . import integral

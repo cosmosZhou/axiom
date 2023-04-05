@@ -28,7 +28,7 @@ def prove(Eq):
 
     Eq.induct = Eq[0].subs(m, m + 1)
 
-    Eq << Eq.induct.this.rhs.apply(discrete.matProd.to.matmul.pop_back)
+    Eq << Eq.induct.this.rhs.apply(discrete.matProd.to.matmul.pop)
 
     Eq << Eq[-1].subs(Eq[0].reversed)
 
@@ -38,7 +38,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(discrete.matmul.to.block, deep=True)
 
-    Eq << Eq[-1].this.rhs.find(MatMul).apply(discrete.matmul.to.matProd.push_back)
+    Eq << Eq[-1].this.rhs.find(MatMul).apply(discrete.matmul.to.matProd.push)
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 

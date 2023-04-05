@@ -433,3 +433,8 @@ show variables like 'regexp_time_limit';
 SET global regexp_time_limit = 512;   
 
 show variables like 'regexp_stack_limit';  
+
+
+### load data  
+Access denied; you need (at least one of) the SUPER or SYSTEM_VARIABLES_ADMIN privilege(s) for this operation  
+grant insert, SYSTEM_VARIABLES_ADMIN on *.* to prod;  

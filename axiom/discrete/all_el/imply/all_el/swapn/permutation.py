@@ -3,11 +3,9 @@ from util import *
 
 @apply
 def apply(given):
-    (((w, i, j), x), S), (_x, _S) = given.of(All[Element[MatMul[Indexed]]])
+    (((w, i, j), x), s), (S[x], S[s]) = given.of(All[Element[MatMul[Indexed]]])
 
-    assert x == _x and S == _S
-
-    n = S.etype.shape[0]
+    n = s.etype.shape[0]
 
     k = Symbol(integer=True)
 
@@ -17,7 +15,7 @@ def apply(given):
 
     P = Symbol(conditionset(p[:n], Equal(p[:n].cup_finiteset(), Range(n))))
 
-    return All[p[:n]:P, x:S](Element(Lamda[k:n](x[p[k]]), S))
+    return All[p[:n]:P, x:s](Element(Lamda[k:n](x[p[k]]), s))
 
 
 @prove

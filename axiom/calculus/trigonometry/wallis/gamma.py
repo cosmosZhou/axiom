@@ -15,18 +15,17 @@ def apply(m, n=1):
 @prove
 def prove(Eq):
     from axiom import calculus, algebra
+
     #m is the inductive variable
     m = Symbol(integer=True, positive=True, given=False)
     #n is not a inductive variable
     n = Symbol(integer=True, positive=True)
-
     Eq << apply(m, n)
 
     (x, *_), *_ = Eq[0].lhs.limits
-
     Eq.one = Eq[0].subs(m, 1)
 
-    Eq << calculus.trigonometry.sine.wallis.apply(n)
+    Eq << Eq.one.this.lhs.apply(calculus.integral_sin.to.mul.gamma.wallis)
 
     Eq.induct = Eq[0].subs(m, m + 2)
 
@@ -62,7 +61,11 @@ def prove(Eq):
     Eq << algebra.eq.eq.infer.imply.eq.induct.apply(Eq.one, Eq.two, Eq[-1], n=m, start=1)
 
 
+
+
+
 if __name__ == '__main__':
     run()
 
 # created on 2020-07-01
+# updated on 2023-03-29

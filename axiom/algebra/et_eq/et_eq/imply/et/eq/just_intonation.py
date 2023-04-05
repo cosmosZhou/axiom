@@ -6,14 +6,14 @@ from axiom.algebra.et_eq.imply.et_eq import equate
 @apply
 def apply(et_eq_8, et_eq_5):
     (r_77, r_11), (S[r_11], r_11_sharp), (r_22, r_22_sharp), (r_33, S[S.One / 2]), (S[r_11_sharp], S[r_22]), (S[r_22_sharp], S[r_33]) = et_eq_8.of(And[Equal[6]])
-    
+
     λ_7, λ_7_low = r_77.of(Expr / Expr)
     λ_1_dot, λ_1 = r_11.of(Expr / Expr)
     λ_2_dot, λ_2 = r_22.of(Expr / Expr)
     λ_3_dot, λ_3 = r_33.of(Expr / Expr)
     λ_1_dot_sharp, λ_1_sharp = r_11_sharp.of(Expr / Expr)
     λ_2_dot_sharp, λ_2_sharp = r_22_sharp.of(Expr / Expr)
-        
+
     (r_51, r_51_sharp), (r_62, r_62_sharp), (r_73, r_14), (S[r_14], r_14_sharp), (r_25, r_25_sharp), (r_36, S[Number(2) / 3]), (r_47_low, S[r_51]), (S[r_51_sharp], S[r_62]), (S[r_62_sharp], S[r_73]), (S[r_14_sharp], S[r_25]), (S[r_25_sharp], S[r_36]) = et_eq_5.of(And[Equal[11]])
 
     λ_4_sharp, S[λ_7_low] = r_47_low.of(Expr / Expr)
@@ -22,14 +22,14 @@ def apply(et_eq_8, et_eq_5):
     λ_6, S[λ_2] = r_62.of(Expr / Expr)
     λ_6_sharp, S[λ_2_sharp] = r_62_sharp.of(Expr / Expr)
     S[λ_7], S[λ_3] = r_73.of(Expr / Expr)
-    
+
     S[λ_1_dot], λ_4 = r_14.of(Expr / Expr)
     S[λ_1_dot_sharp], S[λ_4_sharp] = r_14_sharp.of(Expr / Expr)
-    
+
     S[λ_2_dot], S[λ_5] = r_25.of(Expr / Expr)
     S[λ_2_dot_sharp], S[λ_5_sharp] = r_25_sharp.of(Expr / Expr)
     S[λ_3_dot], S[λ_6] = r_36.of(Expr / Expr)
-    
+
     return equate(λ_1_sharp / λ_1, λ_2_sharp / λ_2, λ_4_sharp / λ_4, λ_5_sharp / λ_5, λ_6_sharp / λ_6, Number(2) ** 11 / 3 ** 7), \
         equate(λ_1 / λ_7_low, λ_2 / λ_1_sharp, λ_3 / λ_2_sharp, λ_4 / λ_3, λ_5 / λ_4_sharp, λ_6 / λ_5_sharp, λ_7 / λ_6_sharp, Number(3) ** 5 / 2 ** 8), \
         Equal(λ_2 / λ_1, Number(8) / 9), Equal(λ_4 / λ_1, Number(3) / 4)
@@ -55,9 +55,9 @@ def prove(Eq):
                 equate(λ_4_sharp / λ_7_low, λ_5 / λ_1, λ_5_sharp / λ_1_sharp, λ_6 / λ_2, λ_6_sharp / λ_2_sharp, λ_7 / λ_3, λ_1_dot / λ_4,  λ_1_dot_sharp / λ_4_sharp,  λ_2_dot / λ_5,  λ_2_dot_sharp / λ_5_sharp,  λ_3_dot / λ_6,  Number(2) / 3))
 
     #two degree of musical tones: d_*, deux
-    Eq.d_1_sharp, Eq.d_2_sharp, Eq.d_4_sharp, Eq.d_5_sharp, Eq.d_6_sharp = algebra.et_eq.given.et_eq.apply(Eq.et_d5, Number(2) ** 11 / 3 ** 7)
+    Eq.d_1_sharp, Eq.d_2_sharp, Eq.d_4_sharp, Eq.d_5_sharp, Eq.d_6_sharp = algebra.et_eq.given.et_eq.continued.apply(Eq.et_d5, Number(2) ** 11 / 3 ** 7)
 
-    Eq.d_1, Eq.d_2, Eq.d_3, Eq.d_4, Eq.d_5, Eq.d_6, Eq.d_7 = algebra.et_eq.given.et_eq.apply(Eq.et_d7, Number(3) ** 5 / 2 ** 8)
+    Eq.d_1, Eq.d_2, Eq.d_3, Eq.d_4, Eq.d_5, Eq.d_6, Eq.d_7 = algebra.et_eq.given.et_eq.continued.apply(Eq.et_d7, Number(3) ** 5 / 2 ** 8)
 
     #eight degree of musical tones: h_*, huit
     Eq.h_7, Eq.h_1, Eq.h_1_sharp, Eq.h_2, Eq.h_2_sharp, Eq.h_3 = algebra.et_eq.imply.et_eq.apply(Eq.et_h, S.One / 2)
@@ -124,8 +124,8 @@ def prove(Eq):
     #三，一个大二度使波长/弦长变为原来的8/9；
     #四，一个纯四度使波长/弦长变为原来的3/4；
     #百科参考资料：https://baike.baidu.com/pic/%E7%BA%AF%E5%BE%8B/659996/0/834344afb490879efaed5021?fr=lemma&ct=single#aid=0&pic=834344afb490879efaed5021
-    
-    
+
+
 
 
 if __name__ == '__main__':

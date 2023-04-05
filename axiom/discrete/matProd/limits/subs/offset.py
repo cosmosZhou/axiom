@@ -21,9 +21,9 @@ def prove(Eq):
 
     Eq.induct = Eq[0].subs(m, m + 1)
 
-    Eq << Eq.induct.this.lhs.apply(discrete.matProd.to.matmul.pop_back)
+    Eq << Eq.induct.this.lhs.apply(discrete.matProd.to.matmul.pop)
 
-    Eq << Eq[-1].this.rhs.apply(discrete.matProd.to.matmul.pop_back)
+    Eq << Eq[-1].this.rhs.apply(discrete.matProd.to.matmul.pop)
 
     Eq << Eq[0] @ f(m)
 

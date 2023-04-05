@@ -13,7 +13,7 @@
 </template>
 
 <script>
-console.log('importing packageSelector.vue');    
+console.log('import packageSelector.vue');    
 import smallPackage from "./smallPackage.vue"
 
 export default {
@@ -64,7 +64,7 @@ export default {
                     console.log("res = " + res);
                     var focusedIndex = this.$parent.focusedIndex;
                     //console.log('this.$parent.theorems = ' + this.$parent.theorems);
-                    this.$parent.theorems.remove(focusedIndex);
+                    this.$parent.theorems.delete(focusedIndex);
                     //console.log('this.$parent.theorems = ' + this.$parent.theorems);
                     this.$parent.focusedIndex = -1;                        
                 });

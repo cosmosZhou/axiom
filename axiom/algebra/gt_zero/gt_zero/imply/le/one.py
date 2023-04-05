@@ -16,19 +16,27 @@ def prove(Eq):
     a, b = Symbol(shape=(n,), real=True, given=True)
     Eq << apply(ReducedSum(a ** 2) > 0, ReducedSum(b ** 2) > 0)
 
-    Eq << ~Eq[-1]
+    Eq << algebra.gt_zero.imply.ne_zero.apply(Eq[0])
 
+    Eq << algebra.gt_zero.imply.ne_zero.apply(Eq[1])
+
+    Eq << ~Eq[2]
+
+    Eq <<= Eq[-1] & Eq[-2] & Eq[-3]
+
+    Eq << algebra.et.imply.cond.apply(Eq[-1])
+
+    
     Eq << algebra.gt_zero.imply.gt_zero.sqrt.apply(Eq[0] * Eq[1])
-
     Eq << algebra.gt_zero.gt.imply.gt.mul.apply(Eq[-1], Eq[-2])
-
     Eq << algebra.gt_zero.gt.imply.gt.square.apply(Eq[-2], Eq[-1])
-
     Eq << algebra.imply.le.Cauchy.apply(a, b)
-
     Eq << ~Eq[-1]
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-04-02
+# updated on 2023-04-05
