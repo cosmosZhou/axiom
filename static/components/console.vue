@@ -20,7 +20,7 @@
 </template>
 
 <script>
-console.log('import console.vue');
+console.log('importing console.vue');
 import consoleStatement from "./consoleStatement.vue"
 export default {
 	components: {consoleStatement },

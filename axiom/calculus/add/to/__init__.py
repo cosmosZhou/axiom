@@ -1,2 +1,1 @@
-from . import integral
-from . import grad
+from . import derivative, integral

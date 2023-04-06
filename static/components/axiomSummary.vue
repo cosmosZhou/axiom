@@ -5,7 +5,7 @@
 		<searchForm v-if="issearch" :keyword=keyword :caseSensitive=caseSensitive :wholeWord=wholeWord :regularExpression=regularExpression :nlp=nlp></searchForm>		
 		<ul>
 			<li v-for="(content, section) in repertoire">
-				<a :href=href_section(section)>
+				<a :href="'/%s/index.php?module=%s'.format(user, section)">
 					{{section}}
 				</a>
 				<ul>
@@ -15,7 +15,7 @@
 						</font>
 						<ul>
 							<li v-for="axiom in axioms">
-								<a :href=href_module(axiom)>
+								<a :href="'/%s/index.php?module=%s'.format(user, axiom)">
 									{{axiom}}
 								</a>
 							</li>
@@ -35,12 +35,12 @@
 			</tr>
 	
 			<tr v-for="tuple of state_count_pairs">
-				<td><a :href="href_state(tuple.state)">{{tuple.state}}</a></td>
+				<td><a :href="state_href(tuple.state)">{{tuple.state}}</a></td>
 				<td>{{tuple.count}}</td>
 			</tr>	
 		</table>
 		most recent <input size=2 v-model=topk @change=change_input>axioms updated:
-		<a v-for="axiom of recentAxioms" :href=href_module(axiom)>
+		<a v-for="axiom of recentAxioms" :href="'/%s/index.php?module=%s'.format(user, axiom)">
 			<p>{{axiom}}</p>
 		</a>
 		<br>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-console.log('import axiomSummary.vue');
+console.log('importing axiomSummary.vue');
 	
 import searchForm from "./searchForm.vue"
 	
@@ -82,22 +82,11 @@ export default {
 	},
 	
 	methods: {
-		href_section(section) {
-			var {user} = this;
-			return `/${user}/index.php?module=${section}`;
-		},
-
-		href_module(axiom) {
-			var {user} = this;
-			return `/${user}/index.php?module=${axiom}`;
-		},
-
-		href_state(state){
+		state_href(state){
 			if (state == 'total'){
 				return `/${this.user}/run.py`;
 			}
-			var {user} = this;
-			return `/${user}/index.php?state=${state}`;
+			return `/${this.user}/index.php?state=${state}`;
 		},
 	
 		keydown(event){

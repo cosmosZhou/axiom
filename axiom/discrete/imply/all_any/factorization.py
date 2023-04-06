@@ -69,7 +69,7 @@ def prove(Eq):
 
     Eq.induct = Eq.hypothesis.subs(n, n + 1)
 
-    Eq << Eq.induct.expr.expr.rhs.args[1].this.apply(discrete.matProd.to.matmul.pop)
+    Eq << Eq.induct.expr.expr.rhs.args[1].this.apply(discrete.matProd.to.matmul.pop_back)
 
     Eq << discrete.block.to.matProd.apply(n, n, b)
 
@@ -77,7 +77,7 @@ def prove(Eq):
 
     Eq << Eq.induct.subs(Eq[-1])
 
-    Eq << Eq[-1].this.expr.expr.rhs.args[0].apply(algebra.lamda.to.block.pop)
+    Eq << Eq[-1].this.expr.expr.rhs.args[0].apply(algebra.lamda.to.block.pop_back)
 
     Eq << MatMul(*Eq[-1].expr.expr.rhs.args[:2]).this.apply(discrete.matmul.to.block, deep=True)
 
@@ -125,7 +125,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.cond.any.imply.any_et)
 
-    Eq << Eq[-1].this.expr.expr.apply(discrete.eq.eq.imply.eq.permutation.pop.interval)
+    Eq << Eq[-1].this.expr.expr.apply(discrete.eq.eq.imply.eq.permutation.pop_back.interval)
 
     Eq << algebra.all.imply.ou.subs.apply(Eq.hypothesis, Eq.hypothesis.variable, p_quote[:n])
 

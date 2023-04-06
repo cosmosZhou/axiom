@@ -5,7 +5,8 @@ from util import *
 def apply(self):
     ((delta, i), (j, S[0], m), (S[i], S[0], (S[m], d))), (((λ, (S[d], S[-i], S[j])), (S[d], S[i - j])), (S[j], S[0], S[m - d]), (S[i], S[0], S[m])) = self.of(Det[Lamda[Pow, Tuple[Expr - Expr]] @ Lamda[(-Expr) ** Add * Binomial]])
     delta -= j
-    assert not delta._has(j)    
+    assert not delta._has(j)
+    h = self.generate_var(integer=True, var='h')
     return Equal(self, (1 - λ) ** (d * (m - d)) * Product[i:m - d](factorial(i)))
 
 
@@ -21,7 +22,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(MatMul).apply(discrete.matmul.vandermonde.col_transform.st.one)
 
-    Eq << Eq[-1].this.lhs.apply(discrete.det.to.mul, doit=True, deep=False)
+    Eq << Eq[-1].this.lhs.apply(discrete.det.to.mul)
 
     Eq << Eq[-1].this.find(Sum).apply(discrete.sum_binom.to.pow.Newton)
 
@@ -29,8 +30,9 @@ def prove(Eq):
 
     
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2022-01-15
-# updated on 2023-03-21

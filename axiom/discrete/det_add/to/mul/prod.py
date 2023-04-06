@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << Eq.induct.subs(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.pop)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.pop_back)
 
     Eq << Eq[-1].this.find(Sum)().find(Add).simplify()
 
@@ -37,7 +37,7 @@ def prove(Eq):
 
     Eq << Eq.deduct.find(Product).this.apply(algebra.prod.to.mul.split, cond={n})
 
-    Eq << Eq.deduct.find(Mul, Sum).this.apply(algebra.sum.to.add.pop)
+    Eq << Eq.deduct.find(Mul, Sum).this.apply(algebra.sum.to.add.pop_back)
 
     Eq << Eq.deduct.rhs.this.subs(Eq[-1], Eq[-2])
 
@@ -59,7 +59,7 @@ def prove(Eq):
     #return Lamda(Piecewise((KroneckerDelta(i, j), i < n - 1), (2 * KroneckerDelta(j, n - 1) - 1, True)), *limits)
     Eq << (D @ column_transformation(*D.limits)).this.apply(discrete.matmul.to.lamda)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.pop)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.pop_back)
 
     Eq.split = Eq[-1].this.rhs().find(Mul, Add, KroneckerDelta).simplify()
 
@@ -92,14 +92,14 @@ def prove(Eq):
     Eq << discrete.det.to.sum.expansion_by_minors.apply(Det(Eq.column_transformation.rhs), i=i).this.rhs.simplify(deep=True)
 
     Eq << Eq[-1].this.rhs.find(Add[Lamda]).apply(algebra.add.to.lamda)
-
+    
     Eq << Eq[-1].this.rhs.find(Add[Piecewise]).apply(algebra.add.to.piece)
-
+    
     Eq << Eq[-1].this.rhs.find(Add[Lamda]).apply(algebra.add.to.lamda)
-
+    
     Eq << Eq[-1].this.rhs.find(Add[Piecewise]).apply(algebra.add.to.piece)
 
-    Eq << Eq[-1].this.find(Mul, Det).doit(deep=True)
+    Eq << Eq[-1].this.find(Mul, Det).doit()
 
     Eq << Eq[-1].this.find(Product).apply(algebra.prod.limits.subs.offset, -1)
 
@@ -122,8 +122,8 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
@@ -133,4 +133,4 @@ if __name__ == '__main__':
 # https://mathworld.wolfram.com/DeterminantExpansionbyMinors.html
 # https://mathworld.wolfram.com/Minor.html
 # created on 2020-10-04
-# updated on 2023-03-21
+# updated on 2022-09-20

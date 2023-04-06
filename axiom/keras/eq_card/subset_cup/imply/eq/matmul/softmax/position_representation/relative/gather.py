@@ -54,7 +54,7 @@ def prove(Eq):
 
     Eq << Eq.zi_definition.find(ReducedSum).this.subs(Eq.Xi_def)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.reducedSum.to.sum, j)
+    Eq << Eq[-1].this.rhs.apply(algebra.reducedSum.to.sum)
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.absorb)
 
@@ -111,7 +111,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda[MatMul]).apply(discrete.lamda_matmul.to.matmul)
 
-    Eq << Eq[-1].this.find(Transpose[Lamda]).apply(algebra.transpose.to.lamda)
+    Eq << Eq[-1].this.find(Transpose[Lamda]).apply(algebra.transpose_lamda.to.lamda)
 
     Eq << Eq[-1].this.find(Lamda[Add]).apply(algebra.lamda.to.add)
 
@@ -127,10 +127,8 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.z_def, Eq[-1])
 
-    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-01-11
-# updated on 2023-03-19

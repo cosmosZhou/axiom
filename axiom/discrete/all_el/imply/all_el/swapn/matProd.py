@@ -34,7 +34,7 @@ def prove(Eq):
     b = Eq.hypothesis.expr.lhs.args[1].expr.indices[1].base
     Eq.induct = Eq.hypothesis.subs(m, m + 1)
 
-    Eq << Eq.induct.expr.lhs.args[1].this.apply(discrete.matProd.to.matmul.pop)
+    Eq << Eq.induct.expr.lhs.args[1].this.apply(discrete.matProd.to.matmul.pop_back)
 
     Eq << x @ Eq[-1]
 

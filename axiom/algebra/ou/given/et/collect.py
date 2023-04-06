@@ -6,22 +6,8 @@ def apply(given, *, cond=None):
     or_eqs = given.of(Or)
 
     new_or_eqs = []
-    and_eqs = []
-    if cond is None:
-        common_set = None
-        for and_eq in or_eqs:
-            if common_set is None:
-                if and_eq.is_And:
-                    common_set = {*and_eq._argset}
-                else:
-                    common_set = {and_eq}
-            else:
-                if and_eq.is_And:
-                    common_set &= {*and_eq._argset}
-                else:
-                    common_set &= {and_eq}
-        cond = And(*common_set)
 
+    and_eqs = []
     for and_eq in or_eqs:
         if and_eq.is_And:
             try:

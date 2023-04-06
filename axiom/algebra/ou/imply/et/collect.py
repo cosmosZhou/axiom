@@ -32,7 +32,9 @@ def apply(given, *, cond=None):
                 ...
         new_or_eqs.append(and_eq)
 
-    assert not new_or_eqs and and_eqs
+    assert not new_or_eqs
+    assert and_eqs
+
     return cond, Or(*and_eqs)
 
 

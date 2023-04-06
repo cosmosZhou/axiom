@@ -34,6 +34,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
+from . import infinity
 # created on 2021-02-08
-del oo
-from . import oo

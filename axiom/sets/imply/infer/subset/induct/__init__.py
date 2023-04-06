@@ -24,9 +24,9 @@ def prove(Eq):
 
     Eq << algebra.infer.imply.infer.et.both_sided.apply(Eq[0], cond=Subset(f(n), g(n)))
 
-    Eq << Eq[-1].this.rhs.apply(sets.subset.subset.imply.subset.cup.push)
+    Eq << Eq[-1].this.rhs.apply(sets.subset.subset.imply.subset.cup.push_back)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.cond.all.given.all.push)
+    Eq << Eq[-1].this.lhs.apply(algebra.cond.all.given.all.push_back)
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 

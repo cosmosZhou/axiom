@@ -11,7 +11,7 @@
 </template>
 
 <script>
-console.log('import hierarchyModule.vue');
+console.log('importing hierarchyModule.vue');
 
 import searchLink from "./searchLink.vue"
 

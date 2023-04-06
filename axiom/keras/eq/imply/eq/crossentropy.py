@@ -38,23 +38,21 @@ def prove(Eq):
     Eq << Eq[-1].this.find(MatMul).apply(discrete.matmul.to.sum, var=j)
 
     i = Symbol(domain=Range(n))
-    Eq << Eq[-1].apply(calculus.eq.imply.eq.grad, (x[i],), simplify=False)
+    Eq << Eq[-1].apply(calculus.eq.imply.eq.derive, (x[i],), simplify=False)
 
-    Eq << Eq[-1].this.rhs.apply(calculus.grad.to.mul)
+    Eq << Eq[-1].this.rhs.apply(calculus.derivative.to.mul)
 
-    Eq.loss = Eq[-1].this.find(Derivative[Sum]).apply(calculus.grad.to.sum)
+    Eq.loss = Eq[-1].this.find(Derivative[Sum]).apply(calculus.derivative.to.sum)
 
     Eq << Eq.y_def[i]
 
     Eq << Eq.y_def[j]
 
-    Eq << Eq[-1].apply(calculus.eq.imply.eq.grad, (x[i],), simplify=False)
+    Eq << Eq[-1].apply(calculus.eq.imply.eq.derive, (x[i],), simplify=False)
 
     Eq << Eq[-1].this.rhs.doit(deep=False)
 
-    Eq << Eq[-1].this.rhs.find(Derivative).apply(calculus.grad.to.mul.grad)
-
-    Eq << Eq[-1].subs(Eq[-4].reversed).subs(Eq[-5].reversed) / Eq[-1].lhs.expr
+    Eq << Eq[-1].subs(Eq[-3].reversed).subs(Eq[-4].reversed) / Eq[-1].lhs.expr
 
     Eq << Eq.loss.subs(Eq[-1])
 
@@ -67,14 +65,14 @@ def prove(Eq):
     Eq << Eq[-1].subs(Eq[0])
 
     Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (i,))
-
+    
     Eq << Eq[-1].subs(Eq.y_def)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-12-27
-# updated on 2023-03-19
+# updated on 2022-01-25

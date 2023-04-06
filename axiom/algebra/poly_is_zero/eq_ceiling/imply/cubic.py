@@ -43,10 +43,10 @@ def prove(Eq):
                 Equal(Ceiling(3 * Arg(-p / 3) / (S.Pi * 2) - S.One / 2) - Ceiling(3 * Arg(A * B) / (S.Pi * 2) - S.One / 2), 1),
                 x=x)
 
-    B = Symbol(Eq[2].args[0].rhs.args[1])
+    B = Symbol(Eq[2].args[0].rhs.args[0].args[1])
     Eq.B_def = B.this.definition
 
-    A = Symbol(Eq[2].args[0].rhs.args[0].find(Pow))
+    A = Symbol(Eq[2].args[0].rhs.args[1])
     Eq.A_def = A.this.definition
 
     Eq.w, Eq.w_conj, Eq.add_ww, Eq.mul_ww, Eq.w_square, Eq.w_conj_square, Eq.w3 = algebra.imply.et.eq.omega.apply('omega')

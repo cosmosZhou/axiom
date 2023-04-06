@@ -20,7 +20,7 @@ def prove(Eq):
     @Function(extended_real=True)
     def g(x):
         return Sum[n:oo](C[n] * x ** n)
-
+     
     x = Symbol(domain=Interval(0, S.One / 4, left_open=True))
     Eq.g_definition = g(x).this.defun()
 
@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq.g_squared = algebra.eq.eq.imply.eq.transit.apply(Eq[-2], Eq[-1])
 
-    Eq << Eq.g_definition.this.rhs.apply(algebra.sum.to.add.shift)
+    Eq << Eq.g_definition.this.rhs.apply(algebra.sum.to.add.pop_front)
 
     Eq << Eq[-1].subs(Eq[0])
 
@@ -73,9 +73,9 @@ def prove(Eq):
 
     Eq.any_gt = algebra.any.imply.any.limits.relax.subs.apply(Eq[-1], x_quote, x)
 
-    Eq << calculus.eq.imply.eq.grad.apply(Eq.g_definition, (x,), simplify=None)
+    Eq << calculus.eq.imply.eq.derive.apply(Eq.g_definition, (x,), simplify=None)
 
-    Eq << Eq[-1].this.rhs.apply(calculus.grad.to.sum)
+    Eq << Eq[-1].this.rhs.apply(calculus.derivative.to.sum)
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add.split, cond={0})
 
@@ -141,7 +141,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[1].expr.powsimp()
 
-    Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum.to.add.shift)
+    Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum.to.add.pop_front)
 
     Eq << 1 - Eq[-1]
 

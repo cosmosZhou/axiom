@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << algebra.add.to.lamda.apply(Eq.matmul.rhs.args[1])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.lamda.to.block.shift)
+    Eq << Eq[-1].this.rhs.apply(algebra.lamda.to.block.pop_front)
 
     Eq << Eq[-1].this.rhs.args[0].apply(algebra.oneMatrix.to.block, 1)
 
@@ -103,7 +103,7 @@ def prove(Eq):
 
     Eq << Eq[0].find(1 - Lamda).this.apply(algebra.add.to.lamda)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.lamda.to.block.shift)
+    Eq << Eq[-1].this.rhs.apply(algebra.lamda.to.block.pop_front)
 
     Eq << Eq[-1].this.find(Lamda[Add]).apply(algebra.lamda.to.add)
 
@@ -119,8 +119,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(discrete.det_block.to.mul)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':

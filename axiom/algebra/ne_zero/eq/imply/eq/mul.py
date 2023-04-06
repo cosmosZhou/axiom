@@ -16,9 +16,9 @@ def apply(is_nonzero, equality):
 @prove
 def prove(Eq):
     from axiom import algebra
-
     x = Symbol(real=True, given=True)
     f, g, h = Function(real=True)
+
     Eq << apply(Unequal(f(x), 0), Equal(g(x) / f(x), h(x) / f(x) + x))
 
     Eq << Eq[-1] / f(x)
@@ -27,11 +27,9 @@ def prove(Eq):
 
     Eq << algebra.et.imply.et.apply(Eq[-1])
 
-    Eq << Eq[-1].subs(Eq[1])
+    Eq << ~Eq[0]
 
-    
-    
-
+    Eq << ~Eq[1]
 
 if __name__ == '__main__':
     run()
@@ -39,4 +37,3 @@ if __name__ == '__main__':
 
 
 # created on 2018-01-24
-# updated on 2023-04-05

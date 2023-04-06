@@ -12,7 +12,7 @@
 </template>
 
 <script>
-console.log('import searchResult.vue');
+console.log('importing searchResult.vue');
 import searchForm from "./searchForm.vue"
 import searchLink from "./searchLink.vue"
 

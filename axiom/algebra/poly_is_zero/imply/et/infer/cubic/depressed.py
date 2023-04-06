@@ -77,7 +77,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.args[3:].apply(algebra.ou.imply.et.collect)
 
-    Eq << Eq[-1].this.args[1:3].apply(algebra.ou.imply.et.collect)
+    Eq << Eq[-1].this.args[:2].apply(algebra.ou.imply.et.collect)
 
     Eq << Eq[-1].this.find(Equal[Integer] | Equal[Integer]).apply(algebra.ou_eq.imply.eq.mod)
 
@@ -91,11 +91,7 @@ def prove(Eq):
 
     Eq << Eq[1].this.lhs.apply(algebra.eq.imply.mod_is_zero, 3)
 
-    
-    
-
 
 if __name__ == '__main__':
     run()
 # created on 2018-11-24
-# updated on 2023-04-05

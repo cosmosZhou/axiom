@@ -9,4 +9,3 @@ from . import sub
 from . import negate
 from . import add
 from . import notin
-from . import lt

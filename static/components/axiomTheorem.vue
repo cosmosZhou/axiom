@@ -3,7 +3,7 @@
 </template>
 
 <script>
-console.log('import axiomTheorem.vue');
+console.log('importing axiomTheorem.vue');
 import icon from "./icon.vue"
 export default {
 	components: {icon},
@@ -40,12 +40,13 @@ export default {
 		remove(){
 			console.log("this.theorem = " + this.theorem);
 			var href = location.href;
-			var m = href.match(/\/([^\/]+)\/(?:index\.php)?\?module=([^#]+)/);
+			var m = href.match(/\/([^\/]+)\/(index\.php)?\?module=([^#]+)/);
 			var user = m[1];
 			var module = m[2];
-			if (module.endsWith('.'))
+			if (module.endsWith('.')){
 				module = module.slice(0, -1);
-
+			}
+			
 			var data = {};
 			data['package'] = module;
 			data['theorem'] = this.theorem;

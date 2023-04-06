@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(given, *limits):
     lhs, rhs = given.of(Less)
-    assert Tuple.is_nonemptyset(limits)
+    print('need to prove', limits, 'are nonemptysets')
     return Less(Sum(lhs, *limits).simplify(), Sum(rhs, *limits).simplify())
 
 

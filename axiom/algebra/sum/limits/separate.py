@@ -3,12 +3,13 @@ from util import *
 
 @apply
 def apply(sgm):
-    expr, *limits = sgm.of(Sum)
+    function, *limits = sgm.of(Sum)
+    assert len(limits) > 1
     limit, *limits = limits
-    assert limits
-    expr = sgm.func(expr, limit).simplify()
 
-    return Equal(sgm, sgm.func(expr, *limits, evaluate=False), evaluate=False)
+    function = sgm.func(function, limit).simplify()
+
+    return Equal(sgm, sgm.func(function, *limits))
 
 
 @prove

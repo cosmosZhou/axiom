@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.rhs.apply(calculus.limit.limits.offset, x0)
 
-    Eq << Derivative(f(t), t).this.apply(calculus.grad.to.limit)
+    Eq << Derivative(f(t), t).this.apply(calculus.derivative.to.limit)
 
     Eq << Eq[-1].this.rhs.apply(calculus.limit.limits.subs, x)
     Eq << Eq[-1].subs(t, x0)

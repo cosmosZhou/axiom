@@ -1,13 +1,29 @@
 from util import *
 
 
+
 @apply
 def apply(given):
-    (x, p_polynomial), (y, S[p_polynomial]) = given.of(Equal[MatMul[2]])
+    assert given.is_Equal
+    lhs, rhs = given.args
 
+    assert lhs.is_MatMul
+    x, p_polynomial = lhs.args
+
+    assert rhs.is_MatMul
+    y, _p_polynomial = rhs.args
+
+    assert p_polynomial == _p_polynomial
+
+    assert p_polynomial.is_Lamda
     assert p_polynomial.shape == x.shape == y.shape
-    (b, e), (k, *ab) = p_polynomial.of(Lamda[Pow])
+    assert len(p_polynomial.shape) == 1
 #     n = p_polynomial.shape[0]
+    k = p_polynomial.variable
+    polynomial = p_polynomial.expr
+    assert polynomial.is_Pow
+
+    b, e = polynomial.as_base_exp()
     assert not b.has(k)
     assert e.as_poly(k).degree() == 1
 

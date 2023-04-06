@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << algebra.le.le.imply.le.subs.apply(Eq[-1], Eq[0])
 
-    Eq << Eq.induct.this.rhs.apply(algebra.sum.to.add.pop)
+    Eq << Eq.induct.this.rhs.apply(algebra.sum.to.add.pop_back)
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 

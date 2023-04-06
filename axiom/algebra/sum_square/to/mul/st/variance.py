@@ -80,7 +80,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[1].limits_subs(j, i)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.add.push_front)
 
     Eq << Eq[-1].this.rhs.apply(algebra.add.to.sum)
 

@@ -10,7 +10,7 @@
 
 <script>
 import codeMirror from "./codeMirror.vue";
-console.log('import module.vue');
+console.log('importing module.vue');
 export default {
 	components: {codeMirror},
 	

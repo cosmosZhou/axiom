@@ -25,9 +25,9 @@ def prove(Eq):
 
     Eq << algebra.infer.imply.infer.et.both_sided.apply(Eq[0], cond=x[n] >= y[n])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.cond.all.given.all.push)
+    Eq << Eq[-1].this.lhs.apply(algebra.cond.all.given.all.push_back)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.ge.ge.imply.ge.sum.push)
+    Eq << Eq[-1].this.rhs.apply(algebra.ge.ge.imply.ge.sum.push_back)
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 

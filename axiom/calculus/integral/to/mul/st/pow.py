@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << Eq.df - Eq[-1]
 
-    Eq << Eq[-1].this.lhs.apply(calculus.add.to.grad)
+    Eq << Eq[-1].this.lhs.apply(calculus.add.to.derivative)
 
     Eq << calculus.is_zero.imply.any_eq.constant.apply(Eq[-1])
 

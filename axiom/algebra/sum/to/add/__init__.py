@@ -68,11 +68,10 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
+from . import push_front, push_back
 from . import doit
 from . import split
+from . import pop_back
+from . import pop_front
 from . import telescope
 # created on 2018-02-20
-from . import shift
-from . import pop
-from . import unshift
-from . import push

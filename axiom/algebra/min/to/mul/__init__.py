@@ -20,7 +20,7 @@ def apply(self, factor=None):
         if common_factors:
             factor = Mul(*common_factors)
 
-    assert factor >= 0
+    assert factor > 0
     args = [arg / factor for arg in args]
     return Equal(self, factor * Min(*args))
 
@@ -36,10 +36,7 @@ def prove(Eq):
     Eq << Eq[0].this.lhs.apply(algebra.min.to.piece)
 
     Eq << Eq[-1].this.rhs.args[1].apply(algebra.min.to.piece)
-
     Eq << Eq[-1].this.lhs.apply(algebra.piece.to.mul)
-
-    
 
 
 if __name__ == '__main__':
@@ -47,4 +44,3 @@ if __name__ == '__main__':
 
 from . import max
 # created on 2019-08-18
-# updated on 2023-03-26

@@ -27,7 +27,7 @@ function getTextWidth(str) {
 	return result;
 }
 
-console.log('import newInput.vue');
+console.log('importing newInput.vue');
 export default {
 	props : [ 'module'],
 	

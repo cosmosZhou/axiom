@@ -3,8 +3,8 @@
 </template>
 
 <script>
-console.log('import codeMirror.vue');
-//import {CodeMirror} from "../../static/codemirror/src/edit/main.js"
+console.log('importing codeMirror.vue');
+
 export default {
     data() {
         return {
@@ -21,16 +21,6 @@ export default {
     },
     
     computed: {
-    	rows() {
-    		console.log('rows = ', this.text.length);
-    		return this.text.length;
-    	},
-    	
-    	cols() {
-    		console.log('cols = ', Math.max(...this.text.map(text => text.length)));
-    		return Math.max(...this.text.map(text => text.length));
-    	},
-    	
     	breakpointArray(){
     		var array = [];
 			for (let line = 0; line < this.breakpoint.length; ++line){
@@ -548,9 +538,6 @@ export default {
 				self.resume();
 			},            
         };
-        
-        if (typeof CodeMirror == 'undefined')
-        	return;
         
         this.editor = CodeMirror.fromTextArea(this.$el, {
             mode: {

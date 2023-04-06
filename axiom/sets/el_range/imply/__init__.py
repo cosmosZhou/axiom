@@ -4,4 +4,3 @@ from . import lt
 from . import ge
 from . import ou
 from . import le
-from . import iff

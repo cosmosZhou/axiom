@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[0], simplify=None)
 
-    Eq << algebra.any.imply.any.limits.negate.oo.apply(Eq[-1])
+    Eq << algebra.any.imply.any.limits.negate.infinity.apply(Eq[-1])
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.imply.el.neg)
 

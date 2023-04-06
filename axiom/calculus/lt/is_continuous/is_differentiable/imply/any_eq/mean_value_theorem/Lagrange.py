@@ -31,7 +31,7 @@ def prove(Eq):
     a, b = Symbol(real=True, given=True)
     x = Symbol(real=True)
     f = Function(real=True)
-
+    
     Eq << apply(a < b, is_continuous(f, a, b), is_differentiable(f, a, b))
 
     @Function(real=True)
@@ -75,7 +75,7 @@ def prove(Eq):
 
     Eq << Eq.is_differentiable.this.expr.lhs.expr.defun()
 
-    Eq << Eq[-1].this.expr.lhs.apply(calculus.grad.to.add)
+    Eq << Eq[-1].this.expr.lhs.apply(calculus.derivative.to.add)
 
     Eq << Eq[-1].this.expr.apply(sets.el.given.el.add, f(b) - f(a))
 
@@ -89,7 +89,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.lhs.expr.defun()
 
-    Eq << Eq[-1].this.expr.lhs.apply(calculus.grad.to.add)
+    Eq << Eq[-1].this.expr.lhs.apply(calculus.derivative.to.add)
 
     Eq << Eq[-1].this.expr - f(a)
 

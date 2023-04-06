@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    Eq << Eq[-1].apply(algebra.ne_zero.ne_zero.imply.ne_zero.mul)
+    Eq << Eq[-1].apply(algebra.ne_zero.ne_zero.imply.ne_zero)
 
     Eq <<= Eq[-1] & Eq[0]
 

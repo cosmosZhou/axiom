@@ -11,4 +11,3 @@ from . import gt_zero
 from . import lt_zero
 from . import ne_zero
 from . import all
-from . import iff

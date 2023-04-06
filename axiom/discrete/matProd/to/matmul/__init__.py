@@ -1,2 +1,2 @@
-from . import shift
-from . import pop
+from . import pop_front
+from . import pop_back

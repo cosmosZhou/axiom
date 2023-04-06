@@ -30,8 +30,3 @@ from . import lt
 from . import ge
 from . import all_lt
 from . import eq_sqrt
-from . import sum_softmax
-from . import eq_prob
-from . import expect
-from . import ne_zero
-from . import sum

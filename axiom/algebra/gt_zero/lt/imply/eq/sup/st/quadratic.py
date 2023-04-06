@@ -27,7 +27,6 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.apply(algebra.sup.limits.subs.offset, -b * Eq.a_reciprocal.lhs / 2)
 
     Eq << Eq[-1].this.rhs.apply(algebra.max.to.add)
-
     Eq.eq = Eq[-1].this.lhs.expr.expand()
 
     Eq << Eq[1] + Eq.a_reciprocal.lhs * b / 2
@@ -40,15 +39,10 @@ def prove(Eq):
 
     Eq << Eq.eq.subs(Eq[-1].reversed)
 
-    Eq << algebra.gt_zero.imply.ne_zero.apply(Eq[0])
-
-    Eq << algebra.et.given.et.apply(Eq[-2])
-
     Eq << algebra.gt_zero.imply.eq.mul.to.max.apply(Eq[0], Eq[-1].lhs.find(Max))
 
     Eq << Eq[-2].subs(Eq[-1])
 
-    Eq << algebra.et.given.et.apply(Eq[-1])
     Eq << Eq[-1].this.lhs.apply(algebra.add.to.max)
 
     Eq << Eq[-1].this.find(Add ** 2).apply(algebra.square.to.add)
@@ -59,11 +53,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[Add]).apply(algebra.mul.to.add)
 
-    
-    
-
 
 if __name__ == '__main__':
     run()
 # created on 2019-09-09
-# updated on 2023-04-05

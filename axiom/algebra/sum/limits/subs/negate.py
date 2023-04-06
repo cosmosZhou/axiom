@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.bool)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.negate.oo)
+    Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.negate.infinity)
 
     Eq << Eq[-1].this.rhs.find(Element).apply(sets.el.negate)
 

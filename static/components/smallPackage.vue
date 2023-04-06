@@ -3,7 +3,7 @@
 </template>
 
 <script>
-console.log('import smallPackage.vue');
+console.log('importing smallPackage.vue');
 import smallIcon from "./smallIcon.vue"
 export default {
 	components: {smallIcon},

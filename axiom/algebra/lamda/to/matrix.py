@@ -13,11 +13,8 @@ def apply(self):
         assert diff_y.is_Number
         array = tuple(tuple(self[sympify(i), sympify(j)] for j in range(diff_y)) for i in range(diff))
 
-    elif sh := function.shape:
-        assert all(isinstance(s, (int, Integer)) for s in sh)
-        [diff_y] = sh
-        array = tuple(tuple(self[sympify(i), sympify(j)] for j in range(diff_y)) for i in range(diff))
     else:
+        assert not function.shape
         array = tuple(self[sympify(i)] for i in range(diff))
 
     return Equal(self, Matrix(array), evaluate=False)

@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.le.imply.lt.relax, upper=oo)
 
-    Eq.ge_sup = algebra.imply.all.sup_ge.apply(Eq[-1].lhs)
+    Eq.ge_sup = algebra.imply.all_ge.sup.apply(Eq[-1].lhs)
 
     Eq << algebra.ge.imply.gt.relax.apply(Eq.ge_sup, lower=-oo)
 

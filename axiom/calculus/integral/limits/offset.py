@@ -23,6 +23,7 @@ def prove(Eq):
 
     fp = Function("f^+", real=True, eval=lambda x: (abs(f(x)) + f(x)) / 2)
     fn = Function("f^-", real=True, eval=lambda x: (abs(f(x)) - f(x)) / 2)
+    
     Eq << fp(x).this.defun()
 
     Eq << algebra.imply.add_ge_zero.abs.apply(f(x)) / 2
@@ -50,18 +51,9 @@ def prove(Eq):
     Eq << calculus.ge_zero.imply.eq.integral.limits.offset.apply(Eq.fp_is_nonnegative, Eq[-1].lhs.args[0], d)
 
     Eq << Eq[-2].subs(Eq[-1]).simplify()
-
-    Eq << Eq[-1].this.lhs.apply(calculus.integral.to.mul)
-
-    Eq << Eq[-1].this.rhs.apply(calculus.integral.to.mul)
-
-    
     Eq << calculus.ge_zero.imply.eq.integral.limits.offset.apply(Eq.fn_is_nonnegative, Eq[-1].lhs, d)
-    
-    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-06-05
-# updated on 2023-04-04

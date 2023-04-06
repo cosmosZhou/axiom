@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(sets.cap.piece)
 
-    Eq << Eq[-1].this.rhs.apply(sets.cap.limits.negate.oo)
+    Eq << Eq[-1].this.rhs.apply(sets.cap.limits.negate.infinity)
 
     Eq << Eq[-1].this.rhs.find(Element).apply(sets.el.negate)
 

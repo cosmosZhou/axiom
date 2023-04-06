@@ -7,7 +7,7 @@
 </template>
 
 <script>
-console.log('import consoleStatement.vue');
+console.log('importing consoleStatement.vue');
 export default {		
 	props : [ 'script', 'latex'],
 	

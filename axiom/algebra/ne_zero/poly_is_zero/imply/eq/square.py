@@ -33,15 +33,11 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1])
 
-    Eq << algebra.et.given.et.apply(Eq[-1])
     Eq << Eq[-1].this.rhs.apply(algebra.mul.to.add)
 
     Eq << Eq[-1].this.lhs.apply(algebra.mul.to.add)
-
-    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-11-12
-# updated on 2023-04-05

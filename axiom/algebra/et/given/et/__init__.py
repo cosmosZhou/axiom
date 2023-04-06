@@ -32,4 +32,3 @@ from . import subs
 from . import transit
 # created on 2018-01-16
 # updated on 2021-11-24
-from . import div

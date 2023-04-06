@@ -3,7 +3,6 @@ from util import *
 
 @apply
 def apply(given, old, new):
-    new = sympify(new)
     from sympy.concrete.limits import limits_dict
     (function, *limits_f), *limits_e = given.of(Any[All])
     limits_f_dict = limits_dict(limits_f)
@@ -11,7 +10,7 @@ def apply(given, old, new):
     domain = limits_f_dict[old]
     if domain:
         assert new in domain
-    
+
     return Any(All(function._subs(old, new) & function, *limits_f), *limits_e)
 
 

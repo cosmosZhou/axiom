@@ -65,7 +65,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(calculus.integral.limits.domain_defined.insert)
 
-    Eq << stats.imply.eq.gaussian.std.apply()
+    Eq << stats.imply.eq.guassion.std.apply()
 
     Eq << Eq[-1] * sqrt(2 * pi)
 

@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << stats.ne_zero.imply.ne_zero.joint.apply(Eq[0])
 
-    Eq << stats.ne_zero.imply.et.ne_zero.apply(Eq[-1])
+    Eq << stats.ne_zero.imply.et.apply(Eq[-1])
 
 
 if __name__ == '__main__':

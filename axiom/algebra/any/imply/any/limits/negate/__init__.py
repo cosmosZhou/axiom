@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[0], simplify=False)
 
-    Eq << algebra.any.imply.any.limits.negate.oo.apply(Eq[-1])
+    Eq << algebra.any.imply.any.limits.negate.infinity.apply(Eq[-1])
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.imply.el.neg)
 
@@ -26,6 +26,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
+from . import infinity
 # created on 2019-02-13
-del oo
-from . import oo

@@ -47,9 +47,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.add.split, cond={n})
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.pop)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.pop_back)
 
-    Eq << Eq[-1].find(Sum, Sum).this.apply(algebra.sum.to.add.pop)
+    Eq << Eq[-1].find(Sum, Sum).this.apply(algebra.sum.to.add.pop_back)
 
     Eq << Eq[-2].subs(Eq[-1])
 

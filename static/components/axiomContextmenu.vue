@@ -23,7 +23,7 @@
 </template>
 
 <script>    
-console.log('import axiomContextmenu.vue');
+console.log('importing axiomContextmenu.vue');
 export default {
     data(){
         return {

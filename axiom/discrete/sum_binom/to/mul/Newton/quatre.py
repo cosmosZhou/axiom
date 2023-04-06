@@ -30,13 +30,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.mul.to.add)
 
-    Eq << Eq[-1].this.find(Sum[Mul[Symbol]]).apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.find(Sum[Mul[Symbol]]).apply(algebra.sum.to.add.push_front)
 
     Eq << Eq[-1].this.find(Sum[Mul[Symbol]]).apply(discrete.sum_binom.to.mul.Newton)
 
     Eq << Eq[-1].this.find(Sum).apply(discrete.sum_binom.to.pow.Newton)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.push_front)
 
     Eq << Eq[-1].this.lhs.apply(algebra.add.collect, factor=x)
 

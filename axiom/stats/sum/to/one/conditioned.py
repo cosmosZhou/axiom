@@ -1,18 +1,12 @@
 from util import *
 
 
-def extract(Sum, self):
-    args, (x_var, *_) = self.of(Sum[Probability[Conditioned]])
-    if args[-1].is_Tuple:
-        args, *weights = args
-        
-    cond, given = args
-    x, S[x_var] = cond.of(Equal)
-    return 1
-
 @apply
 def apply(self):
-    return Equal(self, extract(Sum, self))
+    ((X, x), (Y, y)), (_x, *_) = self.of(Sum[Probability[Conditioned[Equal, Equal]]])
+    assert x == _x
+
+    return Equal(self, 1)
 
 
 @prove
@@ -20,17 +14,14 @@ def prove(Eq):
     from axiom import stats
 
     x, y = Symbol(integer=True, random=True)
-    Eq << apply(Sum[x.var](Probability(x | y)))
+    x_ = Symbol('x', integer=True)
+    Eq << apply(Sum[x_](Probability(x | y)))
 
-    Eq << Eq[-1].this.lhs.expr.apply(stats.prob.to.mul.bayes)
+    Eq << Eq[-1].this.lhs.expr.apply(stats.probability.to.mul)
 
-    Eq << Eq[-1].this.find(Sum).apply(stats.sum.to.prob)
-
-    
-    
+    Eq << Eq[-1].this.find(Sum).apply(stats.sum.to.probability)
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-07-18
-# updated on 2023-03-25

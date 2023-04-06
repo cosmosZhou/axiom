@@ -37,13 +37,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(All).apply(algebra.all.limits.subs.offset, -i - 1)
 
-    Eq << Eq[-1].this.rhs.find(And).apply(algebra.et.to.all.limits.unshift)
+    Eq << Eq[-1].this.rhs.find(And).apply(algebra.et.to.all.limits.push_front)
 
     Eq << Eq[-1].this.lhs.find(Element).simplify()
 
     Eq << Eq[-1].this.lhs.find(All).apply(algebra.all.limits.subs.offset, -i)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.split.slice.shift)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.split.slice.pop_front)
 
 
 if __name__ == '__main__':

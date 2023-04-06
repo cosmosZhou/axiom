@@ -23,22 +23,22 @@ def prove(Eq):
     A = Symbol(r"\boldsymbol A", real=True, shape=(n, n))
     Eq << apply(Equal(f(x), c + b @ x + x @ A @ x))
 
-    Eq << calculus.eq.imply.eq.grad.apply(Eq[0], (x,))
+    Eq << calculus.eq.imply.eq.derive.apply(Eq[0], (x,))
 
-    Eq << Eq[-1].this.rhs.apply(calculus.grad.to.add)
+    Eq << Eq[-1].this.rhs.apply(calculus.derivative.to.add)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(calculus.grad.to.expr.st.poly.simple)
+    Eq << Eq[-1].this.rhs.args[0].apply(calculus.derivative.to.expr.st.polynomial.simple)
 
-    Eq << Eq[-1].this.rhs.args[1].apply(calculus.grad.to.expr.st.poly.quadratic)
+    Eq << Eq[-1].this.rhs.args[1].apply(calculus.derivative.to.expr.st.polynomial.quadratic)
 
-    Eq << calculus.eq.imply.eq.grad.apply(Eq[-1], (x,))
+    Eq << calculus.eq.imply.eq.derive.apply(Eq[-1], (x,))
 
-    Eq << Eq[-1].this.rhs.apply(calculus.grad.to.add)
+    Eq << Eq[-1].this.rhs.apply(calculus.derivative.to.add)
 
-    Eq << Eq[-1].this.rhs.apply(calculus.grad.to.expr.st.poly.simple)
+    Eq << Eq[-1].this.rhs.apply(calculus.derivative.to.expr.st.polynomial.simple)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':

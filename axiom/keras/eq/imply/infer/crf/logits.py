@@ -5,7 +5,7 @@ from util import *
 def apply(given, G, x, s):
     t = s.definition.variable
     (x_eq, y_eq), (y, i), [S[i]] = x.definition.of(Lamda[Log[Probability[Conditioned]], Tuple[Indexed]])
-
+    
     return Infer(t > 0, Equal(s[t], G[y[t], y[t - 1]] + s[t - 1] + x[t, y[t]])), \
         Equal(s[t], Log(Probability(y_eq.subs(i, 0))) + Sum[i:1:t + 1](G[y[i], y[i - 1]]) + Sum[i:t + 1](x[i, y[i]]))
 
@@ -47,7 +47,7 @@ def prove(Eq):
 
     Eq << algebra.eq.cond.imply.cond.subs.apply(Eq.G_definition.reversed, Eq[-1])
 
-    Eq << Eq[-1].this.rhs.args[-1].apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.rhs.args[-1].apply(algebra.sum.to.add.push_front)
 
     Eq << Eq[-1].subs(t, t + 1)
 
@@ -70,7 +70,7 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.apply(algebra.ne_zero.given.gt_zero)
 
     #reference: Neural Architectures for Named Entity Recognition.pdf
-
+    
 
 
 if __name__ == '__main__':

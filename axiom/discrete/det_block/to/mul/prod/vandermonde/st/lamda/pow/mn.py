@@ -28,15 +28,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.transpose.block, 1)
 
-    Eq << Eq[-1].this.find(BlockMatrix).args[1].find((~Lamda) * Lamda)().expr.simplify()
+    Eq << Eq[-1].this.find(BlockMatrix).args[1].find(Lamda[Tuple[2]])().expr.args[0].simplify()
 
     Eq << Eq[-1].this.find(Det).apply(discrete.det_block.to.zero)
 
-    
     
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-07-11
-# updated on 2023-03-18

@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << calculus.pow.to.sum.binom.apply((1 + x) ** r, n)
 
-    Eq << calculus.eq.imply.eq.grad.apply(Eq[-1], (x,))
+    Eq << calculus.eq.imply.eq.derive.apply(Eq[-1], (x,))
 
     Eq << Eq[-1].this.lhs.doit()
 

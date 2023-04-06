@@ -77,7 +77,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Greater).apply(algebra.gt_zero.given.gt_zero.inverse)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.et.to.all.limits.push)
+    Eq << Eq[-1].this.lhs.apply(algebra.et.to.all.limits.push_back)
 
     Eq <<= Eq.alpha_recurrence & Eq[-1]
 

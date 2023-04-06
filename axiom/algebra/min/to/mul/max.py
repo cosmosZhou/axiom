@@ -20,7 +20,7 @@ def apply(self, factor=None):
         if common_factors:
             factor = Mul(*common_factors)
 
-    assert factor <= 0
+    assert factor < 0
     args = [arg / factor for arg in args]
     return Equal(self, factor * Max(*args))
 
@@ -41,10 +41,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(LessEqual).reversed
 
-    
-
 
 if __name__ == '__main__':
     run()
 # created on 2020-01-26
-# updated on 2023-03-26

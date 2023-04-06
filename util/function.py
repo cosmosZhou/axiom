@@ -65,3 +65,4 @@ def topological_sort():
 
 if __name__ == '__main__':
     insert_into_function()
+# exec(open('./util/function.py').read())

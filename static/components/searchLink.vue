@@ -11,7 +11,7 @@
 </template>
 
 <script>
-console.log('import searchLink.vue');
+console.log('importing searchLink.vue');
 import searchContextmenu from "./searchContextmenu.vue"
 
 var focusedAlready = false;

@@ -50,7 +50,7 @@ def prove(Eq):
 
     Eq << Eq.zi_def.find(ReducedSum).this.subs(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.reducedSum.to.sum, j)
+    Eq << Eq[-1].this.rhs.apply(algebra.reducedSum.to.sum)
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.absorb)
 
@@ -79,5 +79,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-04-26
-# updated on 2023-03-19
+# updated on 2022-04-30
 

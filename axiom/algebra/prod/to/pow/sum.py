@@ -18,17 +18,17 @@ def prove(Eq):
     a = Symbol(real=True)
     Eq << apply(Product[i:n](a ** f(i)))
 
-    
+    Eq << Eq[0].subs(n, 0)
 
     Eq.induct = Eq[0].subs(n, n + 1)
 
     Eq << Eq[0] * a ** f(n)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.mul.to.prod.limits.push)
+    Eq << Eq[-1].this.lhs.apply(algebra.mul.to.prod.limits.push_back)
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul.to.pow.add.exponent)
 
-    Eq << Eq[-1].this.find(Add[Sum]).apply(algebra.add.to.sum.limits.push)
+    Eq << Eq[-1].this.find(Add[Sum]).apply(algebra.add.to.sum.limits.push_back)
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
@@ -40,4 +40,3 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-01-15
-# updated on 2023-03-30

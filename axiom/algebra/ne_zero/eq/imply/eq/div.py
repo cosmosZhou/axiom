@@ -2,9 +2,12 @@ from util import *
 
 
 @apply
-def apply(ne_zero, eq, simplify=True):
-    x = ne_zero.of(Unequal[0])
-    lhs, rhs = eq.of(Equal)
+def apply(is_nonzero, equality, simplify=True):
+    if is_nonzero.is_Equal:
+        equality, is_nonzero = is_nonzero, equality
+
+    x = is_nonzero.of(Unequal[0])
+    lhs, rhs = equality.of(Equal)
     if simplify:
         if lhs.is_Add:
             lhs = Add(*(a / x for a in lhs.args))
@@ -34,11 +37,8 @@ def prove(Eq):
 
     Eq << Eq[2].this.rhs.ratsimp()
 
-    
-
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-01-24
-# updated on 2023-03-27

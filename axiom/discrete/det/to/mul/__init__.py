@@ -2,11 +2,11 @@ from util import *
 
 
 @apply
-def apply(self, doit=True, deep=True):
+def apply(self, doit=True):
     args = self.of(Det[MatMul])
     args = [Det(arg) for arg in args]
     if doit:
-        args = [arg.doit(deep=deep) for arg in args]
+        args = [arg.doit() for arg in args]
 
     return Equal(self, Mul(*args))
 
@@ -28,13 +28,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Det[MatMul]).apply(discrete.det.to.mul.deux)
 
-    
-    
-
 
 if __name__ == '__main__':
     run()
 from . import st
 # created on 2020-08-20
 from . import deux
-# updated on 2023-03-21

@@ -9,7 +9,7 @@ def apply(_Y, Y):
 
     function, (i, S[k]) = X_squared_Sum.of(Sum[Tuple[0, Expr]])
 
-    X = pspace(X_squared_Sum).value
+    X = pspace(X_squared_Sum).value.base
 
     y = pspace(Y).symbol
     assert y >= 0

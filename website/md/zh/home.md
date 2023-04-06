@@ -4,14 +4,13 @@
 [axiom.top](../index.php)是一个基于数学定理知识库、用于证明数学命题的网站，此[github工程](https://github.com/cosmosZhou/axiom)主要依靠开源符号计算项目 
 [sympy](https://github.com/sympy/sympy) 和 
 [Maxima](http://maxima.sourceforge.net) 改写, 其中函数命名主要参考数学软件语言
-[Mathematica](https://reference.wolfram.com/language/index.html.en?source=footer)。 
-其主要特征在于：半机械化、公理化、严密的推理逻辑。  
-基本设计理念是：语法精确，表达简洁，执行高效，书写美观。
+[Mathematica](https://reference.wolfram.com/language/index.html.en?source=footer)
+。 其主要特征在于：半机械化、公理化、追求逻辑严密性。目前该工具可以应用于求证数学课本上的证明题。
 	
 	
-* 所述半机械化，是指目前做不到全自动根据数学命题题设直接打印出证明过程，而是需要人脑的辅助，人必须通过检索定理库，告诉计算机，面对什么样的题型使用什么样的定理；全机械化，自动化的符号推理算法尚未有可演示的研究成果；
-* 所述公理化，是指所有已证明的数学定理，归根结底是通过有限个公理经过有限次逻辑运算推导出来的，而公理是不需要证明的，其真伪是人为假定成立的，整个数学定理库就是建立在公理的假设之上展开构建的；当然根据哥德尔不完备性定理（Goedel Incompleteness Theorem），任何一个自洽的推理系统，必然存在不能证明，亦不能证伪的命题，此类命题不能通过有限个公理经过有限次逻辑运算（布尔运算）导出；
-* 所述严密的推理逻辑，就是依据[希尔伯特纲领](https://en.wikipedia.org/wiki/Hilbert%27s_program)中的申明，在论证过程中，以[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定逻辑来引导程序进行推理，力求确保计算结果在[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定语法规则内有效，且所有推理都依据某个公理或者定理进行。在本系统中，所有数学命题都将被[Python](https://www.python.org/)语句精确描述出来，不存在自然语言描述数学问题时存在的歧义性，也不存在浮点数引起的误差问题。
+* 所述半机械化，是指目前做不到全自动根据数学命题题设直接打印出证明过程，而是需要人脑的辅助，人必须通过检索定理库，告诉计算机，面对什么样的题型使用什么样的定理；
+* 所述公理化，是指所有数学定理，归根结底可以用公理来解释，而公理是不需要证明的，其真伪是人为假定成立的，整个数学定理库就是建立在公理的假设之上展开构建的；
+* 所述追求逻辑严密性，就是依据[希尔伯特纲领](https://en.wikipedia.org/wiki/Hilbert%27s_program)中的申明，在论证过程中，以[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定逻辑来引导程序进行推理，力求确保计算结果在[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定语法规则内有效，且所有推理都依据某个公理或者定理进行。在本系统中，所有数学问题都将被[Python](https://www.python.org/)语句精确描述出来，不存在自然语言描述数学问题时存在的歧义性。
 
 该系统的三个基本要件是[Symbol](../index.php?symbol=Symbol), [Function](../index.php?symbol=Function), Theorem；
 * Symbol是一个字母或者数字组合的变量。变量命名规则与[Python](https://www.python.org/)一致。用于定义任意类型的抽象数学符号，比如  
@@ -36,7 +35,7 @@ f = Function(measurable=True, domain=Interval(0, 1))，表示一个可测实数�
 f = Function(real=True, integrable=True)，表示一个实数抽象（在任意区间内）Lebesgue可积函数。  
 以及系统内置函数，比如[cos](../index.php?symbol=cos)(x), [sin](../index.php?symbol=sin)(x), [tan](../index.php?symbol=tan)(x), [log](../index.php?symbol=log)(x), [exp](../index.php?symbol=exp)(x), 以及大型运算符[Sum](../index.php?symbol=Sum)\[k:a:b\](h\[k\]), [Product](../index.php?symbol=Product)\[k:a:b\](h\[k\]), [All](../index.php?symbol=All)\[k:a:b\](h\[k\] > t\[k\]), [Any](../index.php?symbol=Any)\[k:a:b\](h\[k\] > t\[k\])等等，所有函数都不会进行浮点数运算，因为在定理推导系统中，没有浮点数的概念，一切都是严格意义上的数学符号与函数。  
 * Theorem表示一个定理或者公理；    
-Theorem的入参是一个python表达式,可以是布尔（Boolean）表达式或者是关于Symbol与Function的表达式，出参是一个布尔（Boolean）表达式。它以定理库的形式储存。基本用法就是Theorem.apply(...);  
+Theorem的入参是一个表达式，出参是一个判断表达式。它以定理库的形式储存。基本用法就是Theorem.apply(...);  
 比如  
 a, b, c = Symbol(complex=True)  
 [algebra.poly_is_zero.imply.et.infer.cubic.apply](../index.php?module=algebra.poly_is_zero.imply.et.infer.cubic)(Equal(x ** 3 + a * x ** 2 + b * x + c, 0), x=x),  表示对一个一元三次方程在复数域内求解。  

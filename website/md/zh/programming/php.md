@@ -117,8 +117,6 @@ cURL support	enabled
 添加：  
 Include conf/extra/httpd-autoindex.conf  
 或者去掉前面的注释  
-这时会打印以下内容：  
-Name	Last modified	Size	Description  
 
 
 ## 安装Xdebug调试器
@@ -325,3 +323,4 @@ www.axiom.top
 或者
 https://www.axiom.top
 之后可以发现没有“不安全”提示语句了！  
+

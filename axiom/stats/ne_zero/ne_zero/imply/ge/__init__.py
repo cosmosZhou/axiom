@@ -1,1 +1,1 @@
-from . import KL
+from . import kullback_leibler

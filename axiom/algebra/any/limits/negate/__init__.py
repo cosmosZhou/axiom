@@ -26,6 +26,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
+from . import infinity
 # created on 2019-02-19
-del oo
-from . import oo

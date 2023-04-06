@@ -23,11 +23,11 @@ def prove(Eq):
 
     Eq.induct = Eq[0].subs(n, n + 1)
 
-    #Eq << Eq.induct.this.find(Equal[~Sum]).apply(algebra.sum.to.add.pop)
+    #Eq << Eq.induct.this.find(Equal[~Sum]).apply(algebra.sum.to.add.pop_back)
     #Eq << Eq[-1].this.find(All).apply(algebra.all.imply.et.split, cond={n})
     Eq << Eq.induct.this.find(All).apply(algebra.all_et.imply.et.all)
 
-    Eq << Eq[-1].this.find(Element[~Sum]).apply(algebra.sum.to.add.pop)
+    Eq << Eq[-1].this.find(Element[~Sum]).apply(algebra.sum.to.add.pop_back)
 
     Eq.lt, Eq.ge = algebra.cond.given.et.infer.split.apply(Eq[-1], cond=w[n] < 1)
 
@@ -49,7 +49,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.infer.flatten)
 
-    Eq << Eq[-1].this.find(Equal[~Sum]).apply(algebra.sum.to.add.pop)
+    Eq << Eq[-1].this.find(Equal[~Sum]).apply(algebra.sum.to.add.pop_back)
 
     Eq << Eq[-1].this.find(Equal) - w[n]
 

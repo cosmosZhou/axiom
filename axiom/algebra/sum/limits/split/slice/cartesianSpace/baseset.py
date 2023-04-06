@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(All).apply(algebra.all.to.et.split, cond={i})
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.split.slice.shift)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.split.slice.pop_front)
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
 from . import eq
 
-from . import given
+from . import ne_zero
 from . import imply

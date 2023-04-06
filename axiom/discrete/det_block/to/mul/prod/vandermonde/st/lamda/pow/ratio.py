@@ -37,17 +37,16 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(discrete.det_block.to.mul)
 
-    Eq << Eq[-1].this.lhs.args[1].doit(deep=True)
+    Eq << Eq[-1].this.lhs.args[1].doit()
 
     Eq << Eq[-1].this.find(Det[MatMul]).apply(discrete.det_matmul.to.mul.prod.vandermonde.col_transform.st.one)
 
     Eq << Eq[-1].this.find(Det[MatMul]).apply(discrete.det_matmul_lamda.to.mul.prod.vandermonde)
 
     
-    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-11-25
-# updated on 2023-03-21
+# updated on 2022-07-11
