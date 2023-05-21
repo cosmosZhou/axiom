@@ -329,3 +329,8 @@ https://www.axiom.top
 ### PHP Warning:  'vcruntime140.dll' 14.0 is not compatible with this PHP build linked with 14.16 in Unknown on line 0  
 check the site and download  
 https://learn.microsoft.com/zh-CN/cpp/windows/latest-supported-vc-redist?view=msvc-170  
+
+### apache Error:  
+(98)Address already in use: AH00072: make_sock: could not bind to address 0.0.0.0:80  
+killall -9 httpd  
+/usr/local/httpd/apachectl -k restart  

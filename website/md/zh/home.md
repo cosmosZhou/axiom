@@ -78,10 +78,8 @@ extended_integer ⊂ extended_rational ⊂ [extended_real](https://en.wikipedia.
 [数学归纳法](../index.php?module=algebra.ne_zero.infer.imply.ne_zero.induct)的证明；
 * [sets](../index.php?module=sets) 集合论, 即sets theory，集合论是整个数学分析、数学推导系统的理论核心；涉及大量用集合论术语ForAll（任意）, Exists（存在）, ‘属于’ （Element），‘包含’（Subset）描述的命题，比如
 [容斥原理](../index.php?module=sets/imply/eq/principle/inclusion_exclusion/basic)的证明。可以说，集合论是数学推理的根本语法。
-* [geometry](../index.php?module=geometry) 几何学，主要分为初中
-[平面几何学](../index.php?module=geometry/plane)，(中学三角函数学) 与高中
-[立体几何学](../index.php?module=geometry/solid)； 包含不少三角函数恒等式，比如
-[和差化积](../index.php?module=geometry.cos.to.add.principle.add)，[积化和差](../index.php?module=geometry.mul.to.add.sin)，等等。
+* [geometry](../index.php?module=geometry) 几何学，包含不少三角函数恒等式，比如
+[和差化积](../index.php?module=geometry.cos.to.add.principle)，[积化和差](../index.php?module=geometry.mul.to.add.sin)，等等。
 * [calculus](../index.php?module=calculus) 微积分，主要包含以下内容： 
 [极限定义](../index.php?module=calculus/eq/to/any_all/limit_definition) 及其理论，它是微积分的理论基础； 
 [无穷级数](../index.php?module=calculus.eq.imply.eq.series.infinite.coefficient) 的运算性质；
