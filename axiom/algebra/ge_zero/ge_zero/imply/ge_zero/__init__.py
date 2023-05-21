@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.apply(Eq[1], cond=x > 0)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(algebra.gt_zero.ge_zero.imply.ge_zero)
 

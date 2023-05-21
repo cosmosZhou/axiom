@@ -21,13 +21,15 @@ def prove(Eq):
 
     Eq << Eq[0].this.args[1].args[1].apply(sets.el_complement.imply.et, simplify=None)
 
-    Eq << Eq[-1].this.args[2].args[1].apply(sets.notin.imply.et.split.union, simplify=None)
+    Eq << Eq[-1].this.find(NotElement[Union]).apply(sets.notin.imply.et.split.union, simplify=None)
 
     Eq << Eq[-1].apply(algebra.ou.imply.ou.collect, cond=NotElement(x, A))
 
-    Eq << Eq[-1].this.args[0].args[0].apply(algebra.ou.imply.lt.two, wrt=p)
+    Eq << Eq[-1].this.find(Or).apply(algebra.ou.imply.lt.two, wrt=p)
 
     Eq << Eq[-1].apply(algebra.ou.imply.lt.two, wrt=p)
+
+    
 
 
 if __name__ == '__main__':
@@ -35,3 +37,4 @@ if __name__ == '__main__':
 
 from . import two
 # created on 2019-08-06
+# updated on 2023-05-12

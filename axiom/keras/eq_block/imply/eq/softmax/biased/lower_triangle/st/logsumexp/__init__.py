@@ -71,7 +71,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(-Piecewise).apply(algebra.mul.to.piece)
 
-    Eq << Eq[-1].this.rhs.find(Add).apply(algebra.add_piece.to.piece)
+    Eq << Eq[-1].this.rhs.find(Add).apply(algebra.add_piece.to.piece, swap=True)
 
     Eq << Eq[-1].this.rhs.find(Add[Piecewise]).apply(algebra.add.to.piece)
 
@@ -113,12 +113,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Symbol).definition
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-03-13
-# updated on 2022-03-29
+# updated on 2023-05-20
 from . import tf

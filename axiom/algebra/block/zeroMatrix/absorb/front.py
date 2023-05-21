@@ -9,10 +9,9 @@ def apply(self, index=-1):
         index += len(args)
 
     zeroMatrix = args[index]
-    assert zeroMatrix.is_ZeroMatrix
-    [n] = zeroMatrix.shape
-    front = args[index - 1]
-    assert front == 0
+    assert not zeroMatrix
+    n, = zeroMatrix.shape
+    assert args[index - 1] == 0
     args = args[:index - 1] + (ZeroMatrix(n + 1),) + args[index + 1:]
 
     return Equal(self, BlockMatrix(args))

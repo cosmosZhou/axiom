@@ -5,7 +5,8 @@ from util import *
 def apply(self):
     x, y = self.of(ReducedSum[Mul])
 
-    assert len(x.shape) == len(y.shape) == 1
+    n, = x.shape
+    S[n], = y.shape
     rhs = x @ y
 
     return Equal(self, rhs, evaluate=False)

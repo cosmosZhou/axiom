@@ -1,13 +1,10 @@
 from util import *
 
 
-from axiom.algebra.eq.simplify.terms.negative import simplify_negative_terms
-
-
-@apply(given=None)
+@apply
 def apply(given):
-    assert given.is_LessEqual
-    return Equivalent(given, simplify_negative_terms(given))
+    from axiom.algebra.eq.simplify.terms.negative import simplify_negative_terms
+    return simplify_negative_terms(LessEqual, given)
 
 
 @prove

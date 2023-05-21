@@ -5,9 +5,9 @@ from util import *
 def apply(imply):
     (x, y), (lhs, *rhs) = imply.of(All[Unequal])
     if len(rhs) == 2:
-        rhs = Range(*rhs) if lhs.is_integer else Interval(*rhs)
+        rhs = lhs.range(*rhs)
     else:
-        [rhs] = rhs
+        rhs, = rhs
 
     if x == lhs:
         return NotElement(y, rhs)

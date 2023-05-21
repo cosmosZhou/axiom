@@ -37,13 +37,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(Exp[Add]).apply(algebra.exp.to.mul)
 
-    Eq << Eq[-1].this.lhs.args[1].apply(algebra.expr.to.add.complex)
-
-
+    Eq << Eq[-1].this.lhs.args[-1].apply(algebra.expr.to.add.complex)
 
     Eq << Eq[-1].this.rhs.apply(algebra.expr.to.mul.expi)
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-03-07
+# updated on 2023-05-20

@@ -4,11 +4,10 @@ from util import *
 @apply
 def apply(given):
     x, interval = given.of(Element)
-    m, M = interval.of(Interval)
+    S[0], M = interval.of(Interval)
     assert not interval.left_open
     assert not interval.right_open
 
-    assert m.is_zero
     return LessEqual(x * x, M * M)
 
 

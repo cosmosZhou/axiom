@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    ((delta, i), (j, S[0], m), (S[i], S[0], n)), (((λ, (d, S[-i], S[j])), (S[d], S[i - j])), (S[j], S[0], S[m - d]), (S[i], S[0], S[m])) = self.of(Lamda[Pow] @ Lamda[(-Expr) ** Add * Binomial])
+    ((delta, i), (j, S[0], m), (S[i], S[0], n)), (((λ, (d, S[j], S[-i])), (S[d], S[i - j])), (S[j], S[0], S[m - d]), (S[i], S[0], S[m])) = self.of(Lamda[Pow] @ Lamda[(-Expr) ** Add * Binomial])
     delta -= j
     assert not delta._has(j)
     h = self.generate_var(integer=True, var='h')

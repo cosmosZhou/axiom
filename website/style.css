@@ -45,7 +45,7 @@ A:link {
 
 /*------------------------------------------------------------------*/
 
-/* Set the width to 900 pixels, centered on the page with a little 
+/* Set the width to 900 pixels, centered on the page with a little
   padding on top */
 #container {
 	width: 1100px;
@@ -53,7 +53,7 @@ A:link {
 	padding-top: 10px;
 }
 
-/* 90 pixels to work with at the top - positioned relative so that we 
+/* 90 pixels to work with at the top - positioned relative so that we
    can absolutely position our header elements easily */
 #header {
 	height: 120px;
@@ -77,7 +77,7 @@ A:link {
 }
 
 /* Quick right-aligned tab-looking text menu */
-/* Make sure to be explicit with the padding and margin on our ul and li 
+/* Make sure to be explicit with the padding and margin on our ul and li
    elements so we can change the defaults later on as necessary */
 #main_menu {
 	height: 10px;
@@ -127,8 +127,8 @@ A:link {
 	min-height: 500px;
 }
 
-/* Floating left and then right means that we can play with the widths of 
-   the sidebar and content separately and not worry about explicitly setting 
+/* Floating left and then right means that we can play with the widths of
+   the sidebar and content separately and not worry about explicitly setting
    the space between */
 #sidebar {
 	float: left;

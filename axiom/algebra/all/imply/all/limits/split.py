@@ -39,12 +39,11 @@ def apply(given, index=-1):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     n = Symbol(integer=True, positive=True)
     a, b = Symbol(real=True)
-
     x = Symbol(real=True, shape=(oo,))
     f = Function(real=True)
-
     Eq << apply(All[x[:n + 1]:CartesianSpace(Interval(a, b), n + 1)](f(x[:n + 1]) > 0), index=n)
 
     Eq << algebra.all.imply.infer.apply(Eq[0])
@@ -53,10 +52,13 @@ def prove(Eq):
 
     Eq << algebra.all.given.infer.apply(Eq[1])
 
-    Eq << Eq[-1].this.lhs.args[0].simplify()
+    Eq << Eq[-1].this.lhs.args[1].simplify()
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-12-07
+# updated on 2023-05-20

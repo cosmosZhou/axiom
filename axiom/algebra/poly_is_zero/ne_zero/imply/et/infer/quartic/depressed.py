@@ -25,7 +25,7 @@ def solver_set(d, A, B, x, alpha, beta, w, offset=0):
 @apply
 def apply(fx, is_nonzero, x=None):
     from axiom.algebra.poly_is_zero.imply.et.infer.quartic.one_leaded import quartic_coefficient
-    from axiom.algebra.poly_is_zero.given.et_eq.cubic.one_leaded import cubic_solve
+    from axiom.algebra.poly_is_zero.given.et.eq.cubic.one_leaded import cubic_solve
     from axiom.algebra.ne_zero.poly_is_zero.imply.ne import cubic_delta
     fx = fx.of(Equal[0])
     S[1], S[0], alpha, beta, gamma = quartic_coefficient(fx, x=x)
@@ -58,19 +58,19 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.apply(Eq[0] & Eq[1], cond=Eq[2].lhs)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(algebra.poly_is_zero.poly_is_zero.ne_zero.imply.ou_eq.quartic.depressed, x)
 
     Eq << algebra.cond.imply.infer.apply(Eq[0] & Eq[1], cond=Eq[3].lhs)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(algebra.poly_is_zero.mod_is_zero.ne_zero.imply.ou_eq.quartic.depressed, x)
 
     Eq << algebra.cond.imply.infer.apply(Eq[0] & Eq[1], cond=Eq[4].lhs)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(algebra.poly_is_zero.mod_is_zero.ne_zero.imply.ou_eq.quartic.depressed, x)
 

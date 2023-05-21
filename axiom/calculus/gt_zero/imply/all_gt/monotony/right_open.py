@@ -3,15 +3,11 @@ from util import *
 
 @apply
 def apply(given):
-    fx, (x, n) = given.of(Derivative > 0)
-    assert n == 1
-
+    fx, (x, S[1]) = given.of(Derivative > 0)
     domain = x.domain
-
-    assert not domain.left_open and domain.right_open
     a, b = domain.of(Interval)
-
-    return All[x:Interval(a, b, left_open=True, right_open=True)](Greater(fx, fx._subs(x, a)))
+    assert not domain.left_open and domain.right_open
+    return All[x:a:b](Greater(fx, fx._subs(x, a)))
 
 
 @prove

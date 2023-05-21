@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(self):
     interval, (k, a, b) = self.of(Cup)
-    _k, k1 = interval.of(Interval)
-    assert k == _k and k1 == k + 1
+    S[k], S[k + 1] = interval.of(Interval)
     assert interval.left_open and not interval.right_open
 
     return Equal(self, Interval(a, b, left_open=True))

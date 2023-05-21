@@ -26,12 +26,16 @@ def prove(Eq):
 
     Eq << Eq[-1].this.args[0].apply(algebra.ne_zero.imply.et.matrix)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.ne_zero.imply.et.matrix)
+    Eq << Eq[-1].this.find(Unequal[ZeroMatrix]).apply(algebra.ne_zero.imply.et.matrix)
 
     Eq << algebra.et.imply.ou.apply(Eq[-1])
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-01-26
+# updated on 2023-05-15

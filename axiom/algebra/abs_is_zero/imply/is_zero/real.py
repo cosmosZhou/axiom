@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.lhs.apply(algebra.abs.to.piece)
 
-    Eq << algebra.eq_piece.imply.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.imply.ou.apply(Eq[-1])
     Eq << Eq[-1].reversed
 
 

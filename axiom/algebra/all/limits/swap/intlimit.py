@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self):
     from axiom.algebra.sum.limits.swap.intlimit import limits_swap
-    return Equivalent(self, limits_swap(All, self))
+    return limits_swap(All, self)
 
 
 @prove
@@ -21,12 +21,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.all.to.ou)
 
-    Eq << sets.et_el.transform.i_lt_j.apply(Or(*Eq[-1].find(Or).args[1:]).invert())
+    Eq << sets.el.el.transform.i_lt_j.apply(*Or(*Eq[-1].find(Or).args[:-1]).invert().args)
 
     Eq << Eq[-1].this.apply(algebra.iff.contraposition).reversed
 
-    
     Eq << algebra.iff.imply.iff.ou.apply(Eq[-1], cond=Eq[0].lhs.expr)
+
     
     
 
@@ -34,4 +34,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-01-24
-# updated on 2022-01-27
+# updated on 2023-05-21

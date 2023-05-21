@@ -3,9 +3,8 @@ from util import *
 
 @apply
 def apply(le, sgm):
-    _b, _a = le.of(LessEqual)
-    expr, (k, a, b) = sgm.of(Sum)
-    assert _a == a and _b == b
+    b, a = le.of(LessEqual)
+    expr, (k, S[a], S[b]) = sgm.of(Sum)
     return Equal(sgm, 0)
 
 

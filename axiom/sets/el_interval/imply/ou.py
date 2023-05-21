@@ -3,20 +3,32 @@ from util import *
 
 @apply(simplify=False)
 def apply(given, by, left_open=False):
-    x, interval = given.of(Element)
-    a, b = interval.of(Interval)
-    assert by in interval
-    return Or(Element(x, Interval(a, by, left_open=interval.left_open, right_open=not left_open)), Element(x, Interval(by, b, left_open=left_open, right_open=interval.right_open)))
+    e, domain = given.of(Element)
+    a, b = domain.of(Interval)
+
+    assert domain.conditionally_contains(by)    
+    A = domain.copy(stop=by, right_open=not left_open)
+    B = domain.copy(start=by, left_open=left_open)
+    return Or(Element(e, A), Element(e, B))
 
 
 @prove
 def prove(Eq):
-    x, b = Symbol(real=True, given=True, positive=True)
-    Eq << apply(Element(x, Interval(0, b)), by=b /2)
+    from axiom import sets
 
-    Eq << Eq[-1].simplify()
+    x, a, b = Symbol(real=True, given=True, positive=True)
+    c = Symbol(domain=Interval(a, b))
+    Eq << apply(Element(x, Interval(a, b)), c)
+
+    Eq << Eq[0].this.rhs.apply(sets.interval.to.union, c)
+
+    Eq << sets.el_union.imply.ou.apply(Eq[-1])
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-04-12
+# updated on 2023-04-18

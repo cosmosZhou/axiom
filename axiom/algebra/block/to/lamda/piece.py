@@ -24,12 +24,12 @@ def apply(self, var=None):
 def prove(Eq):
     from axiom import algebra
 
-    n0, n1, n2, n3, m = Symbol(positive=True, integer=True, given=False)
-    X0 = Symbol(shape=(m, n0), real=True)
-    X1 = Symbol(shape=(m, n1), real=True)
-    X2 = Symbol(shape=(m, n2), real=True)
-    X3 = Symbol(shape=(m, n3), real=True)
-    Eq << apply(BlockMatrix[1](X0, X1, X2, X3))
+    n0, n1, n2, n3, m = Symbol(positive=True, integer=True)
+    A = Symbol(shape=(m, n0), real=True)
+    B = Symbol(shape=(m, n1), real=True)
+    C = Symbol(shape=(m, n2), real=True)
+    D = Symbol(shape=(m, n3), real=True)
+    Eq << apply(BlockMatrix[1](A, B, C, D))
 
     i = Symbol(domain=Range(m))
     Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
@@ -44,4 +44,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2021-12-20
-# updated on 2022-01-15
+# updated on 2023-04-29

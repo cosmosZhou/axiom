@@ -23,8 +23,8 @@ def prove(Eq):
     f, g = Function(shape=(), real=True)
     Eq << apply(All[x:0:a](Any[y:0:b](All[z:0:c]((g(x, y, z) <= 1) & (f(x, y, z) >= 1)))))
 
-    Eq << algebra.all_any_et.imply.all_any.apply(Eq[0], index=0)
-    Eq << algebra.all_any_et.imply.all_any.apply(Eq[0], index=1)
+    Eq << algebra.all_any_et.imply.all.any.apply(Eq[0], index=0)
+    Eq << algebra.all_any_et.imply.all.any.apply(Eq[0], index=1)
 
 
 

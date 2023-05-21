@@ -6,7 +6,7 @@ def apply(eq_cup, subset, eq_K_quote, eq_V_quote, eq_K_dquote, eq_V_dquote, Q, K
     cup, m = eq_cup.of(Equal[Card])
     (d, j), j_limit = cup.of(Cup[FiniteSet[Indexed]])
     S[j], S[0], S[m] = j_limit
-    n, d_z = Q.shape    
+    n, d_z = Q.shape
     S[cup], (S[0], S[n]) = subset.of(Subset[Expr, Range])     
     
     ((w_K, clip_index), j_limit, i_limit), K_quote = eq_K_quote.of(Equal[Lamda[Indexed]])

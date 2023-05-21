@@ -2,13 +2,13 @@ from util import *
 
 
 
-@apply(given=None)
+@apply
 def apply(given, wrt=None):
     fn, fn1 = given.of(Infer)
     if wrt is None:
         wrt = fn.wrt
     assert wrt.is_given is None
-    return Equivalent(given, All[wrt:fn](fn1))
+    return All[wrt:fn](fn1)
 
 
 @prove

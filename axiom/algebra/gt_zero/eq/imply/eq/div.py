@@ -2,14 +2,20 @@ from util import *
 
 
 @apply
-def apply(is_positive, eq):
-    if is_positive.is_Equal:
-        eq, is_positive = is_positive, eq
-
+def apply(is_positive, eq, *, simplify=True):
     x = is_positive.of(Expr > 0)
     lhs, rhs = eq.of(Equal)
-
-    return Equal(lhs / x, rhs / x)
+    if simplify and lhs.is_Add:
+        lhs = Add(*(arg / x for arg in lhs.args))
+    else:
+        lhs /= x
+        
+    if simplify and rhs.is_Add:
+        rhs = Add(*(arg / x for arg in rhs.args))
+    else:
+        rhs /= x
+        
+    return Equal(lhs, rhs)
 
 
 @prove
@@ -24,9 +30,11 @@ def prove(Eq):
 
     Eq << algebra.ne_zero.eq.imply.eq.div.apply(Eq[-1], Eq[1])
 
-    Eq << Eq[2].this.rhs.apply(algebra.mul.to.add)
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-04-01
+# updated on 2023-05-02

@@ -5,10 +5,9 @@ from util import *
 
 @apply
 def apply(given):
-    assert given.is_Unequal
-    A, B = given.args
+    A, B = given.of(Unequal)
     if B:
-        assert A.is_EmptySet
+        assert not A
         A = B
     x = A.element_symbol()
     return Any[x](Element(x, A))

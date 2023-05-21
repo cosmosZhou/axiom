@@ -3,9 +3,8 @@ from util import *
 
 @apply
 def apply(given):
-    (_x, S), (x,), *limits = given.of(Any[Element])
-    assert x == _x
-    return Any(Element(x, S), (x, S), *limits)
+    (x, s), (S[x],), *limits = given.of(Any[Element])
+    return Any(Element(x, s), (x, s), *limits)
 
 
 @prove

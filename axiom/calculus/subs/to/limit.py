@@ -3,9 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    (fx, (x, d)), [_x], [xi] = self.of(Subs[Derivative])
-    assert d == 1
-    assert x == _x
+    (fx, (x, S[1])), [S[x]], [xi] = self.of(Subs[Derivative])
 
     return Equal(self, Limit[x:xi]((fx - fx._subs(x, xi)) / (x - xi)))
 
@@ -21,7 +19,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.rhs.apply(calculus.limit.limits.offset, x0)
 
-    Eq << Derivative(f(t), t).this.apply(calculus.derivative.to.limit)
+    Eq << Derivative(f(t), t).this.apply(calculus.grad.to.limit)
 
     Eq << Eq[-1].this.rhs.apply(calculus.limit.limits.subs, x)
     Eq << Eq[-1].subs(t, x0)

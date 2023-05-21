@@ -8,16 +8,13 @@ def apply(given, t):
 
     yt, x, i, n = dissect_distance(dx)
 
-    _yt, y_mean = dy.of(Abs[Expr - Expr])
+    S[yt], y_mean = dy.of(Abs[Expr - Expr])
 
-    assert _yt == yt
     y_sum, m = y_mean.of(Expr / Expr)
 
     yj, (j, *ab) = y_sum.of(Sum)
     if ab:
-        zero, _m = ab
-        assert zero == 0
-        assert _m == m
+        S[0], S[m] = ab
 
     y = Lamda[j:m](yj).simplify()
     assert y[t] == yt

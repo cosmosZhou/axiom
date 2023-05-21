@@ -43,28 +43,29 @@ def prove(Eq):
     x = Symbol(real=True, shape=(k,))
     A, B = Symbol(etype=dtype.real * k)
     f, g, h = Function(shape=(), real=True)
-    #Eq << apply(Piecewise((f(x), Element(x, A)), (Piecewise((g(x), Element(x, B)), (h(x), True)), True)))
     Eq << apply(Piecewise((Piecewise((g(x), Element(x, B)), (h(x), True)), Element(x, A)), (f(x), True)))
 
     p = Symbol(Eq[0].lhs)
     Eq << p.this.definition
 
-    Eq << algebra.eq_piece.imply.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.imply.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[0].args[0].apply(algebra.eq_piece.imply.ou)
+    Eq << Eq[-1].this.args[0].args[0].apply(algebra.cond_piece.imply.ou)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.imply.ou)
+    Eq << Eq[-1].this.find(And[Or]).apply(algebra.et.imply.ou)
 
     Eq << algebra.ou.imply.eq.piece.apply(Eq[-1], wrt=p)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.swap)
-
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.swap, -2)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.ou)
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[1], Eq[-1])
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-01-20
+# updated on 2023-05-10

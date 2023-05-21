@@ -1,29 +1,37 @@
 from util import *
 
 
-def convert(self):
-    for i, arg in enumerate(self.of(MatMul)):
-        if arg.is_Add:
-            args = [*self.args]
-            if i > 0:
-                former, latter = self.func(*args[:i]), args[i + 1:]
-                left = Add(*(former @ a for a in arg.args))
-                if latter:
-                    left @= self.func(*latter)
-                return left
-            else:
-                latter = self.func(*args[1:])
-                return Add(*(a @ latter for a in arg.args))
+def convert(self, i=None):
+    [*args] = self.of(MatMul)
+    if i is None:
+        for i, arg in enumerate(args):
+            if arg.is_Add:                
+                break
+    else :
+        arg = args[i]
+        assert arg.is_Add
+        if i < 0:
+            i += len(args)
+    
+    if i > 0:
+        former, latter = self.func(*args[:i]), args[i + 1:]
+        left = Add(*(former @ a for a in arg.args))
+        if latter:
+            left @= self.func(*latter)
+        return left
+    else:
+        latter = self.func(*args[1:])
+        return Add(*(a @ latter for a in arg.args))
 
 @apply
-def apply(self):
-    rhs = convert(self)
+def apply(self, i=None):
+    rhs = convert(self, i)
     return Equal(self, rhs, evaluate=False)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra, discrete
+    from axiom import discrete, algebra
 
     n = Symbol(integer=True, positive=True)
     x, a, b = Symbol(shape=(n, n), complex=True)
@@ -41,6 +49,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(MatMul).apply(discrete.matmul.to.lamda)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
@@ -48,3 +59,4 @@ if __name__ == '__main__':
 # created on 2020-11-10
 
 from . import st
+# updated on 2023-04-30

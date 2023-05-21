@@ -70,7 +70,7 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[-4]
 
-    Eq <<= Infer(And(*Eq[-1].args[:2]), And(*Eq[-1].args[:2]), plausible=True), Infer(And(*Eq[-1].args[2:]), And(*Eq[-1].args[2:]), plausible=True)
+    Eq <<= Infer(And(*Eq[-1].args[::2]), And(*Eq[-1].args[::2]), plausible=True), Infer(And(*Eq[-1].args[1::2]), And(*Eq[-1].args[1::2]), plausible=True)
 
     Eq <<= Eq[-2].this.rhs.apply(algebra.eq.eq.imply.eq.transit), Eq[-1].this.rhs.apply(algebra.eq.ne.imply.ne.transit)
 
@@ -78,8 +78,11 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2021-04-02
+# updated on 2023-05-17

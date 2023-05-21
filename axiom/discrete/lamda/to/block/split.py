@@ -3,9 +3,7 @@ from util import *
 
 @apply
 def apply(self, pivot):
-    expr, *limits, (i, _0, n) = self.of(Lamda)
-    assert _0 == 0
-    args = []
+    expr, *limits, (i, S[0], n) = self.of(Lamda)
     assert n > pivot > 0
     first = Lamda(expr, *limits, (i, 0, pivot)).simplify()
     second = Lamda(expr, *limits, (i, pivot, n)).simplify()

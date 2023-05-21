@@ -19,15 +19,17 @@ def prove(Eq):
     f, g, h = Function(etype=dtype.real * k)
     Eq << apply(Supset(f(x), S) & Element(x, A) | Supset(g(x), S) & Element(x, B - A) | Supset(h(x), S) & NotElement(x, A | B), wrt=S)
 
-    Eq << Eq[0].this.args[1].args[1].apply(sets.el_complement.imply.et, simplify=None)
+    Eq << Eq[0].this.find(Element[Complement]).apply(sets.el_complement.imply.et, simplify=None)
 
-    Eq << Eq[-1].this.args[2].args[1].apply(sets.notin.imply.et.split.union, simplify=None)
+    Eq << Eq[-1].this.find(NotElement[Union]).apply(sets.notin.imply.et.split.union, simplify=None)
 
     Eq << Eq[-1].apply(algebra.ou.imply.ou.collect, cond=NotElement(x, A))
 
-    Eq << Eq[-1].this.args[0].args[0].apply(sets.ou.imply.supset.piece.two, wrt=S)
+    Eq << Eq[-1].this.find(Or).apply(sets.ou.imply.supset.piece.two, wrt=S)
 
     Eq << Eq[-1].apply(sets.ou.imply.supset.piece.two, wrt=S)
+
+    
 
 
 if __name__ == '__main__':
@@ -35,3 +37,4 @@ if __name__ == '__main__':
 
 from . import two
 # created on 2021-06-15
+# updated on 2023-05-14

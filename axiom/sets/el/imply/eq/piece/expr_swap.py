@@ -51,7 +51,7 @@ def prove(Eq):
 
     Eq << ~Eq.all_not_s
 
-    Eq << Eq[-1].this.apply(algebra.cond.cond.imply.cond.subs, ret=0)
+    Eq << Eq[-1].this.apply(algebra.cond.cond.imply.cond.subs, swap=True, ret=1)
 
     Eq << Eq[-1].this.args[0].simplify()
 
@@ -59,7 +59,7 @@ def prove(Eq):
 
     Eq << ~Eq.all_s
 
-    Eq << Eq[-1].this.apply(algebra.cond.cond.imply.cond.subs, invert=True, ret=0)
+    Eq << Eq[-1].this.apply(algebra.cond.cond.imply.cond.subs, swap=True, invert=True, ret=1)
 
     Eq << Eq[-1].this.args[0].simplify()
 
@@ -69,8 +69,12 @@ def prove(Eq):
 
     Eq << Eq.p_definition.subs(Eq[-1].reversed)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-10-27
+# updated on 2023-05-20

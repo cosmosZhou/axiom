@@ -3,7 +3,7 @@
 </template>
 
 <script>
-console.log('importing axiomPackage.vue');
+console.log('import axiomPackage.vue');
 import icon from "./icon.vue"
 export default {
 	components: {icon},

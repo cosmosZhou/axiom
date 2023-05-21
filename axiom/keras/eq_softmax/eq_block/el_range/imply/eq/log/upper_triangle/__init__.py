@@ -21,7 +21,7 @@ def apply(eq_z, eq_z_quote, el):
 
     assert n >= 2 and u >= 2 and u <= n
 
-    (h, S[i]), (S[0], (S[n - i], S[u])) = el.of(Element[Indexed, Range[Min]])
+    (h, S[i]), (S[0], (S[u], S[n - i])) = el.of(Element[Indexed, Range[Min]])
 
     return Equal(log(z[i, h[i] + i]), z_quote[i, h[i]])
 
@@ -55,7 +55,7 @@ def prove(Eq):
 
     Eq.ge_zero, Eq.lt_min = sets.el_range.imply.et.apply(Eq[2])
 
-    Eq << Eq.lt_min.this.find(Min).args[0].apply(algebra.expr.to.piece, upper=n)
+    Eq << Eq.lt_min.this.find(Add).apply(algebra.expr.to.piece, upper=n)
 
     Eq << Eq[-1].this(i).find(GreaterEqual).simplify()
 
@@ -71,12 +71,12 @@ def prove(Eq):
 
     Eq.loss = -algebra.eq.imply.eq.sum.apply(Eq[3] * (1 + log(1 + h[i] / 2)), (i, 0, n))
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-01-05
-# updated on 2022-03-30
+# updated on 2023-05-19
 from . import tf

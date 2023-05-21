@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given):
     A, B = given.of(Supset)
-    return Equivalent(given, Subset(B, A), evaluate=False)
+    return Subset(B, A)
 
 
 @prove

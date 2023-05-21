@@ -13,9 +13,7 @@ def dissect_distance(variance):
     xi, (i, *ab) = x_sum.of(Sum)
     x = Lamda[i](xi).simplify()
     if ab:
-        zero, _n = ab
-        assert zero == 0
-        assert _n == n
+        S[0], S[n] = ab
 
     return ym, x, i, n
 
@@ -27,9 +25,7 @@ def dissect_variance(variance):
     xi, (i, *ab) = x_sum.of(Sum)
     x = Lamda[i](xi).simplify()
     if ab:
-        zero, _n = ab
-        assert zero == 0
-        assert _n == n
+        S[0], S[n] = ab
 
     return ym, x, i, n
 

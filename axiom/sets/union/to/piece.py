@@ -21,14 +21,18 @@ def prove(Eq):
     f, g, h, t = Function(etype=dtype.real)
     Eq << apply(Union(Piecewise((f(x), x > 0), (g(x), True)), h(x), t(x), evaluate=False))
 
-    Eq << algebra.eq.given.ou.apply(Eq[0])
+    Eq << algebra.cond_piece.given.ou.apply(Eq[0])
 
     Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, index=1)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, index=1, invert=True)
+    Eq << Eq[-1].this.args[1].apply(algebra.et.given.et.subs.bool, index=1, invert=True)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2021-01-24
+# updated on 2023-05-09

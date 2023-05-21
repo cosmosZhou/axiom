@@ -5,8 +5,7 @@ from util import *
 def K_step(x):
     if not x.shape:
         return S.One
-    assert len(x.shape) == 1
-    n = x.shape[0]
+    n, = x.shape
     if n == 2:
         return x[1]
     return Piecewise((1, Equal(n, 1)),

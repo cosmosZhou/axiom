@@ -27,18 +27,16 @@ def apply(self):
                     prod[i] += A[i, k] * B[k]
             
     elif len(B.shape) == 2:
-        [n] = A.shape
-        _n, l = B.shape
-        assert n == _n
+        n, = A.shape
+        S[n], l = B.shape
     
         prod = [0] * l
         for j in range(l):
             for k in range(n):
                 prod[j] += A[k] * B[k, j]
     else:
-        [n] = A.shape
-        [_n] = B.shape
-        assert n == _n
+        n, = A.shape
+        S[n], = B.shape
     
         prod = 0
         for k in range(n):

@@ -2,8 +2,11 @@ from util import *
 
 
 @apply
-def apply(self, *, simplify=True):
-    (former, latter), *limits = self.of(Sum[Expr * Expr])
+def apply(self, pivot=-1, *, simplify=True):
+    args, *limits = self.of(Sum[Mul])
+
+    former = Mul(*args[:pivot])
+    latter = Mul(*args[pivot:])
 
     former = Lamda(former, *limits)
     latter = Lamda(latter, *limits)

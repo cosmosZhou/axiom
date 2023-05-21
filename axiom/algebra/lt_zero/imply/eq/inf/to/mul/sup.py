@@ -26,7 +26,7 @@ def prove(Eq):
     Eq << algebra.eq.imply.et.squeeze.apply(Eq[-1])
 
     z = Symbol(real=True)
-    Eq <<= algebra.sup_le.imply.all_le.apply(Eq[-2]), algebra.sup_ge.imply.all_any_gt.apply(Eq[-1], z)
+    Eq <<= algebra.sup_le.imply.all_le.apply(Eq[-2]), algebra.sup_ge.imply.all.any.gt.apply(Eq[-1], z)
 
     Eq <<= algebra.all.imply.infer.apply(Eq[-2]), algebra.all.imply.infer.apply(Eq[-1])
 
@@ -50,8 +50,8 @@ def prove(Eq):
 
     Eq <<= algebra.all.given.infer.apply(Eq[-2]), algebra.all.given.infer.apply(Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

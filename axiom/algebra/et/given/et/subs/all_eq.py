@@ -5,6 +5,8 @@ from util import *
 def apply(imply, simplify=True):
     from sympy.concrete.expr_with_limits import ExprWithLimits
     all_eq, cond = imply.of(And)
+    if not all_eq.is_ForAll:
+        all_eq, cond = cond, all_eq
     (old, new), *limits = all_eq.of(All[Equal])
     limits = tuple(limits)
 

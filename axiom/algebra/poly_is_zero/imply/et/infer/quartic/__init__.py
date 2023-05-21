@@ -29,7 +29,7 @@ def apply(given, x=None):
 
     w = -S.One / 2 + sqrt(3) * S.ImaginaryUnit / 2
     from axiom.algebra.ne_zero.poly_is_zero.imply.ne import cubic_delta
-    from axiom.algebra.poly_is_zero.given.et_eq.cubic.one_leaded import cubic_solve
+    from axiom.algebra.poly_is_zero.given.et.eq.cubic.one_leaded import cubic_solve
     y_delta = cubic_delta(x, alpha, beta, gamma)
     D, Y0, Y1, Y2 = cubic_solve(y_delta, x)
     D = Symbol(D)
@@ -69,7 +69,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.et.infer.split.apply(Eq[0], cond=Equal(a, 0))
 
-    Eq <<= algebra.infer.imply.infer.subs.apply(Eq[-2]), algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq <<= algebra.infer.imply.infer.subs.apply(Eq[-2]), algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq <<= algebra.infer.imply.et.infer.apply(Eq[-2].this.rhs.apply(algebra.poly_is_zero.imply.et.infer.cubic), None), Eq[-1].this.rhs.apply(algebra.ne_zero.eq.imply.eq.div)
 

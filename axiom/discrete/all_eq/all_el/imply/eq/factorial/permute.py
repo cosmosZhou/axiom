@@ -4,26 +4,22 @@ from util import *
 @apply
 def apply(all0, all1):
 
-    (ref, s), (j, a, n_munis_1), (x, S[s]) = all0.of(All[Element])
-    assert a == 1
+    (ref, s), (j, S[1], n_munis_1), (x, S[s]) = all0.of(All[Element])
 
-    piecewise, (i, S[0], _n_munis_1) = ref.of(Lamda)
+    piecewise, (i, S[0], S[n_munis_1]) = ref.of(Lamda)
     assert s.is_set
     dtype = s.etype
-    assert _n_munis_1 == n_munis_1
 
-    (x0, condition0), (xj, conditionj), (xi, conditioni) = piecewise.of(Piecewise)
-    assert condition0.is_Equal and {*condition0.args} == {i, j}
-    assert conditionj.is_Equal and {*conditionj.args} == {i, 0}
-    assert conditioni
+    (x0, condition0), (xj, conditionj), (xi, S[True]) = piecewise.of(Piecewise)
+    S[i] = condition0.of(Equal[j])
+    S[i] = conditionj.of(Equal[0])
 
     n = n_munis_1
 
     assert x[j] == xj and x[i] == xi and x[0] == x0 and dtype == x.type
 
-    equality, (_x, S[s]) = all1.of(All)
-    assert x == _x
-    assert equality.is_Equal and {*equality.args} == {Card(x.cup_finiteset()), n}
+    equality, (S[x], S[s]) = all1.of(All)
+    S[Card(x.cup_finiteset())] = equality.of(Equal[n])
 
     return Equal(Card(s), factorial(n) * Card(Cup[x:s]({x.cup_finiteset()})))
 

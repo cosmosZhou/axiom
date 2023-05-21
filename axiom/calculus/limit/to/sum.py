@@ -6,11 +6,21 @@ def doit(cls, self, simplify=True):
     (expr, *limits), limit = self.of(Limit[cls])
 
     x = limit[0]
-    assert x not in limits_dict(limits)
-    expr = Limit(expr, limit)
-    if simplify:
-        expr = expr.doit()
+    
+    hit = False
+    for _x, *ab in reversed(limits):
+        if x == _x:
+            assert any(c._has(x) for c in ab)
+            hit = True
 
+    if not hit and expr._has(x):
+        expr = Limit(expr, limit)
+        if simplify:
+            try:
+                expr = expr.doit()
+            except:
+                ...
+                    
     for i, (x, *ab) in enumerate(limits):
         for j, t in enumerate(ab):
             t = Limit(t, limit)
@@ -18,7 +28,6 @@ def doit(cls, self, simplify=True):
                 t = t.doit()
             ab[j] = t
         limits[i] = (x, *ab)
-
 
     return cls(expr, *limits)
 

@@ -6,18 +6,15 @@ def apply(given, peicewise_A, peicewise_B):
     AB = given.of(Equal[EmptySet])
     A, B = AB.of(Intersection)
 
-    (fx, c0_A), (_fx, _) = peicewise_A.of(Piecewise)
-    (gx, c0_B), (_gx, _) = peicewise_B.of(Piecewise)
+    (fx, c0_A), (_fx, S[True]) = peicewise_A.of(Piecewise)
+    (gx, c0_B), (_gx, S[True]) = peicewise_B.of(Piecewise)
 
     x, _A = c0_A.of(Element)
-    _x, _B = c0_B.of(Element)
-
-    assert x == _x
+    S[x], _B = c0_B.of(Element)
 
     if A != _A:
-        A, B = B, A
+        S[A], B = B, A
 
-    assert A == _A
     assert B == _B
 
     return Equal(peicewise_A + peicewise_B, Piecewise((fx + _gx, Element(x, A)),

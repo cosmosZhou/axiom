@@ -1,11 +1,12 @@
-from util import utility, MySQL
+from util import utility
+from std import MySQL
 
 
 if __name__ == '__main__':
     
     data = []
     user = utility.user
-    for axiom, *_ in MySQL.instance.select(f"select axiom from tbl_axiom_py where user = '{user}'"):
+    for axiom, *_ in MySQL.instance.query(f"select axiom from axiom where user = '{user}'"):
         phrases = axiom.split('.')
         size = len(phrases)
         phrases.append('apply')
@@ -36,7 +37,5 @@ if __name__ == '__main__':
             1
         ])
     
-    MySQL.instance.execute(f"delete from tbl_suggest_py where user = '{user}'")    
-    MySQL.instance.load_data('tbl_suggest_py', data)
-
-#exec(open('./util/suggest.py').read())
+    MySQL.instance.execute(f"delete from suggest where user = '{user}'")    
+    MySQL.instance.load_data('suggest', data)

@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << sets.el_interval.given.et.apply(Eq[0])
 
-    Eq << algebra.imply.le.floor.apply(Eq[0].find(Floor).arg)
+    Eq << algebra.imply.floor_le.apply(Eq[0].find(Floor).arg)
 
     Eq << algebra.le.imply.le.mul.apply(Eq[-1], d)
 

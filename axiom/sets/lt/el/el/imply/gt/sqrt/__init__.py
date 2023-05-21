@@ -38,7 +38,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.apply(Eq.x_contains, cond=Eq[-4].lhs)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(sets.ne.el.imply.el)
 

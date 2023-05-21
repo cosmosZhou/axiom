@@ -8,8 +8,7 @@ def apply(m_is_nonpositive, is_positive, lt, x=None):
     M = mM - m
 
     U, M2 = lt.of(Less)
-    _M = M2.of(Expr ** 2)
-    assert _M == M
+    S[M] = M2.of(Expr ** 2)
     if x is None:
         x = lt.generate_var(real=True)
     return Any[x:Interval(m, M, left_open=True, right_open=True)](x ** 2 > U)

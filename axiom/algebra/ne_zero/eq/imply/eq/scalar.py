@@ -4,13 +4,9 @@ from util import *
 
 @apply
 def apply(unequality, equality):
-    if not unequality.is_Unequal:
-        unequality, equality = equality, unequality
-    assert unequality.is_Unequal
-    unequality.rhs.is_zero
-
-    divisor = unequality.lhs
-    return Equal(equality.lhs / divisor, equality.rhs / divisor)
+    divisor = unequality.of(Unequal[0])
+    lhs, rhs = equality.of(Equal)
+    return Equal(lhs / divisor, rhs / divisor)
 
 
 @prove

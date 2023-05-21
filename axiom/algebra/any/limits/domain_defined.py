@@ -1,7 +1,7 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given, wrt=None):
     expr, *limits = given.of(Any)
 
@@ -21,7 +21,7 @@ def apply(given, wrt=None):
     domain = expr.domain_defined(x)    
     limit = (x, domain & S)
     limits[i] = limit
-    return Equivalent(given, Any(expr, *limits), evaluate=False)
+    return Any(expr, *limits)
 
 
 @prove

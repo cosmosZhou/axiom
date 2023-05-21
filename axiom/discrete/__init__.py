@@ -56,7 +56,9 @@ from . import lamda_indexed
 from . import matProd
 from . import mul_matmul
 from . import ne_zero
-from . import swapMatrix
-from . import matpow
-from . import ge
 from . import eq_lamda_swapMatrix
+from . import eq_transpose
+from . import ge
+from . import det_pow
+from . import eq_inverse
+from . import matpow

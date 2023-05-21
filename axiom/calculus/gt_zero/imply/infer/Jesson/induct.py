@@ -3,11 +3,10 @@ from util import *
 
 @apply
 def apply(is_positive, x=None, w=None, i=None, n=None):
-    fx, (x_, d) = is_positive.of(Derivative > 0)
-    assert d == 2
+    fx, (x_, S[2]) = is_positive.of(Derivative > 0)
 
     domain = x_.domain
-    assert domain.left_open and domain.right_open
+    assert domain.is_open
     if x is None:
         x = Symbol(shape=(oo,), domain=domain)
 
@@ -44,9 +43,9 @@ def prove(Eq):
 
     Eq.induct = Eq[1].subs(n, n + 1)
 
-    Eq << Eq.induct.this.rhs.find(Sum).apply(algebra.sum.to.add.pop_back)
+    Eq << Eq.induct.this.rhs.find(Sum).apply(algebra.sum.to.add.pop)
 
-    Eq << Eq[-1].this.find(f[~Sum]).apply(algebra.sum.to.add.pop_back)
+    Eq << Eq[-1].this.find(f[~Sum]).apply(algebra.sum.to.add.pop)
 
     Eq.lt, Eq.ge = algebra.cond.given.et.infer.split.apply(Eq[-1], cond=w[n] < 1)
 
@@ -54,7 +53,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.eq_sum.ge.all_ge_zero.imply.eq.all_is_zero.squeeze)
 
-    Eq << algebra.infer_et.given.infer.subs.apply(Eq[-1])
+    Eq << algebra.infer_et.given.infer.et.subs.apply(Eq[-1])
 
     Eq << Eq[-1].this.lhs.apply(algebra.et.imply.cond, index=1)
 
@@ -83,9 +82,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Less) - w[n]
 
-    Eq << Eq[-1].this.apply(algebra.infer.fold, index=1)
+    Eq << Eq[-1].this.apply(algebra.infer.fold, index=2)
 
-    Eq << Eq[-1].this.find(And).apply(algebra.gt_zero.eq.imply.eq.div, simplify=None, ret=0)
+    Eq << Eq[-1].this.find(And).apply(algebra.gt_zero.eq.imply.eq.div, simplify=None, ret=1)
 
     Eq << Eq[-1].this.find(Mul[Sum]).apply(algebra.mul.to.sum)
 
@@ -95,7 +94,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.infer.flatten)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.infer.fold, index=slice(0, 2))
+    Eq << Eq[-1].this.rhs.apply(algebra.infer.fold, index=slice(1, None))
 
     Eq << Eq[-1].this.find(And).apply(algebra.cond.all.imply.all_et, simplify=None)
 
@@ -103,7 +102,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.infer.flatten)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.infer.fold)
+    Eq << Eq[-1].this.rhs.apply(algebra.infer.fold, 1)
 
     Eq << Eq[-1].this.apply(algebra.infer.flatten)
 
@@ -114,11 +113,7 @@ def prove(Eq):
 
     Eq << algebra.cond.given.et.subs.apply(Eq[-3], *Eq[-1].args, simplify=None)
 
-    Eq << Eq[-1].this.find(~GreaterEqual & Equal).apply(algebra.cond.imply.all.domain_defined, wrt=i)
-
-    Eq << Eq[-1].this.find(Add[~Sum]).apply(algebra.sum.to.mul)
-
-    Eq << Eq[-1].this.find(Add[~Sum]).apply(algebra.sum.to.mul)
+    Eq << Eq[-1].this.find(Equal & ~GreaterEqual).apply(algebra.cond.imply.all.domain_defined, wrt=i)
 
     Eq.induct1 = Eq[-1].this.lhs.apply(sets.lt.ge.imply.el.interval)
 
@@ -132,7 +127,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.apply(Eq[-1], cond=Eq.induct1.lhs)
 
-    Eq << Eq[-1].this.apply(algebra.infer_infer.imply.infer_infer.et)
+    Eq << Eq[-1].this.apply(algebra.infer_infer.to.infer_infer.et)
 
     Eq <<  Eq[-1].this.find(And[~Element]).apply(sets.el_interval.imply.lt)
 
@@ -144,7 +139,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Greater).apply(algebra.cond.imply.all, Eq[-1].find(Derivative).variable)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Element(x[n], domain, plausible=True)
 
@@ -158,11 +153,11 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.apply(Eq[-1], cond=Eq.induct1.rhs.lhs)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1], index=0)
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1], index=1)
 
     Eq << Eq[-1].this.rhs.apply(algebra.cond.all.imply.all_et, simplify=None)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1], index=1)
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1], index=0)
 
     Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.limits.domain_defined.insert)
 
@@ -172,7 +167,7 @@ def prove(Eq):
 
     Eq <<= Eq.suffices & Eq[-1]
 
-    Eq << Eq[-1].this.rhs.rhs.apply(calculus.el.el.el.all_gt_zero.imply.ge.Jesson, swap=True)
+    Eq << Eq[-1].this.rhs.rhs.apply(calculus.el.el.el.all_gt_zero.imply.ge.Jesson)
 
     Eq << Eq[-1].this.find(Sum[Mul]).simplify()
 
@@ -187,6 +182,10 @@ def prove(Eq):
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
 
+
+
+
 if __name__ == '__main__':
     run()
 # created on 2020-06-01
+# updated on 2023-05-15

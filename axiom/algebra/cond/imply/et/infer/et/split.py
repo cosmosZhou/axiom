@@ -17,8 +17,8 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.et.infer.split.apply(Eq[0], cond=e > 0)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-2])
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-2])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
 
 if __name__ == '__main__':

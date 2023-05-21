@@ -9,8 +9,8 @@ require_once '../php/mysql.php';
 $user = $_POST['login'];
 $password = $_POST['password'];
 
-$sql = "select * from tbl_login_py where user = '$user'";
-foreach (\mysql\select("select password from tbl_login_py where user = '$user'") as list($password_mysql)){
+$sql = "select * from login where user = '$user'";
+foreach (\mysql\select("select password from login where user = '$user'") as list($password_mysql)){
     if ($password == $password_mysql){
         break;
     }

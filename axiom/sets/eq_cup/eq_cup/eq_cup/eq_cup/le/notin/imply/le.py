@@ -94,15 +94,15 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any_et.limits.cond.apply(Eq[-1], 0, simplify=None)
 
-    Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], 1, simplify=None)
+    Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.expr.apply(sets.le_abs.el.imply.le, simplify=None, ret=0)
+    Eq << Eq[-1].this.expr.apply(sets.le_abs.el.imply.le, simplify=None, ret=1)
 
     Eq << Eq[-1].subs(Eq.add_ab.reversed)
 
-    Eq << Eq[-1].this.expr.args[1].apply(sets.el.imply.eq.sum, Eq[-1].expr.args[0].lhs.args[3].find(Sum), simplify=None, ret=0)
+    Eq << Eq[-1].this.find(Element).apply(sets.el.imply.eq.sum, Eq[-1].find(Sum[2]).find(Sum), simplify=None, ret=0)
 
-    Eq << Eq[-1].this.expr.args[::2].apply(algebra.eq.cond.imply.cond.subs, simplify=None)
+    Eq << Eq[-1].this.expr.args[:2].apply(algebra.eq.cond.imply.cond.subs, simplify=None)
 
     Eq << Eq[-1].this.expr.args[1].apply(sets.el.imply.eq.sum, Eq[-1].expr.args[0].lhs.args[3])
 
@@ -110,7 +110,7 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any_et.limits.cond.apply(Eq[-1], 0, simplify=None)
 
-    Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], 1, simplify=None)
+    Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], -1, simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, reverse=True)
 
@@ -129,17 +129,28 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.expr.args[:4].apply(sets.eq.eq.eq.el.imply.eq.sum, Eq[-1].expr.args[4].lhs.args[1].find(Sum), simplify=None, ret=slice(None))
+    Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], -2, simplify=None)
 
-    Eq << Eq[-1].this.expr.args[4:6].apply(algebra.eq.cond.imply.cond.subs, simplify=None)
+    Eq << Eq[-1].this.expr.apply(sets.eq.eq.eq.el.imply.eq.sum, Eq[-1].find(Sum[2]).find(Sum), simplify=None, ret=slice(None))
 
-    Eq << Eq[-1].this.expr.args[:4].apply(sets.eq.eq.eq.el.imply.eq.sum, Eq[-1].expr.args[4].lhs.args[1], simplify=None)
+    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
 
+    Eq << Eq[-1].this.expr.args[3:5].apply(algebra.eq.cond.imply.cond.subs, simplify=None)
+
+    Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], -2, simplify=None)
+
+    Eq << Eq[-1].this.expr.apply(sets.eq.eq.eq.el.imply.eq.sum, Eq[-1].find(Sum[2]), simplify=None)
+
+    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
+
+    
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)
-
     Eq << Eq[-1].subs(Eq.eq_X_union.reversed, Eq.eq_Y_complement.reversed)
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-03-24
+# updated on 2023-05-20

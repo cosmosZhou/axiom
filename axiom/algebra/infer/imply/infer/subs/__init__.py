@@ -16,7 +16,7 @@ def prove(Eq):
     t, f, g = Function(integer=True)
     Eq << apply(Infer(Equal(t(x), y), Equal(f(t(x), y), g(x))))
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[0])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[0])
 
     Eq << Eq[-1].this.rhs.apply(algebra.eq.eq.imply.eq.subs, swap=True)
 

@@ -19,13 +19,16 @@ def prove(Eq):
 
     Eq <<= ~Eq[0] & Eq[1]
 
-    Eq << Eq[-1].this.args[0].apply(algebra.all_et.imply.et.all)
+    Eq << Eq[-1].this.find(All).apply(algebra.all_et.imply.et.all)
 
     Eq << algebra.et.imply.ou.apply(Eq[-1])
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-10-02
-# updated on 2022-09-20
+# updated on 2023-05-11

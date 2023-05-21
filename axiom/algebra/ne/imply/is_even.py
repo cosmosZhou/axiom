@@ -4,13 +4,8 @@ from util import *
 
 @apply
 def apply(given):
-    expr, one = given.of(Unequal)
-    if one != 1:
-        expr, one = one, expr
-    assert one == 1
-
-    n, two = expr.of(Mod)
-    assert two == 2
+    expr = given.of(Unequal[One])
+    n, S[2] = expr.of(Mod)
     return Equal(expr, 0)
 
 

@@ -8,7 +8,7 @@ from _collections import deque, defaultdict
 from util.search import py_to_module
 from os.path import dirname, basename
 from std import json_encode
-from std.heap import skip_first_permutation
+from std.combinatorics import skip_first_permutation
 from datetime import datetime
 import time
 
@@ -39,13 +39,13 @@ class Eq:
     def __init__(self, debug=True): 
         self.__dict__['list'] = []        
         self.__dict__['latex'] = []
-        self.__dict__['debug'] = debug        
+        self.__dict__['debug'] = debug
 
     def postprocess(self):
         lines = []
                 
         for line in self.latex:
-            i = 0  
+            i = 0
             res = []   
             for m in re.finditer(r"\\tag\*{(Eq(?:\[(\d+)\]|\.(\w+)))}", line):
                 expr, index, attr = m[1], m[2], m[3]
@@ -140,7 +140,7 @@ class Eq:
         
         return '\n'.join(lines)
 
-    @staticmethod   
+    @staticmethod
     def reference(index):
         if isinstance(index, list):
             return ', '.join(Eq.reference(d) for d in index)
@@ -152,7 +152,7 @@ class Eq:
         else:
             return "Eq.%s" % index
 
-    @staticmethod        
+    @staticmethod
     def get_equivalent(eq):
         if eq.equivalent is not None:
             return eq.equivalent
@@ -195,19 +195,24 @@ class Eq:
         return plausibles
 
     def index(self, eq, dummy_eq=True):
+        if eq.is_Inference:
+            eq = eq.cond
+
         for k in self.__dict__.keys() - self.slots:
-            v = self.__dict__[k]
-            if eq == v or (dummy_eq and eq.dummy_eq(v)):
-                return k
-        for i, _eq in enumerate(self.list):
+            _eq = self.__dict__[k]
             if _eq.is_Inference:
                 _eq = _eq.cond
-                
-            if eq.is_Inference:
-                eq = eq.cond
-            
-            if _eq == eq or (dummy_eq and eq.dummy_eq(_eq)):
-                return i
+
+            if dummy_eq and eq.dummy_eq(_eq) or eq == _eq:
+                return k
+
+        for k, _eq in enumerate(self.list):
+            if _eq.is_Inference:
+                _eq = _eq.cond
+
+            if dummy_eq and eq.dummy_eq(_eq) or eq == _eq:
+                return k
+
         return -1
 
     def append(self, eq):
@@ -234,6 +239,8 @@ class Eq:
                     return
             else:            
                 assert start < 0
+                if isinstance(rhs[0], tuple):
+                    rhs, = rhs
                 assert -start == len(rhs), f"{-start} == {len(rhs)}, lengths are not compatible! suggested codes are Eq[-{len(rhs)}:] = ..."
                  
             assert not index.stop and index.step is None
@@ -269,7 +276,7 @@ class Eq:
         if flush:
             self.latex.append(latex)
         else:
-            return latex 
+            return latex
 
     def __setattr__(self, index, rhs):
         if index in self.__dict__:
@@ -325,17 +332,17 @@ class Eq:
                         
                         rhs_equivalent = equivalent_ancestor(rhs)
                         if len(rhs_equivalent) == 1:
-                            [rhs_equivalent] = rhs_equivalent
+                            rhs_equivalent, = rhs_equivalent
 
                             if lhs != rhs_equivalent or rhs.given is not None:
                                 rhs_plausibles, rhs_is_equivalent = rhs_equivalent.plausibles_set()
                                 if len(rhs_plausibles) == 1:
-                                    [rhs_plausible] = rhs_plausibles
+                                    rhs_plausible, = rhs_plausibles
                                     if rhs_plausible is not lhs:
                                         if rhs_is_equivalent:
                                             lhs_plausibles, lhs_is_equivalent = lhs.plausibles_set()
                                             if len(lhs_plausibles) == 1:
-                                                [lhs_plausible] = lhs_plausibles
+                                                lhs_plausible, = lhs_plausibles
                                                 if lhs_is_equivalent:
                                                     lhs_plausible.equivalent = rhs_plausible
                                                 else:
@@ -349,13 +356,13 @@ class Eq:
                                                 
                                                 lhs_plausibles = [*lhs_plausibles]
                                                 if len(lhs_plausibles) == 1:
-                                                    [lhs_plausible] = lhs_plausibles
+                                                    lhs_plausible, = lhs_plausibles
                                                     lhs_plausible.given = rhs_plausible
                                                 else: 
                                                     rhs_plausible.imply = lhs_plausibles
                                             else:
                                                 lhs_plausibles, lhs_is_equivalent = lhs.plausibles_set(clue='imply')
-                                                assert not lhs_is_equivalent                                                
+                                                assert not lhs_is_equivalent
                                                 if len(lhs_plausibles) == 1: 
                                                     operations = []
                                                     
@@ -364,7 +371,7 @@ class Eq:
                                                     clue = cond.clue
                                                     while clue:
                                                         if clue == 'equivalent':
-                                                            imply = cond.equivalent                                                                                                                     
+                                                            imply = cond.equivalent
                                                         else:
                                                             assert clue == 'imply'
                                                             imply = cond.imply
@@ -388,7 +395,7 @@ class Eq:
                                 else:
                                     plausibles_set, is_equivalent = lhs.plausibles_set()
                                     if len(plausibles_set) == 1:
-                                        [lhs_plausible] = plausibles_set
+                                        lhs_plausible, = plausibles_set
                                         if is_equivalent: 
                                             if rhs_is_equivalent:
                                                 rhs_plausibles.discard(lhs_plausible)
@@ -402,16 +409,16 @@ class Eq:
                         else:
                             rhs_plausibles, rhs_is_equivalent = rhs.plausibles_set()
                             if len(rhs_plausibles) == 1:
-                                [rhs_plausible] = rhs_plausibles
+                                rhs_plausible, = rhs_plausibles
                                 if not lhs_is_plausible:
                                     lhs_equivalent = equivalent_ancestor(lhs)
                                     if len(lhs_equivalent) == 1:
-                                        [lhs_equivalent] = lhs_equivalent
+                                        lhs_equivalent, = lhs_equivalent
                                         lhs_equivalent.given = rhs_plausible
                             else: 
                                 lhs_plausibles, lhs_is_equivalent = lhs.plausibles_set()
                                 if len(lhs_plausibles) == 1:
-                                    [lhs_plausible] = lhs_plausibles
+                                    lhs_plausible, = lhs_plausibles
                                     if rhs_is_equivalent and lhs_is_equivalent:
                                         ...
                                     else:
@@ -419,7 +426,7 @@ class Eq:
                                             lhs_plausible.given = [*rhs_plausibles]
                         if lhs_is_plausible:
                             if 'imply' not in rhs._assumptions: 
-                                rhs = lhs                
+                                rhs = lhs
                                                                
             if isinstance(old_index, int):
                 self.list[old_index] = rhs
@@ -489,8 +496,8 @@ def topological_sort(graph):
 class RetCode(Enum):
     proved = ()  # 0
     failed = ()  # 1
-    plausible = ()  # 2    
-    unproved = ()  # 3 
+    plausible = ()  # 2
+    unproved = ()  # 3
     unprovable = ()  # 4
     slow = ()  # 5
 
@@ -513,34 +520,35 @@ def run():
         
     package = py_to_module(file)
     
-    from run import prove_with_timing, import_module
-    
+    from run import prove_with_timing, import_module, tackle_type_error 
     res = import_module(package)
-    from util import MySQL
+    from std import MySQL
     try:
         state, lapse, latex = prove_with_timing(res, debug=True, slow=True)
         if len(latex) > 65535:
             print('truncating date to 65535 bytes, original length =', len(latex))
             latex = latex[:65535]
         
-        sql = 'update tbl_axiom_py set state = "%s", lapse = %s, latex = %s where user = "%s" and axiom = "%s"' % (state, lapse, json_encode(latex), user, package)
+        sql = 'update axiom set state = "%s", lapse = %s, latex = %s where user = "%s" and axiom = "%s"' % (state, lapse, json_encode(latex), user, package)
         # print(sql)
     except AttributeError as e: 
         if re.match("module '[\w.]+' has no attribute 'prove'", str(e)) or re.match("'function' object has no attribute 'prove'", str(e)):
-            raise e 
+            raise e
+        elif re.match("type object '[\w.]+' has no attribute 'prove'", str(e)):
+            if tackle_type_error(package):
+                return
         else: 
             sql = analyze_results_from_run(res, latex=False)        
     except TypeError:
-        from run import tackle_type_error
         if tackle_type_error(package):
             return
             
     rowcount = MySQL.instance.execute(sql)
     if rowcount <= 0:
         
-        m = re.match('update tbl_axiom_py set state = "(\w+)", lapse = (\S+), latex = "([\s\S]+)" where user = "(\w+)" and axiom = "(\S+)"', sql)
+        m = re.match('update axiom set state = "(\w+)", lapse = (\S+), latex = "([\s\S]+)" where user = "(\w+)" and axiom = "(\S+)"', sql)
         state, lapse, latex, _, axiom = m.groups()
-        sql = 'insert into tbl_axiom_py values("%s", "%s", "%s", %s, "%s")' % (user, axiom, state, lapse, latex)
+        sql = 'insert into axiom values("%s", "%s", "%s", %s, "%s")' % (user, axiom, state, lapse, latex)
         rowcount = MySQL.instance.execute(sql)
         assert rowcount > 0
           
@@ -560,7 +568,7 @@ def analyze_results_from_run(lines, latex=True):
 # PermissionError: [WinError 32]
     if latex: 
         m = re.match('exit_code = (\S+)', line)
-        assert m, line                
+        assert m, line
         ret = int(m[1])
         if ret < 0:
             ret = RetCode.failed
@@ -605,21 +613,21 @@ def from_axiom_import(py, section, eqs):
         traceback.print_exc()
         return RetCode.failed, eqs.postprocess()       
     
+def website(py):
+    return f"http://localhost/{basename(dirname(dirname(__file__)))}/?module={py_to_module(py, '.')}"
 
-def _prove(func, debug=True, **_):
+def _prove(func, debug=True, **kwargs):
     py = func.__code__.co_filename
-    
-    website = f"http://localhost/{basename(dirname(dirname(__file__)))}/index.php?module={py_to_module(py, '.')}"
     
     eqs = Eq(debug=debug)
     
     try: 
         func(eqs)
-        
+
         if debug:
-            print(website)
+            print(website(py))
          
-        assert eqs.latex, "empty latex from " + py   
+        assert eqs.latex, "empty latex from " + py
         ret = RetCode.plausible if eqs.plausibles_dict else RetCode.proved
         
     except AttributeError as e:
@@ -634,7 +642,7 @@ def _prove(func, debug=True, **_):
                 if statement == 'if not isinstance(self, cls.func):':
                     ...
                 else:
-                    import_axiom = True                                
+                    import_axiom = True
             else: 
                 import_axiom = True
                 
@@ -645,7 +653,7 @@ def _prove(func, debug=True, **_):
         if m:
             t = m[1]
             if t == 'function':
-                * _, statement = messages            
+                * _, statement = messages
                 statement = statement.strip()
                 m = re.search('(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+', statement)
                 if m:
@@ -686,7 +694,7 @@ def _prove(func, debug=True, **_):
 
         print(json_encode(kwargs))
             
-        print(website)
+        print(website(py))
         ret = RetCode.failed
     except Exception as e: 
         messages = source_error()
@@ -700,7 +708,7 @@ def _prove(func, debug=True, **_):
         else:
             kwargs |= get_error_info(e)
         print(json_encode(kwargs))
-        print(website)
+        print(website(py))
         ret = RetCode.failed
     
     return ret, eqs.postprocess()
@@ -759,7 +767,7 @@ def detect_error_in_prove(py, messages):
             kwargs['func'] = 'prove'
             kwargs['line'] = __line__
             kwargs['code'] = code
-            return kwargs 
+            return kwargs
     
 
 def detect_error_in_apply(py, messages, index=-3):
@@ -783,7 +791,7 @@ def detect_error_in_apply(py, messages, index=-3):
             kwargs['code'] = code
             
             if pyFile != py:
-                m = re.search(r"\b(axiom[/\\].+)\.py", pyFile)
+                m = re.search(fr"\b{user}[/\\](axiom[/\\].+)\.py", pyFile)
                 if m:
                     file = m[1].replace(os.path.sep, '.')
                     file = file.replace(".__init__", '')
@@ -883,12 +891,16 @@ def slow(func):
         if kwargs.pop('slow', False):
             return _prove(func, **kwargs)
         else:
-            from util import MySQL
+            axiomPath = py_to_module(func.__code__.co_filename, '.')
             try:
-                [[latex]] = MySQL.instance.select(f"select latex from tbl_axiom_py where user = '{user}' and axiom = '{py_to_module(func.__code__.co_filename, '.')}'")            
+                from std import MySQL
+                [[latex]] = MySQL.instance.select(f"select latex from axiom where user = '{user}' and axiom = '{axiomPath}'")            
                 return RetCode.slow, latex
             except ValueError:
                 return _prove(func, **kwargs)
+            except:
+                print(axiomPath, "is too slow to execute, so skipping")
+                return RetCode.slow, ''
     
     return slow
 
@@ -904,25 +916,29 @@ funcptr = {
 
 def prove(*args, **kwargs):
     if args:
-        return lambda **kwargs: _prove(*args, **kwargs)    
+        return lambda **kwargs: _prove(*args, **kwargs)
         
     for key, value in kwargs.items():
         return funcptr[(key, value)]
 
+def split(axiom):
+    if axiom.__module__ == '__main__':
+        return axiom.__code__.co_filename[len(dirname(dirname(__file__))) + 1:].split(os.sep)
+    else:
+        return axiom.__module__.split('.')
 
 def apply(*args, **kwargs):
     if args:
-        assert len(args) == 1
-        axiom = args[0]
-        if axiom.__module__ == '__main__':
-            paths = axiom.__code__.co_filename[len(dirname(__file__)):].split(os.sep)
-        else:
-            paths = axiom.__module__.split('.')
-            
-        if 'given' in paths:
+        axiom, = args
+        tokens = split(axiom)
+        if 'given' in tokens:
             return given(axiom, **kwargs)
-        else:
-            return imply(axiom, **kwargs)
+
+        from sympy.logic.boolalg import inference_type
+        i, type = inference_type(tokens)
+        if type == 'to':
+            kwargs['given'] = None
+        return imply(axiom, **kwargs)
     else:
         return lambda axiom: apply(axiom, **kwargs)
 
@@ -1013,7 +1029,16 @@ def imply(apply, **kwargs):
                 given = None
         else:
             given = None
-             
+        
+        if given is None:
+            if args and isinstance(args[0], (Boolean, Inference)):
+                tokens = split(apply)
+                from sympy.logic.boolalg import inference_type
+                i, type = inference_type(tokens)
+                if type == 'to':
+                    from sympy import And, Equivalent
+                    statement = Equivalent(And(*(eq for eq in args if isinstance(eq, (Boolean, Inference)))), statement, evaluate=False)
+
         if apply.__code__.co_filename != traceback.extract_stack()[-2][0]:
             
             if given is None:
@@ -1021,11 +1046,23 @@ def imply(apply, **kwargs):
                     statement = tuple(s.copy(plausible=None, evaluate=False) for s in statement)
                 else: 
                     statement = statement.copy(plausible=None, evaluate=False)
-                                    
-                    if _simplify and len(args) == 1 and \
-                    (statement.is_Equal or statement.is_Equivalent) \
-                    and args[0] is statement.lhs:
-                        _simplify = False
+                    from sympy import Basic
+                    if _simplify and sum([isinstance(a, Basic) for a in args]) == 1:
+                        if statement.is_Equal and args[0] is statement.lhs:
+                            lhs, rhs = statement.args
+                            if not lhs.is_random:
+                                if rhs.is_random:
+#                                     print(rhs)
+                                    from sympy.stats.symbolic_probability import Surrogate
+                                    for surrogate in rhs.finditer(Surrogate):
+                                        rhs = rhs._subs(surrogate, surrogate.arg.var)
+                                        
+                                    assert not rhs.is_random
+                                    statement = statement.func(lhs, rhs, evaluate=False)
+
+                            _simplify = False
+                        elif statement.is_Equivalent and args[0] is statement.lhs:
+                            _simplify = False
             else: 
                 if isinstance(given, tuple):
                     is_not_False = all(g.plausible is not False for g in given)
@@ -1057,7 +1094,7 @@ def imply(apply, **kwargs):
         dependency = {}
         
         if isinstance(statement, tuple):
-            statement = tuple(process(s, dependency) for s in statement)                
+            statement = tuple(process(s, dependency) for s in statement)
         else:
             statement = process(statement, dependency)
             
@@ -1075,14 +1112,14 @@ def imply(apply, **kwargs):
         if G:
             definition = tuple(s.equality_defined() for s in G)
             if len(definition) == 1:
-                [definition] = definition
+                definition, = definition
         else:
             definition = None
             
         if definition is None:
             if given is None:
                 return statement
-            return [given, statement]                
+            return [given, statement]
         else:
             if given is None:
                 return [definition, statement]    
@@ -1134,7 +1171,7 @@ def given(apply, **kwargs):
             else:
                 raise e
             
-        i = 0        
+        i = 0
         if isinstance(args[i], Inference):
             imply, *args = args
         else: 
@@ -1145,7 +1182,7 @@ def given(apply, **kwargs):
 
             imply, args = args[:i], args[i:]
             if len(imply) == 1:
-                [imply] = imply
+                imply, = imply
         
         if is_applying: 
             if isinstance(statement, tuple):
@@ -1209,7 +1246,7 @@ import re
 # https://cloud.tencent.com/developer/ask/222013
 def get_function_body(func):
     import inspect
-    from itertools import dropwhile    
+    from itertools import dropwhile
     print("{func.__name__}'s body:".format(func=func))
     source_lines = inspect.getsourcelines(func)[0]
     source_lines = dropwhile(lambda x: x.startswith('@'), source_lines)
@@ -1298,7 +1335,7 @@ def detect_axiom_given_theorem(theorem, statement):
 
 
 def dependency_analysis(theorem):
-    import axiom    
+    import axiom
     prove = eval('axiom.' + theorem).prove
     import inspect
     prove = prove.__closure__[0].cell_contents
@@ -1384,7 +1421,7 @@ def recursive_parsing(theorem):
         theoremSetNew -= theoremSet
         
         if theoremSetNew:
-            theoremSet |= theoremSetNew        
+            theoremSet |= theoremSetNew
             for child in theoremSetNew:
                 q.append(child)
                 G[theorem].append(child)
@@ -1393,7 +1430,7 @@ def recursive_parsing(theorem):
 
         
 def chmod():
-    if os.sep == '/':  # is Linux system    
+    if os.sep == '/':  # is Linux system
         cmd = 'chmod -R 777 axiom'
     #         os.system(cmd)
         for s in os.popen(cmd).readlines():

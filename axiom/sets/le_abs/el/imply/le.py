@@ -55,7 +55,7 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(t_, t)
 
-    Eq << algebra.ou.imply.infer.apply(Eq[-1])
+    Eq << algebra.ou.imply.infer.apply(Eq[-1], 1)
 
     Eq << Eq[-1].this.apply(algebra.infer.flatten)
 
@@ -63,7 +63,10 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[-1], Eq[-2])
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2021-03-23
+# updated on 2023-05-19

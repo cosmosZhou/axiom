@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    (xi, xj), (j, _0, i), (i, __0, n) = self.of(Sum[Mul])
-    assert 0 == _0 == __0
+    (xi, xj), (j, S[0], i), (S[i], S[0], n) = self.of(Sum[Mul])
     if not xi._has(i):
         xi, xj = xj, xi
     assert xj._subs(j, i) == xi

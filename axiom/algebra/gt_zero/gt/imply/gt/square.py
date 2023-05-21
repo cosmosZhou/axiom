@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(is_positive_x, strict_greater_than):
     x = is_positive_x.of(Expr > 0)
-    y, _x = strict_greater_than.of(Greater)
-    assert x == _x
+    y, S[x] = strict_greater_than.of(Greater)
     return Greater(y ** 2, x ** 2)
 
 
@@ -28,9 +27,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.mul.to.add, deep=True)
 
-    Eq << Eq[-1].this.apply(algebra.gt.transport, lhs=0)
+    Eq << Eq[-1].this.apply(algebra.gt.transport, lhs=1)
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-08-10
+# updated on 2023-05-20

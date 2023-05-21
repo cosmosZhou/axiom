@@ -1,7 +1,7 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self, *, cond=None):
     cond=sympify(cond)
 
@@ -17,7 +17,7 @@ def apply(self, *, cond=None):
             continue
         unmatch.append(eq)
     assert not unmatch
-    return Equivalent(self, Or(cond, self.func(*matched)))
+    return Or(cond, self.func(*matched))
 
 
 @prove

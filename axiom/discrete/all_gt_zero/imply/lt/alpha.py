@@ -1,12 +1,10 @@
 from util import *
-from axiom.discrete.K.to.add.definition import K
 from axiom.discrete.imply.gt_zero.alpha import alpha
 
 
 @apply
 def apply(given, n):
-    (x, _j), j = given.of(All[Indexed > 0, Tuple[1, oo]])
-    assert _j == j
+    (x, j), S[j] = given.of(All[Indexed > 0, Tuple[1, oo]])
     assert n > 0
     return Less(alpha(x[:2 * n - 1]), alpha(x[:2 * n + 1]))
 

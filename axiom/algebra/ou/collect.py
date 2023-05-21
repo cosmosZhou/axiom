@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given, *, cond=None):
     from axiom.algebra.ou.imply.ou.collect import collect
-    return Equivalent(given, collect(given, cond))
+    return collect(given, cond)
 
 @prove
 def prove(Eq):

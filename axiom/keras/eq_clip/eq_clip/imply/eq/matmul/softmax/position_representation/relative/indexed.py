@@ -8,7 +8,7 @@ def apply(eq_K_quote, eq_V_quote, Q, K, V):
     ((w_K, clip_index), j_limit, i_limit), K_quote = eq_K_quote.of(Equal[Lamda[Indexed]])
     ((w_V, S[clip_index]), S[j_limit], S[i_limit]), V_quote = eq_V_quote.of(Equal[Lamda[Indexed]])
     i, S[0], S[n] = i_limit
-    j, S[0], S[n] = j_limit    
+    j, S[0], S[n] = j_limit
     k, (((r, S[j]), (S[r], S[i])), S[-k], S[k]) = clip_index.of(Add[clip[Indexed - Indexed]])
     
 

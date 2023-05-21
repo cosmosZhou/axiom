@@ -5,8 +5,7 @@ from util import *
 
 @apply(simplify=None)
 def apply(given):
-    assert given.is_Unequal
-    x, y = given.args
+    x, y = given.of(Unequal)
     return NotElement(x, y.set)
 
 

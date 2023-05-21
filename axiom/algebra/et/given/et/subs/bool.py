@@ -3,8 +3,6 @@ from util import *
 
 @apply
 def apply(imply, index=-1, invert=None, reverse=False):
-    assert imply.is_Boolean
-
     eqs = imply.of(And)
 
     given = eqs[index]

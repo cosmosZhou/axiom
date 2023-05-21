@@ -3,7 +3,7 @@ from _collections import defaultdict
 from util.search import py_to_module, read_directory, read_all_files, \
     yield_from_py, axiom_directory, is_py_theorem
 from os.path import basename
-from util import MySQL
+from std import MySQL
 import time
 import datetime
 from std.file import Text
@@ -43,9 +43,9 @@ def insert_into_hierarchy():
             args = user, caller, callee, count
             data.append(args)
         
-    MySQL.instance.execute(f"delete from tbl_hierarchy_py where user = '{user}'")
+    MySQL.instance.execute(f"delete from hierarchy where user = '{user}'")
     
-    MySQL.instance.load_data('tbl_hierarchy_py', data)
+    MySQL.instance.load_data('hierarchy', data)
 
     
 def topological_sort():
@@ -118,5 +118,3 @@ def update_timestamp():
 if __name__ == '__main__':
     insert_into_hierarchy()
     # update_timestamp()    
-
-# exec(open('./util/hierarchy.py').read())

@@ -22,7 +22,7 @@ def prove(Eq):
 
     k, *ab = Eq[-1].lhs.args[0].args[-1].limits[0]
     k = k.copy(domain=Range(*ab))
-    Eq << Eq.is_continuous.apply(algebra.cond.imply.all.restrict, (x0, k, k + 1))
+    Eq << Eq.is_continuous.apply(algebra.cond.imply.all.restrict, (x0, Interval(k, k + 1)))
 
     Eq.mean_value_theorem = calculus.is_continuous.imply.any_eq.mean_value_theorem.apply(Eq[-1])
 

@@ -114,7 +114,7 @@ def prove(Eq):
 
     Eq.lower_part = Eq[-1].this.rhs.apply(algebra.lamda.piece.to.block)
 
-    Eq << Eq.A_def[i]#[i:i + Min(u, n)]
+    Eq << Eq.A_def[i]
 
     Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (i, 0, n - Min(u, n)))
 

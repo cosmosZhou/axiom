@@ -14,7 +14,7 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(NotElement(x, Integers))
 
-    Eq << algebra.imply.ge.ceiling.apply(x)
+    Eq << algebra.imply.ceiling_ge.apply(x)
 
     Eq << sets.notin.imply.gt_zero.frac.apply(Eq[0])
 

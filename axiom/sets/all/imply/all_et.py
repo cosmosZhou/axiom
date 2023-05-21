@@ -5,10 +5,10 @@ from util import *
 def apply(given):
     fn, (x, *S) = given.of(All)
     if len(S) == 1:
-        [S] = S
+        S, = S
         assert S.is_set
     else:
-        S = Range(*S) if x.is_integer else Interval(*S)
+        S = x.range(*S)
     return All[x:S](fn & Unequal(S, x.emptySet))
 
 

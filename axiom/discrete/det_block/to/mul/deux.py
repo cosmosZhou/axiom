@@ -4,12 +4,12 @@ from util import *
 @apply
 def apply(self):
     (A, B), (C, D) = self.of(Determinant[BlockMatrix[BlockMatrix[1], BlockMatrix[1]]])
-    if A.is_ZeroMatrix or D.is_ZeroMatrix:
+    if not A or not D:
         A = B
         D = C
         factor = (-1) ** (B.shape[0] * C.shape[0])
     else:
-        assert B.is_ZeroMatrix or C.is_ZeroMatrix
+        assert not B or not C
         factor = 1
 
     if A.is_Transpose:

@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << apply(Or(Any[x:A]((g(x) > 0)), f(x) > 0))
 
-    Eq << Eq[0].this.args[0].apply(algebra.cond.imply.any.conditioned, (x, A))
+    Eq << Eq[0].this.args[0].apply(algebra.cond.imply.any.cond, (x, A))
 
     Eq << algebra.ou.imply.any_ou.distributed.apply(Eq[-1])
 

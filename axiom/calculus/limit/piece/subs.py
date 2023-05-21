@@ -49,13 +49,13 @@ def prove(Eq):
     A = Symbol(Eq[0].rhs, real=True)
     Eq << A.this.definition
 
-    Eq << calculus.eq.imply.any_all.limit_definition.apply(Eq[-1])
+    Eq << calculus.eq_limit.imply.any.all.limit_definition.apply(Eq[-1])
 
     Eq << Eq[0].subs(Eq[1].reversed)
 
     Eq << Eq[-1].this.apply(calculus.eq.to.any_all.limit_definition)
 
-    Eq << Eq[-1].this.find(Less).apply(algebra.lt_piece.given.ou)
+    Eq << Eq[-1].this.find(Less).apply(algebra.cond_piece.given.ou)
 
     Eq << Eq[-1].this.expr.apply(algebra.all_ou.given.all)
 
@@ -74,7 +74,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Greater).apply(algebra.gt_max.imply.gt, 1)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2020-05-28
+# updated on 2023-04-29

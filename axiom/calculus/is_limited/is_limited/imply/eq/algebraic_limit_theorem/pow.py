@@ -3,14 +3,9 @@ from util import *
 
 @apply
 def apply(limited_f, limited_g):
-    from axiom.calculus.is_limited.imply.any_all.limit_definition import of_limited
-    fx, (x, x0, dir) = of_limited(limited_f, positive=True)
-    assert dir == 0
-    gx, (_x, _x0, dir) = of_limited(limited_g, real=True)
-    assert dir == 0
-
-    assert x == _x
-    assert x0 == _x0
+    from axiom.calculus.is_limited.imply.any.all.limit_definition import of_limited
+    fx, (x, x0, S[0]) = of_limited(limited_f, positive=True)
+    gx, S[(x, x0, 0)] = of_limited(limited_g, real=True)
 
     return Equal(Limit[x:x0](fx ** gx), limited_f.lhs ** limited_g.lhs)
 
@@ -26,17 +21,17 @@ def prove(Eq):
     ε = Symbol(real=True, positive=True)
     ε_0 = Symbol(real=True, positive=True)
     δ_0 = Symbol(real=True, positive=True)
-    Eq << calculus.is_limited.imply.any_all.limit_definition.symbol_subs.apply(Eq[0], ε_0, δ_0, var='A')
+    Eq << calculus.is_limited.imply.any.all.limit_definition.symbol_subs.apply(Eq[0], ε_0, δ_0, var='A')
 
     Eq << Eq[-1].subs(ε_0, ε / 2)
 
     ε_1 = Symbol(real=True, positive=True)
     δ_1 = Symbol(real=True, positive=True)
-    Eq << calculus.is_limited.imply.any_all.limit_definition.symbol_subs.apply(Eq[1], ε_1, δ_1, var='B')
+    Eq << calculus.is_limited.imply.any.all.limit_definition.symbol_subs.apply(Eq[1], ε_1, δ_1, var='B')
 
     Eq << Eq[-1].subs(ε_1, ε / 2)
 
-    Eq << algebra.any_all.any_all.imply.any_all_et.limits_intersect.apply(Eq[-1], Eq[-3])
+    Eq << algebra.any_all.any_all.imply.any.all.et.limits_intersect.apply(Eq[-1], Eq[-3])
 
     Eq << Eq[-1].this.expr.expr.apply(algebra.lt.lt.imply.lt.abs.add)
 

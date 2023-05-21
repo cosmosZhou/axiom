@@ -6,12 +6,10 @@ def apply(given):
     function, (n, *ab) = given.of(All)
     assert n.is_integer
     if len(ab) == 2:
-        a, b = ab
-        assert b.is_Infinity
+        a, S[oo] = ab
         assert a.is_integer and a.is_finite
     elif len(ab) == 1:
         domain = ab[0]
-        assert domain.is_Relational
         assert domain.lhs == n
         if domain.is_GreaterEqual:
             a = domain.rhs

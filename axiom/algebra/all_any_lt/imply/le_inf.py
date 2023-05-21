@@ -3,9 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    ((fx, M), *limits), (M, M0_domain) = given.of(All[Any[Less]])
-    M0, a = M0_domain.of(Interval)
-    assert a.is_Infinity and M0_domain.left_open
+    ((fx, M), *limits), (S[M], M0, S[oo]) = given.of(All[Any[Less]])
     return Inf(fx, *limits) <= M0
 
 
@@ -16,11 +14,11 @@ def prove(Eq):
     M0, a, b = Symbol(real=True, given=True)
     M, x = Symbol(real=True)
     f = Function(real=True)
-    Eq << apply(All[M:Interval(M0, oo, left_open=True)](Any[x:a:b](f(x) < M)))
+    Eq << apply(All[M:M0:oo](Any[x:Interval(a, b)](f(x) < M)))
 
     Eq << ~Eq[1]
 
-    Eq << algebra.gt_inf.imply.any_all_ge.apply(Eq[-1])
+    Eq << algebra.gt_inf.imply.any.all.ge.apply(Eq[-1])
 
     Eq << ~Eq[-1]
 

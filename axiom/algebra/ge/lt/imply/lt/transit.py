@@ -2,19 +2,21 @@ from util import *
 
 
 @apply
-def apply(b_greater_than_x, a_less_than_x):
-    b, x = b_greater_than_x.of(GreaterEqual)
-    a, _x = a_less_than_x.of(Less)
-    assert x == _x
+def apply(ge, lt):
+    b, x = ge.of(GreaterEqual)
+    a, _x = lt.of(Less)
+    if x != _x:
+        assert a == b
+        a, b = x, _x
     return Less(a, b)
 
 
 @prove
 def prove(Eq):
     from axiom import algebra
-    a, x, b = Symbol(real=True)
 
-    Eq << apply(b >= x, a < x)
+    a, x, b = Symbol(real=True)
+    Eq << apply(x >= b, x < a)
 
     Eq << Eq[1].reversed
 
@@ -22,7 +24,10 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-06-04
+# updated on 2023-04-24

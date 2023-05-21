@@ -1,7 +1,7 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given, i=-1, j=None):
     [*args] = given.of(And)
     if i < 0:
@@ -11,7 +11,7 @@ def apply(given, i=-1, j=None):
 
     conj = args[i]
     args[j] = Infer(conj, args[j])
-    return Equivalent(given, And(*args), evaluate=False)
+    return And(*args)
 
 @prove
 def prove(Eq):

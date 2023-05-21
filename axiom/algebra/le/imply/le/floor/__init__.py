@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << algebra.gt.imply.ge.strengthen.apply(Eq[-1])
 
-    Eq << algebra.imply.le.floor.apply(x)
+    Eq << algebra.imply.floor_le.apply(x)
 
     Eq << algebra.ge.le.imply.ge.transit.apply(Eq[-2], Eq[-1])
 
@@ -28,8 +28,8 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[0]
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

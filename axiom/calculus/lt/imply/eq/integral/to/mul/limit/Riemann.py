@@ -3,15 +3,14 @@ from util import *
 
 @apply
 def apply(lt, self, n=None, k=None):
-    _a, _b = lt.of(Less)
-    fx, (x, a, b) = self.of(Integral)
+    a, b = lt.of(Less)
+    fx, (x, S[a], S[b]) = self.of(Integral)
     if n is None:
         n = self.generate_var(integer=True, var='n')
 
     if k is None:
         k = self.generate_var(n, integer=True, var='k')
     assert fx.is_continuous(x)
-    assert a == _a and b == _b
     return Equal(self, (b - a) * Limit[n:oo](Sum[k:n](fx._subs(x, a + (b - a) * k / n)) / n))
 
 

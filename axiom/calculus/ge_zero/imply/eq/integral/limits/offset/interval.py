@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(is_nonnegative, self, offset):
     expr = is_nonnegative.of(Expr >= 0)
-    _expr, (x, E) = self.of(Integral)
-    assert _expr == expr
+    S[expr], (x, E) = self.of(Integral)
     E -= offset
     return Equal(self, Integral[x:E](expr._subs(x, x + offset)))
 

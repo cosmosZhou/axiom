@@ -4,8 +4,8 @@ from util import *
 @apply
 def apply(given):
     A_abs, zero = given.of(Greater)
-    assert A_abs.is_Card and zero.is_extended_nonnegative
-    A = A_abs.arg
+    assert zero >= 0
+    A = A_abs.of(Card)
 
     return Unequal(A, A.etype.emptySet)
 

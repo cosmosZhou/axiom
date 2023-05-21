@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    (expr, _x, d), x, n = self.of(Difference[Difference])
-    assert x == _x
+    (expr, x, d), S[x], n = self.of(Difference[Difference])
     return Equal(self, Difference(expr, x, n + d), evaluate=False)
 
 

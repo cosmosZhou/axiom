@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(is_nonpositive, is_nonnegative):
     x = is_nonnegative.of(Expr >= 0)
-    _x = is_nonpositive.of(Expr <= 0)
-    assert x == _x
+    S[x] = is_nonpositive.of(Expr <= 0)
     return Equal(x, 0)
 
 

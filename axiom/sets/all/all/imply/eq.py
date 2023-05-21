@@ -4,12 +4,10 @@ from util import *
 @apply
 def apply(all_A, all_B):
     A_function, (x, A) = all_A.of(All)
-    B_function, (_x, B) = all_B.of(All)
+    S[A.image_set()[-1]], (S[x], B) = all_B.of(All)
 
     assert A_function == B.image_set()[-1]
-    assert B_function == A.image_set()[-1]
 
-    assert x == _x
     assert A.is_ConditionSet or A.definition.is_ConditionSet
     assert B.is_ConditionSet or B.definition.is_ConditionSet
 

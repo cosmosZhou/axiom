@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.et.to.ou)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.to.ou)
+    Eq << Eq[-1].this.args[1].apply(algebra.et.to.ou)
 
     Eq << algebra.infer.imply.ou.apply(Eq[2])
 
@@ -33,11 +33,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.et.to.ou)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.to.ou)
+    Eq << Eq[-1].this.args[1].apply(algebra.et.to.ou)
 
     Eq << ~Eq[-1]
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-04-01
+# updated on 2023-05-20

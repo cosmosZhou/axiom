@@ -2,22 +2,20 @@ from util import *
 
 
 @apply
-def apply(self, rho=None, theta=None):
-    if rho is None:
-        rho = Symbol(real=True)
-    if theta is None:
-        theta = Symbol(real=True)
+def apply(self, ρ=None, θ=None):
+    if ρ is None:
+        ρ = Symbol(real=True)
+    if θ is None:
+        θ = Symbol(real=True)
 
-    _x = rho * cos(theta)
-    _y = rho * sin(theta)
+    _x = ρ * cos(θ)
+    _y = ρ * sin(θ)
 
-    J = Matrix([_x, _y]).jacobian(Matrix([rho, theta]))
-    J = J.det().trigsimp()
+    J = Matrix([_x, _y]).jacobian(Matrix([ρ, θ])).det().trigsimp()
 
-    x, y = (var for var, *_ in self.limits)
+    (x,), (y,) = self.limits
     function = self.expr.subs({x:_x, y:_y}, simultaneous=True).trigsimp()
-    limits = [(rho, 0, oo), (theta, -pi, pi)]
-    rhs = self.func(J * function, *limits)
+    rhs = Integral[ρ:0:oo, θ:-pi:pi] (J * function)
 
     return Equal(self, rhs, evaluate=False)
 
@@ -28,8 +26,10 @@ def prove(Eq):
     Eq << apply(Integral[x, y](E ** (-x ** 2 / 2 - y ** 2 / 2)))
 
     #https://ccjou.wordpress.com/2012/11/26/jacobian-矩陣與行列式/
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-06-09
+# updated on 2023-04-30

@@ -4,9 +4,8 @@ from util import *
 @apply
 def apply(lt_zero, is_nonpositive, lt, left_open=True, right_open=True, x=None):
     a = lt_zero.of(Expr < 0)
-    _M = is_nonpositive.of(Expr <= 0)
-    m, M = lt.of(Less)
-    assert M == _M
+    M = is_nonpositive.of(Expr <= 0)
+    m, S[M] = lt.of(Less)
     if x is None:
         x = lt.generate_var(real=True)
 

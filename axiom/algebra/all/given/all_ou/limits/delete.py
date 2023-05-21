@@ -2,16 +2,15 @@ from util import *
 
 
 @apply
-def apply(given, index=0):
+def apply(given):
     from sympy.concrete.limits import limits_cond
-    assert index == 0
-    function, *limits = given.of(All)
+    expr, *limits = given.of(All)
 
     assert len(limits) > 1
 
     limit, *limits = limits
     cond = limits_cond((limit,))
-    return All(function | cond.invert(), *limits)
+    return All(expr | cond.invert(), *limits)
 
 
 @prove

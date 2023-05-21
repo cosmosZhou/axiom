@@ -3,17 +3,16 @@ from util import *
 
 @apply(simplify=False)
 def apply(given):
-    (e, S), *limits = given.of(All[Element])
+    (e, s), *limits = given.of(All[Element])
 
     shape = []
     for limit in limits:
-        x, a, b = limit
-        assert a == 0
+        x, S[0], b = limit
         assert x.is_integer
         assert e._has(x)
         shape.append(b)
     shape.reverse()
-    return Element(Lamda(e, *limits).simplify(), CartesianSpace(S, *shape))
+    return Element(Lamda(e, *limits).simplify(), CartesianSpace(s, *shape))
 
 
 @prove

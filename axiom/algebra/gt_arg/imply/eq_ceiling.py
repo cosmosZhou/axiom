@@ -25,7 +25,7 @@ def prove(Eq):
     Eq << sets.gt.el.imply.el.intersect.apply(Eq[-1], Eq[-2])
 
     Eq << sets.el.imply.el.sub.apply(Eq[-1], S.One / 2)
-    Eq << sets.el.imply.el.ceiling.apply(Eq[-1])
+    Eq << sets.el_interval.imply.el_range.ceiling.apply(Eq[-1])
 
 
 if __name__ == '__main__':

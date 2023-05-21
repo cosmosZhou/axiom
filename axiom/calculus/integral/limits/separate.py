@@ -2,14 +2,17 @@ from util import *
 
 
 @apply
-def apply(sgm):
-    function, *limits = sgm.of(Integral)
+def apply(sgm, *, simplify=True):
+    expr, *limits = sgm.of(Integral)
     assert len(limits) > 1
     limit, *limits = limits
+    
+    expr = sgm.func(expr, limit)
+    if simplify:
+        expr = expr.simplify()
 
-    function = sgm.func(function, limit).simplify()
-
-    return Equal(sgm, sgm.func(function, *limits))
+    rhs = sgm.func(expr, *limits, evaluate=simplify)
+    return Equal(sgm, rhs)
 
 
 @prove

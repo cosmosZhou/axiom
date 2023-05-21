@@ -28,13 +28,17 @@ def prove(Eq):
 
     Eq << Eq[0].subs(Eq[-1].reversed)
 
+    Eq << Eq[-1].this.find(Lamda).simplify()
     Eq << Eq[-1].this.lhs.apply(discrete.det_lamda.to.prod.vandermonde)
 
     Eq << Eq[-1].this.find(Indexed).definition
 
     Eq << Eq[-1].this.find(Indexed).definition
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2022-01-15
+# updated on 2023-03-18

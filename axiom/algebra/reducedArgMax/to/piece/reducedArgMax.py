@@ -19,14 +19,17 @@ def prove(Eq):
     x, a, b = Symbol(real=True)
     Eq << apply(ReducedArgMax(Piecewise((f(x), a > b), (g(x), True))))
 
-    Eq << algebra.eq.given.ou.apply(Eq[0])
+    Eq << algebra.cond_piece.given.ou.apply(Eq[0])
 
     Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, invert=True)
+    Eq << Eq[-1].this.find(And).apply(algebra.et.given.et.subs.bool, invert=True)
 
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-12-17
+# updated on 2023-05-10

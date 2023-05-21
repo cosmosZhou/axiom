@@ -1,11 +1,9 @@
 from util import *
 
 
-
 @apply
 def apply(given):
-    assert given.is_Less
-    lhs, rhs = given.args
+    lhs, rhs = given.of(Less)
     return LessEqual(lhs, rhs)
 
 
@@ -18,7 +16,10 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[0]
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-12-29
+# updated on 2023-04-18

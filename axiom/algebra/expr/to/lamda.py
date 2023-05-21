@@ -11,7 +11,10 @@ def apply(self, *vars):
         for j, m in zip(vars, self.shape):
             assert j.is_integer
             assert not self._has(j)
-            limits.append((j, 0, m))
+            if m.is_infinite:
+                limits.append((j,))
+            else:
+                limits.append((j, 0, m))
     else:
         excludes = set()
         vars = []
@@ -54,4 +57,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2019-05-08
-# updated on 2021-12-16
+# updated on 2023-04-14

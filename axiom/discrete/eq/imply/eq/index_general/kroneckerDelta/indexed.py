@@ -4,18 +4,13 @@ from util import *
 @apply
 def apply(nonoverlapping, x_equal, i=None, j=None):
     a_cup_finiteset, n = nonoverlapping.of(Equal[Card])
-    (xk, limit), _a_cup_finiteset = x_equal.of(Equal[Cup[FiniteSet]])
+    (xk, limit), S[a_cup_finiteset] = x_equal.of(Equal[Cup[FiniteSet]])
     x = Lamda(xk, limit).simplify()
-    [_n] = x.shape
-    assert n == _n
-
-    assert _a_cup_finiteset == a_cup_finiteset
+    S[n], = x.shape
 
     ak, limit = a_cup_finiteset.of(Cup[FiniteSet])
     a = Lamda(ak, limit).simplify()
-    [_n] = a.shape
-    assert n == _n
-
+    S[n], = a.shape
 
     if j is None:
         j = Symbol(domain=Range(n), given=True)
@@ -23,8 +18,8 @@ def apply(nonoverlapping, x_equal, i=None, j=None):
     if i is None:
         i = Symbol(domain=Range(n), given=True)
 
-    assert j >= 0 and j < n
-    assert i >= 0 and i < n
+    assert 0 <= j < n
+    assert 0 <= i < n
 
     return Equal(KroneckerDelta(x[i], x[j]), KroneckerDelta(i, j))
 

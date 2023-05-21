@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(x_less_than_y, x_less_than_b):
     x, y = x_less_than_y.of(Greater)
-    _x, b = x_less_than_b.of(Greater)
-    assert x == _x
+    S[x], b = x_less_than_b.of(Greater)
     return Greater(x, Max(y, b))
 
 

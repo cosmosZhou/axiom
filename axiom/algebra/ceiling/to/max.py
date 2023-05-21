@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq <<= algebra.imply.gt.ceiling.apply(x), algebra.imply.gt.ceiling.apply(y)
 
-    Eq << algebra.gt.gt.imply.gt.max.both.apply(Eq[-2], Eq[-1])
+    Eq << algebra.gt.gt.imply.gt.max.apply(Eq[-2], Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(algebra.max.to.add)
 

@@ -74,7 +74,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.swap, 0)
 
-    Eq << Eq[-1].this.find(And).apply(sets.et.to.el.range)
+    Eq << Eq[-1].this.find(And).apply(sets.cond.cond.to.el.range)
 
     Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.swap, 0)
 
@@ -120,15 +120,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.swap, -2)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.invert, 1)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.et.invert, 1)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.invert)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.et.invert)
 
-    Eq << Eq[-1].this.find(And).apply(algebra.et_lt.to.lt.min)
+    Eq << Eq[-1].this.find(And).apply(algebra.lt.lt.to.lt.min)
 
-    Eq << Eq[-1].this.find(And).apply(sets.et.to.el.range)
+    Eq << Eq[-1].this.find(And).apply(sets.cond.cond.to.el.range)
 
-    Eq.four_blocks = Eq[-1].this.find(And).apply(algebra.et_ge.to.ge.max)
+    Eq.four_blocks = Eq[-1].this.find(And).apply(algebra.ge.ge.to.ge.max)
 
     Eq << keras.eq_block.imply.et.infer.block.apply(Eq[0])
 
@@ -151,7 +151,7 @@ def prove(Eq):
 
     Eq << algebra.infer.imply.eq.piece.apply(Eq.block3, Eq[-1].rhs, index=1, reverse=True)
 
-    Eq << algebra.et_eq.imply.eq.transit.apply(Eq.four_blocks & Eq[-1] & Eq[-2] & Eq[-3])
+    Eq << algebra.et.imply.eq.transit.apply(Eq.four_blocks & Eq[-1] & Eq[-2] & Eq[-3]).reversed
 
     Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (i, 0, n))
 
@@ -172,7 +172,7 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-01-03
-# updated on 2022-01-28
+# updated on 2023-05-15
 from . import tf
 from . import lower_triangle
 from . import upper_triangle

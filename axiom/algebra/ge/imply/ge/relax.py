@@ -5,10 +5,10 @@ from util import *
 def apply(given, lower=None, upper=None):
     lhs, rhs = given.of(GreaterEqual)
     if lower is not None:
-        assert rhs >= lower
+        assert rhs - lower >= 0 or rhs >= lower
         rhs = lower
     elif upper is not None:
-        assert lhs <= upper
+        assert lhs - upper <= 0 or lhs <= upper
         lhs = upper
 
     return GreaterEqual(lhs, rhs)

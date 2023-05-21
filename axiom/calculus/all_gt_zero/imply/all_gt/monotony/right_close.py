@@ -3,10 +3,9 @@ from util import *
 
 @apply
 def apply(given):
-    (fx, (x, n)), (_x, a, b) = given.of(All[Derivative > 0])
-    assert n == 1
-    assert x == _x
-
+    (fx, (x, S[1])), (S[x], domain) = given.of(All[Derivative > 0])
+    a, b = domain.of(Interval)
+    assert domain.is_closed
     return All[x:Interval(a, b, left_open=True)](Greater(fx, fx._subs(x, a)))
 
 
@@ -31,7 +30,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.apply(Eq[0], cond=a < b)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
     Eq << Eq[-1].this.rhs.apply(calculus.lt.all_gt_zero.imply.all_gt.monotony.right_close)
 
 

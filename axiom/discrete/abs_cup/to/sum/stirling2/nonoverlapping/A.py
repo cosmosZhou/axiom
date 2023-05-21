@@ -55,7 +55,7 @@ def prove(Eq):
     u = Eq[-1].lhs.arg
     Eq.SqueezeTheorem = sets.imply.le.cup.apply(u.expr, *u.limits)
 
-    Eq << algebra.eq_piece.imply.ou.apply(x_quote_abs)
+    Eq << algebra.cond_piece.imply.ou.apply(x_quote_abs)
 
     Eq << Eq[-1].subs(i, j)
 
@@ -105,7 +105,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.subs(Eq.x_quote_definition)
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq_piece.imply.ou)
+    Eq << Eq[-1].this.expr.apply(algebra.cond_piece.imply.ou)
 
     Eq << ~Eq[-1]
 

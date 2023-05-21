@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(lt):
-    x, a = lt.of(Abs < Expr)    
+    x, a = lt.of(Abs < Expr)
     assert x.is_extended_real
     return Less(x, a), Greater(x, -a)
 
@@ -15,11 +15,11 @@ def prove(Eq):
     x, a = Symbol(real=True, given=True)
     Eq << apply(abs(x) < a)
 
-    Eq << algebra.lt_abs.imply.lt.apply(Eq[0])
+    Eq << algebra.abs_lt.imply.lt.apply(Eq[0])
 
-    Eq << algebra.lt_abs.imply.gt.apply(Eq[0])
+    Eq << algebra.abs_lt.imply.gt.apply(Eq[0])
 
-    
+
 
 
 if __name__ == '__main__':

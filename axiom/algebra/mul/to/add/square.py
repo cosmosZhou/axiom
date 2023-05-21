@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    (z, x), (_z, y) = self.of(Mul[Expr - Expr, Expr - Expr])
-    assert _z == z
+    (z, x), (S[z], y) = self.of(Mul[Expr - Expr, Expr - Expr])
     return Equal(self, ((z - x) ** 2 + (z - y) ** 2 - (x - y) ** 2) / 2)
 
 

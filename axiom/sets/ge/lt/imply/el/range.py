@@ -6,12 +6,11 @@ def apply(greater_than, strict_greater_than):
     a, x = greater_than.of(GreaterEqual)
     b, _x = strict_greater_than.of(Less)
     if x != _x:
-        a, x, _x, b = _x, b, a, x,
+        a, x, S[x], b = _x, b, a, x,
     else:
         a += 1
         b += 1
 
-    assert x == _x
     assert x.is_integer
     return Element(x, Range(b, a))
 

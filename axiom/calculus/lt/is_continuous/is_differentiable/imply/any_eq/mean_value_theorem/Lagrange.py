@@ -8,13 +8,8 @@ def apply(lt, is_continuous, is_differentiable):
     if is_continuous.expr.is_Element:
         is_continuous, is_differentiable = is_differentiable, is_continuous
 
-    fz, (z, _a, _b) = of_continuous(is_continuous)
-    _fz, (_z, __a, __b) = of_differentiable(is_differentiable)
-
-    assert _fz == fz
-    assert _z == z
-    assert _a == a == __a
-    assert _b == b == __b
+    fz, (z, S[a], S[b]) = of_continuous(is_continuous)
+    S[fz], S[(z, a, b)] = of_differentiable(is_differentiable)
 
     fa = fz._subs(z, a)
     fb = fz._subs(z, b)
@@ -27,11 +22,11 @@ def prove(Eq):
     from axiom import calculus, algebra, sets
 
     from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle import is_differentiable
-    from axiom.calculus.all_eq.imply.all_any_eq.intermediate_value_theorem import is_continuous
+    from axiom.calculus.all_eq.imply.all.any.eq.intermediate_value_theorem import is_continuous
     a, b = Symbol(real=True, given=True)
     x = Symbol(real=True)
     f = Function(real=True)
-    
+
     Eq << apply(a < b, is_continuous(f, a, b), is_differentiable(f, a, b))
 
     @Function(real=True)
@@ -75,7 +70,7 @@ def prove(Eq):
 
     Eq << Eq.is_differentiable.this.expr.lhs.expr.defun()
 
-    Eq << Eq[-1].this.expr.lhs.apply(calculus.derivative.to.add)
+    Eq << Eq[-1].this.expr.lhs.apply(calculus.grad.to.add)
 
     Eq << Eq[-1].this.expr.apply(sets.el.given.el.add, f(b) - f(a))
 
@@ -89,7 +84,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.lhs.expr.defun()
 
-    Eq << Eq[-1].this.expr.lhs.apply(calculus.derivative.to.add)
+    Eq << Eq[-1].this.expr.lhs.apply(calculus.grad.to.add)
 
     Eq << Eq[-1].this.expr - f(a)
 

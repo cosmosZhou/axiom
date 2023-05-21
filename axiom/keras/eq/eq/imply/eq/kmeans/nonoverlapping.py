@@ -6,18 +6,12 @@ def apply(eq_sum, eq_union, x=None):
     w_sum, M = eq_sum.of(Equal)
     w_union, M_interval = eq_union.of(Equal)
 
-    zero, _M = M_interval.of(Range)
-    assert _M == M
-    assert zero == 0
+    S[0], S[M] = M_interval.of(Range)
 
-    _wi, i = w_sum.of(Sum[Card, Tuple])
-    wi, _i = w_union.of(Cup[Tuple])
+    wi, i = w_sum.of(Sum[Card, Tuple])
+    S[wi], S[i] = w_union.of(Cup[Tuple])
 
-    assert i == _i
-    assert _wi == wi
-
-    w, _i = wi.of(Indexed)
-    assert _i == i
+    w, S[i] = wi.of(Indexed)
 
     assert x.shape[0] == M
 

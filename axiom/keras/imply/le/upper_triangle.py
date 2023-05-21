@@ -25,17 +25,17 @@ def prove(Eq):
 
     Eq << algebra.le.given.le_zero.apply(Eq[-1])
 
-    Eq << algebra.le_piece.given.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.given.ou.apply(Eq[-1])
 
     Eq << Eq[-1].this.find(LessEqual).apply(algebra.le_zero.given.le)
 
-    Eq << Eq[-1].this.find(LessEqual[Zero]).apply(algebra.le_zero.given.le)
+    Eq << Eq[-1].this.find(LessEqual[ZeroMatrix]).apply(algebra.le_zero.given.le)
 
     Eq << Eq[-1].this.find(LessEqual[BlockMatrix]).apply(algebra.block_le.given.et.le)
 
-    Eq.ou = Eq[-1].this.find(LessEqual).apply(algebra.le.given.all.le)
+    Eq.ou = Eq[-1].this.find(LessEqual[Mul, logsumexp]).apply(algebra.le.given.all.le)
 
-    Eq <<= keras.imply.le.logsumexp.apply(Eq.ou.find(Sliced)), keras.imply.le.logsumexp.apply(Eq.ou.args[1].find(Sliced))
+    Eq <<= keras.imply.le.logsumexp.apply(Eq.ou.args[1].find(Sliced)), keras.imply.le.logsumexp.apply(Eq.ou.find(Sliced))
 
     Eq <<= Eq.ou.find(Less).this.apply(algebra.lt.imply.lt.transport, rhs=1), Eq.ou.find(GreaterEqual).this.apply(algebra.ge.imply.ge.transport, rhs=1)
 
@@ -48,8 +48,10 @@ def prove(Eq):
     Eq << algebra.infer.infer.imply.ou.apply(Eq[-2], Eq[-1])
 
     
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-04-01
+# updated on 2023-05-20

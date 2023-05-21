@@ -8,7 +8,7 @@ def try_axis(ecs, limits, axis=0, shape=None):
     if len(ab) == 2:
         start, stop = ab
     elif len(ab) == 1:
-        [domain] = ab
+        domain, = ab
         start, stop, S[1] = domain.args
     else:
         if ab:

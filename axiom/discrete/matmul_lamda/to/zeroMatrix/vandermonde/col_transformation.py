@@ -3,14 +3,15 @@ from util import *
 
 @apply
 def apply(self):
-    (((_x, _j), (delta, _i)), (j, S[0], m), (i, S[0], d)), (((x, (S[d], S[-i], S[j])), (S[d], S[i - j])), (S[j], S[0], S[m - d]), (S[i], S[0], S[m])) = self.of(Lamda[Pow * Pow] @ Lamda[(-Symbol) ** Add * Binomial])
+    (((_x, _j), (delta, _i)), (j, S[0], m), (i, S[0], d)), (((x, (S[d], S[j], S[-i])), (S[d], S[i - j])), (S[j], S[0], S[m - d]), (S[i], S[0], S[m])) = \
+    self.of(Lamda[Pow * Pow] @ Lamda[(-Symbol) ** Add * Binomial])
     if _x != x:
         _x, _j, delta, _i = delta, _i, _x, _j
         
     assert _x == x
     assert _j == j
     assert _i == i
-         
+
     delta -= j
     assert not delta._has(j)    
     return Equal(self, ZeroMatrix(d, m - d))

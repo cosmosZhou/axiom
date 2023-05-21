@@ -4,11 +4,10 @@ from util import *
 @apply
 def apply(fx, x=None):
     from axiom.algebra.poly_is_zero.imply.et.infer.quartic.one_leaded import quartic_coefficient
-    from axiom.algebra.poly_is_zero.given.et_eq.cubic.one_leaded import cubic_solve
+    from axiom.algebra.poly_is_zero.given.et.eq.cubic.one_leaded import cubic_solve
     from axiom.algebra.ne_zero.poly_is_zero.imply.ne import cubic_delta
     fx = fx.of(Equal[0])
-    _1, _0, alpha, beta, gamma = quartic_coefficient(fx, x=x)
-    assert _0 == 0 and _1 == 1
+    S[1], S[0], alpha, beta, gamma = quartic_coefficient(fx, x=x)
 
     w = -S.One / 2 + sqrt(3) * S.ImaginaryUnit / 2
 
@@ -42,7 +41,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.et.infer.split.apply(Eq[0], cond=Equal(beta, 0))
 
-    Eq <<= algebra.infer.imply.infer.subs.apply(Eq[-2]), algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq <<= algebra.infer.imply.infer.subs.apply(Eq[-2]), algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-2].this.rhs.apply(algebra.poly_is_zero.imply.ou_eq.biquadratic, x)
 

@@ -3,13 +3,8 @@ from util import *
 
 @apply
 def apply(limited_f, limited_g):
-    (fx, (x, x0, dir)), A = limited_f.of(Equal[Limit])
-    assert dir == 0
-    (gx, (_x, _x0, dir)), B = limited_g.of(Equal[Limit])
-    assert dir == 0
-
-    assert x == _x
-    assert x0 == _x0
+    (fx, (x, x0, S[0])), A = limited_f.of(Equal[Limit])
+    (gx, (S[x], S[x0], S[0])), B = limited_g.of(Equal[Limit])
 
     return Equal(Limit[x:x0](fx + gx), A + B)
 

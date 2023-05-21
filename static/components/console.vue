@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<template v-if=readonly>
-			this document is readonly, trying to edit it will cause the page to jump to 
+			this document is readonly, trying to edit it will cause the page to jump to
 			<a :href=interactive_href>interactive python console</a>
 		</template>
 		
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-console.log('importing console.vue');
+console.log('import console.vue');
 import consoleStatement from "./consoleStatement.vue"
 export default {
 	components: {consoleStatement },

@@ -37,7 +37,7 @@ def prove(Eq):
 
     Eq << algebra.et.given.et.apply(Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.find(Expr ** 2).apply(algebra.square.to.add)
+    Eq << Eq[-1].this.find(Add ** 2).apply(algebra.square.to.add)
 
     Eq << Eq[-1].this.find(Mul[Add]).apply(algebra.mul.to.add)
 
@@ -56,7 +56,7 @@ def prove(Eq):
     Eq << Eq[-1].this.find(Mul[Add]).apply(algebra.mul.to.add)
 
     Eq << Eq[0] * epsilon
-    
+
     Eq << algebra.gt_zero.ge_zero.imply.gt_zero.add.apply(Eq[-1], Eq.delta_is_nonnegative)
 
     
@@ -65,3 +65,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-04-02
+# updated on 2023-05-15

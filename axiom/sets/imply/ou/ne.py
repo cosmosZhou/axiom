@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << Eq[-1].apply(algebra.cond.given.et.all, cond=Card(S) >= 2)
 
-    Eq.lt, Eq.ge = algebra.et.given.et.apply(Eq[-1])
+    Eq.ge, Eq.lt = algebra.et.given.et.apply(Eq[-1])
 
     Eq << algebra.imply.all.limits_assert.apply(Eq.lt.limits)
 
@@ -31,8 +31,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(sets.ge.imply.any_ne)
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-07-16
+# updated on 2023-05-20

@@ -23,11 +23,11 @@ def prove(Eq):
     a = Symbol(real=True)
     Eq << apply(Equal(Sum[i:n + 1](x[i]), a), x[n] >= a, All[i:n + 1](x[i] >= 0))
 
-    Eq.eq = Eq[0].this.lhs.apply(algebra.sum.to.add.pop_back)
+    Eq.eq = Eq[0].this.lhs.apply(algebra.sum.to.add.pop)
 
     Eq.all_is_nonnegative = algebra.all.imply.all.limits.restrict.apply(Eq[2], domain=Range(n))
 
-    Eq << algebra.all_ge_zero.imply.sum_ge_zero.apply(Eq.all_is_nonnegative)
+    Eq << algebra.all_ge_zero.imply.ge_zero.sum.apply(Eq.all_is_nonnegative)
 
     Eq << algebra.eq.ge.imply.le.sub.apply(Eq.eq, Eq[-1])
 
@@ -55,7 +55,7 @@ def prove(Eq):
 
     Eq << Eq[-1].limits_subs(i, j)
 
-    Eq << algebra.all_ge_zero.imply.sum_ge_zero.apply(Eq[-1])
+    Eq << algebra.all_ge_zero.imply.ge_zero.sum.apply(Eq[-1])
 
     Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq.any_is_negative)
 

@@ -3,10 +3,8 @@ from util import *
 
 @apply
 def apply(given, limit):
-    assert given.is_NotElement
-
     k, a, b = limit
-    e, A = given.args
+    e, A = given.of(NotElement)
 
     assert Range(a, b) in A.domain_defined(k)
 

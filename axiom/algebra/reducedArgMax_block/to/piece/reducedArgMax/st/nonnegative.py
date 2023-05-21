@@ -4,8 +4,8 @@ from util import *
 @apply
 def apply(self):
     x, y = self.of(ReducedArgMax[BlockMatrix])
-    [m] = x.shape
-    [n] = y.shape
+    m, = x.shape
+    n, = y.shape
     assert x.is_nonnegative
     assert y.is_nonnegative
     

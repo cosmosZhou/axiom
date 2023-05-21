@@ -11,17 +11,14 @@ def apply(all_a, all_b, equality_a):
 def analyze(*given):
     all_a, all_b, equality_a = given
 
-    (fa, B), (a, _A) = all_a.of(All[Element])
-    (gb, A), (b, _B) = all_b.of(All[Element])
+    (fa, B), (a, A) = all_a.of(All[Element])
+    (gb, S[A]), (b, S[B]) = all_b.of(All[Element])
 
-    assert _A == A
-    assert _B == B
     assert fa._has(a) and gb._has(b)
 
     eqs = Equal(a, Lambda(b, gb)(fa))
     if equality_a.is_ForAll:
-        equality_a, limit = equality_a.of(All)
-        assert limit == (a, A)
+        equality_a, S[(a, A)] = equality_a.of(All)
 
     assert {*equality_a.of(Equal)} == {*eqs.args}
 

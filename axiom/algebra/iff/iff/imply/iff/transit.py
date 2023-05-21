@@ -12,7 +12,9 @@ def transit(b_eq_x, x_eq_a, reverse=False):
             b, x, _x, a = x, b, a, _x
         elif x == a:
             _x, a = a, _x
-    assert x == _x
+            
+        assert x == _x
+        
     if reverse:
         b, a = a, b
     return Equivalent(b, a)

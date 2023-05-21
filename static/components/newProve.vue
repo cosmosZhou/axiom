@@ -3,7 +3,7 @@
 </template>
 
 <script>
-console.log('importing newProve.vue');
+console.log('import newProve.vue');
 import codeMirror from "./codeMirror.vue";
 
 export default {

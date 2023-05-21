@@ -10,10 +10,10 @@ def apply(is_nonnegative, self, n=None, k=None):
     if k is None:
         k = self.generate_var(n, integer=True, var='k')
 
-    fx, (x, a, b) = self.of(Integral)
+    S[fx], (x, a, b) = self.of(Integral)
     assert fx.is_integrable(x, a, b)
 
-    return Equal(self, Piecewise((-Sup[x:b:a](fx) * Limit[n:oo](Sum[k:n](Measure({Element(x, Interval(b, a)) : fx >= Sup[x:b:a](fx) / n * k})) / n), a > b), (Sup[x:a:b](fx) * Limit[n:oo](Sum[k:n](Measure({Element(x, Interval(a, b)) : fx >= Sup[x:a:b](fx) / n * k})) / n), True)))
+    return Equal(self, Piecewise((-Sup[x:Interval(b, a)](fx) * Limit[n:oo](Sum[k:n](Measure({Element(x, Interval(b, a)) : fx >= Sup[x:Interval(b, a)](fx) / n * k})) / n), a > b), (Sup[x:Interval(a, b)](fx) * Limit[n:oo](Sum[k:n](Measure({Element(x, Interval(a, b)) : fx >= Sup[x:Interval(a, b)](fx) / n * k})) / n), True)))
 
 
 @prove

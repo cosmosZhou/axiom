@@ -5,7 +5,7 @@ from util import *
 def apply(self):
     function, ((x, (start, stop)), cond, (domain, *shape)) = self.of(Sum[Tuple[Sliced, CartesianSpace]])
 
-    [n] = shape
+    n, = shape
     assert start + 1 < stop
     assert n == stop - start
 
@@ -15,6 +15,7 @@ def apply(self):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     a, b = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
     i = Symbol(domain=Range(n - 1))
@@ -26,7 +27,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.bool)
 
-    Eq << Eq[-1].this.rhs.find(Element).simplify()
+    Eq << Eq[-1].this.rhs.find(Element[Sliced]).simplify()
 
     Eq << Eq[-1].this.rhs.find(All).apply(algebra.all.limits.subs.offset, -i - 1)
 
@@ -36,10 +37,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(All).apply(algebra.all.to.et.split, cond={i})
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.split.slice.pop_front)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.split.slice.shift)
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-03-18
+# updated on 2023-05-14

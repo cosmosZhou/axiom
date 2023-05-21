@@ -9,9 +9,7 @@ def apply(is_nonzero, eq, x=None):
     if not rhs.is_Zero:
         fx -= rhs
 
-    x, _a, b, c = quadratic_coefficient(fx, x=x)
-    assert b.is_Zero
-    assert a == _a
+    x, S[a], S[0], c = quadratic_coefficient(fx, x=x)
     delta = -4 * a * c
 
     return Or(Equal(x, sqrt(delta) / (a * 2)), Equal(x, -sqrt(delta) / (a * 2)))
@@ -41,9 +39,9 @@ def prove(Eq):
 
     Eq << algebra.mul_is_zero.imply.ou.is_zero.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[1].reversed
+    Eq << Eq[-1].this.args[0].reversed
 
-    Eq.ou = Eq[-1].this.args[0] - t
+    Eq.ou = Eq[-1].this.args[1] - t
 
     Eq << -Eq.t_squared * a
 
@@ -55,11 +53,17 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1])
 
+    Eq << algebra.ou.given.et.collect.apply(Eq[-1])
+
     Eq << algebra.ou.given.eq.abs.apply(Eq[-1])
 
     Eq << algebra.ou.imply.eq.abs.apply(Eq.ou)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-08-15
+# updated on 2023-05-20

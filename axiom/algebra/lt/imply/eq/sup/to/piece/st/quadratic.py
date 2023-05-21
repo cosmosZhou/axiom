@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq <<= algebra.infer.given.infer.subs.bool.apply(Eq[-2], invert=True), algebra.infer.given.infer.subs.bool.apply(Eq[-1])
 
-    Eq <<= algebra.cond.given.et.infer.split.apply(Eq[-2], cond=a > 0), algebra.infer.given.et.infer_et.apply(Eq[-1], cond=Eq[0])
+    Eq <<= algebra.cond.given.et.infer.split.apply(Eq[-2], cond=a > 0), algebra.infer.given.et.infer.et.apply(Eq[-1], cond=Eq[0])
 
     Eq <<= Eq[-3].this.apply(algebra.infer.flatten), Eq[-2].this.apply(algebra.infer.flatten), Eq[-1].this.lhs.apply(algebra.lt_zero.lt.imply.eq.sup.st.quadratic, a * x ** 2 + b * x + c, x)
 

@@ -22,12 +22,12 @@ def prove(Eq):
 
     Eq << algebra.gt.ge.imply.gt.transit.apply(Eq[-2], Eq[-1])
 
-    Eq << algebra.imply.ge.ceiling.apply(y)
+    Eq << algebra.imply.ceiling_ge.apply(y)
 
     Eq << algebra.gt.ge.imply.gt.transit.apply(Eq[-2], Eq[-1])
 
     Eq <<= Eq[-1] & Eq[0]
-    
+
 
 
 if __name__ == '__main__':

@@ -32,9 +32,7 @@ def apply(given, *, cond=None):
                 ...
         new_or_eqs.append(and_eq)
 
-    assert not new_or_eqs
-    assert and_eqs
-
+    assert not new_or_eqs and and_eqs
     return cond, Or(*and_eqs)
 
 
@@ -50,10 +48,13 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[0]
 
-    Eq << algebra.et.imply.ou.apply(Eq[-1])
+    Eq << algebra.et.imply.ou.apply(Eq[-1], 1)
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-01-14
+# updated on 2023-05-20

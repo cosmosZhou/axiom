@@ -7,15 +7,14 @@ def apply(self):
     x_sub_x_means = function.of(Expr ** 2)
 
     try:
-        i, z, n = limit
+        i, S[0], n = limit
     except:
-        (i,) = limit
+        i, = limit
         domain = function.domain_defined(i)
-        z, n = domain.of(Range)
+        S[0], n = domain.of(Range)
 
     assert i.is_integer
-
-    assert z == 0
+    
     xi, x_means = x_sub_x_means.of(Expr - Expr)
 
     x, S[i] = xi.of(Indexed)
@@ -27,7 +26,7 @@ def apply(self):
     try:
         j, S[0], S[n] = limit
     except:
-        (j,) = limit
+        j, = limit
         domain = xi.domain_defined(j)
         S[0], S[n] = domain.of(Range)
 
@@ -42,10 +41,10 @@ def apply(self):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     i, j = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
     x = Symbol(integer=True, shape=(oo,))
-
     Eq << apply(Sum[i:n]((x[i] - Sum[j:n](x[j]) / n) ** 2))
 
     Eq << Eq[-1].this.lhs.expr.expand()
@@ -72,7 +71,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expand()
 
-    Eq << Eq[-1].this.rhs.args[2].apply(algebra.sum.to.mul)
+    
 
     Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum.limits.swap.intlimit)
 
@@ -80,7 +79,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[1].limits_subs(j, i)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.add.push_front)
+    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.add.unshift)
 
     Eq << Eq[-1].this.rhs.apply(algebra.add.to.sum)
 
@@ -88,8 +87,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add)
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2019-11-15
+# updated on 2023-04-28

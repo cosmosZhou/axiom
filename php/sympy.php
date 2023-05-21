@@ -2,7 +2,7 @@
 // ^ *error_log
 
 // input is a py file
-$python_file = dirname(dirname(__file__)) . '/axiom/' . str_replace(".", "/", $sympy) . ".py";
+$python_file = dirname(dirname(dirname(__file__))) . '/sympy/sympy/' . str_replace(".", "/", $sympy) . ".py";
 error_log($python_file);
 if (array_key_exists('code', $_POST)) {
     $code = $_POST['code'];

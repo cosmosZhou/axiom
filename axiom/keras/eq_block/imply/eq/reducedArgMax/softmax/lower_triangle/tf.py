@@ -71,7 +71,7 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq[0])
 
-    Eq << Eq[-1].this.apply(algebra.eq.transport)
+    Eq << Eq[-1].this.apply(algebra.eq.transport, lhs=0)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.flatten)
 
@@ -98,7 +98,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.lamda.to.add)
 
-    Eq << Eq[-1].this.apply(algebra.eq.transport, lhs=0)
+    Eq << Eq[-1].this.apply(algebra.eq.transport, lhs=-1)
 
     Eq << Eq.eq_reducedArgMax.subs(Eq[-1])
 
@@ -114,11 +114,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(ReducedArgMax).arg.definition
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-12-16
-# updated on 2022-03-30
+# updated on 2023-05-20

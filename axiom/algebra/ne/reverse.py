@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(ne):
     a, b = ne.of(Unequal)
-    return Equivalent(ne, Unequal(b, a), evaluate=False)
+    return Unequal(b, a)
 
 
 @prove

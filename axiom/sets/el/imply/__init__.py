@@ -16,9 +16,7 @@ from . import et
 from . import lt
 from . import ne_empty
 from . import notin
-from . import gt_zero
 from . import sqrt_gt_zero
-from . import lt_zero
 from . import ge_zero
 from . import sqrt_ge_zero
 from . import le_zero

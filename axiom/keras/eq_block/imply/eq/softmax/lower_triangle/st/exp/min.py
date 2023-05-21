@@ -3,7 +3,6 @@ from util import *
 
 @apply
 def apply(eq):
-#   (((((A, i), (  0 ,   i + 1 )), (  i,    0,  (l, n))), (  A[i + Min(l, n)][i + 1:i + Min(l, n) + 1],  (  i ,   0 ,   n - Min(l, n) ))), (  A[i][relu(i - l + 1):i + 1] , (  i,    0 ,   n ))), z
     (((((A, i), (S[0], S[i + 1])), (S[i], S[0], (l, n))), (S[A[i + Min(l, n), i + 1:i + Min(l, n) + 1]], (S[i], S[0], S[n - Min(l, n)]))), (S[A[i, relu(i - l + 1):i + 1]], (S[i], S[0], S[n]))), z = \
     eq.of(Equal[
         BlockMatrix[
@@ -95,7 +94,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(ExprCondPair[2]).expr.apply(algebra.piece.swap, i=0)
 
-    Eq << Eq[-1].this.find(And).apply(sets.et.to.el.range)
+    Eq << Eq[-1].this.find(And).apply(sets.cond.cond.to.el.range)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.sub, i)
 
@@ -121,7 +120,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Symbol < Symbol + 1).apply(algebra.lt.to.le.strengthen)
 
-    Eq << Eq[-1].this(i, j).find(And).apply(sets.et_ou.to.el_range.bandPart.lower.st.le.min)
+    Eq << Eq[-1].this(i, j).find(And).apply(sets.ou.ou.to.el.range.bandPart.lower.st.le.min)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.negate)
 
@@ -133,8 +132,8 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.z_def, Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

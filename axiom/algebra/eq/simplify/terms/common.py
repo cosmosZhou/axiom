@@ -1,8 +1,8 @@
 from util import *
 
 
-def simplify_common_terms(given):
-    lhs, rhs = given.args
+def simplify_common_terms(cls, given):
+    lhs, rhs = given.of(cls)
 
     if lhs.is_Add:
         lhs_args = lhs.args
@@ -21,10 +21,9 @@ def simplify_common_terms(given):
 
     return given.func(Add(*lhs), Add(*rhs))
 
-@apply(given=None)
+@apply
 def apply(given):
-    assert given.is_Equal
-    return Equivalent(given, simplify_common_terms(given))
+    return simplify_common_terms(Equal, given)
 
 
 @prove

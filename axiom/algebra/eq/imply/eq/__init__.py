@@ -13,7 +13,6 @@ from . import swap
 from . import getitem
 from . import geometric_progression
 from . import div
-from . import subs
 from . import rsolve
 from . import reducedSum
 from . import floor, ceiling
@@ -22,14 +21,12 @@ from . import inverse
 from . import reducedMax
 from . import reverse
 from . import simple_equation
-from . import conjugate
 from . import arg
 from . import mod
 from . import prod
 from . import minima
 from . import maxima
 from . import sup
-from . import piece
 from . import inf
 from . import sup_inf
 from . import transpose
@@ -39,3 +36,6 @@ from . import bool
 from . import transport
 from . import Re
 from . import Im
+from . import adjoint
+from . import conj
+from . import neg

@@ -4,9 +4,7 @@ from util import *
 
 @apply
 def apply(imply):
-    assert imply.is_Element
-
-    e, interval = imply.args
+    e, interval = imply.of(Element)
 
     return Element(-e, -interval)
 

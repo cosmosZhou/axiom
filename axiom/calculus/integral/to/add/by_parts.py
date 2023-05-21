@@ -2,21 +2,21 @@ from util import *
 
 
 @apply
-def apply(integral, u=None, dv=None):
-    [(x, a, b)] = integral.limits
+def apply(self, u=None, dv=None):
+    [(x, a, b)] = self.limits
     if u is not None:
-        dv = integral.expr / u
-        v = integral.func(dv, x).doit()
+        dv = self.expr / u
+        v = self.func(dv, x).doit()
         du = diff(u, x)
     elif dv is not None:
-        u = integral.expr / dv
-        v = integral.func(dv, x).doit()
+        u = self.expr / dv
+        v = self.func(dv, x).doit()
         du = diff(u, x)
     else:
         ...
 # u * dv = d(u v) - du * v
-    f = (u * v)._eval_interval(x, a, b) - integral.func(du * v, *integral.limits).simplify()
-    return Equal(integral, f)
+    f = (u * v)._eval_interval(x, a, b) - self.func(du * v, *self.limits).simplify()
+    return Equal(self, f, evaluate=False)
 
 
 @prove
@@ -30,7 +30,6 @@ def prove(Eq):
     @Function(real=True)
     def uv(x):
         return u(x) * v(x)
-    
     Eq << diff(uv(x), x).this.expr.defun()
 
     Eq << Eq[-1].this.rhs.doit()
@@ -43,12 +42,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.doit()
 
-    Eq << Eq[-1].this.lhs.args[-1].defun()
+    Eq << Eq[-1].this.lhs.args[0].defun()
 
     Eq << Eq[-1].this.lhs.defun()
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-06-07
+# updated on 2023-05-20

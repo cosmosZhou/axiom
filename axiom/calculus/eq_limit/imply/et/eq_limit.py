@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(limited_f):
-    (fx, (x, x0, dir)), A = limited_f.of(Equal[Limit])
-    assert dir == 0
+    (fx, (x, x0, S[0])), A = limited_f.of(Equal[Limit])
 
     return Equal(Limit[x:x0:1](fx), A), Equal(Limit[x:x0:-1](fx), A)
 

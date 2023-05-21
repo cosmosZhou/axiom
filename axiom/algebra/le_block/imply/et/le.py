@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << algebra.le.imply.all.le.apply(Eq[0])
 
-    Eq << algebra.le_piece.imply.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.imply.ou.apply(Eq[-1])
 
     Eq << algebra.ou.imply.et.infer.apply(Eq[-1])
 
@@ -34,6 +34,7 @@ def prove(Eq):
     Eq <<= algebra.all.imply.all.limits.restrict.apply(Eq[-2], domain=Range(0, n), simplify=None), algebra.all.imply.all.limits.restrict.apply(Eq[-1], domain=Range(n, m + n), simplify=None)
 
     Eq << algebra.all_le.imply.le.lamda.apply(Eq[-2])
+
     Eq << algebra.all_le.imply.le.lamda.apply(Eq[-1])
 
     
@@ -42,3 +43,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-04-01
+# updated on 2023-04-29

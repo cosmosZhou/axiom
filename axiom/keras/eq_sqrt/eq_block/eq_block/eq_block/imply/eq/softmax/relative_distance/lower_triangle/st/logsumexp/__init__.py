@@ -38,7 +38,7 @@ def apply(eq_C, eq_V, eq_V_quote, eq):
 
 @prove
 def prove(Eq):
-    from axiom import keras, algebra, keras
+    from axiom import keras, algebra
 
     n, k, d = Symbol(domain=Range(2, oo))
     l = Symbol(domain=Range(2, n + 1))
@@ -84,7 +84,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda + Lamda).apply(algebra.add.to.lamda)
 
-    Eq << Eq[-1].this.find(-~Min).apply(keras.min.to.add.relu, index=0)
+    Eq << Eq[-1].this.find(-~Min).apply(keras.min.to.add.relu)
 
     A_quote = Symbol(A + V * C)
     Eq.A_quote_def = A_quote.this.definition
@@ -103,10 +103,11 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq.C_def)
 
-
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-04-02
 from . import tf
+# updated on 2023-05-15

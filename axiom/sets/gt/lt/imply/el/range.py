@@ -6,11 +6,10 @@ def apply(gt, lt):
     a, x = gt.of(Greater)
     b, _x = lt.of(Less)
     if x != _x:
-        a, x, _x, b = _x, b, a, x,
+        a, x, S[x], b = _x, b, a, x,
 
     assert b.is_integer
     b += 1
-    assert x == _x
     assert x.is_integer
     return Element(x, Range(b, a))
 

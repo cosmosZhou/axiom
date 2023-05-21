@@ -84,7 +84,7 @@ def prove(Eq):
 
     Eq.SqueezeTheorem = Eq[-4] & Eq[-1]
 
-    Eq << algebra.eq_piece.imply.ou.apply(x_quote_abs)
+    Eq << algebra.cond_piece.imply.ou.apply(x_quote_abs)
 
     Eq << Eq[-1].subs(i, j)
 

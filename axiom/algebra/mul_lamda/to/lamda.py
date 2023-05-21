@@ -12,7 +12,7 @@ def apply(self):
         if limits is None:
             limits = _limits
         else:
-            assert limits == _limits            
+            assert limits == _limits
 
         factors.append(f)
     return Equal(self, Lamda(Mul(*factors), *limits))

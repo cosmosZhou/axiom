@@ -14,7 +14,6 @@ def prove(Eq):
     i, j, a, b, c, d = Symbol(integer=True)
     f = Function(integer=True)
 
-
     Eq << apply(Cup[j:f(i), i:{a, b, c, d}](x[i, j]))
 
     Eq << Equal(Cup[j:f(i), i:{a}](x[i, j]), Cup[j:f(a)](x[a, j]), plausible=True)

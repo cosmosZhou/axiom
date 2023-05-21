@@ -4,11 +4,10 @@ from util import *
 @apply
 def apply(contains):
     x, domain = contains.of(Element)
-    a, b = domain.of(Interval)
-    assert a + b == 0
-    assert domain.left_open and domain.right_open
+    a, S[-a] = domain.of(Interval)
+    assert domain.is_open
 
-    return x ** 2 < b ** 2
+    return x ** 2 < a ** 2
 
 
 @prove

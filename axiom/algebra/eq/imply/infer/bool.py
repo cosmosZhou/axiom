@@ -12,8 +12,7 @@ def apply(given):
     _p = _p.of(Bool)
     q = q.of(Bool)
     if p != _p:
-        _p, q = q, _p
-    assert p == _p
+        S[p], q = q, _p
 
     return Infer(p, q)
 
@@ -21,9 +20,9 @@ def apply(given):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     n = Symbol(integer=True, nonnegative=True)
     f, h, g = Symbol(integer=True, shape=(oo,))
-
     Eq << apply(Equal(Bool(Equal(f[n], g[n])), Bool(Equal(f[n], g[n])) * Bool(Equal(f[n + 1], g[n + 1]))))
 
     Eq << Eq[0] - Eq[0].rhs
@@ -32,7 +31,7 @@ def prove(Eq):
 
     Eq << algebra.mul_is_zero.imply.ou.is_zero.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[1].apply(algebra.is_zero.imply.ne, One())
+    Eq << Eq[-1].this.find(Equal[0]).apply(algebra.is_zero.imply.ne, One())
 
     Eq << algebra.ou.imply.infer.apply(Eq[-1], pivot=1)
 
@@ -40,7 +39,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.lhs.apply(algebra.bool.to.piece)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-03-21
+# updated on 2023-05-14

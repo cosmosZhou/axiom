@@ -71,8 +71,8 @@ def apply(self):
         for i, v in enumerate(self.variables):
             if cond._has(v):
                 v, *ab = limits[i]
-                if ab:                    
-                    domain = (Range if v.is_integer else Interval)(*ab)
+                if ab:
+                    domain = v.range(*ab)
                 else:
                     domain = v.universalSet
                     

@@ -4,12 +4,8 @@ from util import *
 
 @apply
 def apply(contains1, contains2):
-    assert contains1.is_Element
-    assert contains2.is_Element
-
-    x, A = contains1.args
-    y, _A = contains2.args
-    assert A == _A
+    x, A = contains1.of(Element)
+    y, S[A] = contains2.of(Element)
 
     return Subset({x, y}, A)
 

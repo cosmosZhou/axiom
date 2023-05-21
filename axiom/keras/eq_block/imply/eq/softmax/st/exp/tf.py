@@ -113,15 +113,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[0].find(Piecewise[ExprCondPair[3]]).apply(algebra.piece.swap, i=0)
 
-    Eq << Eq[-1].this.find(And).apply(sets.et.to.el.range, simplify=None)
+    Eq << Eq[-1].this.find(And).apply(sets.cond.cond.to.el.range, simplify=None)
 
-    Eq << Eq[-1].this.find(And).apply(sets.et.to.el.range, simplify=None)
+    Eq << Eq[-1].this.find(And).apply(sets.cond.cond.to.el.range, simplify=None)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.sub, i, simplify=None)
 
     Eq << Eq[-1].this.find(Element[Symbol]).apply(sets.el.sub, i, simplify=None)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.rhs.args[1].apply(algebra.piece.flatten)
 
     Eq << Eq[-1].this.rhs.args[1].apply(algebra.piece.flatten)
 
@@ -131,11 +131,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(And).apply(algebra.et.collect, cond=Eq[-1].find(Element))
 
-    Eq << Eq[-1].this(i, j).find(And).apply(sets.et_ou.to.el_range.bandPart.lower.offset)
+    Eq << Eq[-1].this(i, j).find(And).apply(sets.ou.ou.to.el.range.bandPart.lower.offset)
 
-    Eq << Eq[-1].this.find(And).apply(algebra.et.collect, cond=Eq[-1].find(Element))
+    Eq << Eq[-1].this.find(And).apply(algebra.et.collect, cond=Eq[-1].rhs.args[1].find(Element))
 
-    Eq.zij_dquote_def = Eq[-1].this(i, j).find(And).apply(sets.et_ou.to.el_range.bandPart.upper.offset)
+    Eq.zij_dquote_def = Eq[-1].this(i, j).find(And).apply(sets.ou.ou.to.el.range.bandPart.upper.offset)
 
     Eq.zi_quote_def = Eq[0][i]
 
@@ -162,4 +162,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-01-01
-# updated on 2022-01-23
+# updated on 2023-05-21

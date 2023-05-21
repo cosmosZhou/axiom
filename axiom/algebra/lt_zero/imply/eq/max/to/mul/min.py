@@ -12,7 +12,7 @@ def apply(is_negative, self, div=False):
     else:
         args = [arg / factor for arg in args]
         rhs = Min(*args) * factor
-        
+
     return Equal(self, rhs)
 
 
@@ -36,14 +36,14 @@ def prove(Eq):
 
     Eq << algebra.iff.given.et.apply(Eq.equivalent)
 
-    Eq <<= algebra.infer.given.et.infer_et.apply(Eq[-2], cond=Eq[0]), algebra.assuming.given.assuming_et.apply(Eq[-1], cond=Eq[0])
+    Eq <<= algebra.infer.given.et.infer.et.apply(Eq[-2], cond=Eq[0]), algebra.assuming.given.assuming_et.apply(Eq[-1], cond=Eq[0])
 
     Eq <<= Eq[-2].this.lhs.apply(algebra.lt_zero.ge.imply.le.div), Eq[-1].this.rhs.apply(algebra.lt_zero.le.imply.ge.mul)
 
     Eq << algebra.cond.given.cond.subs.cond.apply(Eq.eq, old=Eq.equivalent.lhs, new=Eq.equivalent.rhs)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

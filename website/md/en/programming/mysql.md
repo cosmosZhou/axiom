@@ -248,15 +248,15 @@ local-infile=1
  #export structure and data  
 mysqldump -h localhost -uroot -p123456 corpus > corpus.sql  
 (注意末尾没有分号;)  
-mysqldump -h localhost -uroot -p123456 corpus tbl_structure > tbl_structure.sql  
+mysqldump -h localhost -uroot -p123456 corpus structure > structure.sql  
 
  #export structure only  
  #mysqldump -h localhost -uroot -p123456  -d corpus > corpus.sql  
- #mysqldump -h localhost -uroot -p123456  -d corpus tbl_structure > tbl_structure.sql  
+ #mysqldump -h localhost -uroot -p123456  -d corpus structure > structure.sql  
 
  #export data only  
- #select * from tbl_structure into outfile "D:/wamp64/tmp/tbl_structure.csv";  
-select * from tbl_service into outfile "/var/lib/mysql-files/tbl_service-9-25.csv";  
+ #select * from structure into outfile "D:/wamp64/tmp/structure.csv";  
+select * from service into outfile "/var/lib/mysql-files/service-9-25.csv";  
 If the following message prompts:  
 The MySQL server is running with the --secure-file-priv option so it cannot execute this statement  
 
@@ -309,16 +309,16 @@ set global local_infile = 1;
  #mysql --local-infile=1 -uroot -Dcorpus  
 
 
-load data local infile "D:/wamp64/tmp/tbl_structure.csv" into table tbl_structure character set utf8;  
-load data local infile "/var/lib/mysql-files/tbl_intent.csv" into table tbl_structure character set utf8;  
+load data local infile "D:/wamp64/tmp/structure.csv" into table structure character set utf8;  
+load data local infile "/var/lib/mysql-files/intent.csv" into table structure character set utf8;  
 或者：  
-load data local infile "/var/lib/mysql-files/tbl_intent.csv" replace into table tbl_repertoire character set   utf8;  
-load data local infile "D:/wamp64/tmp/tbl_intent-9-18.csv" into table tbl_intent character set utf8;  
-load data local infile "D:/wamp64/tmp/tbl_service-9-6.csv" into table tbl_service character set utf8;  
+load data local infile "/var/lib/mysql-files/intent.csv" replace into table repertoire character set   utf8;  
+load data local infile "D:/wamp64/tmp/intent-9-18.csv" into table intent character set utf8;  
+load data local infile "D:/wamp64/tmp/service-9-6.csv" into table service character set utf8;  
 在执行大数据传输时，比如以下语句，包含了上百万条记录的表：  
-load data local infile "D:/wamp64/tmp/tbl_repertoire-9-18.csv" into table tbl_repertoire character set utf8;  
+load data local infile "D:/wamp64/tmp/repertoire-9-18.csv" into table repertoire character set utf8;  
 可能会出现导入失败的问题，作以下处理：  
-alter table `tbl_repertoire` drop key text;  
+alter table `repertoire` drop key text;  
 
 ![load-data](mysql/load-data.png)   
 
@@ -333,7 +333,7 @@ https://blog.csdn.net/airujingye/article/details/70526943
 
 1,first NEWLY create the table and the database which is identical to the one you want to recover; ie:  
 create database corpus; use corpus;  
-CREATE TABLE `tbl_structure` (
+CREATE TABLE `structure` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `text` varchar(128) NOT NULL,
   `infix` varchar(2048) NOT NULL,
@@ -342,14 +342,14 @@ CREATE TABLE `tbl_structure` (
   UNIQUE KEY `text` (`text`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;  
 
-2, ALTER TABLE tbl_structure DISCARD TABLESPACE;  
+2, ALTER TABLE structure DISCARD TABLESPACE;  
 
-3, copy the tbl_structure.idb to the folder:   
+3, copy the structure.idb to the folder:   
 D:\wamp64\bin\mysql\mysql8.0.17\data\corpus  
 
-4, ALTER TABLE tbl_structure IMPORT TABLESPACE;  
+4, ALTER TABLE structure IMPORT TABLESPACE;  
 
-5, select * from `tbl_structure` limit 100;  
+5, select * from `structure` limit 100;  
 
 
 ## Mysql错误处理
@@ -376,10 +376,10 @@ show global variables like "%table_size%";
 SET global innodb_buffer_pool_size=3221225472;  
 show global variables like "%buffer_pool_size%";  
 
-alter table tbl_id2feature partition by key() partitions 128;  
-关于delete from tbl_id2feature_ limit 10000  
+alter table id2feature partition by key() partitions 128;  
+关于delete from id2feature_ limit 10000  
 关于后存储空间不变小的问题：  
-使用 OPTIMIZE TABLE tbl_id2feature_;进行磁盘优化！  
+使用 OPTIMIZE TABLE id2feature_;进行磁盘优化！  
 
 若出现以下错误：  
 本地计算机上的wampmysqld64服务启动后停止，某些服务在未由其他服务或程序使用时将自动停止.  

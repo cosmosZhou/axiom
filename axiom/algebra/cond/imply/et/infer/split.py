@@ -17,10 +17,13 @@ def prove(Eq):
 
     Eq <<= Eq[-2].apply(algebra.infer.given.ou), Eq[-1].apply(algebra.infer.given.ou)
 
-    Eq <<= algebra.ou.given.cond.apply(Eq[-2], index=1), algebra.ou.given.cond.apply(Eq[-1], index=1)
+    Eq <<= algebra.ou.given.cond.apply(Eq[-2], index=0), algebra.ou.given.cond.apply(Eq[-1], index=1)
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-08-13
+# updated on 2023-05-20

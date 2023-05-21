@@ -4,11 +4,9 @@ from util import *
 @apply
 def apply(contains):
     x, domain = contains.of(Element)
-    a, b = domain.of(Interval)
-    assert a + b == 0
-    assert domain.left_open and domain.right_open
-
-    return abs(x) < b
+    a, S[-a] = domain.of(Interval)
+    assert domain.is_open
+    return abs(x) < -a
 
 
 @prove

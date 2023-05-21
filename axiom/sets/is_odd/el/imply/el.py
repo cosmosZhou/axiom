@@ -4,9 +4,7 @@ from util import *
 @apply
 def apply(is_odd, contains_n):
     n = is_odd.of(Equal[Expr % 2, 1])
-    n_, ab = contains_n.of(Element)
-
-    assert n == n_
+    S[n], ab = contains_n.of(Element)
 
     a, b = ab.of(Range)
     b -= 1

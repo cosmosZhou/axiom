@@ -24,12 +24,17 @@ def prove(Eq):
 
     Eq << sets.el_interval.imply.ou.apply(Eq[0], oo)
 
-    Eq << Eq[-1].this.args[1].simplify()
+    Eq << Eq[-1].this.find(Element[FiniteSet]).simplify()
 
     Eq << Eq[-1].this.args[1].apply(sets.el_interval.imply.ou, -oo, simplify=None, left_open=True)
-    Eq << Eq[-1].this.args[-1].simplify()
+
+    Eq << Eq[-1].this.find(Element[FiniteSet]).simplify()
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-05-15
+# updated on 2023-05-13

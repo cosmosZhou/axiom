@@ -55,7 +55,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.exp.to.mul)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.exp.to.block)
+    Eq << Eq[-1].this.find(Exp[BlockMatrix]).apply(algebra.exp.to.block)
 
     Eq << Eq[-1].this.find(Exp[BlockMatrix]).apply(algebra.exp.to.block)
 
@@ -90,5 +90,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-01-03
-# updated on 2022-03-14
+# updated on 2023-05-20
 from . import tf

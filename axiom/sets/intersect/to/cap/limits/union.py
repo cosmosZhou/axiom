@@ -1,15 +1,12 @@
 from util import *
 
-from axiom.sets.union.to.cup.limits.union import limits_union
-
 
 @apply
 def apply(self):
     A, B = self.of(Intersection)
     function, *limits_a = A.of(Cap)
-    _function, *limits_b = B.of(Cap)
-    assert function == _function
-
+    S[function], *limits_b = B.of(Cap)
+    from axiom.sets.union.to.cup.limits.union import limits_union
     limits = limits_union(limits_a, limits_b, function=function)
     return Equal(self, Cap(function, *limits), evaluate=False)
 

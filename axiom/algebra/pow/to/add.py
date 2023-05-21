@@ -4,7 +4,6 @@ from util import *
 @apply
 def apply(self):
     (x, y), n = self.of(Add ** Expr)
-    assert n.is_Integer
     s = 0
     for k in range(n + 1):
         s += binomial(n, k) * x ** k * y ** (n - k)

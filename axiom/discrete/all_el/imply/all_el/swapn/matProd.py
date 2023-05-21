@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(given, m=None, b=None):
-    ((x, (w, i, j)), S), (_x, _S) = given.of(All[Element[MatMul[Indexed]]])
-    assert S == _S and x == _x
+    ((x, (w, i, j)), s), (S[x], S[s]) = given.of(All[Element[MatMul[Indexed]]])
 
     assert w[i, j].is_SwapMatrix or w[i, j].definition.is_SwapMatrix
 
@@ -14,7 +13,7 @@ def apply(given, m=None, b=None):
     if b is None:
         b = Symbol(integer=True, shape=(oo,))
 
-    return All[x:S](Element(x @ MatProduct[i:m](w[i, b[i]]), S))
+    return All[x:s](Element(x @ MatProduct[i:m](w[i, b[i]]), s))
 
 
 @prove
@@ -34,7 +33,7 @@ def prove(Eq):
     b = Eq.hypothesis.expr.lhs.args[1].expr.indices[1].base
     Eq.induct = Eq.hypothesis.subs(m, m + 1)
 
-    Eq << Eq.induct.expr.lhs.args[1].this.apply(discrete.matProd.to.matmul.pop_back)
+    Eq << Eq.induct.expr.lhs.args[1].this.apply(discrete.matProd.to.matmul.pop)
 
     Eq << x @ Eq[-1]
 
@@ -46,7 +45,7 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq.hypothesis
 
-    Eq << algebra.all_et.imply.all.apply(Eq[-1])
+    Eq << algebra.all_et.imply.all.apply(Eq[-1], 1)
 
     Eq << Eq[-1].subs(Eq[1].reversed)
 
@@ -54,8 +53,11 @@ def prove(Eq):
 
     Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n=m)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 # created on 2020-09-03
+# updated on 2023-05-20

@@ -2,10 +2,10 @@ from util import *
 
 
 @apply
-def apply(self, var=None, *, simplify=True):
+def apply(self, *, simplify=True):
     A, B = self.of(MatMul)
-    assert len(A.shape) == 1
-    assert len(B.shape) == 1
+    n, = A.shape
+    S[n], = B.shape
     res = ReducedSum(A * B)
     if simplify:
         res = res.simplify()

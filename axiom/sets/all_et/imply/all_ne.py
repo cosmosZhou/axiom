@@ -3,16 +3,11 @@ from util import *
 
 @apply
 def apply(given):
-    (all_historic, all_n), (i, zero, n_1) = given.of(All[And])
-    assert zero.is_zero
-
+    (all_historic, all_n), (i, S[0], n) = given.of(All[And])
     if all_n.is_ForAll:
         all_n, all_historic = all_historic, all_n
 
-    (lhs, rhs), (j, zero, i_1) = all_historic.of(All[Unequal])
-    assert zero == 0
-    assert i == i_1
-    n = n_1
+    (lhs, rhs), (j, S[0], S[i]) = all_historic.of(All[Unequal])
 
     if lhs._has(j):
         lhs, rhs = rhs, lhs

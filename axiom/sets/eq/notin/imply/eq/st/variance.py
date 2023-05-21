@@ -3,14 +3,8 @@ from util import *
 
 @apply
 def apply(notcontains, eq):
-    if notcontains.is_Equal:
-        notcontains, eq = eq, notcontains
-    _y, __X = notcontains.of(NotElement)
-    (a, y), (((_a, _x), (x, X)), _X) = eq.of(Equal[Indexed, Sum[Indexed] / Card])
-
-    assert a == _a
-    assert y == _y
-    assert X == _X  == __X and x == _x
+    y, X = notcontains.of(NotElement)
+    (a, S[y]), (((S[a], x), (S[x], S[X])), S[X]) = eq.of(Equal[Indexed, Sum[Indexed] / Card])
 
     X_ = X | {y}
     return Equal(Sum[x:X_]((a[x] - (Sum[x:X_](a[x])) / (Card(X_))) ** 2),

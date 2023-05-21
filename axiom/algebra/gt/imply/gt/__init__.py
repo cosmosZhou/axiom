@@ -6,3 +6,5 @@ from . import prod
 from . import relax
 from . import log
 from . import transport
+from . import pow
+from . import exp

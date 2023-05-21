@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(any_eq, forall, reverse=False):
     (x, y), *limits = any_eq.of(Any[Equal])
-    cond, *_limits = forall.of(All)
-    assert limits == _limits
+    cond, *S[limits] = forall.of(All)
 
     if reverse:
         x, y = y, x

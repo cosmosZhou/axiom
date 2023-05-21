@@ -5,6 +5,7 @@ import os, sys, re
 from std import batch_map, rindex
 
 from std.file import Text
+from os.path import dirname, basename, realpath, isdir, join, sep, exists
 
 try:
     import axiom
@@ -12,17 +13,18 @@ except ImportError as e:
     from util.utility import source_error
     error_message, line = source_error()
 
-    m = re.fullmatch(r'File "([^"]+(?:\\|/)__init__\.py)", line (\d+), in <module>', error_message)
+    m = re.fullmatch(r'File "([^"]+(?:\\|/)(?:\w+)\.py)", line (\d+), in <module>', error_message)
     assert m, error_message
     file, line_number = m.groups()
 
     line_number = int(line_number) - 1
     print('file =', file)
     print('line_number =', line_number)
+    assert 'site-packages' not in file
 
     file = Text(file)
 
-    lines = file.readlines()    
+    lines = file.readlines()
     del lines[line_number]
 
     file.writelines(lines)
@@ -37,14 +39,12 @@ except ImportError as e:
 import time
 from multiprocessing import cpu_count
 from queue import PriorityQueue
-from functools import singledispatch 
+from functools import singledispatch
 import random
 from util.utility import RetCode
 
-sep = os.path.sep
-
 def axiom_directory():
-    directory = os.path.dirname(__file__)
+    directory = dirname(__file__)
     if not directory:
         return './axiom'
     return directory + '/axiom'
@@ -68,7 +68,7 @@ def readFolder(rootdir, sufix='.py'):
     names = os.listdir(rootdir)
     unused = 0
     for name in names:
-        path = os.path.join(rootdir, name)
+        path = join(rootdir, name)
 
         if path.endswith(sufix):
             name = name[:-len(sufix)]
@@ -82,25 +82,17 @@ def readFolder(rootdir, sufix='.py'):
                             break
                     else:
                         i = len(lines)
-                        
+
                     if not i:
-                        try:
-                            os.remove(path)
-                        except PermissionError as e:
-                            print(e)                            
+                        removeFile(path)
                         continue
  
                     try:
                         lines = lines[i:]
                         Text(path).writelines(lines)
-                    except UnboundLocalError:
-                        print(f'removing {path}')                        
-                        try:
-                            os.remove(path)
-                        except PermissionError as e:
-                            print(e)
-                            
-                        continue                    
+                    except UnboundLocalError:                        
+                        removeFile(path)
+                        continue
                     
                 if re.match('from *\. *import +\w+', line):
                     continue
@@ -126,7 +118,7 @@ def readFolder(rootdir, sufix='.py'):
             
             yield package
 
-        elif os.path.isdir(path):
+        elif isdir(path):
             if name == '__pycache__':
                 unused += 1
             else:
@@ -141,38 +133,33 @@ def readFolder(rootdir, sufix='.py'):
             
 
 def project_directory():
-    return os.path.dirname(axiom_directory())
+    return dirname(axiom_directory())
 
 
 def working_directory():
-    return os.path.dirname(project_directory())
+    return dirname(project_directory())
 
 
 def create_module(package, module):
     print('package =', package)
     print('module =', module)
     
-    dirname = project_directory()
-    __init__ = dirname + sep + package.replace('.', sep) + sep + '__init__.py'
-    print('editing', __init__)
-    
-    hit = False
-    
+    __init__ = project_directory() + sep + package.replace('.', sep) + sep + '__init__.py'
     file = Text(__init__)
     
     for line in file:
         m = re.match('from \. import (\w+(?:, *\w+)*)', line)
         if m and module in m[1].split(', *'):
-            hit = True
-            break                
+            print('module', module, 'is already added in', package)
+            return True
     
-    if not hit:
-        addition = 'from . import '
-        addition += module
-        
-        if file.size and not file.endswith('\n'):
-            addition = '\n' + addition  
-        file.append(addition)
+    print('editing', __init__)
+    addition = 'from . import '
+    addition += module
+    
+    if file.size and not file.endswith('\n'):
+        addition = '\n' + addition
+    file.append(addition)
 
 
 def run(package, debug=True):
@@ -187,7 +174,7 @@ def run(package, debug=True):
 
     
 def import_module(package):
-    try: 
+    try:
         module = axiom
         for attr in package.split('.'):
             module = getattr(module, attr)
@@ -195,10 +182,8 @@ def import_module(package):
     
     except AttributeError as e: 
         print(e)
-        s = str(e)
-        
-        m = re.fullmatch("module '([\w\.]+)' has no attribute '(\w+)'", s)
-        assert m 
+        m = re.fullmatch("module '([\w\.]+)' has no attribute '(\w+)'", str(e))
+        assert m
         create_module(*m.groups())
         print(package, 'is created newly')
         return -1
@@ -207,7 +192,7 @@ def import_module(package):
 def prove_with_timing(module, **kwargs):
     lapse = time.time()
     state, latex = module.prove(**kwargs)
-    lapse = time.time() - lapse    
+    lapse = time.time() - lapse
     return state, lapse, latex
 
 
@@ -229,12 +214,14 @@ def tackle_type_error(package, debug=True):
         return
     
     print("editing on line", index, __init__, ":", 'del ' + func)
-    file.insert(index, 'del ' + func)
+    lines = file.readlines()
+    lines.insert(index, 'del ' + func)
+    file.writelines(lines)
     return run(package, debug=debug)
     
-@singledispatch    
+@singledispatch
 def process(package, debug=False):
-    module = import_module(package)    
+    module = import_module(package)
 #     https://www.geeksforgeeks.org/try-except-vs-if-in-python/
 # We often hear that python always encourages EAFP(
 # "It's easier to ask for forgiveness than permission") 
@@ -245,26 +232,38 @@ def process(package, debug=False):
             print(file)
             
         state, lapse, latex = prove_with_timing(module, debug=debug)
-                                
     except AttributeError as e:
         lapse = 0
-        latex = None 
+        latex = None
         
         if module is not None:
             print(module, 'from', module)
             print(e)
-            print('importing errors found in', package)
+            if m := re.fullmatch("module '([\w\.]+)' has no attribute '(\w+)'", str(e)):
+                print('importing errors found in', package)
+    
+                _package, module = re.match('(.*)\.(\w+)', package).groups()
+                _package = 'axiom.' + _package
+                if create_module(_package, module):
+                    print("file =", file, type(file))
+                    if m[2] == 'prove' and basename(file) == '__init__.py':
+                        pyFile = re.sub(r"[\\/]__init__\.py$", '.py', file)
+                        print("pyFile =", pyFile)
+                        if exists(pyFile):
+                            print('try to update', file)
+                            file = Text(file)
+                            file.writelines([*Text(pyFile)] + [*file])
+                            removeFile(pyFile)
+            elif re.match("type object '[\w.]+' has no attribute 'prove'", str(e)):
+                lapse = 0
+                latex = None
+                tackle_type_error(package, debug)
 
-            m = re.match('(.*)\.(\w+)', package)
-            _package, module = m.groups()
-            _package = 'axiom.' + _package
-            create_module(_package, module)
-            
         state = RetCode.failed
         file = project_directory() + sep + package.replace('.', sep) + '.py'        
     except TypeError:
         lapse = 0
-        latex = None        
+        latex = None
         tackle_type_error(package, debug)
         state = RetCode.failed
         file = project_directory() + sep + package.replace('.', sep) + '.py'        
@@ -277,36 +276,171 @@ def _(packages, debug=False):
     return [process(package, debug=debug) for package in packages]
 
 
-start = time.time()    
+start = time.time()
 
-user = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
+user = basename(dirname(realpath(__file__)))
 assert user, 'user should not be empty!'
 
-def prove(**kwargs): 
-    from util import MySQL
+try:
+    from std import MySQL
 
+    def select_axiom_lapse_from_axiom(self):
+        import mysql.connector
+        try:
+            return {axiom: lapse for axiom, lapse in self.query("select axiom, lapse from axiom where user='%s'" % user)}
+        except mysql.connector.errors.ProgrammingError as err:
+            print(err.msg)
+            m = re.compile("Table '(\w+)\.([\w_]+)' doesn't exist").search(err.msg)
+            assert m
+            assert m[1] == 'axiom'
+            assert m[2] == 'axiom'
+            sql = '''\
+    CREATE TABLE `axiom` (
+      `user` varchar(32) NOT NULL,
+      `axiom` varchar(256) NOT NULL,  
+      `state` enum('proved', 'failed', 'plausible', 'unproved', 'unprovable', 'slow') NOT NULL,
+      `lapse` double default NULL,  
+      `latex` text NOT NULL,
+      PRIMARY KEY (`user`, `axiom`) 
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+            sql = '''\
+    CREATE TABLE `hierarchy` (
+      `user` varchar(32) NOT NULL,
+      `caller` varchar(256) NOT NULL,
+      `callee` varchar(256) NOT NULL,
+      `count` int DEFAULT '0',
+      PRIMARY KEY (`user`,`caller`,`callee`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+                      
+#ai = accent insensitivity; ci = case insensitivity
+#as = accent sensitivity  ; cs = case sensitivity 
+            sql = '''\
+    CREATE TABLE `hint` (
+      `prefix` varchar(36) NOT NULL,
+      `phrase` varchar(36) NOT NULL,
+      `usage` int DEFAULT '1',
+      PRIMARY KEY (`prefix`,`phrase`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_0900_as_cs
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+                  
+            sql = '''\
+    CREATE TABLE `suggest` (
+      `user` varchar(32) NOT NULL,
+      `prefix` varchar(256) NOT NULL,
+      `phrase` varchar(32) NOT NULL,
+      `usage` int DEFAULT '1',
+      PRIMARY KEY (`user`,`prefix`,`phrase`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+                    
+            sql = '''\
+    CREATE TABLE `login` (
+      `user` varchar(32) NOT NULL,
+      `password` varchar(32) NOT NULL,
+      `email` varchar(128) NOT NULL,
+      `port` int DEFAULT '0',
+      `visibility` enum('public','private','protected') NOT NULL,
+      PRIMARY KEY (`user`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+            
+            sql = "insert into login values('sympy', '123456', 'chenlizhibeing@126.com', 'protected')"
+            self.execute(sql)
+            
+            sql = '''\
+    CREATE TABLE `debug` (  
+      `symbol` varchar(64) NOT NULL,
+      `script` text NOT NULL,
+      `latex` text NOT NULL,
+      PRIMARY KEY (`symbol`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+            
+            sql = '''\
+    CREATE TABLE `function` (
+      `user` varchar(32) NOT NULL,
+      `caller` varchar(256) NOT NULL,
+      `callee` varchar(256) NOT NULL,
+      `func` varchar(64) NOT NULL,
+      PRIMARY KEY (`user`,`caller`,`callee`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+    PARTITION BY KEY () 
+    PARTITIONS 8
+    '''
+            self.execute(sql)
+            
+            sql = '''\
+    CREATE TABLE `breakpoint` (
+      `user` varchar(32) NOT NULL,
+      `module` varchar(256) NOT NULL,  
+      `line` int NOT NULL,
+      PRIMARY KEY (`user`, `module`, `line`) 
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    PARTITION BY KEY () PARTITIONS 8
+    '''
+            self.execute(sql)
+            
+        except Exception as e:
+            print(type(e), e)
+            
+        return {}
+
+    MySQL.instance.select_axiom_lapse_from_axiom = lambda : select_axiom_lapse_from_axiom(MySQL.instance)
+    MySQL.instance.url_address = lambda package: f"http://localhost/{user}/index.php?module={package}"
+    
+except Exception as e:
+    from util import javaScript as MySQL
+
+
+def select_axiom_by_state_not(user, state):
+    yield from MySQL.instance.query(f"select axiom, state from axiom where user = '{user}' and state != '{state}'")
+
+
+def select_count(user, state=None):
+    sql = f"select count(*) from axiom where user = '{user}'"
+    if state:
+        sql += f" and state = '{state}'"
+
+    [[count]] = MySQL.instance.query(sql)
+    return count
+
+
+def prove(**kwargs):
     def generator(): 
         rootdir = axiom_directory()
 #         rootdir += r'\algebra\imply\le\abs'
         for name in os.listdir(rootdir):
-            path = os.path.join(rootdir, name)
+            path = join(rootdir, name)
             
-            if os.path.isdir(path):
+            if isdir(path):
                 if name != '__pycache__':
                     yield from readFolder(path)
 
     taskSet = {*generator()}
     
-#     taskSet = {*[*taskSet][:100]}
+    # taskSet = {*[*taskSet][:100]}
 
-    tasks = MySQL.select_axiom_lapse_from_tbl_axiom_py(user=user)
+    tasks = MySQL.instance.select_axiom_lapse_from_axiom()
     deleteSet = tasks.keys() - taskSet
     if len(deleteSet) > 1:
-        MySQL.instance.execute("delete from tbl_axiom_py where user='%s' and axiom in %s" % (user, tuple(deleteSet)))
+        MySQL.instance.execute("delete from axiom where user='%s' and axiom in %s" % (user, tuple(deleteSet)))
     elif len(deleteSet) == 1:
         deleteAxiom, *_ = deleteSet
-        MySQL.instance.execute("delete from tbl_axiom_py where user='%s' and axiom = '%s'" % (user, deleteAxiom))
-        
+        MySQL.instance.execute("delete from axiom where user='%s' and axiom = '%s'" % (user, deleteAxiom))
     for key in deleteSet:
         del tasks[key]
     
@@ -346,9 +480,10 @@ def prove(**kwargs):
     data = []
     
     for array in process(packages, **kwargs):
-        data += post_process(array, True)
-        
-    MySQL.instance.load_data('tbl_axiom_py', data, replace=True, ignore=True)
+        data += post_process(array)
+
+    MySQL.instance.load_data('axiom', data, replace=True, truncate=True)
+
     print('in all %d axioms' % Globals.count)
     print_summary()
 
@@ -375,7 +510,7 @@ def print_summary():
     print('total failed    =', len(Globals.failed))
 
         
-def post_process(result, truncate=False):
+def post_process(result):
     data = []
     for package, file, state, lapse, latex in result:
         if latex is None:
@@ -383,20 +518,17 @@ def post_process(result, truncate=False):
             print(file)
             latex = ''
             assert state is RetCode.failed
-        if truncate and len(latex) > 65535:
-            latex = latex[:65535]
             
         data.append((user, package, state, lapse, latex))
             
-        if state is RetCode.plausible: 
-            Globals.plausible.append((file, f"http://localhost/{user}/index.php?module={package}"))
+        if state is RetCode.plausible:
+            Globals.plausible.append((file, MySQL.instance.url_address(package)))
         elif state is RetCode.failed:
-            Globals.failed.append((file, f"http://localhost/{user}/index.php?module={package}"))            
+            Globals.failed.append((file, MySQL.instance.url_address(package)))
         else:
             continue
         
     return data
-
 
 def process_debug(packages):
     return process(packages, debug=True)
@@ -404,7 +536,7 @@ def process_debug(packages):
 
 @process.register(tuple) 
 def _(items, debug=False, parallel=True):  # @DuplicatedSignature
-    proc = process_debug if debug else process 
+    proc = process_debug if debug else process
     if parallel:        
         return batch_map(proc, items, processes=cpu_count()) 
     else:
@@ -413,30 +545,30 @@ def _(items, debug=False, parallel=True):  # @DuplicatedSignature
        
 def listdir(rootdir, sufix='.php'):
     for name in os.listdir(rootdir):
-        path = os.path.join(rootdir, name)
+        path = join(rootdir, name)
 
 #         if path.endswith(sufix):
 #             yield path
-        if os.path.isdir(path):
+        if isdir(path):
             yield from listdir_recursive(path, sufix)
 
 
 def listdir_recursive(rootdir, sufix='.php'):
     for name in os.listdir(rootdir):
-        path = os.path.join(rootdir, name)
+        path = join(rootdir, name)
 
         if path.endswith(sufix):
             yield path
-        elif os.path.isdir(path):
+        elif isdir(path):
             yield from listdir_recursive(path, sufix)
 
 
-def clean(): 
-    for php in listdir(os.path.abspath(axiom_directory())):
-        py = php.replace('.php', '.py')
-        if not os.path.exists(py):
-            print(php)
-            os.remove(php)
+def removeFile(path):
+    try:
+        print(f'removing {path}')
+        os.remove(path)
+    except PermissionError as e:
+        print(e)
 
     
 def args_kwargs(argv):
@@ -452,6 +584,42 @@ def args_kwargs(argv):
     return args, kwargs
 
 
+def post_process_returns(returns):
+    for line in returns:
+        m = re.match(r"seconds costed = (\d+\.\d+)", line)
+        if m:
+            lapse = float(m[1])
+            continue
+            
+        m = re.match(r"exit_code = (\S+)", line)
+        if m:
+            state = int(m[1])
+            if state > 0:
+                state = RetCode.proved
+            elif state < 0:
+                state = RetCode.failed
+            else:
+                state = RetCode.plausible
+            continue
+        
+        m = re.match(r"latex results are saved into: (\S+)", line)
+        if m:
+            sql = m[1]
+            text = Text(sql)
+            for line in text:
+                m = re.match('update axiom set state = "\w+", lapse = \S+, latex = ("[\s\S]+") where user = "\w+" and axiom = "\S+"', line)
+                if m:
+                    latex = eval(m[1])
+
+            text.close()
+            os.unlink(sql)
+            continue
+        
+        print(line.rstrip())
+
+    return state, lapse, latex
+
+
 def run_with_module(*modules, debug=True):
 
     def generator():
@@ -460,10 +628,10 @@ def run_with_module(*modules, debug=True):
             module = import_module(package)
             
             if module is None:
-                state = RetCode.failed                    
+                state = RetCode.failed
                 file = project_directory() + '/' + package.replace('.', '/') + '.py'
                 lapse = None
-                latex = None         
+                latex = None
             else: 
                 try:
                     state, lapse, latex = prove_with_timing(module, debug=debug, slow=True)
@@ -472,42 +640,14 @@ def run_with_module(*modules, debug=True):
                     if re.match("module '[\w.]+' has no attribute 'prove'", str(e)) or re.match("'function' object has no attribute 'prove'", str(e)):
                         from util.search import module_to_py
                         file = module_to_py(package)
-                        __init__ = os.path.dirname(file) + '/__init__.py'
-                        basename = os.path.basename(file)[:-3]
+                        __init__ = dirname(file) + '/__init__.py'
+                        bn = basename(file)[:-3]
                         for line in Text(__init__):
-                            if re.match('from \. import %s' % basename, line):
-                                for line in run(package, debug=False):
-                                    m = re.match(r"seconds costed = (\d+\.\d+)", line)
-                                    if m:
-                                        lapse = float(m[1])
-                                        continue
-                                        
-                                    m = re.match(r"exit_code = (\S+)", line)
-                                    if m:
-                                        state = int(m[1])
-                                        if state > 0:
-                                            state = RetCode.proved
-                                        elif state < 0:
-                                            state = RetCode.failed
-                                        else:
-                                            state = RetCode.plausible                                            
-                                        continue
-                                    
-                                    m = re.match(r"latex results are saved into: (\S+)", line)
-                                    if m:
-                                        sql = m[1]
-                                        text = Text(sql)
-                                        for line in text:
-                                            m = re.match('update tbl_axiom_py set state = "\w+", lapse = \S+, latex = ("[\s\S]+") where user = "\w+" and axiom = "\S+"', line)
-                                            if m:
-                                                latex = eval(m[1])
-
-                                        text.close()
-                                        os.unlink(sql)
-                                        continue
-                                    
-                                    print(line.rstrip())
+                            if re.match('from \. import %s' % bn, line):
+                                state, lapse, latex = post_process_returns(run(package, debug=False))
                                 break
+                    elif re.match("type object '[\w.]+' has no attribute 'prove'", str(e)):
+                        state, lapse, latex = post_process_returns(tackle_type_error(package, False))
                     else: 
                         continue
                 
@@ -547,12 +687,8 @@ if __name__ == '__main__':
     else: 
         args, kwargs = args_kwargs(sys.argv[1:])
         
-    if kwargs:
-        if 'clean' in kwargs:
-            clean()
-
     debug = kwargs.pop('debug', False)
-    parallel = kwargs.pop('parallel', True)    
+    parallel = kwargs.pop('parallel', not sys.gettrace())
     if not args:
         if kwargs:
             for key, value in kwargs.items():
@@ -583,7 +719,7 @@ var ret = setInterval(()=>{
 </script>
 
 <textarea
-readonly=true 
+readonly=true
 spellcheck=false
 style="height:100%; width:100%; overflow:auto; word-break:break-all; background-color:rgb(199, 237, 204);">
 ''')
@@ -622,3 +758,9 @@ clearInterval(ret);
             
     else: 
         run_with_module(*args)
+
+
+# python -c "exec(open('./util/function.py').read())"
+# python -c "exec(open('./util/hierarchy.py').read())"
+# python -c "exec(open('./util/hint.py').read())"
+# python -c "exec(open('./util/suggest.py').read())"

@@ -2,7 +2,7 @@ from util.utility import user
 from util.search import py_to_module, read_directory, read_all_files, \
     axiom_directory, is_py_theorem, yield_function_from_py
 from os.path import basename
-from util import MySQL
+from std import MySQL
 
 
 def read_all_axioms(dir):
@@ -24,7 +24,7 @@ def retrieve_all_dependency():
             dic = {callee: func for callee, func in yield_function_from_py(py)}
             if dic:
                 print("py =", py)  
-                yield caller, dic 
+                yield caller, dic
 
 
 def insert_into_function():
@@ -35,9 +35,9 @@ def insert_into_function():
             args = user, caller, callee, func
             data.append(args)
         
-    MySQL.instance.execute('delete from tbl_function_py')
+    MySQL.instance.execute('delete from `function`')
     
-    MySQL.instance.load_data('tbl_function_py', data)
+    MySQL.instance.load_data('`function`', data)
 
     
 def topological_sort():
@@ -65,4 +65,3 @@ def topological_sort():
 
 if __name__ == '__main__':
     insert_into_function()
-# exec(open('./util/function.py').read())

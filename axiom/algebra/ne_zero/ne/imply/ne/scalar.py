@@ -3,13 +3,10 @@ from util import *
 
 
 @apply
-def apply(unequality, eq):
-    assert eq.is_Unequal
-    assert unequality.is_Unequal
-    unequality.rhs.is_zero
-
-    divisor = unequality.lhs
-    return Unequal(eq.lhs / divisor, eq.rhs / divisor)
+def apply(unequality, ne):
+    lhs, rhs = ne.of(Unequal)
+    divisor = unequality.of(Unequal[0])
+    return Unequal(lhs / divisor, rhs / divisor)
 
 
 @prove

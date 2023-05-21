@@ -13,7 +13,7 @@ def ou_to_sufficient(self, index):
     return Infer(p.invert(), q)
 
 
-@apply(given=None)
+@apply
 def apply(self, index):
     [*eqs] = self.of(Or)
     p = eqs[index]
@@ -23,7 +23,7 @@ def apply(self, index):
     del eqs[index]
     q = Or(*eqs)
 
-    return Equivalent(self, ou_to_sufficient(self, index).simplify(), evaluate=False)
+    return ou_to_sufficient(self, index).simplify()
 
 
 @prove

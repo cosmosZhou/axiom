@@ -1,7 +1,7 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self, y):
     solution = rsolve(self, y, symbols=True)
     if solution is None:
@@ -14,7 +14,7 @@ def apply(self, y):
 
     for i, C in enumerate(limits):
         limits[i] = (C,)
-    return Equivalent(self, Any(eq, *limits))
+    return Any(eq, *limits)
 
 
 @prove(proved=False)

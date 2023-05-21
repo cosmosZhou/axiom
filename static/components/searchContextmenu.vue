@@ -19,7 +19,7 @@
 </template>
 
 <script>    
-console.log('importing searchContextmenu.vue');
+console.log('import searchContextmenu.vue');
 export default {
     data(){
         return {

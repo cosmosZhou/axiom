@@ -1,15 +1,21 @@
 from util import *
 
 
+@apply
+def apply(self, i=None):
+    [*args] = self.of(Or)
+    if i is None:
+        for i, eq in enumerate(args):
+            if eq.is_And:
+                break
+        else :
+            return
+    else :
+        eq = args[i]
 
-@apply(given=None)
-def apply(self):
-    for i, eq in enumerate(self.args):
-        if isinstance(eq, And):
-            args = [*self.args]
-            del args[i]
-            this = self.func(*args)
-            return Equivalent(self, And(*((arg | this).simplify() for arg in eq.args)))
+    del args[i]
+    this = self.func(*args)
+    return And(*((arg | this).simplify() for arg in eq.of(And)))
 
 
 @prove
@@ -26,8 +32,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.ou.given.et)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-02-21
+# updated on 2023-05-10

@@ -3,18 +3,16 @@ from util import *
 
 @apply
 def apply(all_is_positive, contains0, contains1):
-    (fx, (x, d)), (x_, domain) = all_is_positive.of(All[Derivative > 0])
-    assert x == x_
-    assert d == 2
-    assert domain.left_open and domain.right_open
-    x0, domain_ = contains0.of(Element)
-    assert domain_ == domain
+    (fx, (x, S[2])), (S[x], a, b) = all_is_positive.of(All[Derivative > 0])
+    
+    x0, domain = contains0.of(Element)
+    S[a], S[b] = domain.of(Interval)
+    assert domain.is_open
 
-    x1, domain_ = contains1.of(Element)
-    assert domain_ == domain
+    x1, S[domain] = contains1.of(Element)
 
     from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle import is_differentiable
-    f = lambda x: fx._subs(x_, x)
+    f = lambda t: fx._subs(x, t)
     return is_differentiable(f, x0, x1, open=False)
 
 

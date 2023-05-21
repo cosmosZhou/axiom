@@ -21,9 +21,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.args[0].reversed
 
-    Eq << Eq[-1].this.args[1].reversed
+    Eq << Eq[-1].this.args[0].reversed
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-01-02
+# updated on 2023-05-20

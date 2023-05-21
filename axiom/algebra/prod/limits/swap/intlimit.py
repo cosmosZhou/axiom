@@ -19,13 +19,13 @@ def prove(Eq):
 
     Eq << Eq[0].this.lhs.apply(algebra.prod.bool)
 
-    Eq << Eq[-1].this.find(And).apply(sets.et_el.transform.i_lt_j.left_close)
+    Eq << Eq[-1].this.find(And).apply(sets.el.el.transform.i_lt_j.left_close)
 
     Eq << Eq[-1].this.rhs.apply(algebra.prod.bool)
 
     Eq << Eq[-1].this.rhs.apply(algebra.prod.limits.swap)
 
-    
+
 
 
 if __name__ == '__main__':

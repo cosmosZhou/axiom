@@ -5,13 +5,11 @@ from util import *
 def apply(self):
     xi, limit = self.of(Sum ** 2)
     try:
-        i, z, n = limit.of(Tuple)
+        i, S[0], n = limit.of(Tuple)
     except:
-        [i] = limit
+        i, = limit
         domain = xi.domain_defined(i)
-        z, n = domain.of(Range)
-
-    assert z == 0
+        S[0], n = domain.of(Range)
 
     j = self.generate_var({i}, integer=True, var='j')
     xj = xi._subs(i, j)

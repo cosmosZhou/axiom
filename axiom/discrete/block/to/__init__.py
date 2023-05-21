@@ -1,2 +1,2 @@
 from . import matProd
-from . import lamda
+from . import swapMatrix

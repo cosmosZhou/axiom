@@ -3,9 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    (x, _d), d = self.of(Floor[Expr / Expr] * Expr)
-    assert d == _d
-
+    (x, d), S[d] = self.of(Floor[Expr / Expr] * Expr)
     assert d.is_integer and x.is_integer
     return Equal(self, x - x % d)
 

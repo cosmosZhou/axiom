@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    assert self.is_ZeroMatrix
+    assert not self
     m, n = self.shape
     m = int(m)
     n = int(n)

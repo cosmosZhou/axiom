@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    (_e, A), (e, B) = given.of(All[NotElement])
-    assert e == _e
+    (e, A), (S[e], B) = given.of(All[NotElement])
     return Equal(A & B, e.emptySet)
 
 

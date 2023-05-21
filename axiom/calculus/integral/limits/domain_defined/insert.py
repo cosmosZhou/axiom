@@ -6,7 +6,7 @@ def apply(self):
     expr, *limits = self.of(Integral)
 
     * limits, limit = limits
-    [x] = limit
+    x, = limit
 
     assert x.is_real
 

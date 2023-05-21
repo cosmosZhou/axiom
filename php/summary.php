@@ -19,7 +19,7 @@ foreach (\mysql\select_axiom_by_state_not('proved') as $tuple) {
 $state_count_pairs = [];
 
 global $user;
-foreach (\mysql\select("select state, count(*) as count from tbl_axiom_py where user = '$user' group by state order by count", MYSQLI_ASSOC) as $res) {
+foreach (\mysql\select("select state, count(*) as count from axiom where user = '$user' group by state order by count", MYSQLI_ASSOC) as $res) {
     $state_count_pairs[] = $res;
 }
 

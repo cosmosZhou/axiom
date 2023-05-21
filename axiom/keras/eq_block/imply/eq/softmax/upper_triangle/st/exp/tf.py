@@ -91,7 +91,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(ExprCondPair).expr.apply(algebra.piece.swap, i=0)
 
-    Eq << Eq[-1].this.find(And).apply(sets.et.to.el.range, simplify=None)
+    Eq << Eq[-1].this.find(And).apply(sets.cond.cond.to.el.range, simplify=None)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.sub, i, simplify=None)
 
@@ -109,7 +109,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(And).apply(algebra.et.collect, cond=Eq[-1].find(Element))
 
-    Eq << Eq[-1].this(i, j).find(And).apply(sets.et_ou.to.el_range.bandPart.upper.offset)
+    Eq << Eq[-1].this(i, j).find(And).apply(sets.ou.ou.to.el.range.bandPart.upper.offset)
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.zij_def, Eq[-1])
 

@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    function, (n, _n, (a, b)) = self.of(Sum[Tuple[Equal[Expr % 2, 1], Range]])
-    assert n == _n
+    function, (n, S[n], (a, b)) = self.of(Sum[Tuple[Equal[Expr % 2, 1], Range]])
     return Equal(self, Sum[n:a // 2:b // 2](function._subs(n, 2 * n + 1)))
 
 
@@ -31,12 +30,16 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element[Symbol, ~Symbol]).definition
 
-    Eq << Eq[-1].this.find(And).apply(sets.et.to.el.split.is_odd)
+    Eq << Eq[-1].this.find(And).apply(sets.is_odd.el.to.el)
 
     Eq << Eq[-1].this.find(1 + Floor).apply(algebra.add.to.floor)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-06-01
+# updated on 2023-05-21

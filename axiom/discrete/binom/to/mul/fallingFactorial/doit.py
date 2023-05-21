@@ -4,7 +4,6 @@ from util import *
 @apply
 def apply(self):
     n, k = self.of(Binomial)
-    assert k.is_Integer
     k = int(k)
     prod = 1
     den = 1

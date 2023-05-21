@@ -5,7 +5,7 @@ from util import *
 def apply(given):
     x, y = given.of(Equal)
 
-    assert x.shape    
+    assert x.shape
     return Equal(Bool(x), Bool(y))
 
 

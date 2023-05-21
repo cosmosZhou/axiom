@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << algebra.ge.imply.all.ge.apply(Eq[0])
 
-    Eq << algebra.ge_piece.imply.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.imply.ou.apply(Eq[-1])
 
     Eq << algebra.ou.imply.et.infer.apply(Eq[-1])
 
@@ -43,3 +43,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-04-01
+# updated on 2023-04-29

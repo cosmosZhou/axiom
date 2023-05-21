@@ -9,7 +9,7 @@ def negate(i, *ab):
         else:
             return (i, -b, -a)
     elif len(ab) == 1:
-        [domain] = ab
+        domain, = ab
         return (i, -domain)
     else:
         return (i,)
@@ -32,11 +32,14 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(i, -i)
 
-    Eq << Eq[-1].this.args[0].apply(sets.notin.imply.notin.neg)
+    Eq << Eq[-1].this.find(NotElement).apply(sets.notin.imply.notin.neg)
 
     Eq << algebra.all.given.ou.apply(Eq[1])
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-12-08
+# updated on 2023-05-20

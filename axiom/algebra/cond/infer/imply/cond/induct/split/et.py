@@ -29,21 +29,22 @@ def apply(f0, suffice, n=None, x=None, start=0, hypothesis=True):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     n = Symbol(integer=True, nonnegative=True)
     f, g, t = Function(shape=(), real=True)
     x = Symbol(real=True)
-
     Eq << apply(f[0](x) > g[0](x), Infer((f[n](x) > g[n](x)) & (f[n](t(x)) > g[n](t(x))), (f[n + 1](x) > g[n + 1](x))), n=n, x=x)
 
-    Eq << algebra.imply.infer.subs.apply(Eq[2], x, t(x))
+    Eq << Eq[2].cond.this.apply(algebra.cond.imply.cond.subs, x, t(x))
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
-
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
     Eq.induct = algebra.infer.infer.imply.infer.transit.apply(Eq[-1], Eq[1])
-
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq[0], Eq.induct, n=n)
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-03-21
+# updated on 2023-05-21

@@ -13,3 +13,9 @@ from . import relax
 from . import ceiling
 from . import exp
 from . import transport
+from . import split
+from . import pow
+from . import sup
+from . import inf
+from . import minima
+from . import maxima

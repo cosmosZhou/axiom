@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self):
     q, p = self.of(Assuming)
-    return Equivalent(self, Assuming(p.invert(), q.invert()))
+    return Assuming(p.invert(), q.invert())
 
 
 @prove

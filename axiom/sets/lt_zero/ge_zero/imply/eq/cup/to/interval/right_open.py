@@ -35,7 +35,11 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1])
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2021-02-21
+# updated on 2023-05-20

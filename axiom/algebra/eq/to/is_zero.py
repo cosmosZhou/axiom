@@ -1,11 +1,11 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self):
     x, y = self.of(Equal)
 
-    return Equivalent(self, Equal(x - y, 0))
+    return Equal(x - y, 0)
 
 
 @prove

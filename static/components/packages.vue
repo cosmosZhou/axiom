@@ -10,7 +10,7 @@
 </template>
 
 <script>
-console.log('importing packages.vue');	
+console.log('import packages.vue');	
 import axiomPackage from "./axiomPackage.vue"
 import axiomContextmenu from "./axiomContextmenu.vue"
 export default {
@@ -58,7 +58,7 @@ export default {
 
 		remove(indexFocused){
 			var packages = this.packages;
-			packages.remove(indexFocused);
+			packages.delete(indexFocused);
 			this.packages = packages;
 			
 			this.$nextTick(function() {				

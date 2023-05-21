@@ -16,7 +16,8 @@ def apply(inequality_a, inequality_b):
             x, a = a, x
             _x, b = b, _x
 
-    assert x == _x
+        assert x == _x
+        
     return NotElement(x, {a, b})
 
 

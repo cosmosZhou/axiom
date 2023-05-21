@@ -3,11 +3,9 @@ from util import *
 
 @apply
 def apply(given):
-    (((w, i, j), x), S), (_x, _S) = given.of(All[Element[MatMul[Indexed]]])
+    (((w, i, j), x), s), (S[x], S[s]) = given.of(All[Element[MatMul[Indexed]]])
 
-    assert x == _x and S == _S
-
-    n = S.etype.shape[0]
+    n = s.etype.shape[0]
 
     k = Symbol(integer=True)
 
@@ -17,7 +15,7 @@ def apply(given):
 
     P = Symbol(conditionset(p[:n], Equal(p[:n].cup_finiteset(), Range(n))))
 
-    return All[p[:n]:P, x:S](Element(Lamda[k:n](x[p[k]]), S))
+    return All[p[:n]:P, x:s](Element(Lamda[k:n](x[p[k]]), s))
 
 
 @prove
@@ -31,7 +29,7 @@ def prove(Eq):
     w = Symbol(Lamda[j, i](SwapMatrix(n, i, j)))
     Eq.swap, (Eq.P_definition, Eq.w_definition), Eq.axiom = apply(All[x[:n]:S](Element(w[i, j] @ x[:n], S)))
 
-    Eq << discrete.imply.all_any.factorization.apply(n)
+    Eq << discrete.imply.all.any.factorization.apply(n)
 
     * _, b_i = Eq[-1].rhs.args[1].expr.args
     b, _i = b_i.args
@@ -46,7 +44,7 @@ def prove(Eq):
 
     Eq << discrete.lamda.to.matmul.swapn.helper.apply(x[:n], b[:n], w)
 
-    Eq << algebra.all_any_eq.cond.imply.all_any.subs.apply(Eq[-2].reversed, Eq[-1])
+    Eq << algebra.all_any_eq.cond.imply.all.any.subs.apply(Eq[-2].reversed, Eq[-1])
 
     Eq << algebra.all.imply.all.limits.restrict.apply(Eq[-1], (x[:n], S))
 

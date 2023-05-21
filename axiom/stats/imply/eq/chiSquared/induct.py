@@ -9,7 +9,7 @@ def apply(_Y, Y):
 
     function, (i, S[k]) = X_squared_Sum.of(Sum[Tuple[0, Expr]])
 
-    X = pspace(X_squared_Sum).value.base
+    X = pspace(X_squared_Sum).value
 
     y = pspace(Y).symbol
     assert y >= 0
@@ -62,7 +62,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[-1].expr.powsimp()
 
-    Eq << calculus.trigonometry.wallis.beta.apply(1, k)
+    Eq << calculus.integral_mul.to.scale.beta.wallis.apply(1, k)
 
     x = Eq[-1].lhs.variable
     t = Eq[-2].rhs.args[-1].variable

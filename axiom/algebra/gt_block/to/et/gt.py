@@ -1,7 +1,7 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(le):
     lhs, rhs = le.of(Expr > BlockMatrix)
 
@@ -10,7 +10,7 @@ def apply(le):
         assert len(lhs.shape) <= len(e.shape)
         args.append(lhs > e)
 
-    return Equivalent(le, And(*args))
+    return And(*args)
 
 
 @prove

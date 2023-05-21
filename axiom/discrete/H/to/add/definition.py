@@ -4,8 +4,7 @@ from util import *
 def H_step(x):
     if not x.shape:
         return x
-    assert len(x.shape) == 1
-    n = x.shape[0]
+    n, = x.shape
     if n == 2:
         return x[1] * x[0] + 1
     return Piecewise((x[0], Equal(n, 1)),

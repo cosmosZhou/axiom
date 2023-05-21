@@ -1,12 +1,12 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(all_le):
     (lhs, rhs), *limits = all_le.of(All[Greater])
     lhs = Lamda(lhs, *limits).simplify()
     rhs = Lamda(rhs, *limits).simplify()
-    return Equivalent(all_le, lhs > rhs)
+    return lhs > rhs
 
 
 @prove

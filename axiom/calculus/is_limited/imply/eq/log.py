@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(is_limited):
-    from axiom.calculus.is_limited.imply.any_all.limit_definition import of_limited
+    from axiom.calculus.is_limited.imply.any.all.limit_definition import of_limited
     fx, (x, x0, dir) = of_limited(is_limited, positive=True)
     return Equal(Limit[x:x0:dir](log(fx)), log(Limit[x:x0:dir](fx)))
 
@@ -17,14 +17,14 @@ def prove(Eq):
     Eq << apply(Element(Limit[x:x0](f(x)), Interval(0, oo, left_open=True)))
 
     epsilon0, delta0, delta, epsilon = Symbol(positive=True)
-    Eq << calculus.is_limited.imply.any_all.limit_definition.symbol_subs.apply(Eq[0], epsilon0, delta0, var='A')
+    Eq << calculus.is_limited.imply.any.all.limit_definition.symbol_subs.apply(Eq[0], epsilon0, delta0, var='A')
 
     A = Eq[-1].expr.expr.find(Add[-~Symbol])
     Eq.is_limited = A.this.definition.reversed
 
     Eq << Eq[0].subs(Eq.is_limited)
 
-    Eq.A_is_positive = sets.el.imply.gt_zero.apply(Eq[-1])
+    Eq.A_is_positive = sets.is_positive.imply.gt_zero.apply(Eq[-1])
 
     Eq << algebra.gt_zero.eq.imply.eq.log.apply(Eq.A_is_positive, Eq.is_limited)
 
@@ -46,7 +46,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.expr.apply(sets.lt.gt.imply.el.interval)
 
-    Eq << algebra.cond.any_all.imply.any_all_et.apply(Eq.A_is_positive, Eq[-1])
+    Eq << algebra.cond.any_all.imply.any.all.et.apply(Eq.A_is_positive, Eq[-1])
 
     Eq << Eq[-1].this.expr.expr.apply(sets.gt_zero.el.imply.el.div)
 

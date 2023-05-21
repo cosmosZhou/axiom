@@ -14,7 +14,7 @@ def prove(Eq):
 
     Eq << apply(Less(x, y))
 
-    Eq << algebra.imply.le.floor.apply(x)
+    Eq << algebra.imply.floor_le.apply(x)
 
     Eq << algebra.le.lt.imply.lt.transit.apply(Eq[-1], Eq[0])
 

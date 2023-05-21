@@ -2,31 +2,42 @@ from util import *
 
 
 @apply
-def apply(x_less_than_a, y_less_than_a):
-    x, a = x_less_than_a.of(Greater)
-    y, _a = y_less_than_a.of(Greater)
-    assert a == _a
-    return Greater(Min(x, y), a)
+def apply(gt_0, gt_1):
+    x, a = gt_0.of(Greater)
+    y, b = gt_1.of(Greater)
+    return Greater(Min(x, y), Min(a, b))
 
 
 @prove
 def prove(Eq):
     from axiom import algebra
-    a, x, y = Symbol(real=True, given=True)
 
-    Eq << apply(x > a, y > a)
+    a, b, x, y = Symbol(real=True, given=True)
+    Eq << apply(x > a, y > b)
 
     Eq << Eq[-1].this.lhs.apply(algebra.min.to.piece)
 
-    Eq << algebra.cond.given.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.given.ou.apply(Eq[-1])
 
     Eq << ~Eq[-1]
 
-    Eq << algebra.cond.cond.imply.cond.subs.apply(Eq[0], Eq[-1], invert=True)
+    Eq << algebra.imply.ge_min.apply(a, b)
 
-    Eq << algebra.cond.cond.imply.cond.subs.apply(Eq[1], Eq[-1], invert=True)
+    Eq << algebra.ge.gt.imply.gt.transit.apply(Eq[0], Eq[-1])
+
+    Eq << algebra.cond.cond.imply.cond.subs.apply(Eq[-1], Eq[-3], invert=True)
+
+    Eq << algebra.imply.ge_min.apply(b, a)
+
+    Eq << algebra.gt.ge.imply.gt.transit.apply(Eq[1], Eq[-1])
+
+    Eq << algebra.cond.cond.imply.cond.subs.apply(Eq[-1], Eq[-3], invert=True)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-07-18
+# updated on 2023-04-29

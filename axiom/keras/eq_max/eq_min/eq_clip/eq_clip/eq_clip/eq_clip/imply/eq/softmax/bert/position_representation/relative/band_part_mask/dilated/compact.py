@@ -3,10 +3,10 @@ from util import *
 
 @apply
 def apply(eq_max, eq_min, eq_K_quote, eq_V_quote, eq_K, eq_V, Q, K, V):
-    ((((i, l), d), S[i - l + 1]), i_limit), β = eq_max.of(Equal[Lamda[Max[Mod[Expr + 1 - Expr]]]])
+    (((i, l), (S[i - l + 1], d)), i_limit), β = eq_max.of(Equal[Lamda[Max[Expr + 1 - Expr, Mod]]])
     S[i], S[0], n = i_limit
 
-    (((S[i], u), S[n]), S[i_limit]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])
+    ((S[n], (S[i], u)), S[i_limit]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])
 
     ((w_K, clip_index), j_limit, S[i_limit]), K_dquote = eq_K.of(Equal[Lamda[Indexed]])
     ((w_V, S[clip_index]), S[j_limit], S[i_limit]), V_dquote = eq_V.of(Equal[Lamda[Indexed]])
@@ -80,11 +80,11 @@ def prove(Eq):
 
     Eq.le_ceiling = algebra.lt.imply.le.strengthen.apply(Eq[-1])
 
-    Eq <<= Eq.eq_K_dquote.this.find(Min).args[0].apply(algebra.expr.to.piece, upper=Eq.le_ceiling.lhs), Eq.eq_V_dquote.this.find(Min).args[0].apply(algebra.expr.to.piece, upper=Eq.le_ceiling.lhs)
+    Eq <<= Eq.eq_K_dquote.this.find(Min).args[1].apply(algebra.expr.to.piece, upper=Eq.le_ceiling.lhs), Eq.eq_V_dquote.this.find(Min).args[1].apply(algebra.expr.to.piece, upper=Eq.le_ceiling.lhs)
 
     Eq <<= Eq[-2].this.rhs().find(GreaterEqual).simplify(), Eq[-1].this.rhs().find(GreaterEqual).simplify()
 
-    Eq <<= Eq[-2].this.find(Min).args[2].apply(algebra.expr.to.piece, lower=Eq.le_ceiling.lhs), Eq[-1].this.find(Min).args[2].apply(algebra.expr.to.piece, lower=Eq.le_ceiling.lhs)
+    Eq <<= Eq[-2].this.find(Min).args[0].apply(algebra.expr.to.piece, lower=Eq.le_ceiling.lhs), Eq[-1].this.find(Min).args[0].apply(algebra.expr.to.piece, lower=Eq.le_ceiling.lhs)
 
     Eq <<= algebra.cond.cond.imply.cond.subs.apply(Eq.le_ceiling, Eq[-2]), algebra.cond.cond.imply.cond.subs.apply(Eq.le_ceiling, Eq[-1])
 
@@ -111,4 +111,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2021-12-27
-# updated on 2022-03-30
+# updated on 2023-05-14

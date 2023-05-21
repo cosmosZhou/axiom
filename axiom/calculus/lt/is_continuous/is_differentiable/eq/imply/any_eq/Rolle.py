@@ -1,37 +1,28 @@
 from util import *
 
 
-from axiom.calculus.all_eq.imply.all_any_eq.intermediate_value_theorem import is_continuous
-
-
 def of_continuous(cond):
-    (limit, fxi), (xi, a, b) = cond.of(All[Equal])
-    fz, (z, _xi, dirt) = limit.of(Limit)
-    assert xi == _xi
+    (limit, fxi), (xi, domain) = cond.of(All[Equal])
+    fz, (z, S[xi], S[0]) = limit.of(Limit)
     assert fz._subs(z, xi) == fxi
-    assert dirt == 0
-    return fz, (z, a, b)
+    assert domain.is_closed
+    return fz, (z, *domain.args)
 
 
 def of_differentiable(cond, open=True, extended=False):
     if open:
-        (derivative, R), (x, ab) = cond.of(All[Element])
-        a, b = ab.of(Interval)
-        assert ab.left_open and ab.right_open
-    else:
         (derivative, R), (x, a, b) = cond.of(All[Element])
+    else:
+        (derivative, R), (x, domain) = cond.of(All[Element])
+        a, b = domain.args
+        assert domain.is_closed
 
     if extended:
         assert R in ExtendedReals
     else:
         assert R in Reals
 
-    fx, *limits_d = derivative.of(Derivative)
-    assert len(limits_d) == 1
-    _x, one = limits_d[0]
-    assert _x == x
-    assert one == 1
-
+    fx, (S[x], S[1]) = derivative.of(Derivative)
     return fx, (x, a, b)
 
 
@@ -58,24 +49,19 @@ def is_differentiable(f, a, b, x=None, open=True, plausible=None, extended=False
 @apply
 def apply(lt, is_continuous, is_differentiable, equal):
     a, b = lt.of(Less)
-    fz, (z, _a, _b) = of_continuous(is_continuous)
-    _fz, (_z, __a, __b) = of_differentiable(is_differentiable)
-    assert _fz == fz
-    assert _z == z
-    assert _a == a == __a
-    assert _b == b == __b
+    fz, (z, S[a], S[b]) = of_continuous(is_continuous)
+    S[fz], S[(z, a, b)] = of_differentiable(is_differentiable)
 
-    fa, fb = equal.of(Equal)
-    assert fz._subs(z, a) == fa
-    assert fz._subs(z, b) == fb
+    S[fz._subs(z, a)], S[fz._subs(z, b)] = equal.of(Equal)
 
-    return Any[z:Interval(a, b, left_open=True, right_open=True)](Equal(Derivative(fz, z), 0))
+    return Any[z:a:b](Equal(Derivative(fz, z), 0))
 
 
 @prove(proved=False)
 def prove(Eq):
     a, b = Symbol(real=True)
     f = Function(shape=(), real=True)
+    from axiom.calculus.all_eq.imply.all.any.eq.intermediate_value_theorem import is_continuous
     Eq << apply(a < b, is_continuous(f, a, b), is_differentiable(f, a, b), Equal(f(a), f(b)))
 
 

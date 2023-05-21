@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << algebra.infer.given.infer.subs.bool.apply(Eq[-2])
 
-    Eq << algebra.infer.given.et.infer.split.ou.apply(Eq[-1])
+    Eq << algebra.infer_ou.given.et.infer.apply(Eq[-1])
 
     Eq << algebra.infer.given.infer.subs.apply(Eq[-2])
 
@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Greater).apply(algebra.gt_arg.to.eq_ceiling, simplify=None)
 
-    Eq << algebra.infer.given.et.infer.split.ou.apply(Eq[-1])
+    Eq << algebra.infer_ou.given.et.infer.apply(Eq[-1])
 
     Eq <<= algebra.infer.given.infer.subs.apply(Eq[-2]), algebra.infer.given.infer.subs.apply(Eq[-1])
 

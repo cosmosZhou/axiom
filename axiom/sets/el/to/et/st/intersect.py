@@ -1,7 +1,7 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given, index=None):
     x, intersection = given.of(Element)
 
@@ -15,7 +15,7 @@ def apply(given, index=None):
             et.append(given)
         else:
             et = [Element(x, ss), given]
-    return Equivalent(given, And(*et))
+    return And(*et)
 
 
 @prove

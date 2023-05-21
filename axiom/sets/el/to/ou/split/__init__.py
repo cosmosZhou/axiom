@@ -1,11 +1,11 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given, B):
     x, A = given.of(Element)
 
-    return Equivalent(given, Or(Element(x, A - B), Element(x, A & B)))
+    return Or(Element(x, A - B), Element(x, A & B))
 
 
 @prove
@@ -21,5 +21,5 @@ if __name__ == '__main__':
     run()
 
 
-from . import finiteset, union
 # created on 2018-02-21
+from . import finiteset

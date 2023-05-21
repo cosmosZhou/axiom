@@ -3,16 +3,15 @@ from util import *
 
 @apply
 def apply(is_nonempty, all):
-    S = is_nonempty.of(Unequal[EmptySet])
+    s = is_nonempty.of(Unequal[EmptySet])
     function, (e, *rhs) = all.of(All)
 
     if len(rhs) == 2:
-        _S = Range(*rhs) if e.is_integer else Interval(*rhs)
+        S[s] = e.range(*rhs)
     else:
-        [_S] = rhs
-    assert S == _S
+        S[s], = rhs
 
-    return Any[e:S](function)
+    return Any[e:s](function)
 
 
 @prove

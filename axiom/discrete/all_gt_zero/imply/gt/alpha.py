@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(given, n):
     from axiom.discrete.imply.gt_zero.alpha import alpha
-    (x, _j), j = given.of(All[Indexed > 0, Tuple[1, oo]])
-    assert _j == j
+    (x, j), S[j] = given.of(All[Indexed > 0, Tuple[1, oo]])
     assert n > 0
     return Greater(alpha(x[:2 * n]), alpha(x[:2 * n + 2]))
 

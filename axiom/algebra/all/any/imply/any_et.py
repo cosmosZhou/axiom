@@ -47,7 +47,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.gt.given.gt.strengthen, 1)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq.any.this.expr.args[2].apply(algebra.cond.infer.imply.cond.transit, Eq[-1])
 

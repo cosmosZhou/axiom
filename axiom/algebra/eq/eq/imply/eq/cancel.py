@@ -9,7 +9,7 @@ def apply(eq0, eq1, wrt=None):
     assert f.degree() == 1
     #f = a * x + b
     a, b = f.nth(1), f.nth(0)
-    assert a.is_zero is False
+    assert a.is_zero == False
     f = -b / a
 
     lhs, rhs = eq1.of(Equal)
@@ -17,7 +17,7 @@ def apply(eq0, eq1, wrt=None):
 
     g = g.as_poly(wrt)
     a, b = g.nth(1), g.nth(0)
-    assert a.is_zero is False
+    assert a.is_zero == False
     g = -b / a
 
     return Equal(g, f)

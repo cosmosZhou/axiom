@@ -32,17 +32,17 @@ def prove(Eq):
 
     Eq.eq_sum_quote = Eq[-1].subs(Eq.eq_sum)
 
-    Eq << Eq[0].subs(Eq[1].reversed, Eq[2].reversed)
+    Eq << Eq[0].subs(Eq[1].reversed, Eq[2].reversed, simplify=None)
+
+    Eq << Eq[-1].this.find(Mul[~Sum]).apply(algebra.sum.limits.domain_defined.insert)
 
     Eq << Sum[j:n, i:m]((x[i, j] - x_bar) ** 2).this.expr.apply(algebra.square.to.add)
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add)
 
-    Eq << Eq[-1].this.find(Sum[Mul]).apply(algebra.sum.to.mul)
-
     Eq.St = Eq[-1].subs(Eq.eq_sum)
 
-    Eq << Sum[i:m]((_x_bar[i] - x_bar) ** 2).this.expr.apply(algebra.square.to.add)
+    Eq << Sum[i:m]((_x_bar[i] - x_bar) ** 2).this.expr.apply(algebra.square.to.add, simplify=None)
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add)
 
@@ -56,19 +56,21 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add)
 
-    Eq << Eq[-1].this.find(Sum[Mul]).apply(algebra.sum.to.mul)
-
     Eq << Eq[-1].this.find(Sum[Mul]).apply(algebra.sum.limits.separate)
 
     Eq << Eq[-1].subs(Eq.eq_sum_j)
 
-    Eq << Eq[-1].this.find(Sum[Mul]).apply(algebra.sum.to.mul)
+    
 
     Eq << Eq[-1] + Eq.SA
 
     Eq << Eq.St.subs(Eq[-1].reversed)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2020-03-27
+# updated on 2023-05-06

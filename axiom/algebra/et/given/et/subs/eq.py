@@ -1,32 +1,39 @@
 from util import *
 
 
-@apply
-def apply(imply, index=None, reverse=False):
-    [*eqs] = imply.of(And)
-
-    if index is None:
-        for index, eq in enumerate(eqs):
-            if eq.is_Equal:
-                break
-        else:
-            return
-
-    eq = eqs.pop(index)
-
-    imply = And(*eqs)
+def subs(eqs, index, reverse):
+    eq = eqs[index]
+    
+    rhs = And(*eqs[:index], *eqs[index + 1:])
 
     old, new = eq.of(Equal)
 
     if reverse:
         old, new = new, old
 
-    return eq, imply._subs(old, new)
+    _rhs = rhs._subs(old, new)
+    if _rhs != rhs:
+        return _rhs
+
+
+@apply
+def apply(self, index=None, reverse=False):
+    eqs = self.of(And)
+    if index is None:
+        for index, eq in enumerate(eqs):
+            if eq.is_Equal:
+                if (rhs := subs(eqs, index, reverse)) is not None:
+                    break
+        else :
+            return
+    else:
+        rhs = subs(eqs, index, reverse)
+        eq = eqs[index]
+    return eq, rhs
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
     x, y = Symbol(integer=True)
     S = Symbol(etype=dtype.integer)
     f = Function(integer=True)
@@ -36,9 +43,12 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[1]
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 
 # created on 2018-06-10
+# updated on 2023-05-06

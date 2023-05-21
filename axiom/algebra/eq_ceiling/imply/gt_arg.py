@@ -3,9 +3,7 @@ from util import *
 
 @apply
 def apply(eq):
-    ((A, B), pi2), half = eq.of(Equal[Ceiling[(Arg + Arg) * Expr - Expr], 1])
-    assert half * 2 == 1
-    assert 1 / pi2 == S.Pi * 2
+    ((A, B), S[S.One / (S.Pi * 2)]), S[S.One / 2] = eq.of(Equal[Ceiling[(Arg + Arg) * Expr - Expr], 1])
     return Arg(A) + Arg(B) > S.Pi
 
 

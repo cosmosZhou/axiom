@@ -36,9 +36,9 @@ def prove(Eq):
 
     Eq <<= algebra.infer.given.infer.subs.bool.apply(Eq[-2]), algebra.infer.given.infer.subs.bool.apply(Eq[-1], invert=True)
 
-    Eq <<= algebra.infer.given.et.infer_et.apply(Eq[-2], cond=Eq[0]), Eq[-1].this.lhs.apply(sets.notin_interval.imply.ou)
+    Eq <<= algebra.infer.given.et.infer.et.apply(Eq[-2], cond=Eq[0]), Eq[-1].this.lhs.apply(sets.notin_interval.imply.ou)
 
-    Eq <<= Eq[-2].this.lhs.apply(sets.gt_zero.el.imply.eq.inf.st.quadratic, Eq[-2].find(Inf).expr, x), algebra.infer.given.et.infer.split.ou.apply(Eq[-1])
+    Eq <<= Eq[-2].this.lhs.apply(sets.gt_zero.el.imply.eq.inf.st.quadratic, Eq[-2].find(Inf).expr, x), algebra.infer_ou.given.et.infer.apply(Eq[-1])
 
     Eq <<= Eq[-2].this.find(Inf).apply(algebra.inf.limits.subs.offset, Eq[3].lhs * -b /2), Eq[-1].this.find(Inf).apply(algebra.inf.limits.subs.offset, Eq[3].lhs * -b /2)
 
@@ -61,14 +61,14 @@ def prove(Eq):
 
     Eq <<= Eq[-4] & Eq[-3], Eq[-2] & Eq[-1]
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.eq.eq.imply.eq.transit), Eq[-1].this.rhs.apply(algebra.eq.eq.imply.eq.transit)
+    Eq <<= Eq[-2].this.rhs.apply(algebra.eq.eq.imply.eq.transit, reverse=True), Eq[-1].this.rhs.apply(algebra.eq.eq.imply.eq.transit, reverse=True)
 
     Eq <<= Eq[-2].this.rhs.rhs.expand(), Eq[-1].this.rhs.rhs.expand()
 
-
-
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-10-02
+# updated on 2023-05-20

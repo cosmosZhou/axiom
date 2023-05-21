@@ -3,18 +3,17 @@ from util import *
 
 def doit(All, self):
     xi, (i, s), *limits = self.of(All)
-    assert s.is_FiniteSet
 
-    sgm = self.identity(xi)
-    for t in s.args:
+    sgm = All.identity(xi)
+    for t in s.of(FiniteSet):
         sgm = All.operator(sgm, xi._subs(i, t))
 
     assert limits
     return All(sgm, *limits)
 
-@apply(given=None)
+@apply
 def apply(self):
-    return Equivalent(self, doit(All, self))
+    return doit(All, self)
 
 
 @prove

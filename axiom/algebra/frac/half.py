@@ -27,11 +27,14 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this.expr.apply(algebra.cond.any.given.any_et, simplify=None), Eq[-1].this.expr.apply(algebra.cond.any.given.any_et, simplify=None)
 
-    Eq << Eq[-2].this.expr.expr.apply(algebra.et.given.et.subs.eq, index=1)
+    Eq << Eq[-2].this.expr.expr.apply(algebra.et.given.et.subs.eq)
 
-    Eq << Eq[-1].this.expr.expr.apply(algebra.et.given.et.subs.eq, index=1)
+    Eq << Eq[-1].this.expr.expr.apply(algebra.et.given.et.subs.eq)
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-05-10
+# updated on 2023-05-15

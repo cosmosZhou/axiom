@@ -3,9 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    (fx, *limits), (gx, *_limits) = self.of(Sum - Sum)
-    assert limits == _limits
-
+    (fx, *limits), (gx, *S[limits]) = self.of(Sum - Sum)
     return Equal(self, Sum(fx - gx, *limits))
 
 

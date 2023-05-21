@@ -4,15 +4,14 @@ from util import *
 @apply
 def apply(lt, given):
     a, b = lt.of(Less)
-    (fx, (x, n)), (_x, _a, _b) = given.of(All[Derivative > 0])
-    assert a == _a and b == _b
-    assert n == 1
-    assert x == _x
+    (fx, (x, S[1])), (S[x], domain) = given.of(All[Derivative > 0])
+    S[a], S[b] = domain.of(Interval)
+    assert domain.is_closed
 
     return All[x:Interval(a, b, left_open=True)](Greater(fx, fx._subs(x, a)))
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import sets, calculus, algebra
 
@@ -68,7 +67,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.gt_zero.imply.gt)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2020-04-22
+# updated on 2023-04-16

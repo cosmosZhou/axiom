@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self):
     (A, B), (C, D) = self.of(Det[BlockMatrix[BlockMatrix[1], BlockMatrix[1]]])
-    assert A.is_ZeroMatrix or D.is_ZeroMatrix
+    assert not A or not D
     factor = (-1) ** (B.shape[0] * C.shape[0])
 
     assert B.is_Identity

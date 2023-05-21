@@ -1,8 +1,8 @@
 from util import *
 
 
-def simplify_negative_terms(given):
-    lhs, rhs = given.args
+def simplify_negative_terms(cls, given):
+    lhs, rhs = given.of(cls)
 
     lhs_positive = []
     rhs_positive = []
@@ -32,10 +32,9 @@ def simplify_negative_terms(given):
     return given.func(Add(*lhs_positive), Add(*rhs_positive))
 
 
-@apply(given=None)
+@apply
 def apply(given):
-    assert given.is_Equal
-    return Equivalent(given, simplify_negative_terms(given))
+    return simplify_negative_terms(Equal, given)
 
 
 @prove

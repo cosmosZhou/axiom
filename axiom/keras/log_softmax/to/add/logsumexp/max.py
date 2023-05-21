@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(x):
-    assert len(x.shape) == 1
+    n, = x.shape
     return Equal(log(softmax(x)), x - ReducedMax(x) - logsumexp(x - ReducedMax(x)))
 
 

@@ -5,21 +5,11 @@ from util import *
 def apply(given):
     x_union_abs, x_abs_sum = given.of(Equal)
     if not x_union_abs.is_Card:
-        tmp = x_union_abs
-        x_union_abs = x_abs_sum
-        x_abs_sum = tmp
-        assert x_union_abs.is_Card
+        x_union_abs, x_abs_sum = x_abs_sum, x_union_abs
 
-    x_union = x_union_abs.arg
-    assert x_union.is_Union
-    A, B = x_union.args
+    A, B = x_union_abs.of(Card[Union])
 
-    assert x_abs_sum.is_Add
-    A_abs, B_abs = x_abs_sum.args
-    _A = A_abs.of(Card)
-    _B = B_abs.of(Card)
-
-    assert {A, B} == {_A, _B}
+    S[Card(A)] = x_abs_sum.of(Add[Card(B)])
 
     return Equal(A & B, A.etype.emptySet)
 

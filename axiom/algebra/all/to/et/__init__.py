@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self, simplify=True):
     from axiom.algebra.sum.to.add import associate
-    return Equivalent(self, associate(All, self, simplify=simplify))
+    return associate(All, self, simplify=simplify)
 
 
 @prove

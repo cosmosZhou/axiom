@@ -14,7 +14,7 @@ def apply(self):
         elif e_y == k:
             assert e_x == n - k or x == -1 and e_x == n + k
     else:
-        [x_pow] = factors
+        x_pow, = factors
         x, _k = x_pow.of(Pow)
         assert _k == k or _k + k == n
         y = 1

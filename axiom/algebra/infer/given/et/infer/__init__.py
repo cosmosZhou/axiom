@@ -34,5 +34,5 @@ if __name__ == '__main__':
 
 
 from . import split
-from . import st
 # created on 2018-02-01
+from . import et

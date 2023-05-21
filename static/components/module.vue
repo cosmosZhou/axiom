@@ -10,7 +10,7 @@
 
 <script>
 import codeMirror from "./codeMirror.vue";
-console.log('importing module.vue');
+console.log('import module.vue');
 export default {
 	components: {codeMirror},
 	
@@ -35,7 +35,7 @@ export default {
     
     async created(){
     	this.user = await get('system/user');
-    	for (let [line] of await form_post('mysql/select', {sql:`select line from tbl_breakpoint_py where user = '${this.user}' and module = '${this.module}'`})){
+    	for (let [line] of await form_post('mysql/select', {sql:`select line from breakpoint where user = '${this.user}' and module = '${this.module}'`})){
     		this.breakpoint[line] = true;	
     	}
     	console.log("this.breakpoint.length =", this.breakpoint.length);
@@ -136,7 +136,7 @@ export default {
 		async debug(){
 			console.log("debug in axiom.vue");
 			var user = axiom_user();
-			var [[port]] = await form_post('php/request/mysql/select.php', {sql: `select port from tbl_login_py where user = '${user}'`});
+			var [[port]] = await form_post('php/request/mysql/select.php', {sql: `select port from login where user = '${user}'`});
 			port = parseInt(port);
 			
 			var href = location.href;
@@ -146,14 +146,14 @@ export default {
 
 		set_breakpoint(line){
 			this.breakpoint[line] = true;
-			form_post('mysql/execute', {sql: `insert into tbl_breakpoint_py values('${this.user}', '${this.module}', ${line})`}).then(res =>{
+			form_post('mysql/execute', {sql: `insert into breakpoint values('${this.user}', '${this.module}', ${line})`}).then(res =>{
 				console.log(res);
 			});
 		},
 
 		clear_breakpoint(line){
 			delete this.breakpoint[line];
-			form_post('mysql/execute', {sql: `delete from tbl_breakpoint_py where user = '${this.user}' and module = '${this.module}' and line = ${line}`}).then(res =>{
+			form_post('mysql/execute', {sql: `delete from breakpoint where user = '${this.user}' and module = '${this.module}' and line = ${line}`}).then(res =>{
 				console.log(res);
 			});
 		},

@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(is_nonnegative, less_than):
     x = is_nonnegative.of(Expr >= 0)
-    _x, a = less_than.of(LessEqual)
-    assert x == _x
+    S[x], a = less_than.of(LessEqual)
     return LessEqual(x * (x - a), 0)
 
 

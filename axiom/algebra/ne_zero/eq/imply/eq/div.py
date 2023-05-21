@@ -2,24 +2,18 @@ from util import *
 
 
 @apply
-def apply(is_nonzero, equality, simplify=True):
-    if is_nonzero.is_Equal:
-        equality, is_nonzero = is_nonzero, equality
-
-    x = is_nonzero.of(Unequal[0])
-    lhs, rhs = equality.of(Equal)
-    if simplify:
-        if lhs.is_Add:
-            lhs = Add(*(a / x for a in lhs.args))
-        else:
-            lhs /= x
-
-        if rhs.is_Add:
-            rhs = Add(*(a / x for a in rhs.args))
-        else:
-            rhs /= x
+def apply(ne_zero, eq, *, simplify=True):
+    x = ne_zero.of(Unequal[0])
+    lhs, rhs = eq.of(Equal)
+    if simplify and lhs.is_Add:
+        lhs = Add(*(a / x for a in lhs.args))
     else:
-        lhs, rhs = lhs / x, rhs / x
+        lhs /= x
+
+    if simplify and rhs.is_Add:
+        rhs = Add(*(a / x for a in rhs.args))
+    else:
+        rhs /= x
     return Equal(lhs, rhs)
 
 
@@ -37,8 +31,12 @@ def prove(Eq):
 
     Eq << Eq[2].this.rhs.ratsimp()
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-01-24
+# updated on 2023-05-02

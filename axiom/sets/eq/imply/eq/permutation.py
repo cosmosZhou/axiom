@@ -1,21 +1,14 @@
 from util import *
 
 
-
 @apply
 def apply(given, x):
-    assert given.is_Equal
-    p_cup_finiteset, interval = given.args
-    assert len(p_cup_finiteset.limits) == 1
-    i, zero, n_1 = p_cup_finiteset.limits[0]
-    assert zero.is_zero
-    n = n_1
-    assert p_cup_finiteset.expr.is_FiniteSet
-    p = p_cup_finiteset.expr.arg.base
+    p_cup_finiteset, interval = given.of(Equal)
+    (p, i), (S[i], S[0], n) = p_cup_finiteset.of(Cup[FiniteSet[Indexed]])
+
     assert p_cup_finiteset == p[:n].cup_finiteset()
-    zero, _n = interval.args
-    assert zero.is_zero
-    assert _n == n and interval.right_open
+    S[0], S[n] = interval.args
+    assert interval.right_open
     return Equal(Cup[i:n](x[p[i]].set), x[:n].cup_finiteset())
 
 

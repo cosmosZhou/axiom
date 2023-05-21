@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(gt, contains_y):
     y, _a = gt.of(Greater)
-    _y, domain = contains_y.of(Element)
-    assert y == _y
+    S[y], domain = contains_y.of(Element)
     a, b = domain.of(Interval)
     a = Max(a, _a)
     return Element(y, Interval(a, b, left_open=True, right_open=domain.right_open))

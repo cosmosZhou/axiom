@@ -1,4 +1,3 @@
-from . import determinant
 from . import infer
 from . import imply
 from . import ne

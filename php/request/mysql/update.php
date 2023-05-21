@@ -21,11 +21,11 @@ list ($user, $axiom, $state, $lapse, $latex) = $data;
 $latex = json_encode($latex, JSON_UNESCAPED_UNICODE);
 
 error_log("latex = $latex");
-$query = "update tbl_axiom_py set state = \"$state\", lapse = $lapse, latex = $latex where user = \"$user\" and axiom = \"$axiom\"";
+$query = "update axiom set state = \"$state\", lapse = $lapse, latex = $latex where user = \"$user\" and axiom = \"$axiom\"";
 
 $affected_rows = \mysql\execute($query);
 if ($affected_rows < 1) {
-    $query = "insert into tbl_axiom_py values(\"$user\", \"$axiom\", \"$state\", $lapse, $latex)";
+    $query = "insert into axiom values(\"$user\", \"$axiom\", \"$state\", $lapse, $latex)";
     error_log("query = $query");
     $affected_rows = \mysql\execute($query);
 }
@@ -53,7 +53,7 @@ for ($i = 0; $i < $size; ++ $i) {
 }
 
 // error_log(\std\jsonify($tuples));
-\mysql\insertmany("tbl_suggest_py", $tuples);
+\mysql\insertmany("suggest", $tuples);
 
 $theorem = str_replace('.', '/', $axiom);
 $dir = $ROOT . "/" . $user . "/axiom";
@@ -89,9 +89,9 @@ foreach ($linkCount as $callee => $count) {
     ];
 }
 
-\mysql\execute("delete from tbl_hierarchy_py where user = '$user' and caller = '$caller'");
+\mysql\execute("delete from hierarchy where user = '$user' and caller = '$caller'");
 
 if ($tuples)
-    \mysql\insertmany("tbl_hierarchy_py", $tuples, false);
+    \mysql\insertmany("hierarchy", $tuples, false);
 
 ?>

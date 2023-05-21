@@ -5,8 +5,7 @@ from util import *
 def apply(lt, gt, quadratic=None):
     from axiom.algebra.le.ge.imply.le.quadratic import quadratic_coefficient
     x, m = gt.of(Greater)
-    _x, M = lt.of(Less)
-    assert x == _x
+    S[x], M = lt.of(Less)
     x, a, b, c = quadratic_coefficient(quadratic, x)
 
     assert a > 0

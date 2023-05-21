@@ -3,12 +3,10 @@ from util import *
 
 @apply
 def apply(a_size, xa_equality, j=None):
-    a_cup_finiteset, n = a_size.of(Equal[Card])
-    x_cup_finiteset, _a_cup_finiteset = xa_equality.of(Equal)
-
-    assert a_cup_finiteset == _a_cup_finiteset
-
+    x_cup_finiteset, a_cup_finiteset = xa_equality.of(Equal)
     xexpr, (k, a, b) = x_cup_finiteset.of(Cup[FiniteSet])
+    S[a_cup_finiteset], n = a_size.of(Equal[Card])
+    
     assert n == b - a
 
     aexpr, (_k, _a, _b) = a_cup_finiteset.of(Cup[FiniteSet])
@@ -20,7 +18,7 @@ def apply(a_size, xa_equality, j=None):
     if j is None:
         j = Symbol(domain=Range(n), given=True)
 
-    assert j >= 0 and j < n
+    assert 0 <= j < n
 
     from axiom.discrete.eq.imply.et.index import index_function
     index = index_function(n)
@@ -105,9 +103,9 @@ def prove(Eq):
 
     Eq << algebra.all.any.imply.any_et.apply(Eq.j_equality.reversed, Eq.distribute_ab)
 
-    Eq << Eq[-1].this.expr.apply(algebra.et.imply.et.subs, index=1)
+    Eq << Eq[-1].this.expr.apply(algebra.et.imply.et.subs)
 
-    Eq << Eq[-1].this.expr.apply(algebra.et.imply.et.delete, index=2)
+    Eq << Eq[-1].this.expr.apply(algebra.et.imply.et.delete)
 
     Eq << Eq.j_equality.limits_subs(a, b)
 
@@ -125,21 +123,22 @@ def prove(Eq):
 
     Eq.ou = algebra.all.imply.ou.subs.apply(Eq.j_equality, Eq.j_equality.variable, Eq.index_domain.lhs)
 
-    Eq << Eq.ou.args[0].copy(plausible=True)
-
-    Eq << Eq.ou.args[1].copy(plausible=True)
+    Eq <<= Eq.ou.args[1].copy(plausible=True), Eq.ou.args[0].copy(plausible=True)
 
     Eq <<= Eq[-2] & Eq.index_domain
 
     Eq <<= Eq.ou & ~Eq[-2]
 
-    Eq << algebra.et.imply.cond.apply(Eq[-1], index=1)
+    Eq << algebra.et.imply.cond.apply(Eq[-1], index=0)
 
     Eq << Eq[-2].reversed
 
     Eq << Subset(s_j, Eq[2].rhs, plausible=True)
 
     Eq << sets.el.subset.imply.el.apply(Eq.index_domain, Eq[-1])
+
+    
+    
 
 
 if __name__ == '__main__':
@@ -148,3 +147,4 @@ if __name__ == '__main__':
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 
 # created on 2020-07-22
+# updated on 2023-05-20

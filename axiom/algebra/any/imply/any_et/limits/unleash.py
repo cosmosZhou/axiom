@@ -5,7 +5,7 @@ def limits_cond(limits, index):
     x, *ab = limits[index]
     assert ab
     if len(ab) == 1:
-        [cond] = ab
+        cond, = ab
         if cond.is_set:
             cond = Element(x, domain)
     else:
@@ -13,7 +13,7 @@ def limits_cond(limits, index):
         if b.is_set:
             cond = Element(x, b) & a
         else:
-            cond = Element(x, Range(a, b) if x.is_integer else Interval(a, b))
+            cond = Element(x, x.range(a, b))
     return x, cond
 
 @apply

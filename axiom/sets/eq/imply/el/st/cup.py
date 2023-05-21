@@ -7,7 +7,7 @@ def apply(given, index=None):
     cup, s = given.of(Equal)
     x = of_cup_finiteset(cup)
     n = x.shape[0]
-    assert index >= 0 and index < n
+    assert 0 <= index < n
     return Element(x[index], s)
 
 

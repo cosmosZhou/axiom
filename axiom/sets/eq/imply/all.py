@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    A, (_x, (x, condition)) = given.of(Equal[Expr, Cup[FiniteSet]])
-    assert x == _x
+    A, (x, (S[x], condition)) = given.of(Equal[Expr, Cup[FiniteSet]])
     return All[x:A](condition)
 
 

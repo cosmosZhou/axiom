@@ -61,7 +61,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_range.imply.et)
 
-    Eq << Eq[-1].this.expr.apply(algebra.et.imply.et, slice(0, 3, 2))
+    Eq << Eq[-1].this.expr.apply(algebra.et.imply.cond, slice(0, 3, 2))
 
     Eq << Eq[-1].this.find(GreaterEqual).apply(algebra.ge.imply.gt.relax, plus=True, ret=0)
 
@@ -81,7 +81,10 @@ def prove(Eq):
 
     Eq << sets.intersect_is_empty.eq_complement.imply.eq.apply(Eq.is_empty, Eq.eq_complement)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-09-17
+# updated on 2023-04-25

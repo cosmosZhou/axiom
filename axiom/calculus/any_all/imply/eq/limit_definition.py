@@ -3,14 +3,12 @@ from util import *
 
 @apply
 def apply(given):
-    (lt, *limits_f), *limits_e = given.of(Any[All])
+    (lt, (x, *ab)), [delta] = given.of(Any[All])
 
-    assert len(limits_f) == 1
-    x, *ab = limits_f[0]
     if len(ab) == 2:
-        domain = (Range if x.is_integer else Interval)(*ab)
+        domain = x.range(*ab)
     else:
-        [domain] = ab
+        domain, = ab
 
     abs_fx_A, epsilon = lt.of(Less)
 
@@ -36,8 +34,6 @@ def apply(given):
         fx = fx_A
         A = 0
 
-    assert len(limits_e) == 1
-    delta, *_ = limits_e[0]
     assert delta >= 0
 
     if x.is_integer:
@@ -51,7 +47,7 @@ def apply(given):
             
         return Equal(Limit[x:oo](fx), A)
     else:
-        assert x.is_real
+        assert not x.is_integer and x.is_real
         assert not delta.is_integer and delta.is_real
 
         if domain.is_And:
@@ -82,13 +78,18 @@ def apply(given):
         elif domain.is_Interval:
             assert domain.left_open and domain.right_open
             a, b = domain.args
-            assert delta == b - a
-            if b._has(delta):
-                x0 = a
-                dir = 1
-            elif a._has(delta):
-                x0 = b
+            if b.is_Infinity:
                 dir = -1
+                x0 = oo
+                assert a == delta
+            else:
+                assert delta == b - a
+                if b._has(delta):
+                    x0 = a
+                    dir = 1
+                elif a._has(delta):
+                    x0 = b
+                    dir = -1
 
         return Equal(Limit[x:x0:dir](fx).simplify(), A)
 

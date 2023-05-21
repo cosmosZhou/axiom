@@ -8,16 +8,13 @@ def apply(given):
 
     yt, x, i, n = dissect_distance(dx)
 
-    _yt, y_mean = dy.of(Abs[Expr - Expr])
+    S[yt], y_mean = dy.of(Abs[Expr - Expr])
 
-    assert _yt == yt
     y_sum, m = y_mean.of(Expr / Expr)
 
     yj, (j, *ab) = y_sum.of(Sum)
     if ab:
-        zero, _m = ab
-        assert zero == 0
-        assert _m == m
+        S[0], S[m] = ab
 
     y = Lamda[j](yj).simplify()
 
@@ -58,11 +55,11 @@ def prove(Eq):
 
     Eq << Eq.le.subs(Eq[-1])
 
-    Eq << algebra.le.imply.le.st.square.pop_back.apply(Eq[-1])
+    Eq << algebra.le.imply.le.st.square.pop.apply(Eq[-1])
 
     Eq << Eq[-1].rhs.args[0].args[1].this.apply(algebra.sum.to.add.split, cond={m - 1})
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.add.push_back)
+    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.add.push)
 
     Eq << Eq[-1].this.apply(algebra.eq.transport, rhs=0).reversed
 
@@ -92,5 +89,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-from . import pop_back
 # created on 2019-11-15
+from . import pop

@@ -11,9 +11,12 @@ def apply(self, pivot=None):
             adds.append(Log(arg).simplify())
         rhs = Add(*adds)
     else:
-        left = log(Mul(*args[:pivot]))
-        right = log(Mul(*args[pivot:]))
+        import std
+        left, right = std.array_split(args, pivot)
+        left = log(Mul(*left))
+        right = log(Mul(*right))
         rhs = left + right
+        
 
     return Equal(self, rhs, evaluate=False)
 
@@ -27,7 +30,10 @@ def prove(Eq):
 
     Eq << algebra.eq.given.eq.exp.apply(Eq[0])
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-08-27
+# updated on 2023-05-17

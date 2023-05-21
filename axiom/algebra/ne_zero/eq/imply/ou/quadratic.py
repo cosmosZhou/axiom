@@ -9,8 +9,7 @@ def apply(is_nonzero, eq, x=None):
     if not rhs.is_Zero:
         fx -= rhs
 
-    x, _a, b, c = quadratic_coefficient(fx, x=x)
-    assert a == _a
+    x, S[a], b, c = quadratic_coefficient(fx, x=x)
     delta = b * b - 4 * a * c
 
     return Or(Equal(x, (-b + sqrt(delta)) / (a * 2)), Equal(x, (-b - sqrt(delta)) / (a * 2)))
@@ -38,15 +37,19 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(x.this.definition)
 
-    Eq << Eq[-1].this.args[0] - b / (2 * a)
+    Eq << Eq[-1].this.args[1] - b / (2 * a)
 
-    Eq << Eq[-1].this.args[0] - b / (2 * a)
+    Eq << Eq[-1].this.args[1] - b / (2 * a)
 
     Eq << Eq[2].this.args[0].rhs.expand()
 
     Eq << Eq[-1].this.args[0].rhs.expand()
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-08-15
+# updated on 2023-05-20

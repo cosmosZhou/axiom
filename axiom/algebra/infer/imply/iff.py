@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq.suffice, Eq.necessary = algebra.iff.given.et.apply(Eq[1])
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[0])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[0])
 
 
 

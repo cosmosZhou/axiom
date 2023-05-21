@@ -6,7 +6,7 @@ def apply(self):
     assert not self.shape
     x, *args = self.of(ReducedArgMax[BlockMatrix])
     y = BlockMatrix(*args)
-    [n] = x.shape
+    n, = x.shape
     i = self.generate_var(integer=True, var='i', domain=Range(y.shape[0]))
     if x[n - 1] >= y[i]:
         ...

@@ -4,14 +4,9 @@ from util import *
 
 @apply
 def apply(unequality, eq):
-    if not unequality.is_Unequal:
-        unequality, eq = eq, unequality
-    assert unequality.is_Unequal
-    unequality.rhs.is_zero
-
-    assert unequality.lhs.is_Determinant
-    divisor = unequality.lhs.arg
-    return Unequal(eq.lhs @ Inverse(divisor), eq.rhs @ Inverse(divisor))
+    divisor = unequality.of(Unequal[Determinant, 0])
+    lhs, rhs = eq.of(Unequal)
+    return Unequal(lhs @ Inverse(divisor), rhs @ Inverse(divisor))
 
 
 @prove

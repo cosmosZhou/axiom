@@ -21,7 +21,7 @@ def prove(Eq):
     A = Symbol(Eq[0].rhs, real=True)
     Eq << A.this.definition
 
-    Eq << calculus.eq.imply.any_all.limit_definition.apply(Eq[-1])
+    Eq << calculus.eq_limit.imply.any.all.limit_definition.apply(Eq[-1])
 
     Eq << Eq[-1].this.expr.apply(algebra.all.imply.all.limits.subs.offset, -x0)
 

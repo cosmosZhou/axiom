@@ -16,10 +16,10 @@ def apply(self):
     shape = fx.shape
     if shape:
         if len(shape) == 1:
-            [m] = shape
+            m, = shape
             if coeff.shape:
                 if len(coeff.shape) == 1:
-                    [n] = coeff.shape
+                    n, = coeff.shape
                     scale = Product[i:n](abs(coeff[i])).doit()
                 else:
                     ...
@@ -30,7 +30,7 @@ def apply(self):
     else:
         if coeff.shape:
             if len(coeff.shape) == 1:
-                [n] = coeff.shape
+                n, = coeff.shape
                 scale = Product[i:n](abs(coeff[i])).doit()
             else:
                 ...

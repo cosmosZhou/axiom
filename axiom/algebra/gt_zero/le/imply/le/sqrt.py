@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(is_positive, lt):
     x = is_positive.of(Expr > 0)
-    _x, M = lt.of(LessEqual)
-    assert x == _x
+    S[x], M = lt.of(LessEqual)
 
     return LessEqual(sqrt(x), sqrt(M))
 

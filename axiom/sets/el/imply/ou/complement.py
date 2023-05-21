@@ -4,8 +4,7 @@ from util import *
 
 @apply
 def apply(given, simplify=True):
-    assert given.is_Element
-    e, domain = given.args
+    e, domain = given.of(Element)
     A, B = domain.of(Union)
 
     first = Element(e, A)

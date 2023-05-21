@@ -16,7 +16,7 @@ def apply(self, *, simplify=True):
 
     delta = self.func(*delta, evaluate=False)
     if len(piecewise) == 1:
-        [result] = piecewise
+        result, = piecewise
         if not delta.is_One:
             result = result.func(*((e * delta, c) for e, c in result.args))
     else:
@@ -39,11 +39,14 @@ def prove(Eq):
     g, h = Function(real=True)
     Eq << apply(Piecewise((g(x), x > 0), (h(x), True)) * y)
 
-    Eq << algebra.eq.given.ou.apply(Eq[0])
+    Eq << algebra.cond_piece.given.ou.apply(Eq[0])
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, index=0)
+    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, index=1)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, index=0, invert=True)
+    Eq << Eq[-1].this.find(And).apply(algebra.et.given.et.subs.bool, index=1, invert=True)
+
+    
+    
 
 
 if __name__ == '__main__':
@@ -52,3 +55,4 @@ if __name__ == '__main__':
 from . import st
 
 # created on 2018-01-20
+# updated on 2023-05-20

@@ -5,12 +5,9 @@ from util import *
 def apply(self):
     matmul, (j, *j_ab) = self.of(Lamda)
     if j_ab:
-        a, b = j_ab
+        S[0], k = j_ab
     else:
-        a, b = matmul.domain_defined(j).of(Range)
-
-    k = b - a
-    assert a == 0
+        S[0], k = matmul.domain_defined(j).of(Range)
 
     A, B = matmul.of(MatMul)
     

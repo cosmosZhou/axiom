@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(ge):
     x, a = ge.of(LessEqual)
-    return Equivalent(ge, GreaterEqual(a, x), evaluate=False)
+    return GreaterEqual(a, x)
 
 
 @prove

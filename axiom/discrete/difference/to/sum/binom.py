@@ -40,7 +40,7 @@ def prove(Eq):
     i = Eq[-1].find(Sum).variable
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.subs.offset, -1)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.mul.to.sum)
+    Eq << Eq[-1].this.find(-Sum).apply(algebra.mul.to.sum)
 
     Eq << Eq[-1].this.find(Sum[2]).apply(algebra.sum.to.add.split, cond={n + 1})
 
@@ -68,4 +68,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2020-10-10
-# updated on 2022-01-15
+# updated on 2023-05-20

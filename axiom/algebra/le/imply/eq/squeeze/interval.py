@@ -5,9 +5,8 @@ from util import *
 def apply(given):
     x, b = given.of(LessEqual)
     domain = x.domain
-    _b, a = domain.of(Interval)
+    S[b], a = domain.of(Interval)
     assert not domain.left_open
-    assert b == _b
 
     return Equal(x, b)
 

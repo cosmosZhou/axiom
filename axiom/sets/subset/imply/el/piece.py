@@ -20,20 +20,20 @@ def prove(Eq):
 
     sets.subset.imply.el
     Eq << sets.subset.imply.el.apply(Eq[0])
+
     Eq.bool_fx = sets.el.imply.eq.bool.el.apply(Eq[-1])
 
     Eq << sets.subset.imply.el.apply(Eq[0], 1)
+
     Eq.bool_gx = sets.el.imply.eq.bool.el.apply(Eq[-1])
 
     Eq << sets.subset.imply.el.apply(Eq[0], 2)
+
     Eq.bool_hx = sets.el.imply.eq.bool.el.apply(Eq[-1])
 
     Eq.plausible = Or(Equal(Bool(Element(f(x), S)), 1) & Element(x, A),
                       Equal(Bool(Element(g(x), S)), 1) & Element(x, B - A),
                       Equal(Bool(Element(h(x), S)), 1) & NotElement(x, A | B), plausible=True)
-
-
-
 
     Eq << Eq.plausible.subs(Eq.bool_fx).subs(Eq.bool_gx).subs(Eq.bool_hx)
 
@@ -41,15 +41,19 @@ def prove(Eq):
 
     Eq << Eq[-1].simplify()
 
-    Eq << Eq.plausible.this.args[0].args[1].lhs.apply(algebra.bool.to.piece)
+    Eq << Eq.plausible.this.find(Bool).apply(algebra.bool.to.piece)
 
-    Eq << Eq[-1].this.args[1].args[1].lhs.apply(algebra.bool.to.piece)
+    Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.piece)
 
-    Eq << Eq[-1].this.args[2].args[1].lhs.apply(algebra.bool.to.piece)
+    Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.piece)
 
     Eq << sets.ou.imply.el.piece.apply(Eq[-1], wrt=S)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-11-03
+# updated on 2023-05-14

@@ -25,16 +25,15 @@ def apply(m, d, w=None, x=None):
 @prove
 def prove(Eq):
     from axiom import discrete, algebra
+
     n = Symbol(domain=Range(2, oo))
     m = Symbol(integer=True, nonnegative=True, given=False)
     d = Symbol(shape=(n,), integer=True, nonnegative=True)
-
     Eq << apply(m, d)
 
     Eq.induct = Eq[-1].subs(m, m + 1)
 
     w, i, j = Eq[0].lhs.args
-
     Eq << discrete.imply.all_el.permutation.apply(n, w, left=False).subs(i, m).subs(j, d[m])
 
     Eq << algebra.all.imply.ou.subs.apply(Eq[-1], Eq[-1].variable, Eq[2].expr.lhs)
@@ -45,14 +44,17 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[2]
 
-    Eq << algebra.all_et.imply.all.apply(Eq[-1])
+    Eq << algebra.all_et.imply.all.apply(Eq[-1], 1)
 
     Eq << Infer(Eq[2], Eq.induct, plausible=True)
 
     Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n=m)
+
+    
 
 
 if __name__ == '__main__':
     run()
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 # created on 2020-11-02
+# updated on 2023-05-20

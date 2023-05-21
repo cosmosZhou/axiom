@@ -2,8 +2,10 @@ from util import *
 
 
 @apply
-def apply(self):
+def apply(self, swap=False):
     ecs, _ecs = self.of(Piecewise + Piecewise)
+    if swap:
+        ecs, _ecs = _ecs, ecs
 
     rhs = add(ecs, _ecs)
     if rhs.is_Piecewise:
@@ -39,9 +41,9 @@ def add(ecs, _ecs):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     x = Symbol(real=True)
     A, B = Symbol(etype=dtype.real)
-
     f, g, h, p = Function(real=True)
     Eq << apply(Piecewise((f(x), Element(x, A)), (g(x), True)) + Piecewise((h(x), Element(x, B)), (p(x), True)))
 
@@ -53,7 +55,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.flatten)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-02-23
+# updated on 2023-05-12

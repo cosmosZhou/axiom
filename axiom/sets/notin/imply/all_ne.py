@@ -4,8 +4,7 @@ from util import *
 
 @apply
 def apply(given, reverse=False):
-    assert given.is_NotElement
-    e, S = given.args
+    e, S = given.of(NotElement)
 
     x = given.generate_var(**e.type.dict)
     if reverse:

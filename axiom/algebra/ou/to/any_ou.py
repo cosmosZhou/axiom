@@ -1,7 +1,7 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(imply):
     limits = None
     eqs = []
@@ -13,7 +13,7 @@ def apply(imply):
             assert limits == _limits
         eqs.append(fn)
 
-    return Equivalent(imply, Any(Or(*eqs), *limits))
+    return Any(Or(*eqs), *limits)
 
 
 @prove

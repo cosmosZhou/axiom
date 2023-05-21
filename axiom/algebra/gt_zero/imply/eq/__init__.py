@@ -6,3 +6,5 @@ from . import min
 from . import max
 from . import inf
 from . import sup
+from . import log
+from . import square_completing

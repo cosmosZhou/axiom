@@ -4,9 +4,9 @@ from util import *
 @apply
 def apply(is_positive, lt, fx, x=None, left_open=True, right_open=True):
     m, M = lt.of(Less)
-    a = is_positive.of(Expr > 0)
     p = fx.as_poly(x)
     assert p.degree() == 1
+    a = is_positive.of(Expr > 0)
     assert a == p.nth(1)
     b = p.nth(0)
 

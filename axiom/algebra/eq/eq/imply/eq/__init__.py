@@ -1,4 +1,3 @@
-from . import concatenate
 from . import transit
 from . import add
 from . import mul
@@ -8,3 +7,4 @@ from . import prod
 from . import sum
 from . import cancel
 from . import block
+from . import concat

@@ -1,11 +1,11 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self, t):
     e, interval = self.of(Element)
 
-    return Equivalent(self, Element(e + t, interval + t))
+    return Element(e + t, interval + t)
 
 
 @prove

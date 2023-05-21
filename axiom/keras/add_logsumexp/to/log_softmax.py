@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self):
     x, S[x] = self.of(Expr - logsumexp)
-    assert len(x.shape) == 1
+    n, = x.shape
     return Equal(self, log(softmax(x)))
 
 

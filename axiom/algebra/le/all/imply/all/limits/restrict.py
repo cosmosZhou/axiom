@@ -3,16 +3,15 @@ from util import *
 
 @apply
 def apply(le, given):
-    c, _b = le.of(LessEqual)
+    c, b = le.of(LessEqual)
     function, (x, *ab) = given.of(All)
     if len(ab) == 2:
-        a, b = ab
+        a, S[b] = ab
         limit = (x, a, c)
     else:
-        [ab] = ab
-        a, b = ab.of(Interval)
+        ab, = ab
+        a, S[b] = ab.of(Interval)
         limit = (x, Interval(a, c, left_open=ab.left_open, right_open=ab.right_open))
-    assert _b == b
 
     return All(function, limit)
 
@@ -24,7 +23,7 @@ def prove(Eq):
     a, b, c = Symbol(real=True, given=True)
     x = Symbol(real=True)
     f = Function(shape=(), real=True)
-    Eq << apply(c <= b, All[x:a:b](f(x) > 0))
+    Eq << apply(c <= b, All[x:Interval(a, b)](f(x) > 0))
 
     e = Symbol(nonnegative=True)
     Eq << algebra.all.imply.all.limits.restrict.apply(Eq[1], Interval(a, b - e))

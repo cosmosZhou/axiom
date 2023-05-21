@@ -3,13 +3,10 @@ from util import *
 
 
 @apply
-def apply(unequality, eq):
-    assert eq.is_Unequal
-    assert unequality.is_Unequal
-    unequality.rhs.is_zero
-
-    factor = unequality.lhs
-    return Unequal(eq.lhs * factor, eq.rhs * factor)
+def apply(unequality, ne):
+    lhs, rhs = ne.of(Unequal)
+    factor = unequality.of(Unequal[0])
+    return Unequal(lhs * factor, rhs * factor)
 
 
 @prove

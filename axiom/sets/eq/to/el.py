@@ -2,14 +2,14 @@ from util import *
 
 
 
-@apply(given=None)
+@apply
 def apply(given):
     x, fx = given.of(Equal)
     if not x.is_Symbol:
         x, fx = fx, x
 
     assert x.is_given is None
-    return Equivalent(given, Element(x, conditionset(x, given)), evaluate=False)
+    return Element(x, conditionset(x, given))
 
 
 @prove

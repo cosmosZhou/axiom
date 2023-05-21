@@ -3,9 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    assert self.is_Mul
     from axiom.algebra.add.to.sum import piece_together
-
     return Equal(self, piece_together(Product, self))
 
 

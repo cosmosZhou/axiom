@@ -5,8 +5,7 @@ from util import *
 def apply(given, sgm):
     A, B = given.of(Equal[Intersection, EmptySet])
     fx, (x, s) = sgm.of(Sum)
-    _A, _B = s.of(Union)
-    assert A == _A and B == _B
+    S[A], S[B] = s.of(Union)
 
     return Equal(sgm, Sum[x:A](fx).simplify() + Sum[x:B](fx).simplify())
 

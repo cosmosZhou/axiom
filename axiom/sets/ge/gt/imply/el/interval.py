@@ -6,14 +6,12 @@ def apply(greater_than, strict_greater_than):
     a, x = greater_than.of(GreaterEqual)
     _x, b = strict_greater_than.of(Greater)
     if x != _x:
-        a, x, _x, b = _x, b, a, x,
+        a, x, S[x], b = _x, b, a, x,
         left_open = False
         right_open = True
     else:
         left_open = True
         right_open = False
-
-    assert x == _x
 
     return Element(x, Interval(b, a, left_open=left_open, right_open=right_open))
 

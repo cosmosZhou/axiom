@@ -4,5 +4,4 @@ from . import conditioned
 from . import joint
 from . import marginal
 
-from . import condition
 from . import delete

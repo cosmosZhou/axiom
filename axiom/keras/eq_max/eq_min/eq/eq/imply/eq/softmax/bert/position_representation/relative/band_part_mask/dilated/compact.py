@@ -3,15 +3,15 @@ from util import *
 
 @apply
 def apply(eq_max, eq_min, eq_K, eq_V, Q, K, V):
-    ((((i, l), d), S[i - l + 1]), i_limit), β = eq_max.of(Equal[Lamda[Max[Mod[Expr + 1 - Expr]]]])
+    (((i, l), (S[i - l + 1], d)), i_limit), β = eq_max.of(Equal[Lamda[Max[Expr + 1 - Expr, Mod]]])
     S[i], S[0], n = i_limit
 
-    (((S[i], u), S[n]), S[i_limit]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])
+    ((S[n], (S[i], u)), S[i_limit]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])
     
     ((K_quote, S[i], j_index), j_limit, S[i_limit]), K_dquote = eq_K.of(Equal[Lamda[Indexed]])
     ((V_quote, S[i], S[j_index]), S[j_limit], S[i_limit]), V_dquote = eq_V.of(Equal[Lamda[Indexed]])
     j, (S[0], S[Min(n, l + u - 1)], S[d]) = j_limit.of(Tuple[Range])
-    (S[j], S[β[i]]), S[n - 1] = j_index.of(Min[Add])
+    S[n - 1], S[j + β[i]] = j_index.of(Min)
 
     S[n], d_z = Q.shape
 

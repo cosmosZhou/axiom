@@ -1,5 +1,6 @@
-from util import MySQL
+from std import MySQL
 from blueprint.debug import extract_latex, compile_definition_statement
+from std.unicode import ascii2greek
 
 keywords = ['False', 'None', 'True', 
             'and', 'as', 'assert', 'abs',
@@ -84,10 +85,10 @@ def local_eval(python, __globals__):
         
     return latex
     
-if __name__ == '__main__':
-    vocab = keywords + sections
+symbols = [symbol for symbol in sympy.__dict__ if re.match('^[A-Za-z]+$', symbol)]
     
-    symbols = [symbol for symbol in sympy.__dict__ if re.match('^[A-Za-z]+$', symbol)]
+def insert_into_hint():
+    vocab = keywords + sections
     vocab += symbols
     
     vocab.remove('symbol')
@@ -107,13 +108,21 @@ if __name__ == '__main__':
     for key, value, *_ in data:
         print(key, '=>', value)
         
+    for s in {'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lamda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega'}:
+        data.append((s, ascii2greek(s), 1))
+        s = s.capitalize()
+        data.append((s, ascii2greek(s), 1))
+        s = s.upper()
+        data.append((s, ascii2greek(s), 1))
+        
     print(len(data))
     
-    MySQL.instance.execute('delete from tbl_hint_py')
-    MySQL.instance.load_data('tbl_hint_py', data)    
-    
+    MySQL.instance.execute('delete from hint')
+    MySQL.instance.load_data('hint', data)    
+        
+__globals__ = globals()    
+def insert_into_debug():
     data = []
-    __globals__ = globals()
     for symbol in symbols:
 #         if symbol != 'BandPart':
 #             continue
@@ -134,12 +143,11 @@ if __name__ == '__main__':
         print(datum)
         data.append(datum) 
             
-    MySQL.instance.execute('delete from tbl_debug_py')
+    MySQL.instance.execute('delete from debug')
     
     print('len(data) =', len(data))
-    MySQL.instance.load_data('tbl_debug_py', data)
+    MySQL.instance.load_data('debug', data)
 
-
-# exec(open('./util/hint.py').read())
-# update tbl_axiom_py set latex = '\\[\\color{red}{This\\ technique\\ is\\ proprietory,\\ please\\ contact\\ software\\ developer\\ for\\ details!}\\]'where axiom in ('keras.imply.eq.conv1d', 'keras.imply.eq.conv2d', 'keras.imply.eq.conv3d', 'keras.imply.eq.bert.band_part_mask', 'keras.imply.eq.bert.position_representation.relative.band_part_mask');
-# delete from tbl_axiom_py where axiom in ('keras.imply.eq.conv1d', 'keras.imply.eq.conv2d', 'keras.imply.eq.conv3d', 'keras.imply.eq.bert.band_part_mask', 'keras.imply.eq.bert.position_representation.relative.band_part_mask');
+if __name__ == '__main__':
+    insert_into_hint()
+    insert_into_debug()

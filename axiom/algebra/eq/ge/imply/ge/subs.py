@@ -1,9 +1,6 @@
 from util import *
 
 
-
-
-
 @apply
 def apply(equal, less_than):
     from axiom.algebra.eq.le.imply.le.subs import ratsimp

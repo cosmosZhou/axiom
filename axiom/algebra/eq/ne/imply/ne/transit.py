@@ -2,17 +2,15 @@ from util import *
 
 
 @apply
-def apply(eq, not_eq):
-    if not eq.is_Equal:
-        eq, not_eq = not_eq, eq
+def apply(eq, ne):
 
     a, x = eq.of(Equal)
-    _x, b = not_eq.of(Unequal)
+    _x, b = ne.of(Unequal)
     if x != _x:
         if _x == a:
             a, x = x, a
 
-    assert x == _x
+        assert x == _x
     return Unequal(a, b)
 
 

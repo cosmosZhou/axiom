@@ -3,10 +3,7 @@ from util import *
 
 @apply
 def apply(eq):
-    (a, y), (((_a, _x), (x, X)), _X) = eq.of(Equal[Indexed, Sum[Indexed] / Card])
-
-    assert a == _a
-    assert X == _X and x == _x
+    (a, y), (((S[a], x), (S[x], X)), S[X]) = eq.of(Equal[Indexed, Sum[Indexed] / Card])
 
     X_ = X | {y}
     return Equal(Sum[x:X_]((a[x] - (Sum[x:X_](a[x])) / (Card(X_))) ** 2),
@@ -33,11 +30,15 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.apply(Eq[0], cond=Eq[3].lhs)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(sets.eq.notin.imply.eq.st.variance)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-04-03
+# updated on 2023-05-06

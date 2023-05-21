@@ -3,12 +3,14 @@ from util import *
 
 @apply
 def apply(a_is_negative, b_is_negative):
-    a, aR = a_is_negative.of(Element)
-    b, bR = b_is_negative.of(Element)
-    from axiom.sets.is_negative.imply.is_negative.div import interval_is_negative
-    assert interval_is_negative(aR)
-    assert interval_is_negative(bR)
-    return Element(a * b, Interval(0, oo, left_open=True))
+    a, R = a_is_negative.of(Element)
+    RR = Interval(-oo, 0, right_open=True)
+    assert R in RR
+    
+    b, R = b_is_negative.of(Element)
+    assert R in RR
+    
+    return Element(a * b, -RR)
 
 
 @prove

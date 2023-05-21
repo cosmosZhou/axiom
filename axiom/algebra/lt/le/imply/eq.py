@@ -3,10 +3,8 @@ from util import *
 
 @apply
 def apply(x1_less_than_y, y_less_than_x):
-    x1, y = x1_less_than_y.of(Less)
-    _y, x = y_less_than_x.of(LessEqual)
-    assert y == _y
-    assert x1 + 1 == x
+    y, x = y_less_than_x.of(LessEqual)
+    S[x - 1], S[y] = x1_less_than_y.of(Less)
     assert y.is_integer
 
     return Equal(y, floor(x))

@@ -3,21 +3,15 @@ from util import *
 
 @apply
 def apply(all_is_positive, contains0, contains1, le):
-    (fx, (x, d)), (x_, domain) = all_is_positive.of(All[Derivative > 0])
-    assert x == x_
-    assert d == 1
+    (fx, (x, S[1])), (S[x], domain) = all_is_positive.of(All[Derivative > 0])
     assert domain.left_open and domain.right_open
-    x0, domain_ = contains0.of(Element)
-    assert domain_ == domain
+    x0, S[domain] = contains0.of(Element)
 
-    x1, domain_ = contains1.of(Element)
-    assert domain_ == domain
+    x1, S[domain] = contains1.of(Element)
 
-    _x0, _x1 = le.of(Less)
-    assert x0 == _x0
-    assert x1 == _x1
+    S[x0], S[x1] = le.of(Less)
 
-    f = lambda x: fx._subs(x_, x)
+    f = lambda t: fx._subs(x, t)
     return f(x0) < f(x1)
 
 

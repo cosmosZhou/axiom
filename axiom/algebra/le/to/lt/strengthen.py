@@ -1,12 +1,12 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(lt):
     x, a = lt.of(LessEqual)
     x -= 1
     assert x.is_integer and a.is_integer
-    return Equivalent(lt, Less(x, a).simplify(), evaluate=False)
+    return Less(x, a).simplify()
 
 
 @prove

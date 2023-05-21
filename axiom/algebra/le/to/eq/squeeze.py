@@ -2,11 +2,11 @@ from util import *
 
 
 
-@apply(given=None)
+@apply
 def apply(given):
     x, a = given.of(LessEqual)
     assert x >= a
-    return Equivalent(given, Equal(x, a))
+    return Equal(x, a)
 
 
 @prove

@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << apply('omega')
 
-    Eq << algebra.eq.imply.eq.conjugate.apply(Eq[0])
+    Eq << algebra.eq.imply.eq.conj.apply(Eq[0])
 
     Eq << Eq[1] + Eq[0]
 

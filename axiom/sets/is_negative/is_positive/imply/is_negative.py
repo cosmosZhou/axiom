@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(b_is_negative, a_is_positive):
-    a, aR = a_is_positive.of(Element)
-    b, bR = b_is_negative.of(Element)
-    from axiom.sets.is_positive.imply.is_positive.div import interval_is_positive
-    assert interval_is_positive(aR)
-    from axiom.sets.is_negative.imply.is_negative.div import interval_is_negative
-    assert interval_is_negative(bR)
-    return Element(a * b, Interval(-oo, 0, right_open=True))
+    a, R = a_is_positive.of(Element)
+    RR = Interval(0, oo, left_open=True)
+    assert R in RR
+    b, R = b_is_negative.of(Element)
+    RR = Interval(-oo, 0, right_open=True)
+    assert R in RR
+    return Element(a * b, RR)
 
 
 @prove

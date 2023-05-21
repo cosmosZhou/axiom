@@ -15,7 +15,7 @@ def apply(self, sgm):
         S[0], n = domain.of(Range)
     n += 1
 
-    assert t >= 0 and t < n
+    assert 0 <= t < n
     assert fyi._has(yi)
 
     fxi = fyi._subs(yi, xi)

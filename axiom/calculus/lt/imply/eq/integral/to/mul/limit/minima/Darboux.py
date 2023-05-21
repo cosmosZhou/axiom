@@ -10,8 +10,7 @@ def apply(lt, self, n=None, k=None):
     if k is None:
         k = self.generate_var(n, integer=True, var='k')
 
-    fx, (x, _a, _b) = self.of(Integral)
-    assert _a == a and _b == b
+    fx, (x, S[a], S[b]) = self.of(Integral)
     assert fx.is_continuous(x)
     return Equal(self, (b - a) * Limit[n:oo](Sum[k:n](Minima[x:a + (b - a) * k / n:a + (b - a) * (k + 1) / n](fx)) / n))
 

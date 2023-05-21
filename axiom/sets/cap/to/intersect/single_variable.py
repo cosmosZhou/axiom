@@ -21,8 +21,8 @@ def prove(Eq):
     Eq <<= Eq[-2].this.lhs.apply(sets.el_cap.imply.all_el), \
     Eq[-1].this.rhs.apply(sets.el_cap.given.all_el)
 
-    Eq <<= Eq[-2].this.lhs.expr.apply(sets.el_piece.imply.ou), \
-    Eq[-1].this.rhs.expr.apply(sets.el_piece.given.ou)
+    Eq <<= Eq[-2].this.lhs.expr.apply(algebra.cond_piece.imply.ou), \
+    Eq[-1].this.rhs.expr.apply(algebra.cond_piece.given.ou)
 
     Eq <<= Eq[-2].this.rhs.apply(sets.el_intersect.given.et.el, simplify=None), \
     Eq[-1].this.lhs.apply(sets.el_intersect.imply.et.el, simplify=None)
@@ -62,8 +62,11 @@ def prove(Eq):
     Eq <<= Eq[-2].this.lhs.args[0].apply(algebra.infer.to.all, wrt=x), \
     Eq[-1].this.rhs.apply(algebra.infer.to.all, wrt=x)
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2021-01-26
+# updated on 2023-04-29

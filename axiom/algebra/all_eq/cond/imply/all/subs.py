@@ -1,7 +1,7 @@
 from util import *
 
 
-def subs(self, old, new, simplify=True, assumptions={}, index=None):
+def subs(self, old, new, simplify=True, assumptions={}, index=None, limits=None):
     if self == old:
         return new
 
@@ -22,19 +22,22 @@ def subs(self, old, new, simplify=True, assumptions={}, index=None):
                 if domain is False:
                     return self
 
-        limits = [*self.limits]
+        self_limits = [*self.limits]
         hit = False
-        for i, [x, *ab] in enumerate(limits):
-            _ab = [subs(c, old, new, simplify=simplify, assumptions=assumptions) for c in ab]
-            if _ab != ab:
-                limits[i] = (x, *_ab)
-                hit = True
+        if limits == self_limits:
+            ...
+        else:
+            for i, [x, *ab] in enumerate(self_limits):
+                _ab = [subs(c, old, new, simplify=simplify, assumptions=assumptions, limits=limits) for c in ab]
+                if _ab != ab:
+                    self_limits[i] = (x, *_ab)
+                    hit = True
 
-        expr = subs(self.expr, old, new, simplify=simplify, assumptions=assumptions)
+        expr = subs(self.expr, old, new, simplify=simplify, assumptions=assumptions, limits=limits)
         hit |= expr != self.expr
 
         if hit:
-            self = self.func(expr, *limits)
+            self = self.func(expr, *self_limits)
             if simplify:
                 self = self.simplify()
         return self
@@ -44,13 +47,13 @@ def subs(self, old, new, simplify=True, assumptions={}, index=None):
     if index is None:
         
         for i, arg in enumerate(args):
-            _arg = subs(arg, old, new, simplify=simplify, assumptions=assumptions)
+            _arg = subs(arg, old, new, simplify=simplify, assumptions=assumptions, limits=limits)
             if _arg != arg:
                 hit = True
                 args[i] = _arg
     else:
         arg = args[index]
-        _arg = subs(arg, old, new, simplify=simplify, assumptions=assumptions)
+        _arg = subs(arg, old, new, simplify=simplify, assumptions=assumptions, limits=limits)
         if _arg != arg:
             hit = True
             args[index] = _arg
@@ -67,7 +70,15 @@ def apply(all_eq, f_eq, reverse=False, simplify=True, assumptions={}):
     (lhs, rhs), *limits = all_eq.of(All[Equal])
     if reverse:
         lhs, rhs = rhs, lhs
-    return All(subs(f_eq, lhs, rhs, simplify=simplify, assumptions=assumptions), *limits)
+    cond = subs(f_eq, lhs, rhs, simplify=simplify, assumptions=assumptions, limits=limits)
+    
+    import std
+    if (ret := std.deleteIndices(limits, lambda limit: not cond._has(limit[0]))) is not None:
+        limits = ret
+        if not limits:
+            return cond
+
+    return All(cond, *limits)
 
 
 @prove
@@ -85,9 +96,10 @@ def prove(Eq):
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)
 
     
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-01-06
-# updated on 2022-04-01
+# updated on 2023-05-03

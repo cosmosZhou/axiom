@@ -3,11 +3,8 @@ from util import *
 
 @apply
 def apply(ge, contains_y):
-    if ge.is_Element:
-        ge, contains_y = contains_y, ge
     y, a = ge.of(GreaterEqual)
-    _y, domain = contains_y.of(Element)
-    assert y == _y
+    S[y], domain = contains_y.of(Element)
     b, c = domain.of(Interval)
     a = Max(b, a)
     return Element(y, Interval(a, c, left_open=domain.left_open, right_open=domain.right_open))
@@ -24,7 +21,7 @@ def prove(Eq):
 
     Eq << sets.el_interval.imply.et.apply(Eq[1])
 
-    Eq << algebra.ge.ge.imply.ge.max.rhs.apply(Eq[-1], Eq[0])
+    Eq << algebra.ge.ge.imply.ge.max.apply(Eq[-1], Eq[0])
 
 
 if __name__ == '__main__':

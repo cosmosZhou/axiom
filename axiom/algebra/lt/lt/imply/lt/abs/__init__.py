@@ -4,9 +4,7 @@ from util import *
 @apply
 def apply(x_less_than_y, neg_x_less_than_y):
     x, y = x_less_than_y.of(Less)
-    _x, _y = neg_x_less_than_y.of(Less)
-    assert x == -_x
-    assert y == _y
+    S[-x], S[y] = neg_x_less_than_y.of(Less)
     return Less(abs(x), y)
 
 

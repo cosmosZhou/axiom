@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self):
     from axiom.algebra.sum.doit.outer.setlimit import doit
-    return Equivalent(self, doit(Any, self))
+    return doit(Any, self)
 
 
 @prove

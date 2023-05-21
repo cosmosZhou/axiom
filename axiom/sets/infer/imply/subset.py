@@ -6,8 +6,7 @@ def apply(given):
     x_in_A, x_in_B = given.of(Infer)
 
     x, A = x_in_A.of(Element)
-    _x, B = x_in_B.of(Element)
-    assert x == _x
+    S[x], B = x_in_B.of(Element)
     assert not x.is_given
     assert x.is_symbol
 

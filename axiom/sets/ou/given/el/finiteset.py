@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << apply(Equal(x, a) | Equal(x, b) | Equal(x, c))
 
-    Eq << sets.el.imply.ou.split.finiteset.apply(Eq[-1])
+    Eq << sets.el_finiteset.imply.ou.apply(Eq[-1])
 
 
 if __name__ == '__main__':

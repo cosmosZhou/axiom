@@ -25,14 +25,14 @@ def prove(Eq):
 
     Eq << algebra.cond.any.imply.any_et.apply(Eq[0], Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.expr.args[::2].apply(algebra.gt_zero.le.imply.le.mul)
+    Eq << Eq[-1].this.expr.args[1:].apply(algebra.gt_zero.le.imply.le.mul)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, reverse=True)
 
-
-
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-10-02
+# updated on 2023-05-14

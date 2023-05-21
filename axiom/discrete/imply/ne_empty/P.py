@@ -29,12 +29,17 @@ def prove(Eq):
 
     Eq << algebra.et.given.et.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.simplify()
+    Eq << Eq[-2].this.lhs.simplify()
 
-    Eq << algebra.all.given.infer.apply(Eq[-2])
+    Eq << algebra.all.given.infer.apply(Eq[-1])
+
     Eq << Eq[-1].this.lhs.apply(sets.el_range.imply.ge)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-11-06
+# updated on 2023-05-15

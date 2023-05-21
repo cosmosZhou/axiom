@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(eq):
-    ((x, d), x_), a = eq.of(Equal[(Expr ** 2 + Expr) ** (S.One / 2) - Expr])
-    assert x == x_
+    ((x, d), S[x]), a = eq.of(Equal[(Expr ** 2 + Expr) ** (S.One / 2) - Expr])
     return Equal(x, (d / a - a) / 2)
 
 @prove

@@ -16,7 +16,7 @@ def summary():
     
     state_count_pairs = []
     
-    for state, count in instance.select(f"select state, count(*) as count from tbl_axiom_py where user = '{user}' group by state order by count"):
+    for state, count in instance.select(f"select state, count(*) as count from axiom where user = '{user}' group by state order by count"):
         state_count_pairs.append({'state': state, 'count': count})
     
     state_count_pairs.append({

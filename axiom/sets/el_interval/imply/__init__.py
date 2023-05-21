@@ -4,3 +4,8 @@ from . import et
 from . import gt
 from . import ge
 from . import ou
+from . import lt_zero
+from . import el_range
+from . import le_zero
+from . import ge_zero
+from . import gt_zero

@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    (xi, xj), (j, _0, i), (i, __0, n) = self.of(Sum[Pow[Expr - Expr, 2]])
-    assert 0 == _0 == __0
+    (xi, xj), (j, S[0], i), (S[i], S[0], n) = self.of(Sum[Pow[Expr - Expr, 2]])
     if not xi._has(i):
         xi, xj = xj, xi
     assert xj._subs(j, i) == xi
@@ -24,7 +23,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add)
 
-    Eq << Eq[-1].this.lhs.args[2].apply(algebra.sum.to.mul)
+    
 
     Eq << Eq[-1].this.lhs.args[1].apply(algebra.sum.limits.swap.intlimit)
 
@@ -38,7 +37,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(2 * ~Sum).apply(algebra.sum_mul.to.add.st.double_limits)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-11-12
+# updated on 2023-04-28

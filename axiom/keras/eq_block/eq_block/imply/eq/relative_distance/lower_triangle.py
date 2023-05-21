@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this(i).rhs(j).find(GreaterEqual).simplify()
 
-    Eq.V_relu = Eq[-1].this.rhs.find(-~Min).apply(keras.min.to.add.relu, index=0)
+    Eq.V_relu = Eq[-1].this.rhs.find(-~Min).apply(keras.min.to.add.relu, index=1)
 
     Eq << Eq[1][i]
 
@@ -55,9 +55,10 @@ def prove(Eq):
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.V_relu, Eq[-1])
 
     
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-03-17
-# updated on 2022-03-30
+# updated on 2023-05-15

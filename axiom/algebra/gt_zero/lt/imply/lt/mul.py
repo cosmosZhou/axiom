@@ -4,7 +4,16 @@ from util import *
 @apply
 def apply(is_positive_x, lt):
     x = is_positive_x.of(Expr > 0)
-    assert x.is_finite
+    if x.is_Pow:
+        b, e = x.args
+        if e > 0:
+            assert x.is_finite
+        elif e < 0:
+            ...
+        else:
+            assert x.is_finite
+    else :
+        assert x.is_finite
     lhs, rhs = lt.of(Less)
     return Less(lhs * x, rhs * x)
 
@@ -24,7 +33,10 @@ def prove(Eq):
 
     Eq << Eq[-1] + b * x
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-06-26
+# updated on 2023-04-16

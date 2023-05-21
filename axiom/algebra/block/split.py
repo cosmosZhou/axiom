@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self, k):
     args = self.of(BlockMatrix[1])
-    assert k >= 0 and k <= self.shape[0], "requirements not satisfied, %s >= 0 and %s <= %s" % (k, k, self.shape[0])
+    assert 0 <= k <= self.shape[0]
     
     blocks = [None, None]
     blocks[0] = [None] * len(args)

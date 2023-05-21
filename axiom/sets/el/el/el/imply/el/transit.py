@@ -12,8 +12,7 @@ def apply(contains_x, contains_y, contains_z):
     right_open = interval_y.right_open
 
     z, interval_z = contains_z.of(Element)
-    _x, _y = interval_z.of(Interval)
-    assert _x == x and _y == y
+    S[x], S[y] = interval_z.of(Interval)
 
     return Element(z, Interval(a, d, left_open=left_open, right_open=right_open))
 

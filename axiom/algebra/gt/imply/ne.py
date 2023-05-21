@@ -3,9 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    assert given.is_Greater
-
-    return Unequal(*given.args)
+    return Unequal(*given.of(Greater))
 
 
 @prove

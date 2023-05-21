@@ -9,7 +9,7 @@ def apply(self):
         a, b = ab
         n = b - a
     else:
-        [domain] = ab
+        domain, = ab
         n = Card(domain)
 
     args = []

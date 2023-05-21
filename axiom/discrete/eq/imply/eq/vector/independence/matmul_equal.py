@@ -1,42 +1,34 @@
 from util import *
 
+def extract(p_polynomial, x, y):
+    assert x.shape == y.shape
+    n, = p_polynomial.shape
+
+    if p_polynomial.is_Lamda:
+        (b, e), (k, *_) = p_polynomial.of(Lamda[Pow])
+    else:
+        b, (e, (k, *_)) = p_polynomial.of(Pow[Lamda])
+
+    assert not b.has(k)
+    assert not b.is_given
+    assert not x._has(b) and not y._has(b)
+    assert e.as_poly(k).degree() == 1
+    return x, y
 
 @apply
 def apply(given):
-    assert given.is_Equal
-    lhs, rhs = given.args
-
-    assert lhs.is_MatMul
-    p_polynomial, x = lhs.args
-
-    assert rhs.is_MatMul
-    _p_polynomial, y = rhs.args
-
-    assert p_polynomial == _p_polynomial
-
-    assert p_polynomial.is_Lamda
-    assert p_polynomial.shape == x.shape == y.shape
-    assert len(p_polynomial.shape) == 1
-#     n = p_polynomial.shape[0]
-    k = p_polynomial.variable
-    polynomial = p_polynomial.expr
-    assert polynomial.is_Pow
-
-    b, e = polynomial.as_base_exp()
-    assert not b.has(k)
-    assert e.as_poly(k).degree() == 1
-
-    return Equal(x, y)
+    (p, x), (S[p], y) = given.of(Equal[MatMul[2]])
+    return Equal(*extract(p, x, y))
 
 
 @prove
 def prove(Eq):
     from axiom import algebra, discrete
 
-    p = Symbol(complex=True)
+    p = Symbol(complex=True, zero=False)
     n, k = Symbol(domain=Range(1, oo))
+    print(n.dtype)
     x, y = Symbol(shape=(n,), complex=True, given=True)
-    assert x.is_given and y.is_given
     Eq << apply(Equal(Lamda[k:n](p ** k) @ x, Lamda[k:n](p ** k) @ y))
 
     i = Symbol(domain=Range(1, n + 1))
@@ -50,7 +42,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(discrete.lamda_matmul.to.matmul)
 
-    Eq.statement = Eq[-1].T
+    Eq << Eq[-1].T
+
+    Eq << Eq[-1].this.find(Add[Lamda]).apply(algebra.add.to.lamda).this.find(Pow[Lamda]).apply(algebra.pow.to.lamda, simplify=None)
+
+    Eq.statement = Eq[-1].this.find(Add[Lamda]).apply(algebra.add.to.lamda).this.find(Pow[Lamda]).apply(algebra.pow.to.lamda, simplify=None)
 
     i, k = Eq.statement.lhs.args[1].variables
     j = Symbol(integer=True)
@@ -63,15 +59,17 @@ def prove(Eq):
     j, i = Eq[-1].lhs.arg.variables
     Eq << Eq[-1].this.lhs.arg.limits_subs(i, k)
 
-    Eq << Eq[-1].this.lhs.arg.limits_subs(j, i)
+    Eq << Eq[-1].this.find(Add[~Lamda]).limits_subs(j, i)
 
-    Eq << algebra.ne_zero.eq.imply.eq.matrix.apply(Eq[-1], Eq.statement)
+    Eq << Eq[-1].this.find(Add[Lamda]).apply(algebra.add.to.lamda).this.find(Pow[Lamda]).apply(algebra.pow.to.lamda, simplify=None)
 
-    
-    
+    Eq << discrete.ne_zero.eq.imply.eq.matmul.apply(Eq[-1], Eq.statement)
+
+
+
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-08-21
-# updated on 2022-01-15
+# updated on 2023-04-08

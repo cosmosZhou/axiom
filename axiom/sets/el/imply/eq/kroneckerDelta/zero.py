@@ -27,13 +27,16 @@ def prove(Eq):
 
     Eq << Eq[-2].apply(algebra.eq.ne.imply.ne.subs)
 
-    Eq << Eq[-1].apply(algebra.cond.cond.imply.cond.subs, invert=True, reverse=True, swap=True, ret=1)
+    Eq << Eq[-1].apply(algebra.cond.cond.imply.cond.subs, invert=True, reverse=True, ret=0)
 
     Eq << Eq[-1].apply(sets.ne.ne.imply.notin, simplify=False)
 
     Eq <<= Eq[-1] & Eq[0]
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2020-08-29
+# updated on 2023-05-20

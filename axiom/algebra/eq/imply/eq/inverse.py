@@ -10,16 +10,26 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    x = Symbol(real=True)
-    a = Symbol(real=True)
-    b = Symbol(real=True, zero=False)
+    from axiom import algebra
+
+    x = Symbol(real=True, given=True)
+    a = Symbol(real=True, given=True)
+    b = Symbol(real=True, zero=False, given=True)
     Eq << apply(Equal(x * a, b))
 
     Eq << Eq[-1].subs(Eq[0])
 
+    Eq << algebra.et.given.et.apply(Eq[-1])
 
+    Eq <<= ~Eq[-2], ~Eq[-1]
+
+    Eq << Eq[0].subs(Eq[-2])
+
+    Eq << Eq[0].subs(Eq[-1])
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-08-16
+# updated on 2023-04-05

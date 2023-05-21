@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq << algebra.ge.ge.imply.ge.transit.apply(Eq[-2], algebra.imply.ge.floor.integer.apply(a + 1, 2))
 
-    Eq << algebra.le.le.imply.le.transit.apply(Eq[-2], algebra.imply.le.floor.apply(b / 2) * 2)
+    Eq << algebra.le.le.imply.le.transit.apply(Eq[-2], algebra.imply.floor_le.apply(b / 2) * 2)
 
     Eq << sets.ge.le.imply.el.range.apply(Eq[-2], Eq[-1])
 

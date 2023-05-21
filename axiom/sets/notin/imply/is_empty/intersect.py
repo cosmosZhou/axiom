@@ -5,8 +5,7 @@ from util import *
 # given e not in S
 @apply
 def apply(given):
-    assert given.is_NotElement
-    e, s = given.args
+    e, s = given.of(NotElement)
     return Equal(e.set & s, e.emptySet)
 
 

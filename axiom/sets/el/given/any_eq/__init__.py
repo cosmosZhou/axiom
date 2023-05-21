@@ -3,13 +3,13 @@ from util import *
 
 @apply(simplify=False)
 def apply(imply, var=None):
-    assert imply.is_Element
+    lhs, rhs = imply.of(Element)
     if var is None:
-        var = imply.generate_var(**imply.lhs.type.dict)
+        var = imply.generate_var(**lhs.type.dict)
     elif isinstance(var, str):
-        var = imply.generate_var(var=var, **imply.rhs.etype.dict)
+        var = imply.generate_var(var=var, **rhs.etype.dict)
 
-    return Any[var:imply.rhs](Equal(imply.lhs, var))
+    return Any[var:rhs](Equal(lhs, var))
 
 
 @prove

@@ -7,8 +7,7 @@ def apply(lt, contains, contains_y):
     y, domain_y = contains_y.of(Element)
     assert domain_x in Interval(-1, 1)
     assert domain_y in Interval(-1, 1, right_open=True)
-    _x, _y = lt.of(Less)
-    assert _x == x and _y == y
+    S[x], S[y] = lt.of(Less)
     return acos(x) > acos(y)
 
 
@@ -41,7 +40,7 @@ def prove(Eq):
 
     Eq << algebra.cond.ou.imply.cond.apply(Eq.sin_is_positive, Eq[-1])
 
-    Eq << sets.el.imply.gt_zero.apply(Eq[-1])
+    Eq << sets.is_positive.imply.gt_zero.apply(Eq[-1])
 
 
 if __name__ == '__main__':

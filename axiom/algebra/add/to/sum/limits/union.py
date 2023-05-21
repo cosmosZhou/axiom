@@ -7,9 +7,8 @@ def limits_union(limits, _limits, function=None):
 
     for limit, _limit in zip(limits, _limits):
         x, domain = limit.coerce_setlimit(function=function)
-        _x, _domain = _limit.coerce_setlimit(function=function)
+        S[x], _domain = _limit.coerce_setlimit(function=function)
 
-        assert x == _x
         assert not _domain & domain
         new_limits.append((x, domain | _domain))
 
@@ -20,8 +19,7 @@ def limits_union(limits, _limits, function=None):
 def apply(self):
     A, B = self.of(Add)
     function, *limits_a = A.of(Sum)
-    _function, *limits_b = B.of(Sum)
-    assert function == _function
+    S[function], *limits_b = B.of(Sum)
 
     limits = limits_union(limits_a, limits_b, function=function)
     return Equal(self, Sum(function, *limits), evaluate=False)

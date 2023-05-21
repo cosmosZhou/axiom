@@ -73,7 +73,7 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq[0])
 
-    Eq << Eq[-1].this.apply(algebra.eq.transport)
+    Eq << Eq[-1].this.apply(algebra.eq.transport, 0)
 
     j = Symbol(integer=True)
     Eq << Eq[0][i + n + 1 - Min(n, u), j - i]
@@ -104,10 +104,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(ReducedArgMax).arg.definition
 
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-01-03
-# updated on 2022-01-15
+# updated on 2023-05-18

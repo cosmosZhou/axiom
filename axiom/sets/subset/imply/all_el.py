@@ -5,8 +5,7 @@ from util import *
 
 @apply
 def apply(given, wrt=None):
-    assert given.is_Subset
-    B, A = given.args
+    B, A = given.of(Subset)
 
     if wrt is None:
         x = B.element_symbol()

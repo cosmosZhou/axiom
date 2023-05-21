@@ -5,8 +5,7 @@ from util import *
 @apply
 def apply(b_greater_than_x, x_greater_than_a):
     b, x = b_greater_than_x.of(Greater)
-    _x, a = x_greater_than_a.of(Greater)
-    assert x == _x
+    S[x], a = x_greater_than_a.of(Greater)
     return Less(a, b)
 
 

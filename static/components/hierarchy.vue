@@ -1,13 +1,13 @@
 <template>
 	<div>
-		<hierarchyInformation :key-input=keyInput :deep="!deep"></hierarchyInformation>
+		<hierarchyInformation :key-input=keyInput :deep=!deep></hierarchyInformation>
 		<br>
 		<hierarchyModule ref=hierarchyModule :module=module></hierarchyModule>			
 	</div>
 </template>
 
 <script>
-console.log('importing hierarchy.vue');	
+console.log('import hierarchy.vue');	
 
 import hierarchyInformation from "./hierarchyInformation.vue"
 import hierarchyModule from "./hierarchyModule.vue"

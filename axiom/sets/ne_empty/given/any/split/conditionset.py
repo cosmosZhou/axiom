@@ -5,7 +5,7 @@ from util import *
 def apply(imply):
     x, (S[x], cond, *baseset) = imply.of(Unequal[Cup[FiniteSet], EmptySet])
     if baseset:
-        [baseset] = baseset
+        baseset, = baseset
         return Any[x:baseset](cond)
     else:
         return Any[x](cond)

@@ -7,15 +7,18 @@ def apply(given, expr=None):
     eq, *limits = given.of(All)
 
     dic = limits_dict(limits)
-    assert len(dic) == 1
-    (x, domain), *_ = dic.items()
+    (x, domain), = dic.items()
     assert domain.is_Range
 
     lhs, rhs = eq.of(Equal)
     if expr is not None:
         lhs, rhs = expr, expr._subs(lhs, rhs)
         
-    return Equal(Lamda[x:domain](lhs).simplify(), Lamda[x:domain](rhs).simplify())
+    lhs = Lamda[x:domain](lhs)
+    rhs = Lamda[x:domain](rhs)
+    lhs = lhs.simplify()
+    rhs = rhs.simplify()
+    return Equal(lhs, rhs)
 
 
 @prove
@@ -42,4 +45,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2019-01-08
-# updated on 2022-03-17
+# updated on 2023-05-01

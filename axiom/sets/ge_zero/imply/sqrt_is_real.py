@@ -19,11 +19,14 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(y, x)
 
-    Eq << Eq[-1].this.args[0].simplify()
+    Eq << Eq[-1].this.args[1].simplify()
 
     Eq << algebra.cond.ou.imply.cond.apply(Eq[0], Eq[-1], simplify=None)
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-04-11
+# updated on 2023-05-09

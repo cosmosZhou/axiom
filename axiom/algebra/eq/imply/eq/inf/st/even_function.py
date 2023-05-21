@@ -24,7 +24,7 @@ def prove(Eq):
     Eq <<= algebra.eq.imply.et.squeeze.apply(Eq[-1].reversed), Eq[1].subs(Eq[-1].reversed)
 
     z = Symbol(real=True)
-    Eq <<= algebra.inf_le.imply.all_any_lt.apply(Eq[-3], z), algebra.inf_ge.imply.all_ge.apply(Eq[-2]), algebra.eq.given.et.squeeze.apply(Eq[-1])
+    Eq <<= algebra.inf_le.imply.all.any.lt.apply(Eq[-3], z), algebra.inf_ge.imply.all_ge.apply(Eq[-2]), algebra.eq.given.et.squeeze.apply(Eq[-1])
 
     Eq <<= Eq[-4].this.expr.apply(algebra.any.imply.any.limits.negate), algebra.all.imply.all.limits.subs.negate.real.apply(Eq[-3], x, -x), algebra.inf_le.given.all_any_lt.apply(Eq[-2], z), algebra.inf_ge.given.all_ge.apply(Eq[-1])
 

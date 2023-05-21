@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.et.infer.split.apply(Eq[0], cond=b ** 2 - 4 * a * c >= 0)
 
-    Eq <<= algebra.infer.imply.infer.et.apply(Eq[-2]), algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq <<= algebra.infer_et.imply.infer.et.apply(Eq[-2]), algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq <<= Eq[-2].this.rhs.apply(algebra.lt_zero.add_ge_zero.imply.any.lt_zero, x=x), Eq[-1].this.rhs.apply(algebra.lt_zero.add_lt_zero.imply.lt_zero, x=x)
 

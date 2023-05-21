@@ -9,11 +9,9 @@ from . import mul
 from . import div
 from . import acos
 from . import inverse
-from . import ceiling
 from . import relax
 from . import right_close
 from . import left_close
-from . import floor
 from . import finiteset
 from . import st
 from . import swapMatrix

@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self):
     A, (p, q) = self.of(Infer[Basic, Infer])
-    return Equivalent(self, Infer(p, Infer(A, q)), evaluate=False)
+    return Infer(p, Infer(A, q))
 
 
 @prove

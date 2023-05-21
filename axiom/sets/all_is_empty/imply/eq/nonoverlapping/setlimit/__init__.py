@@ -1,9 +1,6 @@
 from util import *
 
 
-# given: x[i] & x[j] = {}
-# |Union x[i]| = Sum |x[i]|
-
 
 @apply
 def apply(given):
@@ -13,8 +10,7 @@ def apply(given):
         _, i = j_domain.of(Complement)
         i = i.of(FiniteSet)
     else:
-        assert len(limits) == 1
-        i, j_domain = limits[0]
+        (i, j_domain), = limits
         universe, j = j_domain.of(Complement)
         j = j.of(FiniteSet)
         i_limit = (i, universe)

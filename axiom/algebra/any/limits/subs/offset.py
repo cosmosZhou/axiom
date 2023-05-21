@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self, offset):
     from axiom.algebra.sum.limits.subs.offset import limits_subs
-    return Equivalent(self, limits_subs(Any, self, offset), evaluate=False)
+    return limits_subs(Any, self, offset)
 
 
 @prove

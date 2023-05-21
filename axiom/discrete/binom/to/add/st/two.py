@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self, d):
     n = self.of(Binomial[Expr, 2])
-    assert d >= 0 and d <= n
+    assert 0 <= d <= n
     return Equal(self, binomial(n - d, 2) + binomial(d, 2) + (n - d) * d)
 
 

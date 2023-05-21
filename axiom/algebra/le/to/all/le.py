@@ -1,13 +1,13 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(le, var=None):
     lhs, rhs = le.of(LessEqual)
     assert lhs.shape
     if var is None:
         var = le.generate_var(integer=True)
-    return Equivalent(le, All[var:lhs.shape[0]](lhs[var] <= rhs[var]))
+    return All[var:lhs.shape[0]](lhs[var] <= rhs[var])
 
 
 @prove

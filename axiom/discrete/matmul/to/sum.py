@@ -6,11 +6,18 @@ def apply(self, var=None):
     A, B = self.of(MatMul)
     kwargs = {'var': var, 'generator': self}
 
-    assert len(A.shape) == 1
-    assert len(B.shape) == 1
+    size, = A.shape
+    assert len(B.shape) <= 2
     k_limit = MatMul.generate_k_limit(A, B, **kwargs)
-    k, *_ = k_limit
-    rhs = Sum(A[k] * B[k], k_limit).simplify()
+    k, *ab = k_limit
+    expr = A[k] * B[k]
+    if not ab:
+        rgn = expr.domain_defined(k)
+        if rgn.is_Range:
+            if rgn.start != 0 or rgn.stop != size:
+                k_limit = (k, 0, size)
+
+    rhs = Sum(expr, k_limit).simplify()
     return Equal(self, rhs, evaluate=False)
 
 
@@ -20,7 +27,10 @@ def prove(Eq):
     A, B = Symbol(shape=(n,), complex=True)
     Eq << apply(A @ B)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-11-09
+# updated on 2023-04-09

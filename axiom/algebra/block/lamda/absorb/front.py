@@ -8,8 +8,7 @@ def apply(self, index=-1):
     if index < 0:
         index += len(args)
 
-    expr, *limits, (i, a, n) = args[index].of(Lamda)
-    assert a == 0
+    expr, *limits, (i, S[0], n) = args[index].of(Lamda)
     if limits:
         expr = Lamda(expr, *limits)
     front = args[index - 1]
@@ -35,7 +34,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.add_piece.to.piece)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.invert, 0)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.et.invert, 0)
 
 
 

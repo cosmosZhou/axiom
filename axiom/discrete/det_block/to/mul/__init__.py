@@ -11,7 +11,7 @@ def find_zero_matrix(row, n):
                 if a + b == n:
                     return i
             elif len(cell.shape) == 1:
-                [a] = cell.shape
+                a, = cell.shape
                 if a + 1 == n:
                     return i
 
@@ -62,7 +62,7 @@ def apply(self):
 
     del B[i]
     if len(B) == 1:
-        [B] = B
+        B, = B
     else:
         B = BlockMatrix(B)
     
@@ -73,7 +73,7 @@ def apply(self):
     del A[j]
 
     if len(A) == 1:
-        [A] = A
+        A, = A
     else:
         A = BlockMatrix[1](A)
         

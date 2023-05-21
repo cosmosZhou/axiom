@@ -24,14 +24,13 @@ def prove(Eq):
 
     Eq << sets.eq.imply.all_ne.apply(Eq[0])
 
-    Eq << algebra.imply.infer.eq.sum.induct.apply(Eq[1].lhs)
+    Eq << algebra.all_ne.imply.eq.sum.double_limits.apply(Eq[-1], Eq[1].lhs)
 
-    Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[2], Eq[-1])
-
+    
     
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-03-20
-# updated on 2022-01-10
+# updated on 2023-05-21

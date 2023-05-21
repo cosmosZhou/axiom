@@ -1,20 +1,20 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given):
     x, interval = given.of(Element)
     a, b = interval.of(Interval)
     if interval.left_open:
         if interval.right_open:
-            return Equivalent(given, And(x > a, x < b))
+            return And(x > a, x < b)
         else:
-            return Equivalent(given, And(x > a, x <= b))
+            return And(x > a, x <= b)
     else:
         if interval.right_open:
-            return Equivalent(given, And(x >= a, x < b))
+            return And(x >= a, x < b)
         else:
-            return Equivalent(given, And(x >= a, x <= b))
+            return And(x >= a, x <= b)
 
 
 @prove

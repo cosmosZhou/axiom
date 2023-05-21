@@ -5,12 +5,9 @@ from util import *
 def apply(given):
     from sympy.concrete.limits import limits_dict
 
-    (xi, limit), (_xi, _limit) = given.of(Equal[Card[Cup], Sum[Card]])
+    (xi, limit), (S[xi], S[limit]) = given.of(Equal[Card[Cup], Sum[Card]])
 
-    assert xi == _xi
-    assert limit == _limit
-    i, _0, n = limit
-    assert _0 == 0
+    i, S[0], n = limit
 
     j = xi.generate_var(integer=True)
     xj = xi.subs(i, j)
@@ -42,7 +39,7 @@ def prove(Eq):
 
     Eq << Eq[0].lhs.arg.this.apply(sets.cup.to.union.split, cond={i, j})
 
-    Eq.union_less_than = sets.imply.le.cup.apply(x[i], *Eq[-1].rhs.args[0].limits)
+    Eq.union_less_than = sets.imply.le.cup.apply(x[i], *Eq[-1].rhs.args[1].limits)
 
     Eq << sets.imply.le.union.apply(*Eq[-1].rhs.args)
 
@@ -50,13 +47,16 @@ def prove(Eq):
 
     Eq << Eq[-1].this().find(Intersection).simplify()
 
-    Eq << Eq[-1].this.find(Card + Card[~Cup]).apply(sets.cup.to.union.doit.setlimit)
+    Eq << Eq[-1].this.find(Cup).apply(sets.cup.to.union.doit.setlimit)
 
     Eq << Eq.union_less_than.this.find(Cup).limits_subs(Eq.union_less_than.find(Cup).variable, Eq[-1].find(Cup).variable)
 
     Eq << Eq[-1].this.expr.apply(algebra.gt.le.imply.gt.subs, Eq.union_less_than)
 
     Eq << Eq[-1].this().expr.lhs.simplify()
+
+    
+    
 
 
 if __name__ == '__main__':
@@ -65,3 +65,4 @@ if __name__ == '__main__':
 
 from . import complement
 # created on 2021-03-19
+# updated on 2023-05-18

@@ -1,7 +1,7 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self, index=0, swap=False):
     [*eqs], q = self.of(Infer[And, Basic])
 
@@ -14,7 +14,7 @@ def apply(self, index=0, swap=False):
     if swap:
         r, p = p, r
 
-    return Equivalent(self, Infer(r, Infer(p, q)), evaluate=False)
+    return Infer(r, Infer(p, q))
 
 
 @prove

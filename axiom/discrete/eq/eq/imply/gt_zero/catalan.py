@@ -3,22 +3,17 @@ from util import *
 
 def is_catalan_series(*given):
     C0_definition, Cn1_definition = given
-
-    C0, one = C0_definition.of(Equal)
-    assert one.is_One
+    C0, S[1] = C0_definition.of(Equal)
 
     Cn1, summation = Cn1_definition.of(Equal)
-    fk, (k, zero, n1) = summation.of(Sum)
+    fk, (k, S[0], n1) = summation.of(Sum)
 
     n = n1 - 1
-    assert zero.is_zero
 
     Cn = Cn1._subs(n, n - 1)
     assert Cn._subs(n, 0) == C0
 
-    Cnk, Ck = fk.of(Mul)
-    assert Ck == Cn._subs(n, k)
-    assert Cnk == Cn._subs(n, n - k)
+    S[Cn._subs(n, n - k)] = fk.of(Expr * Cn._subs(n, k))
     return Cn, n
 
 

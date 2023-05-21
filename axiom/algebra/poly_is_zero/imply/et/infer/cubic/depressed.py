@@ -5,8 +5,7 @@ from util import *
 def apply(is_zero, x=None):
     from axiom.algebra.poly_is_zero.imply.et.infer.cubic import cubic_coefficient
     fx = is_zero.of(Equal[0])
-    _1, _0, p, q = cubic_coefficient(fx, x=x)
-    assert _0 == 0 and _1 == 1
+    S[1], S[0], p, q = cubic_coefficient(fx, x=x)
 
     delta = 4 * p ** 3 / 27 + q ** 2
     U = sqrt(delta) - q
@@ -41,7 +40,7 @@ def prove(Eq):
 
     Eq << sets.el.imply.el.div.interval.apply(Eq[-1], S.Pi * 2, simplify=None)
 
-    Eq << sets.el.imply.el.ceiling.apply(Eq[-1])
+    Eq << sets.el_interval.imply.el_range.ceiling.apply(Eq[-1])
 
     Eq << Eq[-1].this.find(Mul).apply(algebra.mul.to.add)
 
@@ -59,39 +58,40 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq.eq_peicewise.reversed)
 
-    Eq.ou = sets.el.imply.ou.split.finiteset.apply(Eq[-1])
+    Eq.ou = sets.el_finiteset.imply.ou.apply(Eq[-1])
 
     Eq <<= Eq.ou & Eq[0]
 
     Eq << algebra.et.imply.ou.apply(Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.poly_is_zero.eq_ceiling.imply.cubic, x, ret=1)
+    Eq << Eq[-1].this.find(Equal[-2] & Equal[0]).apply(algebra.poly_is_zero.eq_ceiling.imply.cubic, x, ret=0)
 
-    Eq << Eq[-1].this.args[1].apply(algebra.poly_is_zero.eq_ceiling.imply.cubic, x, ret=1)
+    Eq << Eq[-1].this.find(Equal[-1] & Equal[0]).apply(algebra.poly_is_zero.eq_ceiling.imply.cubic, x, ret=0)
 
-    Eq << Eq[-1].this.args[2].apply(algebra.poly_is_zero.eq_ceiling.imply.cubic, x, ret=1)
+    Eq << Eq[-1].this.find(Equal[0] & Equal[0]).apply(algebra.poly_is_zero.eq_ceiling.imply.cubic, x, ret=0)
 
-    Eq << Eq[-1].this.args[3].apply(algebra.poly_is_zero.eq_ceiling.imply.cubic, x, ret=1)
+    Eq << Eq[-1].this.find(Equal[S(1)] & Equal[0]).apply(algebra.poly_is_zero.eq_ceiling.imply.cubic, x, ret=0)
 
-    Eq << Eq[-1].this.args[4].apply(algebra.poly_is_zero.eq_ceiling.imply.cubic, x, ret=1)
+    Eq << Eq[-1].this.find(Equal[S(2)] & Equal[0]).apply(algebra.poly_is_zero.eq_ceiling.imply.cubic, x, ret=0)
 
-    Eq << Eq[-1].this.args[3:].apply(algebra.ou.imply.et.collect)
+    #find Equal[S(1)] & Equal[S(-2)]
+    Eq << Eq[-1].this.args[:3:2].apply(algebra.ou.imply.et.collect)
 
+    #find Equal[S(-1)] & Equal[S(2)]
     Eq << Eq[-1].this.args[:2].apply(algebra.ou.imply.et.collect)
 
+    
     Eq << Eq[-1].this.find(Equal[Integer] | Equal[Integer]).apply(algebra.ou_eq.imply.eq.mod)
-
     Eq << Eq[-1].this.find(Equal[Integer] | Equal[Integer]).apply(algebra.ou_eq.imply.eq.mod)
-
     Eq << Eq[-1].this.find(Equal[Ceiling, Ceiling]).apply(algebra.eq.imply.mod_is_zero, 3, swap=True)
-
     Eq << Eq[-1].subs(Eq.eq_peicewise)
-
     Eq << algebra.ou.imply.et.infer.apply(Eq[-1])
-
     Eq << Eq[1].this.lhs.apply(algebra.eq.imply.mod_is_zero, 3)
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-11-24
+# updated on 2023-05-15

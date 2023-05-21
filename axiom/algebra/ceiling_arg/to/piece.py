@@ -3,10 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    ((AB, pi2), half) = self.of(Ceiling[Arg * Expr - Expr])
-    assert pi2 == 3 / (S.Pi * 2)
-    assert half * 2 == 1
-
+    ((AB, S[3 / (S.Pi * 2)]), S[S.One  / 2]) = self.of(Ceiling[Arg * Expr - Expr])
     delta_0, delta_1 = AB.of(Expr ** (S.One / 3) * Expr ** (S.One / 3))
 
     q = (delta_0 + delta_1) / -2

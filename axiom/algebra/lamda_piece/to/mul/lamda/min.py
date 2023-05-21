@@ -6,8 +6,8 @@ def apply(self):
     ((i, (j, S[i])), (S[j], S[j < i]), (S[0], S[True])), (S[j], S[0], n), (S[i], S[0], S[n]) = \
     self.of(
         Lamda[
-            Piecewise[ExprCondPair[Greater], 
-                      ExprCondPair, 
+            Piecewise[ExprCondPair[Greater],
+                      ExprCondPair,
                       ExprCondPair
             ]
         ])
@@ -47,12 +47,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.swap, -2)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.invert, 0)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.et.invert, 0)
 
     Eq << Eq[-1].this.lhs.find(Equal).reversed
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

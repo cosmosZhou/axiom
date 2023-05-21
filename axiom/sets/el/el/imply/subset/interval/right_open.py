@@ -3,12 +3,8 @@ from util import *
 
 @apply
 def apply(contains1, contains2):
-    assert contains1.is_Element
-    assert contains2.is_Element
-
-    x, A = contains1.args
-    y, _A = contains2.args
-    assert A == _A
+    x, A = contains1.of(Element)
+    y, S[A] = contains2.of(Element)
     a, b = A.of(Interval)
     return Subset(Interval(x, y, right_open=True), Interval(a, b, left_open=A.left_open, right_open=True))
 
@@ -33,7 +29,7 @@ def prove(Eq):
 
     Eq << sets.el_interval.imply.le.apply(Eq[1])
 
-    Eq << sets.le.imply.subset.interval.negativeInfinity.apply(Eq[-1], right_open=True)
+    Eq << sets.le.imply.subset.interval.minus_oo.apply(Eq[-1], right_open=True)
 
     Eq << sets.subset.imply.subset.intersect.apply(Eq[-1], Interval(a, oo, left_open=True))
     Eq << sets.subset.subset.imply.subset.transit.apply(Eq.subset, Eq[-1])

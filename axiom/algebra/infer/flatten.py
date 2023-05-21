@@ -1,13 +1,13 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self, *, simplify=True):
     A, (p, q) = self.of(Infer[Basic, Infer])
     p &= A
     if simplify:
         p = p.simplify()
-    return Equivalent(self, Infer(p, q), evaluate=False)
+    return Infer(p, q)
 
 
 @prove

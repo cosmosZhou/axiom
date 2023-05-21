@@ -45,17 +45,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.args[0].cond.apply(algebra.et.to.ou)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.invert, 0)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.et.invert, 0)
 
     Eq.equal = Eq[-1].this.lhs.args[1].cond.apply(algebra.et.to.ou)
 
-
-
     Eq.suffice = Infer(Eq.equal.lhs.args[1].cond, Equal(x * y, 0), plausible=True)
 
-    Eq << algebra.infer.given.et.infer.split.ou.apply(Eq.suffice)
+    Eq << algebra.infer_ou.given.et.infer.apply(Eq.suffice)
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.et.imply.cond, index=1), Eq[-1].this.lhs.apply(algebra.et.imply.cond, index=0)
+    Eq <<= Eq[-1].this.lhs.apply(algebra.et.imply.cond, index=0), Eq[-2].this.lhs.apply(algebra.et.imply.cond, index=0)
 
     Eq << Eq[-2].this.lhs * x
 
@@ -77,7 +75,7 @@ def prove(Eq):
 
     Eq.suffice, Eq.necessary = algebra.iff.given.et.apply(Eq.equivalent)
 
-    Eq << algebra.infer.given.et.infer.split.ou.apply(Eq.suffice)
+    Eq << algebra.infer_ou.given.et.infer.apply(Eq.suffice)
 
     Eq << Eq[-2].this.lhs.apply(algebra.lt_zero.lt_zero.imply.gt_zero)
 
@@ -87,12 +85,12 @@ def prove(Eq):
 
     Eq << algebra.iff.imply.eq.subs.apply(Eq.equivalent, Eq.equal.lhs)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-02-11
-# updated on 2022-01-08
+# updated on 2023-05-19

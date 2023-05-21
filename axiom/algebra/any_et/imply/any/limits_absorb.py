@@ -12,7 +12,7 @@ def limits_absorb(given, index):
 
     assert wrt
     if len(wrt) == 1:
-        [wrt] = wrt
+        wrt, = wrt
         i = variables.index(wrt)
         wrt, *ab = limits[i]
         if ab:
@@ -28,7 +28,7 @@ def limits_absorb(given, index):
                 if a.is_bool:
                     eq &= a & Element(wrt, b)
                 else:
-                    eq &= Element(wrt, (Range if wrt.is_integer else Interval)(a, b))
+                    eq &= Element(wrt, wrt.range(a, b))
         limits[i] = (wrt, eq)
     elif len(wrt) == 2:
         x_slice, x_index = wrt
@@ -37,32 +37,28 @@ def limits_absorb(given, index):
 
         if x_slice.is_Sliced and x_index.is_Indexed:
             start, stop = x_slice.index
-            assert len(x_index.indices) == 1
-            assert x_index.indices[0] == stop
+            S[stop], = x_index.indices
             i = variables.index(x_slice)
             j = variables.index(x_index)
 
-            del limits[j]
             wrt, cond = limits[i]
             wrt = x_slice.base[start:stop + 1]
             limits[i] = (wrt, cond & eq)
+            del limits[j]
         else:
             limit_a, *limit_b = limits
             if len(limit_a) == 2:
-                a, fa = limit_a
-                if fa.is_bool:
-                    limit_a = (a, fa & eq)
-                    limits[0] = limit_a
-                else:
-                    eq = eq.domain_conditioned(a)
-                    limit_a = (a, fa & eq)
-                    limits[0] = limit_a
+                x, domain = limit_a
+                if not domain.is_bool:
+                    eq = eq.domain_conditioned(x)
             elif len(limit_a) == 1:
-                a = limit_a[0]
-                limits[0] = (a, eq)
+                x = limit_a[0]
+                domain = S.true
             else:
                 x, a, b = limit_a
-                limits[0] = (x, eq, Range(a, b) if x.is_integer else Interval(a, b))
+                domain = x.range(a, b)
+                eq = eq.domain_conditioned(x)
+            limits[0] = x, domain & eq
     else:
         return
 
@@ -70,7 +66,7 @@ def limits_absorb(given, index):
 
 
 @apply
-def apply(given, index):
+def apply(given, index=0):
     return limits_absorb(given, index)
 
 
@@ -94,8 +90,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.limits[0][1].definition
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-03-24
+# updated on 2023-05-15

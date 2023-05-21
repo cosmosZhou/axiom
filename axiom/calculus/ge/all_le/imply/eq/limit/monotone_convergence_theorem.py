@@ -3,12 +3,8 @@ from util import *
 
 @apply
 def apply(ge, any_all_le):
-    an1, an = ge.of(GreaterEqual)
-    ((_an, _M), (n, _0, b)), (M,) = any_all_le.of(Any[All[LessEqual]])
-    assert an == _an
-    assert b == oo
-    assert M == _M
-    assert an._subs(n, n + 1) == an1
+    ((an, M), (n, S[0], S[oo])), (S[M],) = any_all_le.of(Any[All[LessEqual]])
+    S[an._subs(n, n + 1)], S[an] = ge.of(GreaterEqual)
     return Equal(Limit[n:oo](an), Sup[n:0:oo](an))
 
 
@@ -35,7 +31,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.le.imply.lt.relax, upper=oo)
 
-    Eq.ge_sup = algebra.imply.all_ge.sup.apply(Eq[-1].lhs)
+    Eq.ge_sup = algebra.imply.all.sup_ge.apply(Eq[-1].lhs)
 
     Eq << algebra.ge.imply.gt.relax.apply(Eq.ge_sup, lower=-oo)
 
@@ -61,7 +57,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(sets.le.el.imply.le.add)
 
-    Eq << algebra.all.any.imply.any_all_et.apply(Eq[-1], Eq.any_lt)
+    Eq << algebra.all.any.imply.any.all.et.apply(Eq[-1], Eq.any_lt)
 
     Eq << Eq[-1].this.expr.expr.apply(algebra.lt.le.imply.lt.transit)
 

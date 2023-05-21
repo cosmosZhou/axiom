@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(given, *limits):
-    assert given.is_Supset
-    A, fx = given.args
+    A, fx = given.of(Supset)
 
     return Supset(A, Cup(fx, *limits).simplify())
 

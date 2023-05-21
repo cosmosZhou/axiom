@@ -1,12 +1,12 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given):
     x, finiteset = given.of(Element)
     finiteset = finiteset.of(FiniteSet)
 
-    return Equivalent(given, Or(*(Equal(x, e) for e in finiteset)))
+    return Or(*(Equal(x, e) for e in finiteset))
 
 
 @prove

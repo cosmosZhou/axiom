@@ -117,6 +117,8 @@ cURL support	enabled
 添加：  
 Include conf/extra/httpd-autoindex.conf  
 或者去掉前面的注释  
+这时会打印以下内容：  
+Name	Last modified	Size	Description  
 
 
 ## 安装Xdebug调试器
@@ -324,3 +326,6 @@ www.axiom.top
 https://www.axiom.top
 之后可以发现没有“不安全”提示语句了！  
 
+### PHP Warning:  'vcruntime140.dll' 14.0 is not compatible with this PHP build linked with 14.16 in Unknown on line 0  
+check the site and download  
+https://learn.microsoft.com/zh-CN/cpp/windows/latest-supported-vc-redist?view=msvc-170  

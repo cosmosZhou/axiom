@@ -4,10 +4,9 @@ from axiom.discrete.K.to.add.definition import K
 
 @apply
 def apply(given):
-    (x, _j), (j, n1) = given.of(All[Indexed >= 1, Tuple[1, Expr]])
+    (x, j), (S[j], n1) = given.of(All[Indexed >= 1, Tuple[1, Expr]])
 
     n = n1 - 1
-    assert _j == j
 
     return GreaterEqual(K(x[:n + 1]), K(x[:n]))
 

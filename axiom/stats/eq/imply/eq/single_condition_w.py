@@ -3,12 +3,12 @@ from util import *
 
 @apply
 def apply(given, wrt=None):
-    (x, yzw), (_x, w) = given.of(Equal[Conditioned, Conditioned])
-    assert x == _x
-
-    assert w in yzw.args
-    args = [*yzw.args]
+    (x, yzw), (S[x], w) = given.of(Equal[Conditioned, Conditioned])
+    
+    [*args] = yzw.of(And)
+    assert w in args
     args.remove(w)
+
     y, z = args
 
     if wrt is not None:
@@ -18,7 +18,7 @@ def apply(given, wrt=None):
             z = z.lhs
 
         assert wrt in {y, z}
-        return Equal(x | wrt.as_boolean() & w, x | w)
+        return Equal(x | wrt & w, x | w)
     return Equal(x | y & w, x | w)
 
 
@@ -27,7 +27,7 @@ def prove(Eq):
     from axiom import stats, algebra, calculus
 
     x, y, z, w = Symbol(real=True, random=True)
-    Eq << apply(Equal(x | y.as_boolean() & z.as_boolean() & w.as_boolean(), x | w), wrt=y)
+    Eq << apply(Equal(x | y & z & w, x | w), wrt=y)
 
     return
     Eq << stats.eq_conditioned.imply.is_nonzero.apply(Eq[0])

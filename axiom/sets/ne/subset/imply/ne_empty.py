@@ -3,9 +3,8 @@ from util import *
 
 @apply
 def apply(ne, subset, evaluate=False):
-    _A, _B = ne.of(Unequal)
     A, B = subset.of(Subset)
-    assert A == _A and B == _B or A == _B and B == _A
+    S[A] = ne.of(Unequal[B])
     return Unequal(B - A, A.etype.emptySet, evaluate=evaluate)
 
 

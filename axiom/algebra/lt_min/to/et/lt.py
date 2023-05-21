@@ -1,7 +1,7 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given, index=-1):
     x, args = given.of(Expr < Min)
     if index is None:
@@ -11,7 +11,7 @@ def apply(given, index=-1):
         second = args[index:]
         eqs = x < Min(*first), x < Min(*second)
         
-    return Equivalent(given, And(*eqs), evaluate=False)
+    return And(*eqs)
 
 
 @prove

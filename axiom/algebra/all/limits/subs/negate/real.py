@@ -11,16 +11,16 @@ def limits_subs(All, self, old, new):
         a, b = ab
         limit = (i, c - b, c - a)
     else:
-        [ab] = ab
+        ab, = ab
         a, b = ab.of(Interval)
         limit = (i, Interval(c - b, c - a, left_open=ab.right_open, right_open=ab.left_open))
 
     assert not c._has(i)
     return All(expr._subs(old, new), limit)
 
-@apply(given=None)
+@apply
 def apply(self, old, new):
-    return Equivalent(self, limits_subs(All, self, old, new), evaluate=False)
+    return limits_subs(All, self, old, new)
 
 
 @prove

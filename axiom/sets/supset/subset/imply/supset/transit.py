@@ -6,8 +6,7 @@ def apply(a_less_than_x, x_less_than_b):
     X, A = a_less_than_x.of(Supset)
     _X, B = x_less_than_b.of(Subset)
     if X != _X:
-        A, X, _X, B = _X, B, A, X
-    assert X == _X
+        A, X, S[X], B = _X, B, A, X
     return Supset(B, A)
 
 

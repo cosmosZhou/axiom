@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << algebra.all.imply.ou.apply(Eq[-1])
 
-    Eq << algebra.ou.imply.infer.apply(Eq[-1])
+    Eq << algebra.ou.imply.infer.apply(Eq[-1], 1)
 
     Eq << Element(i, Range(-1, n + 1)).this.apply(sets.el_range.imply.eq.union.to.complement)
 
@@ -44,8 +44,8 @@ def prove(Eq):
 
     Eq << algebra.infer.imply.all.apply(Eq[-1])
 
-    
-    Eq << Eq[-1].this.expr.apply(algebra.ou.imply.all)
+    Eq << Eq[-1].this.expr.apply(algebra.ou.imply.all, 1)
+
     
     
 
@@ -53,4 +53,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-01-24
-# updated on 2022-01-28
+# updated on 2023-05-19

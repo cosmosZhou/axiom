@@ -3,10 +3,10 @@ from util import *
 
 @apply
 def apply(eq_max, eq_min, eq_K_quote, eq_V_quote, eq_K, eq_V, Q, K, V):
-    ((((i, l), d), S[i - l + 1]), i_limit), β = eq_max.of(Equal[Lamda[Max[Mod[Expr + 1 - Expr]]]])
+    (((i, l), (S[i - l + 1], d)), i_limit), β = eq_max.of(Equal[Lamda[Max[Expr + 1 - Expr, Mod]]])
     S[i], S[0], n = i_limit
 
-    (((S[i], u), S[n]), S[i_limit]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])
+    ((S[n], (S[i], u)), S[i_limit]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])
 
     ((w_K, clip_index), j_limit, S[i_limit]), K_dquote = eq_K.of(Equal[Lamda[Indexed]])
     ((w_V, S[clip_index]), S[j_limit], S[i_limit]), V_dquote = eq_V.of(Equal[Lamda[Indexed]])
@@ -66,11 +66,11 @@ def prove(Eq):
 
     Eq <<= algebra.le.eq.imply.eq.slice.apply(Eq.le_min, Eq[-2], step=d), algebra.le.eq.imply.eq.slice.apply(Eq.le_min, Eq[-1], step=d)
 
-    Eq <<= Eq[-2].this.find(Min).args[0].apply(algebra.expr.to.piece, upper=ζ[i] - 1), Eq[-1].this.find(Min).args[0].apply(algebra.expr.to.piece, upper=ζ[i] - 1)
+    Eq <<= Eq[-2].this.find(Add[2]).apply(algebra.expr.to.piece, upper=ζ[i] - 1), Eq[-1].this.find(Add[2]).apply(algebra.expr.to.piece, upper=ζ[i] - 1)
 
     Eq <<= Eq[-2].this.rhs().find(GreaterEqual).simplify(), Eq[-1].this.rhs().find(GreaterEqual).simplify()
 
-    Eq <<= Eq[-2].this.find(Min).args[1].apply(algebra.expr.to.piece, lower=ζ[i] - 1), Eq[-1].this.find(Min).args[1].apply(algebra.expr.to.piece, lower=ζ[i] - 1)
+    Eq <<= Eq[-2].this.find(Min[~Add]).apply(algebra.expr.to.piece, lower=ζ[i] - 1), Eq[-1].this.find(Min[~Add]).apply(algebra.expr.to.piece, lower=ζ[i] - 1)
 
     Eq.le_zeta = algebra.eq.imply.le.relax.apply(Eq.zeta[i], upper=n)
 
@@ -93,11 +93,12 @@ def prove(Eq):
     Eq << Eq[2].subs(Eq[-2], Eq[-1])
 
     
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-12-27
 from . import compact
-# updated on 2022-03-30
+# updated on 2023-05-14
 from . import indexed

@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(is_nonnegative, lt):
     x = is_nonnegative.of(Expr >= 0)
-    _x, M = lt.of(Less)
-    assert x == _x
+    S[x], M = lt.of(Less)
 
     return Less(x * x, M * M)
 
@@ -27,9 +26,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.expand()
 
-    Eq << Eq[-1] - Eq[-1].lhs.args[0]
+    Eq << Eq[-1] - Eq[-1].lhs.args[1]
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-07-05
+# updated on 2023-05-20

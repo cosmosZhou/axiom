@@ -6,8 +6,7 @@ def apply(self):
     int0, int1 = self.of(Union)
     assert int1.left_open == int1.right_open == int0.left_open == int0.right_open
     a, b = int0.of(Interval)
-    _b, _a = int1.of(Interval)
-    assert a == _a and b == _b
+    S[b], S[a] = int1.of(Interval)
 
     return Equal(self, Interval(Min(a, b), Max(b, a)))
 

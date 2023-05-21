@@ -3,10 +3,8 @@ from util import *
 
 @apply
 def apply(self):
-    [*args], variable, count = self.of(Difference[Add])
-
-    assert count == 1
-    rhs = Add(*(Difference(arg, variable, count).simplify() for arg in args))
+    [*args], variable, S[1] = self.of(Difference[Add])
+    rhs = Add(*(Difference(arg, variable, 1).simplify() for arg in args))
 
     return Equal(self, rhs, evaluate=False)
 

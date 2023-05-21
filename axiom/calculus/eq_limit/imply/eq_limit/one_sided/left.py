@@ -3,9 +3,7 @@ from util import *
 
 @apply
 def apply(limited_f):
-    (fx, (x, x0, dir)), A = limited_f.of(Equal[Limit])
-    assert dir == 0
-
+    (fx, (x, x0, S[0])), A = limited_f.of(Equal[Limit])
     return Equal(Limit[x:x0:-1](fx), A)
 
 
@@ -17,11 +15,11 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Equal(Limit[x:x0](f(x)), A))
 
-    Eq << calculus.eq.given.any_all.limit_definition.apply(Eq[1])
+    Eq << calculus.eq_limit.given.any_all.limit_definition.apply(Eq[1])
 
     delta = Eq[-1].variable
     epsilon = Eq[-1].expr.expr.rhs
-    Eq << calculus.eq.imply.any_all.limit_definition.apply(Eq[0], epsilon, delta)
+    Eq << calculus.eq_limit.imply.any.all.limit_definition.apply(Eq[0], epsilon, delta)
 
     Eq << Eq[-1].this.find(Greater).apply(algebra.abs_gt.to.ou)
 
@@ -35,10 +33,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(And[~Less]) + x0
 
-    Eq << Eq[-1].this.find(And).apply(sets.et.to.el.interval)
+    Eq << Eq[-1].this.find(And).apply(sets.cond.cond.to.el.interval)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

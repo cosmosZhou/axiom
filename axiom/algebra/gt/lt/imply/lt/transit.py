@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(b_greater_than_x, a_less_than_x):
     b, x = b_greater_than_x.of(GreaterEqual)
-    a, _x = a_less_than_x.of(Less)
-    assert x == _x
+    a, S[x] = a_less_than_x.of(Less)
     return Less(a, b)
 
 

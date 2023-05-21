@@ -7,14 +7,15 @@ def apply(subset, exist):
 
     B, A = subset.of(Subset)
 
-    index = -1
-    for i, (x, *domain) in enumerate(limits):
+    for index, (x, *domain) in enumerate(limits):
         if len(domain) == 1:
             if domain[0] == B:
-                index = i
                 break
-
-    assert index >= 0
+        elif len(domain) == 2:
+            if x.range(*domain) == B:
+                break
+    else:
+        return
 
     limits[index] = (x, A)
     return Any(expr, *limits)
@@ -33,9 +34,13 @@ def prove(Eq):
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[1], simplify=None)
 
     Eq << algebra.cond.any.imply.any_et.apply(Eq[0], Eq[-1], simplify=None)
-    Eq << Eq[-1].this.expr.args[::2].apply(sets.el.subset.imply.el)
+
+    Eq << Eq[-1].this.expr.args[1:].apply(sets.el.subset.imply.el)
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-07-10
+# updated on 2023-05-18

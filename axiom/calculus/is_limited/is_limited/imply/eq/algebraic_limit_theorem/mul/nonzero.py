@@ -3,13 +3,9 @@ from util import *
 
 @apply
 def apply(limited_f, limited_g):
-    from axiom.calculus.is_limited.imply.any_all.limit_definition import of_limited
+    from axiom.calculus.is_limited.imply.any.all.limit_definition import of_limited
     fx, (x, x0, dir) = of_limited(limited_f, nonzero=True)
-    gx, (_x, _x0, _dir) = of_limited(limited_g, real=True)
-    assert dir == _dir
-
-    assert x == _x
-    assert x0 == _x0
+    gx, S[(x, x0, dir)] = of_limited(limited_g, real=True)
 
     return Equal(Limit[x:x0:dir](fx * gx), limited_f.lhs * limited_g.lhs)
 
@@ -26,18 +22,18 @@ def prove(Eq):
     ε = Symbol(real=True, positive=True)
     ε_0 = Symbol(real=True, positive=True)
     δ_0 = Symbol(real=True, positive=True)
-    Eq.limit_A_definition = calculus.is_limited.imply.any_all.limit_definition.symbol_subs.apply(Eq[0], ε_0, δ_0, var='A')
+    Eq.limit_A_definition = calculus.is_limited.imply.any.all.limit_definition.symbol_subs.apply(Eq[0], ε_0, δ_0, var='A')
 
     A = -Eq.limit_A_definition.expr.expr.lhs.arg.args[0]
     Eq << Eq[0].subs(A.this.definition.reversed)
 
-    Eq.abs_gt_zero = sets.is_nonzero_real.imply.gt_zero.abs.apply(Eq[-1])
+    Eq.abs_gt_zero = sets.is_nonzero.imply.gt_zero.abs.apply(Eq[-1])
 
-    Eq.abs_is_positive = sets.is_nonzero_real.imply.is_positive.abs.apply(Eq[-1], simplify=None)
+    Eq.abs_is_positive = sets.is_nonzero.imply.is_positive.abs.apply(Eq[-1], simplify=None)
 
-    Eq << sets.is_nonzero_real.imply.is_nonzero_real.div.apply(Eq[-1])
+    Eq << sets.is_nonzero.imply.is_nonzero.div.apply(Eq[-1])
 
-    Eq << sets.is_nonzero_real.imply.is_positive.abs.apply(Eq[-1], simplify=None)
+    Eq << sets.is_nonzero.imply.is_positive.abs.apply(Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.lhs.apply(algebra.abs.to.reciprocal, simplify=None)
 
@@ -45,13 +41,13 @@ def prove(Eq):
 
     ε_1 = Symbol(real=True, positive=True)
     δ_1 = Symbol(real=True, positive=True)
-    Eq.limit_B_definition = calculus.is_limited.imply.any_all.limit_definition.symbol_subs.apply(Eq[1], ε_1, δ_1, var='B')
+    Eq.limit_B_definition = calculus.is_limited.imply.any.all.limit_definition.symbol_subs.apply(Eq[1], ε_1, δ_1, var='B')
 
     B = -Eq.limit_B_definition.expr.expr.lhs.arg.args[0]
     Eq << algebra.imply.le.abs.add.mul.apply(f(x), g(x), A, B)
 
     δ_2 = Symbol(real=True, positive=True)
-    Eq << calculus.is_limited.imply.any_all.le.boundedness.apply(Eq[1], delta=δ_2, var='B')
+    Eq << calculus.is_limited.imply.any.all.le.boundedness.apply(Eq[1], delta=δ_2, var='B')
 
     B = Eq[-1].expr.expr.rhs
     Eq.le = Eq[-1].this.expr.expr.apply(algebra.le.lt.imply.le.subs, Eq[-2])
@@ -69,11 +65,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.expr.apply(sets.lt.is_positive.imply.lt.mul, Eq.abs_is_positive)
 
-    Eq << algebra.any_all.any_all.imply.any_all_et.limits_intersect.apply(Eq[-1], Eq.lt_fx)
+    Eq << algebra.any_all.any_all.imply.any.all.et.limits_intersect.apply(Eq[-1], Eq.lt_fx)
 
     Eq << Eq[-1].this.expr.expr.apply(algebra.lt.lt.imply.lt.add)
 
-    Eq << algebra.any_all.any_all.imply.any_all_et.limits_intersect.apply(Eq.le, Eq[-1])
+    Eq << algebra.any_all.any_all.imply.any.all.et.limits_intersect.apply(Eq.le, Eq[-1])
 
     Eq << Eq[-1].this.expr.expr.apply(algebra.lt.le.imply.lt.transit)
 

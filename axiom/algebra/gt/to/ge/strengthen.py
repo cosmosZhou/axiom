@@ -1,11 +1,11 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(gt):
     a, x = gt.of(Greater)
     assert x.is_integer and a.is_integer
-    return Equivalent(gt, GreaterEqual(a, x + 1).simplify(), evaluate=False)
+    return GreaterEqual(a, x + 1).simplify()
 
 
 @prove

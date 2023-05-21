@@ -8,8 +8,7 @@ def apply(given):
         lt, gt = gt, lt
 
     e, a = lt.args
-    _e, b = gt.args
-    assert e == _e
+    S[e], b = gt.args
 
     if lt.is_Less:
         left_open = False

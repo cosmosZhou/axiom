@@ -3,12 +3,8 @@ from util import *
 
 @apply
 def apply(eq, ge):
-    if ge.is_Equal:
-        eq, ge = ge, eq
-
-    (xi, (i, _0, n)), a = eq.of(Equal[Sum])
-    xn, _a = ge.of(GreaterEqual)
-    assert a == _a
+    (xi, (i, S[0], n)), a = eq.of(Equal[Sum])
+    xn, S[a] = ge.of(GreaterEqual)
 
     assert n > 0
     assert xn == xi._subs(i, n - 1)

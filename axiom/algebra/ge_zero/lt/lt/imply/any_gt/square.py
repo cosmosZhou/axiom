@@ -50,7 +50,7 @@ def prove(Eq):
 
     Eq << algebra.infer.given.et.infer.apply(Eq[-1], index=None)
 
-    Eq <<= Eq[-3].this.rhs.apply(algebra.gt.given.gt_zero), Eq[-2].this.rhs.apply(algebra.lt.transport, lhs=0)
+    Eq <<= Eq[-1].this.rhs.apply(algebra.gt.given.gt_zero), Eq[-3].this.rhs.apply(algebra.lt.transport, lhs=0)
 
     Eq <<= Eq[-2].this.find(Add).apply(algebra.add.to.mul.st.square_difference), Eq[-1].this.rhs * 2
 
@@ -72,7 +72,7 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this.rhs.apply(algebra.add_gt_zero.given.et, 0), Eq[-1].this.rhs.apply(algebra.gt_zero.given.gt)
 
-    Eq <<= Eq[-2].this.rhs.args[0] / 3, Eq[-1].this.rhs.reversed
+    Eq <<= Eq[-2].this.rhs.args[1] / 3, Eq[-1].this.rhs.reversed
 
     Eq <<= algebra.infer.given.et.infer.apply(Eq[-1])
 
@@ -92,7 +92,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs / 2
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-07-07
+# updated on 2023-05-20

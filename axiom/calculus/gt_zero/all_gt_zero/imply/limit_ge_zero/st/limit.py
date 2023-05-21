@@ -4,8 +4,12 @@ from util import *
 @apply
 def apply(is_positive, all_is_positive):
     (fx, (x, x0, dir)), (epsilon, domain) = all_is_positive.of(All[Limit > 0])
-    _0, delta = domain.of(Interval)
-    assert _0 == 0
+    if domain.is_LessEqual:
+        S[epsilon], delta = domain.args
+        assert epsilon > 0
+        assert epsilon.domain.min().is_Infinitesimal
+    else:
+        S[0], delta = domain.of(Interval)
     b = x0 + epsilon
     assert not b._has(epsilon)
     return GreaterEqual(Limit[x:b:-1](fx), 0)

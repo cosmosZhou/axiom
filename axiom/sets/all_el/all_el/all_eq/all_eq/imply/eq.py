@@ -6,14 +6,12 @@ def apply(all_a, all_b, equality_a, equality_b):
     from axiom.sets.all_el.all_el.all_eq.imply.eq import analyze
     A, B, a, b, fa, gb = analyze(all_a, all_b, equality_a)
 
-    eqs = Equal(b, Lambda(a, fa)(gb))
     if equality_b.is_ForAll:
         assert equality_b.variable == b
         assert equality_b.limits == all_b.limits
         equality_b = equality_b.expr
 
-    assert equality_b.is_Equal
-    assert equality_b == eqs or equality_b.reversed == eqs
+    S[Lambda(a, fa)(gb)] = equality_b.of(Equal[b])
 
     return Equal(Card(A), Card(B))
 

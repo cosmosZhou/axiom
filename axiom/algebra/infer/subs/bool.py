@@ -2,7 +2,7 @@ from util import *
 
 
 
-@apply(given=None)
+@apply
 def apply(given, index=None, invert=False):
     p, q = given.of(Infer)
     if index is None:
@@ -19,7 +19,7 @@ def apply(given, index=None, invert=False):
         new = S.true
 
     q = q._subs(old, new)
-    return Equivalent(given, Infer(p, q), evaluate=False)
+    return Infer(p, q)
 
 
 @prove

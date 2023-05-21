@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self):
-    function, *limits = self.of(Sum)
+    expr, *limits = self.of(Sum)
     variables = self.variables
 
-    for _, cond in function.of(Piecewise):
+    for _, cond in expr.of(Piecewise):
         assert not cond.has(*variables)
 
-    ecs = [(self.func(expr, *limits).simplify(), cond) for expr, cond in function.of(Piecewise)]
+    ecs = [(self.func(expr, *limits).simplify(), cond) for expr, cond in expr.of(Piecewise)]
 
     return Equal(self, Piecewise(*ecs))
 
@@ -24,23 +24,23 @@ def prove(Eq):
     f, h = Function(real=True)
     Eq << apply(Sum[j:D, i:C](Piecewise((f(i, j), Element(x, A) & Element(y, B)), (h(i, j), True))))
 
-    Eq << algebra.eq.given.ou.apply(Eq[0])
+    Eq << algebra.cond_piece.given.ou.apply(Eq[0])
 
-    Eq << Eq[-1].this.args[1].apply(algebra.et.given.et.subs.bool, index=slice(0, 2))
+    Eq << Eq[-1].this.args[1].apply(algebra.et.given.et.subs.bool, index=slice(1, 3))
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, index=0, invert=True)
+    Eq << Eq[-1].this.find(And).apply(algebra.et.given.et.subs.bool, index=1, invert=True)
 
     Eq << Eq[-1].this.apply(algebra.ou.given.infer, -1)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 
-from . import push_front
-from . import pop_back
 # created on 2020-03-17
-# updated on 2022-09-20
+# updated on 2023-05-20
+from . import pop
+from . import unshift

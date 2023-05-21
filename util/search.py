@@ -249,7 +249,7 @@ def detect_and_change():
         pivot = -1
         for i, line in enumerate(lines):
             if re.match('def prove', line):
-                pivot = i            
+                pivot = i
         
         if pivot < 0:
             continue
@@ -307,7 +307,7 @@ if __name__ == '__main__':
     keyword = ''
     caseSensitive = True
     wholeWord = False
-    wholeWord = True    
+    wholeWord = True
     regularExpression = False
 #     regularExpression = True
     

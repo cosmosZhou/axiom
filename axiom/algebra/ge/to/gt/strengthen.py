@@ -1,13 +1,13 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(ge):
     a, x = ge.of(GreaterEqual)
     x -= 1
     assert x.is_integer and a.is_integer
     
-    return Equivalent(ge, Greater(a, x).simplify(), evaluate=False)
+    return Greater(a, x).simplify()
 
 
 @prove

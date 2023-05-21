@@ -3,12 +3,9 @@ from util import *
 
 @apply
 def apply(given):
-    (fx, (x, n)), (_x, domain) = given.of(All[Derivative > 0])
-    assert n == 1
+    (fx, (x, S[1])), (S[x], domain) = given.of(All[Derivative > 0])
+    a, b = domain.of(Interval)
     assert not domain.left_open
-    assert x == _x
-
-    a, b = domain.args
     return All[x:Interval(a, b, left_open=True, right_open=domain.right_open)](Greater(fx, fx._subs(x, a)))
 
 
@@ -24,7 +21,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.apply(Eq[0], cond=t < b)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(algebra.lt.all.imply.all.limits.restrict)
 
@@ -46,19 +43,24 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_interval.imply.gt)
 
-    eta = Symbol(real=True, positive=True)
-    Eq << Eq[-1].this.find(Greater).apply(algebra.gt_zero.imply.any_gt, var=eta)
+    η = Symbol(real=True, positive=True)
+    Eq << Eq[-1].this.find(Greater).apply(algebra.gt_zero.imply.any_gt, var=η)
 
     Eq << Eq[-1].this.find(And).apply(algebra.cond.any.imply.any_et, simplify=None)
 
     Eq << algebra.any.imply.any.limits.swap.apply(Eq[-1], simplify=None)
 
-    Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], index=1)
+    Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1])
 
-    Eq << Eq.suffice.subs(e, eta)
+    Eq << Eq.suffice.subs(e, η)
+
     Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq[-2])
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-04-23
+# updated on 2023-05-17

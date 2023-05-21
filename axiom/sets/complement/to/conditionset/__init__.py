@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    (x, (_x, cond, baseset)), B = self.of(Complement[Cup[FiniteSet], Basic])
-    assert _x == x
+    (x, (S[x], cond, baseset)), B = self.of(Complement[Cup[FiniteSet], Basic])
     return Equal(self, conditionset(x, cond, baseset - B))
 
 

@@ -10,12 +10,12 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import sets, algebra
-    n = Symbol(integer=True)
+    from axiom import algebra, sets
 
+    n = Symbol(integer=True)
     Eq << apply((-1) ** n)
 
-    Eq << algebra.eq.given.ou.apply(Eq[0])
+    Eq << algebra.cond_piece.given.ou.apply(Eq[0])
 
     Eq << Eq[1].this.find(Equal & ~Equal).apply(algebra.is_even.to.eq)
 
@@ -25,10 +25,13 @@ def prove(Eq):
 
     Eq << sets.imply.el.pow.apply((-1) ** n)
 
-    Eq << sets.el.imply.ou.split.finiteset.apply(Eq[-1])
+    Eq << sets.el_finiteset.imply.ou.apply(Eq[-1])
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-03-01
+# updated on 2023-04-30

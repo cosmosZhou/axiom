@@ -6,7 +6,6 @@ def convert(self):
     if len(indices) == 1:
         start, stop = self.index
         size = stop - start
-        assert size.is_Integer
 
         array = []
         for i in range(size):

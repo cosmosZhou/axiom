@@ -2,10 +2,10 @@ from util import *
 
 
 @apply
-def apply(is_negative, strict_greater_than):
-    x = is_negative.of(Expr < 0)
+def apply(lt_zero, gt):
+    x = lt_zero.of(Expr < 0)
     assert x.is_finite
-    lhs, rhs = strict_greater_than.of(Greater)
+    lhs, rhs = gt.of(Greater)
     return Less(lhs * x, rhs * x)
 
 

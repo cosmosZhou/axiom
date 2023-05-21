@@ -1,14 +1,14 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given):
     e, S = given.of(NotElement)
     start, stop = S.of(Range)
 
     lower_bound = e < start
     upper_bound = e >= stop
-    return Equivalent(given, Or(lower_bound, upper_bound))
+    return Or(lower_bound, upper_bound)
 
 
 @prove

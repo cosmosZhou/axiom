@@ -3,7 +3,7 @@ from util import *
 
 def quadratic_form(x, c, doit=True):
     from axiom.discrete.matmul.to.matrix import list_to_tuple
-    [n] = x.shape
+    n, = x.shape
     if doit:
         mat = [[0] * n for _ in range(n)]
         for i in range(n):
@@ -20,7 +20,7 @@ def quadratic_form(x, c, doit=True):
     
 def reduced_sum(x, c):
     from axiom.algebra.mul.to.add.poly import generate_combination
-    [n] = x.shape
+    n, = x.shape
     sgm = 0
     for a, b in generate_combination(n, 2):
         sgm += c[2 ** a + 2 ** b] * x[a] * x[b]
@@ -30,7 +30,7 @@ def reduced_sum(x, c):
 @apply
 def apply(self):    
     x, mat, S[x] = self.of(MatMul / 2)
-    [n] = x.shape
+    n, = x.shape
     assert mat.is_Matrix
     
     coefficient = None

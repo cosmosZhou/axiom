@@ -4,19 +4,21 @@ from util import *
 @apply
 def apply(self):
     ((n, k), S[k], (x, S[k])), (S[k], a, S[n + 1]) = self.of(Sum[Binomial * Symbol * Pow])
-    assert a == 0 or a == 1
+    assert a in (0, 1)
     return Equal(self, n * (x + 1) ** (n - 1) * x)
 
 
 @prove
 def prove(Eq):
-    from axiom import discrete, algebra
+    from axiom import algebra, discrete
 
     x, k = Symbol(integer=True)
     n = Symbol(integer=True, nonnegative=True)
     Eq << apply(Sum[k:n + 1](Binomial(n, k) * x ** k * k))
 
-    Eq << Eq[-1].this.find(Binomial).apply(discrete.binom.to.mul.binom)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.shift)
+
+    Eq << Eq[-1].this.lhs().find(Binomial).apply(discrete.binom.to.mul.binom)
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.subs.offset, 1)
 
@@ -24,8 +26,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum).apply(discrete.sum_binom.to.pow.Newton)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
@@ -34,3 +36,4 @@ if __name__ == '__main__':
 from . import deux
 from . import trois
 from . import quatre
+# updated on 2023-04-12

@@ -5,8 +5,7 @@ from util import *
 
 @apply
 def apply(self):
-    boole, two = self.of(Pow)
-    assert two == 2
+    boole, S[2] = self.of(Pow)
     assert boole.is_Bool
     return Equal(self, boole)
 

@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(is_nonpositive, lt):
     x = is_nonpositive.of(Expr <= 0)
-    y, _x = lt.of(Less)
-    assert x == _x
+    y, S[x] = lt.of(Less)
 
     return Equal(Min(y ** 2, x ** 2), x ** 2)
 

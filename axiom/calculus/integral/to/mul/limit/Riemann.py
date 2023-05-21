@@ -31,13 +31,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.eq.eq.imply.eq.transit)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.args[1].apply(algebra.lt.imply.gt_zero)
 
     Eq << Eq[-1].this.rhs.apply(algebra.gt_zero.eq.imply.eq.div)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(calculus.lt.eq_limit.imply.eq.Darboux)
 

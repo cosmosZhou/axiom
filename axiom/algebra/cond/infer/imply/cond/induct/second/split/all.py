@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[1]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.cond.all.imply.all.push_back)
+    Eq << Eq[-1].this.rhs.apply(algebra.cond.all.imply.all.push)
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq[0], Eq[-1], n=n, start=1)
 

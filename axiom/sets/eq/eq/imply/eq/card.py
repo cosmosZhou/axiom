@@ -4,14 +4,11 @@ from util import *
 
 @apply
 def apply(equality_A, equality_B):
-    assert equality_A.is_Equal and equality_B.is_Equal
-    image_B, A = equality_A.args
-    image_A, B = equality_B.args
+    image_B, A = equality_A.of(Equal)
+    image_A, B = equality_B.of(Equal)
 
-    gb, b, _B = image_B.image_set()
-    fb, a, _A = image_A.image_set()
-
-    assert A == _A and B == _B
+    gb, b, S[B] = image_B.image_set()
+    fb, a, S[A] = image_A.image_set()
 
     return Equal(Card(A), Card(B))
 

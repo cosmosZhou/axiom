@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << algebra.et.imply.ou.apply(Eq[-1])
 
-    Eq << algebra.et.imply.et.apply(Eq[0], index=-1)
+    Eq << algebra.et.imply.et.apply(Eq[0], index=1)
 
     
     
@@ -45,4 +45,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2019-04-28
-# updated on 2021-11-20
+# updated on 2023-05-20

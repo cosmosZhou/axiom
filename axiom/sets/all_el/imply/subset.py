@@ -3,12 +3,9 @@ from util import *
 
 @apply
 def apply(given):
-    function, *limits = given.of(All)
-    assert len(limits) == 1
-    x, A = limits[0]
-    _x, B = function.of(Element)
+    expr, (x, A) = given.of(All)
+    S[x], B = expr.of(Element)
 
-    assert x == _x
     return Subset(A, B)
 
 

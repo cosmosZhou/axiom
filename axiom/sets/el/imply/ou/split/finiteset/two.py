@@ -4,8 +4,7 @@ from util import *
 
 @apply
 def apply(given):
-    assert given.is_Element
-    e, finiteset = given.args
+    e, finiteset = given.of(Element)
     a, b = finiteset.of(FiniteSet)
 
     return Or(Equal(e, a), Equal(e, b))

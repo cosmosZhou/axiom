@@ -43,10 +43,10 @@ def prove(Eq):
                 Equal(Ceiling(3 * Arg(-p / 3) / (S.Pi * 2) - S.One / 2) - Ceiling(3 * Arg(A * B) / (S.Pi * 2) - S.One / 2), 1),
                 x=x)
 
-    B = Symbol(Eq[2].args[0].rhs.args[0].args[1])
+    B = Symbol(Eq[2].args[1].rhs.args[1])
     Eq.B_def = B.this.definition
 
-    A = Symbol(Eq[2].args[0].rhs.args[1])
+    A = Symbol(Eq[2].args[0].rhs.args[0].find(Pow))
     Eq.A_def = A.this.definition
 
     Eq.w, Eq.w_conj, Eq.add_ww, Eq.mul_ww, Eq.w_square, Eq.w_conj_square, Eq.w3 = algebra.imply.et.eq.omega.apply('omega')
@@ -54,7 +54,7 @@ def prove(Eq):
     w = Eq.w.lhs
     Eq.w_sub = Eq.add_ww.this.apply(algebra.eq.transport)
 
-    Eq.w3_conj = algebra.eq.imply.eq.conjugate.apply(Eq.w3)
+    Eq.w3_conj = algebra.eq.imply.eq.conj.apply(Eq.w3)
 
     A_ = A * w
     Eq << ((x - A_ * ~w - B * w) * (x - A_ * w - B * ~w) * (x - A_ - B)).this.apply(algebra.mul.to.add.poly, x)
@@ -91,13 +91,13 @@ def prove(Eq):
 
     Eq.expand = Eq.expand.subs(Eq[-1])
 
-    Eq << -Eq.expand.rhs.args[1].this.apply(algebra.mul.to.add, deep=True)
+    Eq << -Eq.expand.rhs.args[-1].this.apply(algebra.mul.to.add, deep=True)
 
     Eq << Eq[-1].subs(Eq.mul_ww, Eq.w_square)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.add.collect, factor=A ** 2 * B)
+    Eq << Eq[-1].this.rhs.apply(algebra.add.collect, factor=(A ** 2, B))
 
-    Eq << Eq[-1].this.rhs.apply(algebra.add.collect, factor=B ** 2 * A)
+    Eq << Eq[-1].this.rhs.apply(algebra.add.collect, factor=(B ** 2, A))
 
     Eq << Eq[-1].subs(Eq.add_ww)
 
@@ -143,17 +143,17 @@ def prove(Eq):
 
     Eq << Eq[-1].this.args[0].reversed
 
-    Eq << Eq[-1].this.args[0].reversed
+    Eq << Eq[-1].this.args[-1].reversed
 
-    Eq << Eq[-1].this.args[0].reversed
+    Eq << Eq[-1].this.args[-1].reversed
 
     Eq << Eq[-1].subs(Eq.A_def, Eq.B_def, Eq.w, Eq.w_conj)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-11-15
-# updated on 2022-01-15
+# updated on 2023-05-20

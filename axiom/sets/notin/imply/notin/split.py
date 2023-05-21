@@ -4,14 +4,12 @@ from util import *
 
 @apply
 def apply(given, s=None):
-    assert given.is_NotElement
-
-    e, S = given.args
-    assert S.is_Union
+    e, S = given.of(NotElement)
+    args = S.of(Union)
     if s is None:
-        s = S.args[0]
+        s = args[0]
     else:
-        assert s in S.args
+        assert s in args
 
     return NotElement(e, s)
 

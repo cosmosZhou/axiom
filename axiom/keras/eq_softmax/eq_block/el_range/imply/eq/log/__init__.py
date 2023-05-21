@@ -31,7 +31,7 @@ def apply(eq_z, eq_z_quote, el):
 
     (S[A], (([S[l - 1]], [S[u - 1]]), S[oo])), z = eq_z.of(Equal[Softmax[Add[Mul[BandPart[OneMatrix] - 1]]]])
 
-    (h, S[i]), ((S[i], S[l - 1]), (S[n - i], S[u])) = el.of(Element[Indexed, Range[-Min, Min]])
+    (h, S[i]), ((S[i], S[l - 1]), (S[u], S[n - i])) = el.of(Element[Indexed, Range[-Min, Min]])
 
     return Equal(log(z[i, h[i] + i]), z_quote[i, h[i] + Min(l, n) - 1])
 
@@ -69,7 +69,7 @@ def prove(Eq):
 
     Eq.ge_neg_min, Eq.lt_min = sets.el_range.imply.et.apply(Eq[2])
 
-    Eq <<= Eq.ge_neg_min.this.find(Min).args[0].apply(algebra.expr.to.piece, upper=n - 1), Eq.lt_min.this.find(Min).args[0].apply(algebra.expr.to.piece, upper=n)
+    Eq <<= Eq.ge_neg_min.this.find(Min).args[0].apply(algebra.expr.to.piece, upper=n - 1), Eq.lt_min.this.find(Add).apply(algebra.expr.to.piece, upper=n)
 
     Eq <<= -Eq[-2].this(i).find(GreaterEqual).simplify(), Eq[-1].this(i).find(GreaterEqual).simplify()
 
@@ -89,7 +89,7 @@ def prove(Eq):
 
     Eq.loss = -algebra.eq.imply.eq.sum.apply(Eq[3] * (1 + log(1 + abs(h[i]) / 2)), (i, 0, n))
 
-
+    
 
 
 if __name__ == '__main__':
@@ -100,3 +100,4 @@ if __name__ == '__main__':
 from . import lower_triangle
 from . import upper_triangle
 from . import tf
+# updated on 2023-05-19

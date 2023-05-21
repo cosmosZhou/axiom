@@ -6,8 +6,7 @@ def apply(le, ge, contains):
     _a, a = le.of(LessEqual)
     _b, b = ge.of(GreaterEqual)
     x, domain = contains.of(Element)
-    a_, b_ = domain.of(Range)
-    assert a == a_ and b == b_
+    S[a], S[b] = domain.of(Range)
 
     return Element(x, Range(_a, _b))
 

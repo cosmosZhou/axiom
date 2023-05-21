@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any_et.limits.single_variable.apply(Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.expr.args[1].apply(sets.el_interval.imply.et)
+    Eq << Eq[-1].this.find(Element).apply(sets.el_interval.imply.et)
 
     #if self implies a False proposition, then self must be False
     Eq << Eq[-1].this.expr.apply(algebra.cond.cond.ou.given.ou, simplify=False)
@@ -41,8 +41,11 @@ def prove(Eq):
 
     Eq << ~(~Eq.any_ax & ~Eq.any_by)
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2021-05-17
+# updated on 2023-05-20

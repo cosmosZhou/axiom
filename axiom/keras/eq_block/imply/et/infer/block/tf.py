@@ -109,7 +109,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this(i).find(And).simplify()
 
-    Eq << Eq[-1].this.find(Less[2]).apply(algebra.lt.transport, rhs=slice(0, 2))
+    Eq << Eq[-1].this.find(Or[~Less]).apply(algebra.lt.transport, rhs=slice(0, 2))
 
     Eq << Eq[-1].this.find(Or).apply(algebra.ou_lt.to.lt.max)
 
@@ -133,15 +133,17 @@ def prove(Eq):
 
     Eq << Eq[-1].this(i).expr.rhs.find(ExprCondPair[Piecewise[ExprCondPair[~Piecewise]]]).find(Symbol < Min - 1).simplify()
 
-    Eq << Eq[-1].this.find(Less[2]).apply(algebra.lt.transport, rhs=slice(0, 2))
+    Eq << Eq[-1].this.find(Or[~Less]).apply(algebra.lt.transport, rhs=slice(0, 2))
 
     Eq << Eq[-1].this.find(Or).apply(algebra.ou_lt.to.lt.max)
 
     Eq << Eq[-1].this(i).find(Max).simplify()
 
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-01-04
-# updated on 2022-01-13
+# updated on 2023-05-20

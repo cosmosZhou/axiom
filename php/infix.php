@@ -421,24 +421,4 @@ function compile($infix)
 }
 
 require_once 'mysql.php';
-
-function test()
-{
-    $line = 0;
-    foreach (\mysql\select("select infix from corpus.tbl_syntax_cn limit 100000 offset $line") as list ($infix,)) {
-
-        // \std\println($infix);
-
-        // \std\println(++$line);
-        $node = compile($infix);
-
-        $nodeString = (string) $node;
-
-        if (! \std\equals($nodeString, $infix)) {
-            \std\println($infix);
-        }
-    }
-}
-
-
 ?>

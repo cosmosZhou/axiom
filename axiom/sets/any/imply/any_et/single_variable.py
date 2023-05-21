@@ -5,9 +5,9 @@ from util import *
 def apply(given):
     function, (lhs, *rhs) = given.of(Any)
     if len(rhs) == 2:
-        rhs = Range(*rhs) if lhs.is_integer else Interval(*rhs)
+        rhs = lhs.range(*rhs)
     else:
-        [rhs] = rhs
+        rhs, = rhs
 
     return Any[lhs]((function & Element(lhs, rhs)).simplify())
 

@@ -18,10 +18,13 @@ def prove(Eq):
 
     Eq << algebra.ou.given.cond.apply(Eq[-2], index=1)
 
-    Eq << algebra.ou.given.cond.apply(Eq[-1], index=1)
+    Eq << algebra.ou.given.cond.apply(Eq[-1], index=0)
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-01-03
+# updated on 2023-05-20

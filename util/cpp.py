@@ -28,7 +28,7 @@ class VectorBase:
         start = cast(self._M_start, c_void_p).value
         if start is None:
             assert end is None
-            return 0   
+            return 0
         return (end - start) // sizeof(self.etype)
         
     def __iter__(self):
@@ -106,7 +106,7 @@ def vector(Element_Type):
         
         def __init__(self, *args):
             if len(args) == 1: 
-                [args] = args
+                args, = args
             # allocate memory before the final allocation occurs!
             args = [Element_Type(x) for x in args]
                         
@@ -250,7 +250,7 @@ class Lagacy:
             os.add_dll_directory(os.environ.get('MINGW_HOME') + '/bin')
             self.lib = cdll.LoadLibrary(workingDirectory + f'{lib}/Release/{lib}.dll')
         
-        # self.initialize_working_directory[c_char_p] = None        
+        # self.initialize_working_directory[c_char_p] = None
         # self.initialize_working_directory(cstring(workingDirectory))
     
         self.sizeof_string[()] = c_uint

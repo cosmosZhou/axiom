@@ -2,7 +2,7 @@ from util import *
 
 
 
-@apply(given=None)
+@apply
 def apply(given):
     boole, one = given.of(Equal)
     if not one.is_One:
@@ -11,7 +11,7 @@ def apply(given):
 
     cond = boole.of(Bool)
 
-    return Equivalent(given, cond)
+    return cond
 
 
 @prove

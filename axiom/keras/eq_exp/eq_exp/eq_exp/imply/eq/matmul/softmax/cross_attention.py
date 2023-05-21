@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(eq_D, eq_Ah, eq_Al, V):
     # diagonal part
-    (d_z, (K, Q)), D = eq_D.of(Equal[Transpose[OneMatrix * Exp[ReducedSum[Mul] * Expr ** (-S.One / 2)]]])
+    ((K, Q), d_z), D = eq_D.of(Equal[Transpose[OneMatrix * Exp[ReducedSum[Mul] * Expr ** (-S.One / 2)]]])
     n, S[d_z] = Q.shape
     # upper part
     (((S[Q], (S[0], h)), (S[K], (S[h], S[n]))), S[1 / sqrt(d_z)]), Ah = eq_Ah.of(Equal[Exp[Mul[Sliced @ Transpose[Sliced]]]])

@@ -4,14 +4,11 @@ from util import *
 @apply
 def apply(self):
     function, (x, space) = self.of(Sum)
-    x, *indices = x.of(Sliced)
+    domain, n = space.of(CartesianSpace)
+    
+    x, (start, stop) = x.of(Sliced)
 
-    assert len(indices) == 1
-    domain, *shape = space.of(CartesianSpace)
-    assert len(shape) == 1
-    n = shape[0]
-
-    start, stop = indices[0]
+    
     assert start + 1 < stop
     assert n == stop - start
 
@@ -33,17 +30,19 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.bool)
 
-    Eq << Eq[-1].this.rhs.find(Element).simplify()
+    Eq << Eq[-1].this.rhs.find(Element[2]).simplify()
 
     Eq << Eq[-1].this.rhs.find(All).apply(algebra.all.limits.subs.offset, -i - 1)
 
-    Eq << Eq[-1].this.rhs.find(And).apply(algebra.et.to.all.limits.push_front)
+    Eq << Eq[-1].this.rhs.find(And).apply(algebra.et.to.all.limits.unshift)
 
     Eq << Eq[-1].this.lhs.find(Element).simplify()
 
     Eq << Eq[-1].this.lhs.find(All).apply(algebra.all.limits.subs.offset, -i)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.split.slice.pop_front)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.split.slice.shift)
+
+    
 
 
 if __name__ == '__main__':
@@ -51,3 +50,4 @@ if __name__ == '__main__':
 
 from . import baseset
 # created on 2020-03-19
+# updated on 2023-05-20

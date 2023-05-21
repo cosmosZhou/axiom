@@ -19,7 +19,7 @@ def apply(a_is_real, b_is_real):
 def prove(Eq):
     from axiom import sets, algebra
 
-    x, y = Symbol(hyper_real=True)
+    x, y = Symbol(super_real=True)
     Eq << apply(Element(x, Reals), Element(y, Reals))
 
     Eq << sets.el.imply.any_eq.apply(Eq[0], var='a')
@@ -34,9 +34,12 @@ def prove(Eq):
     c = Symbol(real=True)
     Eq << algebra.any.imply.any.subs.apply(Eq[-1], a * b, c)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2022-04-03
 from . import add
 from . import sub
+# updated on 2023-05-03

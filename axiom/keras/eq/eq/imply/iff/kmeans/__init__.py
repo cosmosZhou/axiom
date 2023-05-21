@@ -6,24 +6,17 @@ def apply(eq_sum, eq_union, x=None):
     w_sum, M = eq_sum.of(Equal)
     w_union, M_interval = eq_union.of(Equal)
 
-    zero, _M = M_interval.of(Range)
-    assert _M == M
-    assert zero == 0
+    S[0], S[M] = M_interval.of(Range)
 
     wi_abs, limit = w_sum.of(Sum)
-    wi, _limit = w_union.of(Cup)
+    wi, S[limit] = w_union.of(Cup)
 
-    assert limit == _limit
+    S[wi] = wi_abs.of(Card)
 
-    _wi = wi_abs.of(Card)
-    assert _wi == wi
+    i, = limit
+    w, S[i] = wi.of(Indexed)
 
-    (i,) = limit
-    w, _i = wi.of(Indexed)
-    assert _i == i
-
-    _M = x.shape[0]
-    assert _M == M
+    S[M] = x.shape[0]
 
     j = Symbol(integer=True)
 

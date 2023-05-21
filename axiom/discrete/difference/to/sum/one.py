@@ -3,10 +3,8 @@ from util import *
 
 @apply
 def apply(self):
-    (function, *limits), variable, count = self.of(Difference[Sum])
-
-    assert count == 1
-    rhs = Sum(Difference(function, variable, count).simplify(), *limits)
+    (expr, *limits), variable, S[1] = self.of(Difference[Sum])
+    rhs = Sum(Difference(expr, variable, 1).simplify(), *limits)
 
     return Equal(self, rhs, evaluate=False)
 

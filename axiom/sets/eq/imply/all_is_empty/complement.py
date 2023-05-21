@@ -5,10 +5,7 @@ from util import *
 def apply(given, excludes=None):
     from sympy.concrete.limits import limits_dict
 
-    (xi, *limits), (_xi, *_limits) = given.of(Equal[Card[Cup], Sum[Card]])
-
-    assert xi == _xi
-    assert limits == _limits
+    (xi, *limits), (S[xi], *S[limits]) = given.of(Equal[Card[Cup], Sum[Card]])
 
     limitsDict = limits_dict(limits)
     i, *_ = limitsDict.keys()
@@ -50,7 +47,7 @@ def prove(Eq):
 
     Eq << Eq[0].lhs.arg.this.apply(sets.cup.to.union.split, cond={i, j})
 
-    Eq.union_less_than = sets.imply.le.cup.apply(x[i], *Eq[-1].rhs.args[0].limits)
+    Eq.union_less_than = sets.imply.le.cup.apply(x[i], *Eq[-1].rhs.args[1].limits)
 
     Eq << sets.imply.le.union.apply(*Eq[-1].rhs.args)
 
@@ -68,14 +65,18 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
 
-    Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], index=0, simplify=None)
+    Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], index=1, simplify=None)
 
-    Eq << Eq[-1].this.expr.args[0].apply(sets.el.imply.ne)
+    Eq << Eq[-1].this.find(Element).apply(sets.el.imply.ne)
 
     Eq << Eq[-1].this.expr.apply(algebra.ne.cond.imply.cond.subs)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-07-18
+# updated on 2023-05-20

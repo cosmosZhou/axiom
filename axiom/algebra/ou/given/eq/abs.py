@@ -7,9 +7,8 @@ def apply(imply):
     y, x = equal_positive.of(Equal)
     _y, _x = equal_negative.of(Equal)
     if y != _y:
-        _y, _x = _x, _y
+        S[y], _x = _x, _y
 
-    assert y == _y
     assert x == -_x
 
     return Equal(abs(y), abs(x))
@@ -18,8 +17,8 @@ def apply(imply):
 @prove
 def prove(Eq):
     from axiom import algebra
-    x, y = Symbol(real=True, given=True)
 
+    x, y = Symbol(real=True, given=True)
     Eq << apply(Equal(y, x) | Equal(y, -x))
 
     Eq << Eq[-1] ** 2
@@ -30,10 +29,13 @@ def prove(Eq):
 
     Eq << algebra.mul_is_zero.imply.ou.is_zero.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[0] - x
+    Eq << Eq[-1].this.args[1] - x
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-08-14
+# updated on 2023-05-20

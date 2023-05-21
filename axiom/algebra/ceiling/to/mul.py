@@ -31,13 +31,16 @@ def prove(Eq):
 
     Eq << Eq[2].this.lhs.apply(sets.is_noninteger.imply.eq.ceiling, ret=0)
 
-    Eq << Eq[-1].this.lhs.args[0].apply(sets.notin.imply.eq.floor_frac)
+    Eq << Eq[-1].this.find(NotElement).apply(sets.notin.imply.eq.floor_frac)
 
     Eq << Eq[-1].this.find(frac).apply(algebra.frac.to.add)
 
     Eq << Eq[-1].this.lhs.apply(algebra.eq.eq.imply.eq.add)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-05-21
+# updated on 2023-05-14

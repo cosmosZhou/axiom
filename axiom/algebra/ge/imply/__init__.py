@@ -11,5 +11,4 @@ from . import gt_zero
 from . import lt_zero
 from . import ge_zero
 from . import le_zero
-from . import ne_zero
 from . import all

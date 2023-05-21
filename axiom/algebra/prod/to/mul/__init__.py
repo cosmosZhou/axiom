@@ -18,8 +18,10 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-from . import push_back
 from . import split
 from . import doit
-from . import push_front
 # created on 2018-04-14
+from . import shift
+from . import pop
+from . import unshift
+from . import push

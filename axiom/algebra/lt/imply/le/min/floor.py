@@ -34,6 +34,7 @@ def apply(given):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     di = Symbol('d_i', integer=True)
     i0 = Symbol(integer=True)
     r, l, s = Symbol(integer=True, positive=True)
@@ -53,9 +54,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.floor.to.min)
 
-    Eq << Eq[-1].this.rhs.args[1].arg.expand()
+    Eq << Eq[-1].this.rhs.args[0].arg.expand()
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-12-29
+# updated on 2023-05-20

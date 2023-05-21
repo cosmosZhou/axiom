@@ -54,13 +54,14 @@ def prove(Eq):
 
     Eq <<= Eq.V_lower & Eq[-1]
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.transit)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.transit, reverse=True)
 
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-03-17
-# updated on 2022-03-30
+# updated on 2023-05-20
 from . import tf

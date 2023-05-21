@@ -5,3 +5,4 @@ from . import max
 from . import inf
 from . import sup
 from . import min
+from . import square_completing

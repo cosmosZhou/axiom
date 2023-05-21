@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(gt):
     x, a = gt.of(Abs > Expr)
-    return Equivalent(gt, Or(x < -a, x > a), evaluate=False)
+    return Or(x < -a, x > a)
 
 
 @prove

@@ -4,10 +4,8 @@ from util import *
 
 @apply
 def apply(given):
-    lhs, rhs = given.of(Unequal)
-    assert rhs.is_One
+    lhs, S[1] = given.of(Unequal)
     assert lhs.is_Bool
-
     return Equal(lhs, 0)
 
 

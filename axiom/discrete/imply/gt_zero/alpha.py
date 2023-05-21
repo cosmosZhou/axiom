@@ -5,8 +5,7 @@ def alpha_step(*args):
     if len(args) == 1:
         x = args[0]
         if x.shape:
-            assert len(x.shape) == 1
-            n, *_ = x.shape
+            n, = x.shape
             assert n > 0
             return Piecewise((x[0], Equal(n, 1)),
                              (x[0] + 1 / alpha(x[1:]), True))
@@ -15,8 +14,7 @@ def alpha_step(*args):
     else:
         x, *args = args
         if x.shape:
-            assert len(x.shape) == 1
-            n, *_ = x.shape
+            n, = x.shape
             assert n > 0
             return Piecewise((x[0] + 1 / alpha(*args), Equal(n, 1)),
                              (x[0] + 1 / alpha(x[1:], *args), True))

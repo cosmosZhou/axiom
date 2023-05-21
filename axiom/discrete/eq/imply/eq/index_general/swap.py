@@ -7,10 +7,9 @@ def apply(given, i=None, j=None, w=None):
     x_cup_finiteset, interval = given.of(Equal)
     n = interval.max() + 1
     assert interval.min() == 0
-    assert len(x_cup_finiteset.limits) == 1
-    k, a, b = x_cup_finiteset.limits[0]
-    assert b - a == n
-    x = Lamda(x_cup_finiteset.expr.arg, *x_cup_finiteset.limits).simplify()
+    
+    arg, (k, a, S[a + n]) = x_cup_finiteset.of(Cup[FiniteSet])
+    x = Lamda[k:a:a + n](arg).simplify()
 
     if j is None:
         j = Symbol(domain=Range(n), given=True)
@@ -18,8 +17,8 @@ def apply(given, i=None, j=None, w=None):
     if i is None:
         i = Symbol(domain=Range(n), given=True)
 
-    assert j >= 0 and j < n
-    assert i >= 0 and i < n
+    assert 0 <= j < n
+    assert 0 <= i < n
 
     index = index_function(n)
     if w is None:
@@ -69,6 +68,7 @@ def prove(Eq):
     Eq.di_domain, Eq.x_di_eqaulity = Eq[-2].subs(Eq.di_definition.reversed), Eq[-1].subs(Eq.di_definition.reversed)
 
     Eq << algebra.cond.cond.imply.cond.subs.apply(Eq.di_domain, Eq.expand)
+
     Eq.expand = algebra.cond.cond.imply.cond.subs.apply(Eq.dj_domain, Eq[-1])
 
     Eq << sets.el.el.imply.subset.finiteset.apply(Eq.dj_domain, Eq.di_domain, simplify=False)
@@ -90,22 +90,34 @@ def prove(Eq):
     Eq << Eq[-1].this.rhs.subs(Eq.union_equality)
 
     Eq << Eq.di_definition.this.rhs.defun().this.rhs.apply(discrete.matmul.to.sum)
+    Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add.unshift)
 
-    Eq << Eq[-2].subs(Eq[-1].reversed)
-
-    Eq.piecewise_equality = Eq.piecewise_equality.subs(Eq[-1])
-    Eq.dj_eq = sets.el.imply.eq.piece.expr_swap.apply(Eq.dj_domain, Eq.piecewise_equality.lhs.args[2])
-    Eq << sets.el.imply.eq.piece.expr_swap.apply(Eq.di_domain, Eq.piecewise_equality.lhs.args[-1])
-    Eq << sets.el.imply.eq.intersect.apply(Eq.dj_domain)
-    Eq << algebra.eq.eq.imply.eq.subs.apply(Eq[-1], Eq[-2])
-    Eq << Eq[-1].this.rhs.find(Element).simplify()
-    Eq << Eq.dj_eq + Eq[-1]
-    Eq << Eq.piecewise_equality.subs(Eq[-1])
-    Eq << discrete.eq.imply.eq.index.kroneckerDelta.indexOf.apply(Eq[0], i, j)
-    Eq << Eq[-1].subs(Eq.di_definition.reversed).subs(Eq.dj_definition.reversed)
     Eq << Eq[-3].subs(Eq[-1].reversed)
 
+    Eq.piecewise_equality = Eq.piecewise_equality.subs(Eq[-1])
 
+    Eq.dj_eq = sets.el.imply.eq.piece.expr_swap.apply(Eq.dj_domain, Eq.piecewise_equality.lhs.args[2])
+
+    Eq << sets.el.imply.eq.piece.expr_swap.apply(Eq.di_domain, Eq.piecewise_equality.lhs.args[-1])
+
+    Eq << sets.el.imply.eq.intersect.apply(Eq.dj_domain)
+
+    Eq << algebra.eq.eq.imply.eq.subs.apply(Eq[-1], Eq[-2])
+
+    Eq << Eq[-1].this.rhs.find(Element).simplify()
+
+    Eq << Eq.dj_eq + Eq[-1]
+
+    Eq << Eq.piecewise_equality.subs(Eq[-1])
+
+    Eq << discrete.eq.imply.eq.index.kroneckerDelta.indexOf.apply(Eq[0], i, j)
+
+    Eq << Eq[-1].subs(Eq.di_definition.reversed).subs(Eq.dj_definition.reversed)
+
+    Eq << Eq[-3].subs(Eq[-1].reversed)
+
+    
+    
 
 
 if __name__ == '__main__':
@@ -113,4 +125,4 @@ if __name__ == '__main__':
 
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 # created on 2020-10-28
-# updated on 2022-01-08
+# updated on 2023-05-05

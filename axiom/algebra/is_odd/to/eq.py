@@ -2,10 +2,10 @@ from util import *
 
 
 
-@apply(given=None)
+@apply
 def apply(self):
     n = self.of(Equal[Expr % 2, 1])
-    return Equivalent(self, Equal((-1) ** n, -1))
+    return Equal((-1) ** n, -1)
 
 
 @prove

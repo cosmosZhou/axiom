@@ -23,11 +23,11 @@ def prove(Eq):
 
     Eq << algebra.infer.given.infer.subs.apply(Eq[-2])
 
-    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.block.pop_front)
+    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.block.shift)
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.transpose.block, 1)
 
-    Eq << Eq[-1].this.find(Lamda[Tuple[2]])().expr.args[0].simplify()
+    Eq << Eq[-1].this.find((~Lamda) * Lamda)().expr.simplify()
 
     Eq << Eq[-1].this.find(Det).apply(discrete.det_block.to.zero)
 
@@ -38,4 +38,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2020-10-15
-# updated on 2021-12-15
+# updated on 2023-03-18

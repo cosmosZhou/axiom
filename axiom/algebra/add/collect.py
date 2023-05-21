@@ -97,7 +97,16 @@ def collect(self, *factors):
 
     return sgm
 
+def search_for_intersection(args):
+    from axiom.algebra.add.to.mul import intersect
+    for i in range(1, len(args)):
+        for j in range(i):
+            #j < i             
+            ret = intersect(args[i].args if args[i].is_Mul else [args[i]], args[j].args if args[j].is_Mul else [args[j]])
+            if ret:
+                return i, j, ret
 
+            
 @apply(simplify=False)
 def apply(self, factor=None):
     args = self.of(Add)
@@ -124,10 +133,24 @@ def apply(self, factor=None):
         for arg in muls:
             arg = Mul(*{*arg.args} - common_terms)
             additives.append(arg)
-
-        rhs = Add(*additives) * Mul(*common_terms) + Add(*others)
+            
+        if len(additives) > 1:
+            factor = Mul(*common_terms)
+            additives = Add(*additives)
+        else:
+            #try a better algorithm to find common terms:
+            i, j, common_terms = search_for_intersection(args)
+            others = [*args]
+            del others[i]
+            del others[j]
+            
+            from axiom.algebra.add.to.mul import factorize
+            additives, factor = factorize([args[i], args[j]], common_terms)
+        rhs = additives * factor + Add(*others) 
     else:
-        if factor.is_Mul:
+        if isinstance(factor, (tuple, list)):
+            rhs = collect(self, *factor)
+        elif factor.is_Mul:
             rhs = collect(self, *factor.args)
         else:
             rhs = collect(self, factor)
@@ -144,7 +167,10 @@ def prove(Eq):
 
     Eq << Eq[0].this.find(Mul[Add]).apply(algebra.mul.to.add)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-08-02
+# updated on 2023-05-20

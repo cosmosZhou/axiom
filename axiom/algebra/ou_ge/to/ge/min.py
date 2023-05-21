@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given):
     (x, a), (S[x], b) = given.of(GreaterEqual | GreaterEqual)
-    return Equivalent(given, GreaterEqual(x, Min(a, b)))
+    return GreaterEqual(x, Min(a, b))
 
 
 @prove

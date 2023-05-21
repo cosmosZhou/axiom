@@ -27,9 +27,9 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.apply(Eq[0], cond=Eq[-1].lhs)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.args[:2].apply(sets.ne.el.imply.el, simplify=None)
+    Eq << Eq[-1].this.rhs.args[::2].apply(sets.ne.el.imply.el, simplify=None)
 
     Eq << Eq[-1].this.rhs.apply(sets.ne.el.imply.el)
 
@@ -37,7 +37,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.gt_zero.imply.ge_zero)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2020-11-20
+# updated on 2023-05-14

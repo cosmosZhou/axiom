@@ -1,17 +1,9 @@
 from util import *
 
 
-# given : A & B = A | B => A = B
-
-
 @apply
 def apply(given):
-    x_y, _01 = given.of(Equal)
-    x, y = x_y.of(FiniteSet)
-    zero, one = _01.of(FiniteSet)
-
-    assert zero.is_zero
-    assert one.is_One
+    (x, y), S[{0, 1}] = given.of(Equal[FiniteSet])
     return Unequal(x, y)
 
 

@@ -4,31 +4,22 @@ from util import *
 @apply
 def apply(all_x, all_p, equality):
 
-    (x_cup_finiteset, e), (x, S) = all_x.of(All[Equal])
-    (((__x, (_p, _k)), (k, z, n)), __S), (_x, _S), (p, P) = all_p.of(All[Element[Lamda[Indexed[Indexed]]]])
+    (x_cup_finiteset, e), (x, s) = all_x.of(All[Equal])
+    (((S[x], (p, k)), (S[k], S[0], n)), S[s]), (S[x], S[s]), (S[p], P) = all_p.of(All[Element[Lamda[Indexed[Indexed]]]])
 
     assert x_cup_finiteset == x.cup_finiteset()
-    assert S == _S == __S
-    assert z == 0
-    assert n == x.shape[0]
-    assert __x == _x == x
-    assert _p == p
-    assert _k == k
+    S[n] = x.shape[0]
 
     if P.is_set:
         P = P.condition_set().condition
 
-    assert p.shape[0] == n
+    S[n] = p.shape[0]
 
-    lhs, rhs = P.args
-    assert rhs == Range(n)
-    assert lhs == p.cup_finiteset()
+    S[p.cup_finiteset()], S[Range(n)] = P.args
 
-    _e, _n = equality.of(Equal[Card])
-    assert _n == n
-    assert _e == e
+    S[e], S[n] = equality.of(Equal[Card])
 
-    return Equal(Card(S), factorial(n))
+    return Equal(Card(s), factorial(n))
 
 
 @prove(proved=False)
@@ -48,7 +39,7 @@ def prove(Eq):
 
     Eq << sets.eq.imply.any_eq.condset.all.apply(Eq[2])
 
-    Eq << algebra.all.any.imply.any_all_et.apply(Eq[0], Eq[-1])
+    Eq << algebra.all.any.imply.any.all.et.apply(Eq[0], Eq[-1])
 
     Eq << Eq[-1].this.expr.expr.apply(algebra.eq.eq.imply.eq.transit)
 

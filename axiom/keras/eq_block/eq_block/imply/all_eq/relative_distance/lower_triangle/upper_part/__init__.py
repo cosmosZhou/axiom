@@ -40,7 +40,7 @@ def prove(Eq):
 
     Eq << algebra.all_eq.imply.all_eq.slice.apply(Eq[-1], slice(0, i + 1))
 
-    Eq << Eq[-1].this.find(-Indexed + ~Indexed).args[1].apply(algebra.expr.to.piece, upper=n - 1)
+    Eq << Eq[-1].this.find((~Indexed) - Indexed).args[1].apply(algebra.expr.to.piece, upper=n - 1)
 
     Eq.V_upper = Eq[-1].this(i).expr.rhs(j).find(GreaterEqual).simplify()
 
@@ -58,11 +58,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.transit)
 
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-03-17
-# updated on 2022-03-30
+# updated on 2023-05-15
 from . import tf

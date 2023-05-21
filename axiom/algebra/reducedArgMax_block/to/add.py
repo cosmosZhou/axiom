@@ -5,7 +5,7 @@ from util import *
 def apply(self):
     assert not self.shape
     x, *args = self.of(ReducedArgMax[BlockMatrix])
-    [n] = x.shape
+    n, = x.shape
     y = BlockMatrix(*args)
 
     i = self.generate_var(domain=Range(n))

@@ -5,11 +5,7 @@ from util import *
 def apply(is_continuous, is_differentiable):
     from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle import of_differentiable, of_continuous
     fz, (z, a, b) = of_continuous(is_continuous)
-    _fz, (_z, _a, _b) = of_differentiable(is_differentiable)
-    assert _fz == fz
-    assert _z == z
-    assert _a == a
-    assert _b == b
+    S[fz], S[(z, a, b)] = of_differentiable(is_differentiable)
     assert a < b
 
     fa = fz._subs(z, a)
@@ -23,7 +19,7 @@ def prove(Eq):
     from axiom import calculus
 
     from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle import is_differentiable
-    from axiom.calculus.all_eq.imply.all_any_eq.intermediate_value_theorem import is_continuous
+    from axiom.calculus.all_eq.imply.all.any.eq.intermediate_value_theorem import is_continuous
     a = Symbol(real=True)
     b = Symbol(domain=Interval(a, oo, left_open=True))
     f = Function(shape=(), real=True)

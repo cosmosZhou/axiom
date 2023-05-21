@@ -3,6 +3,9 @@ from util import *
 
 def transport(Equal, given, lhs=-1, rhs=None):
     _lhs, _rhs = given.of(Equal)
+    if rhs is None and not _lhs.is_Add:
+        rhs = -1
+        
     if rhs is None:
         [*_lhs] = _lhs.of(Add)
         try:
@@ -30,9 +33,9 @@ def transport(Equal, given, lhs=-1, rhs=None):
     return Equal(_lhs, _rhs, evaluate=False)
 
 
-@apply(given=None)
+@apply
 def apply(given, lhs=-1, rhs=None):
-    return Equivalent(given, transport(Equal, given, lhs=lhs, rhs=rhs), evaluate=False)
+    return transport(Equal, given, lhs=lhs, rhs=rhs)
 
 
 @prove
@@ -42,7 +45,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs + x
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-05-16
+# updated on 2023-04-30

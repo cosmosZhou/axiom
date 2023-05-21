@@ -8,21 +8,16 @@ def apply(given):
 
     yt, x, i, n = dissect_distance(dx)
 
-    _yt, y_mean = dy.of(Abs[Expr - Expr])
+    S[yt], y_mean = dy.of(Abs[Expr - Expr])
 
-    assert _yt == yt
     y_sum, m = y_mean.of(Expr / Expr)
 
     yj, (j, *ab) = y_sum.of(Sum)
     if ab:
-        zero, _m = ab
-        assert zero == 0
-        assert _m == m
+        S[0], S[m] = ab
 
-    y, _j = yj.of(Indexed)
-    assert j == _j
-    _y, t = yt.of(Indexed)
-    assert y == _y
+    y, S[j] = yj.of(Indexed)
+    S[y], t = yt.of(Indexed)
     assert t < m
 
     return LessEqual(Sum[i:n]((x[i] - (Sum[i:n](x[i]) + yt) / (n + 1)) ** 2) + (yt - (Sum[i:n](x[i]) + yt) / (n + 1)) ** 2 + Sum[j:m]((y[j] - (Sum[j:m](y[j]) - yt) / (m - 1)) ** 2) - (yt - (Sum[j:m](y[j]) - yt) / (m - 1)) ** 2,
@@ -47,9 +42,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.add.split, cond={n})
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.pop_back)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.pop)
 
-    Eq << Eq[-1].find(Sum, Sum).this.apply(algebra.sum.to.add.pop_back)
+    Eq << Eq[-1].find(Sum, Sum).this.apply(algebra.sum.to.add.pop)
 
     Eq << Eq[-2].subs(Eq[-1])
 
@@ -69,13 +64,16 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.args[0].apply(algebra.mul.to.add.st.variance)
 
-    Eq << Eq[-1].this.lhs.find(Add, Mul, Add, Sum).limits_subs(i, j)
+    Eq << Eq[-1].this.lhs.find(Add, Mul, Add, Sum).limits_subs(i, j, simplify=None)
 
-    Eq << Eq[-1].this.lhs.find(Sum, Add, Mul, Add, Sum).limits_subs(i, j)
+    Eq << Eq[-1].this.lhs.find(Sum, Add, Mul, Add, Sum).limits_subs(i, j, simplify=None)
 
-    Eq << Eq[-1].this.lhs.args[2].limits_subs(i, j)
+    Eq << Eq[-1].this.lhs.args[2].limits_subs(i, j, simplify=None)
 
     Eq << Eq[-1].this.lhs.args[0].find(Expr ** 2).apply(algebra.square.negate)
+
+    
+    
 
 
 if __name__ == '__main__':
@@ -84,3 +82,4 @@ if __name__ == '__main__':
 
 from . import function
 # created on 2019-11-28
+# updated on 2023-05-06

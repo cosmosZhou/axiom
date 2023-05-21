@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(self):
     interval, k = self.of(Cup[Tuple])
-    _k, k1 = interval.of(Interval)
-    assert k == _k and k1 == k + 1
+    S[k], S[k + 1] = interval.of(Interval)
     assert interval.left_open and not interval.right_open
 
     return Equal(self, Interval(-oo, oo, left_open=True))
@@ -29,7 +28,7 @@ def prove(Eq):
 
     Eq << algebra.imply.gt.ceiling.apply(x)
 
-    Eq << algebra.imply.le.ceiling.apply(x)
+    Eq << algebra.imply.le_ceiling.apply(x)
 
 
 if __name__ == '__main__':

@@ -14,8 +14,8 @@ def apply(given, i=None, j=None):
     if i is None:
         i = Symbol(domain=Range(n), given=True)
 
-    assert j >= 0 and j < n
-    assert i >= 0 and i < n
+    assert 0 <= j < n
+    assert 0 <= i < n
 
     return Equal(KroneckerDelta(x[i], x[j]), KroneckerDelta(i, j))
 

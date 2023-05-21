@@ -1,12 +1,12 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given):
     x, complement = given.of(Element)
 
     B, A = complement.of(Complement)
-    return Equivalent(given, And(Element(x, B), NotElement(x, A)))
+    return And(Element(x, B), NotElement(x, A))
 
 
 @prove

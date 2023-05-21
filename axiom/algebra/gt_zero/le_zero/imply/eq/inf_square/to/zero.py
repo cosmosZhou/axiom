@@ -32,11 +32,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Greater).apply(algebra.gt_zero.imply.eq.inf_square.to.zero)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.eq.eq.imply.eq.subs.lhs, swap=True, reverse=True)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.eq.imply.eq.subs.lhs, reverse=True)
 
-
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-08-25
+# updated on 2023-05-20

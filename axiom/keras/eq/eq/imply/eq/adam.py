@@ -22,9 +22,7 @@ def extract(recurrence):
 @apply
 def apply(initial_condition, recurrence):
     m, g, beta, t = extract(recurrence)
-    assert initial_condition.is_Equal
-    m0, _0 = initial_condition.args
-    assert m0 == m[0] and _0.is_zero
+    S[m[0]], S[0] = initial_condition.of(Equal)
 
     k = Symbol(integer=True, nonnegative=True)
 
@@ -38,7 +36,7 @@ def prove(Eq):
     m, g = Symbol(shape=(oo,), real=True)
     t = Symbol(integer=True, positive=True)
     beta = Symbol(real=True, nonzero=True)
-#     beta = Symbol(real=True, zero=False)
+    #beta = Symbol(real=True, zero=False)
     Eq << apply(Equal(m[0], 0), Equal(m[t], beta * m[t - 1] + (1 - beta) * g[t]))
 
     Eq << Eq[1] / beta ** t
@@ -54,7 +52,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add)
 
-    Eq << Eq[-1] - Eq[-1].rhs.args[0]
+    Eq << Eq[-1] - Eq[-1].rhs.args[1]
 
     Eq << Eq[-1].this.lhs.simplify()
 
@@ -66,8 +64,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Add).apply(algebra.add.to.mul)
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-12-22
+# updated on 2023-05-20

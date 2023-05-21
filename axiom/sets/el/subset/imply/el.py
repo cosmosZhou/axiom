@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(contains, subset):
     x, A = contains.of(Element)
-    _A, B = subset.of(Subset)
-    assert A == _A
+    S[A], B = subset.of(Subset)
     return Element(x, B)
 
 

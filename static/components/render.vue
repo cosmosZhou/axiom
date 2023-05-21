@@ -78,7 +78,7 @@
 </template>
 
 <script>
-console.log('importing render.vue');
+console.log('import render.vue');
 var renderedAlready = false;
 import renderProve from "./renderProve.vue"
 import renderApply from "./renderApply.vue"

@@ -1,11 +1,9 @@
 from util import *
 
 
-
 @apply
 def apply(given, m):
-    assert given.is_Greater
-    lhs, rhs = given.args
+    lhs, rhs = given.of(Greater)
     return GreaterEqual(Min(lhs, m), Min(rhs, m))
 
 

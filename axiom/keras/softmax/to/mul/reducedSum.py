@@ -1,7 +1,6 @@
 from util import *
 
 
-
 @apply
 def apply(self):
     x = self.of(Softmax)

@@ -9,14 +9,14 @@ def limits_swap(Sum, self):
     try:
         i, _a, _b = limit_i
     except:
-        (i,) = limit_i
+        i, = limit_i
         _ab = function.domain_defined(i)
         _a, _b = _ab.of(Range)
 
     try:
         j, a, b = limit_j
     except:
-        (j,) = limit_j
+        j, = limit_j
         ab = function.domain_defined(j)
         a, b = ab.of(Range)
 
@@ -73,11 +73,13 @@ def prove(Eq):
 
     Eq << Eq[0].this.lhs.apply(algebra.sum.bool)
 
-    Eq << Eq[-1].this.lhs.expr.args[-1].arg.apply(sets.et_el.transform.i_ge_j)
+    Eq << Eq[-1].this.lhs.expr.args[-1].arg.apply(sets.el.el.transform.i_ge_j)
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.bool)
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.swap)
+
+    
 
 
 if __name__ == '__main__':
@@ -85,3 +87,4 @@ if __name__ == '__main__':
 
 from . import parallel
 # created on 2019-11-06
+# updated on 2023-05-21

@@ -6,9 +6,8 @@ def apply(lt, gt):
     x, a = lt.of(Less)
     _x, b = gt.of(Greater)
     if x != _x:
-        a, x, _x, b = _x, b, a, x,
+        a, x, S[x], b = _x, b, a, x,
 
-    assert x == _x
 
     return Element(x, Interval(b, a, left_open=True, right_open=True))
 

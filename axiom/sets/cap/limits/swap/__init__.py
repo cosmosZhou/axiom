@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << Eq.induct.this.lhs.apply(sets.cap.to.intersect.split, {n})
 
-    Eq.induct_dissected = Eq[-1].this.lhs.find(Cap).apply(sets.cap.to.intersect.doit.outer.setlimit)
+    Eq.induct_dissected = Eq[-1].this.find(Intersection[~Cap]).apply(sets.cap.to.intersect.doit.outer.setlimit)
 
     s = Symbol(Cap[j:0:n + 1](f[i] | g[i, j]))
     Eq << s.this.definition
@@ -39,11 +39,14 @@ def prove(Eq):
 
     Eq << Eq.induct_dissected.subs(Eq[-1].reversed)
 
-    Eq << sets.eq.imply.eq.intersect.apply(Eq[0], Eq[-1].lhs.args[0])
+    Eq << sets.eq.imply.eq.intersect.apply(Eq[0], Eq[-1].find(Cap))
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
     Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=1)
+
+    
+    
 
 
 if __name__ == '__main__':
@@ -52,3 +55,4 @@ if __name__ == '__main__':
 from . import intlimit
 from . import subs
 # created on 2021-01-31
+# updated on 2023-05-13

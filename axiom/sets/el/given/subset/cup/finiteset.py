@@ -5,7 +5,7 @@ from util import *
 def apply(el):
     e, S = el.of(Element)
 
-    [n] = e.shape
+    n, = e.shape
     i = el.generate_var(integer=True)
     
     return Subset(e.cup_finiteset(i), S.space)

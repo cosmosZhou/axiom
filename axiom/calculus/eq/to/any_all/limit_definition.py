@@ -1,21 +1,29 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given, epsilon=None, delta=None):
-    return Equivalent(given, any_all(given, epsilon, delta))
+    return any_all(given, epsilon, delta)
 
 
-def any_all(given, epsilon=None, delta=None):
+def any_all(given, epsilon=None, delta=None, upper=None):
     (fx, (x, x0, direction)), a = given.of(Equal[Limit])
 
     if isinstance(epsilon, Basic):
-        assert epsilon.is_positive
         assert not epsilon.is_given
+        assert epsilon.domain.min().is_Infinitesimal
+        if upper:
+            assert epsilon < upper
     else:
         if epsilon is None:
             epsilon = 'epsilon'
-        epsilon = given.generate_var(x, real=True, positive=True, var=epsilon)
+        kwargs = dict(real=True, var=epsilon)
+        if upper:
+            assert upper > 0
+            kwargs['domain'] = Interval(0, upper, left_open=True, right_open=True)
+        else:
+            kwargs['positive'] = True
+        epsilon = given.generate_var(x, **kwargs)
 
     if fx.is_real:
         assert a.is_extended_real
@@ -31,10 +39,11 @@ def any_all(given, epsilon=None, delta=None):
         kwargs['real'] = True
         kwargs['var'] = 'delta' if delta is None else delta
 
-    if delta is None:
-        delta = given.generate_var(x, positive=True, **kwargs)
-    else:
+    if isinstance(delta, Basic):
+        assert not delta.is_given
         assert delta > 0
+    else:
+        delta = given.generate_var(x, positive=True, **kwargs)
 
     assert not x.is_integer or x.is_integer and x0.is_infinite
 # https://en.wikipedia.org/wiki/Limit_of_a_function
@@ -84,6 +93,8 @@ def prove(Eq):
     direction = 1
     Eq << apply(Equal(Limit[x:x0:direction](f(x)), a))
 
+    
+
 
 if __name__ == '__main__':
     run()
@@ -91,3 +102,4 @@ if __name__ == '__main__':
 # https://baike.baidu.com/item/单调有界定理#3
 # The monotone bounded convergence theorem
 # created on 2020-04-03
+# updated on 2023-04-17

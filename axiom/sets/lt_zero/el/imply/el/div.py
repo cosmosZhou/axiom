@@ -2,11 +2,22 @@ from util import *
 
 
 @apply
-def apply(is_positive, contains):
-    a = is_positive.of(Expr < 0)
-    fa, R = contains.of(Element)
-    assert R.is_Interval
-    return Element(fa / a, Interval(R.stop / a, R.start / a, left_open=R.right_open, right_open=R.left_open))
+def apply(lt_zero, el):
+    a = lt_zero.of(Expr < 0)
+    fa, R = el.of(Element)
+    
+    stop, start = R.of(Interval)
+    if start.is_infinite:
+        start = -start
+    else:
+        start /= a
+
+    if stop.is_infinite:
+        stop = -stop
+    else:
+        stop /= a
+        
+    return Element(fa / a, Interval(start, stop, left_open=R.right_open, right_open=R.left_open))
 
 
 @prove
@@ -18,13 +29,15 @@ def prove(Eq):
 
     Eq << sets.el_interval.imply.et.apply(Eq[1])
 
-
-
     Eq <<= algebra.lt_zero.gt.imply.lt.div.apply(Eq[0], Eq[-2]), algebra.lt_zero.le.imply.ge.div.apply(Eq[0], Eq[-1])
 
     Eq << sets.lt.ge.imply.el.interval.apply(Eq[-2], Eq[-1])
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-06-03
+# updated on 2023-04-17

@@ -3,14 +3,11 @@ from util import *
 
 @apply
 def apply(ne, contains):
-    if ne.is_Element:
-        ne, contains = contains, ne
     _x, y = ne.of(Unequal)
     x, s = contains.of(Element)
 
     if x != _x:
-        _x, y = y, _x
-    assert x == _x
+        S[x], y = y, _x
 
     return Element(x, s - y.set)
 

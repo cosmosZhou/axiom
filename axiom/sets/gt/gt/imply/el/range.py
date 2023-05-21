@@ -6,9 +6,8 @@ def apply(greater_than, _greater_than):
     a, x = greater_than.of(Greater)
     _x, b = _greater_than.of(Greater)
     if x != _x:
-        a, x, _x, b = _x, b, a, x,
+        a, x, S[x], b = _x, b, a, x,
 
-    assert x == _x
     assert x.is_integer
     return Element(x, Range(b + 1, a))
 

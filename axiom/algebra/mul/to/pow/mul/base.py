@@ -45,7 +45,7 @@ def determine_args(args, simplify):
 def apply(self, *, simplify=True):
     args, others = determine_args(self.of(Mul), simplify=simplify)
     assert not others
-    [ret] = args
+    ret, = args
     return Equal(self, ret, evaluate=False)
 
 

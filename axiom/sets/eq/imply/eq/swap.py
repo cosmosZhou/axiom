@@ -5,7 +5,7 @@ from axiom.sets.imply.eq.swap import swap
 @apply
 def apply(given, i=None, j=None):
     x, y = given.of(Equal)
-    assert len(x.shape) == 1
+    n, = x.shape
 
     assert x.dtype.is_set
     if i is None:

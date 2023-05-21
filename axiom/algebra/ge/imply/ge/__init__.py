@@ -8,3 +8,9 @@ from . import prod
 from . import relax
 from . import floor
 from . import transport
+from . import pow
+from . import exp
+from . import inf
+from . import sup
+from . import minima
+from . import maxima

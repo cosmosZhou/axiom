@@ -2,11 +2,9 @@ from util import *
 
 
 @apply
-def apply(x_less_than_y, x_greater_than_y_minus):
-    x, y = x_less_than_y.of(Less)
-    _x, _y = x_greater_than_y_minus.of(Greater)
-    assert x == _x
-    assert y + _y == 0
+def apply(lt, gt):
+    x, y = lt.of(Less)
+    S[x], S[-y] = gt.of(Greater)
     return Less(abs(x), y)
 
 
@@ -19,19 +17,20 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.abs.to.piece)
 
-    Eq << Eq[-1].apply(algebra.cond.given.ou)
+    Eq << Eq[-1].apply(algebra.cond_piece.given.ou)
 
     Eq << algebra.cond.given.et.restrict.apply(Eq[-1], cond=Eq[0])
 
-    Eq << algebra.et.given.et.subs.bool.apply(Eq[-1])
-
-
+    Eq << algebra.et.given.et.subs.bool.apply(Eq[-1], 0)
 
     Eq << -Eq[1]
 
     Eq << algebra.cond.given.et.restrict.apply(Eq[-2], cond=Eq[-1])
 
-    Eq << algebra.et.given.et.subs.bool.apply(Eq[-1])
+    Eq << algebra.et.given.et.subs.bool.apply(Eq[-1], index=0)
+
+    
+    
 
 
 if __name__ == '__main__':
@@ -40,3 +39,4 @@ if __name__ == '__main__':
 from . import both
 from . import max
 # created on 2018-07-29
+# updated on 2023-05-20

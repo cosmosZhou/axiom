@@ -6,8 +6,7 @@ def apply(lt, le):
     a, x = lt.of(Less)
     _x, b = le.of(LessEqual)
     if x != _x:
-        a, x, _x, b = _x, b, a, x
-    assert x == _x
+        a, x, S[x], b = _x, b, a, x
     return Greater(b, a)
 
 

@@ -7,12 +7,11 @@ def apply(contains0, contains1, contains2):
     interval01.of(Interval[0, 1])
     assert interval01.left_open and interval01.right_open
 
-    x0, S = contains1.of(Element)
-    x1, _S = contains2.of(Element)
-    assert S == _S
-    assert S.is_Interval
+    x0, s = contains1.of(Element)
+    x1, S[s] = contains2.of(Element)
+    assert s.is_Interval
 
-    return Element(x0 * w + x1 * (1 - w), S)
+    return Element(x0 * w + x1 * (1 - w), s)
 
 
 @prove

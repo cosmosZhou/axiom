@@ -3,11 +3,10 @@ from util import *
 
 @apply
 def apply(given):
-    assert given.is_Equal
-    assert given.lhs.is_Intersection and given.rhs.is_Union or given.lhs.is_Union and given.rhs.is_Intersection
-    A, B = given.lhs.args
-    _A, _B = given.rhs.args
-    assert A == _A and B == _B
+    lhs, rhs = given.of(Equal)
+    assert lhs.is_Intersection and rhs.is_Union or lhs.is_Union and rhs.is_Intersection
+    A, B = lhs.args
+    S[A], S[B] = rhs.args
     return Equal(A, B)
 
 

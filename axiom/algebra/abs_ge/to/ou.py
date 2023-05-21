@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(ge):
     x, a = ge.of(Abs >= Expr)
-    return Equivalent(ge, Or(x <= -a, x >= a))
+    return Or(x <= -a, x >= a)
 
 
 @prove

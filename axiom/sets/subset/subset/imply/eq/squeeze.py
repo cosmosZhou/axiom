@@ -4,9 +4,7 @@ from util import *
 @apply
 def apply(a_less_than_x, x_less_than_b):
     A, B = a_less_than_x.of(Subset)
-    _B, _A = x_less_than_b.of(Subset)
-    assert A == _A
-    assert B == _B
+    S[B], S[A] = x_less_than_b.of(Subset)
 
     return Equal(A, B)
 

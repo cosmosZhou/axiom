@@ -5,16 +5,16 @@ from util import *
 def apply(self):
     function, *limits, (x, a, b) = self.of(Lamda)
     diff = b - a
-    assert diff.is_Number
-
     if limits:
         [(y, _a, _b)] = limits
         diff_y = _b - _a
-        assert diff_y.is_Number
         array = tuple(tuple(self[sympify(i), sympify(j)] for j in range(diff_y)) for i in range(diff))
 
+    elif sh := function.shape:
+        assert all(isinstance(s, (int, Integer)) for s in sh)
+        diff_y, = sh
+        array = tuple(tuple(self[sympify(i), sympify(j)] for j in range(diff_y)) for i in range(diff))
     else:
-        assert not function.shape
         array = tuple(self[sympify(i)] for i in range(diff))
 
     return Equal(self, Matrix(array), evaluate=False)

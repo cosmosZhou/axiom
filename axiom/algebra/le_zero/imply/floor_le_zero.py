@@ -22,14 +22,18 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.args[1:].apply(algebra.le.ge.imply.ge.transit, ret=1)
 
-    Eq << Eq[-1].this.expr.args[1:].apply(sets.lt.ge.imply.el.interval)
+    Eq << Eq[-1].this.expr.args[::2].apply(sets.lt.ge.imply.el.interval)
 
     Eq << Eq[-1].this.expr.args[1].apply(sets.el.imply.eq.floor)
 
     Eq << Eq[-1].this.expr.apply(algebra.ge.eq.imply.ge.transit)
+
     Eq << Eq[-1].reversed
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-12-06
+# updated on 2023-05-18

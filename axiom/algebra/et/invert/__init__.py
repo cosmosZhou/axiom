@@ -1,7 +1,7 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given, i=-1, j=None, *, simplify=True):
     [*args] = given.of(And)
     if i < 0:
@@ -18,7 +18,7 @@ def apply(given, i=-1, j=None, *, simplify=True):
     imply = And(*args)
     if simplify:
         imply = imply.simplify()
-    return Equivalent(given, imply, evaluate=False)
+    return imply
 
 @prove
 def prove(Eq):

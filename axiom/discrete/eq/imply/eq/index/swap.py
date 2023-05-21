@@ -1,19 +1,15 @@
 from util import *
 
 
-from axiom.discrete.eq.imply.et.index import index_function
-
-
 @apply
 def apply(given, i=None, j=None, w=None):
-    assert given.is_Equal
-    x_cup_finiteset, interval = given.args
+    from axiom.discrete.eq.imply.et.index import index_function
+    x_cup_finiteset, interval = given.of(Equal)
     n = interval.max() + 1
     assert interval.min() == 0
-    assert len(x_cup_finiteset.limits) == 1
-    k, a, b = x_cup_finiteset.limits[0]
-    assert b - a == n
-    x = Lamda(x_cup_finiteset.expr.arg, *x_cup_finiteset.limits).simplify()
+    
+    arg, (k, a, S[a + n]) = x_cup_finiteset.of(Cup[FiniteSet])
+    x = Lamda[k:a:a + n](arg).simplify()
 
     if j is None:
         j = Symbol(domain=Range(n), given=True)
@@ -21,8 +17,8 @@ def apply(given, i=None, j=None, w=None):
     if i is None:
         i = Symbol(domain=Range(n), given=True)
 
-    assert j >= 0 and j < n
-    assert i >= 0 and i < n
+    assert 0 <= j < n
+    assert 0 <= i < n
 
     index = index_function(n)
     if w is None:

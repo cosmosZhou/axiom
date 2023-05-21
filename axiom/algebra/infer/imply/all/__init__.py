@@ -12,7 +12,7 @@ def apply(given, wrt=None):
         limits = []
         wrt = {*wrt}
         for eq in eqs:
-            [x] = eq.free_symbols & wrt
+            x, = eq.free_symbols & wrt
             limits.append((x, eq))
         return All(q, *limits)
     return All[wrt:cond](q)

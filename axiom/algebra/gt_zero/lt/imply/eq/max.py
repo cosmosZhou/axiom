@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(is_positive, lt):
     x = is_positive.of(Expr > 0)
-    _x, y = lt.of(Less)
-    assert x == _x
+    S[x], y = lt.of(Less)
 
     return Equal(Max(y ** 2, x ** 2), y ** 2)
 

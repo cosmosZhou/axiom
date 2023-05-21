@@ -6,7 +6,6 @@ def doit(All, self):
 
     assert limits
     assert s.is_FiniteSet
-
     sgm = self.identity(xi)
     for t in s.args:
         _limits = []
@@ -18,9 +17,9 @@ def doit(All, self):
     return sgm
 
 
-@apply(given=None)
+@apply
 def apply(self):
-    return Equivalent(self, doit(All, self))
+    return doit(All, self)
 
 
 @prove

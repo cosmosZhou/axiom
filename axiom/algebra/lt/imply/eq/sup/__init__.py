@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq <<= algebra.all.given.et.all.split.apply(Eq[-2], cond=y < m), algebra.all.given.ou.apply(Eq[-1])
 
-    Eq <<= Eq[-3].subs(Eq.eq_min), Eq[-2].this.expr.apply(algebra.any.given.cond.subs, x, (M + y) / 2), Eq[-1].this.args[0].apply(sets.notin_interval.given.ou)
+    Eq <<= Eq[-2].subs(Eq.eq_min), Eq[-3].this.expr.apply(algebra.any.given.cond.subs, x, (M + y) / 2), Eq[-1].this.find(NotElement).apply(sets.notin_interval.given.ou)
 
     Eq <<= Eq[-2].this.expr.apply(algebra.any.given.cond.subs, x, (m + M) / 2), algebra.all_et.given.et.all.apply(Eq[-1])
 
@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq <<= algebra.all.given.infer.apply(Eq[-3]), Eq[-2].this.rhs * 2, Eq[-1].this.rhs.apply(sets.el.given.el.mul.interval, 2)
 
-    Eq <<= algebra.infer.given.et.infer_et.apply(Eq[-3], cond=Eq[0]), Eq[-2].this.rhs - y, Eq[-1].this.rhs.apply(sets.el.given.el.sub, M)
+    Eq <<= algebra.infer.given.et.infer.et.apply(Eq[-3], cond=Eq[0]), Eq[-2].this.rhs - y, Eq[-1].this.rhs.apply(sets.el.given.el.sub, M)
 
     Eq << Eq[-2].this.lhs.apply(sets.el_interval.imply.gt)
 
@@ -46,8 +46,11 @@ def prove(Eq):
 
     Eq << Eq[-2].this.rhs * 2
 
+    
+
 
 if __name__ == '__main__':
     run()
 from . import to
 # created on 2019-09-10
+# updated on 2023-05-20

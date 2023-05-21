@@ -16,12 +16,11 @@ def prove(Eq):
     f = Symbol(shape=(oo,), etype=dtype.real)
     g = Symbol(shape=(oo, oo), etype=dtype.real)
 
-
     Eq << apply(Cap[i:a + d:j + d + 1, j:a:n](f[i] | g[i, j]))
 
     Eq << Eq[0].this.lhs.apply(sets.cap.piece)
 
-    Eq << Eq[-1].this.lhs.expr.args[0].cond.apply(sets.et_el.transform.i_lt_j)
+    Eq << Eq[-1].this.lhs.expr.args[0].cond.apply(sets.el.el.transform.i_lt_j)
 
     Eq << Eq[-1].this.rhs.apply(sets.cap.piece)
 

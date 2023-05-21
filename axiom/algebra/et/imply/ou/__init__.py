@@ -2,13 +2,20 @@ from util import *
 
 
 @apply
-def apply(self):
-    for i, eq in enumerate(self.args):
-        if isinstance(eq, Or):
-            args = [*self.args]
-            del args[i]
-            this = self.func(*args)
-            return Or(*((arg & this).simplify() for arg in eq.args))
+def apply(self, i=None):
+    [*args] = self.of(And)
+    if i is None:
+        for i, eq in enumerate(args):
+            if eq.is_Or:
+                break
+        else :
+            return
+    else :
+        eq = args[i]
+            
+    del args[i]
+    this = self.func(*args)
+    return Or(*((arg & this).simplify() for arg in eq.of(Or)))
 
 
 @prove
@@ -24,9 +31,12 @@ def prove(Eq):
 
     Eq << algebra.et.imply.et.apply(Eq[0])
 
-    Eq << algebra.cond.cond.imply.cond.subs.apply(Eq[-1], Eq[-3], invert=True)
+    Eq << algebra.cond.cond.imply.cond.subs.apply(Eq[-2], Eq[-3], invert=True)
 
-    Eq <<= Eq[-1] & Eq[-3]
+    Eq <<= Eq[-1] & Eq[-2]
+
+    
+    
 
 
 if __name__ == '__main__':
@@ -34,4 +44,4 @@ if __name__ == '__main__':
 
 from . import collect
 # created on 2018-01-06
-# updated on 2021-11-20
+# updated on 2023-05-13

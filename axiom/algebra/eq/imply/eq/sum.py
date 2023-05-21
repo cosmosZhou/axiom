@@ -19,7 +19,6 @@ def prove(Eq):
     from axiom import algebra
     n = Symbol(integer=True, positive=True)
     i = Symbol(domain=Range(n))
-    assert i.is_integer
     f, g = Function(shape=(), complex=True)
 
     Eq << apply(Equal(f(i), g(i)), (i, 0, n))

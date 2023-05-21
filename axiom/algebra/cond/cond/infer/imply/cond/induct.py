@@ -24,9 +24,9 @@ def apply(f0, f1, suffice, n=None, start=0):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     n = Symbol(integer=True, positive=True)
     f, g = Symbol(integer=True, shape=(oo,))
-
     Eq << apply(f[1] < g[1], f[2] < g[2], Infer((f[n] < g[n]) & (f[n + 1] < g[n + 1]), f[n + 2] < g[n + 2]), n=n, start=1)
 
     Eq << Infer((f[n] < g[n]) & (f[n + 1] < g[n + 1]), f[n + 1] < g[n + 1], plausible=True)
@@ -37,10 +37,13 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq[-1], Eq[-2], n=n, start=1)
 
-    Eq << algebra.et.imply.cond.apply(Eq[-1], index=1)
+    Eq << algebra.et.imply.cond.apply(Eq[-1], index=0)
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2019-03-14
+# updated on 2023-05-20

@@ -3,10 +3,8 @@ from util import *
 
 @apply
 def apply(given):
-    assert given.is_NotElement
-    n, interval = given.args
-    a, _n = interval.of(Range)
-    assert n == _n - 1
+    n, interval = given.of(NotElement)
+    a, S[n + 1] = interval.of(Range)
     return LessEqual(n, a - 1)
 
 

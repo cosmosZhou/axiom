@@ -35,10 +35,13 @@ def prove(Eq):
 
     Eq << algebra.any.given.ou.apply(Eq[-1], cond={t})
 
-    Eq << algebra.ou.given.cond.apply(Eq[-1], index=0)
+    Eq << algebra.ou.given.cond.apply(Eq[-1], index=1)
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-09-01
+# updated on 2023-05-20

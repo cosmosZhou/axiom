@@ -17,18 +17,17 @@ def prove(Eq):
 
     Eq <<= Eq[1] & Eq[2]
 
-    
-    
+
+
 
 
 if __name__ == '__main__':
     run()
 
 
-from . import split
 from . import collect
-from . import mul
-from . import subs
 from . import transit
 # created on 2018-01-16
 # updated on 2021-11-24
+from . import eq
+from . import subs

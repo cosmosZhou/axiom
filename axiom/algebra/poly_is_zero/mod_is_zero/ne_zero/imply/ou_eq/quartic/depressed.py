@@ -1,9 +1,8 @@
 from util import *
 
 
-from axiom.algebra.poly_is_zero.given.et_eq.cubic.one_leaded import cubic_solve
 from axiom.algebra.ne_zero.poly_is_zero.imply.ne import cubic_delta
-
+from axiom.algebra.poly_is_zero.given.et.eq.cubic.one_leaded import cubic_solve
 
 @apply
 def apply(fx, mod_is_zero, is_nonzero, x=None):
@@ -72,7 +71,7 @@ def prove(Eq):
 
     Eq << Equal(Eq[-1].rhs, 0).this.apply(algebra.poly_is_zero.imply.et.infer.quadratic, x)
 
-    Eq << Equal(cubic_delta(y, alpha, beta, gamma), 0).this.apply(algebra.poly_is_zero.given.et_eq.mod.cubic.one_leaded, y, d=1)
+    Eq << Equal(cubic_delta(y, alpha, beta, gamma), 0).this.apply(algebra.poly_is_zero.given.et.eq.mod.cubic.one_leaded, y, d=1)
 
     Eq << Eq[-1].subs(Eq[1])
 

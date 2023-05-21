@@ -37,10 +37,13 @@ def prove(Eq):
     f, h, g = Function(real=True)
     Eq << apply(Unequal(x, y) | Equal(f(x), g(y)) & (y > 0) | Equal(h(x), g(y)) & (y > 0), cond=y > 0)
 
-    Eq << Eq[1].this.args[0].apply(algebra.cond.ou.given.ou, simplify=None)
+    Eq << Eq[1].this.find(And).apply(algebra.cond.ou.given.ou, simplify=None)
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-01-15
+# updated on 2023-05-12

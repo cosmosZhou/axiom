@@ -40,7 +40,7 @@ def prove(Eq):
 
     Eq << algebra.gt.imply.ge.strengthen.apply(Eq[-1])
 
-    Eq << algebra.imply.le.floor.apply((b - 1) / 2) * 2 + 1
+    Eq << algebra.imply.floor_le.apply((b - 1) / 2) * 2 + 1
 
     Eq << algebra.le.le.imply.le.transit.apply(Eq.less_than, Eq[-1])
 

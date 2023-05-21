@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul.to.add)
 
-    Eq << algebra.eq.given.et_eq.complex.apply(Eq[-1])
+    Eq << algebra.eq.given.et.eq.complex.apply(Eq[-1])
 
     Eq << Eq[-2].this.lhs.apply(geometry.re.to.mul.cos)
     Eq << Eq[-1].this.lhs.apply(geometry.im.to.mul.sin)

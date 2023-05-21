@@ -1,46 +1,46 @@
 from util import *
 
-from axiom.algebra.et_eq.imply.et_eq import equate
 
 
 @apply
 def apply(eq_1_high, et_eq):
     λ_1_high, λ_1 = eq_1_high.of(Equal[Expr / Expr, S.One / 2])
-    
+
     (r_12, r_22), (r_23, r_34), (S[r_34], r_44), (r_45, r_55), (r_56, r_66), (r_67, r_71), (r_11, S[r_12]), (S[r_22], S[r_23]), (S[r_44], S[r_45]), (S[r_55], S[r_56]), (S[r_66], S[r_67]) = et_eq.of(And[Equal[11]])
-    
+
     λ_1_sharp, S[λ_1] = r_11.of(Expr / Expr)
     λ_2, S[λ_1_sharp] = r_12.of(Expr / Expr)
-    
+
     λ_2_sharp, S[λ_2] = r_22.of(Expr / Expr)
-    
+
     λ_3, S[λ_2_sharp] = r_23.of(Expr / Expr)
-    
+
     λ_4, S[λ_3] = r_34.of(Expr / Expr)
-    
+
     λ_4_sharp, S[λ_4] = r_44.of(Expr / Expr)
-    
+
     λ_5, S[λ_4_sharp] = r_45.of(Expr / Expr)
-    
+
     λ_5_sharp, S[λ_5] = r_55.of(Expr / Expr)
-    
+
     λ_6, S[λ_5_sharp] = r_56.of(Expr / Expr)
-    
+
     λ_6_sharp, S[λ_6] = r_66.of(Expr / Expr)
-    
+
     λ_7, S[λ_6_sharp] = r_67.of(Expr / Expr)
-        
+
     S[λ_1_high], S[λ_7] = r_71.of(Expr / Expr)
-    
+
     w = (S.One / 2) ** (S.One / 12)
-    
+
     return Equal(λ_1_sharp / λ_1, w), Equal(λ_4 / λ_3, w), Equal(λ_2 / λ_1, w ** 2), Equal(λ_4 / λ_1, w ** 5)
 
 
 @prove
 def prove(Eq):
     from axiom import algebra
-
+    from axiom.algebra.et.imply.et.eq.just_intonation import equate
+    
     λ_1, λ_2, λ_3, λ_4, λ_5, λ_6, λ_7 = Symbol(real=True, positive=True)
     λ_1_sharp = Symbol("λ_{1^\#}", real=True, positive=True)
     λ_2_sharp = Symbol("λ_{2^\#}", real=True, positive=True)

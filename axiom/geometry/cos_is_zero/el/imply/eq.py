@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(is_zero, contains):
     x = is_zero.of(Equal[Cos, 0])
-    _x, domain = contains.of(Element)
-    assert _x == x
+    S[x], domain = contains.of(Element)
     assert domain in Interval(0, S.Pi)
     assert S.Pi / 2 in domain
     return Equal(x, S.Pi / 2)

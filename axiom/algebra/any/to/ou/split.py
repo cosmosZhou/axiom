@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self, indices, wrt=None, evaluate=False):
     from axiom.algebra.sum.to.add.split import split
-    return Equivalent(self, split(Any, self, indices, wrt=wrt), evaluate=evaluate)
+    return split(Any, self, indices, wrt=wrt)
 
 
 @prove

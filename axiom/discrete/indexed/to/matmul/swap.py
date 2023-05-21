@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(x, d, w=None):
     n = x.shape[0]
-    assert d.shape == (n,)
+    S[n], = d.shape
     i, j, k = Symbol(integer=True)
 
     if w is None:

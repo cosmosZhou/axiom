@@ -1,7 +1,7 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given, i=-1, j=None):
     [*args] = given.of(Or)
     if i < 0:
@@ -13,7 +13,7 @@ def apply(given, i=-1, j=None):
     conj = pivot.invert()
     args[j] &= conj
 
-    return Equivalent(given, Or(*args))
+    return Or(*args)
 
 @prove
 def prove(Eq):

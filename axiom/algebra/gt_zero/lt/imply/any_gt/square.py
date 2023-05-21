@@ -54,7 +54,7 @@ def prove(Eq):
 
     Eq <<= algebra.infer.given.et.infer.apply(Eq[-3]), Eq[-2].this.rhs.apply(algebra.lt.transport, lhs=0), Eq[-1].this.rhs.apply(algebra.gt.given.gt_zero)
 
-    Eq <<= Eq[-3].this.rhs * 2, Eq[-2].this.rhs * 2, Eq[-1].this.rhs.apply(algebra.add_gt_zero.given.et, index=0)
+    Eq <<= Eq[-3].this.rhs * 2, Eq[-2].this.rhs * 2, Eq[-1].this.rhs.apply(algebra.add_gt_zero.given.et, index=1)
 
     Eq <<= Eq[-3].this.rhs.apply(algebra.add_gt_zero.given.et, index=0), Eq[-2].this.rhs.apply(algebra.gt.transport), algebra.infer.given.et.infer.apply(Eq[-1])
 
@@ -62,7 +62,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs / 3
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-08-26
+# updated on 2023-05-20

@@ -1,12 +1,11 @@
 from util import *
 
-from axiom.algebra.eq.le.imply.le.subs import ratsimp
 
 @apply
 def apply(less_than_f, less_than):
     assert less_than_f.is_Greater
     assert less_than.is_LessEqual
-
+    from axiom.algebra.eq.le.imply.le.subs import ratsimp
     lhs, rhs, k = ratsimp(less_than_f, less_than)
     assert k < 0
     return Greater(lhs, rhs)

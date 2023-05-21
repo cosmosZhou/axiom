@@ -3,9 +3,10 @@ from util import *
 
 @apply
 def apply(self):
-    (sgm, sgm_t), den = self.of((Expr - Expr) / Expr)
-    (xi, xj), (j, _0, i), (i, __0, n) = sgm.of(Sum[(Expr - Expr) ** 2])
-    (_xi, xt), (_i, _0, _n) = sgm_t.of(Sum[(Expr - Expr) ** 2])
+    (sgm, sgm_t), n = self.of((Expr - Expr) / Expr)
+    n += 1
+    (xi, xj), (j, S[0], i), (S[i], S[0], S[n]) = sgm.of(Sum[(Expr - Expr) ** 2])
+    (_xi, xt), (_i, S[0], S[n]) = sgm_t.of(Sum[(Expr - Expr) ** 2])
     x, t = xt.of(Indexed)
 
     assert _xi == x[_i]
@@ -15,9 +16,7 @@ def apply(self):
     assert xi == x[i]
     assert xj == x[j]
 
-    assert 0 == _0 == __0
-    assert n == _n == den + 1
-    assert t >= 0 and t < n
+    assert 0 <= t < n
 
     return Equal(self, Sum[i:n]((x[i] - (Sum[i:n](x[i]) - xt) / (n - 1)) ** 2) - (xt - (Sum[i:n](x[i]) - xt) / (n - 1)) ** 2)
 
@@ -49,7 +48,7 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq.y_sum)
 
-    Eq << algebra.eq_piece.imply.eq.sum.apply(Eq[1], Sum[i](y[i] ** 2))
+    Eq << algebra.eq_piece.imply.eq.sum.apply(Eq[1], Sum[i:n - 1](y[i] ** 2))
 
     Eq << Eq[-2].subs(Eq[-1])
 
@@ -69,10 +68,15 @@ def prove(Eq):
 
     Eq << Eq[-3] + Eq[-1]
 
-    Eq << Eq[-1].this.apply(algebra.eq.transport, lhs=slice(0, 2))
+    Eq << Eq[-1].this.apply(algebra.eq.transport, lhs=slice(0, None, 2))
+
     Eq << Eq[0].subs(Eq[-1].reversed)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-11-27
+# updated on 2023-05-20

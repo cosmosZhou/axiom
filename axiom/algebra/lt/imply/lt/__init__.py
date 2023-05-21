@@ -11,3 +11,5 @@ from . import mul
 from . import relax
 from . import log
 from . import transport
+from . import pow
+from . import exp

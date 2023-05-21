@@ -1,7 +1,7 @@
 from util import *
 
 
-from axiom.algebra.poly_is_zero.given.et_eq.cubic.one_leaded import cubic_solve
+from axiom.algebra.poly_is_zero.given.et.eq.cubic.one_leaded import cubic_solve
 from axiom.algebra.ne_zero.poly_is_zero.imply.ne import cubic_delta
 
 
@@ -9,23 +9,19 @@ from axiom.algebra.ne_zero.poly_is_zero.imply.ne import cubic_delta
 def apply(fx, add_is_zero, is_nonzero, x=None):
     try:
         (c, p), d = add_is_zero.of(Equal[Ceiling - Piecewise])
-        __d = Ceiling(c) - Piecewise(*p)
+        _d = Ceiling(c) - Piecewise(*p)
     except:
         fx, add_is_zero = add_is_zero, fx
-        __d, d = add_is_zero.of(Equal)
+        _d, d = add_is_zero.of(Equal)
 
     from axiom.algebra.poly_is_zero.imply.et.infer.quartic.one_leaded import quartic_coefficient
     fx = fx.of(Equal[0])
-    _1, _0, alpha, beta, gamma = quartic_coefficient(fx, x=x)
-    assert _0 == 0 and _1 == 1
-
+    S[1], S[0], alpha, beta, gamma = quartic_coefficient(fx, x=x)
 
     y_delta = cubic_delta(x, alpha, beta, gamma)
-    _d, y0 = cubic_solve(y_delta, x, d)
+    S[_d], y0 = cubic_solve(y_delta, x, d)
 
-    assert __d == _d
-    _beta = is_nonzero.of(Unequal[0])
-    assert _beta == beta
+    S[beta] = is_nonzero.of(Unequal[0])
 
     delta = -(alpha ** 2 / 3 + 4 * gamma) ** 3 / 27 + (-alpha ** 3 / 27 + 4 * alpha * gamma / 3 - beta ** 2 / 2) ** 2
 
@@ -79,7 +75,7 @@ def prove(Eq):
 
     Eq << Equal(Eq[-1].rhs, 0).this.apply(algebra.poly_is_zero.imply.et.infer.quadratic, x)
 
-    Eq << Equal(cubic_delta(y, alpha, beta, gamma), 0).this.apply(algebra.poly_is_zero.given.et_eq.cubic.one_leaded, y, d=1)
+    Eq << Equal(cubic_delta(y, alpha, beta, gamma), 0).this.apply(algebra.poly_is_zero.given.et.eq.cubic.one_leaded, y, d=1)
 
     Eq << Eq[-1].subs(Eq[1])
 

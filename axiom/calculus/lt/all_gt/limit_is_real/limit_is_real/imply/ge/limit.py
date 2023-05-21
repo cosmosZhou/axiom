@@ -5,14 +5,11 @@ from util import *
 def apply(lt, all_gt, limit_is_real_fx, limit_is_real_gx):
     a, b = lt.of(Less)
     (lhs, rhs), (x, domain) = all_gt.of(All[Greater])
-    _a, _b = domain.of(Interval)
-    assert a == _a and b == _b
+    S[a], S[b] = domain.of(Interval)
 
-    (_lhs, (x, x0, dir)), R = limit_is_real_fx.of(Element[Limit])
-    assert _lhs == lhs
+    (S[lhs], (x, x0, dir)), R = limit_is_real_fx.of(Element[Limit])
     assert R in Reals
-    (_rhs, limit), R = limit_is_real_gx.of(Element[Limit])
-    assert _rhs == rhs
+    (S[rhs], limit), R = limit_is_real_gx.of(Element[Limit])
     assert R in Reals
     assert limit == (x, x0, dir)
 

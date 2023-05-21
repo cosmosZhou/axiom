@@ -1,13 +1,13 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self):
     x, b = self.of(GreaterEqual)
     domain = x.domain
     a, b = domain.of(Range)
 
-    return Equivalent(self, Equal(x, b - 1))
+    return Equal(x, b - 1)
 
 
 @prove

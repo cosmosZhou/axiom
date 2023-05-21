@@ -3,10 +3,8 @@ from util import *
 
 @apply
 def apply(x):
-    assert x.is_Symbol
     domain = x.domain
-    domain.is_Interval
-    return LessEqual(*domain.args)
+    return LessEqual(*domain.of(Interval))
 
 
 @prove

@@ -3,12 +3,11 @@ from util import *
 
 @apply
 def apply(given):
-    ((f, (z, xi, direction)), _f), (_xi, a, b) = given.of(All[Equal[Limit]])
-    assert direction == 0
-    assert xi == _xi
-    assert _f == f._subs(z, xi)
+    ((f, (z, xi, S[0])), S[f._subs(z, xi)]), (S[xi], domain) = given.of(All[Equal[Limit]])
+    a, b = domain.of(Interval)
+    assert domain.is_closed
     assert b >= a
-    return Element(Maxima[z:a:b](f), Reals)
+    return Element(Maxima[z:domain](f), Reals)
 
 
 @prove(proved=False)
@@ -18,14 +17,14 @@ def prove(Eq):
     a = Symbol(real=True)
     b = Symbol(real=True, domain=Interval(a, oo, left_open=True))
     f = Function(real=True)
-    from axiom.calculus.all_eq.imply.all_any_eq.intermediate_value_theorem import is_continuous
+    from axiom.calculus.all_eq.imply.all.any.eq.intermediate_value_theorem import is_continuous
     Eq << apply(is_continuous(f, a, b))
 
-    Eq << calculus.is_continuous.imply.any_all_le.extreme_value_theorem.apply(Eq[0])
+    Eq << calculus.is_continuous.imply.any.all.le.extreme_value_theorem.apply(Eq[0])
 
-    Eq << Eq[-1].this.expr.apply(algebra.all_le.imply.le.maxima)
+    Eq << Eq[-1].this.expr.apply(algebra.all_le.imply.maxima_le)
 
-    Eq << algebra.imply.all_ge.maxima.apply(Eq[1].lhs)
+    Eq << algebra.imply.all.maxima_ge.apply(Eq[1].lhs)
 
     Eq << Eq[-1].limits_subs(Eq[-1].variable, Eq[-2].variable)
 

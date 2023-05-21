@@ -24,9 +24,12 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[0]
 
-    Eq << algebra.et.imply.cond.apply(Eq[-1], 1)
+    Eq << algebra.et.imply.cond.apply(Eq[-1])
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-09-02
+# updated on 2023-05-20

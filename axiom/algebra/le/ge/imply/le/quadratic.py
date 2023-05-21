@@ -25,8 +25,7 @@ def quadratic_coefficient(fx, x=None):
 @apply
 def apply(greater_than, less_than, quadratic=None):
     x, m = greater_than.of(GreaterEqual)
-    _x, M = less_than.of(LessEqual)
-    assert x == _x
+    S[x], M = less_than.of(LessEqual)
     x, a, b, c = quadratic_coefficient(quadratic, x)
 
     assert a > 0

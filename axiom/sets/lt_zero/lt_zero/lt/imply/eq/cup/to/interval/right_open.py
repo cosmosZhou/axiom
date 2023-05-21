@@ -66,7 +66,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.args[1].apply(algebra.lt.imply.le.strengthen.plus)
 
-    Eq << Eq[-1].this.expr.args[1].apply(algebra.le.imply.eq.min)
+    Eq << Eq[-1].this.find(Expr <= 0).apply(algebra.le.imply.eq.min)
 
     Eq << Eq[-1].this.expr.args[:2].apply(algebra.eq.cond.imply.cond.subs)
 
@@ -76,15 +76,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.args[0].apply(sets.interval_ne_empty.imply.gt)
 
-    Eq << Eq[-1].this.expr.args[0].apply(algebra.gt.imply.ge.strengthen)
+    Eq << Eq[-1].this.find(Greater).apply(algebra.gt.imply.ge.strengthen)
 
     Eq << sets.eq.eq.imply.eq.union.apply(Eq.eq_complement, Eq.is_empty)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-02-21
-# updated on 2021-11-23
+# updated on 2023-05-19

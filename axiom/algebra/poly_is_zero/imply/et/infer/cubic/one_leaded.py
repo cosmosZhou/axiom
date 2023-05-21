@@ -8,8 +8,7 @@ def apply(given, x=None):
         fx -= rhs
 
     from axiom.algebra.poly_is_zero.imply.et.infer.cubic import cubic_coefficient
-    _1, a, b, c = cubic_coefficient(fx, x=x)
-    assert _1 == 1
+    S[1], a, b, c = cubic_coefficient(fx, x=x)
     q = a ** 3 / 27 * 2 + c - a * b / 3
     p = b - a ** 2 / 3
     delta = 4 * p ** 3 / 27 + q ** 2
@@ -39,7 +38,7 @@ def prove(Eq):
     x = Symbol(x + a / 3)
     Eq.x_def = x.this.definition
 
-    Eq << Eq.x_def.this.apply(algebra.eq.transport, rhs=0).reversed
+    Eq << Eq.x_def.this.apply(algebra.eq.transport, rhs=1).reversed
 
     Eq << Eq[0].subs(Eq[-1])
 
@@ -55,13 +54,17 @@ def prove(Eq):
 
     Eq <<= Eq[-3].subs(Eq.x_def), Eq[-2].subs(Eq.x_def), Eq[-1].subs(Eq.x_def)
 
-    Eq <<= Eq[-3].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=0), Eq[-2].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=0), Eq[-1].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=0)
+    Eq <<= Eq[-3].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=-1), Eq[-2].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=-1), Eq[-1].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=-1)
 
-    Eq <<= Eq[-3].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=0), Eq[-2].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=0), Eq[-1].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=0)
+    Eq <<= Eq[-3].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=-1), Eq[-2].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=-1), Eq[-1].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=-1)
 
-    Eq <<= Eq[-3].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=0), Eq[-2].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=0), Eq[-1].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=0)
+    Eq <<= Eq[-3].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=-1), Eq[-2].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=-1), Eq[-1].this.find(Equal[Add, Add]).apply(algebra.eq.transport, lhs=-1)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-11-25
+# updated on 2023-05-20

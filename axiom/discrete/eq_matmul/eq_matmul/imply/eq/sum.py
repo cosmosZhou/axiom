@@ -6,11 +6,11 @@ def apply(eq_xy, eq_ab, i=None):
     (x, w), y = eq_xy.of(Equal[MatMul])
     (a, S[w]), b = eq_ab.of(Equal[MatMul])
     
-    [n] = x.shape
+    n, = x.shape
     [S[n]] = a.shape
     _i, _j = w.of(SwapMatrix)
-    assert _i >= 0 and _i < n
-    assert _j >= 0 and _j < n
+    assert 0 <= _i < n
+    assert 0 <= _j < n
     if i is None:
         i = eq_xy.generate_var(eq_ab.free_symbols, integer=True, var='i')
 
@@ -19,7 +19,7 @@ def apply(eq_xy, eq_ab, i=None):
 
 @prove
 def prove(Eq):
-    from axiom import discrete
+    from axiom import discrete, algebra
 
     n = Symbol(integer=True, positive=True)
     x, y, a, b = Symbol(shape=(n,), real=True, given=True)
@@ -38,24 +38,13 @@ def prove(Eq):
     Eq << Eq[-1] * Eq[-3]
 
     Eq << Eq[2].subs(Eq[-1])
+    Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.domain_defined.insert)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-11-13
+# updated on 2023-05-06

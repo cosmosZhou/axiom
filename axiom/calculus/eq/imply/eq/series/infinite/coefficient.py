@@ -22,7 +22,7 @@ def apply(given, x):
     return Equal(an, bn)
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import algebra, calculus
 
@@ -101,8 +101,11 @@ def prove(Eq):
 
     Eq << algebra.ou.imply.all.apply(Eq[-1], 1)
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-05-18
+# updated on 2023-04-16

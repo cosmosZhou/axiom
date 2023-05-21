@@ -1,7 +1,7 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self):
     from sympy.concrete.limits import limits_union
     limitsArr = []
@@ -17,7 +17,7 @@ def apply(self):
         limits = limits_union(limits, limitsArr[i])
 
     fn, *_ = fnset
-    return Equivalent(self, All(fn, *limits))
+    return All(fn, *limits)
 
 
 @prove

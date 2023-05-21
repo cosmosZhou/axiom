@@ -2,10 +2,10 @@ from util import *
 
 
 
-@apply(given=None)
+@apply
 def apply(given):
     p, q = given.of(Assuming)
-    return Equivalent(given, p | q.invert(), evaluate=False)
+    return p | q.invert()
 
 
 @prove

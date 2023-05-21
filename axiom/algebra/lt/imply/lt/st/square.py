@@ -6,12 +6,10 @@ def apply(given):
     dx, dy = given.of(Expr ** 2 < Expr ** 2)
 
     y2, x01_mean = dx.of(Expr - Expr)
-    _y2, y01_mean = dy.of(Expr - Expr)
+    S[y2 * 2 / 3], y01_mean = dy.of(Expr - Expr)
 
     y01_mean *= 3
     y0, y1 = y01_mean.of(Add)
-    _y2 = _y2 * 3 / 2
-    assert _y2 == y2
 
     x01_mean *= 2
     x0, x1 = x01_mean.of(Add)
@@ -23,6 +21,7 @@ def apply(given):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     x0, x1, y0, y1, y2 = Symbol(real=True)
     Eq << apply((y2 - (x0 + x1) / 2) ** 2 < (y2 - (y0 + y1 + y2) / 3) ** 2)
 
@@ -34,7 +33,6 @@ def prove(Eq):
 
     x1_ = Symbol('x1', y2 - x1)
     x0_ = Symbol('x0', y2 - x0)
-
     Eq.x0_defintion = x0_.this.definition + x0 - x0_
 
     Eq.x1_defintion = x1_.this.definition + x1 - x1_
@@ -49,7 +47,6 @@ def prove(Eq):
 
     y1_ = Symbol('y1', y2 - y1)
     y0_ = Symbol('y0', y2 - y0)
-
     Eq << y0_.this.definition + y0 - y0_
 
     Eq << y1_.this.definition + y1 - y1_
@@ -72,9 +69,9 @@ def prove(Eq):
 
     Eq << Eq[1] * 3
 
-    Eq << Eq[-1] - Eq[-1].rhs.args[0] - (y0 - y1) ** 2
+    Eq << Eq[-1] - Eq[-1].rhs.args[-1] - (y0 - y1) ** 2
 
-    Eq << Eq[-1].this.rhs.args[1].apply(algebra.square.negate)
+    Eq << Eq[-1].this.rhs.args[0].apply(algebra.square.negate)
 
     Eq.le = LessEqual(Eq[-1].lhs, Eq.lt.lhs, plausible=True)
 
@@ -92,8 +89,12 @@ def prove(Eq):
 
     Eq << algebra.lt.le.imply.lt.transit.apply(Eq.lt, Eq.le)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-01-02
+# updated on 2023-05-20

@@ -36,13 +36,13 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.apply(Eq[0], cond=x0 <= x1)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(calculus.le.gt_zero.imply.ge.Jesson, w=w)
 
     Eq << algebra.cond.imply.infer.apply(Eq[0], cond=x0 > x1)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.args[0].apply(algebra.gt.imply.le.relax)
 

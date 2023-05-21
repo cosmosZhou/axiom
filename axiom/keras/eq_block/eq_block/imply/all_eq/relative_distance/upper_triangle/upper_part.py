@@ -47,13 +47,9 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (i, 0, n - u), simplify=None)
 
-    
-
-    
-
     Eq <<= Eq.V_lower & Eq[-1]
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.transit)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.transit, reverse=True)
 
     
 
@@ -61,3 +57,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-03-30
+# updated on 2023-05-20

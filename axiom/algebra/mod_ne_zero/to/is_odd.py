@@ -2,12 +2,12 @@ from util import *
 
 
 
-@apply(given=None)
+@apply
 def apply(self):
     expr = self.of(Unequal[0])
     n, two = expr.of(Mod)
     assert two == 2
-    return Equivalent(self, Equal(expr, 1))
+    return Equal(expr, 1)
 
 
 @prove

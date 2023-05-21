@@ -3,9 +3,8 @@ from util import *
 
 @apply
 def apply(is_nonnegative, lt, left_open=True, right_open=True, x=None):
-    _m = is_nonnegative.of(Expr >= 0)
-    m, M = lt.of(Less)
-    assert m == _m
+    m = is_nonnegative.of(Expr >= 0)
+    S[m], M = lt.of(Less)
     if x is None:
         x = lt.generate_var(real=True)
 
@@ -42,11 +41,11 @@ def prove(Eq):
 
     Eq <<= algebra.all.given.et.all.split.apply(Eq[-2], cond=y <= M ** 2), algebra.all.given.infer.apply(Eq[-1])
 
-    Eq <<= algebra.all.given.infer.apply(Eq[-2]), Eq[-3].subs(Eq.eq_max), Eq[-1].this.lhs.apply(sets.el_interval.imply.gt)
+    Eq <<= algebra.all.given.infer.apply(Eq[-3]), Eq[-2].subs(Eq.eq_max), Eq[-1].this.lhs.apply(sets.el_interval.imply.gt)
 
     Eq <<= Eq[-3].this.rhs.apply(algebra.any.given.cond.subs, x, (m + sqrt(y)) / 2), Eq[-2].this.expr.apply(algebra.any.given.cond.subs, x, (M + m) / 2), Eq[-1].this.lhs.apply(algebra.cond.imply.infer.et, cond=Eq[0])
 
-    Eq <<= algebra.infer.given.et.infer.apply(Eq[-3]), algebra.et.given.et.apply(Eq[-2]), algebra.infer.given.et.infer.st.infer.apply(Eq[-1])
+    Eq <<= algebra.infer.given.et.infer.apply(Eq[-3]), algebra.et.given.et.apply(Eq[-2]), algebra.infer_infer.given.et.infer.apply(Eq[-1])
 
     Eq << algebra.cond.given.cond.subs.bool.apply(Eq[-2], cond=Eq[0], invert=True)
 
@@ -62,13 +61,13 @@ def prove(Eq):
 
     Eq <<= algebra.infer.given.et.infer.apply(Eq[-3]), Eq[-2].this.rhs.apply(sets.el.given.et.strengthen, M, strict=True), algebra.infer.given.et.infer.apply(Eq[-1])
 
-    Eq <<= Eq[-5].this.rhs * 2, Eq[-4].this.rhs * 2, algebra.infer.given.cond.apply(Eq[-3]), Eq[-2].this.lhs.apply(algebra.gt.imply.gt.sqrt), Eq[-1].this.rhs.apply(algebra.add_gt_zero.given.et.gt_zero)
+    Eq <<= Eq[-4].this.rhs * 2, Eq[-5].this.rhs * 2, algebra.infer.given.cond.apply(Eq[-3]), Eq[-1].this.lhs.apply(algebra.gt.imply.gt.sqrt), Eq[-2].this.rhs.apply(algebra.add_gt_zero.given.et.gt_zero, 1)
 
     Eq << Eq[-3] + (m - M)
 
     Eq <<= Eq[-5].this.lhs.apply(algebra.gt.imply.gt.sqrt), Eq[-4].this.rhs.apply(algebra.add_gt_zero.given.et), Eq[-2].subs(Eq.eq_abs_M), algebra.infer.given.et.infer.apply(Eq[-1])
 
-    Eq <<= Eq[-5].subs(Eq.eq_abs_m), Eq[-4].this.lhs.apply(algebra.gt.imply.gt.relax, lower=0), Eq[-3].this.rhs.apply(algebra.gt.transport, lhs=slice(0, 2)), algebra.infer.given.cond.apply(Eq[-2]), Eq[-1].this.lhs.apply(algebra.gt.imply.gt.relax, lower=0)
+    Eq <<= Eq[-5].subs(Eq.eq_abs_m), Eq[-4].this.lhs.apply(algebra.gt.imply.gt.relax, lower=0), Eq[-3].this.rhs.apply(algebra.gt.transport, lhs=slice(1, None)), algebra.infer.given.cond.apply(Eq[-2]), Eq[-1].this.lhs.apply(algebra.gt.imply.gt.relax, lower=0)
 
     Eq << Eq[-4].this.lhs.apply(algebra.gt.imply.gt_zero)
 
@@ -84,8 +83,11 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-07-02
-# updated on 2021-10-02
+# updated on 2023-05-20

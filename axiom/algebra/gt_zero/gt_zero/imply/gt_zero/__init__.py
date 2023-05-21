@@ -21,3 +21,5 @@ if __name__ == '__main__':
 
 from . import add
 # created on 2018-02-05
+from . import pow
+from . import div

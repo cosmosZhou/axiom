@@ -4,12 +4,8 @@ from util import *
 
 @apply
 def apply(given):
-    function, *limits = given.of(All)
-    assert len(limits) == 1
-
-    limit = limits[0][0], function.invert()
-
-    return All(given.limits_cond.invert().simplify(), limit)
+    expr, (x, *cond) = given.of(All)
+    return All[x:expr.invert()](given.limits_cond.invert().simplify())
 
 
 @prove

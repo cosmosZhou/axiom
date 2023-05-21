@@ -3,12 +3,10 @@ from util import *
 
 @apply
 def apply(all_historic):
-    (xi, xj), (j, _zero, i_), (i, zero, n) = all_historic.of(All[Unequal])
+    (xi, xj), (j, S[0], i), (S[i], S[0], n) = all_historic.of(All[Unequal])
     if xi._has(j):
         xi, xj = xj, xi
 
-    assert zero == _zero == 0
-    assert i == i_
     assert xi._subs(i, j) == xj
     setc = Cup[i:n]({xi})
     return Equal(Card(setc), n, evaluate=False)

@@ -2,8 +2,14 @@ from util import *
 
 
 @apply
-def apply(given, index=0):
-    return given.of(And)[index]
+def apply(given, index=0, invert=False):
+    eqs = given.of(And)
+    if invert:
+        eqs = [*eqs]
+        del eqs[index]
+        return tuple(eqs)
+    else:
+        return eqs[index]
 
 
 @prove
@@ -20,8 +26,11 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[0], Eq[-1])
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-01-02
+# updated on 2023-05-18

@@ -5,8 +5,7 @@ from util import *
 @apply
 def apply(equality_A, equality_B):
     x, a = equality_A.of(Equal)
-    _x, b = equality_B.of(Equal)
-    assert x == _x
+    S[x], b = equality_B.of(Equal)
 
     return Element(x, a.set & b.set)
 

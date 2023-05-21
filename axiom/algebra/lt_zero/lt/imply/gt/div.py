@@ -2,11 +2,15 @@ from util import *
 
 
 @apply
-def apply(is_negative, strict_less_than):
-    x = is_negative.of(Expr < 0)
+def apply(lt_zero, lt):
+    x = lt_zero.of(Expr < 0)
     assert x.is_finite
-    lhs, rhs = strict_less_than.of(Less)
-    return Greater(lhs / x, rhs / x)
+    lhs, rhs = lt.of(Less)
+    lhs /= x
+    rhs /= x
+    lhs = lhs.ratsimp()
+    rhs = rhs.ratsimp()
+    return Greater(lhs, rhs)
 
 
 @prove
@@ -20,7 +24,11 @@ def prove(Eq):
 
     Eq << algebra.lt_zero.lt.imply.gt.mul.apply(Eq[-1], Eq[1])
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-07-15
+# updated on 2023-04-11

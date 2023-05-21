@@ -26,9 +26,9 @@ def prove(Eq):
 
     Eq << algebra.lt.imply.gt_zero.apply(Eq[0])
 
-    Eq.x_is_positive = sets.el.imply.gt_zero.apply(Eq[1])
+    Eq.x_is_positive = sets.is_positive.imply.gt_zero.apply(Eq[1])
 
-    Eq.y_is_positive = sets.el.imply.gt_zero.apply(Eq[2])
+    Eq.y_is_positive = sets.is_positive.imply.gt_zero.apply(Eq[2])
 
     Eq << Eq.y_is_positive + Eq.x_is_positive
 

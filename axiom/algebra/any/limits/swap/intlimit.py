@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self):
     from axiom.algebra.sum.limits.swap.intlimit import limits_swap
-    return Equivalent(self, limits_swap(Any, self))
+    return limits_swap(Any, self)
 
 
 @prove(proved=False)

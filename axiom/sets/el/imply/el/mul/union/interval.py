@@ -25,11 +25,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.args[0].apply(sets.el.imply.el.mul.interval, e)
 
-    Eq << Eq[-1].this.args[1].apply(sets.el.imply.el.mul.interval, e)
+    Eq << Eq[-1].this.args[0].apply(sets.el.imply.el.mul.interval, e)
 
-
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-03-06
+# updated on 2023-05-20

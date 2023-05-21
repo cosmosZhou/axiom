@@ -7,8 +7,7 @@ def apply(a_less_than_x, x_less_than_b):
     a, x = a_less_than_x.of(Less)
     _x, b = x_less_than_b.of(Less)
     if b == a:
-        a, x, _x, b = _x, b, a, x
-    assert x == _x
+        a, x, S[x], b = _x, b, a, x
     return Less(a, b)
 
 

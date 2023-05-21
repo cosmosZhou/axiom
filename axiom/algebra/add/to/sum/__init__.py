@@ -40,8 +40,6 @@ def piece_together(Sum, self):
 
 @apply
 def apply(self):
-    assert self.is_Add
-
     return Equal(self, piece_together(Sum, self))
 
 

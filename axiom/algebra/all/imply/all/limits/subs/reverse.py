@@ -24,9 +24,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.args[1].apply(sets.notin.imply.notin.neg)
 
-    Eq << Eq[-1].this.args[0].apply(sets.notin.imply.notin.add, m)
+    Eq << Eq[-1].this.find(NotElement).apply(sets.notin.imply.notin.add, m)
 
     Eq << algebra.ou.imply.all.apply(Eq[-1], pivot=1, wrt=n)
+
+    
 
 
 if __name__ == '__main__':
@@ -34,3 +36,4 @@ if __name__ == '__main__':
 
 
 # created on 2018-06-20
+# updated on 2023-05-12

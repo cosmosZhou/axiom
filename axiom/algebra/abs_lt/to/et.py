@@ -1,11 +1,11 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(lt):
     x, a = lt.of(Abs < Expr)    
     assert x.is_extended_real
-    return Equivalent(lt, And(Less(x, a), Greater(x, -a)), evaluate=False)
+    return And(Less(x, a), Greater(x, -a))
 
 
 @prove

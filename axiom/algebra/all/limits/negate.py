@@ -1,11 +1,11 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self):
     expr, (i, *ab) = self.of(All)
     from axiom.algebra.all.imply.all.limits.negate import negate
-    return Equivalent(self, All(expr._subs(i, -i), negate(i, *ab)))
+    return All(expr._subs(i, -i), negate(i, *ab))
 
 
 @prove

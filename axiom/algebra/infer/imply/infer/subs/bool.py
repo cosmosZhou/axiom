@@ -23,7 +23,7 @@ def prove(Eq):
     t, f, g = Function(integer=True)
     Eq << apply(Infer(Element(t(x), A), Equal(Piecewise((f(t(x), y), Element(t(x), A)), (g(x), True)), g(x))))
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[0])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[0])
 
     Eq << Eq[-1].this.rhs.apply(algebra.cond.cond.imply.cond.subs, swap=True)
 

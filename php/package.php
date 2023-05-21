@@ -1,6 +1,4 @@
 <?php
-use std\Graph;
-
 function package_is_theorem($file)
 {
     global $path_info;

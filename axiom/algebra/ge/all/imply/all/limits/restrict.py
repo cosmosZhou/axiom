@@ -9,7 +9,7 @@ def apply(le, given):
         S[a], b = ab
         limit = (x, c, b)
     else:
-        [ab] = ab
+        ab, = ab
         S[a], b = ab.of(Interval)
         limit = (x, Interval(c, b, left_open=ab.left_open, right_open=ab.right_open))
 
@@ -23,7 +23,7 @@ def prove(Eq):
     a, b, c = Symbol(real=True, given=True)
     x = Symbol(real=True)
     f = Function(shape=(), real=True)
-    Eq << apply(c >= a, All[x:a:b](f(x) > 0))
+    Eq << apply(c >= a, All[x:Interval(a,b)](f(x) > 0))
 
     e = Symbol(nonnegative=True)
     Eq << algebra.all.imply.all.limits.restrict.apply(Eq[1], Interval(a + e, b))

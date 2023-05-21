@@ -5,7 +5,6 @@ from util import *
 def apply(given, old, new):
     function, (var, domain) = given.of(All)
 
-    assert len(given.variables) == 1
     assert old.is_Sliced and old == var
     assert new.is_Sliced and new.base.is_symbol and new.base.is_given is None
 

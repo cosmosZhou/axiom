@@ -12,18 +12,12 @@ def apply(all_a, all_b):
     if contains_b.is_Equal:
         equality_b, contains_b = contains_b, equality_b
 
-    fa, _B = contains_a.of(Element)
-    gb, _A = contains_b.of(Element)
-    assert B == _B
-    assert A == _A
+    fa, S[B] = contains_a.of(Element)
+    gb, S[A] = contains_b.of(Element)
 
-    assert equality_a.is_Equal and equality_b.is_Equal
+    S[Lambda(b, gb)(fa)] = equality_a.of(Equal[a])
 
-    eqs = Equal(a, Lambda(b, gb)(fa))
-    assert equality_a == eqs or equality_a.reversed == eqs
-
-    eqs = Equal(b, Lambda(a, fa)(gb))
-    assert equality_b == eqs or equality_b.reversed == eqs
+    S[Lambda(a, fa)(gb)] = equality_b.of(Equal[b])
 
     return Equal(Card(A), Card(B))
 

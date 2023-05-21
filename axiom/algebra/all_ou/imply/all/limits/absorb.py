@@ -19,20 +19,24 @@ def apply(given, index, wrt=None):
             if len(ab) == 2:
                 a, b = ab
                 assert not b.is_set
-                domain = (Range if x.is_integer else Interval)(a, b)
-                domain &= cond.domain_conditioned(wrt)
-                limits[i] = (x, domain)
-                return All(Or(*eqs), *limits)
+                domain = x.range(a, b)
+            elif len(ab) == 1:
+                domain, = ab
+            else:
+                continue
+            
+            domain &= cond.domain_conditioned(wrt)
+            limits[i] = (x, domain)
+            return All(Or(*eqs), *limits)
 
 
 @prove
 def prove(Eq):
-    from axiom import sets, algebra
+    from axiom import algebra, sets
+
     x, a, b, c = Symbol(real=True)
-
     f = Function(shape=(), real=True)
-
-    Eq << apply(All[x:a:b]((x <= c) | (f(x) >= 1)), index=1)
+    Eq << apply(All[x:Interval(a, b)]((x <= c) | (f(x) >= 1)), index=0)
 
     Eq << algebra.all.given.ou.apply(Eq[1])
 
@@ -42,8 +46,11 @@ def prove(Eq):
 
     Eq << algebra.all.imply.ou.apply(Eq[0])
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2019-02-07
+# updated on 2023-05-12

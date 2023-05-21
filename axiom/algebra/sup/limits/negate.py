@@ -11,7 +11,7 @@ def apply(self):
         else:
             limit = (x, -b, -a)
     else:
-        [domain] = ab
+        domain, = ab
         limit = (x, -domain)
 
     return Equal(self, Sup(expr._subs(x, -x), limit))
@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << algebra.eq.imply.et.squeeze.apply(Eq[-1])
 
-    Eq <<= algebra.sup_le.imply.all_le.apply(Eq[-2]), algebra.sup_ge.imply.all_any_gt.apply(Eq[-1])
+    Eq <<= algebra.sup_le.imply.all_le.apply(Eq[-2]), algebra.sup_ge.imply.all.any.gt.apply(Eq[-1])
 
     Eq << Eq[0].subs(Eq[1]).reversed
 

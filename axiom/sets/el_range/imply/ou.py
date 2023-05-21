@@ -6,7 +6,6 @@ def apply(given):
     e, interval = given.of(Element)
     a, b = interval.of(Range)
     size = b - a
-    assert size.is_Integer
     assert size > 0
     finiteset = {a + i for i in range(size)}
 
@@ -22,7 +21,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.rhs.apply(sets.range.to.finiteset)
 
-    Eq << sets.el.imply.ou.split.finiteset.apply(Eq[-1])
+    Eq << sets.el_finiteset.imply.ou.apply(Eq[-1])
 
 
 if __name__ == '__main__':

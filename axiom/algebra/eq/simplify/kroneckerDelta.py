@@ -2,10 +2,10 @@ from util import *
 
 
 
-@apply(given=None)
+@apply
 def apply(given):
     x, y = given.of(Equal[KroneckerDelta, 1])
-    return Equivalent(given, Equal(x, y))
+    return Equal(x, y)
 
 
 @prove

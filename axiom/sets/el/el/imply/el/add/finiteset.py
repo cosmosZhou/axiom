@@ -21,13 +21,13 @@ def prove(Eq):
     x0, x1, a, b, c, d, e = Symbol(integer=True)
     Eq << apply(Element(x0, {a, b, c}), Element(x1, {d, e}))
 
-    Eq << sets.el.imply.ou.split.finiteset.apply(Eq[0])
+    Eq << sets.el_finiteset.imply.ou.apply(Eq[0])
 
-    Eq << sets.el.imply.ou.split.finiteset.apply(Eq[1])
+    Eq << sets.el_finiteset.imply.ou.apply(Eq[1])
 
     Eq <<= Eq[-1] & Eq[-2]
 
-    Eq << Eq[-1].this.apply(algebra.et.imply.ou, simplify=None)
+    Eq << Eq[-1].this.apply(algebra.et.imply.ou, 1, simplify=None)
 
     Eq << Eq[-1].this.find(And).apply(algebra.et.imply.ou, simplify=None)
 
@@ -49,7 +49,10 @@ def prove(Eq):
 
     Eq << sets.el.given.ou.split.finiteset.apply(Eq[2])
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-11-18
+# updated on 2023-05-20

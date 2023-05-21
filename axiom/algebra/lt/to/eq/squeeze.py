@@ -2,14 +2,14 @@ from util import *
 
 
 
-@apply(given=None)
+@apply
 def apply(given):
     x, a = given.of(Less)
     assert x.is_integer and a.is_integer
     a -= 1
 
     assert x >= a
-    return Equivalent(given, Equal(x, a))
+    return Equal(x, a)
 
 
 @prove

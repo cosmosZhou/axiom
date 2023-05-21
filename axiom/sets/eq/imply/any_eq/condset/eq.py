@@ -25,7 +25,7 @@ def prove(Eq):
     S = Symbol(etype=dtype.integer * k, given=True)
     Eq << apply(Equal(Card(S), n))
 
-    Eq << sets.imply.all_any_eq.apply(n, etype=S.etype, elements=Eq[-1].variable)
+    Eq << sets.imply.all.any.eq.apply(n, etype=S.etype, elements=Eq[-1].variable)
 
     Eq.ou = algebra.all.imply.ou.subs.apply(Eq[-1], Eq[-1].variable, S)
 

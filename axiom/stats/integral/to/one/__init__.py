@@ -3,9 +3,15 @@ from util import *
 
 @apply
 def apply(self):
-    (X, x), (_x, *_) = self.of(Integral[Probability[Equal[Symbol, Symbol]]])
-    assert x == _x
+    args, (x_var, *ab) = self.of(Integral[Probability[Equal]])
+    if args[-1].is_Tuple:
+        (x, S[x_var]), *weights = args
+    else:
+        x, S[x_var] = args
 
+    if ab:
+        S[-oo], S[oo] = ab
+    
     return Equal(self, 1)
 
 

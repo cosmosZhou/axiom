@@ -3,10 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    (xi, (i, zero, n)), _n = given.of(Equal[Card[Cup[FiniteSet]]])
-    assert zero == 0
-    assert n == _n
-
+    (xi, (i, S[0], n)), S[n] = given.of(Equal[Card[Cup[FiniteSet]]])
     j = xi.generate_var(integer=True)
     xj = xi.subs(i, j)
 

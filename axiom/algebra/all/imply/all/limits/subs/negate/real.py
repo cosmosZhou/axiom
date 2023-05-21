@@ -17,12 +17,17 @@ def prove(Eq):
 
     Eq << algebra.all.imply.ou.subs.apply(Eq[0], x, c - x)
 
-    Eq << Eq[-1].this.args[0].apply(sets.notin.imply.notin.neg)
+    Eq << Eq[-1].this.find(NotElement).apply(sets.notin.imply.notin.neg)
 
-    Eq << Eq[-1].this.args[0].apply(sets.notin.imply.notin.add, c)
+    Eq << Eq[-1].this.find(NotElement).apply(sets.notin.imply.notin.add, c)
+
     Eq << algebra.ou.imply.all.apply(Eq[-1], pivot=1, wrt=x)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-12-15
+# updated on 2023-05-13

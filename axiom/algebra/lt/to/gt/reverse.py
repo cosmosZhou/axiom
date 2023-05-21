@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(lt):
     x, a = lt.of(Less)
-    return Equivalent(lt, Greater(a, x), evaluate=False)
+    return Greater(a, x)
 
 
 @prove

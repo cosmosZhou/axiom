@@ -16,8 +16,7 @@ def limits_insert(self):
         limit = (x, cond, domain_defined)
     else:
         _, a, b = limit
-        cond = (Range if x.is_integer else Interval)(a, b)
-        limit = (x, cond & domain_defined)
+        limit = (x, x.range(a, b) & domain_defined)
     
     return self.func(function, *limits, limit)
 

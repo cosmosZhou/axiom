@@ -1,11 +1,11 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(imply):
     ou, *limits = imply.of(Any[Or])
 
-    return Equivalent(imply, Or(*(Any(eq, *limits) for eq in ou)))
+    return Or(*(Any(eq, *limits) for eq in ou))
 
 
 @prove

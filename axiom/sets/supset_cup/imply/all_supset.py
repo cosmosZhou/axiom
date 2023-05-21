@@ -5,8 +5,8 @@ from util import *
 @apply
 def apply(given):
     lhs, rhs = given.of(Supset)
-    assert rhs.is_Cup
-    return All(Supset(lhs, rhs.expr, ).simplify(), *rhs.limits)
+    expr, *limits = rhs.of(Cup)
+    return All(Supset(lhs, expr, ).simplify(), *limits)
 
 @prove
 def prove(Eq):

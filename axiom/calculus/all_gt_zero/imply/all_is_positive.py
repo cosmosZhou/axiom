@@ -3,15 +3,14 @@ from util import *
 
 @apply
 def apply(all_is_positive):
-    (fx, (x, d)), (x_, domain) = all_is_positive.of(All[Derivative > 0])
-    assert x == x_
+    (fx, (x, d)), (S[x], domain) = all_is_positive.of(All[Derivative > 0])
 
     assert domain.left_open and domain.right_open
 
     return All[x:domain](Element(Derivative(fx, (x, d)), Interval(0, oo, left_open=True)))
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import sets, algebra, calculus
 
@@ -27,7 +26,7 @@ def prove(Eq):
 
     Eq << algebra.all.any.imply.any_et.apply(Eq[-2], Eq[-1])
 
-    Eq << Eq[-1].this.expr.lhs.apply(calculus.derivative.to.limit)
+    Eq << Eq[-1].this.expr.lhs.apply(calculus.grad.to.limit)
 
     Eq << Eq[-1].this.expr.apply(calculus.eq_limit.imply.et.eq_limit)
 
@@ -35,9 +34,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.args[1].apply(calculus.limit_is_infinite.imply.gt.limit)
 
-
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-04-28
+# updated on 2023-04-16

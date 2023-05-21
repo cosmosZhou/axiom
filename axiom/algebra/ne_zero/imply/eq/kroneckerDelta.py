@@ -3,10 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    assert given.is_Unequal
-    assert given.rhs.is_zero
-    assert given.lhs.is_KroneckerDelta
-    return Equal(*given.lhs.args)
+    return Equal(*given.of(Unequal[KroneckerDelta, 0]))
 
 
 @prove

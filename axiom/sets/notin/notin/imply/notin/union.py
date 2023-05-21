@@ -4,12 +4,8 @@ from util import *
 
 @apply
 def apply(notcontains1, notcontains2):
-    assert notcontains1.is_NotElement
-    assert notcontains2.is_NotElement
-
-    e, A = notcontains1.args
-    _e, B = notcontains2.args
-    assert e == _e
+    e, A = notcontains1.of(NotElement)
+    S[e], B = notcontains2.of(NotElement)
 
     return NotElement(e, (A | B).simplify())
 

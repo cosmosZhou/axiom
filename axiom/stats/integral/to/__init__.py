@@ -1,3 +1,5 @@
 from . import one
 
-from . import probability
+from . import KL
+from . import expect
+from . import prob

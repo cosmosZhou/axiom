@@ -13,11 +13,11 @@ def apply(gt, index=-1):
 @prove
 def prove(Eq):
     from axiom import algebra
-    
+
     x, y, z = Symbol(real=True, given=True)
     Eq << apply(x > Max(y, z))
-    
-    Eq << algebra.gt.gt.imply.gt.max.rhs.apply(Eq[1], Eq[2])
+
+    Eq << algebra.gt.gt.imply.gt.max.apply(Eq[1], Eq[2])
 
 
 if __name__ == '__main__':

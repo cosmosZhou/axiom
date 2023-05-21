@@ -1,12 +1,12 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self):
     z = self.of(Equal[0])
     x = Re(z)
     y = Im(z)
-    return Equivalent(self, Equal(x, 0) & Equal(y, 0))
+    return Equal(x, 0) & Equal(y, 0)
 
 
 @prove
@@ -27,9 +27,13 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.apply(algebra.poly_is_zero.imply.et.is_zero)
 
     Eq << Eq[2].this.rhs.lhs.apply(algebra.expr.to.add.complex)
-    Eq << algebra.infer_et.given.infer.subs.apply(Eq[-1], 0)
+
+    Eq << algebra.infer_et.given.infer.et.subs.apply(Eq[-1], 1)
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-06-11
+# updated on 2023-05-20

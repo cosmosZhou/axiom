@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given, lhs=-1, rhs=None):
     from axiom.algebra.eq.transport import transport
-    return Equivalent(given, transport(GreaterEqual, given, lhs=lhs, rhs=rhs), evaluate=False)
+    return transport(GreaterEqual, given, lhs=lhs, rhs=rhs)
 
 
 @prove

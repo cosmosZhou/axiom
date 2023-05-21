@@ -3,10 +3,8 @@ from util import *
 
 @apply
 def apply(self):
-    interval, (k, _0, n) = self.of(Cup)
-    assert _0 == 0
-    _k, k1 = interval.of(Interval)
-    assert k == _k and k1 == k + 1
+    interval, (k, S[0], n) = self.of(Cup)
+    S[k], S[k + 1] = interval.of(Interval)
     assert not interval.left_open and interval.right_open
 
     return Equal(self, Interval(0, n, right_open=True))

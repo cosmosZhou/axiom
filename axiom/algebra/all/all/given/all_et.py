@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(all_a, all_b):
     fn, *limits = all_a.of(All)
-    _fn, *_limits = all_b.of(All)
-    assert limits == _limits
+    _fn, *S[limits] = all_b.of(All)
     return All(fn & _fn, *limits)
 
 

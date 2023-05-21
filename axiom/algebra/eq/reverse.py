@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(eq):
     a, b = eq.of(Equal)
-    return Equivalent(eq, Equal(b, a), evaluate=False)
+    return Equal(b, a)
 
 
 @prove

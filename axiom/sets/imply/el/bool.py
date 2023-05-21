@@ -9,20 +9,19 @@ def apply(boole):
 
 @prove
 def prove(Eq):
-    from axiom import sets, algebra
-    x, y = Symbol(real=True)
+    from axiom import algebra, sets
 
+    x, y = Symbol(real=True)
     Eq << apply(Bool(x > y))
 
     Eq << Eq[-1].this.lhs.apply(algebra.bool.to.piece)
 
     S = Symbol(Eq[1].rhs)
-
     Eq << Or(Element(1, S) & (x > y), Element(0, S) & (x <= y), plausible=True)
 
-    Eq << Eq[-1].this.args[0].args[0].rhs.definition
+    Eq << Eq[-1].this.find(Element[~Symbol]).definition
 
-    Eq << Eq[-1].this.args[0].args[0].rhs.definition
+    Eq << Eq[-1].this.find(Element[~Symbol]).definition
 
     Eq << sets.ou.imply.el.piece.apply(Eq[-2], wrt=S)
 
@@ -32,8 +31,12 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1])
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-03-08
+# updated on 2023-05-14

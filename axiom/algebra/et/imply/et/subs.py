@@ -12,8 +12,7 @@ def apply(given, index=None, reverse=False):
     else:
         eq = eqs[index]
 
-    assert eq.is_Equal
-    old, new = eq.args
+    old, new = eq.of(Equal)
     if reverse:
         old, new = new, old
 
@@ -40,12 +39,16 @@ def prove(Eq):
 
     Eq << algebra.et.imply.et.apply(Eq[-1])
 
-    Eq << Eq[-2].subs(Eq[1])
+    Eq << Eq[-1].subs(Eq[1])
 
-    Eq <<= Eq[-1] & Eq[-2]
+    Eq <<= Eq[-1] & Eq[-3]
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-02-04
+# updated on 2023-05-14

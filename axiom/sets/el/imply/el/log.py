@@ -4,11 +4,10 @@ from util import *
 @apply
 def apply(given):
     e, interval = given.of(Element)
-    assert interval.is_Interval
+    start, stop = interval.of(Interval)
     left_open = interval.left_open
     right_open = interval.right_open
-
-    start = interval.start
+    
     if left_open:
         if start > 0:
             start = log(start)
@@ -20,7 +19,7 @@ def apply(given):
         assert start > 0
         start = log(start)
 
-    stop = log(interval.stop)
+    stop = log(stop)
 
     return Element(log(e), Interval(start, stop, left_open=left_open, right_open=right_open))
 

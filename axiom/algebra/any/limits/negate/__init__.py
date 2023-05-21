@@ -1,11 +1,11 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self):
     expr, (i, *ab) = self.of(Any)
     from axiom.algebra.all.imply.all.limits.negate import negate
-    return Equivalent(self, Any(expr._subs(i, -i), negate(i, *ab)))
+    return Any(expr._subs(i, -i), negate(i, *ab))
 
 
 @prove
@@ -26,5 +26,6 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-from . import infinity
 # created on 2019-02-19
+del oo
+from . import oo

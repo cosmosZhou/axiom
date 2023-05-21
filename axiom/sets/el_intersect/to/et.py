@@ -1,12 +1,12 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given, index=-1):
     e, args = given.of(Element[Intersection])
     first = Intersection(*args[:index])
     second = Intersection(*args[index:])
-    return Equivalent(given, And(Element(e, first), Element(e, second)), evaluate=False)
+    return And(Element(e, first), Element(e, second))
 
 
 @prove

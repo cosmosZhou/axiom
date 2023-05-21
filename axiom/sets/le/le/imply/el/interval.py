@@ -6,8 +6,7 @@ def apply(le, _le):
     x, a = le.of(LessEqual)
     b, _x = _le.of(LessEqual)
     if x != _x:
-        a, x, _x, b = _x, b, a, x,
-    assert x == _x
+        a, x, S[x], b = _x, b, a, x,
 
     return Element(x, Interval(b, a))
 

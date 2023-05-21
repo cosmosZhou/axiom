@@ -12,3 +12,5 @@ from . import arg_expi
 from . import complement
 from . import interval
 from . import intersect
+from . import definition
+from . import pow

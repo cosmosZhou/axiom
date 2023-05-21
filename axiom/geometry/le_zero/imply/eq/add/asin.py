@@ -21,11 +21,12 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1])
 
+    Eq << Eq[-1].this.lhs.apply(geometry.cos.neg)
     Eq << geometry.cos_is_zero.imply.any.eq.apply(Eq[-1])
 
     Eq << -Eq[-1].this.expr
 
-    Eq << Eq[-1].this.apply(algebra.any.limits.negate.infinity)
+    Eq << Eq[-1].this.apply(algebra.any.limits.negate.oo)
 
     Eq << algebra.any.imply.any.limits.subs.offset.apply(Eq[-1], 1)
 
@@ -50,8 +51,10 @@ def prove(Eq):
     Eq << Eq[-1].this.find(Element).apply(sets.el.imply.el.div.interval, S.Pi)
 
     #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-07-13
+# updated on 2023-05-20

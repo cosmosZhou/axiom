@@ -12,7 +12,7 @@
 </template>
 
 <script>
-console.log('importing theorems.vue');	
+console.log('import theorems.vue');	
 
 import axiomTheorem from "./axiomTheorem.vue"
 import axiomContextmenu from "./axiomContextmenu.vue"
@@ -68,7 +68,7 @@ export default {
 		remove(indexFocused){
 			console.log("theorems = " + this.theorems);
 			var theorems = this.theorems;
-			theorems.remove(indexFocused);
+			theorems.delete(indexFocused);
 			this.theorems = theorems;
 			
 			this.$nextTick(function() {				

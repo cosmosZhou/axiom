@@ -9,7 +9,7 @@
 </template>
 
 <script>
-console.log('importing axiomContents.vue');
+console.log('import axiomContents.vue');
 import packages from "./packages.vue"
 import theorems from "./theorems.vue"
 import searchForm from "./searchForm.vue"

@@ -3,9 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    assert given.is_Equal
-    A, B = given.args
-    assert A.is_set and B.is_set
+    A, B = given.of(Equal)
     return Subset(A, B)
 
 

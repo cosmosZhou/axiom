@@ -13,17 +13,20 @@ def apply(self):
 @prove
 def prove(Eq):
     from axiom import sets, algebra
+
     x = Symbol(real=True)
     A, B = Symbol(etype=dtype.real)
-
     Eq << apply(Bool(Element(x, A)) + Bool(Element(x, B)))
 
-    Eq << Eq[-1].this.rhs.args[1].arg.apply(sets.el.to.ou.split.union)
+    Eq << Eq[-1].this.rhs.args[1].arg.apply(sets.el_union.to.ou)
 
     Eq << Eq[-1].this.find(Bool[Or]).apply(algebra.bool.to.add)
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-08-03
+# updated on 2023-04-18

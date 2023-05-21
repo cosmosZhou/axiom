@@ -5,8 +5,7 @@ from util import *
 # => {A} subset B
 @apply(simplify=False)
 def apply(given):
-    assert given.is_Element
-    e, s = given.args
+    e, s = given.of(Element)
 
     return Subset(e.set, s)
 

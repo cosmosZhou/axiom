@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    (_x, B), (x, A) = given.of(Any[Element])
-    assert x == _x
+    (x, B), (S[x], A) = given.of(Any[Element])
     return Any[x:B](Element(x, A))
 
 

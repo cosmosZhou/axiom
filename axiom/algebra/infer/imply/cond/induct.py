@@ -1,8 +1,6 @@
 from util import *
 
 
-
-
 @apply
 def apply(given, n, start=0):
     start = sympify(start)

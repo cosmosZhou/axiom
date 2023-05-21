@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given):
     fx, fy = given.of(Infer)
-    return Equivalent(given, Assuming(fy, fx))
+    return Assuming(fy, fx)
 
 
 @prove

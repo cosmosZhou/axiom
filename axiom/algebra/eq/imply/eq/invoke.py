@@ -3,9 +3,9 @@ from util import *
 
 @apply
 def apply(given, function):
-    assert given.is_Equal
-    assert function(given.lhs).domain_definition()
-    assert function(given.rhs).domain_definition()
+    lhs, rhs = given.of(Equal)
+    assert function(lhs).domain_definition()
+    assert function(rhs).domain_definition()
 
     return Equal(function(given.lhs), function(given.rhs))
 

@@ -7,9 +7,8 @@ def apply(is_imply_P, is_imply_Q):
     p, q = is_imply_P.of(Assuming)
     _q, r = is_imply_Q.of(Assuming)
     if q != _q:
-        p, q, _q, r = _q, r, p, q
+        p, q, S[q], r = _q, r, p, q
 
-    assert q == _q
     return Assuming(p, r)
 
 

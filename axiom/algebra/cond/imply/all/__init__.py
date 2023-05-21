@@ -5,8 +5,11 @@ def all(self, x):
     assert not x.is_given
     assert self._has(x)
 
-    _x = x.unbounded
-    return All(self._subs(x, _x), (_x, x.domain))
+    if x.is_bounded:
+        _x = x.unbounded
+        return All(self._subs(x, _x), (_x, x.domain))
+    else:
+        return All(self, (x,))
 
 @apply
 def apply(given, var=None):

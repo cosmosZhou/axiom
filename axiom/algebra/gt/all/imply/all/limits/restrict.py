@@ -9,7 +9,7 @@ def apply(le, given):
         S[a], b = ab
         limit = (x, c, b)
     else:
-        [ab] = ab
+        ab, = ab
         S[a], b = ab.of(Interval)
         limit = (x, Interval(c, b, right_open=ab.right_open))
 

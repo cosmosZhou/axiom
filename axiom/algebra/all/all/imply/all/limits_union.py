@@ -5,8 +5,7 @@ from util import *
 def apply(all_a, all_b):
     from sympy.concrete.limits import limits_union
     fn, *limits_a = all_a.of(All)
-    _fn, *limits_b = all_b.of(All)
-    assert fn == _fn
+    S[fn], *limits_b = all_b.of(All)
     limits = limits_union(limits_a, limits_b)
     return All(fn, *limits)
 

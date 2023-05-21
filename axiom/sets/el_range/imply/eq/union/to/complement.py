@@ -35,9 +35,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Symbol >= Add).apply(algebra.ge.to.gt.strengthen)
 
-    Eq << algebra.infer.given.et.infer.split.ou.apply(Eq[-1])
+    Eq << algebra.infer_ou.given.et.infer.apply(Eq[-1])
 
-    Eq <<= algebra.infer.given.et.infer.apply(Eq[-2]), algebra.infer.given.et.infer.apply(Eq[-1])
+    Eq <<= algebra.infer.given.et.infer.apply(Eq[-1]), algebra.infer.given.et.infer.apply(Eq[-2])
 
     Eq <<= algebra.infer_et.given.infer.delete.apply(Eq[-4]), algebra.infer_et.given.infer.delete.apply(Eq[-3]), algebra.infer_et.given.infer.delete.apply(Eq[-2], 0), algebra.infer_et.given.infer.delete.apply(Eq[-1], 0)
 
@@ -55,9 +55,10 @@ def prove(Eq):
 
     Eq << sets.le.imply.range_is_empty.apply(Eq[-1])
 
-
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-01-28
+# updated on 2023-05-20

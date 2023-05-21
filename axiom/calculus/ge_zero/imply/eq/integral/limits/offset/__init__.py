@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(is_nonnegative, self, offset):
     expr = is_nonnegative.of(Expr >= 0)
-    _expr, (x, *ab) = self.of(Integral)
-    assert _expr == expr
+    S[expr], (x, *ab) = self.of(Integral)
     if ab:
         a, b = ab
         limit = (x, a - offset, b - offset)

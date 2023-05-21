@@ -28,7 +28,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(-Piecewise).apply(algebra.mul.to.piece)
 
-    Eq.eq = Eq[-1].this.lhs.apply(algebra.piece.invert)
+    Eq.eq = Eq[-1].this.lhs.apply(algebra.piece.et.invert)
 
     ou = Eq.eq.find(Or)
     Eq.equivalent = Equivalent(ou & (x / sqrt(x ** 2 + y ** 2) >= 0), (x >= 0) & ou, plausible=True)
@@ -43,9 +43,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.invert.delete)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.invert, 1)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.et.invert, 1)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.invert, 0, 3)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.et.invert, 0, 3)
 
     Eq << algebra.cond.given.cond.subs.cond.apply(Eq[-1], old=Eq.equivalent.lhs, new=Eq.equivalent.rhs)
 
@@ -69,7 +69,7 @@ def prove(Eq):
 
     Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
 
-    Eq << algebra.piece.invert.apply(Eq.eq2.rhs, 1, 2)
+    Eq << algebra.piece.et.invert.apply(Eq.eq2.rhs, 1, 2)
 
     Eq << algebra.infer.imply.eq.piece.apply(Eq.suffice, Eq[-1].rhs)
 
@@ -81,9 +81,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.swap, -2)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.invert, 1, 2)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.et.invert, 1, 2)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.invert, 2, 1)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.et.invert, 2, 1)
 
     Eq << algebra.infer.imply.eq.piece.apply(Eq.suffice, Eq[-1].lhs)
 
@@ -91,7 +91,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.swap, -2)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.invert, 2)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.et.invert, 2)
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.swap, 2)
 
@@ -102,4 +102,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2018-07-24
-# updated on 2022-01-23
+# updated on 2023-05-10

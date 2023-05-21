@@ -4,10 +4,6 @@ from util import *
 @apply
 def apply(self):
     piece0, piece1 = self.of(Mul)
-
-    assert piece0.is_Piecewise
-    assert piece1.is_Piecewise
-
     from axiom.algebra.piece.flatten import flatten
     return Equal(self, flatten(mul(piece0, piece1)))
 
@@ -15,11 +11,11 @@ def apply(self):
 def mul(self, other):
     piece = []
     u = S.true
-    for e, c in self.args:
+    for e, c in self.of(Piecewise):
         args = []
         _u = S.true
         c_ = c & u
-        for _e, _c in other.args:
+        for _e, _c in other.of(Piecewise):
             _c_ = _c & _u
             _c_ = c_ & _c_
             if _c_.is_BooleanFalse:

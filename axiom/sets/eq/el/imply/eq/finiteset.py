@@ -4,9 +4,7 @@ from util import *
 @apply
 def apply(equal, contains):
     a, A = contains.of(Element)
-
-    _A = equal.of(Equal[Card, 1])
-    assert _A == A
+    S[A] = equal.of(Equal[Card, 1])
     return Equal(A, a.set, evaluate=False)
 
 
@@ -24,9 +22,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, ret=0)
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.subs, swap=True, reverse=True)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.subs, reverse=True)
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-03-15
+# updated on 2023-05-20

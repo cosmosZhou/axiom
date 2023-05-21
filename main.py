@@ -1,7 +1,7 @@
 from flask import Flask
 
 from werkzeug.routing import BaseConverter
-from util import MySQL
+from std import MySQL
 import sys
  
 app = Flask(__name__)
@@ -53,6 +53,6 @@ if __name__ == '__main__':
     args, kwargs = args_kwargs(sys.argv[1:])
     
     user = MySQL.user
-    [[port]] = MySQL.instance.select(f"select port from tbl_login_py where user = '{user}'")
+    [[port]] = MySQL.instance.select(f"select port from login where user = '{user}'")
     port = kwargs.get('port', port)
     run(port)

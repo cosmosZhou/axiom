@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Product).apply(algebra.prod.bool)
 
-    Eq << Eq[-1].this.rhs.find(Product).apply(algebra.prod.bool)
+    Eq << Eq[-1].this.find(Product[2]).apply(algebra.prod.bool)
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul.to.prod)
 
@@ -30,8 +30,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.add)
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-04-15
+# updated on 2023-05-12

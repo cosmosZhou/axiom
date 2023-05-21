@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.apply(Eq[0], i)
 
-    Eq << sets.all_eq.imply.eq.intersect.apply(Eq[-1])
+    Eq << sets.all_eq.imply.eq.cap.apply(Eq[-1])
 
 
 if __name__ == '__main__':

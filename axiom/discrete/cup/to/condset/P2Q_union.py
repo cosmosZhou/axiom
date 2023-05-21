@@ -37,9 +37,9 @@ def prove(Eq):
 
     Eq << algebra.all_et.given.et.all.apply(Eq[-1])
 
-    Eq << Eq[-1].this.limits[0][1].definition
-
     Eq << Eq[-2].this.limits[0][1].definition
+
+    Eq << Eq[-1].this.limits[0][1].definition
 
     Eq << algebra.all.given.infer.apply(Eq[-1])
 
@@ -47,7 +47,10 @@ def prove(Eq):
 
     Eq <<= Eq.subset_P & Eq.subset_Q
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2020-08-04
+# updated on 2023-05-20

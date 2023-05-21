@@ -5,7 +5,7 @@ from util import *
 def apply(given, G, x, s):
     t = s.definition.variable
     (x_eq, y_eq), (y, i), [S[i]] = x.definition.of(Lamda[Log[Probability[Conditioned]], Tuple[Indexed]])
-    
+
     return Infer(t > 0, Equal(s[t], G[y[t], y[t - 1]] + s[t - 1] + x[t, y[t]])), \
         Equal(s[t], Log(Probability(y_eq.subs(i, 0))) + Sum[i:1:t + 1](G[y[i], y[i - 1]]) + Sum[i:t + 1](x[i, y[i]]))
 
@@ -29,7 +29,7 @@ def prove(Eq):
     G = Symbol(Lamda[y[i - 1], y[i]](log(transition_probability)))
     s = Symbol(Lamda[t](log(joint_probability_t)))
     x = Symbol(Lamda[y[i], i](log(emission_probability)))
-    Eq.given, (Eq.s_definition, Eq.G_definition, Eq.x_definition), Eq[-2:] = apply(given, G, x, s)
+    Eq.given, (Eq.s_definition, Eq.x_definition, Eq.G_definition), Eq[-2:] = apply(given, G, x, s)
 
     Eq << Eq.s_definition.this.rhs.subs(Eq.given)
 
@@ -47,13 +47,13 @@ def prove(Eq):
 
     Eq << algebra.eq.cond.imply.cond.subs.apply(Eq.G_definition.reversed, Eq[-1])
 
-    Eq << Eq[-1].this.rhs.args[-1].apply(algebra.sum.to.add.push_front)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.unshift)
 
     Eq << Eq[-1].subs(t, t + 1)
 
     Eq << Eq[-1].this.args[1].apply(sets.notin.imply.notin.sub, 1)
 
-    Eq << algebra.ou.imply.infer.apply(Eq[-1], 1)
+    Eq << algebra.ou.imply.infer.apply(Eq[-1], 0)
 
     Eq << Eq[-1].this.rhs.apply(algebra.eq.eq.imply.eq.sub, Eq[-4])
 
@@ -65,15 +65,16 @@ def prove(Eq):
 
     Eq << Eq[-1].this.args[1].apply(sets.notin.imply.notin.add, 1)
 
-    Eq << algebra.ou.imply.infer.apply(Eq[-1], 1)
+    Eq << algebra.ou.imply.infer.apply(Eq[-1], 0)
 
     Eq << Eq[-1].this.lhs.apply(algebra.ne_zero.given.gt_zero)
 
     #reference: Neural Architectures for Named Entity Recognition.pdf
+    
     
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-12-17
-# updated on 2022-09-18
+# updated on 2023-05-20

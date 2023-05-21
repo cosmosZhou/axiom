@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq.or_statement = Or(Equal(D[n + 1], 0), Equal(D[n], 1), plausible=True)
 
-    Eq << Eq.or_statement.this.args[0].lhs.definition
+    Eq << Eq.or_statement.this.args[1].lhs.definition
 
     Eq << Eq[-1].this.args[0].lhs.definition
 
@@ -70,6 +70,7 @@ def prove(Eq):
     Eq << Eq[-1].this.args[1].apply(sets.notin.imply.notin.add, 1)
 
     Eq << algebra.ou.imply.all.apply(Eq[-1], 1)
+
     Eq << algebra.eq.eq.imply.eq.subs.apply(Eq[-1].reversed, Eq[-5])
 
     k = Symbol(integer=True)
@@ -88,7 +89,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.sub, 1)
 
-    Eq << (-Eq[-1].rhs.expr.args[0].args[0].expr).this.apply(algebra.mul.to.prod.limits.push_front)
+    Eq << (-Eq[-1].rhs.expr.args[0].args[0].expr).this.apply(algebra.mul.to.prod.limits.unshift)
 
     Eq << Eq[-2].subs(Eq[-1])
 
@@ -112,8 +113,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.definition
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-04-16
+# updated on 2023-05-12

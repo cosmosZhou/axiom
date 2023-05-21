@@ -4,29 +4,29 @@ from util import *
 @apply
 def apply(x_less_than_a, y_less_than_a):
     x, a = x_less_than_a.of(Less)
-    y, _a = y_less_than_a.of(Less)
-    assert a == _a
-    return Less(Max(x, y), a)
+    y, b = y_less_than_a.of(Less)
+    return Less(Max(x, y), Max(a, b))
 
 
 @prove
 def prove(Eq):
     from axiom import algebra
-    a, x, y = Symbol(real=True, given=True)
 
-    Eq << apply(x < a, y < a)
+    a, x, y, b = Symbol(real=True, given=True)
+    Eq << apply(x < a, y < b)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.max.to.piece)
+    Eq << algebra.gt.gt.imply.gt.min.apply(-Eq[0], -Eq[1])
 
-    Eq << algebra.cond.given.ou.apply(Eq[-1])
+    Eq << Eq[-1].this.lhs.apply(algebra.min.to.mul.max)
 
-    Eq << ~Eq[-1]
+    Eq << Eq[-1].this.rhs.apply(algebra.min.to.mul.max)
 
-    Eq << algebra.cond.cond.imply.cond.subs.apply(Eq[0], Eq[-1], invert=True)
-
-    Eq << algebra.cond.cond.imply.cond.subs.apply(Eq[1], Eq[-1], invert=True)
+    Eq << -Eq[-1]
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-01-08
+# updated on 2023-04-23

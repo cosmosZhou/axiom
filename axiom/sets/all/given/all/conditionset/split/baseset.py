@@ -4,11 +4,7 @@ from util import *
 @apply
 def apply(imply, s):
     function, (x, cond, baseset) = imply.of(All)
-    assert s.is_Symbol
-    __x, (_x, _cond, _baseset) = s.definition.of(Cup[FiniteSet])
-    assert x == _x == __x
-    assert _cond == cond
-    assert _baseset == baseset
+    S[x], (S[x], S[cond], S[baseset]) = s.definition.of(Cup[FiniteSet])
 
     return All[x:s](function)
 

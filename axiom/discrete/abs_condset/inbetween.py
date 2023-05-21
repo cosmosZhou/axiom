@@ -20,7 +20,7 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True)
     Eq << apply(n)
 
-    Eq << discrete.condset.identity_Qn.apply(n)
+    Eq << discrete.condset.PQ_equality.apply(n)
 
     Eq << Eq[2].subs(Eq[-1].reversed)
 

@@ -16,7 +16,7 @@ def prove(Eq):
 
     Eq << sets.el_interval.given.et.apply(Eq[-1])
 
-    Eq << algebra.imply.le.ceiling.apply(x)
+    Eq << algebra.imply.le_ceiling.apply(x)
 
     Eq << Eq[-1].subs(Eq[0])
 

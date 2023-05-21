@@ -5,12 +5,8 @@ from util import *
 def apply(le, is_continuous, is_differentiable):
     a, b = le.of(LessEqual)
     from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle import of_differentiable, of_continuous
-    fz, (z, _a, _b) = of_continuous(is_continuous)
-    _fz, (_z, __a, __b) = of_differentiable(is_differentiable, open=False)
-    assert _fz == fz
-    assert _z == z
-    assert _a == a == __a
-    assert _b == b == __b
+    fz, (z, S[a], S[b]) = of_continuous(is_continuous)
+    S[fz], S[(z, a, b)] = of_differentiable(is_differentiable, open=False)
 
     fa = fz._subs(z, a)
     fb = fz._subs(z, b)
@@ -23,7 +19,7 @@ def prove(Eq):
     from axiom import calculus, algebra
 
     from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle import is_differentiable
-    from axiom.calculus.all_eq.imply.all_any_eq.intermediate_value_theorem import is_continuous
+    from axiom.calculus.all_eq.imply.all.any.eq.intermediate_value_theorem import is_continuous
     a, b = Symbol(real=True)
     f = Function(real=True)
     Eq << apply(a <= b, is_continuous(f, a, b), is_differentiable(f, a, b, open=False))
@@ -42,7 +38,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.apply(Eq[1] & Eq[-1], cond=b > a)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.args[0].reversed
 

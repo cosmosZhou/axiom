@@ -29,12 +29,16 @@ def prove(Eq):
 
     Eq << ((sqrt(x) + sqrt(y))(-sqrt(x) + sqrt(y))).this.apply(algebra.mul.to.add, deep=True)
 
-    Eq << algebra.gt_zero.eq.imply.eq.div.apply(Eq.is_positive, Eq[-1])
+    Eq << algebra.gt_zero.eq.imply.eq.div.apply(Eq.is_positive, Eq[-1], simplify=None)
+
     Eq << Eq[-3].subs(Eq[-1].reversed)
 
     Eq << algebra.gt.given.gt_zero.apply(Eq[2])
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-06-13
+# updated on 2023-05-02

@@ -20,14 +20,11 @@ def prove(Eq):
     g = Symbol(shape=(oo, oo), etype=dtype.real)
     Eq << apply(Cup[i:0:m, j:0:n](f[i] & g[i, j]))
 
-    #Eq.initial = Eq[0].subs(n, 1)
-    #Eq << Eq.initial.this.lhs.apply(sets.cup.doit.outer)
-    #Eq << Eq[-1].this.rhs.apply(algebra.sum.doit.inner)
     Eq.induct = Eq[0].subs(n, n + 1)
 
     Eq << Eq.induct.this.lhs.apply(sets.cup.to.union.split, cond={n})
 
-    Eq.induct_dissected = Eq[-1].this.lhs.find(Cup).apply(sets.cup.to.union.doit.outer.setlimit)
+    Eq.induct_dissected = Eq[-1].this.find(Union[~Cup]).apply(sets.cup.to.union.doit.outer.setlimit)
 
     s = Symbol(Cup[j:0:n + 1](f[i] & g[i, j]))
     Eq << s.this.definition
@@ -38,7 +35,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[1].apply(sets.intersect.to.cup)
 
-    Eq << Eq[-1].this.rhs.args[0].find(Cup).apply(sets.cup.to.union.doit.setlimit, simplify=None, evaluate=False)
+    Eq << Eq[-1].this.find(Intersection[~Cup]).apply(sets.cup.to.union.doit.setlimit, simplify=None, evaluate=False)
 
     Eq << Eq[-4].subs(Eq[-1])
 
@@ -46,11 +43,14 @@ def prove(Eq):
 
     Eq << Eq.induct_dissected.subs(Eq[-1].reversed)
 
-    Eq << sets.eq.imply.eq.union.apply(Eq[0], Eq[-1].lhs.args[0])
+    Eq << sets.eq.imply.eq.union.apply(Eq[0], Eq[-1].find(Cup))
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
     Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=1)
+
+    
+    
 
 
 if __name__ == '__main__':
@@ -59,3 +59,4 @@ if __name__ == '__main__':
 from . import intlimit
 from . import subs
 # created on 2021-02-11
+# updated on 2023-05-13

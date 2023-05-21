@@ -6,14 +6,14 @@ def apply(eq_relu, eq_min, eq_K, eq_V, Q, K, V):
     ((i, l), i_limit), β = eq_relu.of(Equal[Lamda[relu[Expr + 1 - Expr]]])
     S[i], S[0], n = i_limit
 
-    (((S[i], u), S[n]), S[i_limit]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])
+    ((S[n], (S[i], u)), S[i_limit]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])
 
     ((K_quote, range_n, j_index), j_limit), K_dquote = eq_K.of(Equal[Transpose[1][Lamda[SlicedIndexed]]])
     ((V_quote, S[range_n], S[j_index]), S[j_limit]), V_dquote = eq_V.of(Equal[Transpose[1][Lamda[SlicedIndexed]]])
 
     S[0], S[n] = range_n
     j, S[0], S[Min(n, l + u - 1)] = j_limit
-    (S[j], S[β[i]]), S[n - 1] = j_index.of(Min[Add])
+    S[n - 1], S[j + β[i]] = j_index.of(Min)
 
     S[n], d_z = Q.shape
 
@@ -120,11 +120,11 @@ def prove(Eq):
 
     Eq <<= algebra.le.eq.imply.eq.slice.apply(Eq[-1], Eq.K_dquote[i]), algebra.le.eq.imply.eq.slice.apply(Eq[-1], Eq.V_dquote[i])
 
-    Eq <<= Eq[-2].this.find(Min[~Add]).apply(algebra.expr.to.piece, upper=ζ[i] - 1), Eq[-1].this.find(Min[~Add]).apply(algebra.expr.to.piece, upper=ζ[i] - 1)
+    Eq <<= Eq[-2].this.find(Symbol + Indexed).apply(algebra.expr.to.piece, upper=ζ[i] - 1), Eq[-1].this.find(Symbol + Indexed).apply(algebra.expr.to.piece, upper=ζ[i] - 1)
 
     Eq <<= Eq[-2].this.rhs().find(GreaterEqual).simplify(), Eq[-1].this.rhs().find(GreaterEqual).simplify()
 
-    Eq <<= Eq[-2].this.find(Min).args[1].apply(algebra.expr.to.piece, lower=ζ[i] - 1), Eq[-1].this.find(Min).args[1].apply(algebra.expr.to.piece, lower=ζ[i] - 1)
+    Eq <<= Eq[-2].this.find(Symbol - 1).apply(algebra.expr.to.piece, lower=ζ[i] - 1), Eq[-1].this.find(Symbol - 1).apply(algebra.expr.to.piece, lower=ζ[i] - 1)
 
     Eq <<= algebra.cond.cond.imply.cond.subs.apply(Eq.le_zeta_i, Eq[-2]), algebra.cond.cond.imply.cond.subs.apply(Eq.le_zeta_i, Eq[-1])
 
@@ -136,12 +136,12 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[1], Eq[-1])
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2021-12-14
-# updated on 2022-03-30
+# updated on 2023-05-19

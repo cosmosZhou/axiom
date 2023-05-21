@@ -4,8 +4,7 @@ from util import *
 @apply
 def apply(is_nonzero, equality):
     lhs = is_nonzero.of(Unequal[0])
-    _lhs, rhs = equality.of(Equal)
-    assert lhs == _lhs
+    S[lhs], rhs = equality.of(Equal)
 
     return Equal(log(lhs), log(rhs))
 

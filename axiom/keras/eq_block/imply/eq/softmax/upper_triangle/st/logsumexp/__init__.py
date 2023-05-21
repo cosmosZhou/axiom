@@ -38,7 +38,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.exp.to.mul)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.exp.to.block)
+    Eq << Eq[-1].this.find(Exp[BlockMatrix]).apply(algebra.exp.to.block)
 
     Eq << Eq[-1].this.find(Exp[Lamda[BlockMatrix]]).apply(algebra.exp.to.lamda)
 
@@ -56,12 +56,12 @@ def prove(Eq):
 
     Eq << keras.eq_block.imply.eq.softmax.upper_triangle.st.exp.apply(Eq[-1])
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-01-03
-# updated on 2022-03-30
+# updated on 2023-05-20
 from . import tf

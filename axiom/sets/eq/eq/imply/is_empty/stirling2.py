@@ -3,16 +3,10 @@ from util import *
 
 @apply
 def apply(equal_sum, equal_union):
-    (xi, (_i, k)), n = equal_sum.of(Equal[Sum[Card, Tuple[0, Expr]]])
-    x, i = xi.of(Indexed)
+    (xi, (i, k)), n = equal_sum.of(Equal[Sum[Card, Tuple[0, Expr]]])
+    x, S[i] = xi.of(Indexed)
 
-    assert _i == i
-
-    (_xi, limit), _n = equal_union.of(Equal[Cup, Range[0, Expr]])
-    assert n == _n
-
-    assert _xi == xi
-    assert limit == (_i, 0, k)
+    (S[xi], S[(i, 0, k)]), S[n] = equal_union.of(Equal[Cup, Range[0, Expr]])
 
     j = Symbol(domain=Range(k))
     complement = Range(k) - {j}
@@ -39,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-1].limits_subs(Eq[-1].variable, i)
 
-    Eq << sets.all_eq.imply.eq.union.apply(Eq[-1])
+    Eq << sets.all_eq.imply.eq.cup.apply(Eq[-1])
 
 
 if __name__ == '__main__':

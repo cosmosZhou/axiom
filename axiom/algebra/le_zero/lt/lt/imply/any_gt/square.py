@@ -3,13 +3,11 @@ from util import *
 
 @apply
 def apply(M_is_nonpositive, lt_mM, lt, x=None):
-    _M = M_is_nonpositive.of(Expr <= 0)
-    m, M = lt_mM.of(Less)
-    assert _M == M
+    M = M_is_nonpositive.of(Expr <= 0)
+    m, S[M] = lt_mM.of(Less)
 
     U, M2 = lt.of(Less)
-    _m = M2.of(Expr ** 2)
-    assert _m == m
+    S[m] = M2.of(Expr ** 2)
     if x is None:
         x = lt.generate_var(real=True)
     return Any[x:Interval(m, M, left_open=True, right_open=True)](x ** 2 > U)

@@ -29,3 +29,4 @@ if __name__ == '__main__':
 
 # created on 2018-03-17
 from . import abs
+from . import div

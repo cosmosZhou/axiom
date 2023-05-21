@@ -2,7 +2,7 @@ from util import *
 
 
 def to_Lamda(self, expr, deep=False):
-    variables = self.variables    
+    variables = self.variables
     if expr.shape:
         size = min(len(expr.shape), len(variables))
         variables = variables[:size]
@@ -32,7 +32,7 @@ def apply(self, deep=False):
                 lamda = Lamda(-expr, *limits)
                 del args[i]
                 rhs = to_Lamda(lamda, Add(*args), deep=deep)
-                break          
+                break
         else:
             return
         

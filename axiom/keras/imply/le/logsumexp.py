@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(x):
-    assert len(x.shape) == 1
+    n, = x.shape
     assert x.is_real
     return x <= logsumexp(x)
 
@@ -24,16 +24,17 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(keras.softmax.to.mul.reducedSum)
 
+    Eq << GreaterEqual(exp(x), ZeroMatrix(*x.shape), plausible=True)
+
+    Eq << algebra.ge_zero.imply.le.reducedSum.apply(Eq[-1])
+
+    Eq << Eq[-1] / Eq[-1].find(ReducedSum)
+
     
-    Eq << GreaterEqual(exp(x), 0, plausible=True)
-
-    Eq << algebra.ge_zero.imply.le_sum.apply(Eq[-1])
-
-    Eq << Eq[-1] / Eq[-1].rhs
     
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-03-31
-# updated on 2022-04-01
+# updated on 2023-03-25

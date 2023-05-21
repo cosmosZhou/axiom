@@ -1,13 +1,13 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given, *, simplify=True):
     fn1, *limits = given.of(All)
     cond = given.limits_cond
     if simplify:
         cond = cond.simplify()
-    return Equivalent(given, Infer(cond, fn1))
+    return Infer(cond, fn1)
 
 
 @prove

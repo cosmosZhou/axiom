@@ -5,9 +5,11 @@ from util import *
 def apply(self):
     (one, cond), (zero, S[True]) = self.of(Piecewise)
     if zero:
-        assert zero == 1
-        assert one == 0
+        S[0], S[1] = one, zero
         cond = cond.invert()
+    else:
+        S[0], S[1] = zero, one
+
     return Equal(self, Bool(cond))
 
 
@@ -19,12 +21,13 @@ def prove(Eq):
     Eq << apply(Piecewise((0, x > y), (1, True)))
 
     Eq << Eq[0].this.rhs.apply(algebra.bool.to.piece)
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.swap)
 
+    
 
-
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-12-16
+# updated on 2023-05-15

@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << algebra.le.given.all.le.apply(Eq[0])
 
-    Eq << algebra.le_piece.given.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.given.ou.apply(Eq[-1])
 
     Eq << algebra.le.imply.all.le.apply(Eq[1])
 
@@ -41,6 +41,7 @@ def prove(Eq):
     Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (i, Range(n, oo)), simplify=None)
 
     Eq << algebra.all.imply.infer.apply(Eq[-1])
+
     Eq << algebra.infer.infer.imply.ou.apply(Eq.infer_lt, Eq[-1])
 
     
@@ -49,3 +50,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-04-01
+# updated on 2023-04-29

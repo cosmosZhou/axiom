@@ -57,11 +57,114 @@ def delete_duplicate():
                 del lines[index]
                 Text(py).writelines(lines)
 
+def test_select_smaller():
+    from sympy import Symbol
+    x = Symbol(real=True) 
+    a = 1
+    b = 2
+#     a = b
+#     strict inequality test:
+    print((x < a) | (x < b))
+    print((x < a) | (b > x))
+    print((a > x) | (b > x))
+    print((a > x) | (x < b))
+    
+    print((x < b) | (x < a))
+    print((b > x) | (x < a))
+    print((b > x) | (a > x))
+    print((x < b) | (a > x))
+    
+#     semi-strict inequality test:
+    print((x <= a) | (x < b))
+    print((x <= a) | (b > x))
+    print((a >= x) | (b > x))
+    print((a >= x) | (x < b))
+    
+    print((x < b) | (x <= a))
+    print((b > x) | (x <= a))
+    print((b > x) | (a >= x))
+    print((x < b) | (a >= x))
+#     semi-strict inequality test:    
+    print((x < a) | (x <= b))
+    print((x < a) | (b >= x))
+    print((a > x) | (b >= x))
+    print((a > x) | (x <= b))
+    
+    print((x <= b) | (x < a))
+    print((b >= x) | (x < a))
+    print((b >= x) | (a > x))
+    print((x <= b) | (a > x))
+    
+#     non-strict inequality test:    
+    print((x <= a) | (x <= b))
+    print((x <= a) | (b >= x))
+    print((a >= x) | (b >= x))
+    print((a >= x) | (x <= b))
+    
+    print((x <= b) | (x <= a))
+    print((b >= x) | (x <= a))
+    print((b >= x) | (a >= x))
+    print((x <= b) | (a >= x))
+    
+def test_select_greater():
+    from sympy import Symbol
+    x = Symbol(real=True) 
+    a = 1
+    b = 2
+    
+#     a = b
+#     strict inequality test:
 
-if __name__ == '__main__':
+    print((x > a) | (x > b))
+    print((x > a) | (b < x))
+    print((a < x) | (b < x))
+    print((a < x) | (x > b))
+    
+    print((x > b) | (x > a))
+    print((b < x) | (x > a))
+    print((b < x) | (a < x))
+    print((x > b) | (a < x))
+    
+#     semi-strict inequality test:
+    print((x >= a) | (x > b))
+    print((x >= a) | (b < x))
+    print((a <= x) | (b < x))
+    print((a <= x) | (x > b))
+    
+    print((x > b) | (x >= a))
+    print((b < x) | (x >= a))
+    print((b < x) | (a <= x))
+    print((x > b) | (a <= x))
+#     semi-strict inequality test:    
+    print((x > a) | (x >= b))
+    print((x > a) | (b <= x))
+    print((a < x) | (b <= x))
+    print((a < x) | (x >= b))
+    
+    print((x >= b) | (x > a))
+    print((b <= x) | (x > a))
+    print((b <= x) | (a < x))
+    print((x >= b) | (a < x))
+    
+#     non-strict inequality test:    
+    print((x >= a) | (x >= b))
+    print((x >= a) | (b <= x))
+    print((a <= x) | (b <= x))
+    print((a <= x) | (x >= b))
+    
+    print((x >= b) | (x >= a))
+    print((b <= x) | (x >= a))
+    print((b <= x) | (a <= x))
+    print((x >= b) | (a <= x))
+    
+def test_sparsemax():    
     z = [0.5, 0.3, 0.1, 0.1, 0, 0.9] * 10
     
     z = sparsemax(z)
     _z = sparsemax(z, False)
     print(sum(z), sum(_z))
     print(z == _z)
+    
+if __name__ == '__main__':
+    test_select_smaller()
+#     test_select_greater()

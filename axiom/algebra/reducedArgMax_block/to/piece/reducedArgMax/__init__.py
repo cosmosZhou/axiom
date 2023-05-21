@@ -4,8 +4,8 @@ from util import *
 @apply
 def apply(self):
     x, y = self.of(ReducedArgMax[BlockMatrix])
-    [m] = x.shape
-    [n] = y.shape
+    m, = x.shape
+    n, = y.shape
 
     return Equal(self, Piecewise((m + ReducedArgMax(y), ReducedMax(y) > ReducedMax(x)), (ReducedArgMax(x), True)))
 

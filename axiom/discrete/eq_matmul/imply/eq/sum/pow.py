@@ -4,10 +4,10 @@ from util import *
 @apply
 def apply(given, m, i=None):
     (x, w), y = given.of(Equal[MatMul])
-    [n] = x.shape
+    n, = x.shape
     _i, _j = w.of(SwapMatrix)    
-    assert _i >= 0 and _i < n
-    assert _j >= 0 and _j < n
+    assert 0 <= _i < n
+    assert 0 <= _j < n
     if i is None:
         i = given.generate_var(integer=True, var='i')
 

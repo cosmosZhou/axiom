@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    (fx, *limits), (gx, *_limits) = self.of(Product / Product)
-    assert limits == _limits
+    (fx, *limits), (gx, *S[limits]) = self.of(Product / Product)
 
     return Equal(self, Product(fx / gx, *limits))
 

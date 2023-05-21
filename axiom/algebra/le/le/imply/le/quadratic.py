@@ -4,10 +4,8 @@ from util import *
 
 @apply
 def apply(x_less_than_1, y_less_than_1):
-    x, one = x_less_than_1.of(LessEqual)
-    assert one.is_One
-    y, one = y_less_than_1.of(LessEqual)
-    assert one.is_One
+    x, S[1] = x_less_than_1.of(LessEqual)
+    y, S[1] = y_less_than_1.of(LessEqual)
 
     assert x >= 0
     assert y >= 0

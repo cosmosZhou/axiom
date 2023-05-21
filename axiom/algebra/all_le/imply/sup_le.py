@@ -4,6 +4,7 @@ from util import *
 @apply
 def apply(all_le):
     (fx, M), *limits = all_le.of(All[LessEqual])
+    assert not M.has(*(v for v, *_ in limits))
     return Sup(fx, *limits) <= M
 
 
@@ -29,9 +30,13 @@ def prove(Eq):
     Eq << Eq[-1].subs(y, M)
 
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[0], Eq[-1])
+
     Eq << Eq[-1].this.lhs.definition
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-01-17
+# updated on 2023-04-14

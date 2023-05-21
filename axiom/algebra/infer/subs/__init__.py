@@ -2,7 +2,7 @@ from util import *
 
 
 
-@apply(given=None)
+@apply
 def apply(given, index=None, reverse=False):
     p, q = given.of(Infer)
     if index is None:
@@ -21,7 +21,7 @@ def apply(given, index=None, reverse=False):
     if reverse:
         old, new = new, old
     q = q._subs(old, new)
-    return Equivalent(given, Infer(p, q), evaluate=False)
+    return Infer(p, q)
 
 
 @prove
@@ -35,11 +35,11 @@ def prove(Eq):
 
     Eq.suffice, Eq.necessary = algebra.iff.given.et.apply(Eq[-1])
 
-    Eq << Eq.suffice.this.lhs.apply(algebra.infer.imply.infer.et, index=0)
+    Eq << Eq.suffice.this.lhs.apply(algebra.infer_et.imply.infer.et, index=0)
 
     Eq << Eq[-1].this.lhs.rhs.apply(algebra.eq.cond.imply.cond.subs)
 
-    Eq << Eq.necessary.this.rhs.apply(algebra.infer.imply.infer.et, index=0)
+    Eq << Eq.necessary.this.rhs.apply(algebra.infer_et.imply.infer.et, index=0)
 
     Eq << Eq[-1].this.rhs.rhs.apply(algebra.eq.cond.imply.cond.subs, reverse=True)
 

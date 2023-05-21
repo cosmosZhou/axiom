@@ -31,5 +31,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-from . import subs, conditioned
+from . import subs, cond
 # created on 2018-12-01

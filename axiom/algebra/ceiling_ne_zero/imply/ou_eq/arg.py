@@ -4,10 +4,7 @@ from util import *
 @apply
 def apply(is_nonzero):
     ceiling = is_nonzero.of(Unequal[0])
-    ((A, B), pi2), half = ceiling.of(Ceiling[(Arg + Arg) * Expr - Expr])
-    assert half * 2 == 1
-    assert 1 / pi2 == S.Pi * 2
-
+    ((A, B), S[S.One / (S.Pi * 2)]), S[S.One  / 2] = ceiling.of(Ceiling[(Arg + Arg) * Expr - Expr])
     return Equal(ceiling, 1) | Equal(ceiling, -1)
 
 
@@ -26,11 +23,11 @@ def prove(Eq):
 
     Eq << sets.el.imply.el.sub.apply(Eq[-1], S.One / 2)
 
-    Eq << sets.el.imply.el.ceiling.apply(Eq[-1])
+    Eq << sets.el_interval.imply.el_range.ceiling.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(sets.range.to.finiteset)
 
-    Eq << sets.el.imply.ou.split.finiteset.apply(Eq[-1])
+    Eq << sets.el_finiteset.imply.ou.apply(Eq[-1])
 
     Eq << algebra.cond.ou.imply.cond.apply(Eq[0], Eq[-1])
 

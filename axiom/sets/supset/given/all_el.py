@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(imply, var=None):
-    assert imply.is_Supset
-    A, B = imply.args
+    A, B = imply.of(Supset)
     if var is None:
         var = B.element_symbol()
 

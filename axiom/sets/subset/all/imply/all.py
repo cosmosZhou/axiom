@@ -7,15 +7,17 @@ def apply(subset, forall):
 
     B, A = subset.of(Subset)
 
-    index = -1
-    for i, (x, *domain) in enumerate(limits):
+    for index, (x, *domain) in enumerate(limits):
         if len(domain) == 1:
             if domain[0] == A:
-                index = i
                 break
+        elif len(domain) == 2:
+            if x.range(*domain) == A:
+                break
+    else:
+        return
 
     assert index >= 0
-
     limits[index] = (x, B)
     return All(function, *limits)
 

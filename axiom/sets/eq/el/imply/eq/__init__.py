@@ -3,24 +3,17 @@ from util import *
 
 @apply
 def apply(equal, contains):
-    if contains.is_Equal:
-        contains, equal = equal, contains
-
     a, A = contains.of(Element)
 
     complement_A_a, complement_B_a = equal.of(Equal)
     _A, _a = complement_A_a.of(Complement)
-    _a = _a.of(FiniteSet)
+    S[a] = _a.of(FiniteSet)
 
-    assert a == _a
     B, _a = complement_B_a.of(Complement)
-    _a = _a.of(FiniteSet)
-
-    assert a == _a
+    S[a] = _a.of(FiniteSet)
 
     if A != _A:
-        _A, B = B, _A
-    assert A == _A
+        S[A], B = B, _A
 
     return Equal(A, B | a.set)
 

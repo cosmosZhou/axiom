@@ -4,8 +4,8 @@ from util import *
 def doit(Sum, self):
     xi, * limits, (i, s) = self.args
     assert limits
+    
     assert s.is_FiniteSet
-
     sgm = self.identity(xi)
     while s:
         t, *args = s.args

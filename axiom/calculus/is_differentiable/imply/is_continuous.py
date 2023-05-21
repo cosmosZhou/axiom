@@ -3,18 +3,16 @@ from util import *
 
 @apply
 def apply(all_contains):
-    ((fx, (x, d)), R), (x_, *domain) = all_contains.of(All[Element[Derivative]])
+    ((fx, (x, S[1])), R), (S[x], *domain) = all_contains.of(All[Element[Derivative]])
     if len(domain) == 2:
         domain = Interval(*domain)
     else:
-        [domain] = domain
+        domain, = domain
 
     assert R in Interval(-oo, oo)
-    assert x == x_
-    assert d == 1
-    assert not domain.left_open and not domain.right_open
     a, b = domain.of(Interval)
-    from axiom.calculus.all_eq.imply.all_any_eq.intermediate_value_theorem import is_continuous
+    assert domain.is_closed
+    from axiom.calculus.all_eq.imply.all.any.eq.intermediate_value_theorem import is_continuous
     f = lambda t: fx._subs(x, t)
     return is_continuous(f, a, b, x=x)
 

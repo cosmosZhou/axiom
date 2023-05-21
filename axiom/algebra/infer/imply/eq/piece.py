@@ -42,15 +42,19 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.add_piece.to.piece)
 
-    Eq << algebra.eq.given.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.given.ou.apply(Eq[-1])
 
-    Eq << algebra.ou.given.infer.apply(Eq[-1], 1)
+    Eq << algebra.ou.given.infer.apply(Eq[-1], 0)
 
     Eq << Eq[-1].this.rhs.reversed
 
     Eq << Eq[-1].this.lhs.apply(sets.el_intersect.imply.el)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-07-23
+# updated on 2023-05-14

@@ -3,3 +3,4 @@ from . import all
 from . import restrict
 from . import infer
 from . import subs
+from . import assuming

@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(imply):
     from axiom.algebra.all.imply.ou import rewrite_as_Or
-    return Equivalent(imply, rewrite_as_Or(imply), evaluate=False)
+    return rewrite_as_Or(imply)
 
 
 @prove

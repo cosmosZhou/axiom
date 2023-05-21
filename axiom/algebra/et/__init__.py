@@ -4,6 +4,7 @@ from . import given
 from . import collect
 from . import to
 
-from . import concatenate
 from . import distribute
 from . import invert
+from . import concat
+from . import et

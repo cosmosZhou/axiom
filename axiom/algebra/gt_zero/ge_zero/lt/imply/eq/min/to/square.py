@@ -4,9 +4,8 @@ from util import *
 @apply
 def apply(lt_zero, ge_zero, lt, x=None):
     a = lt_zero.of(Expr > 0)
-    _m = ge_zero.of(Expr >= 0)
-    m, M = lt.of(Less)
-    assert m == _m
+    m = ge_zero.of(Expr >= 0)
+    S[m], M = lt.of(Less)
     if x is None:
         x = lt.generate_var(real=True)
 

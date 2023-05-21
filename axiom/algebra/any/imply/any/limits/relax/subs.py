@@ -3,15 +3,9 @@ from util import *
 
 @apply
 def apply(given, old, new):
-    function, *limits = given.of(Any)
-    assert len(limits) == 1
-    limit = limits[0]
-    assert len(limit) == 1
-    _old = limits[0][0]
-    assert old == _old
+    expr, [S[old]] = given.of(Any)
     assert old.domain in new.domain
-
-    return Any[new](function._subs(old, new))
+    return Any[new](expr._subs(old, new))
 
 
 @prove

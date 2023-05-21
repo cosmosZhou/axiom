@@ -1,18 +1,12 @@
 from util import *
 
 
-def interval_is_negative(interval):
-    if interval.is_Interval:
-        if interval.right_open:
-            return interval.stop <= 0
-        else:
-            return interval.stop < 0
-
 @apply
 def apply(given):
-    x, domain = given.of(Element)
-    assert interval_is_negative(domain)    
-    return Element(1 / x, Interval(-oo, 0, right_open=True))
+    x, R = given.of(Element)
+    RR = Interval(-oo, 0, right_open=True)
+    assert R in RR
+    return Element(1 / x, RR)
 
 
 @prove

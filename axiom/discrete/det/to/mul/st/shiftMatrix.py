@@ -5,7 +5,7 @@ from util import *
 def apply(A):
     n = A.shape[0]
     k = Symbol(integer=True)
-    return Equal(det(Sum[k:1:n]((ShiftMatrix(n, 0, n - 1) ** k) @ A)), det(A) * (n - 1) * (-1) ** (n - 1))
+    return Equal(det(Sum[k:1:n]((ShiftMatrix(n, 0, n - 1) ^ k) @ A)), det(A) * (n - 1) * (-1) ** (n - 1))
 
 
 @prove
@@ -16,7 +16,8 @@ def prove(Eq):
     A = Symbol(shape=(n, n), complex=True)
     Eq << apply(A)
 
-    Eq << Symbol('L', Eq[0].lhs.arg).this.definition
+    L = Symbol(Eq[0].lhs.arg)
+    Eq << L.this.definition
 
     shift = Eq[-1].rhs.expr.args[0].base
     Eq.L_definition = Eq[-1].this.rhs.doit()
@@ -98,4 +99,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2020-10-03
-# updated on 2022-09-20
+# updated on 2023-05-02

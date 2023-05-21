@@ -5,12 +5,10 @@ from util import *
 def apply(is_positive, contains):
     a = is_positive.of(Expr > 0)
     fa, R = contains.of(Element)
-    assert R.is_Interval
-    start = R.start
+    start, stop = R.of(Interval)
     if not start.is_infinite:
         start *= a
 
-    stop = R.stop
     if not stop.is_infinite:
         stop *= a
 

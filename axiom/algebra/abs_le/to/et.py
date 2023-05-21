@@ -1,11 +1,11 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(le):
     abs_x, a = le.of(LessEqual)
     x = abs_x.of(Abs)
-    return Equivalent(le, And(LessEqual(x, a), GreaterEqual(x, -a)), evaluate=False)
+    return And(LessEqual(x, a), GreaterEqual(x, -a))
 
 
 @prove

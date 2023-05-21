@@ -5,9 +5,8 @@ from util import *
 def apply(given, sgm):
     (y, xi), (i, S[0], n) = given.of(All[Unequal])
     ft, (t, s) = sgm.of(Sum)
-    xj, (j, S[0], _n) = s.of(Cup[FiniteSet])
+    xj, (j, S[0], S[n]) = s.of(Cup[FiniteSet])
     assert xj._subs(j, i) == xi
-    assert n == _n
 
     return Equal(sgm, Sum[t:s | {y}](ft) - ft._subs(t, y), evaluate=False)
 

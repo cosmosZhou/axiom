@@ -5,8 +5,7 @@ from util import *
 def apply(given, n):
     (xi, xj), (j, (i, _j)) = given.of(All[Equal[Intersection, EmptySet], Tuple[Unequal]])
     if j != _j:
-        i, _j = _j, i
-    assert j == _j
+        i, S[j] = _j, i
 
     if not xi.has(i):
         xi = xj

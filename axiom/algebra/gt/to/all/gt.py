@@ -1,13 +1,13 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(gt, var=None):
     lhs, rhs = gt.of(Greater)
     assert lhs.shape
     if var is None:
         var = gt.generate_var(integer=True)
-    return Equivalent(gt, All[var:lhs.shape[0]](lhs[var] > rhs[var]))
+    return All[var:lhs.shape[0]](lhs[var] > rhs[var])
 
 
 @prove

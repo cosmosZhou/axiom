@@ -1,12 +1,12 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given):
     x, domain = given.of(Element)
     a, b, d= domain.of(Range)
     assert x.is_integer
-    return Equivalent(given, And(x >= a, x < b, Equal(x % d, a % d)))
+    return And(x >= a, x < b, Equal(x % d, a % d))
 
 @prove(provable=False)
 def prove(Eq):

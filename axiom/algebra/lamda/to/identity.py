@@ -3,10 +3,9 @@ from util import *
 
 @apply
 def apply(lamda):
-    (_i, _j), (i, n), (j, _n) = lamda.of(Lamda[KroneckerDelta, Tuple[0, Expr], Tuple[0, Expr]])
+    (_i, _j), (i, n), (j, S[n]) = lamda.of(Lamda[KroneckerDelta, Tuple[0, Expr], Tuple[0, Expr]])
 
-    assert i == _i and j == _j or i == _j and j == _i
-    assert n == _n
+    assert {i, j} == {_i, _j}
 
     return Equal(lamda, Identity(n))
 

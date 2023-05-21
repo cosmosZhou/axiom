@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(self, old, new):
     from axiom.algebra.all.limits.subs.negate.real import limits_subs
-    return Equivalent(self, limits_subs(Any, self, old, new), evaluate=False)
+    return limits_subs(Any, self, old, new)
 
 
 @prove

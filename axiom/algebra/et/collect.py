@@ -2,7 +2,7 @@ from util import *
 
 
 
-@apply(given=None)
+@apply
 def apply(self, cond=None):
     matched = []
     unmatch = []
@@ -16,7 +16,7 @@ def apply(self, cond=None):
             continue
         unmatch.append(eq)
     assert unmatch
-    return Equivalent(self, self.func(*unmatch, Or(cond, self.func(*matched))))
+    return self.func(*unmatch, Or(cond, self.func(*matched)))
 
 
 @prove

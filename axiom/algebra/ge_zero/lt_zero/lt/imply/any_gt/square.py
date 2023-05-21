@@ -12,8 +12,10 @@ def apply(M_is_nonnegative, is_negative, lt, x=None):
 
     if x is None:
         x = lt.generate_var(real=True)
+    else:
+        assert not x.is_integer
 
-    return Any[x:Interval(m, M, left_open=True, right_open=True)](x ** 2 > U)
+    return Any[x:m:M](x ** 2 > U)
 
 
 @prove

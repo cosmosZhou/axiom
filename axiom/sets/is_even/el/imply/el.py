@@ -4,9 +4,8 @@ from util import *
 @apply
 def apply(is_even, contains_n):
     n = is_even.of(Equal[Expr % 2, 0])
-    n_, ab = contains_n.of(Element)
+    S[n], ab = contains_n.of(Element)
 
-    assert n == n_
     a, b = ab.of(Range)
     b -= 1
 

@@ -1,11 +1,11 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(lt):
     x, a = lt.of(Less)
     assert x.is_integer and a.is_integer
-    return Equivalent(lt, LessEqual(x + 1, a).simplify(), evaluate=False)
+    return LessEqual(x + 1, a).simplify()
 
 
 @prove

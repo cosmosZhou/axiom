@@ -55,7 +55,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.et.infer.split.apply(Eq[0], cond=Equal(a, 0))
 
-    Eq <<= algebra.infer.imply.infer.subs.apply(Eq[-2]), algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq <<= algebra.infer.imply.infer.subs.apply(Eq[-2]), algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq <<= Eq[-2].this.rhs.apply(algebra.poly_is_zero.imply.et.infer.quadratic, x=x), Eq[-1].this.rhs.apply(algebra.ne_zero.eq.imply.eq.div)
 

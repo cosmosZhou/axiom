@@ -4,10 +4,9 @@ from util import *
 @apply
 def apply(self):
     z = self.of(Ceiling)
-    (z, coeff), half = z.of(Arg * Expr - Expr)
+    (z, coeff), S[S.One / 2] = z.of(Arg * Expr - Expr)
     coeff *= S.Pi * 2
     assert coeff <= 1 and coeff >= -1 or 1 / coeff >= 1 or 1 / coeff <= -1
-    assert half == S.One / 2
     return Equal(self, 0)
 
 
@@ -37,18 +36,20 @@ def prove(Eq):
 
     Eq << Eq.le * (2 * n)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul.to.add)
-
     Eq.ge = GreaterEqual(0, Eq.contains.rhs.stop, plausible=True)
 
     Eq << Eq.ge * (2 * n)
-    Eq << Eq[-1].this.rhs.apply(algebra.mul.to.add)
 
+    
     Eq << sets.le.ge.el.imply.el.interval.apply(Eq.le, Eq.ge, Eq.contains)
 
     Eq << sets.el.imply.ceiling_is_zero.apply(Eq[-1])
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-11-05
+# updated on 2023-04-17

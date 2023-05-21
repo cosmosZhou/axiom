@@ -75,55 +75,82 @@ def prove(Eq):
     Eq << Eq[-1].this(i).expr.lhs.find(Symbol < Min).simplify()
 
     Eq << Eq[-1].this(i).expr.rhs.find(Symbol < Min).simplify()
-    
+
     Eq << Eq[-1].this(i).expr.lhs.find(Symbol < Symbol - Min).simplify()
-    
+
     Eq << Eq[-1].this(i).expr.rhs.find(Symbol < Symbol - Min).simplify()
-    
+
     Eq << Eq[-1].this.expr.lhs.apply(algebra.piece.flatten)
-    
+
     Eq << Eq[-1].this.expr.rhs.apply(algebra.piece.flatten)
-    
+
     Eq << Eq[-1].this(i).find(And).simplify()
-    
+
     Eq <<= Eq.block2.this.expr.lhs.apply(algebra.expr.to.lamda, j)
-    
+
     Eq <<= Eq[-1].this.expr.rhs.apply(algebra.expr.to.lamda, j)
-    
+
     Eq <<= Eq[-1].this.find(ExprCondPair[2]).cond.apply(algebra.lt.transport, rhs=slice(0, 4, 3))
-    
+
     Eq << Eq[-1].subs(Eq.z_ij_def)
-    
+
     Eq << Eq[-1].this.expr.rhs.apply(algebra.piece.to.add, Eq[-1].find(logsumexp))
+
     Eq << Eq[-1].this(i).expr.lhs.find(Symbol < Min).simplify()
+
     Eq << Eq[-1].this(i).expr.rhs.find(Symbol < Min).simplify()
+
     Eq << Eq[-1].this(i).expr.lhs.find(Symbol < Symbol - Min).simplify()
+
     Eq << Eq[-1].this(i).expr.rhs.find(Symbol < Symbol - Min).simplify()
+
     Eq << Eq[-1].this.expr.lhs.apply(algebra.piece.flatten)
+
     Eq << Eq[-1].this.expr.rhs.apply(algebra.piece.flatten)
+
     Eq << Eq[-1].this(i).find(And).simplify()
-    Eq << Eq[-1].this.find(Less[2]).apply(algebra.lt.transport, rhs=slice(0, 2))
+
+    Eq << Eq[-1].this.find(Or[~Less]).apply(algebra.lt.transport, rhs=slice(0, 2))
+
     Eq << Eq[-1].this.find(Or).apply(algebra.ou_lt.to.lt.max)
+
     Eq << Eq[-1].this().find(Max).simplify()
+
     Eq <<= Eq.block3.this.expr.lhs.apply(algebra.expr.to.lamda, j)
+
     Eq <<= Eq[-1].this.expr.rhs.apply(algebra.expr.to.lamda, j)
+
     Eq <<= Eq[-1].this.find(Less).apply(algebra.lt.transport, rhs=slice(0, 4, 3))
+
     Eq << Eq[-1].subs(Eq.z_ij_def)
+
     Eq << Eq[-1].this.expr.rhs.apply(algebra.piece.to.add, Eq[-1].find(logsumexp))
+
     Eq << Eq[-1].this(i).expr.lhs.find(Symbol < Min).simplify()
+
     Eq << Eq[-1].this(i).expr.rhs.find(Symbol < Min).simplify()
+
     Eq << Eq[-1].this(i).expr.lhs.find(Symbol < Symbol - Min).simplify()
+
     Eq << Eq[-1].this(i).expr.rhs.find(Symbol < Symbol - Min).simplify()
-    # Eq << Eq[-1].this.expr.lhs.apply(algebra.piece.flatten)
+
+    
     Eq << Eq[-1].this.expr.rhs.apply(algebra.piece.flatten)
+
     Eq << Eq[-1].this.find(And[Or]).simplify()
-    Eq << Eq[-1].this.find(Less[2]).apply(algebra.lt.transport, rhs=slice(0, 2))
+
+    Eq << Eq[-1].this.find(Or[~Less]).apply(algebra.lt.transport, rhs=slice(0, 2))
+
     Eq << Eq[-1].this.find(Or).apply(algebra.ou_lt.to.lt.max)
+
     Eq << Eq[-1].this(i).find(Max).simplify()
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-01-03
-# updated on 2022-01-08
+# updated on 2023-05-20
 from . import tf

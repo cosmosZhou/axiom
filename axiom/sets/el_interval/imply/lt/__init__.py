@@ -30,3 +30,4 @@ if __name__ == '__main__':
 # created on 2020-04-18
 
 from . import square
+del log

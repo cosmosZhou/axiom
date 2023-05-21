@@ -14,7 +14,7 @@ def limits_subs(cls, self, offset, simplify=True):
             b -= offset
         limit = (x, a, b)
     elif ab:
-        [domain] = ab
+        domain, = ab
         if domain.is_bool:
             domain = domain._subs(x, x + offset)
         else:

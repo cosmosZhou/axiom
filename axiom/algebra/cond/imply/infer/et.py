@@ -19,9 +19,12 @@ def prove(Eq):
 
     Eq << algebra.ou.given.et.apply(Eq[-1])
 
-    Eq << algebra.ou.given.cond.apply(Eq[-1], index=1)
+    Eq << algebra.ou.given.cond.apply(Eq[-1], index=0)
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-08-30
+# updated on 2023-05-20

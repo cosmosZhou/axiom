@@ -5,14 +5,14 @@ from util import *
 def apply(eq, lower=None, upper=None):
     lhs, rhs = eq.of(Equal)
     if upper is None:
-        if lower <= rhs:
+        if lower <= rhs or lower - rhs <= 0:
             return lhs >= lower
-        elif lower <= lhs:
+        elif lower <= lhs or lower - lhs <= 0:
             return rhs >= lower
     else:
-        if rhs <= upper:
+        if rhs <= upper or rhs - upper <= 0:
             return upper >= lhs
-        elif lhs <= upper:
+        elif lhs <= upper or lhs - upper <= 0:
             return upper >= rhs
 
 

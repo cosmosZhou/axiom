@@ -4,13 +4,12 @@ from util import *
 @apply
 def apply(le, is_positive, w=None):
     x0, x1 = le.of(LessEqual)
-    fx, (x_, d) = is_positive.of(Derivative > 0)
-    assert d == 2
+    fx, (x_, S[2]) = is_positive.of(Derivative > 0)
 
     if w is None:
         w = Symbol(domain=Interval(0, 1))
     else:
-        assert w >= 0 and w <= 1
+        assert 0 <= w <= 1
     domain = x_.domain
     assert domain.left_open and domain.right_open
 
@@ -76,59 +75,39 @@ def prove(Eq):
 
     Eq << algebra.any.any.imply.any_et.apply(Eq[-2], Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.sub)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.sub, swap=True)
 
+    
     Eq << Eq[-1].this.expr.lhs.find(Mul[Add]).apply(algebra.mul.to.add)
-
     Eq << Eq[-1].this.expr.lhs.find(Mul[Add]).apply(algebra.mul.to.add)
-
     Eq << Eq[-1].this.expr.lhs.find(Mul[Add]).apply(algebra.mul.to.add)
-
     Eq << Eq[-1].this.expr.lhs.apply(algebra.add.collect, factor=f(x1))
-
     Eq.any = Eq[-1].this.expr.rhs.apply(algebra.add.collect, factor=w * (1 - w) * (x1 - x0))
-
     Eq.suffice = Eq.any.limits_cond.this.apply(sets.el.el.imply.le)
-
     Eq <<= sets.el.el.imply.subset.interval.apply(Eq.x0_contains, Eq.x_mean_contains), sets.el.el.imply.subset.interval.apply(Eq.x_mean_contains, Eq.x1_contains)
-
     Eq <<= algebra.cond.imply.infer.apply(Eq[-2], cond=Eq.suffice.lhs.args[0]), algebra.cond.imply.infer.apply(Eq[-1], cond=Eq.suffice.lhs.args[1])
-
-    Eq <<= algebra.infer.imply.infer.et.apply(Eq[-2]), algebra.infer.imply.infer.et.apply(Eq[-1])
-
+    Eq <<= algebra.infer_et.imply.infer.et.apply(Eq[-2]), algebra.infer_et.imply.infer.et.apply(Eq[-1])
     Eq <<= Eq[-2].this.rhs.apply(sets.el.subset.imply.el), Eq[-1].this.rhs.apply(sets.el.subset.imply.el)
-
     Eq << algebra.infer.infer.imply.infer.et.apply(Eq[-2], Eq[-1])
-
     Eq << algebra.cond.imply.infer.apply(Eq.all_is_positive, cond=Eq[-1].lhs)
-
     Eq <<= Eq[-1] & Eq[-2] & Eq.suffice
-
     Eq << Eq[-1].this.rhs.apply(calculus.le.el.el.all_gt_zero.imply.le)
-
     Eq.is_nonnegative = Eq[-1].this.rhs.apply(algebra.le.imply.ge_zero)
-
     Eq << GreaterEqual(w * (1 - w), 0, plausible=True)
-
     Eq << algebra.ge_zero.ge_zero.imply.ge_zero.apply(Eq[-1], -Eq.is_nonpositive)
-
     Eq << algebra.cond.imply.infer.apply(Eq[-1], cond=Eq[-3].lhs)
-
     Eq <<= Eq[-1] & Eq.is_nonnegative
-
     Eq <<= Eq[-1].this.rhs.apply(algebra.ge_zero.ge_zero.imply.ge_zero)
-
     Eq << algebra.infer.imply.all.apply(Eq[-1], wrt=(x_, x__))
-
     Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq.any)
-
     Eq << Eq[-1].this.expr.apply(algebra.ge.eq.imply.ge.transit)
-
     Eq << algebra.et.imply.et.apply(Eq[-1])
-
     Eq << Eq[-1] + Eq[2].rhs
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-05-11
+# updated on 2023-05-18

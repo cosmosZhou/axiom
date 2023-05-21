@@ -7,9 +7,7 @@ def apply(le, ge):
     b, _x = ge.of(GreaterEqual)
 
     if x != _x:
-        a, x, _x, b = _x, b, a, x
-
-    assert x == _x
+        a, x, S[x], b = _x, b, a, x
 
     return Element(x, Interval(a, b, left_open=False, right_open=False))
 

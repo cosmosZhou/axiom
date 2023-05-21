@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << algebra.imply.lt.floor.apply(x)
 
-    Eq << algebra.imply.ge.floor.apply(x)
+    Eq << algebra.imply.ge_floor.apply(x)
 
 
 if __name__ == '__main__':

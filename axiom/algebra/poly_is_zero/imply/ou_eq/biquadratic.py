@@ -5,9 +5,7 @@ from util import *
 def apply(fx, x=None):
     from axiom.algebra.poly_is_zero.imply.et.infer.quartic.one_leaded import quartic_coefficient
     fx = fx.of(Equal[0])
-    _1, _0, alpha, beta, gamma = quartic_coefficient(fx, x=x)
-    assert _0 == 0 and _1 == 1
-    assert beta == 0
+    S[1], S[0], alpha, S[0], gamma = quartic_coefficient(fx, x=x)
     delta = alpha ** 2 - 4 * gamma
     return Equal(x, sqrt(sqrt(delta) / 2 - alpha / 2)) | Equal(x, -sqrt(sqrt(delta) / 2 - alpha / 2)) | Equal(x, sqrt(-sqrt(delta) / 2 - alpha / 2)) | Equal(x, -sqrt(-sqrt(delta) / 2 - alpha / 2))
 
@@ -28,23 +26,24 @@ def prove(Eq):
     Eq << Eq[-1].subs(y.this.definition)
 
     Eq << Eq[-1].this.find(Mul).apply(algebra.mul.to.add)
-    Eq << Eq[-1].this.args[0].apply(algebra.eq_square.imply.ou_is_zero)
 
     Eq << Eq[-1].this.args[-1].apply(algebra.eq_square.imply.ou_is_zero)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.eq.transport)
+    Eq << Eq[-1].this.args[-1].apply(algebra.eq_square.imply.ou_is_zero)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.eq.transport)
+    Eq << Eq[-1].this.args[-1].apply(algebra.eq.transport)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.eq.transport)
+    Eq << Eq[-1].this.args[-1].apply(algebra.eq.transport)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.eq.transport)
+    Eq << Eq[-1].this.args[-1].apply(algebra.eq.transport)
 
+    Eq << Eq[-1].this.args[-1].apply(algebra.eq.transport)
 
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-11-26
-# updated on 2021-12-03
+# updated on 2023-05-17

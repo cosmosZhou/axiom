@@ -24,7 +24,7 @@ def prove(Eq):
     Eq << apply(n, k)
 
     s0 = Eq[0].lhs
-    s0_quote = Symbol('s_quote_0', conditionset(Eq[0].rhs.variable, Eq[0].rhs.limits[0][1]))
+    s0_quote = Symbol('s_0_quote', conditionset(Eq[0].rhs.variable, Eq[0].rhs.limits[0][1]))
     Eq << s0_quote.this.definition
 
     Eq.s0_definition = imageset(Eq[0].rhs.variable, Eq[0].rhs.expr.arg, s0_quote).this.subs(Eq[-1]).subs(Eq[0].reversed).reversed
@@ -32,7 +32,7 @@ def prove(Eq):
     e = Symbol(etype=dtype.integer.set)
     Eq << sets.imply.all.baseset.apply(s0_quote)
 
-    * _, Eq.x_union_s0 = algebra.all_et.imply.et.all.apply(Eq[-1])
+    Eq.x_union_s0, *_ = algebra.all_et.imply.et.all.apply(Eq[-1], slice(1, None, 2))
 
     i = Symbol(integer=True)
     x = Eq[0].rhs.variable.base
@@ -61,9 +61,9 @@ def prove(Eq):
     x_hat = Symbol(r"\hat{x}", Lamda[i](Piecewise((x[i] - {n} , Equal(i, j)), (x[i], True))))
     Eq.x_hat_definition = x_hat[i].this.definition
 
-    Eq << algebra.eq_piece.imply.ou.apply(Eq.x_hat_definition)
+    Eq << algebra.cond_piece.imply.ou.apply(Eq.x_hat_definition)
 
-    Eq.B_assertion = sets.imply.all_any_eq.split.imageset.apply(B)
+    Eq.B_assertion = sets.imply.all.any.eq.split.imageset.apply(B)
 
     Eq << Eq.B_assertion.this.expr.expr.apply(sets.eq.imply.eq.complement, {n.set})
 
@@ -83,13 +83,14 @@ def prove(Eq):
 
     Eq.all_B_equality = Eq[-1].this.expr.apply(sets.eq.imply.eq.union, Eq[-1].variable)
 
-    Eq << sets.all_el.all_el.all_eq.all_eq.imply.eq.apply(Eq.all_s0_contains,
-                                                                                  Eq.all_B_contains,
-                                                                                  Eq.all_s0_equality,
-                                                                                  Eq.all_B_equality)
+    Eq << sets.all_el.all_el.all_eq.all_eq.imply.eq.apply(Eq.all_s0_contains, Eq.all_B_contains, Eq.all_s0_equality, Eq.all_B_equality)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-08-14
+# updated on 2023-05-20

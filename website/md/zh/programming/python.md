@@ -87,14 +87,6 @@ extra-index-url = http://pypi.douban.com/simple
 [install]
 trusted-host=pypi.douban.com mirrors.aliyun.com
 
-配置modelhubrc:  
-vim ~/.modelhubrc  
-[aws]  
-access_key_id = your_access_key_id  
-secret_access_key = your_secret_access_key  
-region_name = your_region_name  
-bucket_name = your_bucket_name  
-
 [user]  
 name = your_user_name  
 email = your_email_address  
@@ -431,3 +423,20 @@ password: your-password
 repository: http://pypi.nexus.your-company.com/repository/pypi-internal/
 username: your-username
 password: your-password
+
+
+#miniconda
+wget https://mirrors.ustc.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh  
+#wget -c https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh  
+
+bash  Miniconda-latest-Linux-x86_64.sh  
+
+conda create -n complex_networks python=3.9.6  
+
+conda activate complex_networks  
+
+如果需要永久登陆conda:
+vim ~/.bash_profile  
+. ~/miniconda3/etc/profile.d/conda.sh  
+conda activate  
+conda activate complex_networks  

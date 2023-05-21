@@ -33,9 +33,9 @@ def prove(Eq):
 
     Eq << Infer(Eq[2], Eq[2]._subs(x, x + 1), plausible=True)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.eq.imply.eq.subs, x, x + 1)
+    Eq << Eq[-1].this.lhs.apply(algebra.cond.imply.cond.subs, x, x + 1)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << algebra.infer.infer.imply.infer.transit.apply(Eq[-1], Eq[1])
 
@@ -43,9 +43,10 @@ def prove(Eq):
 
     Eq << Eq[2].subs(x, x + 1)
 
-
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-04-17
+# updated on 2023-05-21

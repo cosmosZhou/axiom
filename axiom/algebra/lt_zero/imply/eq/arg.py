@@ -21,9 +21,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.cond.any.given.any_et, simplify=None)
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.given.et.subs, swap=True)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.given.et.subs)
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-01-18
+# updated on 2023-05-20

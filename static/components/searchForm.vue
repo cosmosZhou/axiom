@@ -3,9 +3,9 @@
 		<input v-focus tabindex=1 type=text spellcheck=false name=keyword size=48 :value=keyword placeholder='input a hint for search of a theorem/axiom' @input=input>
 		<br>
 			 
-		<input tabindex=-1 type=checkbox name=caseSensitive :checked=caseSensitive><u>C</u>ase 
+		<input tabindex=-1 type=checkbox name=caseSensitive :checked=caseSensitive><u>C</u>ase
 			
-		<input tabindex=-1 type=checkbox name=wholeWord :checked=wholeWord><u>W</u>holeWord 
+		<input tabindex=-1 type=checkbox name=wholeWord :checked=wholeWord><u>W</u>holeWord
 		
 		<input tabindex=-1 type=checkbox name=regularExpression :checked=regularExpression>Rege<u>x</u>
 		
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-console.log('importing searchForm.vue');
+console.log('import searchForm.vue');
 export default {
 	props : ['keyword', 'caseSensitive', 'wholeWord', 'regularExpression', 'nlp'],
 

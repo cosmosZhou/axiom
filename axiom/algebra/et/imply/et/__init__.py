@@ -4,13 +4,11 @@ from util import *
 def split(given, index):
     eqs = given.of(And)
 
-    if isinstance(index, slice):
-        start, stop = index.start, index.stop
-        return And(*eqs[index]), And(*eqs[:start] + eqs[stop:])
-    elif index is None:
+    if index is None:
         return eqs
-    
-    return And(*eqs[:index]), And(*eqs[index:])
+    import std
+    lhs, rhs = std.array_split(eqs, index)
+    return And(*lhs), And(*rhs)
 
 
 @apply
@@ -48,4 +46,5 @@ from . import delete
 from . import subs
 from . import collect
 # created on 2018-01-04
-# updated on 2021-11-20
+# updated on 2023-04-24
+from . import eq

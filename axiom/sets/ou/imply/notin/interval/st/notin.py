@@ -6,9 +6,8 @@ def apply(given):
     equal, notcontains = given.of(Or)
 
     x, b = equal.of(Equal)
-    _x, ab = notcontains.of(NotElement)
-    assert x == _x
-    a, b = ab.of(Interval)
+    S[x], ab = notcontains.of(NotElement)
+    a, S[b] = ab.of(Interval)
     assert not ab.right_open
 
     ab = ab.copy(right_open=True)

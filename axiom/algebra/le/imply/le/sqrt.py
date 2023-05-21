@@ -21,20 +21,24 @@ def prove(Eq):
 
     Eq << algebra.le_zero.imply.ou.split.mul.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[0].args[0] - y
+    Eq << Eq[-1].this.find(Add <= 0) - y
 
-    Eq << Eq[-1].this.args[0].args[0] - y
+    Eq << Eq[-1].this.find(Add >= 0) + y
 
-    Eq << Eq[-1].this.args[0].args[0] + y
+    Eq << Eq[-1].this.find(Add <= 0) + y
 
-    Eq << Eq[-1].this.args[0].args[0] + y
-
-    Eq << Eq[-1].this.args[0].apply(algebra.le.ge.imply.le.abs.both)
+    Eq << Eq[-1].this.find(Add >= 0) - y
 
     Eq << Eq[-1].this.args[0].apply(algebra.le.ge.imply.le.abs.both)
+
+    Eq << Eq[-1].this.find(And).apply(algebra.le.ge.imply.le.abs.both)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2019-05-31
+# updated on 2023-05-14

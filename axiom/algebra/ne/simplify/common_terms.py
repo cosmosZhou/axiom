@@ -1,13 +1,10 @@
 from util import *
 
 
-from axiom.algebra.eq.simplify.terms.common import simplify_common_terms
-
-
-@apply(given=None)
+@apply
 def apply(given):
-    assert given.is_Unequal
-    return Equivalent(given, simplify_common_terms(given))
+    from axiom.algebra.eq.simplify.terms.common import simplify_common_terms
+    return simplify_common_terms(Unequal, given)
 
 
 @prove

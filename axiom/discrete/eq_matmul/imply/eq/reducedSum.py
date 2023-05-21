@@ -4,10 +4,10 @@ from util import *
 @apply
 def apply(given):
     (x, w), y = given.of(Equal[MatMul])
-    [n] = x.shape
+    n, = x.shape
     i, j = w.of(SwapMatrix)    
-    assert i >= 0 and i < n
-    assert j >= 0 and j < n
+    assert 0 <= i < n
+    assert 0 <= j < n
     return Equal(ReducedSum(x), ReducedSum(y))
 
 

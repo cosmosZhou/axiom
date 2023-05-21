@@ -1379,7 +1379,7 @@ class TopKHeap{
     
     public function __construct($k){
         $this->k = $k;
-        //Standard PHP Library (SPL) Minimum Heap 
+        //Standard PHP Library (SPL) Minimum Heap
         $this->heap = new SplMinHeap();
     }
     

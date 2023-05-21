@@ -7,3 +7,4 @@ from . import inf_square
 from . import inf
 from . import sup
 from . import abs
+from . import conj

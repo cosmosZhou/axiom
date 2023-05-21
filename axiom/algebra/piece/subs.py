@@ -30,7 +30,7 @@ def apply(piecewise, index=None, reverse=False):
     expr = expr._subs(lhs, rhs)
     ec = [*piecewise.args]
     ec[index] = (expr, cond)
-    return Equal(piecewise, piecewise.func(*ec))
+    return Equal(piecewise, piecewise.func(*ec), evaluate=False)
 
 
 @prove
@@ -46,17 +46,13 @@ def prove(Eq):
     p = Symbol(Eq[0].lhs)
     Eq << p.this.definition
 
-    Eq << algebra.eq_piece.imply.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.imply.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[2].apply(algebra.et.imply.et.subs, index=2)
+    Eq << Eq[-1].this.args[0].apply(algebra.et.imply.et.subs)
 
     Eq << algebra.ou.imply.eq.piece.apply(Eq[-1], wrt=p)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.swap, -2)
-
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.swap)
-
-    Eq << Eq[0].this.rhs.apply(algebra.piece.invert)
+    Eq << Eq[0].this.rhs.apply(algebra.piece.et.invert)
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[1], Eq[-2])
 
@@ -68,4 +64,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2018-02-04
-# updated on 2022-10-04
+# updated on 2023-05-21

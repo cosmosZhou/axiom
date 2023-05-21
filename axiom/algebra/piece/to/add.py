@@ -48,17 +48,17 @@ def prove(Eq):
 
     Eq << Eq[-1] + z
 
-    Eq << algebra.eq.given.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.given.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[1].apply(algebra.et.given.et.subs.bool)
+    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, 0)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool)
+    Eq << Eq[-1].this.args[1].apply(algebra.et.given.et.subs.bool, -1)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, 1, invert=True)
+    Eq << Eq[-1].this.args[1].apply(algebra.et.given.et.subs.bool, 1, invert=True)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, invert=True)
+    Eq << Eq[-1].this.args[-1].apply(algebra.et.given.et.subs.bool, invert=True)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, 1, invert=True)
+    Eq << Eq[-1].this.args[-1].apply(algebra.et.given.et.subs.bool, 1, invert=True)
 
     Eq << algebra.ou.given.ou.collect.apply(Eq[-1], cond=Unequal(x, y), simplify=None)
 
@@ -69,4 +69,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2018-02-22
-# updated on 2021-12-20
+# updated on 2023-05-20

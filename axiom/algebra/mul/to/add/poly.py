@@ -39,8 +39,7 @@ def apply(self, x):
     n = len(f)
     y = []
     for f in f:
-        [_1, t] = f.as_poly(x).all_coeffs()
-        assert _1 == 1
+        S[1], t = f.as_poly(x).all_coeffs()
         t = -t
         y.append(t)
 

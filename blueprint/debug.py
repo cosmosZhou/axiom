@@ -14,7 +14,7 @@ debug = Blueprint('debug', __name__)
 def symbol(symbol):
     
     statements = []
-    for script, latex in MySQL.instance.select(f"select script, latex from tbl_debug_py where symbol = '{symbol}'"):
+    for script, latex in MySQL.instance.select(f"select script, latex from debug where symbol = '{symbol}'"):
         latex = latex.strip()
         latex = json.loads(latex)
         
@@ -96,7 +96,7 @@ def compile_definition_statement(line):
         else:
             line = "%s = %s.%s(%s)" % (name, func, name, kwargs)
             
-    return line          
+    return line
 
 class Cout:
     def __init__(self):

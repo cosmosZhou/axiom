@@ -7,7 +7,7 @@ def apply(self):
     try:
         i, a, b = limit
     except:
-        (i,) = limit
+        i, = limit
         domain = xi.domain_defined(i)
         a, b = domain.of(Range)
 

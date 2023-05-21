@@ -7,9 +7,8 @@ def apply(is_imply_P, is_imply_Q):
     p, q = is_imply_P.of(Infer)
     _q, r = is_imply_Q.of(Infer)
     if q != _q:
-        p, q, _q, r = _q, r, p, q
-
-    assert q == _q
+        p, q, S[q], r = _q, r, p, q
+        
     return Infer(p, r)
 
 

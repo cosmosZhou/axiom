@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(eq_relu, eq_min):
     ((i, l), limit_i), β = eq_relu.of(Equal[Lamda[relu[Expr + 1 - Expr]]])
-    (((S[i], u), n), S[limit_i]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])
+    ((n, (S[i], u)), S[limit_i]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])
     
     S[i], S[0], S[n] = limit_i
 

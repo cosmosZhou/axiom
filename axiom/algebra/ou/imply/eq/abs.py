@@ -7,9 +7,8 @@ def apply(given):
     y, x = equal_positive.of(Equal)
     _y, _x = equal_negative.of(Equal)
     if y != _y:
-        _y, _x = _x, _y
+        S[y], _x = _x, _y
 
-    assert y == _y
     assert x == -_x
 
     return Equal(abs(y), abs(x))

@@ -16,8 +16,7 @@ def merge(given):
 
     if len(limit_index) == 3:
         x_index, a, b = limit_index
-        integer = x_index.is_integer
-        domain = (Range if integer else Interval)(a, b)
+        domain = x_index.range(a, b)
         S[x], index = x_index.args
     else:
         x_index, domain = limit_index
@@ -36,9 +35,7 @@ def merge(given):
     elif index == start - 1:
         start = index
     else:
-        assert index.is_Tuple
-        _start, _stop = index
-        assert _stop == start
+        _start, S[start] = index
         start = _start
 
     return All[x[start:stop]:CartesianSpace(domain, stop - start)](function)
@@ -65,10 +62,13 @@ def prove(Eq):
 
     Eq << algebra.all.imply.infer.apply(Eq[0])
 
-    Eq << Eq[-1].this.lhs.args[0].simplify()
+    Eq << Eq[-1].this.lhs.args[1].simplify()
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-12-09
+# updated on 2023-05-20

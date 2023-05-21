@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(limited_f, dir=1):
-    (fx, (x, x0, _dir)), A = limited_f.of(Equal[Limit])
-    assert _dir == 0
+    (fx, (x, x0, S[0])), A = limited_f.of(Equal[Limit])
     assert dir
     return Equal(Limit[x:x0:dir](fx), A)
 
@@ -17,7 +16,7 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Equal(Limit[x:x0](f(x)), A), dir=1)
 
-    Eq << calculus.eq.imply.any_all.limit_definition.apply(Eq[0])
+    Eq << calculus.eq_limit.imply.any.all.limit_definition.apply(Eq[0])
 
     Eq << Eq[-1].this.expr.apply(algebra.all.imply.infer)
 
@@ -31,16 +30,19 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(And).apply(algebra.et.given.ou, simplify=None)
 
-    Eq << Eq[-1].this.find(Or).apply(algebra.ou.given.cond, 1)
+    Eq << Eq[-1].this.find(Or).apply(algebra.ou.given.cond, 0)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.given.el.add, x0)
 
-    Eq << calculus.eq.given.any_all.limit_definition.apply(Eq[1])
+    Eq << calculus.eq_limit.given.any_all.limit_definition.apply(Eq[1])
 
     Eq << Eq[-1].this.expr.apply(algebra.all.given.infer)
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-04-26
 from . import left
+# updated on 2023-05-20

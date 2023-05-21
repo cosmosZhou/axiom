@@ -1,10 +1,10 @@
 from util import *
 
 
-@apply(given=None)
+@apply
 def apply(given):
     x, interval = given.of(Element)
-    return Equivalent(given, Element(-x, -interval))
+    return Element(-x, -interval)
 
 
 @prove
@@ -20,10 +20,13 @@ def prove(Eq):
 
     Eq << Eq[-2].this.args[0].apply(sets.el.given.el.neg)
 
-    Eq << Eq[-1].this.args[1].apply(sets.el.given.el.neg)
+    Eq << Eq[-1].this.args[0].apply(sets.el.given.el.neg)
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-10-06
+# updated on 2023-05-08

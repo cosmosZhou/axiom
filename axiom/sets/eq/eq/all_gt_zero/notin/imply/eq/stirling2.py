@@ -7,25 +7,16 @@ def apply(equal_sum, equal_union, all_is_positive, notcontains, s1=None):
     if not all_is_positive.is_ForAll:
         notcontains, all_is_positive, equal_sum, equal_union = given
 
-    xi, (_i, zero, k) = all_is_positive.of(All[Card > 0])
-    x, i = xi.of(Indexed)
-
-    assert i == _i
-    assert zero.is_zero
+    xi, (i, S[0], k) = all_is_positive.of(All[Card > 0])
+    x, S[i] = xi.of(Indexed)
 
     sgm, n = equal_sum.of(Equal)
-    _xi, limit = sgm.of(Sum[Card])
-    assert _xi == xi
-    assert limit == (_i, zero, k)
+    S[xi], S[(i, 0, k)] = sgm.of(Sum[Card])
 
     union, interval_n = equal_union.of(Equal)
-    zero, _n = interval_n.of(Range)
-    assert n == _n
-    assert zero.is_zero
+    S[0], S[n] = interval_n.of(Range)
 
-    _xi, _limit = union.of(Cup)
-    assert _xi == xi
-    assert limit == _limit
+    S[xi], S[(i, 0, k)] = union.of(Cup)
 
     j = Symbol(domain=Range(k))
 

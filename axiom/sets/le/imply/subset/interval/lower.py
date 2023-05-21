@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq <<= algebra.all.given.ou.apply(Eq[-2]), algebra.all.given.ou.apply(Eq[-1])
 
-    Eq <<= Eq[-2].this.args[1].apply(sets.notin_interval.given.ou), Eq[-1].this.args[0].apply(sets.notin_interval.given.ou)
+    Eq <<= Eq[-2].this.args[1].apply(sets.notin_interval.given.ou), Eq[-1].this.find(NotElement).apply(sets.notin_interval.given.ou)
 
     Eq << algebra.ou.given.ou.apply(Eq[-1], slice(0, 2))
 
@@ -33,7 +33,10 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1])
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-07-09
+# updated on 2023-05-19

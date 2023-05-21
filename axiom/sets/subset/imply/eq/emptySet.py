@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(given):
     A, B = given.of(Subset)
-    assert B.is_EmptySet
+    assert not B
 
     return Equal(A, B)
 

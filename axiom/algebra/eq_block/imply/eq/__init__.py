@@ -1,1 +1,1 @@
-from . import concatenated_double_integer_embedding
+from . import double_integer_embedding

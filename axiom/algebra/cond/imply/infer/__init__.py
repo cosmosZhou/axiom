@@ -10,13 +10,16 @@ def apply(given, *, cond=None):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     e = Symbol(integer=True)
     f = Function(integer=True, shape=())
     Eq << apply(f(e) > 0, cond=e > 0)
 
     Eq << Eq[-1].apply(algebra.infer.given.ou)
 
-    Eq << algebra.ou.given.cond.apply(Eq[-1], index=1)
+    Eq << algebra.ou.given.cond.apply(Eq[-1], index=0)
+
+    
 
 
 if __name__ == '__main__':
@@ -26,3 +29,4 @@ if __name__ == '__main__':
 from . import unbounded
 from . import et
 # created on 2018-02-06
+# updated on 2023-05-20

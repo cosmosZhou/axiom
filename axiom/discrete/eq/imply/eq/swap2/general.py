@@ -3,12 +3,8 @@ from util import *
 
 @apply
 def apply(given):
-    ((((x0, condition0), (xj, conditionj), (xi, conditioni)), (i, z, _n)), _S), (j, a, n), (x, S) = given.of(All[Element[Lamda[Piecewise]]])
-    assert a == 1
-    assert S == _S and S.is_set
-    dtype = S.etype
-
-    assert _n == n and z == 0
+    ((((x0, condition0), (xj, conditionj), (xi, conditioni)), (i, S[0], n)), s), (j, S[1], S[n]), (x, S[s]) = given.of(All[Element[Lamda[Piecewise]]])
+    dtype = s.etype
 
     assert {*condition0.of(Equal)} == {i, j}
     assert {*conditionj.of(Equal)} == {i, 0}
@@ -18,7 +14,7 @@ def apply(given):
 
     w = Symbol(Lamda[j, i](SwapMatrix(n, i, j)))
 
-    return All(Element(w[i, j] @ x, S), (x, S))
+    return All(Element(w[i, j] @ x, s), (x, s))
 
 
 @prove
@@ -58,10 +54,13 @@ def prove(Eq):
 
     Eq << algebra.all.all.imply.all_et.apply(Eq[-2], Eq[-3])
 
-    Eq << discrete.all_el.imply.all_el.swap2.apply(Eq[-1])
+    Eq << discrete.eq.all_el.imply.all_el.swap2.apply(Eq[1], Eq[-1])
+
+    
 
 
 if __name__ == '__main__':
     run()
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 # created on 2020-09-12
+# updated on 2023-05-21

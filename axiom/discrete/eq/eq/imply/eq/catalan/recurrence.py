@@ -20,7 +20,6 @@ def prove(Eq):
     @Function(extended_real=True)
     def g(x):
         return Sum[n:oo](C[n] * x ** n)
-     
     x = Symbol(domain=Interval(0, S.One / 4, left_open=True))
     Eq.g_definition = g(x).this.defun()
 
@@ -36,7 +35,7 @@ def prove(Eq):
 
     Eq.g_squared = algebra.eq.eq.imply.eq.transit.apply(Eq[-2], Eq[-1])
 
-    Eq << Eq.g_definition.this.rhs.apply(algebra.sum.to.add.pop_front)
+    Eq << Eq.g_definition.this.rhs.apply(algebra.sum.to.add.shift)
 
     Eq << Eq[-1].subs(Eq[0])
 
@@ -59,7 +58,8 @@ def prove(Eq):
     Eq.positive_sqrt = Any[x:x < S.One / 4](Eq.ou.args[1], plausible=True)
 
     x_quote = Symbol(domain=Interval(0, S.One / 4, left_open=True, right_open=True))
-    Eq.positive_sqrt_quote = Eq.positive_sqrt.limits_subs(x, x_quote)
+    x_var = Eq.positive_sqrt.variable
+    Eq.positive_sqrt_quote = Eq.positive_sqrt.limits_subs(x_var, x_quote)
 
     Eq << Derivative[x_quote](Eq.positive_sqrt_quote.rhs).this.doit()
 
@@ -73,9 +73,9 @@ def prove(Eq):
 
     Eq.any_gt = algebra.any.imply.any.limits.relax.subs.apply(Eq[-1], x_quote, x)
 
-    Eq << calculus.eq.imply.eq.derive.apply(Eq.g_definition, (x,), simplify=None)
+    Eq << calculus.eq.imply.eq.grad.apply(Eq.g_definition, (x,), simplify=None)
 
-    Eq << Eq[-1].this.rhs.apply(calculus.derivative.to.sum)
+    Eq << Eq[-1].this.rhs.apply(calculus.grad.to.sum)
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add.split, cond={0})
 
@@ -101,9 +101,13 @@ def prove(Eq):
 
     Eq << algebra.all.imply.ou.apply(Eq[-1])
 
+    Eq << Eq[-1].subs(x_var, x)
+
+    Eq << Eq[-1].this.find(NotElement).apply(sets.notin_interval.imply.ou)
+
     Eq << Eq[-1].this.args[1].apply(algebra.ge.imply.eq.squeeze.interval)
 
-    Eq.all_ne = algebra.ou.imply.all.apply(Eq[-1], pivot=-1, wrt=x)
+    Eq.all_ne = algebra.ou.imply.all.apply(Eq[-1], wrt=x)
 
     Eq << Eq.ou.apply(algebra.cond.imply.et.all, cond=x < S.One / 4)
 
@@ -113,7 +117,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(NotElement).simplify()
 
-    Eq << algebra.ou.imply.all.apply(Eq[-1], pivot=-1, wrt=x)
+    Eq << algebra.ou.imply.all.apply(Eq[-1], wrt=x)
 
     Eq <<= Eq.all_ne & Eq[-1]
 
@@ -141,7 +145,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[1].expr.powsimp()
 
-    Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum.to.add.pop_front)
+    Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum.to.add.shift)
 
     Eq << 1 - Eq[-1]
 
@@ -153,7 +157,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul).apply(algebra.mul.distribute)
 
-    Eq.g_series = Eq[-1].this.find(Mul).apply(algebra.mul.cancel, 2)
+    Eq.g_series = Eq[-1].this.find(Mul).apply(algebra.div.cancel, 2)
 
     Eq << discrete.mul.binom.fraction.apply(2 * n + 2, n + 1)
 
@@ -169,12 +173,12 @@ def prove(Eq):
 
     Eq << calculus.eq.imply.eq.series.infinite.coefficient.apply(Eq[-1].reversed, x=x)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-10-21
-# updated on 2021-11-25
+# updated on 2023-05-14

@@ -8,8 +8,7 @@ def apply(equal, contains):
 
     a, A = contains.of(Element)
 
-    _A = equal.of(Equal[Card, 1])
-    assert _A == A
+    S[A] = equal.of(Equal[Card, 1])
     return Equal(A - a.set, a.emptySet)
 
 

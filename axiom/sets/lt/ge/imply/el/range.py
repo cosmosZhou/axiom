@@ -9,11 +9,9 @@ def apply(lt, ge):
     x, a = lt.of(Less)
     _x, b = ge.of(GreaterEqual)
     if x != _x:
-        a, x, _x, b = _x, b, a, x,
+        a, x, S[x], b = _x, b, a, x,
         a += 1
         b += 1
-
-    assert x == _x
 
     assert x.is_integer
     return Element(x, Range(b, a))

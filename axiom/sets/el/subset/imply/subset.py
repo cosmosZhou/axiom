@@ -1,18 +1,12 @@
 from util import *
 
 
-# given: A in B
-# => {A} subset B
 @apply
 def apply(contains, subset):
-    if contains.is_Subset:
-        subset, contains = given
+    x, s = contains.of(Element)
+    A, S[s] = subset.of(Subset)
 
-    x, S = contains.of(Element)
-    s, _S = subset.of(Subset)
-    assert S == _S
-
-    return Subset(s | {x}, S)
+    return Subset(A | {x}, s)
 
 
 @prove

@@ -7,7 +7,7 @@ def apply(fx, limit, xi=None):
     if len(ab) == 2:
         domain = Interval(*ab)
     else:
-        [domain] = ab
+        domain, = ab
 
     assert fx.is_continuous(x, domain)
     if xi is None:

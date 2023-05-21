@@ -14,7 +14,7 @@ def prove(Eq):
     x, a, b = Symbol(real=True)
     f, g = Function(shape=(), real=True)
 
-    Eq << apply(All[x:a:b](Equal(f(x), g(x))))
+    Eq << apply(All[x:Interval(a, b)](Equal(f(x), g(x))))
 
     x_ = Symbol('x', domain=Interval(a, b))
 

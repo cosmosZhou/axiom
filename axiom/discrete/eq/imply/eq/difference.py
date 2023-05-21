@@ -12,7 +12,7 @@ def apply(given, *limits):
 @prove
 def prove(Eq):
     d = Symbol(integer=True, positive=True)
-    x, y = Symbol(integer=True)
+    x = Symbol(integer=True)
     f, g = Function(shape=(), complex=True)
     Eq << apply(Equal(f(x), g(x)), (x, d))
 

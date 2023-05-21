@@ -3,13 +3,10 @@ from util import *
 
 @apply
 def apply(given, index=-1):
-    lhs, rhs = given.of(Equal)
+    lhs, rhs = given.of(Equal[Matrix, Matrix])
 
-    assert lhs.is_Matrix and rhs.is_Matrix
-    assert len(lhs._args) == len(rhs._args)
-
-    first = Equal(Matrix(lhs._args[:index]), Matrix(rhs._args[:index])).simplify()
-    second = Equal(Matrix(lhs._args[index:]), Matrix(rhs._args[index:])).simplify()
+    first = Equal(Matrix(lhs[:index]), Matrix(rhs[:index])).simplify()
+    second = Equal(Matrix(lhs[index:]), Matrix(rhs[index:])).simplify()
 
     return first, second
 

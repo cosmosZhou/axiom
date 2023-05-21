@@ -18,8 +18,8 @@ def apply(self):
         axis = block.axis
     else:
         assert arg.is_BlockMatrix
-        axis = arg.axis
         args = arg.args
+        axis = arg.axis
         args = [exp(e) for e in args]
     return Equal(self, BlockMatrix[axis](args), evaluate=False)
 

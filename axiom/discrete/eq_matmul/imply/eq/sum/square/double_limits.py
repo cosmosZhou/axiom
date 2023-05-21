@@ -4,10 +4,10 @@ from util import *
 @apply
 def apply(given, i=None, j=None):
     (x, w), y = given.of(Equal[MatMul])
-    [n] = x.shape
+    n, = x.shape
     _i, _j = w.of(SwapMatrix)    
-    assert _i >= 0 and _i < n
-    assert _j >= 0 and _j < n
+    assert 0 <= _i < n
+    assert 0 <= _j < n
     if i is None:
         i = given.generate_var(integer=True, var='i')
     if j is None:
@@ -34,13 +34,19 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1])
 
-    Eq << Eq[-1].this.find(Pow[~Sum]).simplify()
+    Eq << Eq[-1].simplify()
 
     Eq << discrete.eq_matmul.imply.eq.sum.square.apply(Eq[0])
-    Eq << Eq[-1].this.lhs.simplify()
-    Eq << Eq[-1].this.rhs.simplify()
+
+    
+
+    
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-11-14
+# updated on 2023-05-06

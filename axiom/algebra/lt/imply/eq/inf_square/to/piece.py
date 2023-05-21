@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq <<= Eq[-3] & Eq[-4], Eq[-1] & Eq[-2]
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.eq.eq.imply.eq.subs, swap=True, reverse=True), Eq[-1].this.rhs.apply(algebra.eq.eq.imply.eq.subs, swap=True, reverse=True)
+    Eq <<= Eq[-2].this.rhs.apply(algebra.eq.eq.imply.eq.subs, reverse=True), Eq[-1].this.rhs.apply(algebra.eq.eq.imply.eq.subs, reverse=True)
 
     Eq << algebra.cond.given.et.infer.split.apply(Eq[1], cond=M >= 0)
 
@@ -38,21 +38,25 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this.apply(algebra.infer.flatten), Eq[-1].this.apply(algebra.infer.flatten)
 
-    Eq <<= algebra.cond.given.et.infer.split.apply(Eq[-2], cond=M > 0), algebra.infer_et.given.infer.delete.apply(Eq[-1], 0)
+    Eq <<= algebra.cond.given.et.infer.split.apply(Eq[-2], cond=M > 0), algebra.infer_et.given.infer.delete.apply(Eq[-1], 1)
 
     Eq <<= Eq[-3].this.apply(algebra.infer.flatten), Eq[-2].this.apply(algebra.infer.flatten), Eq[-1].this.lhs.apply(algebra.gt.imply.ge.relax)
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.gt_zero.le_zero.imply.eq.inf_square.to.zero), algebra.infer_et.given.infer.subs.apply(Eq[-1])
+    Eq <<= Eq[-2].this.lhs.apply(algebra.gt_zero.le_zero.imply.eq.inf_square.to.zero), algebra.infer_et.given.infer.et.subs.apply(Eq[-1])
 
     Eq << algebra.infer_et.given.infer.delete.apply(Eq[-1])
 
-    Eq <<= algebra.infer.given.et.infer_et.apply(Eq[-1], cond=Eq[0])
+    Eq <<= algebra.infer.given.et.infer.et.apply(Eq[-1], cond=Eq[0])
 
     Eq <<= Eq[-1].this.lhs.apply(algebra.eq.cond.imply.cond.subs)
 
     Eq << Eq[-1].this.lhs.apply(algebra.lt_zero.imply.eq.inf_square.to.zero, x)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-12-21
+# updated on 2023-05-18

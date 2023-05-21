@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(x, lamda, w=None):
-    [n] = x.shape
+    n, = x.shape
     i, j = Symbol(domain=Range(n))
 
     if w is None:

@@ -3,8 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    (A, B), _A = given.of(Equal[Complement])
-    assert _A == A
+    (A, B), S[A] = given.of(Equal[Complement])
 
     return Equal(A & B, A.etype.emptySet)
 

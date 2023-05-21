@@ -1,2 +1,2 @@
-from . import union
 from . import finiteset
+from . import interval

@@ -8,7 +8,7 @@ def apply(given, limit):
     n, a, b = limit
 
     assert n.is_integer
-    assert a >= 0 and b > a + 1 or a > 0 and b > a
+    assert b - 1 > a >= 0 or b > a > 0
 
     return Greater(Sum(n * lhs, limit).simplify(), Sum(n * rhs, limit).simplify())
 

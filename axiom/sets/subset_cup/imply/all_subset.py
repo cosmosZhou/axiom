@@ -4,8 +4,8 @@ from util import *
 @apply
 def apply(given):
     lhs, rhs = given.of(Subset)
-    assert lhs.is_Cup
-    return All(Subset(lhs.expr, rhs).simplify(), *lhs.limits)
+    expr, *limits = lhs.of(Cup)
+    return All(Subset(expr, rhs).simplify(), *limits)
 
 
 @prove

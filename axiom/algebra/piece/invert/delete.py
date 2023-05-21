@@ -41,7 +41,7 @@ def prove(Eq):
     g, f, h = Function(shape=(), real=True)
     Eq << apply(Piecewise((g(x), Element(x, A)), (f(x), NotElement(x, A | B)), (h(x), True)))
 
-    Eq << Eq[0].this.rhs.apply(algebra.piece.invert)
+    Eq << Eq[0].this.rhs.apply(algebra.piece.et.invert)
 
 
 if __name__ == '__main__':

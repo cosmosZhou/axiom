@@ -3,10 +3,9 @@ from util import *
 
 @apply
 def apply(given, epsilon=None):
-    ((f, (z, xi, direction)), _f), (_xi, a, b) = given.of(All[Equal[Limit]])
-    assert direction == 0
-    assert xi == _xi
-    assert _f == f._subs(z, xi)
+    ((f, (z, xi, S[0])), S[f._subs(z, xi)]), (S[xi], domain) = given.of(All[Equal[Limit]])
+    a, b = domain.of(Interval)
+    assert domain.is_closed
 
     if not isinstance(epsilon, Basic):
         if epsilon is None:
@@ -22,7 +21,7 @@ def prove(Eq):
 
     a, b = Symbol(real=True)
     f = Function(real=True)
-    from axiom.calculus.all_eq.imply.all_any_eq.intermediate_value_theorem import is_continuous
+    from axiom.calculus.all_eq.imply.all.any.eq.intermediate_value_theorem import is_continuous
     Eq << apply(is_continuous(f, a, b))
 
 

@@ -3,8 +3,8 @@ from util import *
 
 @apply
 def apply(x, y):
-    assert x.shape == y.shape
-    assert len(x.shape) == 1
+    n, = x.shape
+    S[n], = y.shape
     return Equal(x @ y, y @ x)
 
 

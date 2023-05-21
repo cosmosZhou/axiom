@@ -3,14 +3,10 @@ from util import *
 
 @apply
 def apply(given):
-    fx, (x, n) = given.of(Derivative < 0)
-    assert n == 1
-
+    fx, (x, S[1]) = given.of(Derivative < 0)
     domain = x.domain
-
     assert domain.left_open
     a, b = domain.of(Interval)
-
     return Less(fx, fx._subs(x, a))
 
 

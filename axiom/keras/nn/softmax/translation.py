@@ -1,10 +1,9 @@
 from util import *
 
 
-# log softmax(x) = x - max(x) - log∑exp(x - max(x))
 @apply
 def apply(x, delta):
-    assert len(x.shape) == 1
+    n, = x.shape
     assert not delta.shape
 
     return Equal(softmax(x + delta), softmax(x))

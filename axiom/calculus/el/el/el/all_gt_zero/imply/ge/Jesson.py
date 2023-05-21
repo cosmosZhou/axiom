@@ -3,22 +3,20 @@ from util import *
 
 @apply
 def apply(contains, contains0, contains1, all_is_positive, swap=False):
-    (fx, (x_, d)), (x__, domain) = all_is_positive.of(All[Derivative > 0])
-    assert domain.left_open and domain.right_open
-    assert d == 2
-    assert x_ == x__
-
+    (fx, (x, S[2])), (S[x], a, b) = all_is_positive.of(All[Derivative > 0])
+        
+    x0, domain = contains0.of(Element)
+    S[a], S[b] = domain.of(Interval)
+    
     w, interval = contains.of(Element)
     assert interval != domain
     assert interval in Interval(0, 1)
-
-    x0, _domain = contains0.of(Element)
-    x1, __domain = contains1.of(Element)
-    assert domain == _domain == __domain
+    
+    x1, S[domain] = contains1.of(Element)
     if swap:
         x0, x1 = x1, x0
 
-    return GreaterEqual(w * fx._subs(x_, x0) + (1 - w) * fx._subs(x_, x1), fx._subs(x_, w * x0 + (1 - w) * x1))
+    return GreaterEqual(w * fx._subs(x, x0) + (1 - w) * fx._subs(x, x1), fx._subs(x, w * x0 + (1 - w) * x1))
 
 
 @prove

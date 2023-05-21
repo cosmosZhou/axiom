@@ -25,7 +25,11 @@ def prove(Eq):
 
     Eq << algebra.gt_zero.eq.imply.eq.div.apply(Eq[-1], Eq[1])
 
+    Eq << Eq[-1].this.rhs.apply(algebra.add.to.mul)
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-04-02
+# updated on 2023-05-02

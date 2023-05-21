@@ -3,12 +3,8 @@ from util import *
 
 @apply
 def apply(contains1, contains2):
-    assert contains1.is_Element
-    assert contains2.is_Element
-
-    x, A = contains1.args
-    y, _A = contains2.args
-    assert A == _A
+    x, A = contains1.of(Element)
+    y, S[A] = contains2.of(Element)
 
     return Subset(Interval(x, y), A)
 
@@ -27,7 +23,7 @@ def prove(Eq):
 
     Eq << algebra.all.given.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[-1].apply(sets.notin_interval.given.ou)
+    Eq << Eq[-1].this.find(NotElement).apply(sets.notin_interval.given.ou)
 
     Eq << ~Eq[-1]
 
@@ -49,9 +45,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.args[1].reversed
 
+    
+
 
 if __name__ == '__main__':
     run()
 from . import right_open
 from . import left_open
 # created on 2020-03-31
+# updated on 2023-05-20

@@ -7,8 +7,7 @@ def apply(is_nonnegative, less_than):
         less_than, is_nonnegative = given
 
     x = is_nonnegative.of(Expr >= 0)
-    _x, M = less_than.of(Less)
-    assert x == _x
+    S[x], M = less_than.of(Less)
 
     return Equal(Floor(x), 0)
 
@@ -20,7 +19,7 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(x >= 0, x < 1)
 
-    Eq << algebra.imply.le.floor.apply(x)
+    Eq << algebra.imply.floor_le.apply(x)
 
     Eq << algebra.le.lt.imply.lt.transit.apply(Eq[-1], Eq[1])
 

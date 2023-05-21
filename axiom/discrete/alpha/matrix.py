@@ -5,12 +5,9 @@ from axiom.discrete.imply.gt_zero.alpha import alpha
 
 @apply
 def apply(A):
-    assert A.is_alpha
-    assert len(A.args) == 1
-    mat = A.arg
-    assert mat.is_Matrix
+    mat = A.of(alpha)
 
-    return Equal(A, alpha(*mat._args))
+    return Equal(A, alpha(*mat.of(Matrix)))
 
 
 @prove

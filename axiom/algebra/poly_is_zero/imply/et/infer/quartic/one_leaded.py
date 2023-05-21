@@ -25,15 +25,14 @@ def apply(given, x=None):
         else:
             return
 
-    _1, a, b, c, d = quartic_coefficient(fx, x=x)
-    assert _1 == 1
+    S[1], a, b, c, d = quartic_coefficient(fx, x=x)
     alpha = b - 3 * a ** 2 / 8
     beta = a ** 3 / 8 + c - a * b / 2
     gamma = a ** 2 * b / 16 + d - 3 * a ** 4 / 256 - a * c / 4
 
     w = -S.One / 2 + sqrt(3) * S.ImaginaryUnit / 2
     from axiom.algebra.ne_zero.poly_is_zero.imply.ne import cubic_delta
-    from axiom.algebra.poly_is_zero.given.et_eq.cubic.one_leaded import cubic_solve
+    from axiom.algebra.poly_is_zero.given.et.eq.cubic.one_leaded import cubic_solve
     y_delta = cubic_delta(x, alpha, beta, gamma)
     _d, Y0, Y1, Y2 = cubic_solve(y_delta, x)
 

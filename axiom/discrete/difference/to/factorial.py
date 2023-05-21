@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << discrete.pow.to.sum.binom.Newton.apply((x + 1) ** (n + 1), swap=True) - x ** (n + 1)
 
-    Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum.to.add.pop_back)
+    Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum.to.add.pop)
 
     Eq << Eq[-3].subs(Eq[-1])
 
@@ -63,14 +63,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.args[0].apply(algebra.cond.given.all, _k)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.cond.all.given.all.push_back)
+    Eq << Eq[-1].this.lhs.apply(algebra.cond.all.given.all.push)
 
     Eq << algebra.cond.infer.imply.cond.induct.second.split.all.apply(Eq.initial, Eq[-1], n=n)
 
     Eq << Eq[0].subs(n, _k)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

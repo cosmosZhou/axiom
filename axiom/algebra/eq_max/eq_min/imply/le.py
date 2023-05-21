@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(eq_max, eq_min):
     (((i, l), (S[i - l + 1], d)), limit_i), β = eq_max.of(Equal[Lamda[Max[Expr + 1 - Expr, Mod]]])
-    (((S[i], u), n), S[limit_i]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])    
+    ((n, (S[i], u)), S[limit_i]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])    
     S[i], S[0], S[n] = limit_i
 
     return ζ[i] - β[i] <= Min(n, l + u - 1)

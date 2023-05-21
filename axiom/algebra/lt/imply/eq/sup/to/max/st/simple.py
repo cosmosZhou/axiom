@@ -24,11 +24,11 @@ def prove(Eq):
 
     Eq << algebra.cond.given.et.infer.split.apply(Eq[-1], cond=a > 0)
 
-    Eq <<= algebra.infer.given.et.infer_et.apply(Eq[-2], cond=Eq[0]), algebra.cond.given.et.infer.split.apply(Eq[-1], cond=a < 0)
+    Eq <<= algebra.infer.given.et.infer.et.apply(Eq[-2], cond=Eq[0]), algebra.cond.given.et.infer.split.apply(Eq[-1], cond=a < 0)
 
     Eq <<= Eq[-3].this.lhs.apply(algebra.gt_zero.lt.imply.eq.sup.to.max.st.simple, a * x + b, x), Eq[-2].this.apply(algebra.infer.flatten), Eq[-1].this.apply(algebra.infer.flatten)
 
-    Eq <<= algebra.infer.given.et.infer_et.apply(Eq[-2], cond=Eq[0]), algebra.infer.given.infer.subs.apply(Eq[-1])
+    Eq <<= algebra.infer.given.et.infer.et.apply(Eq[-2], cond=Eq[0]), algebra.infer.given.infer.subs.apply(Eq[-1])
 
     Eq <<= Eq[-2].this.lhs.apply(algebra.lt_zero.lt.imply.eq.sup.to.max.st.simple, a * x + b, x), algebra.infer.given.cond.apply(Eq[-1])
 

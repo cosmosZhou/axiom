@@ -6,8 +6,7 @@ def apply(greater_than, _greater_than):
     a, x = greater_than.of(GreaterEqual)
     b, _x = _greater_than.of(LessEqual)
     if x != _x:
-        a, x, _x, b = _x, b, a, x,
-    assert x == _x
+        a, x, S[x], b = _x, b, a, x,
 
     return Element(x, Interval(b, a))
 

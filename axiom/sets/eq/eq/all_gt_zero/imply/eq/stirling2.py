@@ -3,17 +3,11 @@ from util import *
 
 @apply
 def apply(equal_sum, equal_union, all_is_positive):
-    (x, i), (_i, k) = all_is_positive.of(All[Card[Indexed] > 0, Tuple[0, Expr]])
-    assert i == _i
+    (x, i), (S[i], k) = all_is_positive.of(All[Card[Indexed] > 0, Tuple[0, Expr]])
 
-    ((_x, _i), _limit), n = equal_sum.of(Equal[Sum[Card[Indexed]]])
-    assert _x == x and _i == i
-    assert _limit == (_i, 0, k)
+    ((S[x], S[i]), S[(i, 0, k)]), n = equal_sum.of(Equal[Sum[Card[Indexed]]])
 
-    ((_x, _i), limit), _n = equal_union.of(Equal[Cup[Indexed], Range[0, Expr]])
-    assert _x == x and _i == i
-    assert n == _n
-    assert limit == _limit
+    ((S[x], S[i]), S[(i, 0, k)]), S[n] = equal_union.of(Equal[Cup[Indexed], Range[0, Expr]])
 
     j = Symbol(domain=Range(k))
     complement = Range(k) - {j}

@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self, n=None):
     x, r = self.of(Pow)
-    x -= 1 
+    x -= 1
     assert r.is_real
     if n is None:
         n = Symbol(integer=True)

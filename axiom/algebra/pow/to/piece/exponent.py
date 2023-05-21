@@ -17,12 +17,17 @@ def prove(Eq):
     g, h = Function(real=True)
     Eq << apply(b ** Piecewise((g(x), Element(x, A)),(h(x), True)))
 
-    Eq << algebra.eq.given.ou.apply(Eq[0])
+    Eq << algebra.cond_piece.given.ou.apply(Eq[0])
 
     Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool)
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, invert=True)
+
+    Eq << Eq[-1].this.find(And).apply(algebra.et.given.et.subs.bool, invert=True)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-04-13
+# updated on 2023-05-13

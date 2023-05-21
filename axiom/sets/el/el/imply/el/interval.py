@@ -3,13 +3,12 @@ from util import *
 
 @apply
 def apply(contains1, contains2, w=None):
-    x0, S = contains1.of(Element)
-    x1, _S = contains2.of(Element)
-    assert S == _S
-    assert S.is_Interval
+    x0, s = contains1.of(Element)
+    x1, S[s] = contains2.of(Element)
+    assert s.is_Interval
 
-    assert w >= 0 and w <= 1
-    return Element(x0 * w + x1 * (1 - w), S)
+    assert 0 <= w <= 1
+    return Element(x0 * w + x1 * (1 - w), s)
 
 
 @prove
@@ -51,7 +50,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.apply(Eq[0] & Eq[1], cond=Eq[-1].lhs)
 
-    Eq << algebra.infer.imply.infer.et.apply(Eq[-1])
+    Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(sets.el.el.el.imply.el.interval.open)
 

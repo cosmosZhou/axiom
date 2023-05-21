@@ -56,7 +56,7 @@ def prove(Eq):
 
     Eq <<= ~Eq[-2], ~Eq[-1]
 
-    Eq <<= Eq[-2].apply(algebra.cond.cond.imply.cond.subs, invert=True, swap=True, ret=1), Eq[-1].apply(algebra.cond.cond.imply.cond.subs, swap=True, ret=1)
+    Eq <<= Eq[-2].apply(algebra.cond.cond.imply.cond.subs, invert=True, ret=0), Eq[-1].apply(algebra.cond.cond.imply.cond.subs, ret=0)
 
     Eq <<= Eq[-2] & Eq[0], Eq[-1] & Eq[0]
 
@@ -64,8 +64,12 @@ def prove(Eq):
 
     Eq << algebra.et.imply.ou.apply(Eq[-2])
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-03-07
+# updated on 2023-05-14

@@ -59,12 +59,15 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1])
 
-    Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], index=1)
+    Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1])
 
     Eq << Eq[-1].this.expr.apply(sets.subset.subset.imply.eq.squeeze)
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-09-07
+# updated on 2023-05-15

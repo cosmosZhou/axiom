@@ -8,14 +8,11 @@ def apply(given):
     if len(limits) == 2:
         (j, j_domain), i_limit = limits
         _, i = j_domain.of(Complement)
-        assert i.is_FiniteSet and len(i) == 1
-        i, *_ = i.args
+        i = i.of(FiniteSet)
     else:
-        assert len(limits) == 1
-        i, j_domain = limits[0]
+        (i, j_domain), = limits
         universe, j = j_domain.of(Complement)
-        assert j.is_FiniteSet and len(j) == 1
-        j, *_ = j.args
+        j = j.of(FiniteSet)
 
         i_limit = (i, universe)
 

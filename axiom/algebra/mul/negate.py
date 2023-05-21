@@ -4,19 +4,25 @@ from util import *
 @apply(simplify=False)
 def apply(self, index=0):
     [*args] = self.of(Mul)
-    factor = args.pop(index)
-    factor = -factor
-   
-
-    for i, arg in enumerate(args):
-        if arg.is_Add:
-            break
+    
+    if index < 0:
+        index += len(args)
+        
+    factor = args[index]
+    
+    if factor.is_Add:
+        args.append(-1)
     else:
-        return
+        args[index] = -factor
+
+        for index, factor in enumerate(args):
+            if factor.is_Add:
+                break
+        else:
+            return
     
-    args[i] = Add(*[-arg for arg in arg.args])
-    args.append(factor)
-    
+    args[index] = Add(*(-arg for arg in factor.args))
+        
     return Equal(self, Mul(*args), evaluate=False)
 
 
@@ -26,14 +32,8 @@ def prove(Eq):
     Eq << apply((a + b - c) * d)
 
     Eq << Eq[0].this.lhs.expand()
-    
+
     Eq << Eq[-1].this.rhs.expand()
-
-    
-
-    
-
-    
 
     
     
@@ -42,4 +42,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2021-08-02
-# updated on 2021-12-16
+# updated on 2023-05-02

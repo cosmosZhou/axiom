@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << algebra.imply.gt.ceiling.apply(x)
 
-    Eq << algebra.imply.le.ceiling.apply(x)
+    Eq << algebra.imply.le_ceiling.apply(x)
 
 
 if __name__ == '__main__':

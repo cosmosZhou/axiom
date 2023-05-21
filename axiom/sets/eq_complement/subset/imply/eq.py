@@ -6,14 +6,11 @@ def apply(subset, equal):
     C, A = subset.of(Subset)
 
     complement_A_C, complement_B_C = equal.of(Equal)
-    _A, _C = complement_A_C.of(Complement)
-    assert C == _C
-    B, _C = complement_B_C.of(Complement)
-    assert C == _C
+    _A, S[C] = complement_A_C.of(Complement)
+    B, S[C] = complement_B_C.of(Complement)
 
     if A != _A:
-        _A, B = B, _A
-    assert A == _A
+        S[A], B = B, _A
 
     return Equal(A, B | C)
 

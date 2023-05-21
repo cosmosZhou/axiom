@@ -7,7 +7,7 @@ def apply(self, *, cond=None):
 
     matched = []
     unmatch = []
-    for eq in self.args:
+    for eq in self.of(And):
         if eq.is_Or:
             if cond in eq.args:
                 matched.append(Or(*eq._argset - {cond}))
@@ -17,7 +17,7 @@ def apply(self, *, cond=None):
             continue
         unmatch.append(eq)
     assert not unmatch
-    return Or(cond, self.func(*matched))
+    return Or(cond, And(*matched))
 
 
 @prove
@@ -37,3 +37,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-01-28
+# updated on 2023-05-21

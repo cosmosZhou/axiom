@@ -2,11 +2,24 @@ from util import *
 
 
 @apply
-def apply(is_positive_x, lt):
-    x = is_positive_x.of(Expr > 0)
+def apply(gt_zero, lt, *, simplify=True):
+    x = gt_zero.of(Expr > 0)
     assert x.is_finite
     lhs, rhs = lt.of(Less)
-    return Less(lhs / x, rhs / x)
+    if lhs.is_infinite:
+        ...
+    else:
+        lhs /= x
+        
+    if rhs.is_infinite:
+        ...
+    else:
+        rhs /= x
+        
+    if simplify:
+        lhs = lhs.ratsimp()
+        rhs = rhs.ratsimp()
+    return Less(lhs, rhs)
 
 
 @prove
@@ -20,7 +33,11 @@ def prove(Eq):
 
     Eq << algebra.gt_zero.lt.imply.lt.mul.apply(Eq[-1], Eq[1])
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-06-27
+# updated on 2023-04-15
