@@ -436,5 +436,7 @@ show variables like 'regexp_stack_limit';
 
 
 ### load data  
+firstly, ensure the user exists:  
+create user prod identified by "prod";  
 Access denied; you need (at least one of) the SUPER or SYSTEM_VARIABLES_ADMIN privilege(s) for this operation  
-grant insert, SYSTEM_VARIABLES_ADMIN on *.* to prod;  
+grant select, delete, insert, SYSTEM_VARIABLES_ADMIN on *.* to prod;  

@@ -113,5 +113,5 @@ extended_integer ⊂ extended_rational ⊂ [extended_real](https://en.wikipedia.
 [<font size=2>浙ICP备20017509号-3</font>](https://beian.miit.gov.cn/)
 
 <script type=module>
-	$('#count').innerHTML = await get("/sympy/php/request/count.php");
+	$('#count').innerHTML = await get("/axiom/php/request/count.php");
 </script>
