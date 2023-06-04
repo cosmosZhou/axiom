@@ -18,5 +18,7 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-from . import principle
+from . import add
+from . import sub
+
 # created on 2020-12-05

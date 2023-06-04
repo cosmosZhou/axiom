@@ -21,9 +21,9 @@ def prove(Eq):
     x, y = Symbol(real=True)
     Eq << apply(cos(x) * cos(y))
 
-    Eq << Eq[-1].this.find(Cos[Expr - Expr]).apply(geometry.cos.to.add.principle)
+    Eq << Eq[-1].this.find(Cos[Expr - Expr]).apply(geometry.cos.to.sub)
 
-    Eq << Eq[-1].this.find(Cos[Expr + Expr]).apply(geometry.cos.to.add.principle)
+    Eq << Eq[-1].this.find(Cos[Expr + Expr]).apply(geometry.cos.to.sub)
 
 
 if __name__ == '__main__':

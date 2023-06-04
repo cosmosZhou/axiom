@@ -2,7 +2,7 @@ from util import *
 
 
 @apply
-def apply(self, var=None):
+def apply(self, var=None, *, simplify=True):
     A, B = self.of(MatMul)
     kwargs = {'var': var, 'generator': self}
 
@@ -16,8 +16,10 @@ def apply(self, var=None):
         if rgn.is_Range:
             if rgn.start != 0 or rgn.stop != size:
                 k_limit = (k, 0, size)
-
-    rhs = Sum(expr, k_limit).simplify()
+                
+    rhs = Sum(expr, k_limit)
+    if simplify:
+        rhs = rhs.simplify()
     return Equal(self, rhs, evaluate=False)
 
 
@@ -28,9 +30,10 @@ def prove(Eq):
     Eq << apply(A @ B)
 
     
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-11-09
-# updated on 2023-04-09
+# updated on 2023-05-22

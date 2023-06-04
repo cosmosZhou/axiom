@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq << algebra.gt.given.gt_zero.apply(Eq[3])
 
-    Eq << geometry.sin.to.add.principle.sub.apply(sin(Eq[-1].lhs))
+    Eq << geometry.sin.to.sub.apply(sin(Eq[-1].lhs))
 
     Eq << sets.lt.el.el.imply.gt.sqrt.apply(Eq[0], Eq[1], Eq[2])
 

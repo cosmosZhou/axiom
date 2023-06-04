@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << algebra.lt.le.imply.eq.apply(Eq[-2], Eq[-1])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.floor.to.mul.ceiling)
+    Eq << Eq[-1].this.rhs.apply(algebra.floor.to.neg.ceiling)
 
 
 if __name__ == '__main__':

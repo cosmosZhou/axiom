@@ -73,7 +73,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.eq.transport, lhs=0)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest)
 
     j = Symbol(integer=True)
     Eq << Eq[0][i, j + Min(l, n) - i - 1]
@@ -114,8 +114,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(ReducedArgMax).arg.definition
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

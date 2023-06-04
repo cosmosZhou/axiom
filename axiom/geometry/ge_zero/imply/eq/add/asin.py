@@ -15,7 +15,7 @@ def prove(Eq):
     x = Symbol(domain=Interval(-1, 1))
     Eq << apply(x >= 0)
 
-    Eq << geometry.cos.to.add.principle.apply(cos(Eq[1].lhs))
+    Eq << geometry.cos.to.sub.apply(cos(Eq[1].lhs))
 
     Eq << algebra.ge_zero.imply.eq.abs.apply(Eq[0])
 

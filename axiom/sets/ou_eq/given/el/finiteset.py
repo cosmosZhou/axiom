@@ -31,7 +31,7 @@ def prove(Eq):
     x, a, b, c = Symbol(real=True, given=True)
     Eq << apply(Equal(x, a) | Equal(x, b) | Equal(x, c))
 
-    Eq << sets.el_finiteset.imply.ou.apply(Eq[1])
+    Eq << sets.el_finiteset.imply.ou.eq.apply(Eq[1])
 
 
 

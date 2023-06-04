@@ -3,12 +3,12 @@ from util import *
 
 @apply
 def apply(self):
-    function, (i, a, b) = self.of(Product)
+    expr, (i, a, b) = self.of(Product)
 
     assert i.is_integer
-    back = function._subs(i, b)
+    back = expr._subs(i, b)
     assert back.is_nonzero
-    return Equal(self, Product[i:a:b + 1](function) / back, evaluate=False)
+    return Equal(self, Product[i:a:b + 1](expr) / back, evaluate=False)
 
 
 @prove

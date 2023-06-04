@@ -29,15 +29,15 @@ def prove(Eq):
 
     Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.args[::2].apply(sets.ne.el.imply.el, simplify=None)
+    Eq << Eq[-1].this.rhs.args[::2].apply(sets.ne.el.imply.el.complement, simplify=None)
 
-    Eq << Eq[-1].this.rhs.apply(sets.ne.el.imply.el)
+    Eq << Eq[-1].this.rhs.apply(sets.ne.el.imply.el.complement)
 
     Eq << Eq[-1].this.rhs.apply(geometry.el.imply.sin_gt_zero)
 
     Eq << Eq[-1].this.rhs.apply(algebra.gt_zero.imply.ge_zero)
 
-    
+
 
 
 if __name__ == '__main__':

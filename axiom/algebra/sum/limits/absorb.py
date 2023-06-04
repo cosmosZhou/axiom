@@ -60,10 +60,22 @@ def apply(self):
         limits = []
         for v in G:
             eqs = dic[v]
-            cond = And(*eqs)
-            if cond.is_Element and cond.lhs == v:
-                cond = cond.rhs
-            limit = (v, cond)
+            domain = None
+            
+            for el in eqs:
+                if el.is_Element and el.lhs == v:
+                    domain = el.rhs
+                    eqs.remove(el)
+                    break
+                    
+            if eqs:
+                cond = And(*eqs)
+                if domain is None:
+                    limit = (v, cond)
+                else:
+                    limit = (v, cond, domain)
+            else:
+                limit = (v, domain)
 
             limits.append(limit)
 

@@ -13,10 +13,10 @@ def apply(given, var=None):
 
 @prove
 def prove(Eq):
-    from axiom import sets, algebra
+    from axiom import algebra, sets
+
     S = Symbol(etype=dtype.integer)
     n = Symbol(integer=True, positive=True)
-
     Eq << apply(Equal(Card(S), n))
 
     Eq << algebra.eq.imply.ge.apply(Eq[0])
@@ -25,21 +25,24 @@ def prove(Eq):
 
     Eq << sets.any_el.imply.any_el.limits_restricted.apply(Eq[-1], simplify=False)
 
-    i = Eq[-1].expr.lhs
-    Eq << sets.imply.eq.principle.add.apply(S, i.set)
+    Eq << Eq[-1].this.expr.apply(sets.el.imply.eq.union)
 
-    Eq << Eq[-2].this.expr.apply(sets.el.imply.eq.union)
+    Eq << Eq[-1].this.expr.apply(sets.eq.imply.eq.card)
 
-    Eq << algebra.any_eq.cond.imply.any.subs.apply(Eq[-1], Eq[-2])
+    Eq << Eq[-1].this.find(Card).apply(sets.card.to.add)
 
     Eq << Eq[-1].subs(Eq[0])
 
     Eq << Eq[-1].this.expr - 1
 
-    Eq << Eq[-1].reversed
+    
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-09-07
+# updated on 2023-06-01

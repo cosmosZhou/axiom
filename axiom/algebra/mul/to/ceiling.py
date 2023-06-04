@@ -13,7 +13,7 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(-floor(x))
 
-    Eq << Eq[0].this.rhs.apply(algebra.ceiling.to.mul)
+    Eq << Eq[0].this.rhs.apply(algebra.ceiling.to.neg.floor)
 
 
 if __name__ == '__main__':

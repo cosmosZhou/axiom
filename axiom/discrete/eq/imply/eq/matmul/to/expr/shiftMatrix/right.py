@@ -47,7 +47,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Piecewise, Piecewise).apply(algebra.piece.et.invert, 0)
 
-    Eq << Eq[-1].this.rhs.find(Piecewise).args[1]().find(Min).simplify()
+    
 
     Eq << (Eq[-1] @ w[i, j].T).this.rhs.subs(Eq[0])
 
@@ -77,4 +77,4 @@ if __name__ == '__main__':
     run()
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 # created on 2020-11-14
-# updated on 2023-05-21
+# updated on 2023-05-26

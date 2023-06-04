@@ -1,36 +1,51 @@
 from util import *
 
-
-@apply
-def apply(piecewise, index=None, reverse=False):
-    if index is None:
-        for index, (expr, cond) in enumerate(piecewise.args):
-            if cond.is_Equal:
-                break
-
-        if not cond.is_Equal:
-            for index, (expr, cond) in enumerate(piecewise.args):
-                if cond.is_And:
-                    break
-
-    else:
-        expr, cond = piecewise.args[index]
-
+def subs(self, index, reverse):
+    expr, cond = self.args[index]
     if cond.is_And:
         for eq in cond.args:
             if eq.is_Equal:
                 break
+        else:
+            return
     else:
         eq = cond
 
     lhs, rhs = eq.of(Equal)
     if reverse:
         lhs, rhs = rhs, lhs
-
-    expr = expr._subs(lhs, rhs)
-    ec = [*piecewise.args]
+        expr = expr._subs(lhs, rhs)
+    else:
+        _expr = expr._subs(lhs, rhs)
+        if _expr == expr:
+            expr = expr._subs(rhs, lhs)
+        else:
+            expr = _expr
+    ec = [*self.args]
     ec[index] = (expr, cond)
-    return Equal(piecewise, piecewise.func(*ec), evaluate=False)
+    return self.func(*ec)
+
+@apply
+def apply(self, index=None, reverse=False):
+    if index is None:
+        for index, (expr, cond) in enumerate(self.args):
+            if cond.is_Equal:
+                break
+        else:
+            for index, (expr, cond) in enumerate(self.args):
+                if cond.is_And:
+                    break
+            else:
+                return
+
+    if isinstance(index, (tuple, list)):
+        rhs = self
+        for index in index:
+            rhs = subs(rhs, index, reverse)
+    else:
+        rhs = subs(self, index, reverse)
+
+    return Equal(self, rhs, evaluate=False)
 
 
 @prove
@@ -64,4 +79,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2018-02-04
-# updated on 2023-05-21
+# updated on 2023-05-30

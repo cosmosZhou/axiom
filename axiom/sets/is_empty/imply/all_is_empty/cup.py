@@ -12,34 +12,48 @@ def apply(given):
 @prove
 def prove(Eq):
     from axiom import sets, algebra
+
     i = Symbol(integer=True)
     k = Symbol(integer=True, positive=True, given=True)
     x = Symbol(shape=(k + 1,), etype=dtype.integer, given=True)
-
     Eq << apply(Equal(Cup[i:0:k + 1](x[i]), x[i].etype.emptySet))
 
     j = Symbol(domain=Range(k + 1))
-
     Eq << Eq[-1].limits_subs(i, j)
 
     Eq.paradox = ~Eq[-1]
 
-    Eq.positive = Eq.paradox.this.expr.apply(sets.ne_empty.imply.gt_zero)
+    
 
-    Eq.union_empty = Eq[0].apply(sets.eq.imply.eq.card)
+    Eq << Eq[0].apply(sets.eq.imply.eq.card)
+
+    Eq << Eq[-1].this.lhs.apply(sets.card.to.add.split, x[j])
 
     Eq << sets.eq.imply.eq.complement.apply(Eq[0], Eq.paradox.lhs)
 
     Eq << Eq[-1].apply(sets.eq.imply.eq.card)
 
-    Eq << sets.imply.eq.principle.add.apply(*Eq[-2].lhs.args)
+    Eq << Eq[-3].subs(Eq[-1])
 
-    Eq << Eq[-1].subs(Eq[-2], Eq.union_empty)
+    Eq << Subset(*Eq[-1].lhs.arg.args, plausible=True)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq.positive, Eq[-1].reversed)
+    Eq << sets.subset_cup.given.any.subset.apply(Eq[-1])
+
+    Eq << algebra.any.given.cond.subs.apply(Eq[-1], i, j)
+
+    Eq << sets.subset.imply.eq.intersect.apply(Eq[-2])
+
+    Eq << Eq[-4].subs(Eq[-1])
+
+    Eq << Eq.paradox.this.expr.apply(sets.ne_empty.imply.gt_zero)
+    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq[-2])
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-08-09
+# updated on 2023-06-01

@@ -1,8 +1,5 @@
 from util import *
 
-# given: |A| >= 1
-# A != {}
-
 
 @apply
 def apply(greater_than, _greater_than):

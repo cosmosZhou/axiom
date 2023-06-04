@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << Eq[0].reversed
 
-    Eq << sets.subset.imply.subset.relax.apply(Eq[-1], S)
+    Eq << sets.subset.imply.subset.union.rhs.apply(Eq[-1], S)
 
     Eq << Eq[-1].reversed
 

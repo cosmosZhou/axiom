@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(acos).apply(geometry.acos.to.piece.asin)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.flatten, 1)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.unnest, 1)
 
     Eq << Eq[-1].this.find(acos).apply(geometry.acos.to.piece.asin)
 
@@ -95,8 +95,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.swap, 2)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

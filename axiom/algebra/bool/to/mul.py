@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul_piece.to.piece)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.flatten, index=0)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest, index=0)
 
     Eq << Eq[-1].this.lhs.apply(algebra.bool.to.piece)
 

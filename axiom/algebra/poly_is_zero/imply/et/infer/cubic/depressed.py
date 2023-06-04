@@ -58,7 +58,7 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq.eq_peicewise.reversed)
 
-    Eq.ou = sets.el_finiteset.imply.ou.apply(Eq[-1])
+    Eq.ou = sets.el_finiteset.imply.ou.eq.apply(Eq[-1])
 
     Eq <<= Eq.ou & Eq[0]
 
@@ -80,15 +80,17 @@ def prove(Eq):
     #find Equal[S(-1)] & Equal[S(2)]
     Eq << Eq[-1].this.args[:2].apply(algebra.ou.imply.et.collect)
 
-    
     Eq << Eq[-1].this.find(Equal[Integer] | Equal[Integer]).apply(algebra.ou_eq.imply.eq.mod)
+
     Eq << Eq[-1].this.find(Equal[Integer] | Equal[Integer]).apply(algebra.ou_eq.imply.eq.mod)
-    Eq << Eq[-1].this.find(Equal[Ceiling, Ceiling]).apply(algebra.eq.imply.mod_is_zero, 3, swap=True)
+
+    Eq << Eq[-1].this.find(Equal[Ceiling, Ceiling]).apply(algebra.eq.imply.is_zero.mod, 3, swap=True)
+
     Eq << Eq[-1].subs(Eq.eq_peicewise)
+
     Eq << algebra.ou.imply.et.infer.apply(Eq[-1])
-    Eq << Eq[1].this.lhs.apply(algebra.eq.imply.mod_is_zero, 3)
-    
-    
+
+    Eq << Eq[1].this.lhs.apply(algebra.eq.imply.is_zero.mod, 3)
 
 
 if __name__ == '__main__':

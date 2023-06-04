@@ -31,15 +31,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add.doit)
 
-    Eq << Eq[-1].this.rhs.args[0].args[1].arg.apply(algebra.lamda.to.matrix)
+    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.matrix)
 
-    Eq << Eq[-1].this.rhs.args[1].args[2].arg.apply(algebra.lamda.to.matrix)
+    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.matrix)
 
-    Eq << Eq[-1].this.rhs.args[2].args[1].arg.apply(algebra.lamda.to.matrix)
+    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.matrix)
 
-    Eq << Eq[-1].this.rhs.args[3].args[2].arg.apply(algebra.lamda.to.matrix)
+    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.matrix)
 
-    Eq << Eq[-1].this.rhs.args[4].args[1].arg.apply(algebra.lamda.to.matrix)
+    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.matrix)
 
     Eq << Eq[-1].this.lhs.arg.apply(algebra.expr.to.lamda)
 

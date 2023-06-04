@@ -79,9 +79,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this(i).expr.rhs.find(ExprCondPair[~Piecewise]).find(Symbol < Min - 1).simplify()
 
-    Eq << Eq[-1].this.expr.lhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.expr.lhs.apply(algebra.piece.unnest)
 
-    Eq << Eq[-1].this.expr.rhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.expr.rhs.apply(algebra.piece.unnest)
 
     Eq << Eq[-1].this(i).find(And).simplify()
 
@@ -103,9 +103,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this(i).expr.rhs.find(ExprCondPair[Piecewise[ExprCondPair[~Piecewise]]]).find(Symbol < Min - 1).simplify()
 
-    Eq << Eq[-1].this.expr.lhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.expr.lhs.apply(algebra.piece.unnest)
 
-    Eq << Eq[-1].this.expr.rhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.expr.rhs.apply(algebra.piece.unnest)
 
     Eq << Eq[-1].this(i).find(And).simplify()
 
@@ -139,8 +139,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this(i).find(Max).simplify()
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

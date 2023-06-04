@@ -16,7 +16,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.rhs.args[1].apply(algebra.frac.to.add)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.ceiling.to.mul)
+    Eq << Eq[-1].this.lhs.apply(algebra.ceiling.to.neg.floor)
 
 
 if __name__ == '__main__':

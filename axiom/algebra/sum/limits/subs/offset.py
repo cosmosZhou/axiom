@@ -1,13 +1,21 @@
 from util import *
 
 
-def limits_subs(cls, self, offset, simplify=True):
-    fx, (x, *ab), *limits = self.of(cls)
-    fx = fx._subs(x, x + offset)
+def limits_subs(cls, self, index, offset, simplify=True):
+    if offset is None:
+        offset = index
+        index = 0
+
+    fx, *limits = self.of(cls)
+    limits_former = limits[:index]
+    limits_latter = limits[index + 1:]
+    x, *ab = limits[index]
+    x_offset = x + offset
+    fx = fx._subs(x, x_offset)
     if len(ab) == 2:
         a, b = ab
         if a.is_bool:
-            a = a._subs(x, x + offset)
+            a = a._subs(x, x_offset)
             b -= offset
         else:
             a -= offset
@@ -16,20 +24,32 @@ def limits_subs(cls, self, offset, simplify=True):
     elif ab:
         domain, = ab
         if domain.is_bool:
-            domain = domain._subs(x, x + offset)
+            domain = domain._subs(x, x_offset)
         else:
             domain -= offset
         limit = (x, domain)
     else:
         limit = (x,)
-    self = cls(fx, limit, *limits)
+        
+    for i, (v, *ab) in enumerate(limits_former):
+        hit = False
+        for j, c in enumerate(ab):
+            _c = c._subs(x, x_offset)
+            if _c != c:
+                hit = True
+                ab[j] = _c
+                
+        if hit:
+            limits_former[i] = v, *ab 
+
+    self = cls(fx, *limits_former, limit, *limits_latter)
     if simplify:
         self = self.simplify()
     return self
 
 @apply
-def apply(self, offset):
-    return Equal(self, limits_subs(Sum, self, offset), evaluate=False)
+def apply(self, index=0, offset=None):
+    return Equal(self, limits_subs(Sum, self, index, offset), evaluate=False)
 
 
 @prove

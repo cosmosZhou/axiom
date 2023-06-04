@@ -100,7 +100,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.negate)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest)
 
     Eq.zij_dquote_def = Eq[-1].this.rhs.apply(algebra.piece.swap, 1)
 

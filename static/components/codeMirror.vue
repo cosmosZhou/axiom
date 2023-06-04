@@ -616,13 +616,13 @@ export default {
                 						});
                 					}
                 				case ".this.":
-                					if (text.match(/\bEq\[-?\d+\]\.this\.$/)) {
-                						return accept({
-                							list: this_phrases(),
-                							from: Pos(cur.line, token.start),
-                							to: Pos(cur.line, token.end)
-                						});
-                					}
+                					//if (text.match(/\bEq\[-?\d+\]\.this\.$/)) {}
+               						return accept({
+               							list: this_phrases(),
+               							from: Pos(cur.line, token.start),
+               							to: Pos(cur.line, token.end)
+               						});
+
                 				default:
                 					var m = prefix.match(/^\.([\w.]*\.)(\w*)$/);
                 					if (m) {

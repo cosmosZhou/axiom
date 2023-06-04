@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq << apply(Unequal(n % 2, 0))
 
-    Eq << algebra.mod_ne_zero.imply.is_odd.apply(Eq[0])
+    Eq << algebra.ne_zero.imply.is_odd.apply(Eq[0])
 
     Eq << algebra.is_odd.imply.any.apply(Eq[-1], k=Eq[1].variable)
 

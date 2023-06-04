@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Element(frac(x), Interval(0, 1, right_open=True), plausible=True)
 
-    Eq << sets.ne.el.imply.el.apply(Eq[-2], Eq[-1])
+    Eq << sets.ne.el.imply.el.complement.apply(Eq[-2], Eq[-1])
 
     Eq << sets.el_interval.imply.et.apply(Eq[-1])
 

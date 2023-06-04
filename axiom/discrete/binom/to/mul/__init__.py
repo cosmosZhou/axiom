@@ -20,4 +20,3 @@ if __name__ == '__main__':
 # created on 2020-02-23
 from . import fallingFactorial
 from . import half
-from . import binom

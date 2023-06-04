@@ -21,9 +21,9 @@ def prove(Eq):
     x0, x1, a, b, c, d, e = Symbol(integer=True)
     Eq << apply(Element(x0, {a, b, c}), Element(x1, {d, e}))
 
-    Eq << sets.el_finiteset.imply.ou.apply(Eq[0])
+    Eq << sets.el_finiteset.imply.ou.eq.apply(Eq[0])
 
-    Eq << sets.el_finiteset.imply.ou.apply(Eq[1])
+    Eq << sets.el_finiteset.imply.ou.eq.apply(Eq[1])
 
     Eq <<= Eq[-1] & Eq[-2]
 
@@ -49,7 +49,7 @@ def prove(Eq):
 
     Eq << sets.el.given.ou.split.finiteset.apply(Eq[2])
 
-    
+
 
 
 if __name__ == '__main__':

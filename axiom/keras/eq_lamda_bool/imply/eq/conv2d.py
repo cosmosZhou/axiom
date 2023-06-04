@@ -43,8 +43,8 @@ def prove(Eq):
     w = Symbol(real=True, shape=(l[0], l[1], d, d_quote))
     M = Symbol(real=True, shape=(m, n[0], n[1]))
     i, j, k = Symbol(integer=True)
-    Eq << apply(Equal(M, Lamda[j:n[1], i:n[0], k:m](Bool(Element(i, Range(β0[k], ζ0[k])) & Element(j, Range(β1[k], ζ1[k]))))),
-                x, w, r)
+    Eq << apply(
+        Equal(M, Lamda[j:n[1], i:n[0], k:m](Bool(Element(i, Range(β0[k], ζ0[k])) & Element(j, Range(β1[k], ζ1[k]))))), x, w, r)
 
     Eq.M_def = Eq[0].this.find(Element).apply(sets.el_range.to.et).this.find(Element).apply(sets.el_range.to.et)
 
@@ -67,7 +67,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.piece)
 
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.ripple, var=i)
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.nest, pivot=slice(1, None, 2))#select cond with j
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.split.piece)
 
@@ -102,7 +102,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Piecewise, Piecewise).apply(algebra.piece.swap)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest)
 
     Eq << Eq[-1].this.find(-Floor).apply(algebra.mul.to.ceiling).this.find(-Floor).apply(algebra.mul.to.ceiling)
 
@@ -116,11 +116,11 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(C.this.definition, C_quote.this.definition)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-01-01
-# updated on 2022-01-23
+# updated on 2023-06-01

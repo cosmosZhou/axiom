@@ -10,3 +10,5 @@ from . import negate
 from . import add
 from . import notin
 from . import eq
+from . import finiteset
+from . import range

@@ -33,7 +33,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.simplify()
 
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.kroneckerDelta)
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-11-10
+# updated on 2023-05-23

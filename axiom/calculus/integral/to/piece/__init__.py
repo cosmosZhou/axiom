@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(-Piecewise).apply(algebra.mul.to.piece)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest)
 
     Eq << Eq[-1].this.rhs.args[1].cond.reversed
 
@@ -34,8 +34,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(And).apply(algebra.et.given.et.subs.eq)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

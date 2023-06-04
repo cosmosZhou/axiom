@@ -19,15 +19,15 @@ def prove(Eq):
 
     Eq << Eq[1].this.find(Equal & ~Equal).apply(algebra.is_even.to.eq)
 
-    Eq << Eq[-1].this.find(Unequal).apply(algebra.mod_ne_zero.to.is_odd)
+    Eq << Eq[-1].this.find(Unequal).apply(algebra.ne_zero.to.is_odd)
 
     Eq << Eq[-1].this.find(Equal & ~Equal).apply(algebra.is_odd.to.eq)
 
     Eq << sets.imply.el.pow.apply((-1) ** n)
 
-    Eq << sets.el_finiteset.imply.ou.apply(Eq[-1])
+    Eq << sets.el_finiteset.imply.ou.eq.apply(Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

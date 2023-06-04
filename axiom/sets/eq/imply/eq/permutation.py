@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq.subset = Subset(Eq.A_definition.rhs, Eq.B_definition.rhs, plausible=True)
 
-    Eq << sets.subset_cup.given.all_subset.apply(Eq.subset)
+    Eq << sets.cup_subset.given.all_subset.apply(Eq.subset)
 
     Eq << Eq[-1].apply(sets.el_cup.given.any_el)
 

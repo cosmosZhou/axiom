@@ -7,3 +7,4 @@ from . import lt_zero
 from . import iff
 from . import any
 from . import ou
+from . import is_odd

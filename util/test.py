@@ -1,8 +1,8 @@
 from util.search import read_all_py, axiom_directory
 from run import project_directory
 
-from util.cpp import instance as lib, vector
-from ctypes import c_char_p, c_void_p
+from util.cpp import instance as lib
+from ctypes import c_void_p
 from _ctypes import Structure
 from std.file import Text
 import re
@@ -106,6 +106,331 @@ def test_select_smaller():
     print((b >= x) | (a >= x))
     print((x <= b) | (a >= x))
     
+def assert_is_valid(A, B):
+    C = A - B
+    A = A.toset()
+    B = B.toset()
+    C = C.toset()
+    
+    for x in C:
+        assert x in A, f"assert {x} in A"
+        assert x not in B, f"assert {x} not in B"
+
+    for x in A:
+        assert (x in B) ^ (x in C), f"assert ({x} in B) ^ ({x} in C)" 
+
+def test_complement():
+    from sympy import Range
+    #[n, n) - [n, n)
+    assert_is_valid(Range(-100, 100), Range(-10, 10))
+    assert_is_valid(Range(-100, 100), Range(-10, 100))
+    assert_is_valid(Range(-100, 100), Range(-100, 10))
+    
+    assert_is_valid(Range(-100, 100), Range(-10, 200))
+    assert_is_valid(Range(-100, 100), Range(-200, 10))
+    
+    assert_is_valid(Range(-100, 100), Range(100, 200))
+    assert_is_valid(Range(-100, 100), Range(-200, -100))
+    
+    assert_is_valid(Range(-100, 100), Range(101, 200))
+    assert_is_valid(Range(-100, 100), Range(-200, -101))
+    
+    #[n, n) - [n, n, -1)
+    assert_is_valid(Range(-100, 100), Range(10, -10, -1))
+    assert_is_valid(Range(-100, 100), Range(10, -100, -1))
+    assert_is_valid(Range(-100, 100), Range(100, -10, -1))
+    
+    assert_is_valid(Range(-100, 100), Range(10, -200, -1))
+    assert_is_valid(Range(-100, 100), Range(200, -10, -1))
+    
+    assert_is_valid(Range(-100, 100), Range(200, 100, -1))
+    assert_is_valid(Range(-100, 100), Range(-100, -200, -1))
+    
+    assert_is_valid(Range(-100, 100), Range(200, 101, -1))
+    assert_is_valid(Range(-100, 100), Range(-101, -200, -1))
+    
+    #[n, n) - [even, even, 2)
+    assert_is_valid(Range(-100, 100), Range(-10, 10, 2))
+    assert_is_valid(Range(-100, 100), Range(-10, 100, 2))
+    assert_is_valid(Range(-100, 100), Range(-100, 10, 2))
+    
+    assert_is_valid(Range(-100, 100), Range(-10, 200, 2))
+    assert_is_valid(Range(-100, 100), Range(-200, 10, 2))
+    
+    assert_is_valid(Range(-100, 100), Range(100, 200, 2))
+    assert_is_valid(Range(-100, 100), Range(-200, -100, 2))
+    
+    assert_is_valid(Range(-100, 100), Range(102, 200, 2))
+    assert_is_valid(Range(-100, 100), Range(-200, -102, 2))
+    
+    #[n, n) - [even, odd, 2)
+    assert_is_valid(Range(-100, 100), Range(-10, 11, 2))
+    assert_is_valid(Range(-100, 100), Range(-10, 101, 2))
+    assert_is_valid(Range(-100, 100), Range(-100, 11, 2))
+    
+    assert_is_valid(Range(-100, 100), Range(-10, 201, 2))
+    assert_is_valid(Range(-100, 100), Range(-200, 11, 2))
+    
+    assert_is_valid(Range(-100, 100), Range(100, 201, 2))
+    assert_is_valid(Range(-100, 100), Range(-200, -101, 2))
+    
+    assert_is_valid(Range(-100, 100), Range(102, 201, 2))
+    assert_is_valid(Range(-100, 100), Range(-200, -103, 2))
+    
+    #[n, n) - [odd, even, 2)
+    assert_is_valid(Range(-100, 100), Range(-11, 10, 2))
+    assert_is_valid(Range(-100, 100), Range(-11, 100, 2))
+    assert_is_valid(Range(-100, 100), Range(-101, 10, 2))
+    
+    assert_is_valid(Range(-100, 100), Range(-11, 200, 2))
+    assert_is_valid(Range(-100, 100), Range(-201, 10, 2))
+    
+    assert_is_valid(Range(-100, 100), Range(101, 200, 2))
+    assert_is_valid(Range(-100, 100), Range(-201, -100, 2))
+    
+    assert_is_valid(Range(-100, 100), Range(101, 200, 2))
+    assert_is_valid(Range(-100, 100), Range(-201, -102, 2))
+
+    #[n, n) - [odd, odd, 2)
+    assert_is_valid(Range(-100, 100), Range(-11, 11, 2))
+    assert_is_valid(Range(-100, 100), Range(-11, 101, 2))
+    assert_is_valid(Range(-100, 100), Range(-101, 11, 2))
+    
+    assert_is_valid(Range(-100, 100), Range(-11, 201, 2))
+    assert_is_valid(Range(-100, 100), Range(-201, 11, 2))
+    
+    assert_is_valid(Range(-100, 100), Range(101, 201, 2))
+    assert_is_valid(Range(-100, 100), Range(-201, -101, 2))
+    
+    assert_is_valid(Range(-100, 100), Range(101, 201, 2))
+    assert_is_valid(Range(-100, 100), Range(-201, -103, 2))
+    
+    #[n, n) - [even, even, -2)
+    assert_is_valid(Range(-100, 100), Range(10, -10, -2))
+    assert_is_valid(Range(-100, 100), Range(100, -10, -2))
+    assert_is_valid(Range(-100, 100), Range(10, -100, -2))
+    
+    assert_is_valid(Range(-100, 100), Range(200, -10, -2))
+    assert_is_valid(Range(-100, 100), Range(10, -200, -2))
+    
+    assert_is_valid(Range(-100, 100), Range(200, 100, -2))
+    assert_is_valid(Range(-100, 100), Range(-100, -200, -2))
+
+    assert_is_valid(Range(-100, 100), Range(200, 102, -2))
+    assert_is_valid(Range(-100, 100), Range(-102, -200, -2))
+    
+    #[n, n) - [even, odd, -2)
+    assert_is_valid(Range(-100, 100), Range(10, -11, -2))
+    assert_is_valid(Range(-100, 100), Range(100, -11, -2))
+    assert_is_valid(Range(-100, 100), Range(10, -101, -2))
+    
+    assert_is_valid(Range(-100, 100), Range(200, -11, -2))
+    assert_is_valid(Range(-100, 100), Range(10, -201, -2))
+    
+    assert_is_valid(Range(-100, 100), Range(200, 101, -2))
+    assert_is_valid(Range(-100, 100), Range(-100, -201, -2))
+
+    assert_is_valid(Range(-100, 100), Range(200, 103, -2))
+    assert_is_valid(Range(-100, 100), Range(-102, -201, -2))
+    
+    #[n, n) - [odd, even, -2)
+    assert_is_valid(Range(-100, 100), Range(11, -10, -2))
+    assert_is_valid(Range(-100, 100), Range(101, -10, -2))
+    assert_is_valid(Range(-100, 100), Range(11, -100, -2))
+    
+    assert_is_valid(Range(-100, 100), Range(201, -10, -2))
+    assert_is_valid(Range(-100, 100), Range(11, -200, -2))
+    
+    assert_is_valid(Range(-100, 100), Range(201, 100, -2))
+    assert_is_valid(Range(-100, 100), Range(-101, -200, -2))
+
+    assert_is_valid(Range(-100, 100), Range(201, 102, -2))
+    assert_is_valid(Range(-100, 100), Range(-101, -200, -2))
+
+    #[n, n) - [odd, odd, -2)
+    assert_is_valid(Range(-100, 100), Range(11, -11, -2))
+    assert_is_valid(Range(-100, 100), Range(101, -11, -2))
+    assert_is_valid(Range(-100, 100), Range(11, -101, -2))
+    
+    assert_is_valid(Range(-100, 100), Range(201, -11, -2))
+    assert_is_valid(Range(-100, 100), Range(11, -201, -2))
+    
+    assert_is_valid(Range(-100, 100), Range(201, 101, -2))
+    assert_is_valid(Range(-100, 100), Range(-101, -201, -2))
+
+    assert_is_valid(Range(-100, 100), Range(201, 103, -2))
+    assert_is_valid(Range(-100, 100), Range(-101, -201, -2))
+
+    #[n, n, -1) - [n, n)
+    assert_is_valid(Range(100, -100, -1), Range(-10, 10))
+    assert_is_valid(Range(100, -100, -1), Range(-10, 100))
+    assert_is_valid(Range(100, -100, -1), Range(-100, 10))
+    
+    assert_is_valid(Range(100, -100, -1), Range(-10, 200))
+    assert_is_valid(Range(100, -100, -1), Range(-200, 10))
+    
+    assert_is_valid(Range(100, -100, -1), Range(100, 200))
+    assert_is_valid(Range(100, -100, -1), Range(-200, -100))
+    
+    assert_is_valid(Range(100, -100, -1), Range(101, 200))
+    assert_is_valid(Range(100, -100, -1), Range(-200, -101))
+    
+    #[n, n, -1) - [n, n, -1)
+    assert_is_valid(Range(100, -100, -1), Range(10, -10, -1))
+    assert_is_valid(Range(100, -100, -1), Range(10, -100, -1))
+    assert_is_valid(Range(100, -100, -1), Range(100, -10, -1))
+    
+    assert_is_valid(Range(100, -100, -1), Range(10, -200, -1))
+    assert_is_valid(Range(100, -100, -1), Range(200, -10, -1))
+    
+    assert_is_valid(Range(100, -100, -1), Range(200, 100, -1))
+    assert_is_valid(Range(100, -100, -1), Range(-100, -200, -1))
+    
+    assert_is_valid(Range(100, -100, -1), Range(200, 101, -1))
+    assert_is_valid(Range(100, -100, -1), Range(-101, -200, -1))
+    
+    #[n, n, -1) - [even, even, 2)
+    assert_is_valid(Range(100, -100, -1), Range(-10, 10, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-10, 100, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-100, 10, 2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(-10, 200, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-200, 10, 2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(100, 200, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-200, -100, 2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(102, 200, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-200, -102, 2))
+    
+    #[n, n, -1) - [even, odd, 2)
+    assert_is_valid(Range(100, -100, -1), Range(-10, 11, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-10, 101, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-100, 11, 2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(-10, 201, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-200, 11, 2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(100, 201, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-200, -101, 2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(102, 201, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-200, -103, 2))
+    
+    #[n, n, -1) - [odd, even, 2)
+    assert_is_valid(Range(100, -100, -1), Range(-11, 10, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-11, 100, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-101, 10, 2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(-11, 200, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-201, 10, 2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(101, 200, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-201, -100, 2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(101, 200, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-201, -102, 2))
+
+    #[n, n, -1) - [odd, odd, 2)
+    assert_is_valid(Range(100, -100, -1), Range(-11, 11, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-11, 101, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-101, 11, 2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(-11, 201, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-201, 11, 2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(101, 201, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-201, -101, 2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(101, 201, 2))
+    assert_is_valid(Range(100, -100, -1), Range(-201, -103, 2))
+    
+    #[n, n, -1) - [even, even, -2)
+    assert_is_valid(Range(100, -100, -1), Range(10, -10, -2))
+    assert_is_valid(Range(100, -100, -1), Range(100, -10, -2))
+    assert_is_valid(Range(100, -100, -1), Range(10, -100, -2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(200, -10, -2))
+    assert_is_valid(Range(100, -100, -1), Range(10, -200, -2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(200, 100, -2))
+    assert_is_valid(Range(100, -100, -1), Range(-100, -200, -2))
+
+    assert_is_valid(Range(100, -100, -1), Range(200, 102, -2))
+    assert_is_valid(Range(100, -100, -1), Range(-102, -200, -2))
+    
+    #[n, n, -1) - [even, odd, -2)
+    assert_is_valid(Range(100, -100, -1), Range(10, -11, -2))
+    assert_is_valid(Range(100, -100, -1), Range(100, -11, -2))
+    assert_is_valid(Range(100, -100, -1), Range(10, -101, -2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(200, -11, -2))
+    assert_is_valid(Range(100, -100, -1), Range(10, -201, -2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(200, 101, -2))
+    assert_is_valid(Range(100, -100, -1), Range(-100, -201, -2))
+
+    assert_is_valid(Range(100, -100, -1), Range(200, 103, -2))
+    assert_is_valid(Range(100, -100, -1), Range(-102, -201, -2))
+    
+    #[n, n, -1) - [odd, even, -2)
+    assert_is_valid(Range(100, -100, -1), Range(11, -10, -2))
+    assert_is_valid(Range(100, -100, -1), Range(101, -10, -2))
+    assert_is_valid(Range(100, -100, -1), Range(11, -100, -2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(201, -10, -2))
+    assert_is_valid(Range(100, -100, -1), Range(11, -200, -2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(201, 100, -2))
+    assert_is_valid(Range(100, -100, -1), Range(-101, -200, -2))
+
+    assert_is_valid(Range(100, -100, -1), Range(201, 102, -2))
+    assert_is_valid(Range(100, -100, -1), Range(-101, -200, -2))
+
+    #[n, n, -1) - [odd, odd, -2)
+    assert_is_valid(Range(100, -100, -1), Range(11, -11, -2))
+    assert_is_valid(Range(100, -100, -1), Range(101, -11, -2))
+    assert_is_valid(Range(100, -100, -1), Range(11, -101, -2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(201, -11, -2))
+    assert_is_valid(Range(100, -100, -1), Range(11, -201, -2))
+    
+    assert_is_valid(Range(100, -100, -1), Range(201, 101, -2))
+    assert_is_valid(Range(100, -100, -1), Range(-101, -201, -2))
+
+    assert_is_valid(Range(100, -100, -1), Range(201, 103, -2))
+    assert_is_valid(Range(100, -100, -1), Range(-101, -201, -2))
+
+
+    #[n, n) - [n, n, 3)
+    assert_is_valid(Range(-100, 100), Range(100, 200, 3))
+    assert_is_valid(Range(-100, 100), Range(-200, -100, 3))
+    
+    assert_is_valid(Range(-100, 100), Range(102, 200, 3))
+    assert_is_valid(Range(-100, 100), Range(-200, -102, 3))
+
+    #[n, n) - [n, n, -3)
+    assert_is_valid(Range(-100, 100), Range(200, 100, -3))
+    assert_is_valid(Range(-100, 100), Range(-102, -200, -3))
+
+    assert_is_valid(Range(-100, 100), Range(200, 102, -3))
+    assert_is_valid(Range(-100, 100), Range(-102, -200, -3))
+
+
+    #[n, n, -1) - [n, n, 3)
+    assert_is_valid(Range(100, -100, -1), Range(102, 200, 3))
+    assert_is_valid(Range(100, -100, -1), Range(-200, -100, 3))
+    
+    assert_is_valid(Range(100, -100, -1), Range(102, 200, 3))
+    assert_is_valid(Range(100, -100, -1), Range(-200, -102, 3))
+
+    #[n, n, -1) - [n, n, -3)
+    assert_is_valid(Range(100, -100, -1), Range(200, 100, -3))
+    assert_is_valid(Range(100, -100, -1), Range(-100, -200, -3))
+
+    assert_is_valid(Range(100, -100, -1), Range(200, 102, -3))
+    assert_is_valid(Range(100, -100, -1), Range(-102, -200, -3))
+
 def test_select_greater():
     from sympy import Symbol
     x = Symbol(real=True) 
@@ -166,5 +491,5 @@ def test_sparsemax():
     print(z == _z)
     
 if __name__ == '__main__':
-    test_select_smaller()
+    test_complement()
 #     test_select_greater()

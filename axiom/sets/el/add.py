@@ -3,6 +3,7 @@ from util import *
 
 @apply
 def apply(self, t):
+    t = sympify(t)
     e, interval = self.of(Element)
 
     return Element(e + t, interval + t)
@@ -19,7 +20,10 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this.lhs.apply(sets.el.imply.el.add, t), Eq[-1].this.lhs.apply(sets.el.given.el.add, t)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2020-02-27
+# updated on 2023-05-31

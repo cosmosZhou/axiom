@@ -1,21 +1,16 @@
 from util import *
 
 
-@apply
-def apply(self, swap=False):
-    ecs, _ecs = self.of(Piecewise + Piecewise)
-    if swap:
-        ecs, _ecs = _ecs, ecs
+def __add__(lhs, rhs, deep, simplify):
+    if deep and lhs.is_Piecewise and rhs.is_Piecewise:
+        return add(lhs.args, rhs.args, deep, simplify)
 
-    rhs = add(ecs, _ecs)
-    if rhs.is_Piecewise:
-        from axiom.algebra.piece.flatten import flatten
-        rhs = flatten(rhs)
-        
-    return Equal(self, rhs, evaluate=False)
+    ret = lhs + rhs
+    if simplify:
+        ret = ret.simplify()
+    return ret
 
-
-def add(ecs, _ecs):
+def add(ecs, _ecs, deep, simplify):
     piece = []
     u = S.true
     for e, c in ecs:
@@ -25,17 +20,36 @@ def add(ecs, _ecs):
         for _e, _c in _ecs:
             _c_ = _c & _u
             _c_ = c_ & _c_
-            if _c_.is_BooleanFalse:
+            if _c_ == False:
                 continue
-            args.append([(e + _e).simplify(), _c])
+            args.append([__add__(e, _e, deep, simplify), _c])
             _u &= _c.invert()
+            
         if len(args) == 1:
             piece.append((args[-1][0], c))
         else:
             args[-1][-1] = True
-            piece.append((Piecewise(*args).simplify(), c))
+            e = Piecewise(*args)
+            if simplify:
+                e = e.simplify()
+            piece.append((e, c))
         u &= c.invert()
+
     return Piecewise(*piece)
+
+@apply
+def apply(self, swap=False, deep=False, *, simplify=True):
+    ecs, _ecs = self.of(Piecewise + Piecewise)
+    if swap:
+        ecs, _ecs = _ecs, ecs
+
+    rhs = add(ecs, _ecs, deep=deep, simplify=simplify)
+    if simplify and rhs.is_Piecewise:
+        from axiom.algebra.piece.unnest import flatten
+        rhs = flatten(rhs)
+
+    return Equal(self, rhs, evaluate=False)
+
 
 
 @prove
@@ -53,12 +67,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.args[1].find(Add).apply(algebra.add.to.piece)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.unnest)
 
+    
     
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-02-23
-# updated on 2023-05-12
+# updated on 2023-06-02

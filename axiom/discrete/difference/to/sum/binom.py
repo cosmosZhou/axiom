@@ -2,9 +2,10 @@ from util import *
 
 
 @apply
-def apply(self):
+def apply(self, k=None):
     fx, x, n = self.of(Difference)
-    k = fx.generate_var(x.free_symbols | n.free_symbols, integer=True)
+    if k is None:
+        k = fx.generate_var(x.free_symbols | n.free_symbols, integer=True)
     return Equal(self, Sum[k:0:n + 1]((-1) ** (n - k) * binomial(n, k) * fx.subs(x, x + k)))
 
 
@@ -68,4 +69,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2020-10-10
-# updated on 2023-05-20
+# updated on 2023-06-03

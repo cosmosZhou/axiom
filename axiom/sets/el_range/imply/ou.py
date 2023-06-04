@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.rhs.apply(sets.range.to.finiteset)
 
-    Eq << sets.el_finiteset.imply.ou.apply(Eq[-1])
+    Eq << sets.el_finiteset.imply.ou.eq.apply(Eq[-1])
 
 
 if __name__ == '__main__':

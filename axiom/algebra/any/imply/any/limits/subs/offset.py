@@ -2,9 +2,9 @@ from util import *
 
 
 @apply
-def apply(self, offset):
+def apply(self, index=0, offset=None):
     from axiom.algebra.sum.limits.subs.offset import limits_subs
-    return limits_subs(Any, self, offset)
+    return limits_subs(Any, self, index, offset)
 
 
 @prove

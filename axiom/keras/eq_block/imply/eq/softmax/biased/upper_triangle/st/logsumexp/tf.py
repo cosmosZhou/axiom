@@ -74,7 +74,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Add[Piecewise]).apply(algebra.add.to.piece)
 
-    Eq << Eq[-1].this.rhs.find(Piecewise).apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.rhs.find(Piecewise).apply(algebra.piece.unnest)
 
     Eq.lower_part = Eq[-1].this.rhs.apply(algebra.lamda.piece.to.block)
 

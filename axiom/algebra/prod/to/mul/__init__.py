@@ -25,3 +25,5 @@ from . import shift
 from . import pop
 from . import unshift
 from . import push
+from . import neg
+from . import scale

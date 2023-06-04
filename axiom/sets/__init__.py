@@ -104,3 +104,9 @@ from . import subset_range
 from . import supset_cup
 from . import subset_cup
 from . import intersect_finiteset
+from . import eq_ceiling
+from . import eq_floor
+from . import card
+from . import cup_subset
+from . import any_subset
+from . import subset_union

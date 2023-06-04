@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(sets.range.to.finiteset)
 
-    Eq << sets.el_finiteset.imply.ou.apply(Eq[-1])
+    Eq << sets.el_finiteset.imply.ou.eq.apply(Eq[-1])
 
     Eq << algebra.cond.ou.imply.cond.apply(Eq[0], Eq[-1])
 

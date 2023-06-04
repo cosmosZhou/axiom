@@ -7,4 +7,3 @@ from . import all_el
 from . import el
 from . import all
 from . import all_et
-from . import eq

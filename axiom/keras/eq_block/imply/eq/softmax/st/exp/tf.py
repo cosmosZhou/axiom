@@ -121,9 +121,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element[Symbol]).apply(sets.el.sub, i, simplify=None)
 
-    Eq << Eq[-1].this.rhs.args[1].apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.rhs.args[1].apply(algebra.piece.unnest)
 
-    Eq << Eq[-1].this.rhs.args[1].apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.rhs.args[1].apply(algebra.piece.unnest)
 
     Eq << Eq[-1].this.rhs.args[0].apply(algebra.piece.swap, 1)
 

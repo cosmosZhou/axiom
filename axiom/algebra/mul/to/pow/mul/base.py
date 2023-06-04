@@ -8,6 +8,13 @@ def determine_args(args, simplify):
         if arg.is_Pow:
             b, e = arg.args
             if e not in e2b:
+                if -e in e2b:
+                    if e._coeff_isneg():
+                        e2b[-e].append(1 / b)
+                    else:
+                        e2b[e] = [b, *[1 / b for b in e2b[-e]]]
+                        del e2b[-e]
+                    continue
                 e2b[e] = []
             e2b[e].append(b)
         else:

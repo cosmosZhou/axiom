@@ -39,7 +39,6 @@ def prove(Eq):
     Eq << apply(Add(BlockMatrix(A, B), BlockMatrix(C, D)))
 
     i = Symbol(domain=Range(m * 2))
-    j = Symbol(domain=Range(n))
     Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
 
     Eq << Eq[-1].this.lhs.apply(algebra.add_piece.to.piece)

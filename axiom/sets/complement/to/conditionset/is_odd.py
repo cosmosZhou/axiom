@@ -39,7 +39,7 @@ def prove(Eq):
 
     Eq << algebra.et.imply.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[0].apply(algebra.mod_ne_zero.imply.is_odd)
+    Eq << Eq[-1].this.args[0].apply(algebra.ne_zero.imply.is_odd)
 
     Eq.all_contains_in_A = All[n:B](Element(n, A), plausible=True)
 

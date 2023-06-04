@@ -16,12 +16,12 @@ def apply(self):
 def prove(Eq):
     from axiom import algebra
 
-    x = Symbol(real=True, shape=(oo, oo))
+    x = Symbol(complex=True, shape=(oo, oo))
     i, j = Symbol(integer=True)
     n = Symbol(integer=True, nonnegative=True, given=False)
     Eq << apply(Sum[j:n, i:n](x[i, j]))
 
-    Eq << Eq[0].subs(n, 0)
+    
 
     Eq << Eq[0].subs(n, n + 1)
 
@@ -47,12 +47,12 @@ def prove(Eq):
 
     Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n, 0)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-04-19
-# updated on 2023-05-02
+# updated on 2023-05-25
 from . import triple

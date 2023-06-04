@@ -18,7 +18,7 @@ def prove(Eq):
     d = Symbol(integer=True, positive=True)
     Eq << apply(n % d)
 
-    Eq << Eq[0].this.lhs.apply(algebra.mod.to.add)
+    Eq << Eq[0].this.lhs.apply(algebra.mod.to.sub)
 
     Eq << sets.el_range.given.et.apply(Eq[-1])
 

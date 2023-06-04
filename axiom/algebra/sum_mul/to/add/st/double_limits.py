@@ -15,7 +15,7 @@ def prove(Eq):
     from axiom import algebra
 
     i, j = Symbol(integer=True)
-    n = Symbol(integer=True, positive=True, given=False)
+    n = Symbol(integer=True, positive=True)
     x = Symbol(real=True, shape=(oo,))
     Eq << apply(Sum[j:i, i:n](x[i] * x[j]))
 
@@ -23,7 +23,10 @@ def prove(Eq):
 
     Eq << Eq[0].subs(Eq[-1])
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-11-12
+# updated on 2023-06-02

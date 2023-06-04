@@ -23,7 +23,7 @@ def prove(Eq):
     x = Symbol(integer=True)
     Eq << apply(Equal(x % 3, 1), Element(x, {-2, -1, 0, 1, 2}))
 
-    Eq << sets.el_finiteset.imply.ou.apply(Eq[1])
+    Eq << sets.el_finiteset.imply.ou.eq.apply(Eq[1])
 
     Eq <<= Eq[-1] & Eq[0]
 
@@ -39,8 +39,8 @@ def prove(Eq):
 
     Eq << sets.ou_eq.imply.el.finiteset.apply(Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

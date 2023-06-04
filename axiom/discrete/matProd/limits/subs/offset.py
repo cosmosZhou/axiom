@@ -2,9 +2,9 @@ from util import *
 
 
 @apply
-def apply(self, offset):
+def apply(self, index=0, offset=None):
     from axiom.algebra.sum.limits.subs.offset import limits_subs
-    return Equal(self, limits_subs(MatProduct, self, offset), evaluate=False)
+    return Equal(self, limits_subs(MatProduct, self, index, offset), evaluate=False)
 
 
 @prove

@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self):
     n, d = self.of(Ceiling[Expr / Expr] - 1)
-    return Equal(self, (n - 1) // d)
+    return Equal(self, (n - sign(d)) // d)
 
 
 @prove
@@ -18,7 +18,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(Floor).apply(algebra.floor.to.add.quotient)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2018-08-11
+# updated on 2023-05-29

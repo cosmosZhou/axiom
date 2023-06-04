@@ -10,9 +10,8 @@ def apply(x, y, a, b):
 @prove
 def prove(Eq):
     from axiom import algebra
+
     x, y, a, b = Symbol(real=True)
-
-
     Eq << apply(x, y, a, b)
 
     Eq << Eq[-1].this.rhs.args[0].apply(algebra.mul.to.abs)
@@ -23,10 +22,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[0].arg.expand()
 
-    Eq << algebra.imply.le.abs.add.apply(Eq[-1].rhs.args[0].arg, Eq[-1].rhs.args[1].arg)
+    Eq << algebra.imply.add_ge.abs.apply(Eq[-1].rhs)
+
+    Eq << Eq[-1].reversed
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2019-10-01
+# updated on 2023-06-03

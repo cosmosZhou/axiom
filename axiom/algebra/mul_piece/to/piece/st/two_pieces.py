@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self):
     piece0, piece1 = self.of(Mul)
-    from axiom.algebra.piece.flatten import flatten
+    from axiom.algebra.piece.unnest import flatten
     return Equal(self, flatten(mul(piece0, piece1)))
 
 
@@ -46,7 +46,7 @@ def prove(Eq):
 
 
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.unnest)
 
 
 

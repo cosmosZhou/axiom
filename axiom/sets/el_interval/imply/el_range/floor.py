@@ -29,15 +29,15 @@ def prove(Eq):
 
     Eq << sets.el_interval.imply.el_range.ceiling.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.ceiling.to.mul)
+    Eq << Eq[-1].this.lhs.apply(algebra.ceiling.to.neg.floor)
 
     Eq << sets.el.imply.el.neg.apply(Eq[-1])
 
-    Eq << Eq[-1].this.find(-~Ceiling).apply(algebra.ceiling.to.mul)
+    Eq << Eq[-1].this.find(-~Ceiling).apply(algebra.ceiling.to.neg.floor)
 
-    Eq << Eq[-1].this.find(-~Floor).apply(algebra.floor.to.mul.ceiling)
+    Eq << Eq[-1].this.find(-~Floor).apply(algebra.floor.to.neg.ceiling)
 
-    
+
 
 
 if __name__ == '__main__':

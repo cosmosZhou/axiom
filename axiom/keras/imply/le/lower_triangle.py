@@ -32,7 +32,6 @@ def prove(Eq):
     Eq << Eq[-1].this.find(LessEqual[ZeroMatrix]).apply(algebra.le_zero.given.le)
 
     Eq << Eq[-1].this.find(LessEqual[BlockMatrix]).apply(algebra.block_le.given.et.le)
-
     Eq.ou = Eq[-1].this.find(LessEqual[Mul, logsumexp]).apply(algebra.le.given.all.le)
 
     Eq <<= keras.imply.le.logsumexp.apply(Eq.ou.find(Sliced)), keras.imply.le.logsumexp.apply(Eq.ou.args[1].find(Sliced))
@@ -52,4 +51,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-03-31
-# updated on 2023-05-20
+# updated on 2023-05-25

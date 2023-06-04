@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(sets.range.to.finiteset)
 
-    
+
 
 
 if __name__ == '__main__':

@@ -38,3 +38,5 @@ from . import eq_conditioned
 from . import matmul
 from . import eq_expect
 from . import is_finite
+from . import matmul_softmax
+from . import eq_add

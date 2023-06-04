@@ -38,11 +38,11 @@ def prove(Eq):
 
     Eq << Eq.Ξ_definition.this.rhs.args[-1].expr.apply(algebra.kroneckerDelta.to.piece)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest)
 
     Eq << Eq[-1].this.rhs.args[0].expr.apply(algebra.kroneckerDelta.to.piece)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.flatten, index=0)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest, index=0)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.swap, -2)
 
@@ -66,8 +66,8 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq[1].reversed)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

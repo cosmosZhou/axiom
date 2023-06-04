@@ -53,6 +53,7 @@ def prove(Eq):
                 x, w, r)
 
     Eq.M_def = Eq[0].this.find(Element).apply(sets.el_range.to.et).this.find(Element).apply(sets.el_range.to.et).this.find(Element).apply(sets.el_range.to.et)
+
     Eq << Eq[1].rhs.find(conv3d).this.defun()
 
     d0 = Symbol((l[0] - 1) // 2 * r[0] + (r[0] // 2) * (1 - l[0] % 2))
@@ -73,19 +74,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.piece)
 
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.ripple, var=i)
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.nest, pivot=slice(3, None, -3))#deselect cond with i
 
-    Eq << Eq[-1].this.find(Piecewise, Piecewise).apply(algebra.piece.ripple, var=j)
-
-
-
-
-
-
+    Eq << Eq[-1].this.find(Piecewise, Piecewise).apply(algebra.piece.nest, pivot=slice(1, None, 2))#select cond with j
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.split.piece).this.find(Sum).apply(algebra.sum.limits.split.piece)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.split.by_parts)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.separate, evaluate=True)
 
     Eq << Eq[-1].this.find(Min, Add[Min]).apply(algebra.add.to.min).this.find(Min, Add[Min]).apply(algebra.add.to.min).this.find(Min, Add[Min]).apply(algebra.add.to.min)
 
@@ -122,7 +117,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Piecewise, Piecewise, Piecewise).apply(algebra.piece.swap)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest)
 
     Eq << Eq[-1].this.find(-Floor).apply(algebra.mul.to.ceiling).this.find(-Floor).apply(algebra.mul.to.ceiling).this.find(-Floor).apply(algebra.mul.to.ceiling)
 
@@ -136,11 +131,11 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(C.this.definition, C_quote.this.definition)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-01-02
-# updated on 2022-01-23
+# updated on 2023-06-02

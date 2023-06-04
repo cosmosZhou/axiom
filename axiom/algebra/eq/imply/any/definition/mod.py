@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << apply(Equal(n % d, r))
 
-    Eq << Eq[0].this.lhs.apply(algebra.mod.to.add)
+    Eq << Eq[0].this.lhs.apply(algebra.mod.to.sub)
 
     Eq << Eq[-1] + n // d * d
 

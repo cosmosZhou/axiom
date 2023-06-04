@@ -13,6 +13,7 @@ def prove(Eq):
     from axiom import algebra, calculus, discrete, sets
 
     n, k = Symbol(integer=True)
+    #n = Symbol(integer=True, nonnegative=True)
     C = Symbol(shape=(oo,), integer=True)
     Eq << apply(Equal(C[0], 1),
                 Equal(C[n + 1], Sum[k:n + 1](C[k] * C[n - k])))
@@ -139,9 +140,7 @@ def prove(Eq):
 
     Eq << calculus.pow.to.sum.binom.apply((1 - 4 * x) ** (S.One / 2), n=n)
 
-    Eq << discrete.binom.to.mul.half.apply(n)
-
-    Eq << algebra.eq.cond.imply.cond.subs.apply(Eq[-1], Eq[-2])
+    Eq << Eq[-1].this.rhs().find(Binomial).apply(discrete.binom.to.mul.half)
 
     Eq << Eq[-1].this.rhs.args[1].expr.powsimp()
 
@@ -157,13 +156,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul).apply(algebra.mul.distribute)
 
-    Eq.g_series = Eq[-1].this.find(Mul).apply(algebra.div.cancel, 2)
+    Eq << Eq[-1].this.find(Mul).apply(algebra.div.cancel, 2)
 
-    Eq << discrete.mul.binom.fraction.apply(2 * n + 2, n + 1)
+    Eq << Eq[-1].this.find(Binomial).apply(discrete.binom.to.div.binom.decrease)
 
-    Eq << Eq[-1].this.rhs.args[-1].apply(discrete.binom.to.mul.binom) * (2 * n + 2)
-
-    Eq << algebra.eq.cond.imply.cond.subs.apply(Eq[-1], Eq.g_series)
+    Eq << Eq[-1].this.find(Binomial).apply(discrete.binom.to.div.binom)
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul.to.sum)
 
@@ -181,4 +178,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2020-10-21
-# updated on 2023-05-14
+# updated on 2023-06-03

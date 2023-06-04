@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.expr.apply(sets.union.to.piece, simplify=None)
 
-    Eq << Eq[-1].this.lhs.expr.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.lhs.expr.apply(algebra.piece.unnest)
 
 
 if __name__ == '__main__':

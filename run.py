@@ -197,7 +197,9 @@ def prove_with_timing(module, **kwargs):
 
 
 def tackle_type_error(package, debug=True):
-    if not import_module(package).is_FunctionClass:
+    module = import_module(package)
+    from types import ModuleType
+    if not isinstance(module, ModuleType) and not module.is_FunctionClass:
         return
     
     print("package =", package)
@@ -519,7 +521,10 @@ def post_process(result):
             latex = ''
             assert state is RetCode.failed
             
-        data.append((user, package, state, lapse, latex))
+        if state is RetCode.slow:
+            print(f"{package} is not added to the data since it is not modified!")
+        else:
+            data.append((user, package, state, lapse, latex))
             
         if state is RetCode.plausible:
             Globals.plausible.append((file, MySQL.instance.url_address(package)))
@@ -583,7 +588,17 @@ def args_kwargs(argv):
             args.append(arg)
     return args, kwargs
 
+def retry(package):
+    from util.search import module_to_py
+    file = module_to_py(package)
+    __init__ = dirname(file) + '/__init__.py'
+    bn = basename(file)[:-3]
+    for line in Text(__init__):
+        if re.match('from \. import %s' % bn, line):
+            return post_process_returns(run(package, debug=False))
 
+    return RetCode.failed, None, None
+    
 def post_process_returns(returns):
     for line in returns:
         m = re.match(r"seconds costed = (\d+\.\d+)", line)
@@ -628,30 +643,29 @@ def run_with_module(*modules, debug=True):
             module = import_module(package)
             
             if module is None:
-                state = RetCode.failed
                 file = project_directory() + '/' + package.replace('.', '/') + '.py'
-                lapse = None
-                latex = None
+                args = RetCode.failed, None, None
             else: 
                 try:
-                    state, lapse, latex = prove_with_timing(module, debug=debug, slow=True)
+                    args = prove_with_timing(module, debug=debug, slow=True)
                     file = module.__file__
                 except AttributeError as e:
-                    if re.match("module '[\w.]+' has no attribute 'prove'", str(e)) or re.match("'function' object has no attribute 'prove'", str(e)):
-                        from util.search import module_to_py
-                        file = module_to_py(package)
-                        __init__ = dirname(file) + '/__init__.py'
-                        bn = basename(file)[:-3]
-                        for line in Text(__init__):
-                            if re.match('from \. import %s' % bn, line):
-                                state, lapse, latex = post_process_returns(run(package, debug=False))
-                                break
+                    if re.match("'function' object has no attribute 'prove'", str(e)):
+                        args = retry(package)
+
+                    elif m := re.match("module '([\w.]+)' has no attribute 'prove'", str(e)):
+                        if m[1].startswith('sympy.'):
+                            args = post_process_returns(tackle_type_error(package, False))
+                        else:
+                            args = retry(package)
+
                     elif re.match("type object '[\w.]+' has no attribute 'prove'", str(e)):
-                        state, lapse, latex = post_process_returns(tackle_type_error(package, False))
+                        args = post_process_returns(tackle_type_error(package, False))
+
                     else: 
                         continue
                 
-            yield package, file, state, lapse, latex
+            yield package, file, *args
 
     for args in post_process(generator()):
         print('\v'.join((str(arg) for arg in args)).encode(encoding='utf8'))

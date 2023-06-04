@@ -41,3 +41,5 @@ from . import eq_acot
 from . import eq_asec
 from . import eq_acsc
 from . import lamda_piece
+from . import sign
+from . import sub

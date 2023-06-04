@@ -56,13 +56,11 @@ def apply(self, simplify=True):
 @prove(provable=False)
 def prove(Eq):
     i, j = Symbol(integer=True)
-    n = Symbol(integer=True, positive=True, given=False)
-    C = Symbol(etype=dtype.integer, given=True)
+    n = Symbol(integer=True, positive=True)
     f, h = Function(real=True)
-    x = Symbol(shape=(n,), real=True)
-    y = Symbol(shape=(n, n), real=True)
-    #Eq << apply(Sum[i:C, j](f(i) + x[i] + h(j) + x[j] + y[i, j]))
     Eq << apply(Sum[i:n](f(i) + h(i)))
+
+    
 
 
 if __name__ == '__main__':
@@ -76,3 +74,6 @@ from . import shift
 from . import pop
 from . import unshift
 from . import push
+# updated on 2023-06-02
+from . import by_parts
+from . import Abel

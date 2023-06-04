@@ -1,5 +1,6 @@
 from util import *
 
+
 # given: |A| >= 1
 # A != {}
 
@@ -13,7 +14,7 @@ def apply(lt, ge):
         a += 1
         b += 1
 
-    assert x.is_integer
+    assert x.is_super_integer
     return Element(x, Range(b, a))
 
 
@@ -27,13 +28,13 @@ def prove(Eq):
 
     Eq << sets.el_range.given.et.apply(Eq[-1])
 
-
-
     #Eq << Eq[-1].reversed
     #Eq << Eq[-2].reversed
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-03-20
+# updated on 2023-05-26

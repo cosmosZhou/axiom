@@ -16,9 +16,9 @@ def prove(Eq):
     x = Symbol(complex=True)
     Eq << apply(Unequal(x, 0), Element(x, Reals))
 
-    Eq << sets.ne.el.imply.el.apply(Eq[0], Eq[1])
+    Eq << sets.ne.el.imply.el.complement.apply(Eq[0], Eq[1])
 
-    
+
 
 
 if __name__ == '__main__':

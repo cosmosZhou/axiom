@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.mul_piece.to.piece)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.unnest)
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.swap, -2)
 
@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.args[0].expr.apply(algebra.mul.to.piece.et.ne_zero)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.flatten, index=0)
+    Eq << Eq[-1].this.lhs.apply(algebra.piece.unnest, index=0)
 
     Eq << Eq[-1].this.lhs.args[0].cond.apply(algebra.et.to.ou)
 
@@ -85,8 +85,8 @@ def prove(Eq):
 
     Eq << algebra.iff.imply.eq.subs.apply(Eq.equivalent, Eq.equal.lhs)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

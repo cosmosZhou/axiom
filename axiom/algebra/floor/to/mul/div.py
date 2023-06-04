@@ -15,9 +15,9 @@ def prove(Eq):
     n, d = Symbol(integer=True)
     Eq << apply(n // d)
 
-    Eq << Eq[0].this.find(Mod).apply(algebra.mod.to.add)
+    Eq << Eq[0].this.find(Mod).apply(algebra.mod.to.sub)
 
-    
+
 
 
 if __name__ == '__main__':

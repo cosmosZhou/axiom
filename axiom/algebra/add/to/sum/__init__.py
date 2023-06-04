@@ -4,16 +4,15 @@ from util import *
 def piece_together(Sum, self):
     function = []
     limits = None
-    for arg in self.args:
-        assert isinstance(arg, Sum)
-
+    for arg in self.of(Sum.operator):
+        arg_expr, *arg_limits = arg.of(Sum)
         if limits is None:
-            limits = arg.limits
-            func = arg.expr
+            limits = arg_limits
+            func = arg_expr
         else:
             i = -1
-            while i >= -len(limits) and i >= -len(arg.limits):
-                if limits[i] == arg.limits[i]:
+            while i >= -len(limits) and i >= -len(arg_limits):
+                if limits[i] == arg_limits[i]:
                     i -= 1
                     continue
                 else:
@@ -24,15 +23,15 @@ def piece_together(Sum, self):
             assert i < 0
 
             inner_limits, limits = limits[:i], limits[i:]
-            _inner_limits = arg.limits[:i]
+            _inner_limits = arg_limits[:i]
 
             if inner_limits:
                 function = [Sum(f, *inner_limits) for f in function]
 
             if _inner_limits:
-                func = Sum(arg.expr, *_inner_limits)
+                func = Sum(arg_expr, *_inner_limits)
             else:
-                func = arg.expr
+                func = arg_expr
 
         function.append(func)
 
@@ -40,7 +39,21 @@ def piece_together(Sum, self):
 
 @apply
 def apply(self):
-    return Equal(self, piece_together(Sum, self))
+    [*args] = self.of(Add)
+    hit = False
+    for i, arg in enumerate(args):
+        if arg.is_Mul:
+            coeff, (arg_expr, *arg_limits) = arg.of(Expr * Sum)
+            arg_expr *= coeff
+            args[i] = Sum(arg_expr, *arg_limits)
+            hit = True
+            
+    if hit:
+        rhs = Add(*args)
+    else:
+        rhs = self
+
+    return Equal(self, piece_together(Sum, rhs))
 
 
 @prove

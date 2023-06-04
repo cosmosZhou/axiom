@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.shift)
 
-    Eq << Eq[-1].this.lhs().find(Binomial).apply(discrete.binom.to.mul.binom)
+    Eq << Eq[-1].this.lhs().find(Binomial).apply(discrete.binom.to.div.binom)
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.subs.offset, 1)
 
@@ -26,8 +26,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum).apply(discrete.sum_binom.to.pow.Newton)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

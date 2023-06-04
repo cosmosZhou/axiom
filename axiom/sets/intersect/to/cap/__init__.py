@@ -4,8 +4,6 @@ from util import *
 @apply
 def apply(self):
     from axiom.algebra.add.to.sum import piece_together
-    assert self.is_Intersection
-
     return Equal(self, piece_together(Cap, self))
 
 

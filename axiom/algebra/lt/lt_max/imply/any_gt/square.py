@@ -40,8 +40,8 @@ def prove(Eq):
         Eq[-2].this.rhs.args[::2].apply(algebra.ge_zero.lt.imply.eq.max, ret=slice(None)), \
         Eq[-1].this.apply(algebra.infer.contraposition)
 
-    Eq <<= Eq[-5].this.rhs.rhs.apply(algebra.et.imply.cond, index=slice(None, 4, 2), invert=True, simplify=None), \
-        Eq[-4].this.rhs.rhs.apply(algebra.et.imply.cond, index=slice(None, None, 3), invert=True, simplify=None), \
+    Eq <<= Eq[-5].this.rhs.rhs.apply(algebra.et.imply.cond, index=slice(2, None, -2), simplify=None), \
+        Eq[-4].this.rhs.rhs.apply(algebra.et.imply.cond, index=slice(3, None, -3), simplify=None), \
         Eq[-3].this.rhs.args[:3].apply(algebra.le_zero.lt.lt.imply.any_gt.square), \
         Eq[-2].this.rhs.args[::2].apply(algebra.eq.cond.imply.cond.subs), \
         algebra.infer.given.cond.apply(Eq[-1]).reversed

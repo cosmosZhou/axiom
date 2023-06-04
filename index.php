@@ -240,6 +240,9 @@ if (! \std\endsWith($path_info, '/')) {
 
                 if (array_key_exists('unused', $dict)) {
                     $class = '"comment unused"';
+                } elseif ($inputs && has_unterminated_parantheses(end($inputs))) {
+                    $inputs[count($inputs) - 1] .= "\n$statement";
+                    continue;
                 } else {
                     $class = "comment";
                     if ($dict) {

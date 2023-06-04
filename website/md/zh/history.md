@@ -47,4 +47,11 @@ Mathematica, [Matlab](https://www.mathworks.com/products/matlab.html), sympy; �
 中文资料：https://mp.weixin.qq.com/s/ZFpVpi7BsJME6uXi_2IcrQ  
 
 这个研究为通用数学题的机器求解提供了很好的思路，就是：将数学问题用形式语言精确表达出来，构建一个庞大的训练数据集，然后用transformer训练一个序列转序列的神经网络，同时结合符号推理的算法，预测推算出需要调用定理的序列，从而实现通用数学命题的机器证明。  
+
+--------
+在2023年, openAI公布了自动数学证明的数据集80万。  
+https://openai.com/research/improving-mathematical-reasoning-with-process-supervision  
+https://arxiv.org/abs/2305.20050  
+
+
 当然也面临很多问题，比如其中的难题就是：通用数学命题的自动证明并不是一个单纯的已知定理序列的预测过程，因为每个定理在调用时，我们往往要对参数进行一定的调整，这不光是一个序列预测的问题。

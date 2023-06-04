@@ -9,13 +9,14 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    x, a = Symbol(integer=True, given=True)
-
+    x, a = Symbol(real=True, given=True)
     Eq << apply(x <= a)
 
     Eq << ~Eq[0]
 
     Eq <<= Eq[-1] & Eq[1]
+
+    
 
 
 if __name__ == '__main__':
@@ -23,3 +24,4 @@ if __name__ == '__main__':
 
 from . import one
 # created on 2021-08-18
+# updated on 2023-06-02

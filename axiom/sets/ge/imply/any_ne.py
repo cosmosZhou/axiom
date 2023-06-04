@@ -31,9 +31,9 @@ def prove(Eq):
     i = Eq[-1].variable
     Eq << Eq[-1].this.expr.apply(sets.eq.imply.eq.card)
 
-    Eq << sets.imply.eq.principle.add.apply(S, i.set)
+    Eq << Eq[-1].this.find(Card).apply(sets.card.to.add)
 
-    Eq << Eq[-2].subs(Eq[-1])
+    
 
     Eq << Eq[-1].this.expr - 1
 
@@ -52,8 +52,11 @@ def prove(Eq):
 
     Eq << algebra.all_eq.any.imply.any.subs.apply(Eq[-1], Eq[-2])
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-07-15
+# updated on 2023-06-01

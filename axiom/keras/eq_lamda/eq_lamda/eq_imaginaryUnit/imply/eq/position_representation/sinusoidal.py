@@ -59,7 +59,7 @@ def prove(Eq):
 
     Eq << Eq.PE_definition.find(cos).this.arg.apply(algebra.mul.to.add)
 
-    Eq <<= Eq[-2].this.rhs.apply(geometry.sin.to.add.principle), Eq[-1].this.rhs.apply(geometry.cos.to.add.principle)
+    Eq <<= Eq[-2].this.rhs.apply(geometry.sin.to.add), Eq[-1].this.rhs.apply(geometry.cos.to.sub)
 
     Eq.cossin = Eq.PE_definition.this.rhs.subs(Eq[-2], Eq[-1])
 
@@ -85,7 +85,7 @@ def prove(Eq):
 
     Eq << Eq.PE_quote_definition.find(sin).this.arg.apply(algebra.mul.to.add)
 
-    Eq <<= Eq[-2].this.rhs.apply(geometry.cos.to.add.principle), Eq[-1].this.rhs.apply(geometry.sin.to.add.principle)
+    Eq <<= Eq[-2].this.rhs.apply(geometry.cos.to.sub), Eq[-1].this.rhs.apply(geometry.sin.to.add)
 
     Eq <<= algebra.eq.eq.imply.eq.transit.apply(Eq[-4], Eq[-2])
 

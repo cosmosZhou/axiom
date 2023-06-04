@@ -532,8 +532,14 @@ def run():
         sql = 'update axiom set state = "%s", lapse = %s, latex = %s where user = "%s" and axiom = "%s"' % (state, lapse, json_encode(latex), user, package)
         # print(sql)
     except AttributeError as e: 
-        if re.match("module '[\w.]+' has no attribute 'prove'", str(e)) or re.match("'function' object has no attribute 'prove'", str(e)):
-            raise e
+        if re.match("'function' object has no attribute 'prove'", str(e)):
+            raise e        
+        if m := re.match("module '([\w.]+)' has no attribute 'prove'", str(e)):
+            if m[1].startswith('sympy.'):
+                if tackle_type_error(package):
+                    return
+            else:
+                raise e
         elif re.match("type object '[\w.]+' has no attribute 'prove'", str(e)):
             if tackle_type_error(package):
                 return
@@ -894,12 +900,18 @@ def slow(func):
             axiomPath = py_to_module(func.__code__.co_filename, '.')
             try:
                 from std import MySQL
-                [[latex]] = MySQL.instance.select(f"select latex from axiom where user = '{user}' and axiom = '{axiomPath}'")            
-                return RetCode.slow, latex
-            except ValueError:
+                [[latex]] = MySQL.instance().query(f"select latex from axiom where user = '{user}' and axiom = '{axiomPath}'")
+                if latex:
+                    return RetCode.slow, latex
                 return _prove(func, **kwargs)
-            except:
-                print(axiomPath, "is too slow to execute, so skipping")
+            except ValueError as e:
+                print(e)
+                traceback.print_exc()
+                return _prove(func, **kwargs)
+            except Exception as e:
+                print(e)
+                traceback.print_exc()
+                print(f"python run.py {axiomPath}\nis too slow to execute, so skipping, try it manually")
                 return RetCode.slow, ''
     
     return slow
@@ -924,23 +936,22 @@ def prove(*args, **kwargs):
 def split(axiom):
     if axiom.__module__ == '__main__':
         return axiom.__code__.co_filename[len(dirname(dirname(__file__))) + 1:].split(os.sep)
-    else:
-        return axiom.__module__.split('.')
+
+    return axiom.__module__.split('.')
 
 def apply(*args, **kwargs):
     if args:
         axiom, = args
-        tokens = split(axiom)
-        if 'given' in tokens:
+        from sympy.logic.boolalg import inference_type
+        _, type = inference_type(split(axiom))
+        if type == 'given':
             return given(axiom, **kwargs)
 
-        from sympy.logic.boolalg import inference_type
-        i, type = inference_type(tokens)
         if type == 'to':
             kwargs['given'] = None
         return imply(axiom, **kwargs)
-    else:
-        return lambda axiom: apply(axiom, **kwargs)
+    
+    return lambda axiom: apply(axiom, **kwargs)
 
 
 def add(given, statement):
@@ -984,11 +995,6 @@ def imply(apply, **kwargs):
                     ...
                 else:
                     _simplify = False
-                    
-            elif _simplify:
-                ...
-            else:
-                ...
                 
         else: 
             _simplify = simplify
@@ -1105,7 +1111,7 @@ def imply(apply, **kwargs):
 
                 given = tuple(Inference(g, plausible=None) for g in given) 
             else:
-                given.definition_set(dependency)                
+                given.definition_set(dependency)
                 given = Inference(given, plausible=None)
 
         G = topological_sort_depth_first(dependency)

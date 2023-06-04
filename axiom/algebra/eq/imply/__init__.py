@@ -9,7 +9,6 @@ from . import assuming
 from . import any
 from . import lt
 from . import infer
-from . import mod_is_zero
 from . import gt_zero
 from . import lt_zero
 from . import ge_zero

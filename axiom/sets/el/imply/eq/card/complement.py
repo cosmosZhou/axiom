@@ -20,11 +20,17 @@ def prove(Eq):
 
     Eq << sets.subset.imply.eq.union.apply(Eq[-1])
 
-    Eq << sets.imply.eq.principle.add.apply(s, {e})
+    Eq << sets.eq.imply.eq.card.apply(Eq[-1])
 
-    Eq << Eq[-1].subs(Eq[-2]).reversed - 1
+    Eq << Eq[-1].this.lhs.apply(sets.card.to.add)
+
+    
+    Eq << Eq[-1] - 1
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-03-07
+# updated on 2023-06-01

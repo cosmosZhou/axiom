@@ -2,25 +2,28 @@ from util import *
 
 
 @apply
-def apply(self):
+def apply(self, i=None):
     [*args] = self.of(Add)
-    for i, p in enumerate(args):
-        if p.is_Piecewise:
-            break
+    if i is None:
+        for i, arg in enumerate(args):
+            if arg.is_Piecewise:
+                break
+        else:
+            return
     else:
-        return
+        arg = args[i]
 
     del args[i]
     a = Add(*args)
-    return Equal(self, Piecewise(*((e + a, c) for e, c in p.args)))
+    return Equal(self, Piecewise(*((e + a, c) for e, c in arg.of(Piecewise))))
 
 
 @prove
 def prove(Eq):
     from axiom import algebra
+
     x = Symbol(real=True)
     A = Symbol(etype=dtype.real)
-
     f, g, h = Function(real=True)
     Eq << apply(Piecewise((f(x), Element(x, A)), (g(x), True)) + h(x))
 
@@ -30,4 +33,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-
+# created on 2018-01-22
+# updated on 2023-05-22

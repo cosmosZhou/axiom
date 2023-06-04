@@ -31,13 +31,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.eq.rsolve.linear, y[n])
 
-    Eq << discrete.mul.binom.fraction.apply(k + 1, i).reversed * (k + 1 - i)
+    Eq << Eq[-1].this.find(Binomial).apply(discrete.binom.to.div.binom.increase)
 
-    Eq << algebra.eq.cond.imply.cond.subs.apply(Eq[-1], Eq[-2])
-
-    Eq << algebra.eq.cond.imply.cond.subs.apply(Eq[2], Eq[-1])
-
-    Eq.stirling_solution = Eq[-1].this.find(Sum).expr.ratsimp()
+    Eq.stirling_solution = algebra.eq.cond.imply.cond.subs.apply(Eq[2], Eq[-1])
 
     Eq << Eq.stirling_solution.this.expr.apply(algebra.cond.imply.cond.subs, n, k + 1, ret=0)
 
@@ -89,10 +85,11 @@ def prove(Eq):
 
     Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n=k)
 
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-10-13
-# updated on 2022-01-18
+# updated on 2023-06-03

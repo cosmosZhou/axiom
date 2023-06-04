@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Pow[Mul]).apply(algebra.pow.to.mul.split.base)
 
-    Eq << Eq[-1].this.rhs.find(Binomial).apply(discrete.binom.to.mul.binom)
+    Eq << Eq[-1].this.rhs.find(Binomial).apply(discrete.binom.to.div.binom)
 
     Eq << Eq[-1].this.rhs.find(Mul[Add]).expand()
 

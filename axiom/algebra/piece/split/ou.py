@@ -14,8 +14,8 @@ def apply(piecewise, i=0, pivot=-1):
     ecs[i] = (ei, former)
     ecs.insert(i + 1, (ei, latter))
     from axiom.algebra.piece.swap import swap
-    ecs = swap(ecs, i + 1)   
- 
+    ecs = swap(ecs, i + 1)
+
     last = Piecewise(*ecs[i + 1:])
     ecs = ecs[:i + 2]
     ecs[-1] = (last, True)
@@ -32,8 +32,8 @@ def prove(Eq):
     f, g = Function(shape=(), real=True)
     Eq << apply(Piecewise((f(x), Element(x, A) | Unequal(A, B)), (g(x), True)))
 
-    
-    Eq << Eq[0].this.rhs.apply(algebra.piece.flatten)
+
+    Eq << Eq[0].this.rhs.apply(algebra.piece.unnest)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.swap, 1)
 

@@ -17,7 +17,7 @@ def prove(Eq):
     Eq << apply(Sum[k:n + 1](Binomial(n, k) * x ** k * k ** 2))
 
     Eq << Eq[0].this.lhs.apply(algebra.sum.to.add.shift)
-    Eq << Eq[-1].this.lhs().find(Binomial).apply(discrete.binom.to.mul.binom)
+    Eq << Eq[-1].this.lhs().find(Binomial).apply(discrete.binom.to.div.binom)
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.subs.offset, 1)
 
@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(1 + ~Mul).expand()
 
-    
+
 
 
 if __name__ == '__main__':

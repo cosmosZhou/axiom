@@ -205,6 +205,13 @@ from . import div
 from . import eq_argmin
 from . import conj_is_zero
 from . import reducedArgMin_exp
-from . import adjoint
-from . import lt_abs
+from . import eq_transpose
+from . import eq_adjoint
+from . import transpose_sub
+from . import sub_transpose
 from . import mul_lamda
+from . import ne_one
+from . import lt_abs
+from . import sign
+from . import re
+from . import im

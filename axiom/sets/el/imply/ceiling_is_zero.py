@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << sets.el.imply.floor_is_zero.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.floor.to.mul.ceiling)
+    Eq << Eq[-1].this.lhs.apply(algebra.floor.to.neg.ceiling)
     Eq << Eq[-1].reversed
 
 

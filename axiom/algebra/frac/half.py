@@ -17,24 +17,25 @@ def prove(Eq):
     n = Symbol(integer=True)
     Eq << apply(frac(-n / 2))
 
-    Eq << Eq[0].apply(algebra.cond.given.et.all, cond=Equal(n % 2, 0))
+    Eq << algebra.cond.given.et.infer.split.apply(Eq[0], cond=Equal(n % 2, 0))
 
-    Eq << algebra.et.given.et.apply(Eq[-1])
+    Eq <<= algebra.infer.given.infer.et.apply(Eq[-2]), algebra.infer.given.infer.et.apply(Eq[-1])
 
-    Eq <<= algebra.imply.all.limits_assert.apply(Eq[-2].limits).this.expr.apply(algebra.is_even.imply.any), algebra.imply.all.limits_assert.apply(Eq[-1].limits).this.expr.apply(algebra.mod_ne_zero.imply.any)
+    Eq <<= Eq[-2].this.rhs.find(Equal[0]).apply(algebra.is_even.given.any), Eq[-1].this.rhs.find(Unequal[0]).apply(algebra.mod_ne_zero.given.any)
 
-    Eq <<= Eq[2] & Eq[-2], Eq[3] & Eq[-1]
+    Eq <<= Eq[-2].this.rhs.apply(algebra.cond.any.given.any_et, simplify=None), Eq[-1].this.rhs.apply(algebra.cond.any.given.any_et, simplify=None)
 
-    Eq <<= Eq[-2].this.expr.apply(algebra.cond.any.given.any_et, simplify=None), Eq[-1].this.expr.apply(algebra.cond.any.given.any_et, simplify=None)
+    Eq <<= Eq[-2].this.find(And).apply(algebra.et.given.et.subs.eq), Eq[-1].this.find(And).apply(algebra.et.given.et.subs.eq)
 
-    Eq << Eq[-2].this.expr.expr.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-2].this.lhs.apply(algebra.is_even.imply.any)
 
-    Eq << Eq[-1].this.expr.expr.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.lhs.apply(algebra.mod_ne_zero.imply.any)
 
+    
     
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-05-10
-# updated on 2023-05-15
+# updated on 2023-05-26

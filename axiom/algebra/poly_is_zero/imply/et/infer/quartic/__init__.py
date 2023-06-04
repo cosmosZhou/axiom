@@ -5,7 +5,7 @@ from axiom.algebra.poly_is_zero.imply.et.infer.cubic import cubic_root
 def quartic_coefficient(fx, x):
     fx = fx.as_poly(x)
     if fx.degree() != 4:
-        return None
+        return
     a = fx.nth(4)
     b = fx.nth(3)
     c = fx.nth(2)

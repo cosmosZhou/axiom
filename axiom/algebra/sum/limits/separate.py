@@ -2,18 +2,19 @@ from util import *
 
 
 @apply
-def apply(sgm):
+def apply(sgm, *, simplify=False):
     expr, *limits = sgm.of(Sum)
     limit, *limits = limits
     assert limits
-    expr = sgm.func(expr, limit).simplify()
-
-    return Equal(sgm, sgm.func(expr, *limits, evaluate=False), evaluate=False)
+    expr = Sum(expr, limit).simplify()
+    rhs = Sum(expr, *limits, evaluate=simplify)
+    return Equal(sgm, rhs, evaluate=False)
 
 
 @prove
 def prove(Eq):
     from axiom import algebra
+
     i, j = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
     f = Symbol(shape=(oo,), real=True)
@@ -22,8 +23,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expr.apply(algebra.mul.to.sum)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2019-11-11
+# updated on 2023-06-02

@@ -62,3 +62,5 @@ from . import ge
 from . import det_pow
 from . import eq_inverse
 from . import matpow
+from . import eq_oneMatrix
+from . import factorial2

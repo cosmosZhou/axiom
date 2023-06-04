@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[Piecewise]).apply(algebra.mul.to.piece, simplify=False)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.flatten, index=0)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest, index=0)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.swap)
 

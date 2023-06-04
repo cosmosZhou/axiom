@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << algebra.infer.given.cond.apply(Eq[-2])
 
-    Eq << Eq[-1].this.rhs.apply(sets.ne.el.imply.el)
+    Eq << Eq[-1].this.rhs.apply(sets.ne.el.imply.el.complement)
 
     Eq << algebra.cond.infer.imply.infer.et.rhs.apply(Eq.y_contains & Eq[0], Eq[-1])
     Eq << Eq[-1].this.rhs.apply(sets.lt.el.el.imply.gt.sqrt.open.positive)

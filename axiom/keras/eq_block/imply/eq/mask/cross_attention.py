@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << Eq[0][i, j]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.flatten)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.swap, 0)
 
@@ -42,7 +42,7 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq[1].reversed)
 
-    
+
 
 
 if __name__ == '__main__':

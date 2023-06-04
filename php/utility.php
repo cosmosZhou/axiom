@@ -421,6 +421,10 @@ function match_section($statement, &$matches)
     return preg_match_all('/\b(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+/', $statement, $matches, PREG_SET_ORDER);
 }
 
+function has_unterminated_parantheses($statement) {
+    return substr_count($statement, "(") > substr_count($statement, ")");
+}
+
 function insert_section(&$proveCodes)
 {
     $from_axiom_import = determine_section($proveCodes);

@@ -14,7 +14,7 @@ def prove(Eq):
     x, d = Symbol(integer=True)
     Eq << apply(x // d * d)
 
-    Eq << algebra.mod.to.add.apply(x % d)
+    Eq << algebra.mod.to.sub.apply(x % d)
 
     Eq << Eq[0] - Eq[1]
 
