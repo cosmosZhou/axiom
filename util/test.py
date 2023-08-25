@@ -1,7 +1,6 @@
 from util.search import read_all_py, axiom_directory
 from run import project_directory
 
-from util.cpp import instance as lib
 from ctypes import c_void_p
 from _ctypes import Structure
 from std.file import Text

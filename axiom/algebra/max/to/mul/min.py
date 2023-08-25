@@ -10,7 +10,8 @@ def apply(self, factor=None):
 
         for arg in args:
             if not arg.is_Mul:
-                return
+                common_factors = None
+                break
 
             if common_factors is None:
                 common_factors = {*arg.args}
@@ -19,6 +20,8 @@ def apply(self, factor=None):
 
         if common_factors:
             factor = Mul(*common_factors)
+        else:
+            factor = -1
     assert factor < 0
     
     args = [arg / factor for arg in args]
@@ -42,9 +45,10 @@ def prove(Eq):
     Eq << Eq[-1].this.find(GreaterEqual).reversed
 
     
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-01-24
-# updated on 2021-12-26
+# updated on 2023-06-18

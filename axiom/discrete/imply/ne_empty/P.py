@@ -5,7 +5,7 @@ from util import *
 def apply(n):
     assert n > 0
     x = Symbol(integer=True, nonnegative=True, shape=(oo,))
-    P = Symbol("P", conditionset(x[:n], Equal(x[:n].cup_finiteset(), Range(n))))
+    P = Symbol(conditionset(x[:n], Equal(x[:n].cup_finiteset(), Range(n))))
     return Unequal(P, P.etype.emptySet)
 
 
@@ -31,9 +31,11 @@ def prove(Eq):
 
     Eq << Eq[-2].this.lhs.simplify()
 
-    Eq << algebra.all.given.infer.apply(Eq[-1])
+    Eq << sets.el_cartesianSpace.given.all.el.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(sets.el_range.imply.ge)
+    
+
+    
 
     
     
@@ -42,4 +44,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2020-11-06
-# updated on 2023-05-15
+# updated on 2023-08-20

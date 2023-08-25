@@ -2,18 +2,16 @@ from util import *
 
 
 @apply
-def apply(self, u=None, dv=None):
-    [(x, a, b)] = self.limits
-    if u is not None:
-        dv = self.expr / u
-        v = self.func(dv, x).doit()
-        du = diff(u, x)
-    elif dv is not None:
-        u = self.expr / dv
-        v = self.func(dv, x).doit()
-        du = diff(u, x)
-    else:
-        ...
+def apply(self, pivot=-1):
+    args, (x, a, b) = self.of(Integral[Mul])
+    import std
+    dv, u = std.array_split(args, pivot)
+    u = Mul(*u)
+    dv = Mul(*dv)
+
+    v = self.func(dv, x).doit()
+    du = diff(u, x)
+
 # u * dv = d(u v) - du * v
     f = (u * v)._eval_interval(x, a, b) - self.func(du * v, *self.limits).simplify()
     return Equal(self, f, evaluate=False)
@@ -25,7 +23,7 @@ def prove(Eq):
 
     x, a, b = Symbol(real=True)
     u, v = Function(real=True)
-    Eq << apply(Integral(u(x) * diff(v(x), x), (x, a, b)), u=u(x))
+    Eq << apply(Integral(u(x) * diff(v(x), x), (x, a, b)))
 
     @Function(real=True)
     def uv(x):
@@ -47,10 +45,11 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.defun()
 
     
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-06-07
-# updated on 2023-05-20
+# updated on 2023-07-03

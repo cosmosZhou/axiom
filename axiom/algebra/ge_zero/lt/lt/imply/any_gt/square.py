@@ -78,7 +78,7 @@ def prove(Eq):
 
     Eq <<= algebra.infer.given.cond.apply(Eq[-2])
 
-    Eq <<= Eq[-1].this.lhs.apply(algebra.ge_zero.imply.sqrt_ge_zero)
+    Eq <<= Eq[-1].this.lhs.apply(algebra.ge_zero.imply.ge_zero.sqrt)
 
     Eq << algebra.cond.imply.infer.et.apply(Eq[1].reversed, cond=U >= m ** 2)
 
@@ -92,8 +92,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs / 2
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

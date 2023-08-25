@@ -29,7 +29,7 @@ def prove(Eq):
     from axiom import algebra
 
     n, a = Symbol(integer=True)
-    f = Function(shape=())
+    f = Function(complex=True)
     Eq << apply(All[n:a:oo](Equal(f(n + 1), f(n))))
 
     Eq << Eq[0].this.expr - Eq[0].rhs
@@ -47,8 +47,11 @@ def prove(Eq):
 
     Eq << algebra.all.given.et.apply(Eq[1], cond={a})
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-01-07
 from . import slice
+# updated on 2023-06-24

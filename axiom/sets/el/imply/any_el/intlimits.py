@@ -6,12 +6,9 @@ def apply(given, *limits):
     assert given.is_Element
 
     for limit in limits:
-        limit = Tuple.as_setlimit(limit)
-        var, *domain = limit
+        var, domain = Tuple.coerce_setlimit(limit)
         assert given._has(var)
-        if domain:
-            domain = domain[0]
-            assert domain in given.domain_defined(var)
+        assert domain in given.domain_defined(var)
 
     return Any(given, *limits)
 
@@ -29,7 +26,7 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq[0], Eq[-1])
+    Eq << algebra.cond.all.imply.all.et.apply(Eq[0], Eq[-1])
 
 
 if __name__ == '__main__':

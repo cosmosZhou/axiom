@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    (fx, n), x, S[n] = self.of(Difference[Pow])
+    (fx, n), (x, S[n]) = self.of(Difference[Pow])
     assert not (fx - x)._has(x)
     return Equal(self, factorial(n))
 
@@ -18,7 +18,7 @@ def prove(Eq):
     assert t.is_complex
     assert t.is_extended_real
     n = Symbol(integer=True, nonnegative=True, given=False)
-    Eq << apply(Difference(x ** n, x, n))
+    Eq << apply(Difference(x ** n, (x, n)))
 
     Eq.initial = Eq[0].subs(n, 0)
 

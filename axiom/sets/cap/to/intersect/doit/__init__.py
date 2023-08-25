@@ -16,7 +16,7 @@ def prove(Eq):
 
     Eq << apply(Cap[i](x[i]))
 
-    Eq << Eq[-1].this.lhs.apply(sets.cap.limits.domain_defined.insert)
+    Eq << Eq[-1].this.lhs.apply(sets.cap.limits.domain_defined)
 
     n -= 1
     Eq << Eq[-1].this.lhs.apply(sets.cap.to.intersect.split, {n})

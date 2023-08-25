@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.sum.bool)
 
-    Eq << sets.ge.imply.range_is_empty.apply(Eq[0])
+    Eq << sets.ge.imply.is_empty.range.apply(Eq[0])
 
     Eq << Eq[-2].subs(Eq[-1])
 

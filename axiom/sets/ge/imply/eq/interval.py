@@ -16,7 +16,7 @@ def prove(Eq):
 
     Eq << algebra.cond.given.et.infer.split.apply(Eq[-1], cond=x > y)
 
-    Eq.is_zero = (x > y).this.apply(sets.gt.imply.interval_is_empty)
+    Eq.is_zero = (x > y).this.apply(sets.gt.imply.is_empty.interval)
 
     Eq << sets.imply.subset.intersect.apply(x, y)
 
@@ -38,7 +38,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq)
 
-    
+
 
 
 if __name__ == '__main__':

@@ -3,13 +3,8 @@ from util import *
 
 @apply
 def apply(self, *, simplify=True):
-    piecewise = []
-    delta = []
-    for arg in self.of(Mul):
-        if arg.is_Piecewise:
-            piecewise.append(arg)
-        else:
-            delta.append(arg)
+    import std
+    piecewise, delta = std.array_split(self.of(Mul), lambda arg: arg.is_Piecewise)
 
     if not piecewise:
         return

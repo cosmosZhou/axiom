@@ -21,9 +21,9 @@ def prove(Eq):
     f, g = Function(shape=(), integer=True)
     Eq << apply(Any[x:A](f(x, y) > 0), Any[y:B](g(y, x) > 0))
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[0], Eq[1])
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[0], Eq[1])
 
-    Eq << Eq[-1].this.expr.apply(algebra.cond.any.imply.any_et)
+    Eq << Eq[-1].this.expr.apply(algebra.cond.any.imply.any.et)
 
 
 if __name__ == '__main__':

@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq.lt_zero = sets.el_interval.imply.lt_zero.log.apply(Eq[0])
 
-    Eq << Element(Eq.any.find(Mul < ~Log), Interval(-oo, 0, right_open=True), plausible=True)
+    Eq << Element(Eq.any.find(Mul < ~Log), Interval.open(-oo, 0), plausible=True)
 
     Eq << sets.lt_zero.el.imply.el.div.apply(Eq.lt_zero, Eq[-1], simplify=None)
 
@@ -49,11 +49,11 @@ def prove(Eq):
 
     Eq << algebra.ge.imply.gt.relax.apply(Eq[-1], plus=True)
 
-    Eq << algebra.infer.given.et.infer.et.apply(Eq[-3], cond=Eq[-1])
+    Eq << algebra.cond.infer.given.et.infer.et.apply(Eq[-1], Eq[-3])
 
     Eq << Eq[-1].this.lhs.apply(algebra.ge.gt.imply.gt.transit)
 
-    Eq << algebra.infer.given.et.infer.et.apply(Eq[-1], cond=Eq.lt_zero)
+    Eq << algebra.cond.infer.given.et.infer.et.apply(Eq.lt_zero, Eq[-1])
 
 
     Eq << Eq[-1].this.lhs.apply(algebra.lt_zero.gt.imply.lt.mul)

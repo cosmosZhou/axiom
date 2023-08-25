@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(given):
     x, R = given.of(Element)
-    assert R in Interval(0, oo, left_open=True)
+    assert R in Interval.open(0, oo)
     return Element(x ** 2, R)
 
 
@@ -13,7 +13,7 @@ def prove(Eq):
     from axiom import sets
 
     x = Symbol(super_complex=True)
-    Eq << apply(Element(x, Interval(0, oo, left_open=True)))
+    Eq << apply(Element(x, Interval.open(0, oo)))
 
     Eq << sets.is_positive.is_positive.imply.is_positive.apply(Eq[0], Eq[0])
     

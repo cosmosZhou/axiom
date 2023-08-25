@@ -61,7 +61,7 @@ def prove(Eq):
 
     Eq << algebra.ou.imply.any_ou.apply(Eq[-1])
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq[-1], Eq.size_deduction)
+    Eq << algebra.cond.all.imply.all.et.apply(Eq[-1], Eq.size_deduction)
 
     Eq << Eq[-1].this.expr.apply(algebra.any.any.imply.any_et)
 
@@ -73,7 +73,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(sets.el.imply.eq.union)
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq[-1], Eq[-3])
+    Eq << algebra.cond.all.imply.all.et.apply(Eq[-1], Eq[-3])
 
     Eq << Eq[-1].this.expr.apply(algebra.all.any.imply.any_et)
 
@@ -99,8 +99,8 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], start=2, n=n)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

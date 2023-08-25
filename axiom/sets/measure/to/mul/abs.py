@@ -4,13 +4,8 @@ from util import *
 @apply
 def apply(self):
     fx, (x, S) = self.of(Measure[Cup[FiniteSet]])
-    f = []
-    coeff = []
-    for arg in fx.of(Mul):
-        if arg._has(x):
-            f.append(arg)
-        else:
-            coeff.append(arg)
+    import std
+    f, coeff = std.array_split(fx.of(Mul), lambda arg: arg._has(x))
     f = Mul(*f)
     coeff = Mul(*coeff)
     shape = fx.shape

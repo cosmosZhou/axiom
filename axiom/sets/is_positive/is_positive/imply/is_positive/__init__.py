@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(a_is_positive, b_is_positive):
     a, R = a_is_positive.of(Element)
-    RR = Interval(0, oo, left_open=True)
+    RR = Interval.open(0, oo)
     assert R in RR
     b, R = b_is_positive.of(Element)
     assert R in RR
@@ -16,7 +16,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     x, y = Symbol(hyper_real=True)
-    Eq << apply(Element(x, Interval(0, oo, left_open=True)), Element(y, Interval(0, oo, left_open=True)))
+    Eq << apply(Element(x, Interval.open(0, oo)), Element(y, Interval.open(0, oo)))
 
     Eq << sets.el.imply.any_eq.apply(Eq[0], var='a')
 

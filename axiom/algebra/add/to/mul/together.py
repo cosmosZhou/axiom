@@ -19,7 +19,13 @@ def apply(self):
             if arg.exp == -1:
                 factors.append(arg.base)
     assert factors
-    factor = Mul(*factors)
+    
+    from axiom.algebra.add.to.mul import common_terms, factorize
+    if c := common_terms(factors):
+        factors, c = factorize(factors, c)
+        factor = Mul(*factors) * c
+    else:
+        factor = Mul(*factors)
 
     for i in range(len(args)):
         args[i] *= factor

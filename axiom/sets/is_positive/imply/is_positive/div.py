@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(given):
     x, domain = given.of(Element)
-    R = Interval(0, oo, left_open=True)
+    R = Interval.open(0, oo)
     assert domain in R
     return Element(1 / x, R)
 
@@ -14,7 +14,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     x = Symbol(hyper_real=True)
-    Eq << apply(Element(x, Interval(0, oo, left_open=True)))
+    Eq << apply(Element(x, Interval.open(0, oo)))
 
     Eq << sets.el.imply.any_eq.apply(Eq[0])
 

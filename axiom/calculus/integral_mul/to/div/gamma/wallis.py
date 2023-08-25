@@ -29,30 +29,20 @@ def prove(Eq):
 
     Eq << Eq.induct.this.lhs.expr.expand()
 
-    Eq << Eq[-1].this.lhs.apply(calculus.integral.to.add.by_parts, u=cos(x) ** m)
+    Eq << Eq[-1].this.lhs.apply(calculus.integral.to.add.by_parts)
 
+    
     Eq << Eq[-1] / (m / n)
-
     Eq << Eq[-1].this.rhs.expand(func=True)
-
     Eq << algebra.cond.imply.cond.subs.apply(Eq[0], n, n + 2)
-
     Eq << Eq[-1].this.rhs.expand(func=True)
-
     Eq << Eq[-1].this.lhs.expand()
-
     Eq.two = Eq[0].subs(m, 2)
-
     Eq << Eq.two.this.lhs.apply(calculus.integral.limits.subs, sin(x), x)
-
     Eq << Eq[-1].this.lhs.apply(calculus.integral_pow.to.mul)
-
     Eq << Eq[-1].this.rhs.expand(func=True)
-
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
-
     Eq << algebra.eq.eq.infer.imply.eq.induct.apply(Eq.one, Eq.two, Eq[-1], n=m, start=1)
-
     
     
 
@@ -61,4 +51,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2020-07-01
-# updated on 2023-04-30
+# updated on 2023-07-03

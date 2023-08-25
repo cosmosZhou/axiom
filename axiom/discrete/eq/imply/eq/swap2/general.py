@@ -52,11 +52,11 @@ def prove(Eq):
 
     Eq << Eq[-1].simplify()
 
-    Eq << algebra.all.all.imply.all_et.apply(Eq[-2], Eq[-3])
+    Eq << algebra.all.all.imply.all.et.apply(Eq[-2], Eq[-3])
 
     Eq << discrete.eq.all_el.imply.all_el.swap2.apply(Eq[1], Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

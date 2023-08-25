@@ -4,15 +4,8 @@ from util import *
 @apply
 def apply(self):
     expr, (x, x0, dir) = self.of(Limit)
-    args = expr.of(Mul)
-
-    coefficient = []
-    factors = []
-    for arg in args:
-        if arg._has(x):
-            factors.append(arg)
-        else:
-            coefficient.append(arg)
+    import std
+    factors, coefficient = std.array_split(expr.of(Mul), lambda arg: arg._has(x))
 
     coefficient = Mul(*coefficient)
     factors = Mul(*factors)

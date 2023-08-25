@@ -52,7 +52,7 @@ for ($i = 0; $i < $size; ++ $i) {
     ];
 }
 
-// error_log(\std\jsonify($tuples));
+// error_log(\std\encode($tuples));
 \mysql\insertmany("suggest", $tuples);
 
 $theorem = str_replace('.', '/', $axiom);
@@ -76,7 +76,7 @@ foreach (yield_from_py($py) as $dict) {
     }
 }
 
-// error_log("linkCount = " . \std\jsonify($linkCount));
+// error_log("linkCount = " . \std\encode($linkCount));
 
 $tuples = [];
 $caller = $axiom;

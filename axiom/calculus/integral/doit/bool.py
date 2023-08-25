@@ -17,17 +17,17 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Integral[x](f(x) * Bool(x <= a)))
 
-    Eq << Eq[0].lhs.this.apply(calculus.integral.to.add.concat, a)
+    Eq << Eq[0].lhs.this.apply(calculus.integral.to.add.split, a)
 
     Eq << Eq[-1].this.rhs.args[0]().find(LessEqual).simplify()
 
     ε = Symbol(positive=True)
-    Eq << Eq[-1].rhs.args[0].this.apply(calculus.integral.to.add.concat, a + ε)
+    Eq << Eq[-1].rhs.args[0].this.apply(calculus.integral.to.add.split, a + ε)
 
     Eq << Eq[-1].this.rhs.args[1]().find(LessEqual).simplify()
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -18,7 +18,7 @@ def apply(given, w=None):
 
 @prove
 def prove(Eq):
-    from axiom import discrete, algebra
+    from axiom import discrete, algebra, sets
 
     n = Symbol(domain=Range(2, oo))
     x = Symbol(shape=(n,), integer=True)
@@ -31,10 +31,13 @@ def prove(Eq):
     k = Eq[-1].lhs.args[0].indices[-1]
     Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (k, 0, n), simplify=False)
 
-    Eq << Eq[2].simplify()
+    Eq << sets.el_cartesianSpace.given.all.el.apply(Eq[2])
+
+
 
 
 if __name__ == '__main__':
     run()
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 # created on 2020-11-04
+# updated on 2023-07-02

@@ -32,6 +32,7 @@ except ImportError as e:
     command = 'python ' + ' '.join(sys.argv)
     print(command)
 
+    os.system(command + ' parallel=0')
     exit_code = os.system(command)
     print('exit_code =', exit_code)
     exit(exit_code)
@@ -85,14 +86,14 @@ def readFolder(rootdir, sufix='.py'):
 
                     if not i:
                         removeFile(path)
-                        continue
+                        raise RuntimeError(f"removeFile({path})")
  
                     try:
                         lines = lines[i:]
                         Text(path).writelines(lines)
                     except UnboundLocalError:                        
                         removeFile(path)
-                        continue
+                        raise RuntimeError(f"removeFile({path})")                        
                     
                 if re.match('from *\. *import +\w+', line):
                     continue
@@ -103,6 +104,7 @@ def readFolder(rootdir, sufix='.py'):
                     print(__init__, "has no children, thus reducing to a normal module file.")
                     try:
                         os.rename(__init__, path + '.py')
+                        raise RuntimeError(f"removeFile({__init__})")
                     except PermissionError as e:
                         print(e)
             else: 
@@ -182,11 +184,16 @@ def import_module(package):
     
     except AttributeError as e: 
         print(e)
-        m = re.fullmatch("module '([\w\.]+)' has no attribute '(\w+)'", str(e))
-        assert m
-        create_module(*m.groups())
-        print(package, 'is created newly')
-        return -1
+        if m := re.fullmatch("module '([\w\.]+)' has no attribute '(\w+)'", str(e)):
+            create_module(*m.groups())
+            print(package, 'is created newly')
+            return -1
+        
+        if m := re.fullmatch("'function' object has no attribute '(\w+)'", str(e)):
+            paths = package.split('.')
+            index = paths.index(m[1])
+            paths = paths[:index]
+            return tackle_type_error('.'.join(paths))
 
 
 def prove_with_timing(module, **kwargs):
@@ -198,8 +205,8 @@ def prove_with_timing(module, **kwargs):
 
 def tackle_type_error(package, debug=True):
     module = import_module(package)
-    from types import ModuleType
-    if not isinstance(module, ModuleType) and not module.is_FunctionClass:
+    from types import ModuleType, FunctionType
+    if not isinstance(module, (ModuleType, FunctionType)) and not module.is_FunctionClass and not module.is_Basic:
         return
     
     print("package =", package)
@@ -297,103 +304,92 @@ try:
             assert m[1] == 'axiom'
             assert m[2] == 'axiom'
             sql = '''\
-    CREATE TABLE `axiom` (
-      `user` varchar(32) NOT NULL,
-      `axiom` varchar(256) NOT NULL,  
-      `state` enum('proved', 'failed', 'plausible', 'unproved', 'unprovable', 'slow') NOT NULL,
-      `lapse` double default NULL,  
-      `latex` text NOT NULL,
-      PRIMARY KEY (`user`, `axiom`) 
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    PARTITION BY KEY () PARTITIONS 8
-    '''
+CREATE TABLE `axiom` (
+  `user` varchar(32) NOT NULL,
+  `axiom` varchar(256) NOT NULL,
+  `state` enum('proved', 'failed', 'plausible', 'unproved', 'unprovable', 'slow') NOT NULL,
+  `lapse` double default NULL,
+  `latex` text NOT NULL,
+  PRIMARY KEY (`user`, `axiom`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+PARTITION BY KEY() PARTITIONS 8'''
             self.execute(sql)
             sql = '''\
-    CREATE TABLE `hierarchy` (
-      `user` varchar(32) NOT NULL,
-      `caller` varchar(256) NOT NULL,
-      `callee` varchar(256) NOT NULL,
-      `count` int DEFAULT '0',
-      PRIMARY KEY (`user`,`caller`,`callee`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    PARTITION BY KEY () PARTITIONS 8
-    '''
+CREATE TABLE `hierarchy` (
+  `user` varchar(32) NOT NULL,
+  `caller` varchar(256) NOT NULL,
+  `callee` varchar(256) NOT NULL,
+  `count` int DEFAULT '0',
+  PRIMARY KEY (`user`,`caller`,`callee`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+PARTITION BY KEY() PARTITIONS 8'''
             self.execute(sql)
                       
 #ai = accent insensitivity; ci = case insensitivity
 #as = accent sensitivity  ; cs = case sensitivity 
             sql = '''\
-    CREATE TABLE `hint` (
-      `prefix` varchar(36) NOT NULL,
-      `phrase` varchar(36) NOT NULL,
-      `usage` int DEFAULT '1',
-      PRIMARY KEY (`prefix`,`phrase`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_0900_as_cs
-    PARTITION BY KEY () PARTITIONS 8
-    '''
+CREATE TABLE `hint` (
+  `prefix` varchar(36) NOT NULL,
+  `phrase` varchar(36) NOT NULL,
+  `usage` int DEFAULT '1',
+  PRIMARY KEY (`prefix`,`phrase`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_0900_as_cs
+PARTITION BY KEY() PARTITIONS 8'''
             self.execute(sql)
                   
             sql = '''\
-    CREATE TABLE `suggest` (
-      `user` varchar(32) NOT NULL,
-      `prefix` varchar(256) NOT NULL,
-      `phrase` varchar(32) NOT NULL,
-      `usage` int DEFAULT '1',
-      PRIMARY KEY (`user`,`prefix`,`phrase`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    PARTITION BY KEY () PARTITIONS 8
-    '''
+CREATE TABLE `suggest` (
+  `user` varchar(32) NOT NULL,
+  `prefix` varchar(256) NOT NULL,
+  `phrase` varchar(32) NOT NULL,
+  `usage` int DEFAULT '1',
+  PRIMARY KEY (`user`,`prefix`,`phrase`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+PARTITION BY KEY() PARTITIONS 8'''
             self.execute(sql)
                     
             sql = '''\
-    CREATE TABLE `login` (
-      `user` varchar(32) NOT NULL,
-      `password` varchar(32) NOT NULL,
-      `email` varchar(128) NOT NULL,
-      `port` int DEFAULT '0',
-      `visibility` enum('public','private','protected') NOT NULL,
-      PRIMARY KEY (`user`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    PARTITION BY KEY () PARTITIONS 8
-    '''
-            self.execute(sql)
-            
-            sql = "insert into login values('sympy', '123456', 'chenlizhibeing@126.com', 'protected')"
+CREATE TABLE `login` (
+  `user` varchar(32) NOT NULL,
+  `password` varchar(32) NOT NULL,
+  `email` varchar(128) NOT NULL,
+  `port` int DEFAULT '0',
+  `visibility` enum('public','private','protected') NOT NULL,
+  PRIMARY KEY (`user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+PARTITION BY KEY() PARTITIONS 8'''
             self.execute(sql)
             
             sql = '''\
-    CREATE TABLE `debug` (  
-      `symbol` varchar(64) NOT NULL,
-      `script` text NOT NULL,
-      `latex` text NOT NULL,
-      PRIMARY KEY (`symbol`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    PARTITION BY KEY () PARTITIONS 8
-    '''
+CREATE TABLE `symbol` (
+  `symbol` varchar(64) NOT NULL,
+  `script` text NOT NULL,
+  `latex` text NOT NULL,
+  PRIMARY KEY (`symbol`)                                                                                    
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+PARTITION BY KEY() PARTITIONS 8'''
             self.execute(sql)
             
             sql = '''\
-    CREATE TABLE `function` (
-      `user` varchar(32) NOT NULL,
-      `caller` varchar(256) NOT NULL,
-      `callee` varchar(256) NOT NULL,
-      `func` varchar(64) NOT NULL,
-      PRIMARY KEY (`user`,`caller`,`callee`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-    PARTITION BY KEY () 
-    PARTITIONS 8
-    '''
+CREATE TABLE `function` (
+  `user` varchar(32) NOT NULL,
+  `caller` varchar(256) NOT NULL,
+  `callee` varchar(256) NOT NULL,
+  `func` varchar(64) NOT NULL,
+  PRIMARY KEY (`user`,`caller`,`callee`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+PARTITION BY KEY()
+PARTITIONS 8'''
             self.execute(sql)
             
             sql = '''\
-    CREATE TABLE `breakpoint` (
-      `user` varchar(32) NOT NULL,
-      `module` varchar(256) NOT NULL,  
-      `line` int NOT NULL,
-      PRIMARY KEY (`user`, `module`, `line`) 
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    PARTITION BY KEY () PARTITIONS 8
-    '''
+CREATE TABLE `breakpoint` (
+  `user` varchar(32) NOT NULL,
+  `module` varchar(256) NOT NULL,
+  `line` int NOT NULL,
+  PRIMARY KEY (`user`, `module`, `line`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+PARTITION BY KEY () PARTITIONS 8'''
             self.execute(sql)
             
         except Exception as e:
@@ -421,7 +417,7 @@ def select_count(user, state=None):
     return count
 
 
-def prove(**kwargs):
+def prove(debug=False, parallel=True):
     def generator(): 
         rootdir = axiom_directory()
 #         rootdir += r'\algebra\imply\le\abs'
@@ -432,8 +428,17 @@ def prove(**kwargs):
                 if name != '__pycache__':
                     yield from readFolder(path)
 
-    taskSet = {*generator()}
-    
+    try:
+        taskSet = {*generator()}
+    except RuntimeError as e:
+        print(e)
+        command = 'python ' + ' '.join(sys.argv)
+        print(command)
+        exit_code = os.system(command)
+        print('exit_code =', exit_code)
+        exit(exit_code)        
+        return
+
     # taskSet = {*[*taskSet][:100]}
 
     tasks = MySQL.instance.select_axiom_lapse_from_axiom()
@@ -442,7 +447,8 @@ def prove(**kwargs):
         MySQL.instance.execute("delete from axiom where user='%s' and axiom in %s" % (user, tuple(deleteSet)))
     elif len(deleteSet) == 1:
         deleteAxiom, *_ = deleteSet
-        MySQL.instance.execute("delete from axiom where user='%s' and axiom = '%s'" % (user, deleteAxiom))
+        MySQL.instance.executemany("delete from axiom where user=%s and axiom = %s", [(user, deleteAxiom)])
+
     for key in deleteSet:
         del tasks[key]
     
@@ -481,7 +487,11 @@ def prove(**kwargs):
     
     data = []
     
-    for array in process(packages, **kwargs):
+    if parallel == 0:
+        print('parallel set to 0, skipping running!')
+        return
+
+    for array in process(packages, debug=debug, parallel=parallel):
         data += post_process(array)
 
     MySQL.instance.load_data('axiom', data, replace=True, truncate=True)
@@ -521,11 +531,8 @@ def post_process(result):
             latex = ''
             assert state is RetCode.failed
             
-        if state is RetCode.slow:
-            print(f"{package} is not added to the data since it is not modified!")
-        else:
-            data.append((user, package, state, lapse, latex))
-            
+        data.append((user, package, state, lapse, latex))
+
         if state is RetCode.plausible:
             Globals.plausible.append((file, MySQL.instance.url_address(package)))
         elif state is RetCode.failed:
@@ -650,8 +657,20 @@ def run_with_module(*modules, debug=True):
                     args = prove_with_timing(module, debug=debug, slow=True)
                     file = module.__file__
                 except AttributeError as e:
-                    if re.match("'function' object has no attribute 'prove'", str(e)):
-                        args = retry(package)
+                    if m := re.match("'(\w+)' object has no attribute 'prove'", str(e)):
+                        if m[1] == 'function':
+                            args = retry(package)
+                        else:
+                            phrase = m[1]
+                            if phrase == 'Infinity':
+                                phrase = 'oo'
+                            paths = package.split('.')
+                            index = paths.index(phrase)
+                            returns = tackle_type_error('.'.join(paths[:index + 1]), False)
+                            if index == len(paths) - 1:
+                                args = post_process_returns(returns)
+                            else:
+                                args = retry(package)
 
                     elif m := re.match("module '([\w.]+)' has no attribute 'prove'", str(e)):
                         if m[1].startswith('sympy.'):
@@ -737,7 +756,7 @@ readonly=true
 spellcheck=false
 style="height:100%; width:100%; overflow:auto; word-break:break-all; background-color:rgb(199, 237, 204);">
 ''')
-                prove(debug=debug, parallel=parallel)
+                prove(debug, parallel)
                 print(r'''</textarea>
 <div></div>
 <script>
@@ -768,7 +787,7 @@ el.scrollIntoView();
 clearInterval(ret);
 </script>''')
             else:
-                prove(debug=debug, parallel=parallel)
+                prove(debug, parallel)
             
     else: 
         run_with_module(*args)

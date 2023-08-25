@@ -16,7 +16,7 @@ def prove(Eq):
     from axiom import calculus, algebra, sets
 
     a = Symbol(real=True)
-    b = Symbol(real=True, domain=Interval(a, oo, left_open=True))
+    b = Symbol(real=True, domain=Interval.open(a, oo))
     f = Function(real=True)
     from axiom.calculus.all_eq.imply.all.any.eq.intermediate_value_theorem import is_continuous
     Eq << apply(is_continuous(f, a, b))
@@ -50,7 +50,7 @@ def prove(Eq):
 
     Eq << algebra.ou.imply.any_ou.apply(Eq[-1], simplify=None)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq[-3], simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq[-3], simplify=None)
 
     Eq << algebra.any_et.imply.et.any.apply(Eq[-1])
 
@@ -58,8 +58,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.rhs.ratsimp().reversed
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

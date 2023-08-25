@@ -13,26 +13,33 @@ def apply(self):
 
     assert i.is_integer
 
-    assert _xi == xi._subs(i, i + 1)
-    return Equal(self, xi._subs(i, b) - xi._subs(i, a), evaluate=False)
+    if _xi == xi._subs(i, i + 1):
+        rhs = xi._subs(i, b) - xi._subs(i, a)
+    elif xi == _xi._subs(i, i + 1):
+        rhs = _xi._subs(i, a) - _xi._subs(i, b)
+    return Equal(self, rhs, evaluate=False)
 
 
 @prove
 def prove(Eq):
     from axiom import algebra
 
-    k = Symbol(integer=True, positive=True)
-    x = Symbol(real=True, shape=(oo, k))
-    i = Symbol(integer=True)
-    n = Symbol(integer=True, nonnegative=True)
-    Eq << apply(Sum[i:n + 1](x[i + 1] - x[i]))
+    x = Function(real=True)
+    i, k = Symbol(integer=True)
+    n = Symbol(integer=True)
+    Eq << apply(Sum[k:i:n + 1](x(k + 1) - x(k)))
 
     Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add)
 
+    
+
     #https://en.wikipedia.org/wiki/Telescoping_series
+    
+    
 
 
 if __name__ == '__main__':
     run()
 from . import offset
 # created on 2020-03-24
+# updated on 2023-08-19

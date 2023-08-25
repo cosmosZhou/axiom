@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.doit()
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul_kroneckerDelta.subs, -2)
+    
 
     Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (i, 0, n))
 
@@ -44,13 +44,8 @@ def prove(Eq):
 
     
 
-    
-
-    
-
-    
-
 
 if __name__ == '__main__':
     run()
 # created on 2023-03-18
+# updated on 2023-06-08

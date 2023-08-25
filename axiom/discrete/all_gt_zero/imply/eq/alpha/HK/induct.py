@@ -10,6 +10,7 @@ from axiom.discrete.imply.gt_zero.alpha import alpha
 def apply(given):
     (x, j), (S[j], n) = given.of(All[Indexed > 0, Tuple[1, Expr]])
     assert n >= 3
+    assert x.is_real
     return Equal(alpha(x[:n]), H(x[:n]) / K(x[:n]))
 
 
@@ -17,7 +18,7 @@ def apply(given):
 def prove(Eq):
     from axiom import algebra, discrete
 
-    x = Symbol(integer=True, shape=(oo,))
+    x = Symbol(real=True, shape=(oo,))
     n = Symbol(integer=True, positive=True)
     j = Symbol(integer=True)
     n = Symbol(domain=Range(2, oo), given=False)
@@ -63,7 +64,8 @@ def prove(Eq):
 
     Eq.alpha_recurrence = Eq.induct.lhs.this.apply(discrete.all_gt_zero.imply.eq.alpha.recurrence)
 
-    Eq << algebra.cond.imply.cond.subs.apply(Eq.hypothesis, x[:n + 1], BlockMatrix(x[:n], x[n] + 1 / x[n + 1]))
+    #try to avoid using reciprocal expression, instead, using find(1 / Expr) to ensure logical correctness!
+    Eq << algebra.cond.imply.cond.subs.apply(Eq.hypothesis, x[:n + 1], BlockMatrix(x[:n], Eq.alpha_recurrence.find(Indexed + 1 / Indexed)))
 
     Eq << Eq[-1].this.rhs.lhs.apply(discrete.alpha.block)
 
@@ -101,11 +103,15 @@ def prove(Eq):
 
     Eq << Infer(Eq.hypothesis, Eq.induct, plausible=True)
 
-    Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
+    Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n, 2)
 
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[0], Eq.hypothesis)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
-# created on 2023-05-21
+# created on 2020-05-21
+# updated on 2023-06-24

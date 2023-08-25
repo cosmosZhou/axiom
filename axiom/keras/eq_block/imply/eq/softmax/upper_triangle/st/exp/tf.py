@@ -37,7 +37,7 @@ def prove(Eq):
     Ξ = Symbol(Eq[1].find(BandPart))
     Eq.ksi_def = Ξ.this.definition
 
-    Eq << keras.imply.eq.bert.mask.theorem.apply(A, Ξ, add=True)
+    Eq << algebra.mul.to.exp.oo.apply(exp(A) * Ξ).reversed
 
     a_quote = Symbol(Eq[-1].lhs.arg)
     Eq.a_quote_def = a_quote.this.definition

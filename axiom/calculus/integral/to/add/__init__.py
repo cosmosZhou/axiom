@@ -22,4 +22,4 @@ if __name__ == '__main__':
 
 # created on 2020-06-05
 from . import by_parts
-from . import concat
+from . import split

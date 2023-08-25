@@ -3,8 +3,8 @@ from util import *
 
 @apply
 def apply(self):
-    (expr, *limits), variable, S[1] = self.of(Difference[Sum])
-    rhs = Sum(Difference(expr, variable, 1).simplify(), *limits)
+    (expr, *limits), (variable, S[1]) = self.of(Difference[Sum])
+    rhs = Sum(Difference[variable](expr).simplify(), *limits)
 
     return Equal(self, rhs, evaluate=False)
 
@@ -17,7 +17,7 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True)
     f = Function(real=True)
     x = Symbol(real=True)
-    Eq << apply(Difference(Sum[i:n](f[i](x)), x))
+    Eq << apply(Difference[x](Sum[i:n](f[i](x))))
 
     Eq << Eq[0].this.lhs.doit()
 

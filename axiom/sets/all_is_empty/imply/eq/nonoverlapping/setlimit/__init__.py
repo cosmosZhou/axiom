@@ -43,11 +43,11 @@ def prove(Eq):
 
     Eq << Eq.yi_definition.reversed
 
-    Eq << algebra.all.all.imply.all_et.apply(Eq[0], Eq[-1], simplify=None)
+    Eq << algebra.all.all.imply.all.et.apply(Eq[0], Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)
 
-    Eq << algebra.all.all.imply.all_et.apply(Eq[-1], Eq[-3].limits_subs(i, j), simplify=None)
+    Eq << algebra.all.all.imply.all.et.apply(Eq[-1], Eq[-3].limits_subs(i, j), simplify=None)
 
     Eq.nonoverlapping = Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)
 

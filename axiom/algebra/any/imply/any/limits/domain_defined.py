@@ -16,7 +16,7 @@ def apply(given, wrt=None):
         x = limit[0]
         S = x.universalSet
     else:
-        x, S = Tuple.as_setlimit(limit)
+        x, S = limit.coerce_setlimit()
 
     domain = expr.domain_defined(x)
     limit = (x, domain & S)

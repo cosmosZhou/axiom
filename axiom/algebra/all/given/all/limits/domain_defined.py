@@ -16,9 +16,9 @@ def apply(given, wrt=None):
         x = limit[0]
         S = x.universalSet
     else:
-        x, S = Tuple.as_setlimit(limit)
+        x, S = limit.coerce_setlimit()
 
-    domain = expr.domain_defined(x)    
+    domain = expr.domain_defined(x)
     limit = (x, domain & S)
     limits[i] = limit
     return All(expr, *limits)
@@ -37,7 +37,7 @@ def prove(Eq):
 
     Eq << ~Eq[0]
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-2], Eq[-1])
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-2], Eq[-1])
 
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
 

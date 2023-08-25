@@ -2,11 +2,9 @@ from util import *
 
 
 @apply
-def apply(self):
-    function, i_limit, j_limit = self.of(Cap)
-    j, *_ = j_limit
-    assert not i_limit._has(j)
-    return Equal(self, Cap(function, j_limit, i_limit))
+def apply(self, i=0, j=1):
+    from axiom.algebra.sum.limits.swap import rewrite
+    return Equal(self, rewrite(Cap, self, i, j))
 
 
 @prove
@@ -55,4 +53,4 @@ if __name__ == '__main__':
 from . import intlimit
 from . import subs
 # created on 2021-01-31
-# updated on 2023-05-13
+# updated on 2023-07-02

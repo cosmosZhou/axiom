@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(is_real, given, epsilon=None, delta=None):
-    
+
     l, a = given.of(Equal)
     if a.is_Limit:
         l, a = a, l
-    
+
     S[a], S[Reals] = is_real.of(Element)
-    
+
     _a = l.generate_var(excludes=l.variable, real=True)
     given = given._subs(a, _a)
     from axiom.calculus.eq.to.any_all.limit_definition import any_all
@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << sets.el.imply.any_eq.apply(Eq[0], var='A')
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[1], Eq[-1], simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[1], Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, ret=0)
 

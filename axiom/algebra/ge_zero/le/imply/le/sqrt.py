@@ -16,7 +16,7 @@ def prove(Eq):
     x, y = Symbol(real=True)
     Eq << apply(x >= 0, LessEqual(x, y))
 
-    Eq << algebra.ge_zero.imply.sqrt_ge_zero.apply(Eq[0])
+    Eq << algebra.ge_zero.imply.ge_zero.sqrt.apply(Eq[0])
 
     t = Symbol(nonnegative=True)
     Eq << algebra.ge.imply.ou.split.apply(Eq[-1], t)
@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << algebra.le.ge.imply.ge.transit.apply(Eq[1], Eq[0])
 
-    Eq << algebra.ge_zero.imply.sqrt_ge_zero.apply(Eq[-1])
+    Eq << algebra.ge_zero.imply.ge_zero.sqrt.apply(Eq[-1])
 
     Eq << sets.ge.imply.el.interval.apply(Eq[-1])
 
@@ -37,7 +37,7 @@ def prove(Eq):
 
     Eq << algebra.et.imply.cond.apply(Eq[-1], 0)
 
-    
+
 
 
 if __name__ == '__main__':

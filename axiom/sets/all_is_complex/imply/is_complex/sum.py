@@ -8,7 +8,7 @@ def apply(all_is_complex):
     for limit in limits:
         x, domain = limit.coerce_setlimit()
         assert domain.is_finiteset
-    
+
     return Element(Sum(expr, *limits), S.Complexes)
 
 
@@ -31,7 +31,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(sets.is_complex.is_complex.imply.is_complex.add)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.push)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.sub.push)
 
     Eq << Infer(Eq[2], Eq.induct, plausible=True)
 
@@ -39,8 +39,8 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[0], Eq[2])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -29,7 +29,7 @@ def prove(Eq):
     Ξ = Symbol(Ξ)
     Eq.ksi_def = Ξ.this.definition
 
-    Eq << keras.imply.eq.bert.mask.theorem.apply(A, Ξ, add=True)
+    Eq << algebra.mul.to.exp.oo.apply(exp(A) * Ξ).reversed
 
     a_quote = Symbol(Eq[-1].lhs.arg)
     Eq.a_quote_def = a_quote.this.definition
@@ -56,7 +56,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Greater).reversed
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.domain_defined.insert, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.domain_defined, simplify=None)
 
     Eq << algebra.all_lt.subset_cup.imply.eq.sum.reducedArgmax.apply(Eq[0], Eq[1], lambda i, j: exp(A[i, j]))
 
@@ -72,8 +72,8 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.z_def, Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

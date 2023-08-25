@@ -47,7 +47,7 @@ def prove(Eq):
 
     Eq << algebra.eq.cond.imply.cond.subs.apply(Eq.G_definition.reversed, Eq[-1])
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.sub.unshift)
 
     Eq << Eq[-1].subs(t, t + 1)
 
@@ -70,8 +70,8 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.apply(algebra.ne_zero.given.gt_zero)
 
     #reference: Neural Architectures for Named Entity Recognition.pdf
-    
-    
+
+
 
 
 if __name__ == '__main__':

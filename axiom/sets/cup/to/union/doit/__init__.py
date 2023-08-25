@@ -16,7 +16,7 @@ def prove(Eq):
 
     Eq << apply(Cup[i](x[i]))
 
-    Eq << Eq[-1].this.lhs.apply(sets.cup.limits.domain_defined.insert)
+    Eq << Eq[-1].this.lhs.apply(sets.cup.limits.domain_defined)
 
     n -= 1
     Eq << Eq[-1].this.lhs.apply(sets.cup.to.union.split, cond={n})

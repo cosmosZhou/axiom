@@ -4,9 +4,18 @@ from util import *
 @apply
 def apply(self):
     args = self.of(Add)
-    args =[arg.of(Re) for arg in args]
-
-    return Equal(self, Re(Add(*args), evaluate=False))
+    reals = []
+    for arg in args:
+        if r := arg.of(Re):
+            reals.append(r)
+        elif r := arg.of(Expr * Re):
+            coeff, r = r
+            assert coeff.is_super_real
+            reals.append(coeff * r)
+        else:
+            return
+            
+    return Equal(self, Re(Add(*reals), evaluate=False))
 
 
 @prove
@@ -28,3 +37,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-06-03
+# updated on 2023-06-24

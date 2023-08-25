@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << algebra.gt_zero.imply.eq.abs.apply(Eq[-1])
 
-    Eq << algebra.lt_square.given.et.lt.apply(Eq[1])
+    Eq << algebra.square_lt.given.et.lt.apply(Eq[1])
 
     Eq <<= Eq[-2].subs(Eq[-3]), Eq[-1].subs(Eq[-3])
     Eq << Eq[-1].reversed

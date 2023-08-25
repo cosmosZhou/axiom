@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(lt, self):
     d, n = lt.of(Less)
-    (fx, S[d]), x, S[n] = self.of(Difference[Pow])
+    (fx, S[d]), (x, S[n]) = self.of(Difference[Pow])
     assert not (fx - x)._has(x)
     return Equal(self, 0)
 
@@ -16,10 +16,10 @@ def prove(Eq):
     x = Symbol(real=True)
     n = Symbol(integer=True, positive=True)
     d = Symbol(integer=True, nonnegative=True)
-    Eq << apply(d < n, Difference(x ** d, x, n))
+    Eq << apply(d < n, Difference(x ** d, (x, n)))
 
     d_quote = Symbol(domain=Range(n))
-    Eq << discrete.difference.to.zero.apply(Difference(x ** d_quote, x, n))
+    Eq << discrete.difference.to.zero.apply(Difference(x ** d_quote, (x, n)))
 
     Eq << algebra.cond.imply.all.apply(Eq[-1], d_quote)
 

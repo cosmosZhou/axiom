@@ -72,7 +72,7 @@ elseif ($like) {
     $modules = \mysql\select_axiom_by_regex($regex, $caseSensitive);
 }
 
-// error_log(\std\jsonify($modules));
+// error_log(\std\encode($modules));
 
 global $user;
 ?>
@@ -80,19 +80,19 @@ global $user;
 <script src="static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
 <script src="static/unpkg.com/qs@6.10.2/dist/qs.js"></script>
 
-<script src="static/unpkg.com/vue@3.2.11/dist/vue.global.prod.js"></script>
+<script src="static/unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
 <script src="static/unpkg.com/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
 
 <script src="static/js/std.js"></script>
 <script src="static/js/utility.js"></script>
 <script type=module>
 createApp('searchResult', {
-    modules : <?php echo \std\jsonify($modules)?>,
-	user: <?php echo \std\jsonify($user)?>,
-	keyword: <?php echo \std\jsonify($keyword)?>,
-	regularExpression: <?php echo \std\jsonify($regularExpression)?>,
-	wholeWord: <?php echo \std\jsonify($wholeWord)?>,
-	caseSensitive: <?php echo \std\jsonify($caseSensitive)?>,
+    modules : <?php echo \std\encode($modules)?>,
+	user: <?php echo \std\encode($user)?>,
+	keyword: <?php echo \std\encode($keyword)?>,
+	regularExpression: <?php echo \std\encode($regularExpression)?>,
+	wholeWord: <?php echo \std\encode($wholeWord)?>,
+	caseSensitive: <?php echo \std\encode($caseSensitive)?>,
 });
 
 </script>

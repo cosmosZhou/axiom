@@ -2,10 +2,12 @@ from util import *
 
 
 @apply
-def apply(self):
+def apply(self, *, simplify=True):
     arg, *limits = self.of(Sum[Re])
-    
-    return Equal(self, Re(Sum(arg, *limits)))
+    sum = Sum(arg, *limits)
+    if simplify:
+        sum = sum.simplify()
+    return Equal(self, Re(sum))
 
 
 @prove
@@ -27,7 +29,11 @@ def prove(Eq):
 
     Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n, 0)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2023-06-03
+# updated on 2023-06-27

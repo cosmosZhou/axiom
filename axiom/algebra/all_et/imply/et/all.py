@@ -4,11 +4,14 @@ from util import *
 @apply
 def apply(given, index=-1):
     eqs, *limits = given.of(All[And])
+    if index is None:
+        return tuple(All(eq, *limits) for eq in eqs)
     import std
     former, latter = std.array_split(eqs, index)
     former = And(*former)
     latter = And(*latter)
     return All(former, *limits), All(latter, *limits)
+    
 
 
 @prove
@@ -31,4 +34,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2018-10-01
-# updated on 2023-05-20
+# updated on 2023-06-05

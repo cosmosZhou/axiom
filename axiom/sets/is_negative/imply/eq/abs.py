@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(given):
     x, R = given.of(Element)
-    assert R in Interval(-oo, 0, right_open=True)
+    assert R in Interval.open(-oo, 0)
     return Equal(abs(x), -x)
 
 
@@ -13,7 +13,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     x = Symbol(complex=True)
-    Eq << apply(Element(x, Interval(-oo, 0, right_open=True)))
+    Eq << apply(Element(x, Interval.open(-oo, 0)))
 
     Eq << sets.is_negative.imply.lt_zero.apply(Eq[0])
 

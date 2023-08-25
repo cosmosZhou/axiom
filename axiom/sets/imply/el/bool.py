@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(boole):
     assert boole.is_Bool
-    return Element(boole, {0, 1})
+    return Element(boole, {0, 1}, evaluate=False)
 
 
 @prove
@@ -39,4 +39,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2018-03-08
-# updated on 2023-05-14
+# updated on 2023-06-18

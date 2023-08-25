@@ -20,7 +20,7 @@ def apply(given, domain=None, wrt=None):
 
     assert domain is not None
 
-    x, S = Tuple.as_setlimit(limit)
+    x, S = limit.coerce_setlimit()
     assert S in domain
     limit = (x, domain)
 

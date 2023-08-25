@@ -3,11 +3,10 @@ from util import *
 
 @apply
 def apply(self, pivot=-1):
-    ecs = self.of(Piecewise)
-    expr, cond = zip(*ecs)
+    expr, cond = zip(*self.of(Piecewise))
     if not isinstance(pivot, (list, tuple)):
         pivot = [pivot] * len(expr)
-    import std    
+    import std
     former, latter = zip(*([Add(*s) for s in std.array_split(expr.of(Add), pivot)] for expr, pivot in zip(expr, pivot)))
     return Equal(self, Piecewise(*zip(former, cond)) + Piecewise(*zip(latter, cond)), evaluate=False)
 
@@ -30,3 +29,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-05-22
+# updated on 2023-06-08

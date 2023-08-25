@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(given):
     x, R = given.of(Element)
-    assert R in Interval(-oo, 0, right_open=True)
+    assert R in Interval.open(-oo, 0)
     assert x.is_extended_complex
     return x < 0
 
@@ -12,7 +12,7 @@ def apply(given):
 @prove
 def prove(Eq):
     x = Symbol(complex=True, given=True)
-    Eq << apply(Element(x, Interval(-oo, 0, right_open=True)))
+    Eq << apply(Element(x, Interval.open(-oo, 0)))
 
     Eq << ~Eq[1]
 

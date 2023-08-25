@@ -17,10 +17,10 @@ from axiom.discrete.sigma.to.add.recurrent import sigma
 @prove(proved=False)
 def prove(Eq):
     from axiom import algebra
+
     n = Symbol(domain=Range(2, oo), given=False)
     x = Symbol(real=True, positive=True, shape=(oo,))
     k = Symbol(integer=True)
-
     Eq << apply(x[:n], k)
 
     Eq.initial = Eq[0].subs(n, 2)
@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.doit)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.split.slice.cartesianSpace.baseset)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.shift.cartesianSpace.cond)
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.doit.outer)
 
@@ -51,9 +51,8 @@ def prove(Eq):
 
     Eq << algebra.ge_zero.imply.ge.apply(Eq[-1])
 
-    t = Function(real=True, eval=lambda k: (sigma[k](x[:n]) / binomial(n, k)) ** (1 / k)) 
+    t = Function(real=True, eval=lambda k: (sigma[k](x[:n]) / binomial(n, k)) ** (1 / k))
     k_ = Symbol("k", domain=Range(2, n))
-    
     Eq << t(k_).this.defun()
 
     Eq << algebra.eq.imply.eq.pow.apply(Eq[-1], exp=k_)
@@ -90,19 +89,18 @@ def prove(Eq):
 
     Eq << GreaterEqual(((sigma[k_](x[:n]) + x[n] * sigma[k_ - 1](x[:n])) / binomial(n, k_)) ** (1 / k_),
                        ((sigma[k_ + 1](x[:n]) + x[n] * sigma[k_](x[:n])) / binomial(n, k_ + 1)) ** (1 / (k_ + 1)), plausible=True)
+
     return
     Eq << Eq[-1].subs(Eq.s_k)
-
     Eq << Eq[-1].this.find(Mul).apply(algebra.mul.to.add)
-
     Eq << Eq[-1].subs(Eq.s_k1)
-
     Eq << Eq[-1].this.rhs.find(Mul).apply(algebra.mul.to.add)
-
     Eq << Eq[-1].subs(Eq.s_k1_neg)
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-11-05
+# updated on 2023-08-20

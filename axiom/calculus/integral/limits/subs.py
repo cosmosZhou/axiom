@@ -6,6 +6,16 @@ def limits_subs(self, old, new, simplify=True):
     
     if old == x:
         expr = expr._subs(old, new)
+        if new._has(x):
+            a = new._subs(x, a).simplify()
+            b = new._subs(x, b).simplify()
+        else:
+            x, = new.free_symbols - self.free_symbols
+            a = Equal(new, a).solve(x)
+            a = a.of(Equal[x])
+            b = Equal(new, b).solve(x)
+            b = b.of(Equal[x])
+            
         expr *= diff(new, x)
     elif new == x:
         new = expr.generate_var(real=True)
@@ -15,10 +25,13 @@ def limits_subs(self, old, new, simplify=True):
         
         expr = expr._subs(new, x)
         new = old
+
+        a = new._subs(x, a).simplify()
+        b = new._subs(x, b).simplify()
     else:
         return
         
-    self = Integral(expr, (x, new._subs(x, a).simplify(), new._subs(x, b).simplify()))
+    self = Integral(expr, (x, a, b))
     if simplify:
         return self.simplify()
     return self

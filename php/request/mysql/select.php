@@ -6,5 +6,5 @@ $array = [];
 foreach (\mysql\select($sql) as $row){
     $array[] = $row;
 }
-echo \std\jsonify($array);
+echo \std\encode($array);
 ?>

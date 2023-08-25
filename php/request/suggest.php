@@ -7,6 +7,6 @@ $dict = empty($_POST) ? $_GET : $_POST;
 $prefix = $dict['prefix'];
 $phrase = array_key_exists('phrase', $dict) ? $dict['phrase'] : '';
 
-echo \std\jsonify(\mysql\suggest($prefix, $phrase));
+echo \std\encode(\mysql\suggest($prefix, $phrase));
 
 ?>

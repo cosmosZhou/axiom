@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << algebra.iff.given.et.apply(Eq.equivalent)
 
-    Eq <<= algebra.infer.given.et.infer.et.apply(Eq[-2], cond=Eq[0]), algebra.assuming.given.assuming_et.apply(Eq[-1], cond=Eq[0])
+    Eq <<= algebra.cond.infer.given.et.infer.et.apply(Eq[0], Eq[-2]), algebra.assuming.given.assuming_et.apply(Eq[-1], cond=Eq[0])
 
     Eq <<= Eq[-2].this.lhs.apply(algebra.gt_zero.ge.imply.ge.div), Eq[-1].this.rhs.apply(algebra.gt_zero.ge.imply.ge.mul)
 

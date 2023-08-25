@@ -68,8 +68,6 @@ def prove(Eq):
     Eq << Y.this.definition
     Eq << Eq[1] @ Y
 
-
-
     Eq << Eq[-1].this.rhs.subs(Eq[-2])
 
     Eq << Eq[0].subs(Eq[1].reversed)

@@ -308,7 +308,7 @@ function yield_from_py($python_file)
                     'unused' => true,
                     'statement' => $statement
                 ];
-                // error_log(\std\jsonify($yield));
+                // error_log(\std\encode($yield));
                 yield $yield;
 
                 for (++ $i; $i < $count; ++ $i) {
@@ -335,14 +335,14 @@ function yield_from_py($python_file)
                     if (preg_match('/^\s*#(.*)/', $statement, $matches)) {
                         $yield['comment'] = true;
                         $yield['statement'] = "#" . ltrim($matches[1]);
-                        // error_log(\std\jsonify($yield));
+                        // error_log(\std\encode($yield));
                         yield $yield;
                         continue;
                     }
 
                     $statement = substr($statement, 4);
                     $yield['statement'] = $statement;
-                    // error_log(\std\jsonify($yield));
+                    // error_log(\std\encode($yield));
                     yield $yield;
                 }
 
@@ -358,7 +358,7 @@ function yield_from_py($python_file)
                 $yield['comment'] = true;
                 $yield['statement'] = "#" . ltrim($matches[1]);
 
-                // error_log(\std\jsonify($yield));
+                // error_log(\std\encode($yield));
                 yield $yield;
                 continue;
             }
@@ -391,7 +391,7 @@ function yield_from_py($python_file)
                 // error_log("dict = " . jsonify($dict));
                 $yield['a'] = $dict;
             }             
-            // error_log(\std\jsonify($yield));
+            // error_log(\std\encode($yield));
             yield $yield;
         }
 
@@ -560,7 +560,7 @@ function delete_from_init($package, $theorem = null)
 
             ++ $imports;
             $theorems = preg_split('/\s*,\s*/', $m[1]);
-            error_log(\std\jsonify($theorems));
+            error_log(\std\encode($theorems));
 
             $index = array_search($theorem, $theorems);
             if ($index !== false) {

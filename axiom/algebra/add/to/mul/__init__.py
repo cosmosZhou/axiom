@@ -115,10 +115,9 @@ def factorize(args, common_terms):
             assert arg == factor
             additives.append(1)
             
-    return Add(*additives), factor
+    return additives, factor
 
-def rewrite(self):
-    args = self.of(Add)
+def common_terms(args):
     common_terms = None
     for arg in args:
         if arg.is_Mul:
@@ -133,8 +132,14 @@ def rewrite(self):
                 common_terms = intersect(common_terms, [arg])
         if not common_terms:
             return
+    return common_terms
 
-    return factorize(args, common_terms)
+
+def rewrite(self):
+    args = self.of(Add)
+    if c := common_terms(args):
+        args, c = factorize(args, c)
+        return Add(*args), c
 
 
 @apply

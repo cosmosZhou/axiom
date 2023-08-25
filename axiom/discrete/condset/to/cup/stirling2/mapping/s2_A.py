@@ -96,7 +96,7 @@ def prove(Eq):
 
     Eq.xj_is_positive = Eq[-1].subs(Eq[-4].reversed)
 
-    Eq << algebra.all.all.imply.all_et.apply(Eq.x_abs_positive_s1, Eq[-3].reversed)
+    Eq << algebra.all.all.imply.all.et.apply(Eq.x_abs_positive_s1, Eq[-3].reversed)
 
     Eq.xi_is_positive = Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.transit)
 
@@ -154,7 +154,7 @@ def prove(Eq):
 
     Eq << algebra.le.le.imply.le.subs.apply(Eq[-2], Eq[-1])
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq.set_size_inequality)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq.set_size_inequality)
 
     Eq << Eq[-1].this.expr.apply(algebra.lt.le.imply.lt.add)
 

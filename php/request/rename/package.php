@@ -179,5 +179,5 @@ if (strpos($new, '.') !== false) {
     \mysql\update_axiom($oldAxiom, $newAxiom, true);
 }
 
-echo \std\jsonify("renamed!");
+echo \std\encode("renamed!");
 ?>

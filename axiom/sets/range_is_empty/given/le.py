@@ -14,7 +14,7 @@ def prove(Eq):
 
     a, b = Symbol(integer=True, given=True)
     Eq << apply(Equal(Range(a, b), a.emptySet))
-    Eq << sets.le.imply.range_is_empty.apply(Eq[1])
+    Eq << sets.le.imply.is_empty.range.apply(Eq[1])
 
 
 if __name__ == '__main__':

@@ -19,7 +19,7 @@ def prove(Eq):
     f = Function(real=True)
     x = Symbol(real=True)
     d = Symbol(integer=True, positive=True, given=False)
-    Eq << apply(Difference(Sum[i:n](f[i](x)), x, d))
+    Eq << apply(Difference(Sum[i:n](f[i](x)), (x, d)))
 
     Eq.initial = Eq[0].subs(d, 1)
 

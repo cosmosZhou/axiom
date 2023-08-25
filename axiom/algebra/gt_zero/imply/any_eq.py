@@ -8,7 +8,7 @@ def apply(given, var=None):
         var = given.generate_var(positive=True)
     else:
         assert not var.is_given
-        assert var.domain == Interval(0, oo, left_open=True)
+        assert var.domain == Interval.open(0, oo)
     return Any[var](Equal(x, var))
 
 

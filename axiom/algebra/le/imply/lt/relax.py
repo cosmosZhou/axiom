@@ -17,7 +17,7 @@ def prove(Eq):
     from axiom import algebra
 
     x, a = Symbol(real=True)
-    b = Symbol(domain=Interval(a, oo, left_open=True))
+    b = Symbol(domain=Interval.open(a, oo))
     Eq << apply(x <= a, b)
 
     Eq << Less(a, b, plausible=True)

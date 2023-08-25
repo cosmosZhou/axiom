@@ -31,27 +31,27 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum)().expr.simplify()
 
-    Eq << algebra.infer.given.et.infer.et.apply(Eq.gt_zero, cond=Eq[0])
+    Eq << algebra.cond.infer.given.et.infer.et.apply(Eq[0], Eq.gt_zero)
 
     Eq << Eq[-1].this.find(And[~Less]).apply(algebra.abs_lt.imply.lt)
 
     Eq << Eq[-1].this.lhs.apply(sets.lt.gt.imply.el.interval)
 
-    Eq << algebra.infer.given.et.infer.et.apply(Eq[-1], cond=Eq[1])
+    Eq << algebra.cond.infer.given.et.infer.et.apply(Eq[1], Eq[-1])
 
     Eq << Eq[-1].this.lhs.apply(sets.el_interval.is_finite.imply.is_real.sum, simplify=None)
 
-    Eq << algebra.infer.given.et.infer.et.apply(Eq.lt_zero, cond=Eq[0])
+    Eq << algebra.cond.infer.given.et.infer.et.apply(Eq[0], Eq.lt_zero)
 
     Eq << Eq[-1].this.find(Abs < 1).apply(algebra.abs_lt.imply.gt)
 
     Eq << Eq[-1].this.lhs.apply(sets.lt.gt.imply.el.interval)
 
-    Eq << algebra.infer.given.et.infer.et.apply(Eq[-1], cond=Eq[1])
+    Eq << algebra.cond.infer.given.et.infer.et.apply(Eq[1], Eq[-1])
 
     Eq << Eq[-1].this.lhs.apply(sets.el_interval.is_finite.imply.is_real.sum.negative, simplify=None)
 
-    
+
 
 
 if __name__ == '__main__':

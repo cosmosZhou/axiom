@@ -2,8 +2,11 @@ from util import *
 
 
 @apply
-def apply(self):
-    (first, second), *limits = self.of(Lamda[Mul])
+def apply(self, pivot=-1):
+    args, *limits = self.of(Lamda[Mul])
+    import std
+    first, second = std.array_split(args, pivot)
+    first, second = Mul(*first), Mul(*second)
 
     first = Lamda(first, *limits).simplify(squeeze=True)
     second = Lamda(second, *limits).simplify(squeeze=True)
@@ -28,10 +31,12 @@ def prove(Eq):
     Eq << apply(Lamda[j:n](a[j] * b[j]))
 
     _j = Symbol('j', domain=Range(n))
-
     Eq << algebra.eq.given.eq.getitem.apply(Eq[0], _j)
+
+    
 
 
 if __name__ == '__main__':
     run()
 
+# updated on 2023-06-08

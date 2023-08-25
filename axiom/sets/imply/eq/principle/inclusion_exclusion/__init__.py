@@ -25,7 +25,7 @@ def prove(Eq):
     k = _k.unbounded
     Eq << Eq[-1].this.lhs.limits_subs(_k, k)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.domain_defined)
 
     Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.split, cond={0})
 

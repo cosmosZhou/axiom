@@ -8,7 +8,7 @@ def apply(self):
     assert _k1 == -k - 1 and _k == -k
     assert not interval.left_open and interval.right_open
 
-    return Equal(self, Interval(-oo, 0, right_open=True))
+    return Equal(self, Interval.open(-oo, 0))
 
 
 @prove

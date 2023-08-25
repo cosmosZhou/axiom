@@ -110,3 +110,6 @@ from . import card
 from . import cup_subset
 from . import any_subset
 from . import subset_union
+from . import square_lt
+from . import square_le
+from . import el_cartesianSpace

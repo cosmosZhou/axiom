@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this.rhs.apply(algebra.lt_zero.le.imply.ge.mul), algebra.infer.imply.infer.et.both_sided.apply(Eq[-1], cond=Eq[0])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.cond.any.imply.any_et, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(algebra.cond.any.imply.any.et, simplify=None)
 
     Eq << Eq[-1].this.rhs.expr.apply(algebra.lt_zero.gt.imply.lt.mul)
 

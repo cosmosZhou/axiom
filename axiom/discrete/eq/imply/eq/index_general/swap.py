@@ -7,7 +7,7 @@ def apply(given, i=None, j=None, w=None):
     x_cup_finiteset, interval = given.of(Equal)
     n = interval.max() + 1
     assert interval.min() == 0
-    
+
     arg, (k, a, S[a + n]) = x_cup_finiteset.of(Cup[FiniteSet])
     x = Lamda[k:a:a + n](arg).simplify()
 
@@ -90,7 +90,7 @@ def prove(Eq):
     Eq << Eq[-1].this.rhs.subs(Eq.union_equality)
 
     Eq << Eq.di_definition.this.rhs.defun().this.rhs.apply(discrete.matmul.to.sum)
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.rhs.apply(algebra.sum.to.sub.unshift)
 
     Eq << Eq[-3].subs(Eq[-1].reversed)
 
@@ -116,8 +116,8 @@ def prove(Eq):
 
     Eq << Eq[-3].subs(Eq[-1].reversed)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -49,13 +49,13 @@ def prove(Eq):
 
     Eq << sets.el_range.imply.et.apply(Eq[0])
 
-    Eq << sets.ge.imply.range_is_empty.apply(Eq[-2] + 1)
+    Eq << sets.ge.imply.is_empty.range.apply(Eq[-2] + 1)
 
     Eq << algebra.lt.imply.le.strengthen.apply(Eq[-1])
 
-    Eq << sets.le.imply.range_is_empty.apply(Eq[-1])
+    Eq << sets.le.imply.is_empty.range.apply(Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

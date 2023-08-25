@@ -4,16 +4,9 @@ from util import *
 @apply
 def apply(self):
     expr, *limits_d = self.of(Integral)
-    vars = [var for var, *ab in limits_d]
-
-    args = expr.of(Mul)
-    coeff = []
-    funcs = []
-    for arg in args:
-        if arg.has(*vars):
-            funcs.append(arg)
-        else:
-            coeff.append(arg)
+    vars = [var for var, *_ in limits_d]
+    import std
+    funcs, coeff = std.array_split(expr.of(Mul), lambda arg: arg.has(*vars))
     coeff = Mul(*coeff)
     funcs = Mul(*funcs)
     return Equal(self, coeff * Integral(funcs, *limits_d))
@@ -34,3 +27,4 @@ if __name__ == '__main__':
 
 
 from . import limit
+from . import bool

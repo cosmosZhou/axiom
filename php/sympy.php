@@ -21,7 +21,7 @@ $code = str_replace("`", "\\`", $code);
 <link rel=stylesheet href="static/codemirror/addon/hint/show-hint.css">
 <body></body>
 
-<script src="static/unpkg.com/vue@3.2.11/dist/vue.global.prod.js"></script>
+<script src="static/unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
 <script src="static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
 <script src="static/unpkg.com/qs@6.10.2/dist/qs.js"></script>
 <script

@@ -3,13 +3,8 @@ from util import *
 
 @apply
 def apply(ne_zero, self):
-    A = []
-    AT = []
-    for X in ne_zero.of(Unequal[Det[Add], 0]):
-        if X.is_Transpose:
-            AT.append(X)
-        else:
-            A.append(X)
+    import std
+    AT, A = std.array_split(ne_zero.of(Unequal[Det[Add], 0]), lambda arg: arg.is_Transpose)
 
     A = Add(*A)
     if AT:

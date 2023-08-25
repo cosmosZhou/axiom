@@ -123,13 +123,13 @@ def prove(Eq):
 
     Eq <<= Eq.any_n_plausible & Eq[-1]
 
-    Eq << Eq[-1].this.expr.apply(algebra.cond.any.imply.any_et)
+    Eq << Eq[-1].this.expr.apply(algebra.cond.any.imply.any.et)
 
     Eq << Eq[-1].this.expr.expr.apply(discrete.eq.eq.imply.eq.permutation.pop.interval)
 
     Eq << algebra.all.imply.ou.subs.apply(Eq.hypothesis, Eq.hypothesis.variable, p_quote[:n])
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq[-1], Eq[-2])
+    Eq << algebra.cond.all.imply.all.et.apply(Eq[-1], Eq[-2])
 
     Eq << Eq[-1].this.expr.apply(algebra.any.ou.imply.cond, simplify=None)
 
@@ -151,8 +151,8 @@ def prove(Eq):
 
     Eq << Eq[1].subs(Eq[0])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

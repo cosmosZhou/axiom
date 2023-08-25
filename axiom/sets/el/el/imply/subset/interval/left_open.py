@@ -31,7 +31,7 @@ def prove(Eq):
 
     Eq << sets.le.imply.subset.interval.oo.apply(Eq[-1], left_open=True)
 
-    Eq << sets.subset.imply.subset.intersect.apply(Eq[-1], Interval(-oo, b, right_open=True))
+    Eq << sets.subset.imply.subset.intersect.apply(Eq[-1], Interval.open(-oo, b))
 
     Eq << sets.subset.subset.imply.subset.transit.apply(Eq.subset, Eq[-1])
 

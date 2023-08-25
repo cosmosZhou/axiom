@@ -52,7 +52,7 @@ def prove(Eq):
 
     Eq << algebra.all_et.imply.et.all.apply(Eq[-1])
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq.x_quote_n_definition, Eq[-2], simplify=False)
+    Eq << algebra.cond.all.imply.all.et.apply(Eq.x_quote_n_definition, Eq[-2], simplify=False)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.transit)
 

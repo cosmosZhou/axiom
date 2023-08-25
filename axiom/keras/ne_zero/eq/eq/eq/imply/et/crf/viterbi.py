@@ -24,7 +24,6 @@ def apply(x_independence_assumption, y_independence_assumption, xy_independence_
 
     x_quote = Symbol(Lamda[y[t], t](Maxima[y[:t]](s[t])))
 
-
     return Infer(t > 0, Equal(x_quote[t], x[t] + ReducedMax(x_quote[t - 1] + G))), \
         Equal(Maxima[y](joint_probability), exp(ReducedMax(x_quote[n - 1])))
 
@@ -92,7 +91,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.maxima.to.exp)
 
-    Eq << algebra.eq.imply.eq.reducedMax.apply(Eq.x_quote_definition).this.rhs.simplify(wrt=t)
+    Eq << algebra.eq.imply.eq.reducedMax.apply(Eq.x_quote_definition)
 
     Eq << Eq[-2].subs(Eq[-1].reversed)
 

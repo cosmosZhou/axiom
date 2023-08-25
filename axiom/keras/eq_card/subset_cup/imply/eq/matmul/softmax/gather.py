@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(softmax).apply(keras.softmax.to.mul.reducedSum)
 
-    Eq << keras.imply.eq.bert.mask.theorem.apply(a[i], Xi, add=True)
+    Eq << algebra.mul.to.exp.oo.apply(exp(a[i]) * Xi).reversed
 
     Eq.zi_definition = Eq[-2].subs(Eq[-1])
 
@@ -66,7 +66,7 @@ def prove(Eq):
 
     Eq << Eq.zi_definition.find(MatMul).this.apply(discrete.matmul.to.lamda)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined)
 
     k = Eq[-1].rhs.expr.variable
     Eq << Eq.Xi_def[k]

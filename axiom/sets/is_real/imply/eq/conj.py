@@ -2,9 +2,11 @@ from util import *
 
 
 @apply
-def apply(given):
+def apply(given, reverse=False):
     x, R = given.of(Element)
     assert R in Reals
+    if reverse:
+        return Equal(x, ~x)    
     return Equal(~x, x)
 
 
@@ -21,7 +23,10 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-1], Eq[-2])
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2023-05-02
+# updated on 2023-06-23

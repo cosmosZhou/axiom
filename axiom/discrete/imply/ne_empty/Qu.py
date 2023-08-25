@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq << discrete.cup.finiteset.matmul.apply(a)
 
-    Eq << Eq[-1].this.lhs.apply(sets.cup.limits.domain_defined.insert)
+    Eq << Eq[-1].this.lhs.apply(sets.cup.limits.domain_defined)
 
     Eq <<= Eq[-1] & Eq[-3]
 
@@ -48,8 +48,8 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.apply(Eq[-1], _t)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

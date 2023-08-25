@@ -1,27 +1,38 @@
 from util import *
 
 
-@apply
-def apply(self):
+def rewrite(self):
     arg = self.of(Exp)
+    if arg is None:
+        return self
+
     if arg.is_Mul:
         [*args] = arg.args
         for i, block in enumerate(args):
             if block.is_BlockMatrix:
                 break
         else:
-            return
+            return self
+
         del args[i]
         e = Mul(*args)
         args = block.args
         args = [exp(b * e) for b in args]
         axis = block.axis
-    else:
-        assert arg.is_BlockMatrix
+        
+    elif arg.is_BlockMatrix:
         args = arg.args
         axis = arg.axis
-        args = [exp(e) for e in args]
-    return Equal(self, BlockMatrix[axis](args), evaluate=False)
+        args = [rewrite(exp(e)) for e in args]
+        
+    else:
+        return self
+        
+    return BlockMatrix[axis](args)
+
+@apply
+def apply(self):
+    return Equal(self, rewrite(self), evaluate=False)
 
 
 @prove
@@ -38,10 +49,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.exp.to.piece)
 
-
-
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-12-19
+# updated on 2023-06-08

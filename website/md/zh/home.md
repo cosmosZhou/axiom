@@ -72,11 +72,11 @@ extended_integer ⊂ extended_rational ⊂ [extended_real](https://en.wikipedia.
 # 数学定理库的建设
   <br>
   
-目前积累了<label id=count>____</label>个已知数学定理用于半机械化数学推导。主要涉及：	
+目前积累了<label id=count>____</label>个已知数学定理用于交互式半机械化数学推导。涉及：	
 	
-* [algebra](../index.php?module=algebra) 初等代数，主要涉及等式的恒等、换元变换、有限级数[∑裂项求和](../index.php?module=algebra.sum.to.add.telescope)、∏裂项求积技巧，不等式的传递性质的命题，[一元一次方程](../index.php?module=algebra.poly_is_zero.imply.et.infer.simple_equation)，[一元二次方程](../index.php?module=algebra.poly_is_zero.imply.et.infer.quadratic)，[一元三次方程](../index.php?module=algebra.poly_is_zero.imply.et.infer.cubic)，[一元四次方程](../index.php?module=algebra.poly_is_zero.imply.et.infer.quartic)的求解问题，初等函数的各种常见性质；
+* [algebra](../index.php?module=algebra) 初等代数，主要涉及等式的恒等、换元变换、有限级数[∑裂项求和](../index.php?module=algebra.sum.to.add.telescope)、∏裂项求积技巧，[一元一次方程](../index.php?module=algebra.poly_is_zero.imply.et.infer.simple_equation)，[一元二次方程](../index.php?module=algebra.poly_is_zero.imply.et.infer.quadratic)，[一元三次方程](../index.php?module=algebra.poly_is_zero.imply.et.infer.cubic)，[一元四次方程](../index.php?module=algebra.poly_is_zero.imply.et.infer.quartic)的求解问题，[分部求和](../index.php?module=algebra.sum.to.add.by_parts)定理(Abel变换)；
 [数学归纳法](../index.php?module=algebra.ne_zero.infer.imply.ne_zero.induct)的证明；
-* [sets](../index.php?module=sets) 集合论, 即sets theory，集合论是整个数学分析、数学推导系统的理论核心；涉及大量用集合论术语ForAll（任意）, Exists（存在）, ‘属于’ （Element），‘包含’（Subset）描述的命题，比如
+* [sets](../index.php?module=sets) 集合论, 即sets theory，集合论是整个数学分析、数学推导系统的理论核心；涉及用集合论术语ForAll（任意）, Exists（存在）, ‘属于’ （Element），‘包含’（Subset）描述的命题，比如
 [容斥原理](../index.php?module=sets/imply/eq/principle/inclusion_exclusion/basic)的证明。可以说，集合论是数学推理的根本语法。
 * [geometry](../index.php?module=geometry) 几何学，包含不少三角函数恒等式，比如
 [和差化积](../index.php?module=geometry.cos.to.add.principle)，[积化和差](../index.php?module=geometry.mul.to.add.sin)，等等。
@@ -85,19 +85,18 @@ extended_integer ⊂ extended_rational ⊂ [extended_real](https://en.wikipedia.
 [无穷级数](../index.php?module=calculus.eq.imply.eq.series.infinite.coefficient) 的运算性质；
 [分部积分](../index.php?module=calculus.integral.to.add.by_parts) 定理；
 三角函数及其它少数超越函数的积分；
-* [discrete](../index.php?module=discrete) 数论，离散数学，组合数学，线性代数，包含一些基本的排列组合的计算公式的证明（比如
-[排列数](../index.php?module=discrete.abs_cup.to.factorial) 的组合学计算，组合数的组合学计算， [第二类Stirling数](../index.php?module=discrete.stirling2.to.add.recurrence) 的组合学推导， 
-[Catalan数](../index.php?module=discrete.eq.eq.imply.eq.catalan.recurrence) 的推导）， 
-[连分数](../index.php?module=discrete.add.to.pow.HK.recurrence) 初步理论；以及与矩阵的行列式相关的若干命题。
-* [stats](../index.php?module=stats) 概率统计学，主要包含常见概率分布（比如二项式分布，正态分布，poisson分布，die分布，Χ<sup>2</sup>分布）相关公式的推导，以及[Bayes公式](../index.php?module=stats/probability/to/mul)相关的命题；
-* [keras](../index.php?module=keras) 机器学习，深度学习中的数学模型，主要包括用于研究自然语言的数学模型，
-[GRU](https://arxiv.org/abs/1412.3555v1)，
-[LSTM](https://www.mitpressjournals.org/doi/pdf/10.1162/089976600300015015)，
-[BERT](https://arxiv.org/abs/1706.03762)，
-[TEXT-CNN](https://arxiv.org/pdf/1408.5882.pdf)，
-条件自由场[CRF](https://arxiv.org/abs/1603.01360) 模型的计算公式以其在计算上的各种性质，以及KMeans
-[聚类收敛性](../index.php?module=sets.el.notin.le.imply.le.st.variance) 部分证明。概率论为机器学习提供了理论上的依据。  
-* 今后不久将增加物理，化学，生物方面（及其分支学科）的数学应用，以记录数学方法在实用科技方面的经典成功应用，从而推动应用科学技术发展的历史。
+* [discrete](../index.php?module=discrete) 数论，离散数学，组合数学，线性代数，[第二类Stirling数](../index.php?module=discrete.stirling2.to.add.recurrence)的组合学推导，
+[Catalan数](../index.php?module=discrete.eq.eq.imply.eq.catalan.recurrence)的推导）， 
+[连分数](../index.php?module=discrete.add.to.pow.HK.recurrence)初步理论；[Cholesky矩阵分解](../index.php?module=discrete.eq_adjoint.infer_gt_zero.imply.any.eq.Cholesky)存在定理。
+* [stats](../index.php?module=stats) 概率统计学，比如[Bayes公式](../index.php?module=stats/probability/to/mul)相关的命题；
+* [keras](../index.php?module=keras) 机器学习，深度学习中的数学模型，
+[LSTM](../index.php?module=keras.eq.eq.imply.eq.long_short_term_memory)，
+[GRU](../index.php?module=keras.imply.eq.gated_recurrent_unit)，
+[CNN](../index.php?module=keras.eq_lamda_bool.imply.eq.conv1d)，
+[BERT](../index.php?module=keras.matmul_softmax.to.lamda.div.scaled_dot_product_attention)，
+[GPT](../index.php?module=keras.matmul_softmax.to.lamda.matmul.gpt)，
+条件自由场[CRF](../index.php?module=keras.ne_zero.eq.eq.eq.imply.et.crf)模型的计算公式的推导，以及KMeans
+[聚类收敛性](../index.php?module=sets.el.notin.le.imply.le.st.variance)证明。强化学习的[策略梯度定理](../index.php?module=keras.eq_conditioned.eq_expect.is_finite.is_finite.imply.eq.matmul.grad.expect.unbiased_advantage_estimate)。  
 
 <br><br>
 -------

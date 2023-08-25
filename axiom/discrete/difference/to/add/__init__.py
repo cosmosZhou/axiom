@@ -17,7 +17,7 @@ def prove(Eq):
     f, g = Function(real=True)
     x = Symbol(real=True)
     d = Symbol(integer=True, positive=True, given=False)
-    Eq << apply(Difference(f(x) + g(x), x, d))
+    Eq << apply(Difference(f(x) + g(x), (x, d)))
 
     Eq.initial = Eq[0].subs(d, 1)
 

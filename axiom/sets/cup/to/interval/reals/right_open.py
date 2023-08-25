@@ -7,7 +7,7 @@ def apply(self):
     S[k], S[k + 1] = interval.of(Interval)
     assert not interval.left_open and interval.right_open
 
-    return Equal(self, Interval(-oo, oo, right_open=True))
+    return Equal(self, Interval.open(-oo, oo))
 
 
 @prove

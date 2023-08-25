@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.lamda)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined)
 
     Eq << Eq[-1].this.find(Sum).doit()
 

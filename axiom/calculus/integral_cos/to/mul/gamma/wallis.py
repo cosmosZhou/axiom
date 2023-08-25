@@ -31,15 +31,13 @@ def prove(Eq):
     Eq << Eq.induct.lhs.this.expand()
 
     #Integration by parts
-    Eq << Eq[-1].this.rhs.apply(calculus.integral.to.add.by_parts, dv=cos(x)) / n
+    Eq << Eq[-1].this.rhs.apply(calculus.integral.to.add.by_parts) / n
 
     Eq << Eq[-1].this.lhs.args[1].expr.powsimp()
 
     Eq << Eq[-1].this.rhs.expr.powsimp()
 
-    Eq << geometry.plane.trigonometry.sine.squared.apply(x)
-
-    Eq << Eq[-2].this.rhs.subs(Eq[-1])
+    Eq << Eq[-1].this.find(sin ** 2).apply(geometry.square_sin.to.sub.square.cos)
 
     Eq << Eq[-1].this.rhs.expr.apply(algebra.mul.to.add)
 
@@ -73,4 +71,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2020-06-30
-# updated on 2023-05-20
+# updated on 2023-07-03

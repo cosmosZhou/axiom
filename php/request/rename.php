@@ -106,5 +106,5 @@ if (file_exists($newPy)) {
 \mysql\update_axiom($old, $new);
 \mysql\update_hierarchy($old, $new);
 
-echo \std\jsonify("renamed!");
+echo \std\encode("renamed!");
 ?>

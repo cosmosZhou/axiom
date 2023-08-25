@@ -12,7 +12,7 @@ def rotary_matrix(n, d, b, i, j, k):
                 (cos(i / b ** ((j - 1) / d)), Equal(j, k)),
                 (sin(i / b ** ((j - 1) / d)), Equal(j, k + 1)),
                 (0, True)), True)))
-        
+
 def extract(eq_R):
     (piece, (k, S[0], d), (j, S[0], S[d]), (i, S[0], n)), R = eq_R.of(Equal[Lamda])
     (((even_expr, (S[j], S[k])), (S[even_expr], (S[j], S[k - 1]))), S[j]), ((odd_expr, (S[j], S[k])), (S[odd_expr], (S[j], S[k + 1]))) = piece.of(
@@ -37,17 +37,17 @@ def extract(eq_R):
     S[i / b ** ((j - 1) / d)] = odd_expr
     return (R, n, d), b, (i, j, k)
 
-    
+
 @apply
 def apply(eq_R, x):
     (R, n, d), b, (i, j, k) = extract(eq_R)
     return Equal(
-        R[i] @ x, 
+        R[i] @ x,
         Lamda[j:d](
             Piecewise(
-                (x[j] * cos(i / b ** (j / d)) - x[j + 1] * sin(i / b ** (j / d)), Equal(j % 2, 0)), 
+                (x[j] * cos(i / b ** (j / d)) - x[j + 1] * sin(i / b ** (j / d)), Equal(j % 2, 0)),
                 (x[j] * cos(i / b ** ((j - 1) / d)) + x[j - 1] * sin(i / b ** ((j - 1) / d)), True))))
-                 
+
 
 
 
@@ -91,8 +91,8 @@ def prove(Eq):
     #reference:
     #Self-Attention with Rotary Position Embedding.pdf
     #https://arxiv.org/pdf/2104.09864.pdf#page=7
-    
-    
+
+
 
 
 if __name__ == '__main__':

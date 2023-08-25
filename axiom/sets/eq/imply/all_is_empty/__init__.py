@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-2].this.expr.apply(algebra.eq.gt.imply.lt.subs, Eq[-1])
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[0], Eq[-1], simplify=False)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[0], Eq[-1], simplify=False)
 
     Eq.gt = Eq[-1].this.expr.apply(algebra.eq.lt.imply.gt.substract)
 
@@ -55,8 +55,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this().expr.lhs.simplify()
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

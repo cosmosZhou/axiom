@@ -69,7 +69,7 @@ def prove(Eq):
 
     Eq << calculus.gt_zero.all_gt_zero.imply.limit_ge_zero.st.limit.apply(Eq[-1], Eq[-2])
 
-    Eq << calculus.is_limited.is_limited.imply.eq.algebraic_limit_theorem.sub.apply(Eq[2], Eq[3])
+    Eq << calculus.is_limited.is_limited.imply.eq.sub.algebraic_limit_theorem.apply(Eq[2], Eq[3])
 
     Eq << Eq[-2].subs(Eq[-1])
 

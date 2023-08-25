@@ -88,7 +88,7 @@ def prove(Eq):
 
     Eq << sets.eq_cup.el.imply.any.eq.apply(Eq[1], Eq.contains)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq.given, Eq[-1], simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq.given, Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, ret=0)
 
@@ -125,7 +125,7 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1].reversed)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[1] & Eq[3], Eq[-1], simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[1] & Eq[3], Eq[-1], simplify=None)
 
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
 
@@ -143,11 +143,11 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
 
-    
+
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)
     Eq << Eq[-1].subs(Eq.eq_X_union.reversed, Eq.eq_Y_complement.reversed)
-    
-    
+
+
 
 
 if __name__ == '__main__':

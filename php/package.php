@@ -54,7 +54,7 @@ if (\std\endsWith($title, '/')) {
 <title><?php echo $title;?></title>
 <body></body>
 
-<script src="static/unpkg.com/vue@3.2.11/dist/vue.global.prod.js"></script>
+<script src="static/unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
 <script src="static/unpkg.com/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
 
 <script src="static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
@@ -65,8 +65,8 @@ if (\std\endsWith($title, '/')) {
 
 <script>
 createApp('axiomContents', {
-	packages: <?php echo \std\jsonify($packages)?>,
-	theorems: <?php echo \std\jsonify($theorems)?>,
+	packages: <?php echo \std\encode($packages)?>,
+	theorems: <?php echo \std\encode($theorems)?>,
 });
 </script>
 

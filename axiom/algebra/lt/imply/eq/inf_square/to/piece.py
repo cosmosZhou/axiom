@@ -46,14 +46,14 @@ def prove(Eq):
 
     Eq << algebra.infer_et.given.infer.delete.apply(Eq[-1])
 
-    Eq <<= algebra.infer.given.et.infer.et.apply(Eq[-1], cond=Eq[0])
+    Eq <<= algebra.cond.infer.given.et.infer.et.apply(Eq[0], Eq[-1])
 
     Eq <<= Eq[-1].this.lhs.apply(algebra.eq.cond.imply.cond.subs)
 
     Eq << Eq[-1].this.lhs.apply(algebra.lt_zero.imply.eq.inf_square.to.zero, x)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

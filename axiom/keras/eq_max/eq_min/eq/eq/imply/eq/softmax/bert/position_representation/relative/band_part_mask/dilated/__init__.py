@@ -52,7 +52,7 @@ def prove(Eq):
 
     Eq.z_definition = Eq[-1].subs(Eq[0].reversed)
 
-    Eq << keras.imply.eq.bert.mask.theorem.apply(a, band_part, add=True)
+    Eq << algebra.mul.to.exp.oo.apply(exp(a) * band_part).reversed
 
     a_quote = Symbol(Eq[-1].lhs.arg)
     Eq << Eq[-1].subs(a_quote.this.definition.reversed)
@@ -89,7 +89,7 @@ def prove(Eq):
 
     Eq << Eq.zi_definition.rhs.args[0].this.apply(discrete.matmul.to.lamda)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined)
 
     k = Eq[-1].rhs.expr.variable
     Eq << Eq.Xi_definition[k]
@@ -136,8 +136,8 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[1], Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -68,7 +68,7 @@ else{
     $path = dirname($path);
     error_log("dirname(path)= ".$path);
     $files = iterator_to_array(\std\read_files($path, "py"));
-    error_log("files = ".\std\jsonify($files));
+    error_log("files = ".\std\encode($files));
     if (count($files) == 1){
         list($__init__) = $files;
         if (\std\endsWith($__init__, "/__init__.py") || \std\endsWith($__init__, "\\__init__.py")){
@@ -88,5 +88,5 @@ else{
     \mysql\delete_from_axiom('$module\b', true);    
 }
 
-echo \std\jsonify("deleted!");
+echo \std\encode("deleted!");
 ?>

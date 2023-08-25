@@ -5,7 +5,7 @@ if ($input != null) {
 }
 
 $numOfReturnsFromApply = $lengths[$indexOfYield];
-// error_log("lengths = " . \std\jsonify($lengths));
+// error_log("lengths = " . \std\encode($lengths));
 
 $latex = [];
 $i = 0;
@@ -174,51 +174,7 @@ div {
 }
 </style>
 <body></body>
-
-<script>
-MathJax = {
-    startup: {
-        ready(){
-              console.log('MathJax is loaded, but not yet initialized');
-              MathJax.startup.defaultReady();
-              console.log('MathJax is initialized, and the initial typeset is queued');
-              
-              MathJax.startup.promise.then(() => {                    
-                  console.log('MathJax initial typesetting complete');
-                  setTimeout(() => {
-                	  var p = document.querySelectorAll('p');
-                	  if (p.length) {
-                          for (let p of document.querySelectorAll('p')){
-                              if (p.innerText.startsWith("\\[")) {
-                                  console.log("unfinished work detected!");
-                                  console.log(p.innerText);
-                                  console.log('trying MathJax.typesetPromise() again;');
-                                  MathJax.typesetPromise();
-                                  break;
-                              }
-                          }
-                      }
-                	  else {
-                    	  console.log("no p tags have been detected!");
-                    	  setTimeout(() => {
-                    		  console.log("MathJax.typesetPromise() due to absence of p tags");
-                    		  MathJax.typesetPromise();
-                    	  }, 1000);
-                	  }
-                  }, 1000);
-              });                  
-         }
-      },
-
-    tex: {
-        maxBuffer: 60 * 1024,       // maximum size for the internal TeX string (10K)
-        //reference: http://docs.mathjax.org/en/latest/options/input/tex.html?highlight=MAXBUFFER#the-configuration-block
-    },
-};
-</script>
-
-<script async src="static/unpkg.com/mathjax@3.2.0/es5/tex-chtml.js"></script>
-<script src="static/unpkg.com/vue@3.2.11/dist/vue.global.prod.js"></script>
+<script src="static/unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
 <script src="static/unpkg.com/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
 
 <script src="static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
@@ -226,6 +182,10 @@ MathJax = {
 
 <script src='static/js/std.js'></script>
 <script src='static/js/utility.js'></script>
+<script>
+MathJax = InitMathJax(1000);
+</script>
+<script async src="static/unpkg.com/mathjax@3.2.0/es5/tex-chtml.js"></script>
 
 <script type=module>
 import * as codemirror from "./static/codemirror/lib/codemirror.js";
@@ -256,17 +216,17 @@ for (let i = 0; i < logs.length; ++i){
 createApp('render', {
 	error : error,
     logs : logs,
-    prove : <?php echo \std\jsonify($prove)?>,
-    unused : <?php echo \std\jsonify($unused)?>,
-    module: <?php echo \std\jsonify($module)?>,
-    given: <?php echo \std\jsonify($given)?>,
-    imply: <?php echo \std\jsonify($imply)?>,
-    where: <?php echo \std\jsonify($where)?>,
+    prove : <?php echo \std\encode($prove)?>,
+    unused : <?php echo \std\encode($unused)?>,
+    module: <?php echo \std\encode($module)?>,
+    given: <?php echo \std\encode($given)?>,
+    imply: <?php echo \std\encode($imply)?>,
+    where: <?php echo \std\encode($where)?>,
     createdTime: `<?php echo $createdTime?>`,
     updatedTime: `<?php echo isset($updatedTime)? $updatedTime: ''?>`,
 });
 
-var data = <?php echo \std\jsonify($data)?>;
+var data = <?php echo \std\encode($data)?>;
 if (data) {
     console.log(`update mysql data`);
     console.log(data);

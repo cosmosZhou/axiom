@@ -18,7 +18,6 @@ def prove(Eq):
     f, g = Function(etype=dtype.real)
     Eq << apply(Cap[x:A, y:B](f(x, y) & g(x, y)))
 
-    #Eq << apply(Cap[x:A](f(x) & g(x)))
     Eq << sets.eq.given.et.infer.apply(Eq[0], wrt=y)
 
     Eq <<= Eq[-2].this.rhs.apply(sets.el_intersect.given.et.el, simplify=False), \
@@ -31,7 +30,7 @@ def prove(Eq):
     Eq[-1].this.lhs.args[0].apply(sets.el_cap.imply.all_el)
 
     Eq <<= Eq[-2].this.rhs.apply(algebra.all.all.given.all_et), \
-    Eq[-1].this.lhs.apply(algebra.all.all.imply.all_et)
+    Eq[-1].this.lhs.apply(algebra.all.all.imply.all.et)
 
     Eq <<= Eq[-2].this.lhs.apply(sets.el_cap.imply.all_el), \
     Eq[-1].this.rhs.apply(sets.el_cap.given.all_el)

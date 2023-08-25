@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << sets.eq.imply.is_real.apply(Eq[1], simplify=None)
 
-    Eq << calculus.is_limited.is_limited.imply.eq.algebraic_limit_theorem.sub.apply(Eq[-2], Eq[-1])
+    Eq << calculus.is_limited.is_limited.imply.eq.sub.algebraic_limit_theorem.apply(Eq[-2], Eq[-1])
 
     Eq << Eq[-1].subs(Eq[0], Eq[1])
 

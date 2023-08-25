@@ -38,5 +38,5 @@ $res = [];
 foreach ($arr as list(,,, $module)){
     $res[] = $module;
 }
-echo std\jsonify($res);
+echo std\encode($res);
 ?>

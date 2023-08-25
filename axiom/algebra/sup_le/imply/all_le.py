@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1])
 
-    Eq << Eq[-1].this.expr.apply(algebra.cond.all.imply.all_et, simplify=None)
+    Eq << Eq[-1].this.expr.apply(algebra.cond.all.imply.all.et, simplify=None)
     Eq << Eq[-1].this.expr.expr.apply(algebra.le.le.imply.le.transit)
 
 

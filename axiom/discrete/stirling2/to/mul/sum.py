@@ -17,6 +17,8 @@ def prove(Eq):
     n = Symbol(integer=True, nonnegative=True)
     Eq.hypothesis = apply(Stirling(n, k))
 
+    Eq.induct = Eq.hypothesis.subs(k, k + 1)
+
     i = Eq.hypothesis.rhs.args[1].variable
     Eq << discrete.stirling2.to.add.recurrence.apply(n, k)
 
@@ -29,53 +31,51 @@ def prove(Eq):
 
     Eq << Eq[-3].subs(Eq[-1].reversed, Eq[-2].reversed)
 
-    Eq << Eq[-1].this.apply(algebra.eq.rsolve.linear, y[n])
+    j = Symbol(integer=True)
+    #Eq << Eq[-1].this.apply(algebra.eq.rsolve.linear, j)
+    Eq << algebra.eq.imply.eq.rsolve.apply(Eq[-1], j)
+
+    Eq << Eq[-1].this.rhs.args[0].args[0].defun()
+
+    Eq << Eq[-1].this.rhs.find(Mul[Sum]).apply(algebra.mul.to.sum)
+
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.swap)
+
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.separate)
+
+    Eq << Eq[-1].this.find(Sum[Pow * Pow]).apply(algebra.sum.to.mul.series.geometric)
+
+    Eq << Eq[-1].this.find(Sum).find(Expr ** -1).base.apply(algebra.add.to.mul.together)
 
     Eq << Eq[-1].this.find(Binomial).apply(discrete.binom.to.div.binom.increase)
 
-    Eq.stirling_solution = algebra.eq.cond.imply.cond.subs.apply(Eq[2], Eq[-1])
+    Eq << Eq[-1].this.find(Sum).expr.apply(algebra.mul.to.add)
 
-    Eq << Eq.stirling_solution.this.expr.apply(algebra.cond.imply.cond.subs, n, k + 1, ret=0)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add)
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.cancel, wrt=Eq.stirling_solution.variable)
+    Eq << Eq[-1].this.find(Mul[Add]).apply(algebra.mul.to.add)
 
-    Eq << Eq[-1].this.rhs.find(Sum).expr.powsimp()
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.mul)
 
-    Eq << Eq[-1] * (k + 1) ** n
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.sub.push)
 
-    Eq.factor2mul = discrete.factorial.to.mul.apply(factorial(k + 1)).this.rhs.apply(algebra.mul.to.add)
+    Eq << Eq[-1].this.find(Sum).apply(discrete.sum_binom.to.kroneckerDelta.zero)
 
-    Eq << Eq[-1].subs(Eq.factor2mul.reversed)
-
-    Eq << Eq[-1].this.rhs.apply(algebra.mul.to.add)
-
-    Eq.ratsimp = Eq[-1].this.rhs.args[0].ratsimp()
-
-    Eq << discrete.factorial.to.sum.apply(k + 1)
-
-    Eq << Eq[-1] * (-1) ** (k + 1)
-
-    Eq << Eq[-1].this.rhs.apply(algebra.mul.to.sum)
-
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add.split, cond={0, k + 1}).reversed
-
-    Eq << Eq[-1] - Eq[-1].lhs.args[0]
-
-    Eq << Eq.ratsimp.subs(Eq[-1])
-
-    Eq << Eq[-1] - Eq[-1].lhs.args[0] - Eq[-1].rhs.args[0]
-
-    Eq << Eq[-1] * factorial(k + 1)
-
-    Eq << Eq[-1].this.lhs.expand()
-
-    Eq << Eq[-1].this.rhs.ratsimp()
-
-    Eq << Eq[-1] - Eq[-1].lhs.args[1]
+    Eq << Eq[-1].this.find((~Pow) / Factorial).apply(algebra.pow.to.mul.split.exponent, simplify=None)
 
     Eq << Eq[-1].this.find(Mul[Sum]).apply(algebra.mul.to.sum)
 
-    Eq.induct = Eq.hypothesis.subs(k, k + 1)
+    Eq << Eq[-1].this.find(Mul ** Symbol).apply(algebra.pow.to.mul.split.base)
+
+    Eq.factor2mul = discrete.factorial.to.mul.apply(factorial(k + 1))
+
+    Eq << Eq[-1].subs(Eq.factor2mul.reversed)
+
+    Eq << Eq[-1].this.rhs.apply(algebra.add.to.mul)
+
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.sub.push)
+
+    Eq << Eq[-1].this.lhs.defun()
 
     Eq << Eq.induct * factorial(k + 1)
 
@@ -92,4 +92,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2020-10-13
-# updated on 2023-06-03
+# updated on 2023-08-19

@@ -5,7 +5,7 @@ from util import *
 def apply(given):
     x, domain = given.of(Element)
     assert Element(0, domain) == False
-    return Element(1 / x, Interval(0, oo, left_open=True) | Interval(-oo, 0, right_open=True))
+    return Element(1 / x, Interval.open(0, oo) | Interval.open(-oo, 0))
 
 
 @prove
@@ -13,7 +13,7 @@ def prove(Eq):
     from axiom import sets
 
     x = Symbol(hyper_real=True)
-    Eq << apply(Element(x, Interval(0, oo, left_open=True) | Interval(-oo, 0, right_open=True)))
+    Eq << apply(Element(x, Interval.open(0, oo) | Interval.open(-oo, 0)))
 
     Eq << sets.el_union.imply.ou.apply(Eq[0])
 

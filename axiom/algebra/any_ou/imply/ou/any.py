@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    Eq << Eq[-1].apply(algebra.all.all.imply.all_et)
+    Eq << Eq[-1].apply(algebra.all.all.imply.all.et)
 
     Eq << ~Eq[-1]
 

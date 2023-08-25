@@ -87,17 +87,6 @@ def local_eval(python, __globals__):
     return latex
 
         
-def compile_definition_statement(line):
-    m = re.match('(.+?) *= *(Symbol|Function)\((.+)\) *$', line)
-    if m:
-        name, func, kwargs = m.groups()
-        if ',' in name:
-            line = "%s = %s" % (name, ', '.join(["%s.%s(%s)" % (func, n, kwargs) for n in name.split(',')]))
-        else:
-            line = "%s = %s.%s(%s)" % (name, func, name, kwargs)
-            
-    return line
-
 class Cout:
     def __init__(self):
         self._buff = []
@@ -176,37 +165,6 @@ def to_str(result):
         return r'\[%s\]' % result.latex
     
 
-def extract_latex(symbol):
-    try:
-        symbol = globals()[symbol]
-    except KeyError:
-        return
-    
-    doc = symbol.__doc__
-    if doc is None:
-        return
-    
-    lines = []
-    for line in doc.splitlines():
-        m = re.match("^ *>>> *(.+)", line)
-        if m:
-            line = m[1]
-            if re.match("^from +\S+ +import +.+", line):
-                continue
-            lines.append(line)
-            continue
-        m = re.match("^ *\.\.\. *(.+)", line)
-        if m:
-            if not lines:
-                continue
-                
-            line = lines[-1]
-            line += '\n' + m[1]
-            lines[-1] = line
-            
-    return lines
-
-    
 @debug.route('/debug/compile', methods=['POST'])
 def compile_python_file():
     python = request.form.get('py')

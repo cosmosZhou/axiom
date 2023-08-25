@@ -40,3 +40,5 @@ from . import eq_expect
 from . import is_finite
 from . import matmul_softmax
 from . import eq_add
+from . import eq_mul
+from . import is_zero

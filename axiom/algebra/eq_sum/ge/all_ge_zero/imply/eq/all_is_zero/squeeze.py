@@ -45,7 +45,7 @@ def prove(Eq):
 
     Eq << Eq[-3].this.lhs.apply(algebra.sum.to.add.split, cond={i})
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq[-2])
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq[-2])
 
     Eq << Eq[-1].this().expr.find(Piecewise, Element).simplify()
 
@@ -57,7 +57,7 @@ def prove(Eq):
 
     Eq << algebra.all_ge_zero.imply.ge_zero.sum.apply(Eq[-1])
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq.any_is_negative)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq.any_is_negative)
 
 
 if __name__ == '__main__':

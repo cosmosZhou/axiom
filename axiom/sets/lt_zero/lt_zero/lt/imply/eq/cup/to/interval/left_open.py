@@ -59,7 +59,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.et.imply.cond, slice(0, 2))
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[1], Eq[-1])
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[1], Eq[-1])
 
     Eq << Eq[-1].this.expr.args[1:].apply(algebra.lt.lt.imply.lt.transit, ret=1)
 
@@ -79,8 +79,8 @@ def prove(Eq):
 
     Eq << sets.eq.eq.imply.eq.union.apply(Eq.eq_complement, Eq.is_empty)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

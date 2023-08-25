@@ -3,15 +3,11 @@ from util import *
 
 @apply
 def apply(self):
-    args = self.of(ReducedSum[Add])
     len_shape = len(self.shape)
-    new_args = []
-    for arg in args:
-        if len(arg.shape) >= len_shape:
-            new_args.append(ReducedSum(arg).simplify())
-        else:
-            new_args.append(arg)
-    return Equal(self, Add(*new_args), evaluate=False)
+    import std
+    reduced, args = std.array_split(self.of(ReducedSum[Add]), lambda arg : len(arg.shape) >= len_shape)
+    reduced = (ReducedSum(arg).simplify() for arg in reduced)
+    return Equal(self, Add(*reduced, *args), evaluate=False)
 
 
 @prove
@@ -38,3 +34,4 @@ if __name__ == '__main__':
 # created on 2022-04-02
 from . import pop
 from . import shift
+from . import doit

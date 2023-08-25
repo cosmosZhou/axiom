@@ -81,7 +81,7 @@ def prove(Eq):
 
     Eq << Eq.determinant.subs(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul.to.prod)
+    Eq << Eq[-1].this.rhs.apply(algebra.mul_prod.to.prod)
 
     Eq << Eq[-1].this.rhs.expr.apply(algebra.mul.to.prod.limits.unshift)
 
@@ -112,8 +112,8 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -1,8 +1,7 @@
 <template>
 	<div>
-		>>> <input v-focus spellcheck=false type=text v-model=script
-			:size=size @keydown=keydown />
-		<div if=latex v-html=latex></div>
+		>>> <input v-focus spellcheck=false type=text v-model=script :size=size @keydown=keydown />
+		<p v-if=latex>{{latex}}</p>
 	</div>
 </template>
 
@@ -35,10 +34,6 @@ export default {
 			}
     		return -1;
 		},
-	},
-	
-	updated() {
-		MathJax.typesetPromise();
 	},
 	
 	created(){
@@ -145,9 +140,6 @@ export default {
 		    	else{
 		    		el.focus();
 		    	}
-
-		    	if (window.MathJax)
-		    		MathJax.typesetPromise();
 		    },
 		},
 	},

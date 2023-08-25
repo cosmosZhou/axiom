@@ -27,7 +27,7 @@ function load_data_from_list($table, $array, $replace = true, $step = 10000, $ig
 {
     $desc = desc_table($table);
 
-    // error_log(\std\jsonify($desc));
+    // error_log(\std\encode($desc));
 
     $has_training_field = False;
 
@@ -49,7 +49,7 @@ function load_data_from_list($table, $array, $replace = true, $step = 10000, $ig
         }
     }
 
-    // error_log(\std\jsonify($char_length));
+    // error_log(\std\encode($char_length));
 
     $folder = sys_get_temp_dir();
 
@@ -64,16 +64,16 @@ function load_data_from_list($table, $array, $replace = true, $step = 10000, $ig
                 $arg = $args[$i];
 
                 if (is_string($arg)) {
-                    $arg = substr(\std\jsonify($arg), 1, - 1);
+                    $arg = substr(\std\encode($arg), 1, - 1);
                 } else {
-                    $arg = \std\jsonify($arg);
+                    $arg = \std\encode($arg);
                 }
 
                 if (! $ignore && strlen($arg) > $char_length[$i]) {
                     if ($truncate) {
                         $arg = substr($arg, 0, $char_length[$i]);
                     } else {
-                        // error_log(\std\jsonify($args));
+                        // error_log(\std\encode($args));
                         // error_log("args[$i] exceeds the allowable length " . $char_length[$i]);
                         $args = null;
                         break;
@@ -86,7 +86,7 @@ function load_data_from_list($table, $array, $replace = true, $step = 10000, $ig
                     $args[] = "" . rand(0, 1);
                 }
 
-                // error_log("args = " . \std\jsonify($args));
+                // error_log("args = " . \std\encode($args));
                 $line = join("\t", $args);
                 // error_log("line = " . $line);
                 $file->append($line);
@@ -94,7 +94,7 @@ function load_data_from_list($table, $array, $replace = true, $step = 10000, $ig
         }
         $file->flush();
 
-        // error_log(\std\jsonify($csv));
+        // error_log(\std\encode($csv));
 
         // error_log("csv = " . $csv);
         load_data_from_csv($table, $csv, True, $replace, $ignore);
@@ -173,7 +173,7 @@ function insertmany($table, $matrix, $replace = true)
 {
     $insert = $replace ? 'replace' : 'insert';
 
-    $sql = "$insert into $table values" . implode(",", array_map(fn ($vector) => "(" . substr(\std\jsonify($vector), 1, - 1) . ")", $matrix));
+    $sql = "$insert into $table values" . implode(",", array_map(fn ($vector) => "(" . substr(\std\encode($vector), 1, - 1) . ")", $matrix));
     // error_log("sql = $sql");
     return execute($sql);
 }
@@ -200,7 +200,7 @@ class ConnectMysqli
     private function __construct()
     {
         $config = parse_ini_file(dirname(dirname(__file__)) . "/config.ini", true)['client'];
-        // error_log(\std\jsonify($config));
+        // error_log(\std\encode($config));
 
         $this->link = new mysqli($config['host'], $config['user'], $config['password'], $config['database']);
         if (! $this->link) {
@@ -268,7 +268,7 @@ class ConnectMysqli
                 }
                 $array[] = $rows;
                 
-                error_log(\std\jsonify($rows));
+                error_log(\std\encode($rows));
             }
             else{
                 $array[] = $link->affected_rows;
@@ -465,8 +465,8 @@ function select_axiom_by_like($keyword, $binary = false)
         $array[] = $value[0];
     }
 
-    // echo "result = " . \std\jsonify($result) . "<br>";
-    // echo "array = " . \std\jsonify($array) . "<br>";
+    // echo "result = " . \std\encode($result) . "<br>";
+    // echo "array = " . \std\encode($array) . "<br>";
     return $array;
 }
 
@@ -561,7 +561,7 @@ function establish_hierarchy($node, $reverse = false)
 
         $setProcessed->add($node);
 
-        // error_log("theoremSetProcessed = " . \std\jsonify($setProcessed));
+        // error_log("theoremSetProcessed = " . \std\encode($setProcessed));
         foreach (select_hierarchy($node, $reverse) as $child) {
             $queue->push($child);
             $G[$node][] = $child;

@@ -4,8 +4,13 @@ from util import *
 @apply
 def apply(self, *, simplify=True):
     (ft, (t, a, b)), (x, S[1]) = self.of(Derivative[Integral])
+    criteria = 1
     if b._has(x):
-        assert b.is_continuous(x)
+        if b.is_continuous(x):
+            ...
+        else:
+            cond = Element(x, b.domain_defined(x, real=True)).simplify()
+            criteria = Bool(cond)
         assert not a._has(x)
         dfx = Derivative[x](b)
         ft = ft._subs(t, b)
@@ -18,10 +23,10 @@ def apply(self, *, simplify=True):
     if simplify:
         dfx = dfx.simplify()
     assert ft.is_continuous(t)
-    return Equal(self, ft * dfx)
+    return Equal(self, ft * dfx * criteria)
 
 
-@prove(proved=False)
+@prove
 def prove(Eq):
     from axiom import calculus, algebra
 
@@ -38,20 +43,25 @@ def prove(Eq):
 
     Eq << calculus.is_continuous.imply.any_eq.interval01.mean_value_theorem.apply(Eq[-1], 'lamda')
 
-    Eq << Eq[-1].this.expr.apply(calculus.eq.imply.eq.limit.div, epsilon)
+    Eq.exists = Eq[-1].this.expr.apply(calculus.eq.imply.eq.limit.div, epsilon)
 
-    lamda = Eq[-1].variable
-    Eq <<= Limit[epsilon:0](Eq[-1].find(h)).this.apply(calculus.limit.to.expr.continuity), Limit[epsilon:0](Eq[-1].find(h[Add])).this.apply(calculus.limit.to.expr.continuity)
+    Eq.limit_f = Equal(Limit[epsilon:0](Eq.exists.expr.rhs.find(f)), f(h(x)), plausible=True)
 
-    Eq <<= Eq[-1] * lamda, Eq[-1] * (1 - lamda)
+    Eq << Eq.limit_f.this.lhs.apply(calculus.limit.to.expr.continuity)
 
-    Eq <<= Eq[-2].this.lhs.apply(calculus.mul.to.limit), Eq[-1].this.lhs.apply(calculus.mul.to.limit)
+    Eq << Eq[-1].this.find(Mul[Add]).apply(algebra.mul.to.add)
 
-    Eq << calculus.eq_limit.eq_limit.imply.eq_limit.add.apply(Eq[-1], Eq[-2])
+    Eq << Eq[0].rhs.find(Derivative).this.apply(calculus.grad.to.limit, epsilon).reversed
 
-    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(algebra.mul.to.add)
+    Eq << calculus.eq_limit.eq_limit.imply.eq_limit.mul.apply(Eq[-1], Eq.limit_f)
+
+    Eq << Eq.exists.this.expr.subs(Eq[-1])
+
+
+
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-05-05
+# updated on 2023-06-19

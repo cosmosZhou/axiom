@@ -29,12 +29,12 @@ def prove(Eq):
 
     Eq << sets.ou.given.notin.interval.apply(Eq[-1])
 
-    Eq << sets.le.imply.interval_is_empty.apply(Eq[0], left_open=True)
+    Eq << sets.le.imply.is_empty.interval.apply(Eq[0], left_open=True)
 
     Eq << Eq[-2].subs(Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

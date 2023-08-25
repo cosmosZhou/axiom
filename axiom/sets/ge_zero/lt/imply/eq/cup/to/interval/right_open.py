@@ -64,7 +64,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.args[:2].apply(algebra.eq.cond.imply.cond.subs)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[0], Eq[-1])
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[0], Eq[-1])
 
     Eq << Eq[-1].this.expr.args[1:].apply(algebra.ge.ge.imply.ge.transit, ret=1)
 
@@ -76,7 +76,7 @@ def prove(Eq):
 
     Eq << sets.intersect_is_empty.eq_complement.imply.eq.apply(Eq.is_empty, Eq.eq_complement)
 
-    
+
 
 
 if __name__ == '__main__':

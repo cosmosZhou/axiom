@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq.gt_zero, Eq.le_zero = algebra.cond.given.et.infer.split.apply(Eq[1], cond=n > 0)
 
-    Eq << algebra.infer.given.et.infer.et.apply(Eq.gt_zero, cond=Eq[0])
+    Eq << algebra.cond.infer.given.et.infer.et.apply(Eq[0], Eq.gt_zero)
 
     Eq << Eq[-1].this.lhs.apply(algebra.gt_zero.gt_zero.imply.gt_zero.pow)
 
@@ -25,9 +25,9 @@ def prove(Eq):
 
     Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
 
-    Eq << algebra.infer.given.et.infer.et.apply(Eq[-2], cond=Eq[0])
+    Eq << algebra.cond.infer.given.et.infer.et.apply(Eq[0], Eq[-2])
 
-    
+
     Eq << Eq[-1].this.lhs.apply(algebra.lt_zero.gt_zero.imply.gt_zero.pow)
 
 

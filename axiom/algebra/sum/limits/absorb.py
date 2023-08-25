@@ -1,8 +1,7 @@
 from util import *
 
 
-@apply
-def apply(self):
+def rewrite(Sum, self):
     from _collections import defaultdict
     [*args], *limits = self.of(Sum[Mul])
 
@@ -95,8 +94,11 @@ def apply(self):
                 limits[i] = (v, cond)
                 break
 
+    return Sum(function, *limits)
 
-    return Equal(self, Sum(function, *limits))
+@apply
+def apply(self):
+    return Equal(self, rewrite(Sum, self), evaluate=False)
 
 
 @prove
@@ -124,9 +126,10 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.swap)
 
     
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-05-01
-# updated on 2022-01-10
+# updated on 2023-06-18

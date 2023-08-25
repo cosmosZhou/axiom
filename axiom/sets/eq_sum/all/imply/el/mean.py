@@ -69,7 +69,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.infer.fold, slice(1, None))
 
-    Eq << Eq[-1].this.lhs.apply(algebra.cond.all.imply.all_et, simplify=None)
+    Eq << Eq[-1].this.lhs.apply(algebra.cond.all.imply.all.et, simplify=None)
 
     Eq << Eq[-1].this.lhs.find(And).apply(algebra.lt.ge.imply.ge.div, ret=0)
 
@@ -83,7 +83,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.infer.fold, 0, swap=True)
 
-    Eq << Eq[-1].this.find(All & All).apply(algebra.all.all.imply.all_et)
+    Eq << Eq[-1].this.find(All & All).apply(algebra.all.all.imply.all.et)
 
     Eq << Eq[-1].this.apply(algebra.infer.flatten)
 
@@ -114,8 +114,8 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[0] & Eq[1], Eq.hypothesis)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

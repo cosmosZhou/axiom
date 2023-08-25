@@ -3,10 +3,13 @@ from util import *
 
 @apply
 def apply(eq_relu, eq_min, Q, K, V):
-    ((i, l), limit_i), β = eq_relu.of(Equal[Lamda[relu[Expr + 1 - Expr]]])
-    ((n, (S[i], u)), S[limit_i]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])
+    ((_i, l), limit_i), β = eq_relu.of(Equal[Lamda[relu[Expr - Expr]]])
+    i, S[0], n = limit_i
+    l -= _i - 1 - i
     
-    S[i], S[0], S[n] = limit_i
+    ((S[n], iu), S[limit_i]), ζ = eq_min.of(Equal[Lamda[Min]])
+    u = iu - i
+    
     S[n], d_z = Q.shape
     
     indices = slice(β[i], ζ[i])

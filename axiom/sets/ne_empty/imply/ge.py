@@ -21,14 +21,14 @@ def prove(Eq):
 
     Eq << GreaterEqual(Card(A), 0, plausible=True)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq[-2])
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq[-2])
 
     Eq << Eq[-1].this.expr.apply(sets.lt.ge.imply.el.range)
 
-    
+
     Eq << algebra.any_eq.cond.imply.any.subs.apply(Eq[-1], Eq[2])
-    
-    
+
+
 
 
 if __name__ == '__main__':

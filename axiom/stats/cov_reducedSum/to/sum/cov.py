@@ -9,16 +9,16 @@ def apply(self, deep=False):
             sgm = []
             i = self.generate_var(integer=True)
             j = self.generate_var(integer=True, excludes={i})
-            expr_l = lhs.arg[tuple([slice(None, None) for _ in lhs.arg.shape[:-1]] + [i])]
-            expr_r = rhs.arg[tuple([slice(None, None) for _ in rhs.arg.shape[:-1]] + [j])]
+            expr_l = lhs.arg[tuple([slice(None) for _ in lhs.arg.shape[:-1]] + [i])]
+            expr_r = rhs.arg[tuple([slice(None) for _ in rhs.arg.shape[:-1]] + [j])]
             rhs = Sum[j:rhs.arg.shape[-1], i:lhs.arg.shape[-1]](Covariance(expr_l, expr_r))
         else:
             i = self.generate_var(integer=True)
-            expr = lhs.arg[tuple([slice(None, None) for _ in lhs.arg.shape[:-1]] + [i])]
+            expr = lhs.arg[tuple([slice(None) for _ in lhs.arg.shape[:-1]] + [i])]
             rhs = Sum[i:lhs.arg.shape[-1]](Covariance(expr, rhs))
     elif rhs.is_ReducedSum:
         j = self.generate_var(integer=True)
-        expr = rhs.arg[tuple([slice(None, None) for _ in rhs.arg.shape[:-1]] + [j])]
+        expr = rhs.arg[tuple([slice(None) for _ in rhs.arg.shape[:-1]] + [j])]
         rhs = Sum[j:rhs.arg.shape[-1]](Covariance(lhs, expr))
     else: 
         return

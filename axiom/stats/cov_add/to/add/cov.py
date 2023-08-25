@@ -4,15 +4,15 @@ from util import *
 @apply
 def apply(self, deep=False):
     lhs, rhs = self.of(Covariance)
+    import std
+    
     if lhs.is_Add:
         if rhs.is_Add and deep:
             sgm = []
             for a in lhs.args:
-                for b in rhs.args:
-                    if a == b:
-                        sgm.append(Variance(a))
-                    else:
-                        sgm.append(Covariance(a, b))
+                var, cov = std.array_split(rhs.args, lambda b: a == b)
+                sgm += [Variance(a)] * len(var)
+                sgm += [Covariance(a, b) for b in cov]
             rhs = Add(*sgm)
         else:
             rhs = Add(*(Covariance(arg, rhs) for arg in lhs.args))

@@ -12,7 +12,7 @@ def apply(given):
 @prove
 def prove(Eq):
     x, a = Symbol(real=True, given=True)
-    Eq << apply(NotElement(x, Interval(-oo, a, right_open=True)))
+    Eq << apply(NotElement(x, Interval.open(-oo, a)))
 
     Eq << ~Eq[0]
 

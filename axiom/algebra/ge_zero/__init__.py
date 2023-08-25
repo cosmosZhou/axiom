@@ -9,3 +9,5 @@ from . import gt
 from . import le_zero
 from . import given
 from . import to
+from . import sqrt
+from . import st

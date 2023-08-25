@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(le, any_all_ge):
-    
+
     ((an, M), (n, S[0], S[oo])), (S[M],) = any_all_ge.of(Any[All[GreaterEqual]])
     S[an._subs(n, n + 1)], S[an] = le.of(LessEqual)
     return Equal(Limit[n:oo](an), Inf[n:0:oo](an))
@@ -38,7 +38,7 @@ def prove(Eq):
 
     Eq.inf_is_real = sets.gt.lt.imply.el.interval.apply(Eq[-2], Eq[-1], simplify=None)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq.inf_is_real, Eq.any_ge, simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq.inf_is_real, Eq.any_ge, simplify=None)
 
     Eq << Eq[-1].this.expr.apply(sets.ge.el.imply.ge.sub)
 
@@ -54,7 +54,7 @@ def prove(Eq):
 
     Eq << algebra.all.imply.all.limits.restrict.apply(Eq[-1], domain=Range(N + 1, oo))
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq.inf_is_real, Eq[-1], simplify=None)
+    Eq << algebra.cond.all.imply.all.et.apply(Eq.inf_is_real, Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(sets.le.el.imply.le.sub)
 

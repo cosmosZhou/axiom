@@ -18,13 +18,13 @@ def prove(Eq):
 
     Eq << sets.eq.imply.any_eq.one.apply(Eq[0], reverse=True)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[1], Eq[-1], simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[1], Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, ret=0)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.subs, reverse=True)
 
-    
+
 
 
 if __name__ == '__main__':

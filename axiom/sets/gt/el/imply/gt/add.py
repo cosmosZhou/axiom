@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << Eq[0] + z
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq[-2], simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq[-2], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, reverse=True)
 

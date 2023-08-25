@@ -39,7 +39,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.simplify()
 
-    Eq << calculus.is_limited.is_limited.imply.eq.algebraic_limit_theorem.mul.apply(Eq[-1], Eq[-2])
+    Eq << calculus.is_limited.is_limited.imply.eq.mul.algebraic_limit_theorem.apply(Eq[-1], Eq[-2])
 
     Eq << Eq[-1].this.rhs.args[1].simplify()
 

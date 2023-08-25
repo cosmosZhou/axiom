@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.args[0].simplify()
 
-    Eq << Eq[-1].this.expr.apply(algebra.cond.all.imply.all_et, simplify=None)
+    Eq << Eq[-1].this.expr.apply(algebra.cond.all.imply.all.et, simplify=None)
     Eq << Eq[-1].this.expr.expr.apply(algebra.lt.lt.imply.lt.transit)
 
 

@@ -21,8 +21,8 @@ def prove(Eq):
     f = Function(shape=(), real=True)
     Eq << apply(Any[x:a:b]((x <= c) & (f(x) >= 1)))
 
-    Eq << algebra.any_et.imply.any.split.apply(Eq[0], index=0)
-    Eq << algebra.any_et.imply.any.split.apply(Eq[0], index=1)
+    Eq << algebra.any_et.imply.any.getitem.apply(Eq[0], index=0)
+    Eq << algebra.any_et.imply.any.getitem.apply(Eq[0], index=1)
 
 
 

@@ -24,7 +24,7 @@ def prove(Eq):
     (Eq.beta, Eq.zeta), Eq.objective = apply(Equal(β, Lamda[i:n](relu(i - l + 1))), Equal(ζ, Lamda[i:n](Min(i + u, n))), A, V)
 
     band_part = Eq.objective.find(BandPart)
-    Eq << keras.imply.eq.bert.mask.theorem.apply(A, band_part, add=True)
+    Eq << algebra.mul.to.exp.oo.apply(exp(A) * band_part).reversed
 
     a_quote = Symbol(Eq[-1].lhs.arg)
     Eq.a_quote_def = a_quote.this.definition
@@ -71,7 +71,7 @@ def prove(Eq):
 
     Eq << Eq.zi_definition.rhs.args[0].this.apply(discrete.matmul.to.lamda)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined)
 
     k = Eq[-1].rhs.expr.variable
     Eq << Eq.Xi_definition[k]

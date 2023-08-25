@@ -7,7 +7,7 @@ def apply(self):
     assert not sizes
     [*args] = self.of(MatMul)    
     for i, grad in enumerate(args):
-        if grad.is_Derivative:            
+        if grad.is_Derivative:
             fx, (x, S[1]) = grad.args
             break
     else :

@@ -3,15 +3,8 @@ from util import *
 
 @apply
 def apply(self, i=0, j=1):
-    assert i < j
-
-    [function, *limits] = self.of(Integral)
-    i_limit, j_limit = self.limits[i], self.limits[j]
-
-    assert not i_limit._has(j_limit[0])
-    limits[i], limits[j] = limits[j], limits[i]
-
-    return Equal(self, Integral(function, *limits))
+    from axiom.algebra.sum.limits.swap import rewrite
+    return Equal(self, rewrite(Integral, self, i, j))
 
 
 @prove(provable=False)
@@ -27,3 +20,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-03-20
+# updated on 2023-07-02

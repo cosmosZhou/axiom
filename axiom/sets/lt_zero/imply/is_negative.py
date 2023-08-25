@@ -5,7 +5,7 @@ from util import *
 def apply(given):
     x = given.of(Expr < 0)
     assert x.is_finite
-    return Element(x, Interval(-oo, 0, right_open=True))
+    return Element(x, Interval.open(-oo, 0))
 
 
 @prove

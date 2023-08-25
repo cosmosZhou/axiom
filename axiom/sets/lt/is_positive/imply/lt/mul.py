@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(lt, is_positive):
     x, R = is_positive.of(Element)
-    assert R in Interval(0, oo, left_open=True)
+    assert R in Interval.open(0, oo)
     lhs, rhs = lt.of(Less)
     return Less(lhs * x, rhs * x)
 
@@ -15,7 +15,7 @@ def prove(Eq):
 
     a, b = Symbol(real=True)
     x = Symbol(hyper_real=True)
-    Eq << apply(a < b, Element(x, Interval(0, oo, left_open=True)))
+    Eq << apply(a < b, Element(x, Interval.open(0, oo)))
 
     Eq << sets.el.imply.any_eq.apply(Eq[1])
 
@@ -23,13 +23,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element).simplify()
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[0], Eq[-1], simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[0], Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.args[1:].apply(algebra.gt_zero.lt.imply.lt.mul)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, reverse=True)
 
-    
+
 
 
 if __name__ == '__main__':

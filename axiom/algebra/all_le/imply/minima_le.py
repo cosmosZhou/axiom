@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq << algebra.imply.all.minima_le.apply(Eq[1].lhs)
 
-    Eq << algebra.all.all.imply.all_et.apply(Eq[0], Eq[2])
+    Eq << algebra.all.all.imply.all.et.apply(Eq[0], Eq[2])
 
     Eq << Eq[-1].this.expr.apply(algebra.le.le.imply.le.transit)
 

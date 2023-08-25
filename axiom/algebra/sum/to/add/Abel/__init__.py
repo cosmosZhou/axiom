@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.limits.subs.offset, -1)
 
-    Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.sub.unshift)
 
     Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.add.pop)
 
@@ -40,8 +40,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Sum)().find(~Sum - Sum).apply(algebra.sum.to.add.shift)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

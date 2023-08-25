@@ -9,7 +9,13 @@ def apply(self, i=None):
             if arg.is_Piecewise:
                 break
         else:
-            return
+            for i, arg in enumerate(args):
+                if res := arg.of(Expr * Piecewise):
+                    ceoff, pieces = res
+                    arg = Piecewise((ceoff * e, c) for e, c in pieces)
+                    break
+            else:
+                return
     else:
         arg = args[i]
 

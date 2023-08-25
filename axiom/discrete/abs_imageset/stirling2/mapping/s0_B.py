@@ -67,7 +67,7 @@ def prove(Eq):
 
     Eq << Eq.B_assertion.this.expr.expr.apply(sets.eq.imply.eq.complement, {n.set})
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq.all_s0_equality, Eq[-1], simplify=None)
+    Eq << algebra.cond.all.imply.all.et.apply(Eq.all_s0_equality, Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.all.any.imply.any_et)
 
@@ -85,8 +85,8 @@ def prove(Eq):
 
     Eq << sets.all_el.all_el.all_eq.all_eq.imply.eq.apply(Eq.all_s0_contains, Eq.all_B_contains, Eq.all_s0_equality, Eq.all_B_equality)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

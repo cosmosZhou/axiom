@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.mul.to.add, deep=True)
 
-    Eq << algebra.ge_zero.imply.sqrt_ge_zero.apply(Eq[-1])
+    Eq << algebra.ge_zero.imply.ge_zero.sqrt.apply(Eq[-1])
 
 
 if __name__ == '__main__':

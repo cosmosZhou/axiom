@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq <<= algebra.eq_inf.imply.all_ge.apply(Eq[-1]), Eq[0].subs(Eq[-1].reversed)
 
-    Eq <<= algebra.cond.all.imply.all_et.apply(Eq[-2], Eq[-1], simplify=None)
+    Eq <<= algebra.cond.all.imply.all.et.apply(Eq[-2], Eq[-1], simplify=None)
     Eq <<= Eq[-1].this.expr.apply(algebra.ge.ge.imply.ge.transit)
 
 

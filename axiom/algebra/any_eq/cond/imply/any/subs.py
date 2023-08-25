@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << apply(Any[x:S](Equal(g(x), f(x))), g(x) > y)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[0], Eq[1])
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[0], Eq[1])
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)
 

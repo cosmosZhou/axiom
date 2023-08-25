@@ -2,7 +2,7 @@ from util import *
 
 
 def piece_together(Sum, self):
-    function = []
+    expr = []
     limits = None
     for arg in self.of(Sum.operator):
         arg_expr, *arg_limits = arg.of(Sum)
@@ -26,16 +26,22 @@ def piece_together(Sum, self):
             _inner_limits = arg_limits[:i]
 
             if inner_limits:
-                function = [Sum(f, *inner_limits) for f in function]
+                expr = [Sum(f, *inner_limits) for f in expr]
 
             if _inner_limits:
                 func = Sum(arg_expr, *_inner_limits)
             else:
                 func = arg_expr
 
-        function.append(func)
+        expr.append(func)
 
-    return Sum(self.func(*function), *limits)
+    for limit in limits:
+        x, *ab = limit
+        if not ab:
+            domains = {f.domain_defined(x) for f in expr}
+            assert len(domains) == 1, "domains are different:%s" % domains 
+            
+    return Sum(self.func(*expr), *limits)
 
 @apply
 def apply(self):

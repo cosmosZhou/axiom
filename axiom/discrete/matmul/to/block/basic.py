@@ -1,9 +1,12 @@
 from util import *
-from functools import reduce
+
+
+
 
 
 @apply
 def apply(self):
+    from functools import reduce
     A, B = self.of(MatMul)
     if A.is_BlockMatrix:
         if A.axis == 0:
@@ -50,7 +53,10 @@ def prove(Eq):
     j = Symbol(domain=Range(n))
     Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2021-11-20
+# updated on 2023-06-08

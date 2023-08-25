@@ -3,14 +3,8 @@ from util import *
 
 @apply
 def apply(self):
-    args = self.of(Det[Mul])
-    scalar = []
-    matrix = []
-    for arg in args:
-        if arg.shape:
-            matrix.append(arg)
-        else:
-            scalar.append(arg)
+    import std
+    matrix, scalar = std.array_split(self.of(Det[Mul]), lambda arg: arg.shape)
     scalar = Mul(*scalar)
     matrix = Mul(*matrix)
 

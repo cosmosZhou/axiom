@@ -29,9 +29,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.gt.gt.imply.gt.add)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.push)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.sub.push)
 
-    Eq << Eq[-1].this.find(Add[~Sum]).apply(algebra.sum.to.add.push)
+    Eq << Eq[-1].this.find(Add[~Sum]).apply(algebra.sum.to.sub.push)
 
     Eq << Infer(Eq[2], Eq.induct, plausible=True)
 
@@ -39,8 +39,8 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[0], Eq[2])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Product[2]).apply(algebra.prod.bool)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul.to.prod)
+    Eq << Eq[-1].this.rhs.apply(algebra.mul_prod.to.prod)
 
     Eq << Eq[-1].this.rhs.expr.powsimp()
 
@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.add)
 
-    
+
 
 
 if __name__ == '__main__':

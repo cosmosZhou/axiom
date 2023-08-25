@@ -8,7 +8,7 @@ def apply(contains):
     b = Ceiling(b)
 
     a = Floor(a)
-    return Element(x, Interval(a, b, left_open=domain.left_open, right_open=domain.right_open))
+    return Element(x, Interval(a, b, **domain.kwargs))
 
 
 @prove

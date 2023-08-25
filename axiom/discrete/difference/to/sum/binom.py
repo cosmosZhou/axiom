@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self, k=None):
-    fx, x, n = self.of(Difference)
+    fx, (x, n) = self.of(Difference)
     if k is None:
         k = fx.generate_var(x.free_symbols | n.free_symbols, integer=True)
     return Equal(self, Sum[k:0:n + 1]((-1) ** (n - k) * binomial(n, k) * fx.subs(x, x + k)))

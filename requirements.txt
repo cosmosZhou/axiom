@@ -1,3 +1,4 @@
 sympy.keras
 mysql-connector
 flask
+std.algorithm

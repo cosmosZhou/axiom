@@ -7,7 +7,7 @@ def apply(all_is_positive):
 
     assert domain.left_open and domain.right_open
 
-    return All[x:domain](Element(Derivative(fx, (x, d)), Interval(0, oo, left_open=True)))
+    return All[x:domain](Element(Derivative(fx, (x, d)), Interval.open(0, oo)))
 
 
 @prove(proved=False)

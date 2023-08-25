@@ -12,14 +12,9 @@ def apply(self):
     
     scope_variables = self.scope_variables
     
-    variable = []
-    constant = []
-    for arg in args:
-        if any(any(V.index_contains(v) for V in scope_variables) for v in arg.random_symbols):
-            variable.append(arg)
-        else:
-            constant.append(arg)
-            assert not arg.shape
+    import std
+    variable, constant = std.array_split(args, lambda arg: any(any(V.index_contains(v) for V in scope_variables) for v in arg.random_symbols))
+    assert not any(arg.shape for arg in constant)
 
     constant = Mul(*constant)
     variable = Mul(*variable)

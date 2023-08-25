@@ -14,7 +14,7 @@ def prove(Eq):
 
     x, x0 = Symbol(real=True)
     f = Function(real=True)
-    Eq << apply(Element(Limit[x:x0](f(x)), Interval(0, oo, left_open=True)))
+    Eq << apply(Element(Limit[x:x0](f(x)), Interval.open(0, oo)))
 
     epsilon0, delta0, delta, epsilon = Symbol(positive=True)
     Eq << calculus.is_limited.imply.any.all.limit_definition.symbol_subs.apply(Eq[0], epsilon0, delta0, var='A')

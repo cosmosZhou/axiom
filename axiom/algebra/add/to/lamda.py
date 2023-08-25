@@ -3,15 +3,26 @@ from util import *
 
 def to_Lamda(self, expr, deep=False):
     variables = self.variables
+    
+    hit = False
     if expr.shape:
         size = min(len(expr.shape), len(variables))
         variables = variables[:size]
         expr = expr[variables[::-1]]
-        if deep and expr.is_Lamda:
-            expr = to_Lamda(expr, self.expr)
-        else:
-            expr += self.expr
-    else:
+        if deep:
+            if expr.is_Lamda:
+                expr = to_Lamda(expr, self.expr)
+                hit = True
+            else:
+                try:
+                    coeff, (_expr, *limits) = expr.of(Expr * Lamda)
+                    if not coeff.shape:
+                        expr = to_Lamda(Lamda(coeff * _expr, *limits), self.expr)
+                        hit = True
+                except:
+                    ...
+        
+    if not hit:
         expr += self.expr
         
     return Lamda(expr, *self.limits)

@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.find(1 / Product).apply(algebra.pow.to.prod)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.mul.to.prod)
+    Eq << Eq[-1].this.lhs.apply(algebra.mul_prod.to.prod)
 
 
 if __name__ == '__main__':

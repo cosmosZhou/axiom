@@ -20,7 +20,7 @@ def prove(Eq):
     from axiom import sets
 
     x = Symbol(complex=True, given=True)
-    Eq << apply(Element(x, Interval(0, oo, left_open=True)))
+    Eq << apply(Element(x, Interval.open(0, oo)))
 
 
 

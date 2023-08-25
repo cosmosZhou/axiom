@@ -10,6 +10,8 @@ https://www.eclipse.org/downloads/download.php?file=/tools/pdt/downloads/pdt-Upd
 https://blog.csdn.net/weixin_43144260/article/details/82870374  
 
 ## 非root用户lamp的安装
+a commonly used git:  
+https://github.com/teddysun/lamp.git  
 
 假设当前目录为httpd和php的安装目录：  
 git clone --depth=1 https://github.com/cosmosZhou/shell.git  
@@ -35,7 +37,7 @@ https://www.microsoft.com/zh-CN/download/details.aspx?id=40784
 https://www.microsoft.com/zh-cn/download/confirmation.aspx?id=40784  
 下载vcredist_x64安装即可！  
 如果启动wampserver时出现无法启动此程序,因为计算机中丢失MSVCR110.dll  
-https://www.microsoft.com/zh-CN/download/details.aspx?id=30679  
+
 
 php7.4及以上版本需要安装Microsoft Visual C++ Redistributable for Visual Studio 2019  
 https://download.csdn.net/download/quantum7/12850274  
@@ -48,6 +50,12 @@ http://www.eclipse.org/downloads/packages/release/helios/sr1/eclipse-php-develop
 安装wampserver3.2.3_x64  
 下载地址：  
 https://sourceforge.net/projects/wampserver/files/WampServer%203/WampServer%203.0.0/wampserver3.2.3_x64.exe/download  
+
+必须安装的C++ Redistribuable:   
+https://aka.ms/vs/17/release/VC_redist.x64.exe  
+http://www.microsoft.com/en-us/download/details.aspx?id=30679  
+https://www.microsoft.com/zh-CN/download/details.aspx?id=30679  
+
 https://yunpan.360.cn/surl_y6nNuCN9J54  
 如果缺失：msvcp140.dll (vcruntime140_1.dll,这个错误不影响使用！)  
 https://www.microsoft.com/zh-cn/download/confirmation.aspx?id=48145  

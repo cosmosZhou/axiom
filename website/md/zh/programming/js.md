@@ -9,6 +9,16 @@ https://nodejs.org/en/docs/
 
 #### windows
 
+https://blog.csdn.net/qq_48485223/article/details/122709354  
+
+npm config get registry  
+
+npm config set registry https://registry.npm.taobao.org/  
+
+npm config set prefix "D:\Program Files\nodejs\node_cache"  
+
+npm config set prefix "D:\Program Files\nodejs\node_global"  
+
 npm install -g cnpm --registry=http://registry.npm.taobao.org  
 
 cnpm install -g vue-cli 

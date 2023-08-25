@@ -4,16 +4,10 @@ from util import *
 @apply
 def apply(self):
     function, *limits_d = self.of(Derivative)
-    vars = [var for var, d in limits_d]
+    vars = [var for var, _ in limits_d]
 
-    args = function.of(Mul)
-    coeff = []
-    funcs = []
-    for arg in args:
-        if arg.has(*vars):
-            funcs.append(arg)
-        else:
-            coeff.append(arg)
+    import std
+    funcs, coeff = std.array_split(function.of(Mul), lambda arg: arg.has(*vars))
     coeff = Mul(*coeff)
     funcs = Mul(*funcs)
     return Equal(self, coeff * Derivative(funcs, *limits_d))

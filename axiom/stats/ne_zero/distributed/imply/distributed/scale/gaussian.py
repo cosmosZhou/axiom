@@ -24,13 +24,13 @@ def prove(Eq):
 
     Eq << algebra.infer.given.cond.invert.apply(Eq[-1])
 
-    Eq <<= algebra.infer.given.et.infer.et.apply(Eq[-4], cond=Eq[1]), algebra.infer.given.et.infer.et.apply(Eq[-2], cond=Eq[1])
+    Eq <<= algebra.cond.infer.given.et.infer.et.apply(Eq[1], Eq[-4]), algebra.cond.infer.given.et.infer.et.apply(Eq[1], Eq[-2])
 
-    
+
     Eq << Eq[-2].this.lhs.apply(stats.gt_zero.distributed.imply.distributed.scale.gaussian, b)
     Eq << Eq[-1].this.lhs.apply(stats.lt_zero.distributed.imply.distributed.scale.gaussian, b)
-    
-    
+
+
 
 
 if __name__ == '__main__':

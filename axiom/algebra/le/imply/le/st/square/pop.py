@@ -53,11 +53,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.limits.domain_defined)
 
     Eq << Eq[-1].this.rhs.args[0]().expr.args[1].simplify()
 
-    Eq.variance = Eq[-1].this.rhs.args[0].apply(algebra.sum.to.add.unshift)
+    Eq.variance = Eq[-1].this.rhs.args[0].apply(algebra.sum.to.sub.unshift)
 
     Eq << Eq.variance.rhs.args[1].this.apply(algebra.sum.limits.swap.intlimit)
 
@@ -65,7 +65,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.limits_subs(i, j)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.domain_defined)
 
     Eq << Eq[-1] + Eq.variance.rhs.args[0]
 
@@ -77,7 +77,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Mul, Sum).expr.apply(algebra.square.negate)
 
-    Eq << Eq[-1].this.rhs.find(Mul, Sum).apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.rhs.find(Mul, Sum).apply(algebra.sum.limits.domain_defined)
 
     Eq << Eq[-1] + Eq.le_given.rhs.args[0]
 
@@ -87,7 +87,7 @@ def prove(Eq):
 
     Eq << Eq.le_given.find(- ~Sum).this.apply(algebra.sum.to.add.split, cond={m - 1})
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.add.push)
+    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.sub.push)
 
     Eq << Eq[-1].this.rhs.args[0].limits_subs(i, j)
 
@@ -97,7 +97,7 @@ def prove(Eq):
 
     Eq << Eq[-1] - Eq[-1].rhs.args[-1]
 
-    Eq << Eq[-1].this.rhs.find(-~Sum).apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.rhs.find(-~Sum).apply(algebra.sum.limits.domain_defined)
 
     Eq << Eq[-1].this.rhs.collect(Eq[-1].rhs.find(Sum))
 
@@ -129,7 +129,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.args[0].args[0].ratsimp()
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add.push)
+    Eq << Eq[-1].this.rhs.apply(algebra.sum.to.sub.push)
 
     assert Eq[-1].rhs == Eq.le_given.rhs
     Eq.le_plausible = LessEqual(Eq[-1].lhs, Eq.le_given.lhs, plausible=True)
@@ -161,7 +161,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.limits.domain_defined)
 
     Eq << Eq[-1].this.rhs.args[0]().expr.args[1].simplify()
 
@@ -171,7 +171,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[0].limits_subs(i, j)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.sub.unshift)
 
     Eq << Add(*Eq[-1].rhs.args[:2]).this.apply(algebra.add.to.sum)
 
@@ -209,8 +209,8 @@ def prove(Eq):
 
     Eq << algebra.le.le.imply.le.transit.apply(Eq.le_plausible, Eq.le_given)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

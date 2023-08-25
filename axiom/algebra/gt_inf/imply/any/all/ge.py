@@ -6,7 +6,7 @@ def apply(le, M=None):
     (fx, *limits), M0 = le.of(Inf > Expr)
     if M is None:
         M = le.generate_var(real=True, var='M')
-    return Any[M:Interval(M0, oo, left_open=True)](All(fx >= M, *limits))
+    return Any[M:Interval.open(M0, oo)](All(fx >= M, *limits))
 
 
 @prove

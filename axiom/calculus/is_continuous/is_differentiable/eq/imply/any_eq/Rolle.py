@@ -20,7 +20,7 @@ def prove(Eq):
     from axiom.calculus.all_eq.imply.all.any.eq.intermediate_value_theorem import is_continuous
     from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle import is_differentiable
     a = Symbol(real=True)
-    b = Symbol(domain=Interval(a, oo, left_open=True))
+    b = Symbol(domain=Interval.open(a, oo))
     f = Function(shape=(), real=True)
     Eq << apply(is_continuous(f, a, b), is_differentiable(f, a, b), Equal(f(a), f(b)))
 

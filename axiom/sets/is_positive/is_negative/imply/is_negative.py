@@ -4,11 +4,11 @@ from util import *
 @apply
 def apply(a_is_positive, b_is_negative):
     a, R = a_is_positive.of(Element)
-    RR = Interval(0, oo, left_open=True)
+    RR = Interval.open(0, oo)
     assert R in RR
     
     b, R = b_is_negative.of(Element)
-    RR = Interval(-oo, 0, right_open=True)
+    RR = Interval.open(-oo, 0)
     assert R in RR
     return Element(a * b, RR)
 
@@ -18,7 +18,7 @@ def prove(Eq):
     from axiom import sets
 
     x, y = Symbol(hyper_real=True)
-    Eq << apply(Element(x, Interval(0, oo, left_open=True)), Element(y, Interval(-oo, 0, right_open=True)))
+    Eq << apply(Element(x, Interval.open(0, oo)), Element(y, Interval.open(-oo, 0)))
 
     Eq << sets.el.imply.el.neg.apply(Eq[1])
 

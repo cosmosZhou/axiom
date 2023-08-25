@@ -17,7 +17,7 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import discrete, algebra
+    from axiom import discrete, algebra, sets
 
     x = Symbol(real=True, shape=(oo,))
     n = Symbol(integer=True, positive=True)
@@ -31,11 +31,17 @@ def prove(Eq):
 
     Eq << algebra.ou.imply.infer.apply(Eq[-1], 1)
 
-    Eq << Eq[-1].this.lhs.simplify()
+    Eq << Eq[-1].this.lhs.apply(sets.el_cartesianSpace.given.all.el)
+
+    Eq << Eq[-1].this.lhs.expr.simplify()
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[0], Eq[-1])
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-09-20
+# updated on 2023-08-20

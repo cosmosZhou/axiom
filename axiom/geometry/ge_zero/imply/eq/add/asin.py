@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << sets.el.el.imply.el.add.interval.apply(Eq[-1], Eq[-3])
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq.any_eq, simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq.any_eq, simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, ret=0)
 

@@ -5,7 +5,7 @@ from util import *
 def apply(eq_xy, eq_ab, i=None):
     (x, w), y = eq_xy.of(Equal[MatMul])
     (a, S[w]), b = eq_ab.of(Equal[MatMul])
-    
+
     n, = x.shape
     [S[n]] = a.shape
     _i, _j = w.of(SwapMatrix)
@@ -38,10 +38,10 @@ def prove(Eq):
     Eq << Eq[-1] * Eq[-3]
 
     Eq << Eq[2].subs(Eq[-1])
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.domain_defined)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

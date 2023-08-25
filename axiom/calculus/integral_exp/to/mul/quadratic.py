@@ -62,14 +62,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Exp).apply(algebra.exp.to.mul)
 
-    Eq << Eq[-1].this.lhs.apply(calculus.integral.limits.domain_defined.insert)
+    Eq << Eq[-1].this.lhs.apply(calculus.integral.limits.domain_defined)
 
     Eq << Eq[-1].this.lhs.apply(calculus.integral.limits.subs, x, x / sqrt(2 * a))
 
     Eq << Eq[-1].this.find(Integral).apply(calculus.integral_exp.to.mul.sqrt)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

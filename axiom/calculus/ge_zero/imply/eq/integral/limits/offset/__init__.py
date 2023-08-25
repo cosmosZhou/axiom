@@ -18,8 +18,8 @@ def apply(is_nonnegative, self, offset):
 def prove(Eq):
     from axiom import algebra, calculus
 
-    x, y, a, b, c, d = Symbol(real=True)
-    f, g = Function(real=True, integrable=True)
+    x, a, b, d = Symbol(real=True)
+    f = Function(real=True, integrable=True)
     Eq << apply(f(x) >= 0, Integral[x:a:b](f(x)), d)
 
     Eq << algebra.cond.given.et.infer.split.apply(Eq[-1], cond=a > b)
@@ -35,6 +35,7 @@ def prove(Eq):
     Eq << algebra.cond.imply.et.infer.split.apply(Eq[0], cond=a > b)
 
     Eq << Eq[-2].this.rhs.apply(calculus.ge_zero.imply.eq.integral.limits.offset.interval, Eq[-3].find(Integral), d)
+    
     Eq << Eq[-1].this.rhs.apply(calculus.ge_zero.imply.eq.integral.limits.offset.interval, Eq[-4].find(Integral), d)
 
 

@@ -439,4 +439,8 @@ show variables like 'regexp_stack_limit';
 firstly, ensure the user exists:  
 create user prod@localhost identified by 'prod';  
 Access denied; you need (at least one of) the SUPER or SYSTEM_VARIABLES_ADMIN privilege(s) for this operation  
-grant create, select, delete, insert, SYSTEM_VARIABLES_ADMIN on *.* to prod@localhost;  
+grant create, select, delete, insert, update, SYSTEM_VARIABLES_ADMIN, show view on *.* to prod@localhost;  
+
+#### Malformed packet when load data local infile ...
+add the following line into ~/php/etc/php.ini  / D:\wamp64\bin\apache\apache2.4.39\bin\php.ini (Windows Version);  
+mysqli.allow_local_infile = On  

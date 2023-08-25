@@ -49,6 +49,11 @@ function get(url, data) {
 }
 
 function form_post(url, data) {
+	if (url.match(/^https?:\/\//)) {
+		data = {url, data};
+		url = 'php/request/post.php';
+	}
+
 	return axios.post(url, Qs.stringify(data)).then(result => {
 		var {data} = result;
 		if (data && data.isString)
@@ -60,7 +65,7 @@ function form_post(url, data) {
 function json_post(url, data) {
 	if (url.match(/^https?:\/\//)) {
 		data = {url, data};
-		url = 'request/post.php';
+		url = 'php/request/post.php';
 	}
 
 	return axios({
@@ -70,7 +75,13 @@ function json_post(url, data) {
 		header: {
 			'Content-Type':'application/json'
 		}
-	}).then(result => result.data);
+	}).then(result => {
+		var {data} = result;
+		if (data.isString && data.back() == '\n') {
+			data = data.slice(0, -1);
+		}
+		return data;	
+	});
 }
 
 function octet_stream_post(url, data, successCallback, errorCallback) {
@@ -129,22 +140,55 @@ function strlen(s) {
 }
 
 function getParameter(name, evaluate) {
-	name = name.replace(/([\[\]])/g, "\\$1");
-	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-	var search = window.location.search;
+	var attrs = [];
+	for (var m of name.matchAll(/\[([^\[\]]+)\]/g)) {
+		attrs.push(m[1]);
+	}
+	name = name.replace(/(\[[^\[\]]+\])/g, "");
+	var reg = new RegExp("(?<=^|&)" + name + "((?:\\[[^\\[\\]]+\\])*)=([^&]*)(?=&|$)", 'g');
+	var {search} = window.location;
 	if (search.startsWith("?")) {
-		var r = search.substr(1).match(reg);
-		if (r != null) {
-			var expr = unescape(r[2]);
+		search = search.substr(1);
+		var result = {};
+		var hit = false;
+		for (var m of search.matchAll(reg)) {
+			var attr = m[1];
+			var expr = unescape(m[2]);
 			if (evaluate) {
 				if (expr && expr.isString) {
 					expr = eval(expr);
 				}
 			}
-			return expr;
+			if (attr) {
+				var arglist = [];
+				for (var m of attr.matchAll(/\[([^\[\]]+)\]/g)) {
+					arglist.push(m[1]);
+				}
+				
+				if (attrs.length) {
+					if (attrs.equals(arglist))
+						return expr;
+
+					if (attrs.length >= arglist.length || arglist.slice(0, attrs.length).equals(attrs))
+						continue;
+					
+					arglist = arglist.slice(attrs.length);
+				}
+				setitem(result, ...arglist, expr);
+				hit = true;
+			}
+			else {
+				if (!attrs.length) {
+					return expr;
+				}
+			}
+		}
+		if (hit) {
+			if (!attrs.length) {
+				return list(result);
+			}
 		}
 	}
-	return null;
 }
 
 function getParameters() {
@@ -635,10 +679,32 @@ String.prototype.__defineGetter__("isInteger", function() {
 	return this.isdigit();
 });
 
+String.prototype.lang = function(){
+	if (this.match(XRegExp('\\p{Han}')))
+		return 'cn';
+	return 'en';
+};
+
+String.prototype.rows = function(){
+	return this.split('\n').length;
+};
+
+String.prototype.cols = function(){
+	var cols = [];
+	for (var line of this.split('\n')) {
+		cols.push(line.strlen());
+	}
+	return cols.max() + 1;
+};
+
 String.prototype.equals = function(rhs){
 	return this == rhs;
 };
 
+//python equivalent:
+//from urllib import parse
+//parse.urlparse(url)
+//parse.quote(text)
 String.prototype.encodeURI = function(){
 	return encodeURIComponent(this);
 };
@@ -732,7 +798,7 @@ String.prototype.strip = function(){
 };
 
 String.prototype.mysqlStr = function() {
-	var text = this.replace(/'/g, "''").replace(/\\/, "\\\\");
+	var text = this.replace(/'/g, "''").replace(/\\/g, "\\\\");
 	return `'${text}'`;
 };
 
@@ -742,6 +808,16 @@ String.prototype.back = function() {
 
 String.prototype.isdigit = function(){
 	return /^\d+$/.test(this);
+};
+
+String.prototype.isChinese = function(){
+	var chineseCharCount = 0;
+	for (var ch of this) {
+		if (XRegExp('\\p{Han}').test(ch))
+			++chineseCharCount;
+	}
+	
+	return chineseCharCount > this.length / 8;
 };
 
 String.prototype.isalpha = function(){
@@ -943,7 +1019,7 @@ Array.prototype.delete = function(index, size) {
 Array.prototype.clear = function() {
 	this.splice(0, this.length);
 };
- 
+
 Array.prototype.resize = function(newSize,defaultValue) {
     while(newSize > this.length)
         this.push(defaultValue);
@@ -953,6 +1029,10 @@ Array.prototype.resize = function(newSize,defaultValue) {
 Array.prototype.insert = function(index, value) {
 	if (index == this.length)
 		return this.push(value);
+
+	if (index > this.length)
+		this.push(...[null].repeat(index - this.length));
+
 	return this.splice(index, 0, value);
 };
 
@@ -1250,6 +1330,25 @@ Array.prototype.binary_insert = function(value, compareTo) {
 Array.prototype.max = function() {
 	return max(this);
 };
+
+Array.prototype.array_diff = function (other) {
+	if (!(other instanceof Set))
+		other = new Set(other);
+
+	return this.filter(x => !other.has(x));
+}
+
+Array.prototype.array_merge = function (other) {
+	return [...new Set([...this, ...other])];
+}
+
+Set.prototype.array_diff = function (other) {
+	return new Set([...this].array_diff(other));
+}
+
+Set.prototype.array_merge = function (other) {
+	return new Set([...this, ...other]);
+}
 
 /**
  * @template T
@@ -1573,12 +1672,22 @@ function join(sep, generator) {
 	return list(generator).join(sep);
 }
 
-function list(generator) {
-	var arr = [];
-	for (let e of generator) {
-		arr.push(e);
+function list(obj) {
+	if (obj.constructor == Function) {
+		var arr = [];
+		for (let e of obj) {
+			arr.push(e);
+		}
+		return arr;
 	}
-	return arr;
+	var array = [];
+	for (var key in obj) {
+		if (key.isInteger)
+			array[key] = obj[key];
+		else
+			return obj;
+	}
+	return array;
 }
 
 function* map(fn, generator) {
@@ -2094,6 +2203,14 @@ class EmptySet extends SymbolicSet {
 	
 	get args() {
 		return [];
+	}
+	
+	[Symbol.iterator]() {
+		return {
+			next() {
+				return {done: true};
+			}
+		};
 	}
 }
 
@@ -4094,7 +4211,7 @@ class TrapezoidV extends Trapezoid {
 				return cmp;
 			return this.y.compareTo(that.y);
 		}	
-		else
+		else 
 			return 1;
 	}
 	
@@ -4476,9 +4593,14 @@ function zipped(){
 
 function split_filename(filename){
 	var index = filename.lastIndexOf('.');
-	var basename = filename.slice(0, index);
-	var extension = filename.slice(index + 1);
-	return [basename, extension];
+	if (index >= 0) {
+		var basename = filename.slice(0, index);
+		var extension = filename.slice(index + 1);
+		return [basename, extension];
+	}
+	else {
+		return [filename, ''];
+	}
 }
 
 function gcd(x, y) {
@@ -4738,6 +4860,9 @@ class Rational extends Real {
 }
 
 function sleep(time) {
+	//usage: await sleep(1000);
+	console.log(`sleeping for ${time} seconds`);
+	time *= 1000;
 	return new Promise((resolve, reject) => setTimeout(resolve, time));
 }
 
@@ -4806,7 +4931,7 @@ function setitem() {
     var [data, ...indices] = arguments;
 
 	var value = indices.pop();
-    
+    var parentData = null;
     for (var [i, key] of enumerate(indices)) {
 		if (i + 1 < indices.length) {
 	        if (data[key]) {
@@ -4818,10 +4943,23 @@ function setitem() {
 				data[key] = indices[i + 1].isInteger? []: {};
 			}
 				
+			parentData = data;
 			data = data[key];
 		}
-		else
+		else {
+			if (parentData != null && i && !key.isInteger) {
+				data = {};
+				parentData[indices[i - 1]] = data;
+			}
+			else {
+				if (data.isArray && !key.isInteger) {
+					for (var i of reversed(range(data.length))) {
+						data.delete(i);
+					}
+				}
+			}
 			data[key] = value;
+		}
     }
 }
 
@@ -4837,21 +4975,33 @@ function getitem() {
     return data;
 }
 
+function randrange(start, stop, step) {
+	if (step == null) {
+		if (stop == null) {
+			stop = start;
+			start = 0;
+		}
+		step = 1;
+		var size = stop - start;
+	}
+	else {
+		var size = ((stop - start) / step).ceil();	
+	}
+	
+	return (Math.random() * size).floor() * step + start;
+}
+
 function sample(data, count) {
+	if (count > data.length)
+		count = data.length;
+
 	for (var i of range(count)) {
-		var j = (Math.random() * (data.length - i)).floor() + i; //must be >= i
+		var j = randrange(i, data.length); //must be >= i
 		if (j > i)
 			[data[i], data[j]] = [data[j], data[i]];
 	}
 
 	return data.slice(0, count);
-}
-
-function timer(fn) {
-	var start = Date.now();
-	fn();
-	var end = Date.now();
-	return (end - start) / 1000;
 }
 
 function deleteIndices(arr, fn, postprocess)
@@ -4876,7 +5026,7 @@ function deleteIndices(arr, fn, postprocess)
         arr.delete(i);
     }
 
-    return true;
+    return indicesToDelete.length;
 }
 
 function computed(cls, attr) {
@@ -4897,8 +5047,8 @@ function computed(cls, attr) {
 	}
 }
 
-function partition(listOfElement, divisor) {
-	var size = listOfElement.length;
+function partition(data, divisor) {
+	var size = data.length;
 	
 	var quotient = parseInt(size / divisor);
     var batches = [];
@@ -4912,17 +5062,22 @@ function partition(listOfElement, divisor) {
 	var start = 0;
     for (var [i, length] of enumerate(sizes)) {
 		var stop = start + length;
-		batches[i] = listOfElement.slice(start, stop);
+		batches[i] = data.slice(start, stop);
 		start = stop;
 	}
 
     return batches;
 }
 
-function batches(listOfElement, batch_size) {
-	var size = listOfElement.length;
+function batches(data, batch_size) {
+	if (!data.isArray)
+		data = [...data];
+
+	var size = data.length;
 	var divisor = parseInt((size + batch_size - 1) / batch_size);
-	return partition(listOfElement, divisor);
+	if (divisor)
+		return partition(data, divisor);
+	return data;
 }
 
 function pop(obj, key) {
@@ -4940,8 +5095,82 @@ function json_extract(obj, path) {
 	return getitem(obj, ...paths);
 }
 
-async function load(file) {
-	return await fetch(file).then(data => data.text()).then(data => JSON.parse(data));
+function not_any_of(regex) {
+	regex = regex.source;
+	return eval(`/(?!(?:${regex}))\\S+/`);
+}
+
+
+function parseCSV(data) {
+    var {data, meta, errors} = Papa.parse(data, { skipEmptyLines: true });
+    
+    var [fields, ...data] = data;
+    //console.log(fields);
+    //console.log(data);
+    
+    data = data.map(args => {
+    	var obj = {};
+    	for (var [key, value] of zip(fields, args)) {
+    		obj[key] = value;
+    	}
+    	return obj;
+    });
+    
+    return data;
+}
+
+function get_url(kwargs) {
+	var url = get_url_array(kwargs);
+	return '?' + url.map(args => {
+		var [key, value] = args;
+		for (var i of range(1, key.length)) {
+			key[i] = `[${key[i]}]`;	
+		}
+		key = key.join('');
+		return `${key}=${value}`;
+	}).join('&');
+}
+
+function get_url_array(kwargs) {
+	var url = [];
+	for (var key in kwargs) {
+		var value = kwargs[key];
+		if (value == null) {
+			url.push([[key], value]);
+		}
+		else if (value.isArray) {
+			var obj = {};
+			for (var [i, value] of enumerate(value)) {
+				if (value != null)
+					obj[i] = value;
+			}
+
+			for (var args of get_url_array(obj)) {
+				url.push([[key, ...args[0]], args[1]]); 
+			}
+		}
+		else if (value.constructor == Object) {
+			for (var args of get_url_array(value)) {
+				url.push([[key, ...args[0]], args[1]]); 
+			}
+		}
+		else {
+			url.push([[key], value]);
+		}
+	}
+
+	return url;
+}
+
+function is_same(list) {
+	if (!list.isArray)
+        list = [...list];
+
+    for (var i of range(1, list.length)) {
+        if (list[i] != list[i - 1])
+            return false;
+	}
+    return true;
 }
 
 console.log("import std.js");

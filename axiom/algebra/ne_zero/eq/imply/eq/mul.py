@@ -1,15 +1,10 @@
 from util import *
 
 
-
 @apply
-def apply(is_nonzero, equality):
-    if is_nonzero.is_Equal:
-        equality, is_nonzero = given
-
-    x = is_nonzero.of(Unequal[0])
-    lhs, rhs = equality.of(Equal)
-
+def apply(ne, eq):
+    x = ne.of(Unequal[0])
+    lhs, rhs = eq.of(Equal)
     return Equal((x * lhs).expand(), (x * rhs).expand())
 
 
@@ -39,4 +34,4 @@ if __name__ == '__main__':
 
 
 # created on 2018-01-24
-# updated on 2023-04-05
+# updated on 2023-06-06

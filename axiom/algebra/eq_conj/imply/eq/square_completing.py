@@ -5,7 +5,7 @@ from util import *
 def apply(eq_conj, self, z=None):
     b_quote, b_bar = eq_conj.of(Equal)
     b = ~b_bar
-    from axiom.sets.is_nonzero.imply.eq.square_completing import quadratic_coefficient
+    from axiom.sets.is_nonzero.imply.eq.conj.square_completing import quadratic_coefficient
     z, coeffs = quadratic_coefficient(self, z)
 
     a = coeffs[1][1]
@@ -39,7 +39,7 @@ def prove(Eq):
 
     Eq << sets.ne_zero.is_real.imply.el.union.apply(Eq[-2], Eq[-1])
 
-    Eq << sets.is_nonzero.imply.eq.square_completing.apply(Eq[-1], Eq[1].lhs._subs(b_quote, ~b), simplify=None)
+    Eq << sets.is_nonzero.imply.eq.conj.square_completing.apply(Eq[-1], Eq[1].lhs._subs(b_quote, ~b), simplify=None)
 
     Eq << Eq[1].subs(Eq[0])
 

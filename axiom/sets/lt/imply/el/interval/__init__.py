@@ -5,7 +5,7 @@ from util import *
 def apply(given):
     n, b = given.of(Less)
     assert n.is_finite
-    return Element(n, Interval(-oo, b, right_open=True))
+    return Element(n, Interval.open(-oo, b))
 
 
 @prove

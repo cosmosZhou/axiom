@@ -7,7 +7,7 @@ def apply(ge, contains_y):
     S[y], domain = contains_y.of(Element)
     b, c = domain.of(Interval)
     a = Max(b, a)
-    return Element(y, Interval(a, c, left_open=domain.left_open, right_open=domain.right_open))
+    return Element(y, Interval(a, c, **domain.kwargs))
 
 
 @prove

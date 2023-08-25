@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(sets.el_interval.imply.et)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[0], Eq[-1], simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[0], Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.args[:2].apply(algebra.gt.le.imply.lt.transit, ret=0)
 
@@ -32,8 +32,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.le.imply.le.add)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

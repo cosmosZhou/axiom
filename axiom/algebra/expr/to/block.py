@@ -15,9 +15,10 @@ def split(self, *pivot, axis=0):
     for k in pivot:
         if k < 0:
             k += shape[axis]
-            
-        former = rhs[tuple([slice(None, None)] * axis + [slice(0, k)])]
-        latter = rhs[tuple([slice(None, None)] * axis + [slice(k, shape[axis])])]
+
+        prev_slices = [slice(None)] * axis
+        former = rhs[prev_slices + [slice(0, k)]]
+        latter = rhs[prev_slices + [slice(k, shape[axis])]]
         assert former.shape == trim_leading(shape[:axis] + (k,) + shape[axis + 1:])
         assert latter.shape == trim_leading(shape[:axis] + (shape[axis] - k,) + shape[axis + 1:])
         rhs = BlockMatrix[axis](former, latter, shape=shape)
@@ -37,7 +38,6 @@ def prove(Eq):
     from axiom import algebra
 
     m = Symbol(integer=True, positive=True)
-    A = Identity(m)
     A = Symbol(real=True, shape=(m, m, m, m, m))
     i, j = Symbol(domain=Range(1, m))
     Eq << apply(A, i, j, axis=2)

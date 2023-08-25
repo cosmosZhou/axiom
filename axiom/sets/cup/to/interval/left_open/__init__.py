@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << Eq[-2].this.lhs.apply(sets.lt.imply.eq.cup.to.interval.left_open, k)
 
-    Eq << (a >= b).this.apply(sets.ge.imply.interval_is_empty, left_open=True)
+    Eq << (a >= b).this.apply(sets.ge.imply.is_empty.interval, left_open=True)
 
     Eq <<= Eq[-1] & Eq[-2]
 
@@ -31,7 +31,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Cup).apply(sets.cup.piece)
 
-    Eq << (a >= b).this.apply(sets.ge.imply.range_is_empty)
+    Eq << (a >= b).this.apply(sets.ge.imply.is_empty.range)
 
     Eq <<= Eq[-1] & Eq[-2]
 

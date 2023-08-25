@@ -26,9 +26,9 @@ def prove(Eq):
     B = Symbol(etype=dtype.real * k, given=True)
     Eq << apply(And(Unequal(x, y), Unequal(f(x), g(y)), Any[b:B](Equal(f(x), h(b)))))
 
-    Eq << Eq[0].this.args[1:].apply(algebra.cond.any.imply.any_et, simplify=None)
+    Eq << Eq[0].this.args[1:].apply(algebra.cond.any.imply.any.et, simplify=None)
 
-    Eq << Eq[-1].this.apply(algebra.cond.any.imply.any_et, simplify=None)
+    Eq << Eq[-1].this.apply(algebra.cond.any.imply.any.et, simplify=None)
 
 
 if __name__ == '__main__':

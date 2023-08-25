@@ -39,16 +39,18 @@ def prove(Eq):
 
     Eq << algebra.infer.imply.infer.et.domain_defined.apply(Eq[-1], t)
 
-
     Eq << Eq[-1].this.find(Element).apply(sets.el_range.given.et)
+
     Eq << Eq[-1].this(t).find(GreaterEqual).simplify()
+
     Eq << Eq[-1].this.find(And).apply(algebra.ne.lt.given.lt)
+
     #https://arxiv.org/pdf/1909.08593.pdf#page=3
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-04-13
-# updated on 2023-04-25
+# updated on 2023-06-06

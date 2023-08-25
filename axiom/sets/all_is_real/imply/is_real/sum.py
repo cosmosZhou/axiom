@@ -8,7 +8,7 @@ def apply(all_is_real):
     for limit in limits:
         x, domain = limit.coerce_setlimit()
         assert domain.is_finiteset
-    
+
     return Element(Sum(expr, *limits), Reals)
 
 
@@ -31,14 +31,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(sets.is_real.is_real.imply.is_real.add)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.push)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.sub.push)
     Eq << Infer(Eq[2], Eq.induct, plausible=True)
 
     Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n=n, start=0)
 
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[0], Eq[2])
 
-    
+
 
 
 if __name__ == '__main__':

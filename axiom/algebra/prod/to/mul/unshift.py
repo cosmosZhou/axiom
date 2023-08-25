@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.sum.to.add.unshift import rewrite
+    from axiom.algebra.sum.to.sub.unshift import rewrite
     def inverse(x):
         assert x.is_nonzero
         return 1 / x
@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Product).apply(algebra.prod.to.mul.split, cond={0})
 
-    
+
 
 
 if __name__ == '__main__':

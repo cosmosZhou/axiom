@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << algebra.eq.cond.imply.cond.subs.apply(Eq.inverse, Eq[-1], reverse=True)
 
-    Eq << calculus.is_limited.is_limited.imply.eq.algebraic_limit_theorem.mul.apply(Eq[0], Eq[-1])
+    Eq << calculus.is_limited.is_limited.imply.eq.mul.algebraic_limit_theorem.apply(Eq[0], Eq[-1])
     Eq << Eq[-1].subs(Eq.inverse)
 
 

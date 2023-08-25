@@ -1,4 +1,4 @@
 from . import Newton
 from . import difference
 from . import stirling2
-from . import binom
+from . import factorial

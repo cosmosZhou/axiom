@@ -37,5 +37,5 @@ if (\std\endsWith($py, "/__init__.py")) {
 }
 
 \mysql\delete_from_axiom($module);
-echo \std\jsonify("deleted!");
+echo \std\encode("deleted!");
 ?>

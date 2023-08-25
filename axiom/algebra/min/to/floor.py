@@ -5,19 +5,13 @@ from util import *
 @apply
 def apply(self):
     args = self.of(Min)
-
+    import std
     x = []
     for arg in args:
         if arg.is_Floor:
             arg = arg.arg
         elif arg.is_Add:
-            flrs = []
-            non_flrs = []
-            for i, flr in enumerate(arg.args):
-                if flr.is_Floor:
-                    flrs.append(flr)
-                else:
-                    non_flrs.append(flr)
+            flrs, non_flrs = std.array_split(arg.args, lambda arg : arg.is_Floor)
 
             assert flrs
             arg = Add(*non_flrs)

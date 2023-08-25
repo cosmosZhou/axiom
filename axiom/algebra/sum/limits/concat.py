@@ -66,7 +66,7 @@ def prove(Eq):
     f = Function(real=True, shape=())
     Eq << apply(Sum[x[i], x[i + 1:n + 1]](f(x[i:n])))
 
-    Eq << Eq[0].this.rhs.apply(algebra.sum.limits.split.slice.shift)
+    Eq << Eq[0].this.rhs.apply(algebra.sum.limits.shift.slice)
 
 
 if __name__ == '__main__':

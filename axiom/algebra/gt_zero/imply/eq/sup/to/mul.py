@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this.rhs.apply(algebra.gt_zero.le.imply.le.mul), algebra.infer.imply.infer.et.both_sided.apply(Eq[-1], cond=Eq[0])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.cond.any.imply.any_et, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(algebra.cond.any.imply.any.et, simplify=None)
 
     Eq << Eq[-1].this.rhs.expr.apply(algebra.gt_zero.gt.imply.gt.mul)
 
@@ -48,7 +48,7 @@ def prove(Eq):
 
     Eq <<= algebra.all.given.infer.apply(Eq[-2]), algebra.all.given.infer.apply(Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

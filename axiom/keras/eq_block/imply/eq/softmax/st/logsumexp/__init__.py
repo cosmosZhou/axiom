@@ -57,10 +57,6 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Exp[BlockMatrix]).apply(algebra.exp.to.block)
 
-    Eq << Eq[-1].this.find(Exp[BlockMatrix]).apply(algebra.exp.to.block)
-
-    Eq << Eq[-1].this.find(Exp[BlockMatrix]).apply(algebra.exp.to.block)
-
     Eq << Eq[-1].this.find(Exp[Lamda[BlockMatrix]]).apply(algebra.exp.to.lamda)
 
     Eq << Eq[-1].this.find(Exp[Lamda]).apply(algebra.exp.to.lamda)
@@ -90,5 +86,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2022-01-03
-# updated on 2023-05-20
+# updated on 2023-06-08
 from . import tf

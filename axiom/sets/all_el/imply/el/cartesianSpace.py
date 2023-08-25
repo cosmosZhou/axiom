@@ -17,17 +17,20 @@ def apply(given):
 
 @prove
 def prove(Eq):
+    from axiom import sets
+
     x = Symbol(integer=True, shape=(oo,))
     S = Symbol(etype=dtype.integer)
     i = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
     Eq << apply(All[i:n](Element(x[i], S)))
 
-    Eq << Eq[1].simplify()
+    Eq << sets.el_cartesianSpace.given.all.el.apply(Eq[1])
 
-    
+
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-09-20
+# updated on 2023-07-02

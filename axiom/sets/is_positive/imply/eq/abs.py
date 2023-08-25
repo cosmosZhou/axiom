@@ -17,7 +17,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     x = Symbol(complex=True)
-    Eq << apply(Element(x, Interval(0, oo, left_open=True)))
+    Eq << apply(Element(x, Interval.open(0, oo)))
 
     Eq << sets.is_positive.imply.gt_zero.apply(Eq[0])
 

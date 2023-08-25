@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << algebra.et.given.et.apply(Eq[-2])
 
-    Eq << Eq[-3].this.rhs.apply(algebra.cond.any.imply.any_et, Eq[0], simplify=None)
+    Eq << Eq[-3].this.rhs.apply(algebra.cond.any.imply.any.et, Eq[0], simplify=None)
 
     Eq << Eq[-1].this.find(And).apply(algebra.gt_zero.lt.imply.lt.mul)
 

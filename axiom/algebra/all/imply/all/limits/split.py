@@ -38,7 +38,7 @@ def apply(given, index=-1):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from axiom import algebra, sets
 
     n = Symbol(integer=True, positive=True)
     a, b = Symbol(real=True)
@@ -48,12 +48,15 @@ def prove(Eq):
 
     Eq << algebra.all.imply.infer.apply(Eq[0])
 
+    Eq << Eq[-1].this.lhs.apply(sets.el_cartesianSpace.given.all.el)
+
     Eq << Eq[-1].this.lhs.apply(algebra.all.given.et, cond={n})
 
     Eq << algebra.all.given.infer.apply(Eq[1])
 
-    Eq << Eq[-1].this.lhs.args[1].simplify()
+    Eq << Eq[-1].this.find(Element[CartesianSpace]).apply(sets.el_cartesianSpace.imply.all.el)
 
+    
     
 
 
@@ -61,4 +64,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2018-12-07
-# updated on 2023-05-20
+# updated on 2023-08-20

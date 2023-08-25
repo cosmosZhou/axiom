@@ -13,7 +13,7 @@ def prove(Eq):
     from axiom import algebra
 
     a = Symbol(real=True, given=True)
-    t = Symbol(domain=Interval(-oo, 1, right_open=True))
+    t = Symbol(domain=Interval.open(-oo, 1))
     Eq << apply(a > 0, t)
 
     Eq << Less(t - 1, 0, plausible=True)

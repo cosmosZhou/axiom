@@ -60,7 +60,7 @@ def prove(Eq):
     f, h = Function(real=True)
     Eq << apply(Sum[i:n](f(i) + h(i)))
 
-    
+
 
 
 if __name__ == '__main__':
@@ -72,8 +72,6 @@ from . import telescope
 # created on 2018-02-20
 from . import shift
 from . import pop
-from . import unshift
-from . import push
 # updated on 2023-06-02
 from . import by_parts
 from . import Abel

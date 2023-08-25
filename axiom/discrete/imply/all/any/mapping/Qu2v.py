@@ -57,7 +57,7 @@ def prove(Eq):
 
     Eq <<= Eq.x_n1_cup_finiteset & Eq[-1]
 
-    Eq << Eq[-1].this.expr.apply(algebra.cond.any.imply.any_et)
+    Eq << Eq[-1].this.expr.apply(algebra.cond.any.imply.any.et)
 
     Eq << Eq[3].this.expr.expr.rhs.definition
 

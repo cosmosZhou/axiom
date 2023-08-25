@@ -20,9 +20,9 @@ def prove(Eq):
 
     Eq << algebra.cond.given.et.infer.split.apply(Eq[1], cond=a < b)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.all.given.all_et.limits_cond, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(algebra.all.given.all.et.limits_cond, simplify=None)
 
-    Eq << (a >= b).this.apply(sets.ge.imply.interval_is_empty, left_open=True)
+    Eq << (a >= b).this.apply(sets.ge.imply.is_empty.interval, left_open=True)
 
     Eq <<= Eq[-1] & Eq[-2]
 

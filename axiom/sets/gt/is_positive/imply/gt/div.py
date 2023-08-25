@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(lt, is_positive):
     x, R = is_positive.of(Element)
-    assert R in Interval(0, oo, left_open=True)
+    assert R in Interval.open(0, oo)
     lhs, rhs = lt.of(Greater)
     return Greater(lhs / x, rhs / x)
 
@@ -15,7 +15,7 @@ def prove(Eq):
 
     a, b = Symbol(real=True)
     x = Symbol(hyper_real=True)
-    Eq << apply(a > b, Element(x, Interval(0, oo, left_open=True)))
+    Eq << apply(a > b, Element(x, Interval.open(0, oo)))
 
     Eq << sets.is_positive.imply.is_positive.div.apply(Eq[1])
 

@@ -11,7 +11,7 @@ def apply(given, M=None):
     elif isinstance(M, str):
         M = given.generate_var(variables, real=True, var=M)
 
-    return All[M:Interval(-oo, M0, right_open=True)](Any(fx > M, *limits))
+    return All[M:Interval.open(-oo, M0)](Any(fx > M, *limits))
 
 
 @prove
@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.all_le.imply.sup_le)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[0], Eq[-1], simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[0], Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.le.ge.imply.ge.transit)
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1])

@@ -495,7 +495,7 @@ async function createApp(component, data, id) {
 						type: ".mjs"
 					};
 				case 'vue':
-					return window.vue[name];					
+					return window.vue[name];
 				}
 			}
 	
@@ -535,8 +535,8 @@ async function createApp(component, data, id) {
 	document.body.appendChild(div);
 	
 	var components = {};
-	components[component] = await loadModule(`static/components/${component}.vue`, options);	
-
+	components[component] = await loadModule(`static/components/${component}.vue`, options);
+	
 	var args = [];
 	for (let key in data){
 		args.push(`:${key}=${key}`);	
@@ -589,7 +589,53 @@ function create_ClipboardJS(tag) {
 	});
 }
 
-async function query(user, token, data) {
+async function query(host, user, token, sql) {
+	var data = {sql};
 	data.token = token;
-	return await form_post(`query.php?user=${user}`, data);
+	var kwargs = {user};
+	if (host && host != 'localhost')
+		kwargs.host = host;	
+	return await form_post(`query.php` + get_url(kwargs), data);
+}
+
+function InitMathJax(miniseconds) {
+	return {
+	    startup: {
+	        ready(){
+	              console.log('MathJax is loaded, but not yet initialized');
+	              MathJax.startup.defaultReady();
+	              console.log('MathJax is initialized, and the initial typeset is queued');
+	              
+	              MathJax.startup.promise.then(() => {                    
+	                  console.log('MathJax initial typesetting complete');
+	                  setTimeout(() => {
+	                	  var p = document.querySelectorAll('p');
+	                	  if (p.length) {
+	                          for (let p of document.querySelectorAll('p')){
+	                              if (p.innerText.startsWith("\\[")) {
+	                                  console.log("unfinished work detected!");
+	                                  console.log(p.innerText);
+	                                  console.log('trying MathJax.typesetPromise() again;');
+	                                  MathJax.typesetPromise();
+	                                  break;
+	                              }
+	                          }
+	                      }
+	                	  else {
+	                    	  console.log("no p tags have been detected!");
+	                    	  setTimeout(() => {
+	                    		  console.log("MathJax.typesetPromise() due to absence of p tags");
+	                    		  MathJax.typesetPromise();
+	                    	  }, miniseconds);
+	                	  }
+	                  }, miniseconds);
+	              });                  
+	         }
+	      },
+	
+	    tex: {
+	        maxBuffer: 60 * 1024,       // maximum size for the internal TeX string (10K)
+	        //reference: http://docs.mathjax.org/en/latest/options/input/tex.html?highlight=MAXBUFFER#the-configuration-block
+	    },
+	};	
 }

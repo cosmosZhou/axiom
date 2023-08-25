@@ -8,7 +8,7 @@ def apply(contains):
     assert a in Interval(-1, 1)
     assert b in Interval(-1, 1, right_open=True)
     assert domain.left_open and domain.right_open
-    return Element(acos(x), Interval(acos(b), acos(a), left_open=domain.right_open, right_open=domain.left_open))
+    return Element(acos(x), Interval(acos(b), acos(a), **domain.kwargs_reversed))
 
 
 @prove

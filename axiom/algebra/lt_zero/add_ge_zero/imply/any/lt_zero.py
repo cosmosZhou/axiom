@@ -18,7 +18,7 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(a < 0, b ** 2 - 4 * a * c >= 0, x=x)
 
-    Eq.delta_is_nonnegative = algebra.ge_zero.imply.sqrt_ge_zero.apply(Eq[1])
+    Eq.delta_is_nonnegative = algebra.ge_zero.imply.ge_zero.sqrt.apply(Eq[1])
 
     Eq << Eq.delta_is_nonnegative - b
 
@@ -59,7 +59,7 @@ def prove(Eq):
 
     Eq << algebra.gt_zero.ge_zero.imply.gt_zero.add.apply(Eq[-1], Eq.delta_is_nonnegative)
 
-    
+
 
 
 if __name__ == '__main__':

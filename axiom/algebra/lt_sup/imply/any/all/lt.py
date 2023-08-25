@@ -6,7 +6,7 @@ def apply(le, M=None):
     (fx, *limits), M0 = le.of(Sup < Expr)
     if M is None:
         M = le.generate_var(real=True, var='M')
-    return Any[M:Interval(-oo, M0, right_open=True)](All(fx < M, *limits))
+    return Any[M:Interval.open(-oo, M0)](All(fx < M, *limits))
 
 
 @prove
@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq <<= algebra.eq_sup.imply.all_le.apply(Eq[-1]), Eq[0].subs(Eq[-1].reversed), algebra.any.given.cond.subs.apply(Eq[1], M, (y + M0) / 2)
 
-    Eq.all, *Eq[-2:] = algebra.cond.all.imply.all_et.apply(Eq[-2], Eq[-3], simplify=None), algebra.et.given.et.apply(Eq[-1])
+    Eq.all, *Eq[-2:] = algebra.cond.all.imply.all.et.apply(Eq[-2], Eq[-3], simplify=None), algebra.et.given.et.apply(Eq[-1])
 
     Eq << sets.el.given.el.mul.interval.apply(Eq[-2], 2)
 
@@ -44,8 +44,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr / 2
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

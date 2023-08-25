@@ -37,7 +37,7 @@ def prove(Eq):
 
     Eq.sup_is_real = sets.lt.gt.imply.el.interval.apply(Eq[-2], Eq[-1], simplify=None)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq.sup_is_real, Eq.any_le, simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq.sup_is_real, Eq.any_le, simplify=None)
 
     Eq << Eq[-1].this.expr.apply(sets.le.el.imply.le.sub)
 
@@ -53,7 +53,7 @@ def prove(Eq):
 
     Eq << -Eq[-1].this.expr
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq.sup_is_real, Eq[-1], simplify=None)
+    Eq << algebra.cond.all.imply.all.et.apply(Eq.sup_is_real, Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(sets.le.el.imply.le.add)
 

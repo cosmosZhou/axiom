@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << algebra.iff.given.et.infer.apply(Eq[1])
 
-    Eq <<= algebra.infer.given.et.infer.et.apply(Eq[-2], cond=Eq[0]), algebra.infer.given.et.infer.et.apply(Eq[-1], cond=Eq[0])
+    Eq <<= algebra.cond.infer.given.et.infer.et.apply(Eq[0], Eq[-2]), algebra.cond.infer.given.et.infer.et.apply(Eq[0], Eq[-1])
 
     Eq << Eq[-2].this.lhs.apply(algebra.gt_zero.lt.imply.lt.div)
 

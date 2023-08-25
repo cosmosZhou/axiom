@@ -1,17 +1,23 @@
 from util import *
 
 
-@apply
-def apply(self, i=0, j=1):
+def rewrite(Sum, self, i=0, j=1):
     assert i < j
-
-    [function, *limits] = self.of(Sum)
-    i_limit, j_limit = self.limits[i], self.limits[j]
+    expr, *limits = self.of(Sum)
+    i_limit, j_limit = limits[i], limits[j]
 
     assert not i_limit._has(j_limit[0])
-    limits[i], limits[j] = limits[j], limits[i]
+    if j_limit._has(i_limit[0]):
+        i = self.expr.generate_var(excludes=self.variables, **i_limit[0].type.dict)
+        expr = expr._subs(i_limit[0], i)
+        i_limit = (i, *i_limit[1:])
 
-    return Equal(self, Sum(function, *limits))
+    limits[i], limits[j] = j_limit, i_limit
+    return Sum(expr, *limits)
+
+@apply
+def apply(self, i=0, j=1):
+    return Equal(self, rewrite(Sum, self, i, j))
 
 
 @prove
@@ -56,6 +62,9 @@ def prove(Eq):
 
     Eq << algebra.eq.infer.imply.eq.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
@@ -63,3 +72,4 @@ if __name__ == '__main__':
 from . import intlimit
 from . import subs
 # created on 2018-04-30
+# updated on 2023-07-02

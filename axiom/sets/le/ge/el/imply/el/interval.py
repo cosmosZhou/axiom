@@ -8,7 +8,7 @@ def apply(le, ge, contains):
     x, domain = contains.of(Element)
     S[a], S[b] = domain.of(Interval)
 
-    return Element(x, Interval(_a, _b, left_open=domain.left_open, right_open=domain.right_open))
+    return Element(x, Interval(_a, _b, **domain.kwargs))
 
 
 @prove

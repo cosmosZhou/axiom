@@ -3,7 +3,7 @@ from util import *
 
 @apply(simplify=False)
 def apply(self, z=None):
-    from axiom.sets.is_nonzero.imply.eq.square_completing import quadratic_coefficient
+    from axiom.sets.is_nonzero.imply.eq.conj.square_completing import quadratic_coefficient
     z, coeffs = quadratic_coefficient(self, z)
 
     a = coeffs[1][1]
@@ -29,9 +29,9 @@ def prove(Eq):
 
     Eq << sets.ne_zero.imply.el.union.apply(Eq[-1])
 
-    Eq << sets.is_nonzero.imply.eq.square_completing.apply(Eq[-1], Eq[0].lhs, simplify=None)
+    Eq << sets.is_nonzero.imply.eq.conj.square_completing.apply(Eq[-1], Eq[0].lhs, simplify=None)
 
-    
+
 
 
 if __name__ == '__main__':

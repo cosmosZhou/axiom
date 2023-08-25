@@ -60,7 +60,7 @@ def prove(Eq):
 
     Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (j, 0, n), (i, 0, n))
 
-    Eq << keras.imply.eq.bert.mask.theorem.apply(a, Ξ_quote, add=True)
+    Eq << algebra.mul.to.exp.oo.apply(exp(a) * Ξ_quote).reversed
 
     Eq << Eq[-1].subs(Eq[-2])
 

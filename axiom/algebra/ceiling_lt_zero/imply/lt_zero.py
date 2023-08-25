@@ -16,7 +16,7 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    Eq << algebra.ge_zero.imply.ceiling_ge_zero.apply(Eq[-1])
+    Eq << algebra.ge_zero.imply.ge_zero.ceiling.apply(Eq[-1])
 
 
     Eq << ~Eq[-1]

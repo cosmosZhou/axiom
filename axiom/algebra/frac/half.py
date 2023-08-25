@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this.rhs.find(Equal[0]).apply(algebra.is_even.given.any), Eq[-1].this.rhs.find(Unequal[0]).apply(algebra.mod_ne_zero.given.any)
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.cond.any.given.any_et, simplify=None), Eq[-1].this.rhs.apply(algebra.cond.any.given.any_et, simplify=None)
+    Eq <<= Eq[-2].this.rhs.apply(algebra.cond.any.given.any.et, simplify=None), Eq[-1].this.rhs.apply(algebra.cond.any.given.any.et, simplify=None)
 
     Eq <<= Eq[-2].this.find(And).apply(algebra.et.given.et.subs.eq), Eq[-1].this.find(And).apply(algebra.et.given.et.subs.eq)
 
@@ -31,8 +31,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.mod_ne_zero.imply.any)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

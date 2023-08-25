@@ -1,4 +1,3 @@
-from . import bool
 from . import piece
 
 from . import one

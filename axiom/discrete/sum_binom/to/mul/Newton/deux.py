@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.mul.to.add)
 
-    Eq << Eq[-1].this.find(Sum[Mul[Symbol]]).apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.find(Sum[Mul[Symbol]]).apply(algebra.sum.to.sub.unshift)
 
     Eq << Eq[-1].this.find(Sum[Mul[Symbol]]).apply(discrete.sum_binom.to.mul.Newton)
 

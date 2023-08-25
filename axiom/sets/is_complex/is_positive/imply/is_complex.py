@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(is_complex, is_positive):
     a, R = is_positive.of(Element)
-    assert R in Interval(0, oo, left_open=True)
+    assert R in Interval.open(0, oo)
     b, R = is_complex.of(Element)
     assert R in S.Complexes
     return Element(b / a, S.Complexes)
@@ -15,7 +15,7 @@ def prove(Eq):
     from axiom import sets
 
     x, y = Symbol(super_complex=True)
-    Eq << apply(Element(y, S.Complexes), Element(x, Interval(0, oo, left_open=True)))
+    Eq << apply(Element(y, S.Complexes), Element(x, Interval.open(0, oo)))
 
     Eq << sets.is_positive.is_complex.imply.is_complex.apply(Eq[1], Eq[0])
 

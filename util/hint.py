@@ -1,6 +1,51 @@
 from std import MySQL
-from blueprint.debug import extract_latex, compile_definition_statement
 from std.unicode import ascii2greek
+import traceback
+
+def extract_latex(symbol):
+    try:
+        symbol = globals()[symbol]
+    except KeyError:
+        return
+    
+    doc = symbol.__doc__
+    if doc is None:
+        return
+    
+    lines = []
+    for line in doc.splitlines():
+        m = re.match("^ *>>> *(.+)", line)
+        if m:
+            line = m[1]
+            if re.match("^from +\S+ +import +.+", line):
+                continue
+            lines.append(line)
+            continue
+        m = re.match("^ *\.\.\. *(.+)", line)
+        if m:
+            if not lines:
+                continue
+                
+            line = lines[-1]
+            line += '\n' + m[1]
+            lines[-1] = line
+            
+    return lines
+
+
+def compile_definition_statement(line):
+    m = re.match('(.+?) *= *(Symbol|Function)\((.+)\) *$', line)
+    if m:
+        name, func, kwargs = m.groups()
+        if ',' in name:
+            line = "%s = %s" % (name, ', '.join(["%s('%s', %s)" % (func, n, kwargs) for n in re.split("\s*,\s*", name)]))
+        elif re.match("'[^']+'", kwargs) or re.match('"[^"]+"', kwargs):
+            ...
+        else:
+            line = "%s = %s('%s', %s)" % (name, func, name, kwargs)
+            
+    return line
+
 
 keywords = ['False', 'None', 'True', 
             'and', 'as', 'assert', 'abs',
@@ -65,6 +110,7 @@ def local_eval(python, __globals__):
     except Exception as e:
         try:
             print(e)
+            traceback.print_exc()
             e = str(e)
             return e
         except:
@@ -120,17 +166,18 @@ def insert_into_hint():
     MySQL.instance.execute('delete from hint')
     MySQL.instance.load_data('hint', data)    
         
-__globals__ = globals()    
-def insert_into_debug():
+__globals__ = globals()
+def insert_into_symbol():
     data = []
     for symbol in symbols:
-#         if symbol != 'BandPart':
+#         if symbol not in ('Cos', 'Sin', 'BandPart', 'Matrix'):
 #             continue
         
+        print('processing:', symbol)
         script = extract_latex(symbol)
         if not script:
             continue
-        __locals__ = {**__globals__}        
+        __locals__ = {**__globals__}
         __locals__['Eq'] = []
         
         latex = []
@@ -138,16 +185,16 @@ def insert_into_debug():
             latex.append(local_eval(compile_definition_statement(line), __locals__))
                             
         script = [s.replace('\\', r'\\').replace('"', '\\"') for s in script]
-        latex = [s.replace('\\', r'\\').replace('"', '\\"') for s in latex]
+        latex = [s.replace('"', '\\"') for s in latex]
         datum = (symbol, script, latex)
         print(datum)
         data.append(datum) 
             
-    MySQL.instance.execute('delete from debug')
+    MySQL.instance.execute('delete from symbol')
     
     print('len(data) =', len(data))
-    MySQL.instance.load_data('debug', data)
+    MySQL.instance.load_data('symbol', data)
 
 if __name__ == '__main__':
-    insert_into_hint()
-    insert_into_debug()
+#     insert_into_hint()
+    insert_into_symbol()

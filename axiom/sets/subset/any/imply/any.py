@@ -33,11 +33,11 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[1], simplify=None)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[0], Eq[-1], simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[0], Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.args[1:].apply(sets.el.subset.imply.el)
 
-    
+
 
 
 if __name__ == '__main__':

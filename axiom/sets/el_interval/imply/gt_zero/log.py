@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(given):
     x, interval = given.of(Element)
-    assert interval in Interval(1, oo, left_open=True)
+    assert interval in Interval.open(1, oo)
     return log(x) > 0
 
 
@@ -14,7 +14,7 @@ def prove(Eq):
 
     x = Symbol(real=True)
     f = Function(real=True)
-    Eq << apply(Element(f(x), Interval(1, oo, left_open=True)))
+    Eq << apply(Element(f(x), Interval.open(1, oo)))
 
     Eq << sets.el.imply.eq.definition.apply(Eq[0])
 

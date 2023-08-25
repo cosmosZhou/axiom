@@ -96,7 +96,7 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1])
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq.any_gt)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq.any_gt)
 
     Eq << ~Eq.positive_sqrt
 
@@ -170,8 +170,8 @@ def prove(Eq):
 
     Eq << calculus.eq.imply.eq.series.infinite.coefficient.apply(Eq[-1].reversed, x=x)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

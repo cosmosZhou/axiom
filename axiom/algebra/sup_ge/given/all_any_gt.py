@@ -11,7 +11,7 @@ def apply(given, M=None):
     elif isinstance(M, str):
         M = given.generate_var(variables, real=True, var=M)
 
-    return All[M:Interval(-oo, M0, right_open=True)](Any(fx > M, *limits))
+    return All[M:Interval.open(-oo, M0)](Any(fx > M, *limits))
 
 
 @prove

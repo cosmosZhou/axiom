@@ -1,5 +1,4 @@
 from util import *
-from functools import reduce
 
 def outer_prod(args_A, B, deep=False):
     args_B = B.blocks
@@ -71,6 +70,7 @@ def inner_prod(A, B, deep=False):
 
                         args.append(arg)
 
+                    from functools import reduce
                     return reduce(lambda a, b: a + b, args).T
                 else:
                     args = []
@@ -112,12 +112,16 @@ def matmul(A, B, deep=False):
                     return BlockMatrix(*[arg * B for arg in args_A])
 
                 if len(B.shape) == 1:
-                    args_B = B.of(BlockMatrix)
                     args_A = A.of(BlockMatrix)
+                    if len(A.shape) == 2:
+                        if deep:
+                            return BlockMatrix(*(matmul(a, B, deep=True) for a in args_A))
+                        return BlockMatrix(*(a @ B for a in args_A))
+                    
+                    args_B = B.of(BlockMatrix)
                     if args_B and args_A:
                         assert len(args_A) == len(args_B)
-                        args = [a @ b for a, b in zip(args_A, args_B)]
-                        return Add(*args)
+                        return Add(*(a @ b for a, b in zip(args_A, args_B)))
                 else:
                     shape_B = B.shape
                     dotSize = shape_B[-2]

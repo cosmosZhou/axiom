@@ -52,14 +52,14 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any.limits.swap.apply(Eq[-1], simplify=None)
 
-    Eq << Eq[0].this.expr.apply(algebra.eq.cond.given.et.subs, delta=False, simplify=None)
+    Eq << Eq[0].this.expr.apply(algebra.eq.cond.given.et.subs, simplify=None)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2019-02-27
-# updated on 2023-05-20
+# updated on 2023-06-22

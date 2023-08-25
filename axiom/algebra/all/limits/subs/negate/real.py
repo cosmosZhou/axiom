@@ -13,7 +13,7 @@ def limits_subs(All, self, old, new):
     else:
         ab, = ab
         a, b = ab.of(Interval)
-        limit = (i, Interval(c - b, c - a, left_open=ab.right_open, right_open=ab.left_open))
+        limit = (i, Interval(c - b, c - a, **ab.kwargs_reversed))
 
     assert not c._has(i)
     return All(expr._subs(old, new), limit)

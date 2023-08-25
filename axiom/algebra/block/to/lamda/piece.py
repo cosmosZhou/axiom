@@ -15,7 +15,7 @@ def apply(self, var=None):
         limits.append((j, 0, self.shape[i]))
         
     limits.reverse()
-    rhs = Lamda(self[tuple(indices)], *limits)
+    rhs = Lamda(self[indices], *limits)
     
     return Equal(self, rhs)
 

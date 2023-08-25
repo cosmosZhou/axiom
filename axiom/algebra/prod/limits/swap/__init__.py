@@ -2,11 +2,9 @@ from util import *
 
 
 @apply
-def apply(self):
-    function, i_limit, j_limit = self.of(Product)
-    j, *_ = j_limit
-    assert not i_limit._has(j)
-    return Equal(self, Product(function, j_limit, i_limit))
+def apply(self, i=0, j=1):
+    from axiom.algebra.sum.limits.swap import rewrite
+    return Equal(self, rewrite(Product, self, i, j))
 
 
 @prove
@@ -20,12 +18,6 @@ def prove(Eq):
     g = Symbol(shape=(oo, oo), real=True)
     Eq << apply(Product[i:0:m, j:0:n](f[i] + g[i, j]))
 
-    #Eq.initial = Eq[0].subs(n, 1)
-    #
-    #Eq << Eq.initial.this.lhs.apply(algebra.product.doit.outer)
-    #
-    #Eq << Eq[-1].this.rhs.apply(algebra.product.doit.inner)
-    #
     Eq.induct = Eq[0].subs(n, n + 1)
 
     Eq << Eq.induct.this.lhs.apply(algebra.prod.to.mul.split, cond={n})
@@ -41,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.prod.to.mul)
+    Eq << Eq[-1].this.lhs.apply(algebra.prod.to.mul.prod)
 
     Eq << Eq[2].subs(Eq[-1].reversed)
 
@@ -52,9 +44,12 @@ def prove(Eq):
     Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=1)
 
 
+
+
 if __name__ == '__main__':
     run()
 
 from . import subs
 from . import intlimit
 # created on 2020-03-07
+# updated on 2023-07-02

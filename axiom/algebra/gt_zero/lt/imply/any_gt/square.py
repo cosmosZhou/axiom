@@ -58,12 +58,12 @@ def prove(Eq):
 
     Eq <<= Eq[-3].this.rhs.apply(algebra.add_gt_zero.given.et, index=0), Eq[-2].this.rhs.apply(algebra.gt.transport), algebra.infer.given.et.infer.apply(Eq[-1])
 
-    Eq <<= algebra.infer.given.et.infer.apply(Eq[-4]), Eq[-3].this.rhs.reversed, Eq[-2].this.rhs / 3, Eq[-1].this.lhs.apply(algebra.ge_zero.imply.sqrt_ge_zero)
+    Eq <<= algebra.infer.given.et.infer.apply(Eq[-4]), Eq[-3].this.rhs.reversed, Eq[-2].this.rhs / 3, Eq[-1].this.lhs.apply(algebra.ge_zero.imply.ge_zero.sqrt)
 
     Eq << Eq[-1].this.rhs / 3
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

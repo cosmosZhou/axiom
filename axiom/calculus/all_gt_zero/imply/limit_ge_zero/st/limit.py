@@ -15,7 +15,7 @@ def apply(given):
 def prove(Eq):
     b = Symbol(real=True, given=True)
     x = Symbol(real=True)
-    f = Function(real=True, continuous=Interval(-oo, b, right_open=True))
+    f = Function(real=True, continuous=Interval.open(-oo, b))
     epsilon, delta = Symbol(positive=True)
     Eq << apply(All[epsilon:Interval(0, delta, left_open=True)](Limit[x:b - epsilon](f(x)) > 0))
 

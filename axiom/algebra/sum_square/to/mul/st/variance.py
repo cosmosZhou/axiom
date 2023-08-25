@@ -14,7 +14,7 @@ def apply(self):
         S[0], n = domain.of(Range)
 
     assert i.is_integer
-    
+
     xi, x_means = x_sub_x_means.of(Expr - Expr)
 
     x, S[i] = xi.of(Indexed)
@@ -71,7 +71,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expand()
 
-    
+
 
     Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum.limits.swap.intlimit)
 
@@ -79,7 +79,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[1].limits_subs(j, i)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.sub.unshift)
 
     Eq << Eq[-1].this.rhs.apply(algebra.add.to.sum)
 
@@ -87,7 +87,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add)
 
-    
+
 
 
 if __name__ == '__main__':

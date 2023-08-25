@@ -28,13 +28,13 @@ def prove(Eq):
 
     Eq << algebra.all.imply.ou.subs.apply(Eq.given, x, Eq.given_i.expr.lhs)
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq[-1], Eq.given_i)
+    Eq << algebra.cond.all.imply.all.et.apply(Eq[-1], Eq.given_i)
 
     Eq << algebra.all_et.imply.all.apply(Eq[-1], index=-1)
 
     Eq << algebra.all.imply.ou.subs.apply(Eq.given_i, x, Eq[-1].expr.lhs)
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq[-2], Eq[-1])
+    Eq << algebra.cond.all.imply.all.et.apply(Eq[-2], Eq[-1])
 
     Eq << algebra.all_et.imply.all.apply(Eq[-1], index=1)
 
@@ -46,7 +46,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (Eq[-1].limits[0].args[1].args[1].arg,))
 
-    Eq << algebra.all.all.imply.all_et.apply(Eq.final_statement, Eq[-1])
+    Eq << algebra.all.all.imply.all.et.apply(Eq.final_statement, Eq[-1])
 
     Eq.i_complement = Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)
 

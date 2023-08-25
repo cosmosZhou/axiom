@@ -12,3 +12,4 @@ from . import reducedSum
 from . import pow
 from . import neg
 from . import sub
+from . import square

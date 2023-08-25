@@ -37,9 +37,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.eq.transport)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.sub.unshift)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.sub.unshift)
     Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.pop)
 
     #https://en.wikipedia.org/wiki/Telescoping_series

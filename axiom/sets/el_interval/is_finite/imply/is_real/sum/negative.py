@@ -41,9 +41,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul).args[::2].apply(algebra.mul.to.pow.mul.base, simplify=None)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined.insert, simplify=None)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined, simplify=None)
 
-    
+
 
 
 if __name__ == '__main__':

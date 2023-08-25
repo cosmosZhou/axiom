@@ -10,7 +10,7 @@ def apply(P):
     return All[x:P](definition.condition & Element(x, definition.base_set))
 
 
-@prove(proved=False)
+@prove
 def prove(Eq):
     from axiom import algebra
     n, m = Symbol(integer=True, positive=True)

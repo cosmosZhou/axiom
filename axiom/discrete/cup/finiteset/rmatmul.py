@@ -51,11 +51,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[1]().expr.find(Intersection).simplify()
 
-    Eq << Eq[-1].this.lhs.apply(sets.cup.limits.domain_defined.insert)
+    Eq << Eq[-1].this.lhs.apply(sets.cup.limits.domain_defined)
 
     Eq << Eq[-1].this.rhs.limits_subs(Eq[-1].rhs.variable, i)
 
-    Eq << Eq[-1].this.rhs.apply(sets.cup.limits.domain_defined.insert)
+    Eq << Eq[-1].this.rhs.apply(sets.cup.limits.domain_defined)
 
 
 

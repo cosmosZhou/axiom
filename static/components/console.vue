@@ -10,12 +10,11 @@
 		</template>		
 		: 			
 		<label>
-			<input type=checkbox v-model=checked @change=change>
+			<input type=checkbox v-model=checked @change=change />
 			Display style
 		</label>
 		<br>
-		<consoleStatement ref=input v-for="statement of statements" :script=statement.script :latex=statement.latex>
-		</consoleStatement>
+		<consoleStatement ref=input v-for="statement of statements" :script=statement.script :latex=statement.latex></consoleStatement>
 	</div>
 </template>
 

@@ -40,13 +40,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(calculus.integral.limits.separate)
 
-    Eq << Eq[-1].this.rhs.apply(calculus.integral.to.add.concat, 3)
+    Eq << Eq[-1].this.rhs.apply(calculus.integral.to.add.split, 3)
 
     Eq << Eq[-1].this.find(Integral)().find(Min).simplify()
 
     Eq << Eq[-1].this.find(Integral)().find(Min).simplify()
 
-    Eq << Eq[-1].this.find(Integral).apply(calculus.integral.to.add.concat, 0)
+    Eq << Eq[-1].this.find(Integral).apply(calculus.integral.to.add.split, 0)
 
     Eq << Eq[-1].this.find(Integral[2])().find(Interval).simplify()
 
@@ -62,8 +62,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul).expand()
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

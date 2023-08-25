@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << algebra.infer.given.infer.subs.apply(Eq.is_zero)
 
-    Eq << algebra.infer.given.et.infer.et.apply(Eq.gt_zero, cond=Eq[0])
+    Eq << algebra.cond.infer.given.et.infer.et.apply(Eq[0], Eq.gt_zero)
 
     Eq << Eq[-1].this.find(And[~Less]).apply(algebra.abs_lt.imply.lt)
 
@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(calculus.el_interval.imply.is_zero.limit.geometric_series.positive, n)
 
-    Eq << algebra.infer.given.et.infer.et.apply(Eq.lt_zero, cond=Eq[0])
+    Eq << algebra.cond.infer.given.et.infer.et.apply(Eq[0], Eq.lt_zero)
 
     Eq << Eq[-1].this.find(Abs < 1).apply(algebra.abs_lt.imply.gt)
 
@@ -37,8 +37,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(calculus.el_interval.imply.is_zero.limit.geometric_series.negative, n)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

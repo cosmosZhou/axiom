@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << apply(All[y:B](Any[x:A](Equal(g(x, y), f(x, y)))), g(x, y) > y)
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq[1], Eq[0])
+    Eq << algebra.cond.all.imply.all.et.apply(Eq[1], Eq[0])
 
     Eq << Eq[-1].this.expr.apply(algebra.any_eq.cond.imply.any.subs)
 

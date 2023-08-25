@@ -11,7 +11,7 @@ def apply(le, given):
     else:
         ab, = ab
         a, S[b] = ab.of(Interval)
-        limit = (x, Interval(a, c, left_open=ab.left_open, right_open=ab.right_open))
+        limit = (x, Interval(a, c, **ab.kwargs))
 
     return All(function, limit)
 

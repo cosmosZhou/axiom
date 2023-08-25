@@ -36,6 +36,6 @@ foreach (scandir($folder) as $file) {
     }
 }
 
-echo \std\jsonify($packages);
+echo \std\encode($packages);
 
 ?>

@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << Eq[0] * Eq[0].lhs
 
-    Eq << algebra.pow.to.bool.apply(Eq[-1].lhs)
+    Eq << algebra.square.to.bool.apply(Eq[-1].lhs)
 
     Eq << Eq[-2] - Eq[-1]
 
@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << Eq[0] * Eq[0].rhs
 
-    Eq << algebra.pow.to.bool.apply(Eq[0].rhs ** 2)
+    Eq << algebra.square.to.bool.apply(Eq[0].rhs ** 2)
 
     Eq << Eq[-2] + Eq[-1]
 

@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Product).apply(algebra.prod.to.pow.sum)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.mul.arithmetic_progression)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.mul.series.arithmetic)
 
     Eq << Eq[-1].this.find(Add[Lamda]).apply(algebra.add.to.lamda)
 
@@ -42,8 +42,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Binomial).apply(discrete.binom.to.mul.fallingFactorial.doit)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@ def apply(a_size, xa_equality, j=None):
     x_cup_finiteset, a_cup_finiteset = xa_equality.of(Equal)
     xexpr, (k, a, b) = x_cup_finiteset.of(Cup[FiniteSet])
     S[a_cup_finiteset], n = a_size.of(Equal[Card])
-    
+
     assert n == b - a
 
     aexpr, (_k, _a, _b) = a_cup_finiteset.of(Cup[FiniteSet])
@@ -93,7 +93,7 @@ def prove(Eq):
 
     Eq << algebra.all.imply.ou.subs.apply(Eq[-1], Eq[-1].variable, b)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq.inequality_ab)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq.inequality_ab)
 
     Eq.distribute_ab = Eq[-1].this.expr.apply(algebra.et.imply.ou)
 
@@ -137,8 +137,8 @@ def prove(Eq):
 
     Eq << sets.el.subset.imply.el.apply(Eq.index_domain, Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

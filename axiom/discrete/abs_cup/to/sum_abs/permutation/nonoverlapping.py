@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element).rhs.definition
 
-    Eq << algebra.any_et.imply.any.split.apply(Eq[-1], index=1)
+    Eq << algebra.any_et.imply.any.getitem.apply(Eq[-1], index=1)
 
     Eq << sets.imply.all.conditionset.apply(Q[t])
 
@@ -39,7 +39,7 @@ def prove(Eq):
 
     Eq << sets.all_is_empty.imply.eq.nonoverlapping.setlimit.apply(Eq.nonoverlapping)
 
-    
+
 
 
 if __name__ == '__main__':

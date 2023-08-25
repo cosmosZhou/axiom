@@ -24,12 +24,12 @@ def prove(Eq):
 
     Eq << Unequal(Eq[-1].find(Add), 0, plausible=True)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-2], Eq[-1])
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-2], Eq[-1])
 
-    
+
     Eq << Eq[-1].this.expr.apply(algebra.eq.ne.imply.ne.transit)
-    
-    
+
+
 
 
 if __name__ == '__main__':

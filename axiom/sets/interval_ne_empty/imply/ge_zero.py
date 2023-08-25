@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq << Eq[-1] + a
 
-    Eq << sets.lt.imply.interval_is_empty.apply(Eq[-1])
+    Eq << sets.lt.imply.is_empty.interval.apply(Eq[-1])
 
     Eq << ~Eq[-1]
 

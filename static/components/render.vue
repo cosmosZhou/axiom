@@ -89,7 +89,7 @@ export default {
     
     async created(){
     	if (this.hash)
-        	this.applyCode = await form_post("php/request.php", { apply: this.module });
+        	this.applyCode = await form_post("request.php", { apply: this.module });
     },
     
     data(){
@@ -144,7 +144,7 @@ export default {
                 this.$refs.apply.editor.focus();
             }
             else {
-            	this.applyCode = await form_post("php/request.php", { apply: this.module });
+            	this.applyCode = await form_post("request.php", { apply: this.module });
             }                
         },
         
@@ -203,7 +203,7 @@ export default {
                 
                 console.log('module = ' + self.module);
 
-                form_post("php/request.php", { detect: self.module }).then(theorem => {
+                form_post("request.php", { detect: self.module }).then(theorem => {
                     console.log('theorem = ' + theorem);
                     if (!theorem)
                         return;

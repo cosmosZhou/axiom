@@ -1,32 +1,41 @@
 from util import *
 
 
-def convert(self, i=None):
-    [*args] = self.of(MatMul)
+def rewrite(self, i=None, deep=False):
+    args = self.of(MatMul)
     if i is None:
         for i, arg in enumerate(args):
-            if arg.is_Add:                
+            if arg.is_Add:
                 break
+        else:
+            return self
     else :
         arg = args[i]
-        assert arg.is_Add
         if i < 0:
             i += len(args)
     
     if i > 0:
         former, latter = self.func(*args[:i]), args[i + 1:]
-        left = Add(*(former @ a for a in arg.args))
+        if deep:
+            func = lambda a : rewrite(former @ a, deep=True)
+        else:
+            func = lambda a : former @ a            
+        
+        left = Add(*map(func, arg.of(Add)))
         if latter:
             left @= self.func(*latter)
         return left
     else:
         latter = self.func(*args[1:])
-        return Add(*(a @ latter for a in arg.args))
+        if deep:
+            func = lambda a : rewrite(a @ latter, deep=True)
+        else:
+            func = lambda a : a @ latter            
+        return Add(*map(func, arg.of(Add)))
 
 @apply
-def apply(self, i=None):
-    rhs = convert(self, i)
-    return Equal(self, rhs, evaluate=False)
+def apply(self, i=None, deep=False):
+    return Equal(self, rewrite(self, i, deep=deep), evaluate=False)
 
 
 @prove
@@ -59,4 +68,5 @@ if __name__ == '__main__':
 # created on 2020-11-10
 
 from . import st
-# updated on 2023-04-30
+# updated on 2023-06-24
+from . import shift

@@ -16,7 +16,7 @@ def prove(Eq):
     Eq << apply(Equal(Range(a, b), a.emptySet))
 
     Eq << algebra.ge_zero.imply.ge.apply(Eq[-1])
-    Eq << sets.ge.imply.range_is_empty.apply(Eq[-1])
+    Eq << sets.ge.imply.is_empty.range.apply(Eq[-1])
 
 
 if __name__ == '__main__':

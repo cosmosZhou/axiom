@@ -63,11 +63,12 @@ format=columns
 [global]  
 timeout = 5  
 index-url = http://mirrors.aliyun.com/pypi/simple/  
-extra-index-url = your-extra-index-url  
+extra-index-url = http://your-company-domain/repository/pypi/simple  
 
 [install]  
 trusted-host =  
     mirrors.aliyun.com  
+    your-company-domain  
     
 
 如果是windows系统：
@@ -406,7 +407,7 @@ pip install https://github.com/simonflueckiger/tesserocr-windows_build/releases/
 # pypirc
 
 打开%USERPROFILE%  
-新建.pypirc文件
+新建.pypirc文件（注意后缀名为pypirc）
 写入如下信息：
 
 [distutils]
@@ -415,28 +416,45 @@ index-servers =
     nexus
 
 [pypi]
-repository: https://upload.pypi.org/legacy/
-username: your-username
-password: your-password
+repository = https://upload.pypi.org/legacy/
+username = your-username
+password = your-password
 
 [nexus]
-repository: http://pypi.nexus.your-company.com/repository/pypi-internal/
-username: your-username
-password: your-password
+repository = http://pypi.nexus.your-company.com/repository/pypi-internal/
+username = your-username
+password = your-password
 
 
 #miniconda
 wget https://mirrors.ustc.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh  
-#wget -c https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh  
+ ### wget -c https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh  
 
-bash  Miniconda-latest-Linux-x86_64.sh  
+bash  Miniconda3-latest-Linux-x86_64.sh  
 
-conda create -n complex_networks python=3.9.6  
+cd ~/miniconda3/bin  
+source activate  
 
-conda activate complex_networks  
+conda create -n miniconda python=3.11  
+conda activate miniconda    
 
-如果需要永久登陆conda:
 vim ~/.bash_profile  
-. ~/miniconda3/etc/profile.d/conda.sh  
-conda activate  
-conda activate complex_networks  
+export PATH=~/miniconda3/bin:$PATH  
+source ~/miniconda3/bin/activate  
+
+pip install jupyter  
+jupyter notebook --generate-config  
+ipython  
+from notebook.auth import passwd  
+passwd() 
+
+vim /root/.jupyter/jupyter_notebook_config.py
+修改以下几个地方：
+
+c.NotebookApp.ip = 'xx.xxx.xx.xxx'            即对外提供访问的ip,云服务外网ip
+c.NotebookApp.port = 8888                     即对外提供访问的端口
+c.NotebookApp.open_browser = False            False即启动不打开浏览器
+c.NotebookApp.password = u'sha1:XXXXX'   这个就是上面生成的秘钥
+c.NotebookApp.notebook_dir = u'/opt/jupyter_dir' 即设置jupyter启动后默认的根目录
+
+nohup jupyter notebook&

@@ -52,7 +52,6 @@ export default {
 					names = names.slice(index + 1);
 					var section = names.pop();
 					var parentFolder = names.join('.');
-					//error_msg += await form_post(`php/request/delete/package.php`, { package: parentFolder, section});
 				}
 			}
 		},

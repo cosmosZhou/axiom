@@ -17,9 +17,9 @@ def apply(self):
         if base.has(*variables):
             rhs = Pow(Lamda(base, *limits).simplify(), Lamda(exponent, *limits).simplify())
         else:
-            rhs = Pow(base, Lamda(exponent, *limits))
+            rhs = Pow(base, Lamda(exponent, *limits).simplify())
     else:
-        rhs = Pow(Lamda(base, *limits), exponent)
+        rhs = Pow(Lamda(base, *limits).simplify(), exponent)
 
 
     return Equal(self, rhs, evaluate=False)
@@ -44,4 +44,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2019-10-19
-# updated on 2021-12-19
+# updated on 2023-06-08

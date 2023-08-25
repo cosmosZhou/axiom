@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << algebra.ge.imply.ge_zero.apply(Eq[-1])
 
-    Eq << algebra.ge_zero.imply.sqrt_ge_zero.apply(Eq[-1])
+    Eq << algebra.ge_zero.imply.ge_zero.sqrt.apply(Eq[-1])
 
     Eq << LessEqual(-x ** 2, 0, plausible=True)
 

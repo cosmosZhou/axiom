@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Less).apply(algebra.lt.imply.lt.relax, 1)
 
-    χ = Symbol(domain=Interval(1, oo, left_open=True))
+    χ = Symbol(domain=Interval.open(1, oo))
     Eq << algebra.all.imply.cond.subs.apply(Eq.all, ε, 1 / χ)
 
     Eq << Eq[-1].this.find(Less).apply(algebra.lt.imply.lt.relax, χ)

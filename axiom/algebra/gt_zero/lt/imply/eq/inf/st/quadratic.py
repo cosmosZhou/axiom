@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq <<= algebra.infer.given.infer.subs.bool.apply(Eq[-2]), algebra.infer.given.infer.subs.bool.apply(Eq[-1], invert=True)
 
-    Eq <<= algebra.infer.given.et.infer.et.apply(Eq[-2], cond=Eq[0]), Eq[-1].this.lhs.apply(sets.notin_interval.imply.ou)
+    Eq <<= algebra.cond.infer.given.et.infer.et.apply(Eq[0], Eq[-2]), Eq[-1].this.lhs.apply(sets.notin_interval.imply.ou)
 
     Eq <<= Eq[-2].this.lhs.apply(sets.gt_zero.el.imply.eq.inf.st.quadratic, Eq[-2].find(Inf).expr, x), algebra.infer_ou.given.et.infer.apply(Eq[-1])
 
@@ -65,7 +65,7 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this.rhs.rhs.expand(), Eq[-1].this.rhs.rhs.expand()
 
-    
+
 
 
 if __name__ == '__main__':

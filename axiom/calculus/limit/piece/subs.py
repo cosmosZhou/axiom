@@ -66,7 +66,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Max).apply(algebra.max.to.add)
 
-    Eq << Eq[-1].this.expr.apply(algebra.all.imply.all_et)
+    Eq << Eq[-1].this.expr.apply(algebra.all.imply.all.et)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_range.imply.et)
 
@@ -74,7 +74,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Greater).apply(algebra.gt_max.imply.gt, 1)
 
-    
+
 
 
 if __name__ == '__main__':

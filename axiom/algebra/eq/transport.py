@@ -30,7 +30,7 @@ def transport(Equal, given, lhs=-1, rhs=None):
         _lhs -= x
 
     assert x.is_finite
-    return Equal(_lhs, _rhs, evaluate=False)
+    return Equal(_lhs, _rhs)
 
 
 @apply

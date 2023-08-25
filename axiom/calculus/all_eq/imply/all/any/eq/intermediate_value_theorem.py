@@ -31,7 +31,7 @@ def apply(given):
 @prove(proved=False)
 def prove(Eq):
     a = Symbol(real=True)
-    b = Symbol(real=True, domain=Interval(a, oo, left_open=True))
+    b = Symbol(real=True, domain=Interval.open(a, oo))
     f = Function(shape=(), real=True)
     Eq << apply(is_continuous(f, a, b))
 

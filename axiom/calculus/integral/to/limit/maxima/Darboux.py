@@ -20,7 +20,7 @@ def prove(Eq):
 
     n = Symbol(integer=True, positive=True)
     x, a = Symbol(real=True)
-    b = Symbol(domain=Interval(a, oo, left_open=True))
+    b = Symbol(domain=Interval.open(a, oo))
     f = Function(real=True, continuous=True)
     Eq << apply(Integral[x:a:b](f(x)))
 

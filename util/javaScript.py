@@ -194,7 +194,7 @@ MathJax = {{
 </script>
 
 <script async src="{parentPath}static/unpkg.com/mathjax@3.2.0/es5/tex-chtml.js"></script>
-<script src="{parentPath}static/unpkg.com/vue@3.2.11/dist/vue.global.prod.js"></script>
+<script src="{parentPath}static/unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
 <script src="{parentPath}static/unpkg.com/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
 
 <script src="{parentPath}static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>

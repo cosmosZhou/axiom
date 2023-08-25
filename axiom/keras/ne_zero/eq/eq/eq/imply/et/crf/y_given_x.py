@@ -68,7 +68,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Exp).apply(algebra.exp.to.mul)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.split.slice.pop)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.pop.slice)
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.separate)
 
@@ -141,8 +141,8 @@ def prove(Eq):
 
     #reference: Neural Architectures for Named Entity Recognition.pdf
     #https://spaces.ac.cn/archives/5542
-    
-    
+
+
 
 
 if __name__ == '__main__':

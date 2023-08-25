@@ -50,7 +50,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Or).apply(algebra.ou.given.cond, 0)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[0], Eq[1])
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[0], Eq[1])
 
 
 if __name__ == '__main__':

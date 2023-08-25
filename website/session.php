@@ -4,7 +4,6 @@
 // }
 
 require_once '../php/mysql.php';
-//require_once '../php/std.php';
 
 $user = $_POST['login'];
 $password = $_POST['password'];

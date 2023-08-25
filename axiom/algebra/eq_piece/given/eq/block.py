@@ -18,7 +18,7 @@ def apply(eq, axis=0):
     ecs, lhs = eq.of(Equal[Piecewise])
     b = ecs[0].cond.lhs
     a = ecs[1].expr.args[0].cond.rhs
-    prefix = [slice(None, None)] * axis
+    prefix = [slice(None)] * axis
     
     n = [0] * len(ecs)
     X = []#blocks

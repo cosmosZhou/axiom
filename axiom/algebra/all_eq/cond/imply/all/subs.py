@@ -45,7 +45,7 @@ def subs(self, old, new, simplify=True, assumptions={}, index=None, limits=None)
     hit = False
     args = [*self.args]
     if index is None:
-        
+
         for i, arg in enumerate(args):
             _arg = subs(arg, old, new, simplify=simplify, assumptions=assumptions, limits=limits)
             if _arg != arg:
@@ -57,7 +57,7 @@ def subs(self, old, new, simplify=True, assumptions={}, index=None, limits=None)
         if _arg != arg:
             hit = True
             args[index] = _arg
-            
+
     if hit:
         return self.func(*args, **self.kwargs)
 
@@ -71,7 +71,7 @@ def apply(all_eq, f_eq, reverse=False, simplify=True, assumptions={}):
     if reverse:
         lhs, rhs = rhs, lhs
     cond = subs(f_eq, lhs, rhs, simplify=simplify, assumptions=assumptions, limits=limits)
-    
+
     import std
     if (ret := std.deleteIndices(limits, lambda limit: not cond._has(limit[0]))) is not None:
         limits = ret
@@ -91,12 +91,12 @@ def prove(Eq):
     C, S = Symbol(etype=dtype.real * (m, n))
     Eq << apply(All[c:C](Equal(a, f(c))), Element(a * b + c, S))
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq[1], Eq[0])
+    Eq << algebra.cond.all.imply.all.et.apply(Eq[1], Eq[0])
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

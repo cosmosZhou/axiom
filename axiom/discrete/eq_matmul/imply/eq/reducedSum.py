@@ -16,7 +16,7 @@ def prove(Eq):
     from axiom import discrete, algebra
 
     n = Symbol(integer=True, positive=True)
-    x, y = Symbol(shape=(n,), real=True, given=True)
+    x, y = Symbol(shape=(n,), real=True)
     i, j = Symbol(domain=Range(n))
     Eq << apply(Equal(x @ SwapMatrix(n, i, j), y))
 

@@ -5,7 +5,7 @@ from util import *
 def apply(gt_zero, self, z=None):
     a = gt_zero.of(Expr > 0)
     assert a.is_finite
-    from axiom.sets.is_nonzero.imply.eq.square_completing import quadratic_coefficient
+    from axiom.sets.is_nonzero.imply.eq.conj.square_completing import quadratic_coefficient
     z, coeffs = quadratic_coefficient(self, z)
 
     S[a] = coeffs[1][1]
@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq << sets.ne_zero.is_real.imply.el.union.apply(Eq[-2], Eq[-1])
 
-    Eq << sets.is_nonzero.imply.eq.square_completing.apply(Eq[-1], Eq[1].lhs, simplify=None)
+    Eq << sets.is_nonzero.imply.eq.conj.square_completing.apply(Eq[-1], Eq[1].lhs, simplify=None)
 
 
 

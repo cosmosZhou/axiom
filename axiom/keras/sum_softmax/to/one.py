@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self):
     x = self.of(ReducedSum[Softmax])
-    
+
     return Equal(self, OneMatrix(*x.shape[:-1]))
 
 
@@ -22,11 +22,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(ReducedSum).apply(algebra.reducedSum.to.sum)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined)
 
-    
 
-    
+
+
 
 
 if __name__ == '__main__':

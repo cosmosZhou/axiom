@@ -9,7 +9,7 @@ def apply(given, M=None):
     if M is None:
         M = Symbol(positive=True)
     else:
-        assert M.domain == Interval(0, oo, left_open=True)
+        assert M.domain == Interval.open(0, oo)
     return Any[M](All[n](abs(expr) <= M))
 
 
@@ -82,10 +82,10 @@ def prove(Eq):
 
     Eq << algebra.ne_zero.ge_zero.imply.gt_zero.apply(Eq.is_nonzero, Eq[-1])
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq.any)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq.any)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

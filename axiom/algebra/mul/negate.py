@@ -10,18 +10,23 @@ def apply(self, index=0):
         
     factor = args[index]
     
-    if factor.is_Add:
+    if factor.is_Pow and factor.base == -1:
+        base, exp = factor.args
+        args[index] = base ** (exp + 1)
         args.append(-1)
     else:
-        args[index] = -factor
-
-        for index, factor in enumerate(args):
-            if factor.is_Add:
-                break
+        if factor.is_Add:
+            args.append(-1)
         else:
-            return
+            args[index] = -factor
     
-    args[index] = Add(*(-arg for arg in factor.args))
+            for index, factor in enumerate(args):
+                if factor.is_Add:
+                    break
+            else:
+                return
+        
+        args[index] = Add(*(-arg for arg in factor.args))
         
     return Equal(self, Mul(*args), evaluate=False)
 

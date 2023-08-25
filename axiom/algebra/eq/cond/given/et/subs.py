@@ -2,9 +2,9 @@ from util import *
 
 
 @apply
-def apply(eq, cond, **kwargs):
+def apply(eq, cond, delta=False, **kwargs):
     from axiom.algebra.eq.cond.imply.cond.kroneckerDelta import process_given_conditions
-    eq, f_eq = process_given_conditions(eq, cond, **kwargs)
+    eq, f_eq = process_given_conditions(eq, cond, delta=delta, **kwargs)
     return eq, f_eq.simplify()
 
 
@@ -12,7 +12,7 @@ def apply(eq, cond, **kwargs):
 def prove(Eq):
     x, y = Symbol(integer=True, given=True)
     f, g = Function(shape=(), integer=True)
-    Eq << apply(Equal(x, y), Unequal(g(KroneckerDelta(x, y)), f(x, y)))
+    Eq << apply(Equal(x, y), Unequal(g(KroneckerDelta(x, y)), f(x, y)), delta=True)
 
     Eq << Equal(KroneckerDelta(x, y), 1, plausible=True)
 
@@ -23,10 +23,11 @@ def prove(Eq):
     Eq <<= Eq[-1] & Eq[1]
 
     
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2019-02-27
-# updated on 2023-05-21
+# updated on 2023-06-22

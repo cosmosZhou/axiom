@@ -19,7 +19,7 @@ def apply(is_nonzero, eq, x=None):
 def prove(Eq):
     from axiom import algebra
 
-    x, a, c = Symbol(complex=True, given=True)
+    x, a, c = Symbol(complex=True)
     Eq << apply(Unequal(a, 0), Equal(a * x ** 2 + c, 0), x=x)
 
     Eq << Eq[1] - c
@@ -57,6 +57,8 @@ def prove(Eq):
 
     Eq << algebra.ou.given.eq.abs.apply(Eq[-1])
 
+    Eq << Eq[-1].this.rhs.apply(algebra.mul.to.abs)
+
     Eq << algebra.ou.imply.eq.abs.apply(Eq.ou)
 
     
@@ -66,4 +68,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2018-08-15
-# updated on 2023-05-20
+# updated on 2023-06-26

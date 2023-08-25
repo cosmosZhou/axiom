@@ -96,7 +96,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.infer.fold, index=slice(1, None))
 
-    Eq << Eq[-1].this.find(And).apply(algebra.cond.all.imply.all_et, simplify=None)
+    Eq << Eq[-1].this.find(And).apply(algebra.cond.all.imply.all.et, simplify=None)
 
     Eq << Eq[-1].this.find(And).apply(algebra.gt_zero.ge.imply.ge.div, ret=0)
 
@@ -155,11 +155,11 @@ def prove(Eq):
 
     Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1], index=1)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.cond.all.imply.all_et, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(algebra.cond.all.imply.all.et, simplify=None)
 
     Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1], index=0)
 
-    Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.limits.domain_defined)
 
     Eq << Eq[-1].this.rhs.apply(sets.eq_sum.all.imply.el.mean)
 

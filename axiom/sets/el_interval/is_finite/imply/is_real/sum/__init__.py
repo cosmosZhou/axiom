@@ -81,12 +81,12 @@ def prove(Eq):
 
     Eq << algebra.lt.gt.imply.lt.abs.apply(Eq[-2], Eq[-1])
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined)
 
     Eq << sets.abs_lt_oo.imply.is_real.apply(Eq[-1], simplify=None)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

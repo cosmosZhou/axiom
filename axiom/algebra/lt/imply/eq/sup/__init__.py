@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq <<= algebra.all.given.infer.apply(Eq[-3]), Eq[-2].this.rhs * 2, Eq[-1].this.rhs.apply(sets.el.given.el.mul.interval, 2)
 
-    Eq <<= algebra.infer.given.et.infer.et.apply(Eq[-3], cond=Eq[0]), Eq[-2].this.rhs - y, Eq[-1].this.rhs.apply(sets.el.given.el.sub, M)
+    Eq <<= algebra.cond.infer.given.et.infer.et.apply(Eq[0], Eq[-3]), Eq[-2].this.rhs - y, Eq[-1].this.rhs.apply(sets.el.given.el.sub, M)
 
     Eq << Eq[-2].this.lhs.apply(sets.el_interval.imply.gt)
 
@@ -46,7 +46,7 @@ def prove(Eq):
 
     Eq << Eq[-2].this.rhs * 2
 
-    
+
 
 
 if __name__ == '__main__':

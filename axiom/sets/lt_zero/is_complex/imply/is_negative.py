@@ -6,7 +6,7 @@ def apply(gt_zero, is_complex):
     x = gt_zero.of(Expr < 0)
     S[x], C = is_complex.of(Element)
     assert C in S.Complexes
-    return Element(x, Interval(-oo, 0, right_open=True))
+    return Element(x, Interval.open(-oo, 0))
 
 
 @prove

@@ -17,9 +17,9 @@ def prove(Eq):
 
     Eq << Eq[0].find(Expectation).this.apply(stats.expect.to.integral)
 
-    Eq.eq = Eq[-1].this.rhs.apply(calculus.integral.to.add.concat, 0)
+    Eq.eq = Eq[-1].this.rhs.apply(calculus.integral.to.add.split, 0)
 
-    Eq << Eq.eq.find(Integral).this.apply(calculus.integral.to.add.concat, a)
+    Eq << Eq.eq.find(Integral).this.apply(calculus.integral.to.add.split, a)
 
     Eq << algebra.eq.imply.ge.relax.apply(Eq[-1], Eq[-1].find(Integral[2]))
 
@@ -39,7 +39,7 @@ def prove(Eq):
 
     Eq.ge = Eq[-1].this.rhs.find(Integral).apply(stats.integral.to.prob)
 
-    Eq << Eq.eq.find(Integral[2]).this.apply(calculus.integral.to.add.concat, -a)
+    Eq << Eq.eq.find(Integral[2]).this.apply(calculus.integral.to.add.split, -a)
 
     Eq << algebra.eq.imply.ge.relax.apply(Eq[-1], Eq[-1].rhs.find(Integral))
 
@@ -75,8 +75,8 @@ def prove(Eq):
 
     Eq << Eq[-3].subs(Eq[-1].reversed)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

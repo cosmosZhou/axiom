@@ -5,7 +5,7 @@ from util import *
 def apply(is_positive):
     limit, R = is_positive.of(Element)
     (fx, *limits) = limit.of(Limit)
-    assert R in Interval(0, oo, left_open=True)
+    assert R in Interval.open(0, oo)
     return Equal(Limit(abs(fx), *limits), limit)
 
 
@@ -15,7 +15,7 @@ def prove(Eq):
 
     x, x0 = Symbol(real=True)
     g = Function(real=True)
-    Eq << apply(Element(Limit[x:x0](g(x)), Interval(0, oo, left_open=True)))
+    Eq << apply(Element(Limit[x:x0](g(x)), Interval.open(0, oo)))
 
     Eq << sets.el.imply.eq.definition.apply(Eq[0], 'y')
 

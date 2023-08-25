@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq <<= Eq[1] & Eq[-1]
 
-    Eq << Eq[-1].this.apply(algebra.cond.any.given.any_et, simplify=None)
+    Eq << Eq[-1].this.apply(algebra.cond.any.given.any.et, simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.et.given.et.subs.eq)
 

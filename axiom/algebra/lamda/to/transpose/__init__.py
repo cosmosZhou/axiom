@@ -2,18 +2,30 @@ from util import *
 
 
 @apply
-def apply(self, axis=-1):
+def apply(self, axis=-1, *, simplify=True):
     if axis < 0:
         axis += len(self.shape)
 
     if axis == self.default_axis:
-        f, j_limit, i_limit, *limits = self.of(Lamda)
-        assert not f.shape
-        expr = Lamda(f, i_limit, j_limit, *limits).simplify()
+        f, *limits = self.of(Lamda)
+        limits = [*limits]
+        if f.shape:
+            indices, limits_i = f.variables_with_limits()
+            f = f[tuple(indices)]
+            limits = limits_i + limits
+            
+        limits[0], limits[1] = limits[1], limits[0]
+        expr = Lamda(f, *limits).simplify() 
+
     elif axis == 1:
         f, *limits, j_limit, i_limit = self.of(Lamda)
         expr = Lamda(f, *limits, i_limit, j_limit).simplify()
-    return Equal(self, Transpose[axis](expr, evaluate=False), evaluate=False)
+    
+    if simplify:
+        rhs = Transpose[axis](expr)
+    else:
+        rhs = Transpose[axis](expr, evaluate=False)
+    return Equal(self, rhs, evaluate=False)
 
 
 @prove

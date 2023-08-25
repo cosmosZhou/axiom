@@ -16,7 +16,7 @@ def prove(Eq):
     a, b = Symbol(real=True, given=True)
     Eq << apply(Equal(Interval(a, b), a.emptySet))
 
-    Eq << sets.gt.imply.interval_is_empty.apply(Eq[1])
+    Eq << sets.gt.imply.is_empty.interval.apply(Eq[1])
 
 
 

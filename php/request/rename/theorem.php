@@ -146,5 +146,5 @@ if (strpos($new, '.') !== false) {
     \mysql\update_hierarchy($old, $new);
 }
 
-echo \std\jsonify("renamed!");
+echo \std\encode("renamed!");
 ?>

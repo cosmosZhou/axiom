@@ -59,7 +59,7 @@ def prove(Eq):
 
     Eq << Eq[-1].rhs.args[0].args[1].this.apply(algebra.sum.to.add.split, cond={m - 1})
 
-    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.add.push)
+    Eq << Eq[-1].this.rhs.args[0].apply(algebra.sum.to.sub.push)
 
     Eq << Eq[-1].this.apply(algebra.eq.transport, rhs=0).reversed
 

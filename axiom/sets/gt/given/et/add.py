@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << sets.el.imply.any_eq.apply(Eq[2])
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[1], Eq[-1], simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[1], Eq[-1], simplify=None)
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)
 
 

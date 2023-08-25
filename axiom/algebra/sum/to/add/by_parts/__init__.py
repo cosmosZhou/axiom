@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(-~Sum).apply(algebra.sum.limits.subs.offset, -1)
 
-    Eq << Eq[-1].this.find(-~Sum).apply(algebra.sum.to.add.unshift)
+    Eq << Eq[-1].this.find(-~Sum).apply(algebra.sum.to.sub.unshift)
 
     Eq << Eq[-1].this.find(-~Sum).apply(algebra.sum.to.add.pop)
 
@@ -40,8 +40,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Sum)().find(~Sum - Sum).apply(algebra.sum.to.add.pop)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':
@@ -49,3 +49,4 @@ if __name__ == '__main__':
 # created on 2023-06-02
 from . import Newton_series
 # updated on 2023-06-03
+from . import offset

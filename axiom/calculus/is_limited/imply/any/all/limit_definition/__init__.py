@@ -18,7 +18,7 @@ def of_limited(given, **kwargs):
         return expr, *limits
 
     if kwargs.get('positive'):
-        assert R == Interval(0, oo, left_open=True)
+        assert R == Interval.open(0, oo)
         return expr, *limits
 
     if kwargs.get('extended_real'):

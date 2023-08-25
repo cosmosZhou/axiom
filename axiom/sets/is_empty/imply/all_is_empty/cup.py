@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq.paradox = ~Eq[-1]
 
-    
+
 
     Eq << Eq[0].apply(sets.eq.imply.eq.card)
 
@@ -46,10 +46,10 @@ def prove(Eq):
     Eq << Eq[-4].subs(Eq[-1])
 
     Eq << Eq.paradox.this.expr.apply(sets.ne_empty.imply.gt_zero)
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq[-2])
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq[-2])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

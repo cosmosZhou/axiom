@@ -5,13 +5,8 @@ from util import *
 def apply(self):
     expr, *limits = self.of(Sup)
     vars = [x for x, *ab in limits]
-    const = []
-    args = []
-    for arg in expr.of(Add):
-        if arg.has(*vars):
-            args.append(arg)
-        else:
-            const.append(arg)
+    import std
+    args, const = std.array_split(expr.of(Add), lambda arg: arg.has(*vars))
     assert const
 
     const = Add(*const)

@@ -31,7 +31,6 @@ def prove(Eq):
     a, b, a_quote, b_quote = Symbol(shape=(oo,), integer=True)
     Eq << sets.card_ne_zero.imply.any_eq.apply(Eq[-1], a)
 
-    
     Eq << sets.ge_card.imply.any_eq.apply(Eq[1], b)
 
     Eq.any_et = algebra.any.any.imply.any_et.apply(Eq[-2], Eq[-1], simplify=None)
@@ -56,12 +55,12 @@ def prove(Eq):
 
     Eq << algebra.any.any.imply.any_et.apply(Eq.any_et, Eq[-1], simplify=None)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[0] & Eq[3], Eq[-1], simplify=None)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[0] & Eq[3], Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(sets.eq_cup.eq_cup.eq_cup.eq_cup.le.notin.imply.le)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

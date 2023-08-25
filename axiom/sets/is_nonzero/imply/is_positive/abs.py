@@ -5,7 +5,7 @@ from util import *
 def apply(given):
     x, RR = given.of(Element)
     assert Element(0, RR) == False
-    return Element(abs(x), Interval(0, oo, left_open=True))
+    return Element(abs(x), Interval.open(0, oo))
 
 
 @prove

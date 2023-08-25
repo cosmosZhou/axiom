@@ -25,11 +25,11 @@ def prove(Eq):
 
     Eq << algebra.et.imply.ou.apply(Eq[-1], simplify=False)
 
-    Eq << Eq[-1].this.args[1].apply(algebra.cond.any.imply.any_et)
+    Eq << Eq[-1].this.args[1].apply(algebra.cond.any.imply.any.et)
 
     Eq << algebra.et.imply.cond.apply(Eq[-1], index=0)
 
-    
+
 
 
 if __name__ == '__main__':

@@ -5,3 +5,4 @@ from . import swap
 from . import split
 from . import concat
 from . import subs
+from . import absorb

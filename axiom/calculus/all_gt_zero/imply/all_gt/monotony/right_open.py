@@ -46,7 +46,7 @@ def prove(Eq):
     η = Symbol(real=True, positive=True)
     Eq << Eq[-1].this.find(Greater).apply(algebra.gt_zero.imply.any_gt, var=η)
 
-    Eq << Eq[-1].this.find(And).apply(algebra.cond.any.imply.any_et, simplify=None)
+    Eq << Eq[-1].this.find(And).apply(algebra.cond.any.imply.any.et, simplify=None)
 
     Eq << algebra.any.imply.any.limits.swap.apply(Eq[-1], simplify=None)
 
@@ -56,8 +56,8 @@ def prove(Eq):
 
     Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq[-2])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

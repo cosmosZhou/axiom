@@ -1,4 +1,3 @@
-from . import plane
 from . import cos
 from . import sin
 from . import tan
@@ -43,3 +42,6 @@ from . import eq_acsc
 from . import lamda_piece
 from . import sign
 from . import sub
+from . import block
+from . import lamda
+from . import square_sin

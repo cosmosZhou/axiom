@@ -141,7 +141,7 @@ if (! \std\endsWith($path_info, '/')) {
 
         $proveCodes = insert_section($proveCodes);
         if (is_array($proveCodes)) {
-            // error_log("proveCodes = " . \std\jsonify($proveCodes));
+            // error_log("proveCodes = " . \std\encode($proveCodes));
 
             modify_codes($py, $proveCodes, $applyCodes);
         } else {
@@ -210,7 +210,7 @@ if (! \std\endsWith($path_info, '/')) {
     $numOfRequisites = $m ? count(explode(".", $m[1])) - 1 : 0;
 
     foreach (yield_from_py($py) as $dict) {
-        // error_log("dict = " . \std\jsonify($dict));
+        // error_log("dict = " . \std\encode($dict));
         if (array_key_exists('numOfYields', $dict)) {
             $numOfYields = $dict['numOfYields'];
             continue;

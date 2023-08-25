@@ -31,7 +31,7 @@ def prove(Eq):
     Eq << Eq.induct.lhs.this.expand()
 
     #Integration by parts
-    Eq << Eq[-1].this.rhs.apply(calculus.integral.to.add.by_parts, dv=sin(x)) / n
+    Eq << Eq[-1].this.rhs.apply(calculus.integral.to.add.by_parts) / n
 
     Eq << Eq[-1].this.lhs.args[1].expr.powsimp()
 
@@ -69,4 +69,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2020-07-01
-# updated on 2023-05-20
+# updated on 2023-07-03

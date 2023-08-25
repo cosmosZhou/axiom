@@ -17,7 +17,7 @@ def prove(Eq):
     i = Symbol(integer=True)
     Eq << apply(Product[i](x[i]))
 
-    Eq << Eq[-1].this.lhs.apply(algebra.prod.limits.domain_defined.insert)
+    Eq << Eq[-1].this.lhs.apply(algebra.prod.limits.domain_defined)
 
     n -= 1
     Eq << Eq[-1].this.lhs.apply(algebra.prod.to.mul.split, cond={n})

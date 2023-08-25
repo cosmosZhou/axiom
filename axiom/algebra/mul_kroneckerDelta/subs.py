@@ -2,28 +2,32 @@ from util import *
 
 
 @apply
-def apply(self, diff=-1):
+def apply(self, index=None, reverse=False):
     [*array] = self.of(Mul)
-    for i, expr in enumerate(array):
-        if args := expr.of(KroneckerDelta):
-            x, y = args
-            index = i + diff
-            if i == index:
-                if i + 1 < len(array):
-                    index = i + 1
-                elif i - 1 >= 0:
-                    index = i - 1
-                else:
-                    return
-                
-            ret = array[index].subs(x, y)
-            if ret == array[index]:
-                ret = array[index].subs(y, x)
-                
-            array[index] = ret
-            break
+    if index is None:
+        for index, expr in enumerate(array):
+            if args := expr.of(KroneckerDelta):
+                old, new = args
+                break
+        else:
+            return
+    else:
+        old, new = array[index].of(KroneckerDelta)
         
-    return Equal(self, Mul(*array), evaluate=False)
+    if reverse:
+        old, new = new, old            
+    
+    delta = array.pop(index)
+    
+    rest = Mul(*array)
+
+    rest_ = rest.subs(old, new)
+    if rest_ == rest_:
+        rest = rest_.subs(new, old)
+    else:
+        rest = rest_
+
+    return Equal(self, rest * delta, evaluate=False)
 
 
 @prove
@@ -44,3 +48,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-03-17
+# updated on 2023-06-08

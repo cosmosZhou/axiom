@@ -7,13 +7,13 @@ def apply(given):
     a, b = self.of(Interval)
 
     if a.is_positive:
-        domain = Interval(1 / b, 1 / a, left_open=self.right_open, right_open=self.left_open)
+        domain = Interval(1 / b, 1 / a, **self.kwargs_reversed)
     elif b.is_negative:
-        domain = Interval(1 / a, 1 / b, left_open=self.right_open, right_open=self.left_open)
+        domain = Interval(1 / a, 1 / b, **self.kwargs_reversed)
     elif a == 0 and self.left_open:
-        domain = Interval(1 / b, oo, left_open=self.right_open, right_open=self.left_open)
+        domain = Interval(1 / b, oo, **self.kwargs_reversed)
     elif b == 0 and self.right_open:
-        domain = Interval(-oo, 1 / a, left_open=self.right_open, right_open=self.left_open)
+        domain = Interval(-oo, 1 / a, **self.kwargs_reversed)
 
     return Element(1 / x, domain)
 

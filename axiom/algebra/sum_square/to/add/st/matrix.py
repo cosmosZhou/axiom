@@ -16,7 +16,7 @@ def prove(Eq):
     from axiom import algebra
 
     i, j = Symbol(integer=True)
-    m, n = Symbol(integer=True, positive=True, given=False)
+    m, n = Symbol(integer=True, positive=True)
     x = Symbol(real=True, shape=(oo, oo))
     Eq << apply(Sum[j:n, i:m]((x[i, j] - Sum[j:n, i:m](x[i, j]) / (m * n)) ** 2))
 
@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq << Eq[0].subs(Eq[1].reversed, Eq[2].reversed, simplify=None)
 
-    Eq << Eq[-1].this.find(Mul[~Sum]).apply(algebra.sum.limits.domain_defined.insert)
+    Eq << Eq[-1].this.find(Mul[~Sum]).apply(algebra.sum.limits.domain_defined)
 
     Eq << Sum[j:n, i:m]((x[i, j] - x_bar) ** 2).this.expr.apply(algebra.square.to.add)
 
@@ -60,17 +60,15 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq.eq_sum_j)
 
-    
-
     Eq << Eq[-1] + Eq.SA
 
     Eq << Eq.St.subs(Eq[-1].reversed)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-03-27
-# updated on 2023-05-06
+# updated on 2023-06-24

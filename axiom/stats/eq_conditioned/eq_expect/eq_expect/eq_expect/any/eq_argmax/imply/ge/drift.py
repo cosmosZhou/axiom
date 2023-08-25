@@ -86,7 +86,7 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(π_quote, π_tilde)
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq.infer)
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq.infer)
 
     Eq.any = Eq[-1].this.expr.args[1:].apply(algebra.infer.infer.imply.infer.transit)
 
@@ -100,7 +100,7 @@ def prove(Eq):
 
     Eq << Eq.any.this.find(Infer[2]).apply(algebra.infer.imply.eq.piece, Eq[-1].find(Piecewise))
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-2], Eq[-1])
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-2], Eq[-1])
 
     Eq << Eq[-1].this.expr.args[:2].apply(algebra.eq.cond.imply.cond.subs)
 
@@ -108,7 +108,7 @@ def prove(Eq):
 
     Eq << algebra.ne_zero.imply.gt_zero.apply(Eq[-1])
 
-    Eq << algebra.cond.any.imply.any_et.apply(Eq[-1], Eq[-3])
+    Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq[-3])
 
     Eq << Eq[-1].this.expr.args[:2].apply(algebra.gt_zero.ge.imply.ge.div)
 
@@ -144,8 +144,8 @@ def prove(Eq):
     #https://arxiv.org/pdf/2211.11030.pdf
     #https://arxiv.org/pdf/2205.01447.pdf
     #https://arxiv.org/pdf/2210.05639.pdf
-    
-    
+
+
 
 
 if __name__ == '__main__':

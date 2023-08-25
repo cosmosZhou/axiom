@@ -9,7 +9,7 @@ def apply(given):
 
     assert not interval.is_integer
 
-    return Element(acos(e), interval.func(acos(b), acos(a), left_open=interval.right_open, right_open=interval.left_open))
+    return Element(acos(e), interval.func(acos(b), acos(a), **interval.kwargs_reversed))
 
 
 @prove(proved=False)

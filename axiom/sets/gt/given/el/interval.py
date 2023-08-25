@@ -5,7 +5,7 @@ from util import *
 def apply(given):
     n, b = given.of(Greater)
 
-    return Element(n, Interval(b, oo, left_open=True))
+    return Element(n, Interval.open(b, oo))
 
 
 @prove
