@@ -1210,12 +1210,12 @@ function slice(&$s, $start, $stop = null, $step = 1)
     if (is_string($s)) {
         if ($step == 1) {
             if ($stop === null)
-                return mb_substr($s, $start, $stop, "utf8");
+                return substr($s, $start, $stop);
 
             if ($stop < 0)
                 $stop += len($s);
 
-            return mb_substr($s, $start, $stop - $start, "utf8");
+            return substr($s, $start, $stop - $start);
         }
         else {
             if ($stop === null)
