@@ -88,7 +88,7 @@ extended_integer ⊂ extended_rational ⊂ [extended_real](https://en.wikipedia.
 * [discrete](../index.php?module=discrete) 数论，离散数学，组合数学，线性代数，[第二类Stirling数](../index.php?module=discrete.stirling2.to.add.recurrence)的组合学推导，
 [Catalan数](../index.php?module=discrete.eq.eq.imply.eq.catalan.recurrence)的推导）， 
 [连分数](../index.php?module=discrete.add.to.pow.HK.recurrence)初步理论；[Cholesky矩阵分解](../index.php?module=discrete.eq_adjoint.infer_gt_zero.imply.any.eq.Cholesky)存在定理。
-* [stats](../index.php?module=stats) 概率统计学，比如[Bayes公式](../index.php?module=stats/probability/to/mul)相关的命题；
+* [stats](../index.php?module=stats) 概率统计学，比如[Bayes公式](../index.php?module=stats.prob.to.div.prob.bayes)，[大数定理](../index.php?module=stats.eq_conditioned.eq_expect.eq_var.imply.eq.limit.prob.law_of_large_numbers)；
 * [keras](../index.php?module=keras) 机器学习，深度学习中的数学模型，
 [LSTM](../index.php?module=keras.eq.eq.imply.eq.long_short_term_memory)，
 [GRU](../index.php?module=keras.imply.eq.gated_recurrent_unit)，
