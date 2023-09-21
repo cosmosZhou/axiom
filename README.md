@@ -21,7 +21,7 @@ python >= 3.10
 
 pip install sympy.keras
 ## scripts to generate visualized html
-git clone --depth=1 http://git.patsnap.com/zhoulizhi/axiom.git  
+git clone --depth=1 https://github.com/cosmosZhou/axiom.git  
 cd axiom  
 python run.py  
 
