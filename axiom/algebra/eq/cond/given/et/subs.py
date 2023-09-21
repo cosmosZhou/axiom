@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(eq, cond, delta=False, **kwargs):
-    from axiom.algebra.eq.cond.imply.cond.kroneckerDelta import process_given_conditions
+    from axiom.algebra.eq.cond.imply.cond.delta import process_given_conditions
     eq, f_eq = process_given_conditions(eq, cond, delta=delta, **kwargs)
     return eq, f_eq.simplify()
 

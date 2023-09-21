@@ -5,7 +5,7 @@ from util import *
 def apply(self, old, new):
     assert self.is_Derivative
     assert self._has(new)
-    return Equal(self, Subs(self._subs(new, old), old, new))
+    return Equal(self, Subs[old:new](self._subs(new, old)))
 
 
 @prove

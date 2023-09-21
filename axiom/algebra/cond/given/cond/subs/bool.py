@@ -20,9 +20,7 @@ def prove(Eq):
     f = Function(integer=True)
     Eq << apply(Equal(Piecewise((f(a), Element(a, A)), (f(b), True)), 0), cond=Element(a, A))
 
-    Eq <<= Eq[0] & Eq[2]
-
-    Eq << algebra.et.given.et.subs.bool.apply(Eq[-1])
+    Eq << algebra.cond.cond.given.et.subs.apply(Eq[0], Eq[2])
 
 
 if __name__ == '__main__':

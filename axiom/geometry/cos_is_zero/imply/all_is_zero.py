@@ -8,7 +8,7 @@ def apply(is_zero, n=None, negative=False):
         n = is_zero.generate_var(integer=True, var='n')
 
     Pi = -S.Pi if negative else S.Pi
-    return All[n:0:oo](Equal(cos(x + n * Pi), 0))
+    return All[n:oo](Equal(cos(x + n * Pi), 0))
 
 
 @prove

@@ -22,7 +22,7 @@ def prove(Eq):
 
     f = Function(real=True)
 
-    C, S = Symbol(etype=dtype.real * (m, n))
+    C, S = Symbol(etype=dtype.real[m][n])
 
     Eq << apply(All[c:C](Equal(a, f(c))), Any[c:C](Element(a * b + c, S)))
 

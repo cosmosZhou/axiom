@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << Eq[1].subs(Eq[0])
 
-    Eq << Eq[-1].this.find(Arg).apply(algebra.arg_expi.to.add.ceiling)
+    Eq << Eq[-1].this.find(Arg).apply(algebra.arg.expi.to.add.ceiling)
 
 
 if __name__ == '__main__':

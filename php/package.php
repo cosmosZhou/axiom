@@ -3,9 +3,9 @@ function package_is_theorem($file)
 {
     global $path_info;
     $__init__ = $path_info . $file . "/__init__.py";
-    // \std\println("__init__ = $__init__");
+    // std\println("__init__ = $__init__");
     if (file_exists($__init__)) {
-        $text = new \std\Text($__init__);
+        $text = new std\Text($__init__);
         foreach ($text as $line) {
             return ! preg_match("/from *\. *import \w+/", $line, $m);
         }
@@ -15,7 +15,7 @@ function package_is_theorem($file)
 }
 
 // error_log("path_info = $path_info");
-if (! \std\endsWith($path_info, '/')) {
+if (! std\endsWith($path_info, '/')) {
     $path_info .= "/";
 }
 
@@ -34,7 +34,7 @@ foreach (scandir($path_info) as $file) {
         default:
 //             error_log("file = $file");
 
-            if (\std\endsWith($file, '.py')) {
+            if (std\endsWith($file, '.py')) {
                 $theorems[] = substr($file, 0, - 3);
             } else {
                 if (package_is_theorem($file)) {
@@ -46,7 +46,7 @@ foreach (scandir($path_info) as $file) {
     }
 }
 
-if (\std\endsWith($title, '/')) {
+if (std\endsWith($title, '/')) {
     $title = substr($title, 0, - 1);
 }
 ?>
@@ -65,8 +65,8 @@ if (\std\endsWith($title, '/')) {
 
 <script>
 createApp('axiomContents', {
-	packages: <?php echo \std\encode($packages)?>,
-	theorems: <?php echo \std\encode($theorems)?>,
+	packages: <?php echo std\encode($packages)?>,
+	theorems: <?php echo std\encode($theorems)?>,
 });
 </script>
 

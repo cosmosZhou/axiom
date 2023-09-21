@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << algebra.le.given.le_zero.apply(Eq[0])
 
-    Eq << Eq[-1].this.lhs.apply(keras.add_logsumexp.to.log_softmax)
+    Eq << Eq[-1].this.lhs.apply(keras.add.logsumexp.to.log.softmax)
 
     Eq << algebra.le.given.le.exp.apply(Eq[-1])
 
@@ -30,8 +30,8 @@ def prove(Eq):
 
     Eq << Eq[-1] / Eq[-1].find(ReducedSum)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

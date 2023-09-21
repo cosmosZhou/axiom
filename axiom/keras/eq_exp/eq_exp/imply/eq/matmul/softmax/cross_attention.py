@@ -6,7 +6,7 @@ def apply(eq_Ah, eq_Al, V):
     # upper part
     (((Q, (S[0], h)), (K, (S[h], n))), sqrt_dz), Ah = eq_Ah.of(Equal[Exp[Mul[Sliced @ Transpose[Sliced]]]])
     Vu = V[:h]
-    d_z = sqrt_dz.of(Expr ** (-S.One / 2))    
+    d_z = sqrt_dz.of(Expr ** (-S.One / 2))
 
     # lower part
     (((S[Q], (S[h], S[n])), (S[K], (S[0], S[h]))), S[1 / sqrt(d_z)]), Al = eq_Al.of(Equal[Exp[Mul[Sliced @ Transpose[Sliced]]]])
@@ -94,11 +94,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.lamda.to.piece)
 
-    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda_matmul.to.matmul)
+    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda.matmul.to.matmul)
 
     Eq << Eq[-1].this.rhs.find(MatMul).T
 
-    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda_matmul.to.matmul)
+    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda.matmul.to.matmul)
 
     Eq << Eq[-1].this.rhs.find(MatMul[Lamda]).T
 
@@ -106,14 +106,14 @@ def prove(Eq):
 
     Eq << Eq.zi_definition.this.rhs.subs(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul_piece.to.piece)
+    Eq << Eq[-1].this.rhs.apply(algebra.mul.piece.to.piece)
 
     Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (i,))
 
-    Eq << Eq[-1].this.rhs.apply(algebra.lamda_piece.to.block)
+    Eq << Eq[-1].this.rhs.apply(algebra.lamda.piece.to.block)
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.mul)
-    
+
     Eq << Eq[-1].this.find(Lamda[Mul[OneMatrix]]).apply(algebra.lamda.to.mul)
 
     Eq << Eq[-1].this.find(Lamda[Pow]).apply(algebra.lamda.to.pow)
@@ -121,7 +121,7 @@ def prove(Eq):
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.reducedSum)
 
     Eq << Eq[-1].this.find(Lamda[Pow]).apply(algebra.lamda.to.pow)
-    
+
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.reducedSum)
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.z_def, Eq[-1])

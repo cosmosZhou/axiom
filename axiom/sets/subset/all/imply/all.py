@@ -27,7 +27,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     n = Symbol(complex=True, positive=True)
-    A, B = Symbol(etype=dtype.complex * n)
+    A, B = Symbol(etype=dtype.complex[n])
     x = Symbol(complex=True, shape=(n,))
     f = Function(complex=True, shape=())
     Eq << apply(Subset(B, A), All[x:A](Equal(f(x), 1)))

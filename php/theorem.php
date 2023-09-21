@@ -1,97 +1,79 @@
 <?php
 // ^ *error_log
+require_once 'init.php';
 if ($input != null) {
     $inputs[] = piece_together($input);
 }
 
 $numOfReturnsFromApply = $lengths[$indexOfYield];
-// error_log("lengths = " . \std\encode($lengths));
 
 $latex = [];
 $i = 0;
 $statements = '';
-// error_log("module = $module");
-
-$content = [];
-
-if ($data) {
-    $statementsFromSQL = explode("\n", end($data));
-}
-else{
-    $statementsFromSQL = \mysql\yield_from_mysql($module);
-}
-
 $where = '';
 
 function is_latex_with_tabs($latex, &$matches)
 {
-    $matches = [];
-
-    if (strpos($latex, "\t") !== false) {
-        $array = explode("\t", $latex);
-
-        foreach ($array as $tex) {
-            if (! preg_match_all('/\\\\\[.+?\\\\\]/', $tex, $match, PREG_SET_ORDER)) {
+    if (std\contains($latex, "\t")) {
+        $matches = [];
+        foreach (explode("\t", $latex) as $tex) {
+            if (preg_match_all('/\\\\\[.+?\\\\\]/', $tex, $match, PREG_SET_ORDER)) {
+                foreach ($match as &$m) {
+                    [$m] = $m;
+                }
+                $matches[] = join('', $match);
+            }
+            else 
                 return false;
-            }
-
-            foreach ($match as &$statement) {
-                $statement = $statement[0];
-            }
-
-            $matches[] = join('', $match);
-        }
-        return true;
-    } else {
-        if (! preg_match_all('/\\\\\[.+?\\\\\]/', $latex, $matches, PREG_SET_ORDER)) {
-            return false;
-        }
-
-        foreach ($matches as &$statement) {
-            $statement = $statement[0];
         }
         return true;
     }
+
+    if (preg_match_all('/\\\\\[.+?\\\\\]/', $latex, $matches, PREG_SET_ORDER)) {
+        foreach ($matches as &$args) {
+            $args = $args[0];
+        }
+        return true;
+    }
+    
     return false;
 }
 
 $resultsFromApply = [];
 
-foreach ($statementsFromSQL as $statement) {
+foreach ($data ? explode("\n", end($data)) : yield_from_mysql(get_user(), $module) as $statement) {
 
     if ($i == $indexOfYield) {
         if ($numOfReturnsFromApply == 1) {
             
             -- $lengths[$i];
-            if ($lengths[$i] == 0) {
+            if (!$lengths[$i]) {
                 if (is_latex_with_tabs($statement, $matches)) {                    
                     switch (count($matches)) {
                         case 3:
-                            list ($given, $where, $imply) = $matches;
+                            [$given, $where, $imply] = $matches;
                             break;
                         case 2:
                             if ($numOfRequisites) {
-                                list ($given, $imply) = $matches;
+                                [$given, $imply] = $matches;
                                 $where = '';
                             } else {
-                                list ($where, $imply) = $matches;
+                                [$where, $imply] = $matches;
                                 $given = '';
                             }
                             break;
                         case 1:
                             $where = '';
                             $given = '';
-                            $imply = $matches[0];
+                            [$imply] = $matches;
                             break;
                     }
                 }
-                
+
                 $given = [
-                    'py' => $inputs[0],
+                    'py' => array_shift($inputs),
                     'latex' => $given
                 ];
-
-                $inputs = array_slice($inputs, 1);
 
                 $statements = '';
                 ++ $i;
@@ -100,7 +82,7 @@ foreach ($statementsFromSQL as $statement) {
             $resultsFromApply[] = $statement;
 
             -- $lengths[$i];
-            if ($lengths[$i] == 0) {
+            if (!$lengths[$i]) {
                 $given = array_slice($resultsFromApply, 0, $lengthOfGiven);
                 $given = join('', $given);
                 $given = [
@@ -129,7 +111,7 @@ foreach ($statementsFromSQL as $statement) {
             continue;
 
         -- $lengths[$i];
-        if ($lengths[$i] == 0) {
+        if (!$lengths[$i]) {
             $latex[] = $statements;
             $statements = '';
             ++ $i;
@@ -138,19 +120,12 @@ foreach ($statementsFromSQL as $statement) {
 }
 
 $size = count($latex);
-if (count($inputs) > $size) {
-    $unused = array_slice($inputs, $size);
-} else {
-    $unused = [];
-}
+$unused = array_slice($inputs, $size);
 
-$prove = [];
-for ($i = 0; $i < $size; ++ $i) {
-    $prove[] = [
-        'py' => $inputs[$i],
-        'latex' => $latex[$i]
-    ];
-}
+$prove = array_map(fn($i) => [
+    'py' => $inputs[$i],
+    'latex' => $latex[$i]
+], std\ranged($size));
 
 $logStr = [];
 foreach ($logs as $log) {
@@ -188,16 +163,15 @@ MathJax = InitMathJax(1000);
 <script async src="static/unpkg.com/mathjax@3.2.0/es5/tex-chtml.js"></script>
 
 <script type=module>
-import * as codemirror from "./static/codemirror/lib/codemirror.js";
-import * as python from "./static/codemirror/mode/python/python.js";
-import * as active_line from "./static/codemirror/addon/selection/active-line.js";
-import * as show_hint from "./static/codemirror/addon/hint/show-hint.js";
-import * as matchbrackets from "./static/codemirror/addon/edit/matchbrackets.js";
+import * as codemirror from "./static/codemirror/lib/codemirror.js"
+import * as python from "./static/codemirror/mode/python/python.js"
+import * as active_line from "./static/codemirror/addon/selection/active-line.js"
+import * as show_hint from "./static/codemirror/addon/hint/show-hint.js"
+import * as matchbrackets from "./static/codemirror/addon/edit/matchbrackets.js"
 
 var logs = <?php echo $logStr?>;
-
 var error = [];
-//console.log(logs);
+
 for (let i = 0; i < logs.length; ++i){
     var log = logs[i];
     if (log.startsWith('{') && log.endsWith('}')){
@@ -216,17 +190,17 @@ for (let i = 0; i < logs.length; ++i){
 createApp('render', {
 	error : error,
     logs : logs,
-    prove : <?php echo \std\encode($prove)?>,
-    unused : <?php echo \std\encode($unused)?>,
-    module: <?php echo \std\encode($module)?>,
-    given: <?php echo \std\encode($given)?>,
-    imply: <?php echo \std\encode($imply)?>,
-    where: <?php echo \std\encode($where)?>,
+    prove : <?php echo std\encode($prove)?>,
+    unused : <?php echo std\encode($unused)?>,
+    module: <?php echo std\encode($module)?>,
+    given: <?php echo std\encode($given)?>,
+    imply: <?php echo std\encode($imply)?>,
+    where: <?php echo std\encode($where)?>,
     createdTime: `<?php echo $createdTime?>`,
     updatedTime: `<?php echo isset($updatedTime)? $updatedTime: ''?>`,
 });
 
-var data = <?php echo \std\encode($data)?>;
+var data = <?php echo std\encode($data)?>;
 if (data) {
     console.log(`update mysql data`);
     console.log(data);

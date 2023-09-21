@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(given, t):
-    from axiom.algebra.abs_sum.to.mul.sum import dissect_distance
+    from axiom.algebra.abs.sum.to.mul.sum import dissect_distance
     dx, dy = given.of(LessEqual)
 
     yt, x, i, n = dissect_distance(dx)

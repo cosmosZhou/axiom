@@ -58,13 +58,13 @@ def prove(Eq):
     z, a, b, c = Symbol(complex=True)
     Eq << apply(Element(a, Reals - {0}), a * abs(z) ** 2 + 2 * Re(b * z) + c)
 
-    Eq << Eq[1].this.find(Abs ** 2).apply(algebra.square_abs.to.mul.conj)
+    Eq << Eq[1].this.find(Abs ** 2).apply(algebra.square.abs.to.mul.conj)
 
     Eq << Eq[-1].this.find(Re).apply(algebra.re.to.add.conj)
 
-    Eq << Eq[-1].this.find(Abs ** 2).apply(algebra.square_abs.to.mul.conj)
+    Eq << Eq[-1].this.find(Abs ** 2).apply(algebra.square.abs.to.mul.conj)
 
-    Eq << Eq[-1].this.find(Abs ** 2).apply(algebra.square_abs.to.mul.conj)
+    Eq << Eq[-1].this.find(Abs ** 2).apply(algebra.square.abs.to.mul.conj)
 
     Eq << sets.is_nonzero.imply.eq.conj.square_completing.apply(Eq[0], Eq[-1].lhs)
 

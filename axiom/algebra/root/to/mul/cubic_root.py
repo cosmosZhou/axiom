@@ -16,7 +16,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.lhs.apply(algebra.root.to.mul.expi.arg)
 
-    Eq << Eq[-1].this.find(Arg).apply(algebra.arg_pow.to.add)
+    Eq << Eq[-1].this.find(Arg).apply(algebra.arg.pow.to.add)
 
     Eq << Eq[-1].this.find(Exp[~Mul]).apply(algebra.mul.to.add)
     Eq << Eq[-1].this.find(Exp).apply(algebra.exp.to.mul)

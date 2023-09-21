@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.reducedSum.to.sum)
 
-    Eq << Eq[-1].this.lhs.expr.apply(algebra.mul_conj.to.square.abs)
+    Eq << Eq[-1].this.lhs.expr.apply(algebra.mul.conj.to.square.abs)
 
     Eq << Eq[-1].this.rhs.simplify()
 

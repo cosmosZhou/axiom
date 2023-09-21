@@ -48,14 +48,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.cond.imply.any_et, wrt=j)
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.kroneckerDelta, delta=False, simplify=None, ret=0)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.delta, delta=False, simplify=None, ret=0)
 
     Eq << algebra.any.imply.any.limits.swap.apply(Eq[-1], simplify=None)
 
     Eq << Eq[0].this.expr.apply(algebra.eq.cond.given.et.subs, simplify=None)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

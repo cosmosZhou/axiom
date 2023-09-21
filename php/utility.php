@@ -2,7 +2,13 @@
 // use the following regex to remove error_log prints:
 // ^ *error_log
 require_once 'std.php';
+require_once 'mysql.php';
+
 use std\Set, std\Text, std\Queue;
+
+function get_user() {
+    return basename(dirname(dirname(__file__)));
+}
 
 // to speed up the .php page rendering, disable error_log!!
 function py_to_module($py)
@@ -12,7 +18,7 @@ function py_to_module($py)
     for (;;) {
         $dirname = dirname($pythonFile);
         $basename = basename($pythonFile);
-        if (\std\equals($basename, 'axiom')) {
+        if (std\equals($basename, 'axiom')) {
             break;
         }
 
@@ -20,10 +26,10 @@ function py_to_module($py)
         $pythonFile = $dirname;
     }
 
-    $module[0] = substr($module[0], 0, - strlen(\std\get_extension($module[0])) - 1);
+    $module[0] = substr($module[0], 0, - strlen(std\get_extension($module[0])) - 1);
     $module = array_reverse($module);
 
-    if (\std\equals(end($module), '__init__')) {
+    if (std\equals(end($module), '__init__')) {
         array_pop($module);
     }
 
@@ -96,9 +102,9 @@ function println($param, $file = null)
 
 function read_all_axioms($dir)
 {
-    foreach (\std\list_directory($dir) as $directory) {
-        foreach (\std\list_all_files($directory, 'py') as $py) {
-            if (! \std\equals(basename($py), "__init__.py")) {
+    foreach (std\list_directory($dir) as $directory) {
+        foreach (std\list_all_files($directory, 'py') as $py) {
+            if (! std\equals(basename($py), "__init__.py")) {
                 yield [
                     $py,
                     substr($py, 0, - 2) . 'php'
@@ -115,7 +121,7 @@ function read_all_axioms($dir)
 
 function retrieve_all_dependency()
 {
-    foreach (read_all_axioms(dirname(__file__)) as list ($py, $php)) {
+    foreach (read_all_axioms(dirname(__file__)) as [$py, $php]) {
         $from = py_to_module($php);
 
         $count = [];
@@ -134,9 +140,9 @@ function retrieve_all_dependency()
     }
 }
 
-function is_def_start($funcname, $statement, &$matches)
+function is_def_start($funcname, $statement)
 {
-    return preg_match("/^def +$funcname\([^)]*\) *: */", $statement, $matches);
+    return preg_match("/^def +$funcname\([^)]*\) *: */", $statement);
 }
 
 function analyze_apply($py, &$i)
@@ -145,17 +151,12 @@ function analyze_apply($py, &$i)
     $provability = null;
     for (; $i < $count; ++ $i) {
         $statement = $py[$i];
-        if (is_def_start('prove', $statement, $matches)) {
-            // error_log('prove begins: ' . $statement);
+        if (is_def_start('prove', $statement))
             break;
-        }
 
         if (preg_match('/^@prove(.+)/', $statement, $matches)) {
-            $kwargs = $matches[1];
-            if (preg_match('/^\((.+)=(.+)\)/', $kwargs, $matches)) {
+            if (preg_match('/^\((.+)=(.+)\)/', $matches[1], $matches))
                 $provability = $matches[1];
-            }
-            continue;
         }
     }
 
@@ -196,49 +197,35 @@ function detect_axiom_given_theorem(&$theorem, &$statement)
 // input is a py file
 function yield_from_py($python_file)
 {
-    $inputs = [];
-    $input = [];
-
     $py = file($python_file);
     $count = count($py);
 
     for ($i = 0; $i < $count; ++ $i) {
         $statement = $py[$i];
-        // error_log("$statement");
-        // from axiom.keras import bilinear # python import statement
         if (preg_match('/^from +(.+) +import +(.*)/', $statement, $matches)) {
 
             $prefix = $matches[1];
             $namespaces = $matches[2];
             $namespaces = preg_split("/[\s,]+/", $namespaces, - 1, PREG_SPLIT_NO_EMPTY);
 
-            // error_log("end(namespaces) = " . end($namespaces));
-            if (\std\equals(end($namespaces), '\\')) {
+            if (end($namespaces) == '\\') {
                 array_pop($namespaces);
 
                 $statement = $py[++ $i];
-                // error_log("$statement");
 
                 $namespaces_addition = preg_split("/[\s,]+/", $statement, - 1, PREG_SPLIT_NO_EMPTY);
-                // error_log("namespaces_addition = " . jsonify($namespaces_addition));
 
                 array_push($namespaces, ...$namespaces_addition);
-
-                // error_log("namespaces = " . jsonify($namespaces));
             }
-
-            $prefix_path = str_replace(".", "/", $prefix);
             continue;
         }
 
         if (preg_match('/^import +(.+)/', $statement, $matches)) {
-            // error_log('import statement: ' . $statement);
             $packages = $matches[1];
             $packages = preg_split("/\s*,\s*/", $packages, - 1, PREG_SPLIT_NO_EMPTY);
 
             foreach ($packages as $package) {
                 $package = preg_split("/\s+/", $package, - 1, PREG_SPLIT_NO_EMPTY);
-                // error_log('count(package) = ' . count($package));
 
                 switch (count($package)) {
                     case 1:
@@ -252,16 +239,14 @@ function yield_from_py($python_file)
             continue;
         }
 
-        if (is_def_start('apply', $statement, $matches)) {
+        if (is_def_start('apply', $statement)) {
             yield [
                 'line' => $i
             ];
 
-            // error_log('given begins: ' . $statement);
             $provability = analyze_apply($py, $i);
-            // error_log('given ended: ' . $statement);
             yield [
-                'line' => $i + 1,
+                'line' => $i,
                 'provability' => $provability
             ];
 
@@ -273,14 +258,12 @@ function yield_from_py($python_file)
     if ($i < $count) {
         $statement = $py[$i];
 
-        // error_log("first statement in prove: $statement");
         if (preg_match('/^    from axiom import (.+)/', $statement, $matches)) {
             $section = explode(", ", $matches[1]);
-            $yield = [
+            yield [
                 'line' => $i,
                 'section' => $section
-            ];
-            yield $yield;
+            ];;
             ++ $i;
         }
 
@@ -288,41 +271,37 @@ function yield_from_py($python_file)
             $statement = $py[$i];
             $statement = rtrim($statement);
             // skip empty lines;
-            if (preg_match('/^\s*$/', $statement, $matches)) {
+            if (preg_match('/^\s*$/', $statement)) {
                 continue;
             }
 
             // the start of the next global statement other than def prove
-            if (preg_match('/^\w/', $statement, $matches)) {
+            if (preg_match('/^\w/', $statement)) {
                 break;
             }
 
             // stop analyzing if return statement is encountered.
-            if (preg_match('/^    return\b.*$/', $statement, $matches)) {
-                // error_log($statement);
+            if (preg_match('/^    return\b.*$/', $statement)) {
                 $statement = rtrim($statement);
                 $statement = substr($statement, 4);
 
-                $yield = [
+                yield [
                     'line' => $i,
                     'unused' => true,
                     'statement' => $statement
                 ];
-                // error_log(\std\encode($yield));
-                yield $yield;
 
                 for (++ $i; $i < $count; ++ $i) {
                     $statement = $py[$i];
 
-                    // error_log($statement);
                     $statement = rtrim($statement);
                     // skip empty lines;
-                    if (preg_match('/^\s*$/', $statement, $matches)) {
+                    if (preg_match('/^\s*$/', $statement)) {
                         continue;
                     }
 
                     // the start of the next global statement other than def prove
-                    if (preg_match('/^\w/', $statement, $matches)) {
+                    if (preg_match('/^\w/', $statement)) {
                         break;
                     }
 
@@ -335,14 +314,12 @@ function yield_from_py($python_file)
                     if (preg_match('/^\s*#(.*)/', $statement, $matches)) {
                         $yield['comment'] = true;
                         $yield['statement'] = "#" . ltrim($matches[1]);
-                        // error_log(\std\encode($yield));
                         yield $yield;
                         continue;
                     }
 
                     $statement = substr($statement, 4);
                     $yield['statement'] = $statement;
-                    // error_log(\std\encode($yield));
                     yield $yield;
                 }
 
@@ -358,7 +335,6 @@ function yield_from_py($python_file)
                 $yield['comment'] = true;
                 $yield['statement'] = "#" . ltrim($matches[1]);
 
-                // error_log(\std\encode($yield));
                 yield $yield;
                 continue;
             }
@@ -368,8 +344,6 @@ function yield_from_py($python_file)
             $yield['statement'] = $statement;
 
             if (preg_match('/(=|<<) *apply\(/', $statement, $matches)) {
-                // error_log('yield statement: ' . $statement);
-                // error_log("php = $php");
                 
                 $yield['module'] = py_to_module($python_file);
             }            
@@ -379,7 +353,7 @@ function yield_from_py($python_file)
                 $dict = [];
                 foreach ($matches as $module) {
                     $module = $module[0];
-                    if (\std\endsWith($module, '.apply')) {
+                    if (std\endsWith($module, '.apply')) {
                         $module = substr($module, 0, - 6);
                     }
                     assert(is_string($module), "module is not a string: $module, statement = $statement");
@@ -388,10 +362,8 @@ function yield_from_py($python_file)
 
                     $index += strlen($module);
                 }
-                // error_log("dict = " . jsonify($dict));
                 $yield['a'] = $dict;
             }             
-            // error_log(\std\encode($yield));
             yield $yield;
         }
 
@@ -401,15 +373,12 @@ function yield_from_py($python_file)
             // cope with comments starting with #
             if (preg_match('/^\s*#(.*)/', $statement, $matches)) {
                 if (preg_match('/(created|updated) on (\d\d\d\d-\d\d-\d\d)/', $matches[1], $matches)) {
-
-                    $yield = [
-                        'line' => $i
+                    yield [
+                        'line' => $i,
+                        'comment' => true,
+                        'statement' => '',
+                        $matches[1] => $matches[2]
                     ];
-
-                    $yield['comment'] = true;
-                    $yield['statement'] = '';
-                    $yield[$matches[1]] = $matches[2];
-                    yield $yield;
                 }
             }
         }
@@ -430,7 +399,7 @@ function insert_section(&$proveCodes)
     $from_axiom_import = determine_section($proveCodes);
     if ($from_axiom_import != "") {
         if (is_array($proveCodes)) {
-            \std\array_insert($proveCodes, 0, $from_axiom_import);
+            std\array_insert($proveCodes, 0, $from_axiom_import);
         } else {
             $proveCodes = "$from_axiom_import\n$proveCodes";
         }
@@ -456,7 +425,7 @@ function determine_section($proveCodes)
         return "";
     }
 
-    $section = new \std\Set($section);
+    $section = new std\Set($section);
     $section = $section->jsonSerialize();
     $section = implode(", ", $section);
     $section = "from axiom import $section";
@@ -502,7 +471,7 @@ function insert_into_init($package, $new = null)
 {
     error_log("insert into $package with $new");
     if ($new === null) {
-        list ($package, $new) = split_module($package);
+        [$package, $new] = split_module($package);
 
         if (strpos($package, ".") !== false)
             insert_into_init($package);
@@ -531,9 +500,8 @@ function insert_into_init($package, $new = null)
 
 function delete_from_init($package, $theorem = null)
 {
-    if ($theorem === null) {
-        list ($package, $theorem) = split_module($package);
-    }
+    if ($theorem === null)
+        [$package, $theorem] = split_module($package);
 
     $folder = module_to_path($package);
 
@@ -560,14 +528,14 @@ function delete_from_init($package, $theorem = null)
 
             ++ $imports;
             $theorems = preg_split('/\s*,\s*/', $m[1]);
-            error_log(\std\encode($theorems));
+            error_log(std\encode($theorems));
 
             $index = array_search($theorem, $theorems);
             if ($index !== false) {
 
                 error_log("index = $index");
 
-                \std\array_delete($theorems, $index);
+                std\array_delete($theorems, $index);
 
                 $theorems = implode(', ', $theorems);
 
@@ -593,8 +561,8 @@ function delete_from_init($package, $theorem = null)
         
         error_log("folder = $folder");
         $subFolder = "$folder/$theorem";
-        foreach (\std\list_all_files($folder, 'py') as list ($pyFile, $php)) {
-//             if (\std\startsWith($subFolder)){
+        foreach (std\list_all_files($folder, 'py') as [$pyFile, $php]) {
+//             if (std\startsWith($subFolder)){
 //                 error_log("detect py file $pyFile within the deleted $subFolder, so continue the process!");
 //                 continue;
 //             }
@@ -608,9 +576,9 @@ function delete_from_init($package, $theorem = null)
         $lineNum -= $emptyLines;
         if ($lineNum > 0) {
             rename($initPy, "$folder.py");
-            \std\deleteDirectory($folder);
+            std\deleteDirectory($folder);
         } else {
-            \std\deleteDirectory($folder);
+            std\deleteDirectory($folder);
             delete_from_init($package);
         }
     }
@@ -696,8 +664,8 @@ function modify_codes($python_file, $_proveCodes, $applyCodes = null)
 
 function read_all_php($dir)
 {
-    foreach (\std\list_directory($dir) as $directory) {
-        foreach (\std\list_all_files($directory, 'php') as $php) {
+    foreach (std\list_directory($dir) as $directory) {
+        foreach (std\list_all_files($directory, 'php') as $php) {
             yield $php;
         }
     }
@@ -810,7 +778,7 @@ function run($py)
     $module = py_to_module($py);
     $logs[] = "module = " . str_replace(".", "/", $module);
     $user = basename(dirname(dirname(__file__)));
-    if (\std\is_linux()) {
+    if (std\is_linux()) {
         $array = file_get_contents("https://www.axiom.top/$user/run.py?module=$module");
         $array = explode("\n", $array);
     } else {
@@ -851,12 +819,12 @@ function run($py)
 
 function compile_python_file($py)
 {
-    $text = new \std\Text($py);
+    $text = new std\Text($py);
     foreach ($text as $line) {
         error_log($line);
     }
     // $user = basename(dirname(dirname(__file__)));
-    // if (\std\is_linux()) {
+    // if (std\is_linux()) {
     // $url = "https://www.axiom.top:5000/compile";
     // } else {
     // $url = "http://localhost:5000/compile";
@@ -899,7 +867,7 @@ function fetch_codes($module, $fetch_prove = false)
                 break;
             }
 
-            if (\std\startsWith($line, '    ')) {
+            if (std\startsWith($line, '    ')) {
                 $line = substr($line, 4);
             }
 
@@ -920,5 +888,408 @@ function fetch_codes($module, $fetch_prove = false)
 function axiom_directory()
 {
     return dirname(dirname(__file__)) . "/axiom/";
+}
+
+function select_axiom_by_state($user, $state)
+{
+    $result = get_rows("select axiom from axiom where user = '$user' and state = '$state' order by axiom", MYSQLI_NUM);
+    $array = [];
+    foreach ($result as &$value) {
+        $array[] = $value[0];
+    }
+    return $array;
+}
+
+function select_axiom_by_regex($user, $regex, $binary = false)
+{
+    if ($binary) {
+        $binary = " binary ";
+    } else {
+        $binary = " ";
+    }
+
+    $sql = "select axiom from axiom where user = '$user' and axiom regexp$binary'$regex'";
+    // echo $sql . "<br>";
+
+    $result = get_rows($sql, MYSQLI_NUM);
+    $array = [];
+    foreach ($result as &$value) {
+        $array[] = $value[0];
+    }
+    return $array;
+}
+
+function select_axiom_by_like($user, $keyword, $binary = false)
+{
+    if ($binary) {
+        $binary = " binary ";
+    } else {
+        $binary = " ";
+    }
+
+    $keyword = str_replace('_', '\_', $keyword);
+    $sql = "select axiom from axiom where user = '$user' and axiom like$binary'%$keyword%'";
+    // echo $sql . "<br>";
+
+    $result = get_rows($sql, MYSQLI_NUM);
+    $array = [];
+    foreach ($result as &$value) {
+        $array[] = $value[0];
+    }
+
+    // echo "result = " . std\encode($result) . "<br>";
+    // echo "array = " . std\encode($array) . "<br>";
+    return $array;
+}
+
+function select_count($user, $state = null)
+{
+    $sql = "select count(*) from axiom where user = '$user'";
+    if ($state) {
+        $sql .= " and state = '$state'";
+    }
+
+    foreach (get_rows($sql, MYSQLI_NUM) as $count) {
+        return $count[0];
+    }
+}
+
+function select_axiom_by_state_not($user, $state)
+{
+    yield from get_rows("select axiom, state from axiom where user = '$user' and state != '$state'", MYSQLI_NUM);
+}
+
+function yield_from_mysql($user, $axiom)
+{
+    foreach (get_rows("select latex from axiom where user = '$user' and axiom = '$axiom'", MYSQLI_NUM) as [$latex]) {
+        return explode("\n", $latex);
+    }
+}
+
+function select_hierarchy($user, $axiom, $reverse = false)
+{
+    if ($reverse) {
+        $callee = 'caller';
+        $caller = 'callee';
+    } else {
+        $callee = 'callee';
+        $caller = 'caller';
+    }
+
+    try {
+        foreach (get_rows("select $callee from hierarchy where user = '$user' and $caller = '$axiom'", MYSQLI_NUM) as &$result) {
+            yield $result[0];
+        }
+    } catch (Exception $e) {
+        if (preg_match("/Table '(\w+).(\w+)' doesn't exist/", $e->getMessage(), $matches)) {
+            assert(std\equals($matches[1], "axiom"));
+            assert(std\equals($matches[2], "hierarchy"));
+        } else {
+            die($e->getMessage());
+        }
+
+        $sql = <<<EOT
+        CREATE TABLE `hierarchy` (
+          `user` varchar(32) NOT NULL,
+          `caller` varchar(256) NOT NULL,
+          `callee` varchar(256) NOT NULL,  
+          `count` int default 0,
+          PRIMARY KEY (`user`, `caller`, `callee`) 
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        PARTITION BY KEY () PARTITIONS 8;
+        EOT;
+
+        execute($sql);
+
+        foreach (retrieve_all_dependency() as [$caller, $counts]) {
+            foreach ($counts as $callee => $count) {
+                execute("insert into hierarchy values('$user', '$caller', '$callee', $count)");
+            }
+        }
+
+        yield from select_hierarchy($user, $axiom, $reverse);
+    }
+}
+
+function establish_hierarchy($user, $node, $reverse = false)
+{
+    $G = [];
+    $setProcessed = new Set();
+
+    $queue = new Queue();
+    $queue->push($node);
+
+    while (! $queue->isEmpty()) {
+        $node = $queue->pop();
+        if ($setProcessed->contains($node))
+            continue;
+
+        $setProcessed->add($node);
+
+        // error_log("theoremSetProcessed = " . std\encode($setProcessed));
+        foreach (select_hierarchy($user, $node, $reverse) as $child) {
+            $queue->push($child);
+            $G[$node][] = $child;
+        }
+    }
+
+    $graph = new std\Graph();
+    foreach ($G as $key => $value) {
+        foreach ($value as $node) {
+            $graph->insert($key, $node);
+        }
+    }
+
+    return $graph;
+}
+
+function suggest($user, $prefix, $phrase)
+{
+    $phrases = [];
+    try {
+        // $sql = "select phrase from suggest where user = '$user' and prefix = '$prefix' order by usage";
+        $sql = "select phrase from suggest where user = '$user' and prefix = '$prefix'";
+        if ($phrase) {
+            $sql .= " and phrase like '%$phrase%'";
+        }
+
+        // error_log("in suggest: " . $sql);
+
+        foreach (get_rows($sql, MYSQLI_NUM) as [$word]) {
+            $phrases[] = $word;
+        }
+    } catch (Exception $e) {
+        return [];
+    }
+
+    if ($phrase) {
+        $dict = [];
+
+        foreach ($phrases as &$word) {
+            $dict[$word] = std\startsWith($word, $phrase);
+        }
+
+        arsort($dict);
+        $phrases = array_keys($dict);
+    }
+
+    return $phrases;
+}
+
+function hint($prefix)
+{
+    $phrases = [];
+    // error_log($prefix);
+    try {
+        // $sql = "select phrase from suggest where user = '$user' and prefix = '$prefix' order by usage";
+        $sql = "select phrase from hint where prefix = binary'$prefix'";
+        // error_log($sql);
+        foreach (get_rows($sql, MYSQLI_NUM) as [$phrase]) {
+            $phrases[] = $phrase;
+        }
+    } catch (Exception $e) {
+        return [];
+    }
+
+    return $phrases;
+}
+
+function insert_into_suggest($user, $theorem)
+{
+    $phrases = explode('.', $theorem);
+    $size = count($phrases);
+    $phrases[] = 'apply';
+
+    $prefix = '';
+
+    $data = [];
+    foreach (std\range(0, $size) as $i) {
+        $prefix .= $phrases[$i] . ".";
+        $data[] = [
+            $user,
+            $prefix,
+            $phrases[$i + 1],
+            1
+        ];
+    }
+
+    $rows_affected = mysql\insertmany('suggest', $data);
+}
+
+function delete_from_suggest($user, $theorem, $__init__ = false, $regex = false)
+{
+    preg_match('/(.+\.)(\w+)$/', $theorem, $m);
+
+    $prefix = $m[1];
+    $phrase = $m[2];
+
+    if ($regex) {
+        // using regex engine;
+        if ($__init__) {
+
+            $sql = "delete from suggest where user = '$user' and prefix = '$theorem.' and phrase = 'apply'";
+
+            $rows_affected = mysql\execute($sql);
+            if ($rows_affected != 1)
+                error_log("error found in $sql");
+            else
+                error_log("executing: $sql");
+        } else {
+            $sql = "delete from suggest where user = '$user' and prefix = '$prefix.' and phrase = '$phrase'";
+
+            $rows_affected = mysql\execute($sql);
+            if (! $rows_affected)
+                error_log("error found in $sql");
+            else
+                error_log("executing: $sql");
+
+            $sql = "delete from suggest where user = '$user' and prefix regexp '^$theorem\..*'";
+
+            $rows_affected = mysql\execute($sql);
+            if (! $rows_affected)
+                error_log("error found in $sql");
+            else
+                error_log("executing: $sql");
+        }
+    } else {
+
+        if (! $__init__) {
+            $sql = "delete from suggest where user = '$user' and prefix = '$prefix' and phrase = '$phrase'";
+
+            $rows_affected = mysql\execute($sql);
+            if (! $rows_affected)
+                error_log("error found in $sql");
+            else
+                error_log("executing: $sql");
+        }
+
+        $sql = "delete from suggest where user = '$user' and prefix = '$theorem.' and phrase = 'apply'";
+
+        $rows_affected = mysql\execute($sql);
+        if (! $rows_affected)
+            error_log("error found in $sql");
+        else
+            error_log("executing: $sql");
+    }
+}
+
+function update_suggest($user, $package, $old, $new, $is_folder = false)
+{
+    if ($new == null) {
+        $sql = "delete from suggest where user = '$user' and prefix = '$package.' and phrase = '$old'";
+    } else if ($is_folder) {
+        $package_regex = str_replace(".", "\\.", $package);
+        $sql = "update suggest set prefix = regexp_replace(prefix, '^$package_regex\\.$old\\.(.+)', '$package.$new.$1') where user = '$user' and prefix like '$package.$old.%'";
+    } else
+        $sql = "update suggest set phrase = '$new' where user = '$user' and prefix = '$package' and phrase = '$old'";
+
+    // error_log("sql = $sql");
+
+    $rows_affected = mysql\execute($sql);
+    if ($rows_affected < 1) {
+        error_log("error found in $sql");
+    }
+}
+
+function delete_from_axiom($user, $old, $regex = false)
+{
+    if ($regex) {
+        // using regex engine;
+        $sql = "delete from axiom where user = '$user' and axiom regexp '^$old'";
+        $rows_affected = mysql\execute($sql);
+    } else {
+        $sql = "delete from axiom where user = '$user' and axiom = '$old'";
+        $rows_affected = mysql\execute($sql);
+    }
+
+    if (! $rows_affected) {
+        error_log("$sql");
+    }
+}
+
+function update_axiom($user, $old, $new, $is_folder = false)
+{
+    if ($is_folder) {
+        $old_regex = str_replace('.', "\\.", $old);
+        $sql = "update axiom set axiom = regexp_replace(axiom, '^$old_regex\.(.+)', '$new.$1') where user = '$user' and axiom like '$old.%'";
+    } else {
+        $sql = "update axiom set axiom = '$new' where user = '$user' and axiom = '$old'";
+    }
+
+    // error_log("sql = $sql");
+    $rows_affected = mysql\execute($sql);
+    if ($rows_affected < 1) {
+        error_log("error found in $sql");
+    }
+}
+
+function replace_with_callee($user, $old, $new)
+{
+    $old_regex = str_replace('.', "\\.", $old);
+    $old_regex_hierarchy = "$old_regex(?!\.)|$old_regex(?=\.apply\b)";
+    foreach (get_rows("select caller from hierarchy where user = '$user' and callee = '$old'", MYSQLI_NUM) as [$caller]) {
+        $pyFile = module_to_py($caller);
+        $pyFile = new Text($pyFile);
+
+        $pyFile->preg_replace($old_regex_hierarchy, $new);
+    }
+
+    $old_regex = "(?<=from axiom\.)$old_regex(?= import \w+)";
+    // php doesn't support variable-lenth looking-behind assertion
+    // $old_regex = "(?<=^ *from axiom\.)$old_regex(?= import \w+)";
+    foreach (get_rows("select caller from `function` where user = '$user' and callee = '$old'", MYSQLI_NUM) as [$caller]) {
+        $pyFile = module_to_py($caller);
+        $pyFile = new Text($pyFile);
+
+        $pyFile->preg_replace($old_regex, $new);
+    }
+}
+
+function reaplce_axiom_in_hierarchy($user, $old, $new)
+{
+    error_log("sql = update hierarchy set caller = '$new' where user = '$user' and caller = '$old'");
+    $rows_affected = mysql\execute("update hierarchy set caller = '$new' where user = '$user' and caller = '$old'");
+
+    error_log("sql = update hierarchy set callee = '$new' where user = '$user' and callee = '$old'");
+    $rows_affected = mysql\execute("update hierarchy set callee = '$new' where user = '$user' and callee = '$old'");
+
+    error_log("sql = update `function` set caller = '$new' where user = '$user' and caller = '$old'");
+    $rows_affected = mysql\execute("update `function` set caller = '$new' where user = '$user' and caller = '$old'");
+
+    error_log("sql = update `function` set callee = '$new' where user = '$user' and callee = '$old'");
+    $rows_affected = mysql\execute("update `function` set callee = '$new' where user = '$user' and callee = '$old'");
+}
+
+function update_hierarchy($user, $old, $new, $is_folder = false)
+{
+    if ($is_folder) {
+        $old_regex = str_replace('.', "\\.", $old);
+
+        $replaceDict = [];
+        foreach (get_rows("select axiom from axiom where user = '$user' and axiom like '$old.%'", MYSQLI_NUM) as [$axiom]) {
+            $oldAxiom = $axiom;
+            $newAxiom = preg_replace("/^$old_regex\.(.+)/", "$new.$1", $oldAxiom);
+
+            $replaceDict[$oldAxiom] = $newAxiom;
+            error_log("replace $oldAxiom with $newAxiom");
+        }
+
+        foreach ($replaceDict as $old => $new) {
+            replace_with_callee($user, $old, $new);
+        }
+        // these two for loop cannot be combined because results of replace_with_callee depend on reaplce_axiom_in_hierarchy
+        foreach ($replaceDict as $old => $new) {
+            reaplce_axiom_in_hierarchy($user, $old, $new);
+        }
+    } else {
+        // update the python files that contains $old theorem!
+        $sql = "select caller from hierarchy where user = '$user' and callee = '$old'";
+
+        // error_log("sql = $sql");
+
+        replace_with_callee($user, $old, $new);
+
+        reaplce_axiom_in_hierarchy($user, $old, $new);
+    }
 }
 ?>

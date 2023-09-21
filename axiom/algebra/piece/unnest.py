@@ -41,7 +41,7 @@ def prove(Eq):
 
     k = Symbol(integer=True, positive=True)
     x = Symbol(real=True, shape=(k,))
-    A, B = Symbol(etype=dtype.real * k)
+    A, B = Symbol(etype=dtype.real[k])
     f, g, h = Function(shape=(), real=True)
     Eq << apply(Piecewise((Piecewise((g(x), Element(x, B)), (h(x), True)), Element(x, A)), (f(x), True)))
 

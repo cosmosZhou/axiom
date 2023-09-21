@@ -6,15 +6,8 @@
 require_once 'php/utility.php';
 require_once 'php/mysql.php';
 
-// if (! $_GET) {
-// // https://www.php.net/manual/en/function.getopt.php
-// $_GET = getopt("", [
-// 'module::'
-// ]);
-// $_GET['module'] = str_replace('/', '.', $_GET['module']);
-// }
-
-// $_GET['module'] = 'keras.eq.eq.eq.ne_zero.imply.et.crf.viterbi';
+//$_GET['module'] = 'keras.matmul.softmax.to.lamda.matmul.gpt';
+//$_GET['state'] = 'plausible';
 
 $key = array_keys($_GET);
 switch (count($key)) {
@@ -35,7 +28,7 @@ switch (count($key)) {
         }
         break;
     case 1:
-        list ($key) = $key;
+        [$key] = $key;
         switch ($key) {
             case "symbol":
                 require_once 'php/symbol.php';
@@ -97,7 +90,7 @@ function is_latex_print($latex, &$res)
 
     while (preg_match('/^(Eq\.\w+|\((Eq\.\w+|\*Eq\[-\d+:\]) *(, *Eq\.\w+)+ *\)|Eq\[-(\d+:|1)\]|\*Eq\[-\d+:\]|\*\w+|\w+)/u', $latex, $match)){
         $res[] = $match[0];
-        $latex = \std\slice($latex, strlen($match[0]));
+        $latex = std\slice($latex, strlen($match[0]));
         if (preg_match('/^ *= */', $latex, $matchEqual)){
             return true;
         }
@@ -106,8 +99,7 @@ function is_latex_print($latex, &$res)
             return false;
         }
         
-        $latex = \std\slice($latex, strlen($matchComma[0]));
-//         return is_latex_print($latex, $res);
+        $latex = std\slice($latex, strlen($matchComma[0]));
     }
     
     return false;
@@ -119,7 +111,7 @@ $title = str_replace('.', '/', $module);
 $path_info = substr(__FILE__, 0, - 9) . "axiom/" . $title;
 
 $indexOfYield = - 1;
-if (! \std\endsWith($path_info, '/')) {
+if (! std\endsWith($path_info, '/')) {
 
     $py = $path_info . ".py";
 
@@ -141,8 +133,6 @@ if (! \std\endsWith($path_info, '/')) {
 
         $proveCodes = insert_section($proveCodes);
         if (is_array($proveCodes)) {
-            // error_log("proveCodes = " . \std\encode($proveCodes));
-
             modify_codes($py, $proveCodes, $applyCodes);
         } else {
             error_log("create new py file = $py");
@@ -151,17 +141,17 @@ if (! \std\endsWith($path_info, '/')) {
             if (file_exists($base_py)) {
                 $base_init = dirname($py) . "/__init__.py";
                 error_log("change $base_py into $base_init");
-                \std\createDirectory(dirname($py));
+                std\createDirectory(dirname($py));
 
                 rename($base_py, $base_init);
             }
 
             $imports = [];
             if (file_exists($py)) {
-                if (! \std\endsWith($py, "/__init__.py"))
+                if (! std\endsWith($py, "/__init__.py"))
                     die("$py already exists!");
                 else {
-                    $file = new \std\Text($py);
+                    $file = new std\Text($py);
                     if ($file->search('from util import \S')) {
                         die("$py already exists!");
                     }
@@ -169,7 +159,7 @@ if (! \std\endsWith($path_info, '/')) {
                 }
             }
 
-            $file = new \std\Text($py);
+            $file = new std\Text($py);
             $code = "from util import *\n\n\n";
 
             $code .= $applyCodes . "\n";
@@ -193,7 +183,7 @@ if (! \std\endsWith($path_info, '/')) {
             insert_into_init(py_to_module($py));
         }
 
-        list ($logs, $data) = run($py);
+        [$logs, $data] = run($py);
     }
     else{
         $data = null;
@@ -210,15 +200,8 @@ if (! \std\endsWith($path_info, '/')) {
     $numOfRequisites = $m ? count(explode(".", $m[1])) - 1 : 0;
 
     foreach (yield_from_py($py) as $dict) {
-        // error_log("dict = " . \std\encode($dict));
-        if (array_key_exists('numOfYields', $dict)) {
-            $numOfYields = $dict['numOfYields'];
+        if (! array_key_exists('statement', $dict))
             continue;
-        }
-
-        if (! array_key_exists('statement', $dict)) {
-            continue;
-        }
 
         $statement = $dict['statement'];
 
@@ -227,7 +210,7 @@ if (! \std\endsWith($path_info, '/')) {
             $indexOfYield = $counterOfLengths;
             $input[] = $statement;
         } else if (array_key_exists('a', $dict)) {
-            if (! $input && $inputs && end($inputs)[- 1] == '\\') {
+            if (! $input && $inputs && end($inputs)[-1] == '\\') {
                 $length = count($inputs);
                 $inputs[$length - 1] .= "\n$statement";
             } else {
@@ -239,12 +222,10 @@ if (! \std\endsWith($path_info, '/')) {
                 unset($dict['comment']);
 
                 if (array_key_exists('unused', $dict)) {
-                    $class = '"comment unused"';
                 } elseif ($inputs && has_unterminated_parantheses(end($inputs))) {
                     $inputs[count($inputs) - 1] .= "\n$statement";
                     continue;
                 } else {
-                    $class = "comment";
                     if ($dict) {
                         foreach ($dict as $key => $value) {
                             switch ($key) {
@@ -269,8 +250,7 @@ if (! \std\endsWith($path_info, '/')) {
             }
 
             $text = $statement;
-            // error_log("create_text_tag: " . $statement);
-            if (\std\startsWith($statement, '    ') && $input == null) {
+            if (std\startsWith($statement, '    ') && !$input) {
                 // starting with more than 4 spaces indicates this line is a continuation of the previous line of code!
                 $inputs[count($inputs) - 1] .= "\n$text";
             } else {
@@ -279,8 +259,6 @@ if (! \std\endsWith($path_info, '/')) {
         }
         
         if (preg_match('/^Eq *(<<|\[ *(- *\d+ *)?(: *)?\] *=) */', $statement, $matches)) {
-            // error_log(jsonify($input));
-
             $inputs[] = piece_together($input);
 
             ++ $counterOfLengths;

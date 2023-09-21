@@ -16,7 +16,7 @@ def prove(Eq):
 
     n, m = Symbol(integer=True)
     f = Function(integer=True)
-    Eq << apply(Any[n:0:m + 1](f(n) > 0), n, m - n)
+    Eq << apply(Any[n:m + 1](f(n) > 0), n, m - n)
 
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[0], simplify=None)
 

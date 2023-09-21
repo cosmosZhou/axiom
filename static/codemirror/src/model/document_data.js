@@ -1,5 +1,5 @@
 import { loadMode } from "../display/mode_state.js"
-import { runInOp } from "../display/operations.js"
+import { runInOp } from "../display/highlight_worker.js"
 import { regChange } from "../display/view_tracking.js"
 import { Line, updateLine } from "../line/line_data.js"
 import { findMaxLine } from "../line/spans.js"

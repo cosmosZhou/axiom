@@ -4,7 +4,6 @@ from util import *
 @apply
 def apply(self, index=-1):
     [*args] = self.of(Card[Union])
-    import std
     A, B = std.array_split(args, index)
     A = Union(*A)
     B = Union(*B)

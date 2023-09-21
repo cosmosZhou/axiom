@@ -37,7 +37,7 @@ def prove(Eq):
 
     n = Symbol(domain=Range(2, oo), given=False)
     k = Symbol(integer=True, positive=True)
-    S = Symbol(etype=dtype.integer * k)
+    S = Symbol(etype=dtype.integer[k])
     Eq << apply(n, set=S)
 
     Eq.initial = Eq[0].subs(n, 2)

@@ -31,7 +31,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs().find(Element).simplify()
 
-    Eq << Eq[-1].this.rhs.expr.apply(algebra.piece.to.kroneckerDelta)
+    Eq << Eq[-1].this.rhs.expr.apply(algebra.piece.to.delta)
 
     Eq << Eq[-1].this.rhs.apply(algebra.lamda.to.identity)
 

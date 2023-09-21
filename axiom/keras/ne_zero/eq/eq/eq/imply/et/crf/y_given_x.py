@@ -74,7 +74,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.reducedSum)
 
-    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda_reducedSum.to.matmul)
+    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda.reducedSum.to.matmul)
 
     Eq.z_recursion = Eq[-1].subs(Eq.z_definition.reversed)
 
@@ -104,7 +104,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.ne_zero.given.gt_zero)
 
-    Eq << Eq[-1].this.find(log).apply(keras.log_reducedSum.to.logsumexp)
+    Eq << Eq[-1].this.find(log).apply(keras.log.reducedSum.to.logsumexp)
 
     Eq.xy_joint_nonzero = stats.ne_zero.imply.ne_zero.joint_slice.apply(Eq[3], (slice(0, t + 1), slice(0, t + 1)))
 

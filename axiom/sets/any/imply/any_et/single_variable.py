@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(given):
-    function, (lhs, *rhs) = given.of(Any)
+    expr, (lhs, *rhs) = given.of(Any)
     if len(rhs) == 2:
         rhs = lhs.range(*rhs)
     else:
         rhs, = rhs
 
-    return Any[lhs]((function & Element(lhs, rhs)).simplify())
+    return Any[lhs]((expr & Element(lhs, rhs)).simplify())
 
 
 @prove

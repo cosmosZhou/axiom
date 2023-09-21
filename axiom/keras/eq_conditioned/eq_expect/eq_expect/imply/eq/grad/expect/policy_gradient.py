@@ -43,7 +43,7 @@ def prove(Eq):
 
     Eq << calculus.eq.imply.eq.grad.apply(Eq[-1], [π])
 
-    Eq << Eq[-1].this.lhs.apply(stats.grad_expect.to.expect.grad).reversed
+    Eq << Eq[-1].this.lhs.apply(stats.grad.expect.to.expect.grad).reversed
 
     Eq << Eq[-1].this.rhs.apply(stats.expect.to.integral)
 
@@ -77,13 +77,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Integral).apply(calculus.integral.limits.separate)
 
-    Eq << Eq[-1].this.find(Derivative * ~Integral).apply(stats.integral_prod.to.prob)
+    Eq << Eq[-1].this.find(Derivative * ~Integral).apply(stats.integral.prod.to.prob)
 
     Eq << Eq[-1].this.find(Integral).apply(stats.integral.to.expect)
 
     Eq << Eq[-1].this.find(Integral).apply(calculus.integral.limits.separate)
 
-    Eq << Eq[-1].this.find(Integral[Probability * Product]).apply(stats.integral_prod.to.prob)
+    Eq << Eq[-1].this.find(Integral[Probability * Product]).apply(stats.integral.prod.to.prob)
 
     Eq << Eq[-1].this.find(Derivative[Probability]).apply(calculus.grad.to.mul.grad.log)
 
@@ -95,11 +95,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum[~Mul[Expectation]]).apply(stats.mul.to.expect)
 
-    Eq << Eq[-1].this.find(Sum[Expectation]).apply(stats.sum_expect.to.expect.sum)
+    Eq << Eq[-1].this.find(Sum[Expectation]).apply(stats.sum.expect.to.expect.sum)
 
     Eq << Eq[-1].this.lhs.find(Expectation).apply(stats.expect.to.matmul)
 
-    Eq << Eq[-1].this.lhs.apply(calculus.grad_matmul.to.matmul.grad)
+    Eq << Eq[-1].this.lhs.apply(calculus.grad.matmul.to.matmul.grad)
 
     #https://spinningup.openai.com/en/latest/spinningup/rl_intro.html#bellman-equations
     #http://incompleteideas.net/book/bookdraft2017nov5.pdf (Page 47)
@@ -110,8 +110,8 @@ def prove(Eq):
     #https://www.52coding.com.cn/tags/Reinforcement-Learning/
     #TRPO
     #https://arxiv.org/pdf/1502.05477.pdf
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -1,3 +1,3 @@
 from . import bool
 
-from . import kroneckerDelta
+from . import delta

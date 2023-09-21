@@ -4,7 +4,6 @@ from util import *
 @apply
 def apply(self):
     expr, (x, x0, dir) = self.of(Limit)
-    import std
     factors, coefficient = std.array_split(expr.of(Mul), lambda arg: arg._has(x))
 
     coefficient = Mul(*coefficient)

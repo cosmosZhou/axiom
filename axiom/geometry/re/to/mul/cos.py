@@ -15,13 +15,13 @@ def prove(Eq):
     z = Symbol(complex=True, given=True)
     Eq << apply(Re(z))
 
-    Eq << Eq[0].this.find(cos).apply(geometry.cos_arg.to.piece)
+    Eq << Eq[0].this.find(cos).apply(geometry.cos.arg.to.piece)
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul.to.piece)
 
     Eq << Eq[-1].this.find(Abs).apply(algebra.abs.to.sqrt)
 
-    
+
 
 
 if __name__ == '__main__':

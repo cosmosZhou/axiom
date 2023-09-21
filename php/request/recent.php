@@ -1,6 +1,5 @@
 <?php
 require_once '../utility.php';
-require_once '../mysql.php';
 
 $arr = [];
 
@@ -8,8 +7,8 @@ $topk = $_GET['top'];
 
 $folder = axiom_directory();
 
-$topKHeap = new \std\TopKHeap($topk);
-foreach (read_all_axioms($folder) as list ($pyFile, $php)) {
+$topKHeap = new std\TopKHeap($topk);
+foreach (read_all_axioms($folder) as [$pyFile, $php]) {
     $py = file($pyFile);
     $count = count($py);
     
@@ -35,7 +34,7 @@ foreach (read_all_axioms($folder) as list ($pyFile, $php)) {
 $arr = $topKHeap->topk();
 
 $res = [];
-foreach ($arr as list(,,, $module)){
+foreach ($arr as [,,, $module]){
     $res[] = $module;
 }
 echo std\encode($res);

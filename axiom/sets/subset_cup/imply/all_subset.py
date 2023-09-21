@@ -14,8 +14,8 @@ def prove(Eq):
 
     n = Symbol(integer=True, positive=True)
     i = Symbol(integer=True)
-    x = Symbol(shape=(oo,), etype=dtype.complex * n)
-    A = Symbol(etype=dtype.complex * n)
+    x = Symbol(shape=(oo,), etype=dtype.complex[n])
+    A = Symbol(etype=dtype.complex[n])
     Eq << apply(Subset(Cup[i:n](x[i]), A))
 
     k = Symbol(domain=Range(n))

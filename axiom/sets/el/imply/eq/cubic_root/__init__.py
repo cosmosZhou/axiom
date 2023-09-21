@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq << Eq[1].this.lhs.apply(algebra.root.to.mul.expi.arg)
 
-    Eq << Eq[-1].this.find(Arg).apply(algebra.arg_pow.to.add)
+    Eq << Eq[-1].this.find(Arg).apply(algebra.arg.pow.to.add)
 
     Eq << Eq[-1].subs(Eq[-3])
 

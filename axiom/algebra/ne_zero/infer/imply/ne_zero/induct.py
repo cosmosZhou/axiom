@@ -103,7 +103,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs().expr.simplify()
 
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.kroneckerDelta)
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.delta)
 
     Eq << Eq[-1].this.rhs.apply(algebra.lamda.to.identity)
 
@@ -115,8 +115,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.definition
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

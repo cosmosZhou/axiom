@@ -6,7 +6,9 @@
 require_once 'utility.php';
 require_once 'mysql.php';
 require_once 'std.php';
+require_once 'init.php';
 
+$user = get_user();
 $dict = empty($_POST) ? $_GET : $_POST;
 
 if (! $dict) {
@@ -53,8 +55,8 @@ if ($wholeWord) {
 
 if ($nlp){    
     $modules = [];
-    foreach (\std\list_all_files(dirname(dirname(__file__)).'/axiom', 'py') as $py){
-        $file = new \std\Text($py);
+    foreach (std\list_all_files(dirname(dirname(__file__)).'/axiom', 'py') as $py){
+        $file = new std\Text($py);
         //error_log("py = $py");
         if (!$regularExpression && $file->find($keyword) || $regularExpression && $file->search($keyword)){
             error_log("py = $py");
@@ -64,17 +66,15 @@ if ($nlp){
 }
 elseif ($like) {
     if ($regex == null) {
-        $modules = \mysql\select_axiom_by_state($state);
+        $modules = select_axiom_by_state($user, $state);
     } else {
-        $modules = \mysql\select_axiom_by_like($regex, $caseSensitive);
+        $modules = select_axiom_by_like($user, $regex, $caseSensitive);
     }
 } else {
-    $modules = \mysql\select_axiom_by_regex($regex, $caseSensitive);
+    $modules = select_axiom_by_regex($user, $regex, $caseSensitive);
 }
 
-// error_log(\std\encode($modules));
-
-global $user;
+// error_log(std\encode($modules));
 ?>
 
 <script src="static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
@@ -87,12 +87,12 @@ global $user;
 <script src="static/js/utility.js"></script>
 <script type=module>
 createApp('searchResult', {
-    modules : <?php echo \std\encode($modules)?>,
-	user: <?php echo \std\encode($user)?>,
-	keyword: <?php echo \std\encode($keyword)?>,
-	regularExpression: <?php echo \std\encode($regularExpression)?>,
-	wholeWord: <?php echo \std\encode($wholeWord)?>,
-	caseSensitive: <?php echo \std\encode($caseSensitive)?>,
+    modules : <?php echo std\encode($modules)?>,
+	user: <?php echo std\encode($user)?>,
+	keyword: <?php echo std\encode($keyword)?>,
+	regularExpression: <?php echo std\encode($regularExpression)?>,
+	wholeWord: <?php echo std\encode($wholeWord)?>,
+	caseSensitive: <?php echo std\encode($caseSensitive)?>,
 });
 
 </script>

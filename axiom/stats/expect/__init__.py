@@ -4,3 +4,9 @@ from . import law_of_total_expectation
 from . import limits
 from . import law_of_iterated_expectation
 from . import conditioned
+from . import grad
+from . import sum
+from . import var
+from . import cov
+from . import lamda
+from . import reducedSum

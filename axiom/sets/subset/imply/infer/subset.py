@@ -12,8 +12,8 @@ def prove(Eq):
     from axiom import algebra, sets
 
     n = Symbol(integer=True, positive=True)
-    A, B = Symbol(etype=dtype.integer * n)
-    X = Symbol(etype=dtype.integer * n, given=True)
+    A, B = Symbol(etype=dtype.integer[n])
+    X = Symbol(etype=dtype.integer[n], given=True)
     Eq << apply(Subset(A, B), X)
 
     Eq << Eq[1].this.apply(algebra.infer.given.infer.et)

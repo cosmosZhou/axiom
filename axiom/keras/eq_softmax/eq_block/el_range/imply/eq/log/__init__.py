@@ -83,13 +83,13 @@ def prove(Eq):
 
     Eq << algebra.cond.cond.imply.cond.subs.apply(Eq.lt, Eq[-1])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.add_piece.to.piece)
+    Eq << Eq[-1].this.rhs.apply(algebra.add.piece.to.piece)
 
     Eq << algebra.eq.imply.eq.log.apply(Eq[-1])
 
     Eq.loss = -algebra.eq.imply.eq.sum.apply(Eq[3] * (1 + log(1 + abs(h[i]) / 2)), (i, 0, n))
 
-    
+
 
 
 if __name__ == '__main__':

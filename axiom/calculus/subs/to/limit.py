@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    (fx, (x, S[1])), [S[x]], [xi] = self.of(Subs[Derivative])
+    (fx, (x, S[1])), [S[x], xi] = self.of(Subs[Derivative])
 
     return Equal(self, Limit[x:xi]((fx - fx._subs(x, xi)) / (x - xi)))
 
@@ -12,10 +12,10 @@ def apply(self):
 def prove(Eq):
     from axiom import calculus
 
-    x, epsilon, t = Symbol(real=True)
+    x, t = Symbol(real=True)
     x0 = Symbol(real=True, given=True)
     f = Function(real=True)
-    Eq << apply(Subs(Derivative(f(x), x), x, x0))
+    Eq << apply(Subs[x:x0](Derivative(f(x), x)))
 
     Eq << Eq[0].this.rhs.apply(calculus.limit.limits.offset, x0)
 

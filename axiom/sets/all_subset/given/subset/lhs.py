@@ -13,10 +13,10 @@ def prove(Eq):
     from axiom import sets
     n, m = Symbol(integer=True, positive=True)
     i = Symbol(integer=True)
-    x = Symbol(shape=(oo,), etype=dtype.complex * n)
-    A = Symbol(etype=dtype.complex * n)
+    x = Symbol(shape=(oo,), etype=dtype.complex[n])
+    A = Symbol(etype=dtype.complex[n])
 
-    Eq << apply(All[i:0:m](Subset(x[i], A)))
+    Eq << apply(All[i:m](Subset(x[i], A)))
 
     Eq << sets.subset_cup.imply.all_subset.apply(Eq[1])
 

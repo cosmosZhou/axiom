@@ -7,7 +7,7 @@ def apply(n, u, v):
     Q, w, x = predefined_symbols(n)
     j = w.definition.variables[0]
     x_quote = Symbol(w[n, j] @ x[:n + 1])
-    return All[x[:n + 1]:Q[u]](Any[j:0:n + 1](Element(x_quote, Q[v])))
+    return All[x[:n + 1]:Q[u]](Any[j:n + 1](Element(x_quote, Q[v])))
 
 
 @prove

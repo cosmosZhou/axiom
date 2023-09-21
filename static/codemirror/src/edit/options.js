@@ -1,7 +1,8 @@
-import { onBlur } from "../display/focus.js"
+import { onBlur } from "../display/blur.js"
 import { getGutters, updateGutters } from "../display/gutters.js"
 import { loadMode, resetModeState } from "../display/mode_state.js"
-import { initScrollbars, updateScrollbars } from "../display/scrollbars.js"
+import { updateScrollbars } from "../display/scrollbars.js"
+import { initScrollbars } from '../display/highlight_worker.js'
 import { updateSelection } from "../display/selection.js"
 import { regChange } from "../display/view_tracking.js"
 import { getKeyMap } from "../input/keymap.js"

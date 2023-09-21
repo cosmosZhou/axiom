@@ -6,17 +6,17 @@ def apply(eq_h_embed, eq_h_global_in, eq_h_global_out, eq_h_local_in, eq_h_local
     (h_embed, t), ((E_pos, S[t]), (E_global_embed, xt)) = eq_h_embed.of(Equal[Indexed, Indexed + Indexed])
     x_var, S[t] = xt.of(Indexed)
     T, = x_var.shape
-    
+
     V, D_G = E_global_embed.shape
     (h_global_in, k), ((E_global_pad, S[Equal(k, 0)]), (h_embed_patched, S[True])) = eq_h_global_in.of(Equal[Indexed, Piecewise])
-    
+
     P = E_global_pad.shape[-1] / D_G
     (h_embed, index_row, index_col), (i, S[0], S[P * D_G]) = h_embed_patched.of(Lamda[Indexed])
     S[i // P + P * k - P] = index_row
     S[i % P] = index_col
     K, S[P * D_G] = h_global_in.shape
     assert K == Ceiling(T / P)
-    
+
     h_global_out, transformer_global_h_global_in = eq_h_global_out.of(Equal)
     S[h_global_in] = transformer_global_h_global_in.of(Function)
     (h_local_in, S[k], p), (((S[h_global_out[k]], (S[p * D_G], S[p * D_G + D_G])), w_GL), ((E_local_pad, S[Equal(p, 0)]), (E_local_embed, S[True]))) = eq_h_local_in.of(Equal[Indexed, Sliced @ Symbol + Piecewise])
@@ -27,7 +27,7 @@ def apply(eq_h_embed, eq_h_global_in, eq_h_global_out, eq_h_local_in, eq_h_local
     return Equal(h_global_in, BlockMatrix(E_global_pad, Lamda[i: P * D_G, k:K - 1](h_embed[P * k: P * k + P][i // P, i % P]))),\
         Equal(h_local_in[k], Lamda[p:P](h_global_out[k, p * D_G: p * D_G + D_G]) @ w_GL + BlockMatrix(E_local_pad, Lamda[p:P - 1](E_local_embed[x_var[k * P + p]]))),\
         Equal(Probability(x[t] | x[:t]), softmax(E_local_embed @ h_local_out[t // P, t % P])[x.var[t]])
- 
+
 
 @prove
 def prove(Eq):
@@ -81,7 +81,7 @@ def prove(Eq):
     l = Symbol(domain=Range(K))
     Eq << algebra.eq.given.eq.getitem.apply(Eq.h_global_in, l)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.to.kroneckerDelta)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.to.delta)
 
     Eq << Eq[1].subs(k, l)
 
@@ -90,11 +90,11 @@ def prove(Eq):
     l = Symbol(domain=Range(P))
     Eq << algebra.eq.given.eq.getitem.apply(Eq.h_local_in, l)
 
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.kroneckerDelta)
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.delta)
 
     Eq << Eq[3].subs(p, l)
 
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.kroneckerDelta)
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.delta)
 
     Eq << Eq[5][x.var[P * k + p]]
 
@@ -104,7 +104,7 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq[-2].reversed)
     #https://arxiv.org/pdf/2305.07185.pdf#page=3
-    
+
 
 
 if __name__ == '__main__':

@@ -6,7 +6,6 @@ def apply(self, pivot=-1, i=None):
     args, (k, S[0], n) = self.of(Sum[Mul])
     n -= 1
     assert n >= 0
-    import std
     fk, gk = std.array_split(args, pivot)
     fk = Mul(*fk)
     gk = Mul(*gk)

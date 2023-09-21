@@ -1,11 +1,9 @@
 from util import *
 
 
-
 @apply
 def apply(self):
     args = self.of(Min)
-    import std
     x = []
     for arg in args:
         if arg.is_Floor:

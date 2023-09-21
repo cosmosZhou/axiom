@@ -69,9 +69,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.root.to.mul.expi.arg)
 
-    Eq << Eq[-1].this.lhs.find(Arg).apply(algebra.arg_pow.to.add)
+    Eq << Eq[-1].this.lhs.find(Arg).apply(algebra.arg.pow.to.add)
 
-    Eq << Eq[-1].this.rhs.find(Arg).apply(algebra.arg_pow.to.add)
+    Eq << Eq[-1].this.rhs.find(Arg).apply(algebra.arg.pow.to.add)
 
     Eq << Eq[-1].this.lhs.find(Mul[Add]).apply(algebra.mul.to.add)
 

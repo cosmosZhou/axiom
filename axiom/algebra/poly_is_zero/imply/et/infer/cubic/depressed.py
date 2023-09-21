@@ -54,7 +54,7 @@ def prove(Eq):
 
     V = Eq[-1].find(Arg[Add]).arg
     U = Eq[-1].find(Arg[2]).arg
-    Eq.eq_peicewise = algebra.ceiling_arg.to.piece.apply(Eq[-1].find(Ceiling)._subs(-p, U ** (S.One / 3) * V ** (S.One / 3)))
+    Eq.eq_peicewise = algebra.ceiling.arg.to.piece.apply(Eq[-1].find(Ceiling)._subs(-p, U ** (S.One / 3) * V ** (S.One / 3)))
 
     Eq << Eq[-1].subs(Eq.eq_peicewise.reversed)
 

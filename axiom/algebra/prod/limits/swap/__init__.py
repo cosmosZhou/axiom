@@ -16,7 +16,7 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True, given=False)
     f = Symbol(shape=(oo,), real=True)
     g = Symbol(shape=(oo, oo), real=True)
-    Eq << apply(Product[i:0:m, j:0:n](f[i] + g[i, j]))
+    Eq << apply(Product[i:m, j:n](f[i] + g[i, j]))
 
     Eq.induct = Eq[0].subs(n, n + 1)
 
@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(Product).apply(algebra.prod.to.mul.doit.outer.setlimit)
 
-    s = Symbol(Product[j:0:n + 1](f[i] + g[i, j]))
+    s = Symbol(Product[j:n + 1](f[i] + g[i, j]))
     Eq << s.this.definition
 
     Eq << Eq[-1].apply(algebra.eq.imply.eq.prod, (i, 0, m))

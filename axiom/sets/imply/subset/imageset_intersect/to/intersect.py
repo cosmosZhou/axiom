@@ -14,7 +14,7 @@ def prove(Eq):
     n, m = Symbol(integer=True, positive=True)
     x = Symbol(complex=True, shape=(n,))
     f = Function(complex=True, shape=(m,))
-    A, B = Symbol(etype=dtype.complex * n)
+    A, B = Symbol(etype=dtype.complex[n])
     Eq << apply(imageset(x, f(x), A & B))
 
     y = Symbol(complex=True, shape=(m,))

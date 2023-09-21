@@ -48,7 +48,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(discrete.sum.to.matmul)
 
-    Eq << discrete.eq.imply.eq.vector.independence.matmul_equal.apply(Eq[-1])
+    Eq << discrete.eq_matmul.imply.eq.vector.independence.st.matmul.apply(Eq[-1])
 
     Eq << Eq[-1].limits_subs(Eq[-1].variable, Eq[0].lhs.arg.rhs)
 

@@ -1,12 +1,6 @@
 from util import *
 
 
-def list_to_tuple(arr):
-    if isinstance(arr, list):
-        return tuple((list_to_tuple(a) for a in arr))
-    else:
-        return arr
-    
 @apply
 def apply(self):
     A, B = self.of(MatMul)
@@ -14,7 +8,7 @@ def apply(self):
         m, n = A.shape
         if len(B.shape) == 2:
             S[n], l = B.shape
-            prod = [[0] * l for i in range(m)]
+            prod = [[0] * int(l) for i in range(m)]
             for i in range(m):
                 for j in range(l):
                     for k in range(n):
@@ -30,7 +24,7 @@ def apply(self):
         n, = A.shape
         S[n], l = B.shape
     
-        prod = [0] * l
+        prod = [0] * int(l)
         for j in range(l):
             for k in range(n):
                 prod[j] += A[k] * B[k, j]
@@ -44,7 +38,7 @@ def apply(self):
             
         prod = (prod,)
 
-    rhs = Matrix(list_to_tuple(prod))
+    rhs = Matrix(std.list_to_tuple(prod))
     return Equal(self, rhs, evaluate=False)
 
 
@@ -57,8 +51,8 @@ def prove(Eq):
     _b1 = Symbol("b1'", real=True)
     _c0 = Symbol("c0'", real=True)
     _c1 = Symbol("c1'", real=True)
-    X = Matrix([[a0, a1, a2], [b0, b1, b2], [c0, c1, c2], [d0, d1, d2]])
-    Y = Matrix([[_a0, _a1], [_b0, _b1], [_c0, _c1]])
+    X = Matrix(((a0, a1, a2), (b0, b1, b2), (c0, c1, c2), (d0, d1, d2)))
+    Y = Matrix(((_a0, _a1), (_b0, _b1), (_c0, _c1)))
     Eq << apply(MatMul(X, Y))
 
     X = Symbol(X)

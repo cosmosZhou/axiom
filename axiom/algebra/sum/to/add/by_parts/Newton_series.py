@@ -6,7 +6,6 @@ def apply(self, pivot=-1, i=None, d=1):
     args, (k, S[0], n) = self.of(Sum[Mul])
     n -= 1
     assert n >= 0
-    import std
     fk, gk = std.array_split(args, pivot)
     fk = Mul(*fk)
     gk = Mul(*gk)
@@ -44,11 +43,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expr.apply(algebra.add.to.mul)
 
-    Eq << Eq[-1].this.rhs.apply(discrete.sum_binom.telescope)
+    Eq << Eq[-1].this.rhs.apply(discrete.sum.binom.telescope)
 
-    Eq << Eq.abel.find(Sum[Tuple, Tuple]).this.apply(discrete.sum_binom.limits.swap.lower)
+    Eq << Eq.abel.find(Sum[Tuple, Tuple]).this.apply(discrete.sum.binom.limits.swap.lower)
 
-    Eq << Eq.abel.find(-Sum).find(Sum[Tuple, Tuple]).this.apply(discrete.sum_binom.limits.swap.lower)
+    Eq << Eq.abel.find(-Sum).find(Sum[Tuple, Tuple]).this.apply(discrete.sum.binom.limits.swap.lower)
 
     Eq << Eq.abel.rhs.find((~Sum) * Sum).this.apply(algebra.sum.limits.subs.negate, i, d - i).this.rhs.find(Binomial).apply(discrete.binom.complement)
 
@@ -63,8 +62,8 @@ def prove(Eq):
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], d, 1)
 
     #https://en.wikipedia.org/wiki/Summation_by_parts
-    
-    
+
+
 
 
 if __name__ == '__main__':

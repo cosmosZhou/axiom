@@ -1,30 +1,13 @@
 from util import *
 
 
-def rotary_matrix(R, θ, d, b, k, i):
-    return Equal(θ[k], k / b ** (Lamda[i:d / 2](i) / d)), \
-        Equal(R[k], BlockMatrix([
-            [Identity(d / 2) * cos(θ[k]), -Identity(d / 2) * sin(θ[k])],
-            [Identity(d / 2) * sin(θ[k]), Identity(d / 2) * cos(θ[k])]]))
-
-def extract(eq_theta, eq_R):
-    (k, (b, ((i, limit_i), d))), θ = eq_theta.of(Equal[Symbol / Symbol ** (Lamda / Symbol)])
-    S[i], S[0], S[d / 2] = limit_i
-    ((cos, sin), (S[-sin], S[cos])), R = eq_R.of(Equal[BlockMatrix[BlockMatrix[1], BlockMatrix[1]]])
-    S[θ] = cos.of(Cos[Expr] * Identity)
-    S[θ] = sin.of(-Identity * Sin[Expr])
-    alpha = BlockMatrix(θ, θ)
-    θ, S[k] = θ.of(Indexed)
-    assert d.is_even
-    R, S[k] = R.of(Indexed)
-    return R, d, alpha, θ, b, k, i
-    
+from axiom.keras.eq_mul.imply.eq.matmul.position_representation import extract, rotary_matrix  
 @apply
-def apply(eq_theta, eq_R, x):
-    R, d, alpha, θ, b, k, i = extract(eq_theta, eq_R)
+def apply(eq_theta, eq_R, xt):
+    Rk, d, alpha, θ, b, k, *_ = extract(eq_theta, eq_R)
     return Equal(
-        R[k] @ x, 
-        x * Cos(alpha) + BlockMatrix(-x[d / 2:], x[:d / 2]) * Sin(alpha))
+        Rk @ xt, 
+        xt * Cos(alpha) + BlockMatrix(-xt[d / 2:], xt[:d / 2]) * Sin(alpha))
 
 @prove
 def prove(Eq):
@@ -37,15 +20,17 @@ def prove(Eq):
     d = Symbol(integer=True, positive=True, even=True)
     #x_k denotes token embedding at index k (ie, x denotes sentence embedding)
     x = Symbol(shape=(n, d), real=True)
-    #R denotes rotary matrix
-    R = Symbol(shape=(n, d, d), real=True)
+    #R denotes rotary matrix function
+    R = Function(shape=(d, d), real=True)
     θ = Symbol(shape=(n, d / 2), real=True)
     #k denotes token index
     #i denotes row index
-    i, k = Symbol(integer=True)
-    Eq << apply(*rotary_matrix(R, θ, d, b, k, i), x[k])
+    i, k, t = Symbol(integer=True)
+    #λ denotes scaling factor
+    λ = Symbol(real=True)
+    Eq << apply(*rotary_matrix(R, θ, d, b, k, i, λ), x[t])
 
-    Eq << Eq[1] @ x[k]
+    Eq << Eq[1] @ x[t]
 
     Eq << Eq[-1].this.rhs.args[1].apply(algebra.expr.to.block, d / 2)
 
@@ -87,4 +72,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-06-06
-# updated on 2023-06-16
+# updated on 2023-09-20

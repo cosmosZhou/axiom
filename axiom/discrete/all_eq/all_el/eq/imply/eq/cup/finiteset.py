@@ -27,7 +27,7 @@ def prove(Eq):
     from axiom import sets, algebra, discrete
 
     n = Symbol(domain=Range(2, oo))
-    S = Symbol(etype=dtype.integer * n)
+    S = Symbol(etype=dtype.integer[n])
     x = Symbol(**S.element_symbol().type.dict)
     i, j, k = Symbol(integer=True)
     e = Symbol(etype=dtype.integer, given=True)

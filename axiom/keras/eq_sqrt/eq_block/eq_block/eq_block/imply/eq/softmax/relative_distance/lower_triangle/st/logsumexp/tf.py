@@ -80,7 +80,7 @@ def prove(Eq):
 
     Eq << Eq.z_def.subs(Eq[-1].reversed, Eq[-2].reversed, Eq[-3].reversed)
 
-    Eq << Eq[-1].this.find(Lamda * Lamda).apply(algebra.mul_lamda.to.lamda)
+    Eq << Eq[-1].this.find(Lamda * Lamda).apply(algebra.mul.lamda.to.lamda)
 
     Eq << Eq[-1].this.find(Lamda + Lamda).apply(algebra.add.to.lamda)
 
@@ -103,7 +103,7 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq.C_def)
 
-    
+
 
 
 if __name__ == '__main__':

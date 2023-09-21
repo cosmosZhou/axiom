@@ -2,14 +2,11 @@ from . import cos
 from . import sin
 from . import tan
 from . import eq
-from . import cos_arg
 from . import re
 from . import im
-from . import sin_arg
 from . import arg
 from . import ou_ne_zero
 from . import acos
-from . import square_cos
 from . import ge_zero
 from . import el
 from . import cos_is_zero
@@ -19,8 +16,6 @@ from . import imply
 from . import lt
 from . import lt_zero
 from . import mul
-from . import mul_sin
-from . import mul_cos
 from . import cot
 from . import asin
 from . import atan
@@ -39,9 +34,8 @@ from . import eq_atan
 from . import eq_acot
 from . import eq_asec
 from . import eq_acsc
-from . import lamda_piece
 from . import sign
 from . import sub
 from . import block
 from . import lamda
-from . import square_sin
+from . import square

@@ -9,7 +9,7 @@ def apply(self, n=None):
     if n is None:
         n = Symbol(integer=True)
         
-    return Equal(self, Sum[n:0:oo](binomial(r, n) * x ** n))
+    return Equal(self, Sum[n:oo](binomial(r, n) * x ** n))
 
 
 @prove(proved=False)

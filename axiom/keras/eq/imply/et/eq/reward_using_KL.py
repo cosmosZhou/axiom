@@ -27,7 +27,7 @@ def prove(Eq):
     t = Symbol(integer=True) #time step counter
     Eq << apply(Equal(r[t], -log(Probability[θ](a[t] | s[t]) / Probability[SFT](a[t] | s[t])) * β + KroneckerDelta(t, n - 1) * R_human))
 
-    Eq << Eq[0].this.find(KroneckerDelta).apply(algebra.kroneckerDelta.to.piece)
+    Eq << Eq[0].this.find(KroneckerDelta).apply(algebra.delta.to.piece)
 
     Eq << Eq[-1].this.find(Mul[Piecewise]).apply(algebra.mul.to.piece, simplify=None)
 
@@ -46,8 +46,8 @@ def prove(Eq):
     Eq << Eq[-1].this.find(And).apply(algebra.ne.lt.given.lt)
 
     #https://arxiv.org/pdf/1909.08593.pdf#page=3
-    
-    
+
+
 
 
 if __name__ == '__main__':

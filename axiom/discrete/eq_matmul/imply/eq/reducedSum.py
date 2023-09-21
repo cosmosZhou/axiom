@@ -5,7 +5,7 @@ from util import *
 def apply(given):
     (x, w), y = given.of(Equal[MatMul])
     n, = x.shape
-    i, j = w.of(SwapMatrix)    
+    i, j = w.of(SwapMatrix)
     assert 0 <= i < n
     assert 0 <= j < n
     return Equal(ReducedSum(x), ReducedSum(y))
@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.simplify()
 
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.kroneckerDelta)
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.delta)
 
 
 if __name__ == '__main__':

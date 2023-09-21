@@ -7,7 +7,7 @@ def apply(eq_F, eq_F_quote):
     (((S[i / b ** (j / d)], (S[j], S[0])), (S[i / b ** ((j - 1) / d)], S[S.true])), S[j_limit], S[i_limit]), F_quote = eq_F_quote.of(Equal[Lamda[Piecewise[ExprCondPair[sin, Equal[Expr % 2]], ExprCondPair[sin]]]])
     S[j], S[0], S[d] = j_limit
     S[i], S[0], n = i_limit
-    
+
     return Equal(abs(F - S.ImaginaryUnit * F_quote), OneMatrix(*F.shape))
 
 
@@ -31,14 +31,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Add).apply(algebra.add.to.lamda)
 
-    Eq << Eq[-1].this.find(Add).apply(algebra.add_piece.to.piece)
+    Eq << Eq[-1].this.find(Add).apply(algebra.add.piece.to.piece)
 
-    Eq << Eq[-1].this.find(Cos ** 2).apply(geometry.square_cos.to.add.square_sin, simplify=None)
+    Eq << Eq[-1].this.find(Cos ** 2).apply(geometry.square.cos.to.add.square_sin, simplify=None)
 
-    Eq << Eq[-1].this.find(Cos ** 2).apply(geometry.square_cos.to.add.square_sin)
+    Eq << Eq[-1].this.find(Cos ** 2).apply(geometry.square.cos.to.add.square_sin)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

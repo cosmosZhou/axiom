@@ -11,7 +11,6 @@ def extract(expr, z):
         return []
 
     results = []
-    import std
     for (i, j), v in coeffs.items():
         std.setitem(results, i, j, v)
 

@@ -72,7 +72,6 @@ def apply(all_eq, f_eq, reverse=False, simplify=True, assumptions={}):
         lhs, rhs = rhs, lhs
     cond = subs(f_eq, lhs, rhs, simplify=simplify, assumptions=assumptions, limits=limits)
 
-    import std
     if (ret := std.deleteIndices(limits, lambda limit: not cond._has(limit[0]))) is not None:
         limits = ret
         if not limits:
@@ -88,7 +87,7 @@ def prove(Eq):
     m, n = Symbol(integer=True, positive=True)
     a, b, c = Symbol(real=True, shape=(m, n))
     f = Function(real=True)
-    C, S = Symbol(etype=dtype.real * (m, n))
+    C, S = Symbol(etype=dtype.real[m][n])
     Eq << apply(All[c:C](Equal(a, f(c))), Element(a * b + c, S))
 
     Eq << algebra.cond.all.imply.all.et.apply(Eq[1], Eq[0])

@@ -22,7 +22,7 @@ def prove(Eq):
 
     n = Symbol(domain=Range(2, oo))
     m = Symbol(integer=True, nonnegative=True, given=False)
-    S = Symbol(etype=dtype.integer * n, given=True)
+    S = Symbol(etype=dtype.integer[n], given=True)
     x = Symbol(shape=(n,), integer=True)
     i, j = Symbol(integer=True)
     w = Symbol(Lamda[j, i](SwapMatrix(n, i, j)))

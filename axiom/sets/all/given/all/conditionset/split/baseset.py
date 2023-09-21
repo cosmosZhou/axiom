@@ -13,7 +13,7 @@ def apply(imply, s):
 def prove(Eq):
     n = Symbol(integer=True, positive=True)
     x = Symbol(complex=True, shape=(n,))
-    S = Symbol(etype=dtype.complex * n)
+    S = Symbol(etype=dtype.complex[n])
     f, g = Function(shape=(), integer=True)
 
     s = Symbol(conditionset(x, Equal(f(x), 1), S))

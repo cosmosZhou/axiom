@@ -6,7 +6,7 @@ def apply(given):
     (p_polynomial, *x), (S[p_polynomial], *y) = given.of(Equal[MatMul[2]])
     x = MatMul(*x)
     y = MatMul(*y)
-    from axiom.discrete.eq.imply.eq.vector.independence.matmul_equal import extract
+    from axiom.discrete.eq_matmul.imply.eq.vector.independence.st.matmul import extract
     return Equal(*extract(p_polynomial, x, y))
 
 @prove
@@ -22,9 +22,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Pow[Lamda]).apply(algebra.expr.to.lamda, k)
 
-    Eq << discrete.eq_matmul.imply.eq.matrix.independence.matmul_equal.apply(Eq[-1])
+    Eq << discrete.eq_matmul.imply.eq.matrix.independence.st.matmul.apply(Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

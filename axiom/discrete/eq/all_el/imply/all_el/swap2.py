@@ -14,7 +14,7 @@ def prove(Eq):
     from axiom import algebra, discrete, sets
 
     n = Symbol(domain=Range(2, oo))
-    S = Symbol(etype=dtype.integer * n)
+    S = Symbol(etype=dtype.integer[n])
     x = Symbol(**S.element_symbol().type.dict)
     w = Symbol(real=True, shape=(n, n, n, n))
     i, j = Symbol(integer=True)
@@ -40,7 +40,7 @@ def prove(Eq):
 
     Eq.final_statement = algebra.cond.imply.all.restrict.apply(Eq[-1], (i_,), (j_,))
 
-    Eq << discrete.eq_lamda_swapMatrix.imply.all_eq.swap2.eq.apply(Eq[0])
+    Eq << discrete.eq.lamda.swapMatrix.imply.all_eq.swap2.eq.apply(Eq[0])
 
     Eq << Eq[-1].this.expr @ x
 
@@ -58,7 +58,7 @@ def prove(Eq):
 
     Eq << Eq[-2].this.limits[1].subs(Eq[-1])
 
-    Eq << Eq[-1].this.apply(algebra.all.doit.outer.setlimit)
+
 
     Eq << Eq[-1].subs(Eq[0].subs(j, i)).simplify()
 
@@ -78,4 +78,4 @@ if __name__ == '__main__':
     run()
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 # created on 2020-08-25
-# updated on 2023-05-21
+# updated on 2023-08-26

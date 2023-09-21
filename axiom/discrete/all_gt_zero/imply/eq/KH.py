@@ -24,7 +24,7 @@ def prove(Eq):
     x = Symbol(real=True, shape=(oo,))
     n = Symbol(integer=True, positive=True)
     i = Symbol(integer=True)
-    Eq << apply(All[i:0:n + 1](x[i] > 0))
+    Eq << apply(All[i:n + 1](x[i] > 0))
 
     x_ = Symbol('x', real=True, positive=True, shape=(oo,))
     Eq << discrete.mul.to.add.HK.KH.apply(x_[:n + 1])

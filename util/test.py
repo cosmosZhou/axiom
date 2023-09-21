@@ -1,17 +1,8 @@
 from util.search import read_all_py, axiom_directory
 from run import project_directory
 
-from ctypes import c_void_p
-from _ctypes import Structure
 from std.file import Text
 import re
-
-
-class CodeBlock(Structure):
-    _fields_ = [("ptr", c_void_p)]
-    
-    def __del__(self):
-        lib.delete_CodeBlock(self)
 
     
 def test():
@@ -488,7 +479,44 @@ def test_sparsemax():
     _z = sparsemax(z, False)
     print(sum(z), sum(_z))
     print(z == _z)
+
+def PLU():
+#     from sympy import *
+    import numpy as np
+    n = 7
+    X = [[0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            X[i][j] = j ** i
     
+    # X[:2] = X[1::-1]
+    
+    A = Matrix(X)
+    P, L, U = A.LUdecomposition()
+    
+    print('A =', A, sep='\n')
+    print('P =', P, sep='\n')
+    print('L =', L, sep='\n')
+    print('U =', U, sep='\n')
+    print('P @ L @ U =', P @ L @ U, sep='\n')
+    
+    for i in range(n):
+        for j in range(n):
+            X[i][j] = Stirling(i, j)
+    
+    L = Matrix(X)
+    
+    for i in range(n):
+        for j in range(n):
+            X[i][j] = FallingFactorial(j, i)
+    
+    U = Matrix(X)
+    
+    print('L =', L, sep='\n')
+    print('U =', U, sep='\n')
+    print('L @ U =', L @ U, sep='\n')
+
+
 if __name__ == '__main__':
     test_complement()
 #     test_select_greater()

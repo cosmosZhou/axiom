@@ -17,9 +17,9 @@ def prove(Eq):
 
     Eq << algebra.ne_zero.imply.ne_zero.div.apply(Eq[0])
 
-    Eq << Eq[1].this.lhs.apply(discrete.det_pow.to.pow, simplify=None)
+    Eq << Eq[1].this.lhs.apply(discrete.det.pow.to.pow, simplify=None)
 
-    
+
 
 
 if __name__ == '__main__':

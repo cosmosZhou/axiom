@@ -7,7 +7,7 @@ def apply(self):
     a, (S[t], S[oo]) = at.of(Sliced)
     assert a.is_random and s.is_random and r.is_random
     return Equal(self,
-                 Integral[r.var[t + 1:]](Probability(r[t + 1:] | s[t]) * Sum[k:0:oo](γ ** k * r.var[k + t + 1])))
+                 Integral[r.var[t + 1:]](Probability(r[t + 1:] | s[t]) * Sum[k:oo](γ ** k * r.var[k + t + 1])))
 
 
 @prove
@@ -21,7 +21,7 @@ def prove(Eq):
     r = Symbol(shape=(oo,), real=True, random=True) #rewards
     t, k = Symbol(integer=True) #time countor
     γ = Symbol(domain=Interval(0, 1, right_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
-    Eq << apply(Expectation[r[t + 1:], s[t + 1:], a[t:]](Sum[k:0:oo](γ ** k * r[t + k + 1]) | s[t]))
+    Eq << apply(Expectation[r[t + 1:], s[t + 1:], a[t:]](Sum[k:oo](γ ** k * r[t + k + 1]) | s[t]))
 
     Eq << Eq[-1].lhs.this.apply(stats.expect.to.sum)
 

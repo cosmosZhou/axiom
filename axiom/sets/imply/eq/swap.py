@@ -46,7 +46,7 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.defun()
 
     w = Eq[-1].lhs.expr.indices[0].args[1].base
-    Eq << discrete.lamda_indexed.to.matmul.swap.apply(w[i, j], left=False, w=w, reference=False)
+    Eq << discrete.lamda.indexed.to.matmul.swap.apply(w[i, j], left=False, w=w, reference=False)
 
     k = Eq[-1].rhs.args[1].indices[-1]
     Eq << Eq[-2].lhs.expr.index.this.subs(Eq[-1])
@@ -65,7 +65,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.simplify()
 
-    
+
 
 
 if __name__ == '__main__':

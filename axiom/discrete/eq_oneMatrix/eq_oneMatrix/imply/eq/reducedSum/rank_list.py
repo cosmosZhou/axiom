@@ -39,13 +39,13 @@ def prove(Eq):
 
     Eq << Eq.A_def.this.rhs.subs(Eq[0], Eq[1])
 
-    Eq << Eq[-1].this.rhs.find(Add[Mul]).apply(algebra.sub_transpose.to.lamda, i, j, simplify=None)
+    Eq << Eq[-1].this.rhs.find(Add[Mul]).apply(algebra.sub.transpose.to.lamda, i, j, simplify=None)
 
-    Eq << Eq[-1].this.rhs.find(Add[Mul]).apply(algebra.transpose_sub.to.lamda, i, j, simplify=None)
+    Eq << Eq[-1].this.rhs.find(Add[Mul]).apply(algebra.sub.transpose.to.lamda, i, j, simplify=None)
 
     Eq << Eq[-1].this.find(Sign).apply(algebra.sign.to.lamda, simplify=None)
 
-    Eq << Eq[-1].this.find(Lamda * Lamda).apply(algebra.mul_lamda.to.lamda)
+    Eq << Eq[-1].this.find(Lamda * Lamda).apply(algebra.mul.lamda.to.lamda)
 
     Eq << algebra.eq.imply.eq.transpose.apply(Eq.A_def)
 
@@ -75,11 +75,11 @@ def prove(Eq):
 
     #reference:
     #https://arxiv.org/pdf/2203.02155.pdf#page=8
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-05-24
-# updated on 2023-05-27
+# updated on 2023-08-28

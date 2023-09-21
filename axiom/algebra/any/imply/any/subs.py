@@ -19,10 +19,10 @@ def apply(self, old, new):
     assert not function.has(*keys)
 
     for key in keys:
-        assert limits_dict[key] == []
+        assert not limits_dict[key]
         del limits_dict[key]
 
-    limits_dict[new] = []
+    limits_dict[new] = None
 
     limits = limits_sort(limits_dict)
 

@@ -16,7 +16,7 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True, given=False)
     f = Symbol(shape=(oo,), etype=dtype.real)
     g = Symbol(shape=(oo, oo), etype=dtype.real)
-    Eq << apply(Cup[i:0:m, j:0:n](f[i] & g[i, j]))
+    Eq << apply(Cup[i:m, j:n](f[i] & g[i, j]))
 
     Eq.induct = Eq[0].subs(n, n + 1)
 
@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq.induct_dissected = Eq[-1].this.find(Union[~Cup]).apply(sets.cup.to.union.doit.outer.setlimit)
 
-    s = Symbol(Cup[j:0:n + 1](f[i] & g[i, j]))
+    s = Symbol(Cup[j:n + 1](f[i] & g[i, j]))
     Eq << s.this.definition
 
     Eq << Eq[-1].apply(sets.eq.imply.eq.cup, (i, 0, m))

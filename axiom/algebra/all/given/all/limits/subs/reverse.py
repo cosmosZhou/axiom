@@ -17,7 +17,7 @@ def prove(Eq):
     n, m = Symbol(integer=True)
     f = Function(integer=True)
 
-    Eq << apply(All[n:0:m + 1](f(n) > 0), n, m - n)
+    Eq << apply(All[n:m + 1](f(n) > 0), n, m - n)
 
     Eq << algebra.all.imply.all.limits.subs.reverse.apply(Eq[1], n, m - n)
 

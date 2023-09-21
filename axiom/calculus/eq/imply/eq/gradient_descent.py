@@ -9,7 +9,7 @@ def apply(ne, eta=None):
     if eta is None:
         eta = ne.generate_var(real=True, var='eta')
 
-    return Subs(Derivative(fx._subs(x, x - eta * Derivative(fx, x)), eta), eta, 0) < 0
+    return Subs[eta:0](Derivative[eta](fx._subs(x, x - eta * Derivative(fx, x)))) < 0
 
 
 @prove(proved=False)
@@ -18,7 +18,7 @@ def prove(Eq):
     x = Symbol(r"\vec x", real=True, shape=(n,))
     f = Function(real=True, shape=())
     eta = Symbol(real=True)
-    Eq << apply(Unequal(Derivative(f(x), x), ZeroMatrix(*x.shape)))
+    Eq << apply(Unequal(Derivative(f(x), x), ZeroMatrix(*x.shape)), eta)
 
     
 

@@ -1,10 +1,9 @@
 from util import *
-from sympy.functions.combinatorial.numbers import Stirling1
 
 @apply
 def apply(self):
     x = Symbol(shape=(oo,), etype=dtype.integer)
-    assert x.type[0] == dtype.integer.set
+    assert x.type.slice(0) == dtype.integer.set
     assert not x.is_set
 
     n, k = self.of(Stirling1)

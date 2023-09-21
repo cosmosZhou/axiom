@@ -18,7 +18,7 @@ def prove(Eq):
     f = Function(etype=dtype.integer)
     h = Function(etype=dtype.real)
 
-    Eq << apply(Cup[j:f(i), i:0:k](h(x[i], j)))
+    Eq << apply(Cup[j:f(i), i:k](h(x[i], j)))
 
     s = Symbol(Cup[j:f(i)](h(x[i], j)))
     Eq << s.this.definition

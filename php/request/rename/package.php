@@ -1,9 +1,10 @@
 <?php
 require_once '../../utility.php';
 require_once '../../mysql.php';
+require_once '../../init.php';
 use std\Graph, std\Text, std\Set;
 
-global $user;
+$user = get_user();
 
 $dict = empty($_POST) ? $_GET : $_POST;
 
@@ -52,7 +53,7 @@ function rename_folder()
 
         insert_into_init($package, $new);
     } else {
-        \std\renameDirectory($folder . $old, $folder . $new);
+        std\renameDirectory($folder . $old, $folder . $new);
 
         if (file_exists($folder . $new . ".py")) {
             $newPy = new Text($folder . $new . ".py");
@@ -78,7 +79,7 @@ if (strpos($new, '.') !== false) {
 
     $subFolder = $folder . implode("/", array_slice($subPackages, 0, - 1)) . '/';
     error_log("subFolder = $subFolder");
-    \std\createDirectory($subFolder);
+    std\createDirectory($subFolder);
 
     if (file_exists($folder . $old . ".py")) {
         if (! file_exists($subFolder . $new . ".py")) {
@@ -96,10 +97,10 @@ if (strpos($new, '.') !== false) {
                 $subPackage = implode(".", array_slice($subPackages, 0, - 1));
                 $new = "$package.$subPackage.$new";
 
-                \mysql\delete_from_suggest($old);
-                \mysql\insert_into_suggest($new);
-                \mysql\update_axiom($old, $new);
-                \mysql\update_hierarchy($old, $new);
+                delete_from_suggest($user, $old);
+                insert_into_suggest($user, $new);
+                update_axiom($user, $old, $new);
+                update_hierarchy($user, $old, $new);
             } else {
                 die("renaming failed");
             }
@@ -112,7 +113,7 @@ if (strpos($new, '.') !== false) {
 
             $import = [];
             $statement = [];
-            $text = new \std\Text($__init__);
+            $text = new std\Text($__init__);
 
             foreach ($text as $line) {
                 if (preg_match('/from \. import +/', $line, $m))
@@ -127,16 +128,16 @@ if (strpos($new, '.') !== false) {
 
             $text->writelines($import);
 
-            $py = new \std\Text($subFolder . $new . ".py");
+            $py = new std\Text($subFolder . $new . ".py");
             $py->writelines($statement);
 
             if ($subPackage == $old) {
                 $old = "$package.$old";
                 $new = "$package.$subPackage.$new";
 
-                \mysql\insert_into_suggest($new);
-                \mysql\update_axiom($old, $new);
-                \mysql\update_hierarchy($old, $new);
+                insert_into_suggest($user, $new);
+                update_axiom($user, $old, $new);
+                update_hierarchy($user, $old, $new);
             } else {
                 die("$subPackage unimplemented!");
             }
@@ -150,7 +151,7 @@ if (strpos($new, '.') !== false) {
     } else
         $newAxiom = "$package.$new";
         
-    \mysql\update_hierarchy($oldAxiom, $newAxiom, true);
+    update_hierarchy($user, $oldAxiom, $newAxiom, true);
         
     if (is_dir($folder . $new)) {
         $newPyPath = $folder . $new . "/__init__.py";
@@ -168,16 +169,16 @@ if (strpos($new, '.') !== false) {
             unlink($oldPyPath);
             delete_from_init($package, $old);
         } else {
-            \std\deleteDirectory($folder . $new);
+            std\deleteDirectory($folder . $new);
             rename_folder();
         }
     } else {
         rename_folder();
     }
 
-    \mysql\update_suggest($package, $old, $new, true);
-    \mysql\update_axiom($oldAxiom, $newAxiom, true);
+    update_suggest($user, $package, $old, $new, true);
+    update_axiom($user, $oldAxiom, $newAxiom, true);
 }
 
-echo \std\encode("renamed!");
+echo std\encode("renamed!");
 ?>

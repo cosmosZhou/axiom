@@ -16,8 +16,8 @@ def prove(Eq):
 
     k = Symbol(integer=True, positive=True)
     x = Symbol(real=True, shape=(k,), given=True)
-    A, S = Symbol(etype=dtype.real * k, given=True)
-    f, g = Function(etype=dtype.real * k)
+    A, S = Symbol(etype=dtype.real[k], given=True)
+    f, g = Function(etype=dtype.real[k])
     Eq << apply(Supset(f(x), S) & Element(x, A) | Supset(g(x), S) & NotElement(x, A), wrt=S)
 
     Eq << Eq[1].apply(algebra.cond.given.et.ou, cond=Element(x, A))

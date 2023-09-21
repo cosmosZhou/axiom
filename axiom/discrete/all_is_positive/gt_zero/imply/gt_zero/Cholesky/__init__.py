@@ -30,16 +30,16 @@ def prove(Eq):
 
     Eq.induct = Eq.hypothesis.subs(k, k + 1)
 
-    Eq << Eq.hypothesis.find(Norm **  2).this.apply(discrete.sum_square_abs.to.add.norm.matmul.recursive)
+    Eq << Eq.hypothesis.find(Norm **  2).this.apply(discrete.sum.square.abs.to.add.norm.matmul.recursive)
 
     Eq << Eq.hypothesis.find(Sum).this.apply(algebra.sum.to.add.shift)
 
     Eq.gt_zero = Eq.hypothesis.subs(*Eq[-2:])
 
-    Eq <<= Eq.gt_zero.find(Abs ** 2 * Norm ** 2).this.args[1].apply(algebra.square_norm.to.add.pop).this.rhs.apply(algebra.mul.to.add),\
+    Eq <<= Eq.gt_zero.find(Abs ** 2 * Norm ** 2).this.args[1].apply(algebra.square.norm.to.add.pop).this.rhs.apply(algebra.mul.to.add),\
         Eq.gt_zero.find(-2 * ~Re).this.find(Expr @ Expr @ Expr).apply(discrete.matmul.to.sub.push)
 
-    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda_matmul.to.matmul)
+    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda.matmul.to.matmul)
 
     Eq << Eq[-1].this.find(Mul[Add]).apply(algebra.mul.to.add)
 
@@ -60,13 +60,13 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq.eq_square_Lkk)
 
-    Eq << Eq[-1].this.find(Norm[BlockMatrix @ Conjugate[Sliced]] ** 2).apply(algebra.square_norm.to.sub.push)
+    Eq << Eq[-1].this.find(Norm[BlockMatrix @ Conjugate[Sliced]] ** 2).apply(algebra.square.norm.to.sub.push)
 
-    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda_matmul.to.matmul)
+    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda.matmul.to.matmul)
 
     Eq << Eq[-1].this.find(Abs[BlockMatrix @ Conjugate[SlicedIndexed]]).apply(algebra.abs.conj)
 
-    
+
 
     Eq << sets.is_positive.imply.ne_zero.apply(Eq.Lkk_is_positive)
 
@@ -82,8 +82,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.base.apply(algebra.norm.conj)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

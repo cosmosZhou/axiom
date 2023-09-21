@@ -5,7 +5,7 @@ from util import *
 def apply(ge, any_all_le):
     ((an, M), (n, S[0], S[oo])), (S[M],) = any_all_le.of(Any[All[LessEqual]])
     S[an._subs(n, n + 1)], S[an] = ge.of(GreaterEqual)
-    return Equal(Limit[n:oo](an), Sup[n:0:oo](an))
+    return Equal(Limit[n:oo](an), Sup[n:oo](an))
 
 
 @prove
@@ -15,7 +15,7 @@ def prove(Eq):
     a = Symbol(real=True, shape=(oo,), given=True)
     n = Symbol(integer=True)
     M = Symbol(real=True)
-    Eq << apply(a[n + 1] >= a[n], Exists[M](ForAll[n:0:oo](a[n] <= M)))
+    Eq << apply(a[n + 1] >= a[n], Exists[M](ForAll[n:oo](a[n] <= M)))
 
     N = Symbol(integer=True, nonnegative=True)
     epsilon = Symbol(real=True, positive=True)

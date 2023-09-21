@@ -31,7 +31,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(Abs).apply(algebra.abs.to.piece)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.mul_piece.to.piece)
+    Eq << Eq[-1].this.lhs.apply(algebra.mul.piece.to.piece)
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.unnest)
 

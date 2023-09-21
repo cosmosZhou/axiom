@@ -4,7 +4,6 @@ from util import *
 @apply
 def apply(self):
     len_shape = len(self.shape)
-    import std
     reduced, args = std.array_split(self.of(ReducedSum[Add]), lambda arg : len(arg.shape) >= len_shape)
     reduced = (ReducedSum(arg).simplify() for arg in reduced)
     return Equal(self, Add(*reduced, *args), evaluate=False)

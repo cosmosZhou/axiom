@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self):
     x, k = self.of(FallingFactorial)
-    assert k > 0
+    assert k > 0 and k.is_integer
     return Equal(self, (x - k + 1) * FallingFactorial(x, k - 1))
 
 
@@ -23,8 +23,10 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.apply(algebra.prod.to.mul.pop)
 
     
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-08-17
+# updated on 2023-08-26

@@ -35,7 +35,7 @@ def prove(Eq):
     m = Symbol(integer=True, positive=True)
     k = Symbol(domain=Range(m))
     f = Function(real=True)
-    Eq << apply(Lamda[i:0:m](f(i)), k)
+    Eq << apply(Lamda[i:m](f(i)), k)
 
     i = Symbol(domain=Range(m))
     Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)

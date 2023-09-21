@@ -81,7 +81,7 @@ def prove(Eq):
 
     Eq.piecewise_equality = Eq.piecewise_equality.this.lhs.apply(discrete.matmul.to.sum)
 
-    Eq << Eq.piecewise_equality.lhs.args[-1].this.apply(algebra.sum_complement.to.add)
+    Eq << Eq.piecewise_equality.lhs.args[-1].this.apply(algebra.sum.complement.to.add)
 
     Eq << Eq[-1].subs(Eq.eq_intersection)
 
@@ -110,7 +110,7 @@ def prove(Eq):
 
     Eq << Eq.piecewise_equality.subs(Eq[-1])
 
-    Eq << discrete.eq.imply.eq.index.kroneckerDelta.indexOf.apply(Eq[0], i, j)
+    Eq << discrete.eq.imply.eq.index.delta.indexOf.apply(Eq[0], i, j)
 
     Eq << Eq[-1].subs(Eq.di_definition.reversed).subs(Eq.dj_definition.reversed)
 

@@ -110,16 +110,16 @@ def get_extension(file):
     
 def module_to_py(theorem):
     full_theorem_path = module_to_path(theorem)
-    py = full_theorem_path + ".py";
+    py = full_theorem_path + ".py"
     if not os.path.exists(py):
-        py = full_theorem_path + '/__init__.py';
+        py = full_theorem_path + '/__init__.py'
 
     return py
 
 
 def module_to_path(theorem):
     theorem = theorem.replace(".", "/")
-    return os.path.dirname(os.path.dirname(__file__)) + f"/axiom/{theorem}";
+    return os.path.dirname(os.path.dirname(__file__)) + f"/axiom/{theorem}"
 
     
 def py_to_module(py, delimiter='.'):
@@ -197,7 +197,7 @@ def is_py_theorem(py):
         assert re.match('from \. import \w+', line), py
         return False
     
-def yield_from_py(py):
+def yield_callee_from_py(py):
     prove = False
     for line in Text(py):
 #         print("line =", line)
@@ -220,6 +220,195 @@ def yield_from_py(py):
     #             print("module =", module)
                 yield module
         
+def is_def_start(funcname, statement):
+    return re.match(f"def +{funcname}\([^)]*\) *: *", statement)
+        
+def analyze_apply(py, i):
+    count = len(py)
+    provability = None
+    while i < count:
+        statement = py[i]
+        if is_def_start('prove', statement):
+            break
+
+        if matches := re.match('@prove(.+)', statement):
+            if matches := re.match('\((.+)=(.+)\)', matches[1]):
+                provability = matches[1]
+            
+        i += 1
+
+    return i, provability
+
+def match_section(statement):
+    return re.findall(r'\b(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+', statement)
+
+def yield_from_py(module):
+    python_file = module_to_py(module)
+
+    [*py] = Text(python_file)
+    count = len(py)
+
+    i = 0
+    while i < count:
+        statement = py[i]
+        if matches := re.match('from +(.+) +import +(.*)', statement):
+            prefix, namespaces = matches.groups()
+            namespaces = [s for s in re.split("[\s,]+", namespaces) if s]
+
+            if namespaces and namespaces[-1] == '\\':
+                namespaces.pop()
+                i += 1
+                statement = py[i]
+
+                namespaces_addition = [s for s in re.split("[\s,]+", statement) if s]
+
+                namespaces += namespaces_addition
+            i += 1
+            continue
+        
+        if matches := re.match('import +(.+)', statement):
+            packages = matches[1]
+            packages = [s for s in re.split("\s*,\s*", packages) if s]
+
+            for package in packages:
+                package = [s for s in re.split("\s+", package) if s]
+                match len(package):
+                    case 1:
+                        package, = package
+                    case _:
+                        ...
+            i += 1
+            continue
+
+        if is_def_start('apply', statement):
+            yield {
+                'line' : i
+            }
+
+            i, provability = analyze_apply(py, i)
+
+            yield {
+                'line' : i,
+                'provability' : provability
+            }
+
+            break
+        i += 1
+    i += 1
+
+    if i < count:
+        statement = py[i]
+        if matches := re.match('    from axiom import (.+)', statement):
+            section = matches[1].split(", ")
+            yield {
+                'line' : i,
+                'section' : section
+            }
+            i += 1
+
+        while i < count:
+            statement = py[i]
+            statement = statement.rstrip()
+            # skip empty lines
+            if re.match('\s*$', statement):
+                i += 1
+                continue
+
+            # the start of the next global statement other than def prove
+            if re.match('\w', statement):
+                break
+
+            # stop analyzing if return statement is encountered.
+            if re.match('    return\b.*$', statement):
+                statement = statement.rstrip()
+                statement = statement[4:]
+
+                yield {
+                    'line' : i,
+                    'unused' : True,
+                    'statement' : statement
+                }
+
+                i += 1
+                while i < count:
+                    statement = py[i]
+
+                    statement = statement.rstrip()
+                    # skip empty lines
+                    if re.match('\s*', statement):
+                        i += 1
+                        continue
+
+                    # the start of the next global statement other than def prove
+                    if re.match('\w', statement):
+                        break
+
+                    obj = {
+                        'line' : i,
+                        'unused' : True
+                    }
+
+                    if matches := re.match('\s*#(.*)', statement):
+                        obj['comment'] = True
+                        obj['statement'] = "#" + matches[1].lstrip()
+                    else:
+                        statement = statement[4:]
+                        obj['statement'] = statement
+                        
+                    yield obj
+                    i += 1
+                break
+            
+            obj = {
+                'line' : i
+            }
+            # cope with comments starting with #
+            if matches := re.match('\s*#(.*)', statement):
+                obj['comment'] = True
+                obj['statement'] = "#" + matches[1].lstrip()
+
+                yield obj
+                i += 1
+                continue
+
+            statement = statement[4:]
+
+            obj['statement'] = statement
+
+            if re.search('(=|<<) *apply\(', statement):
+                obj['module'] = py_to_module(python_file)
+                        
+            elif matches := match_section(statement):
+                index = 0
+
+                dict = {}
+                for module in matches:
+                    if module.endswith('.apply'):
+                        module = module[:-6]
+                    
+                    index = statement.index(module, index)
+                    dict[index] = module
+                    index += len(module)
+                
+                obj['a'] = dict
+
+            yield obj
+            i += 1
+
+        while i < count:
+            statement = py[i]
+            statement = statement.rstrip()
+            # cope with comments starting with #
+            if matches := re.match('\s*#(.*)', statement):
+                if matches := re.search('(created|updated) on (\d\d\d\d-\d\d-\d\d)', matches[1]):
+                    yield {
+                        'line' : i,
+                        'comment': True,
+                        'statement': '',
+                        matches[1] : matches[2] 
+                    }
+
+            i += 1
         
 def yield_function_from_py(py):
     # prove = False

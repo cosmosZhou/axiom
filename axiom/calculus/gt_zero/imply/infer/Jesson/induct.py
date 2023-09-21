@@ -63,7 +63,7 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[-2]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
     Eq << algebra.infer.given.et.infer.apply(Eq[-1])
 
@@ -72,7 +72,7 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[-2]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
     Eq << Eq.lt.this.apply(algebra.infer.flatten)
 
@@ -181,11 +181,11 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-06-01
-# updated on 2023-05-15
+# updated on 2023-08-26

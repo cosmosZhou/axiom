@@ -1,2 +1,2 @@
-from . import kroneckerDelta
 from . import identity
+from . import delta

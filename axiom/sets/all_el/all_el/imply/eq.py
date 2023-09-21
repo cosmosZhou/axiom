@@ -14,7 +14,7 @@ def prove(Eq):
     from axiom import sets
     n = Symbol(integer=True, positive=True)
     x = Symbol(complex=True, shape=(n,))
-    A, B = Symbol(etype=dtype.integer * n)
+    A, B = Symbol(etype=dtype.integer[n])
 
     Eq << apply(All[x:A](Element(x, B)), All[x:B](Element(x, A)))
 

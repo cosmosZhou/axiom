@@ -11,7 +11,7 @@ def apply(self, var=None, swap=False):
     assert n >= 0
     if swap:
         x, y = y, x
-    return Equal(self, Sum[k:0:n + 1](binomial(n, k) * x ** k * y ** (n - k)))
+    return Equal(self, Sum[k:n + 1](binomial(n, k) * x ** k * y ** (n - k)))
 
 
 @prove
@@ -43,14 +43,14 @@ def prove(Eq):
 
     Eq << algebra.cond.given.et.subs.apply(Eq.induct, *Eq[-1].args)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum_mul.to.add)
+    Eq << Eq[-1].this.rhs.apply(algebra.sum.mul.to.add)
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
     Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n=n)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

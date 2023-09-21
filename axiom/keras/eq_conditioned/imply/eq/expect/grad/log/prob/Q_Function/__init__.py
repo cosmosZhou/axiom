@@ -13,7 +13,7 @@ def apply(eq, k=None, π=None):
     st = s[t].as_boolean(surrogate=True)
     at = a[t].as_boolean(surrogate=True)
     prob = Probability[a:π](at, given=st)
-    
+
     return Equal(Expectation[r[t:], a[t]:π, s[t]](Derivative[π](log(prob)) * ReducedSum(r[t:])),
                  Expectation[a[t]:π, s[t]](Derivative[π](log(prob)) * Expectation[r[t:], a:π](ReducedSum(r[t:]) | at & st)))
 
@@ -36,16 +36,16 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Expectation[Conditioned]).apply(stats.expect.to.mul)
 
-    Eq << Eq[-1].this.rhs.find(Expectation[Conditioned[ReducedSum]]).apply(stats.expect_reducedSum.to.reducedSum.expect)
+    Eq << Eq[-1].this.rhs.find(Expectation[Conditioned[ReducedSum]]).apply(stats.expect.reducedSum.to.reducedSum.expect)
 
     Eq << stats.eq_conditioned.imply.eq_conditioned.independence_assumption.bidirectional.forget_histories.apply(Eq[0])
 
     Eq << Eq[-2].subs(Eq[-1])
 
-    Eq << Eq[-1].this.find(ReducedSum[Expectation]).apply(stats.reducedSum_expect.to.expect.reducedSum)
+    Eq << Eq[-1].this.find(ReducedSum[Expectation]).apply(stats.reducedSum.expect.to.expect.reducedSum)
 
     #https://spinningup.openai.com/en/latest/spinningup/extra_pg_proof2.html
-    
+
 
 
 if __name__ == '__main__':

@@ -1,20 +1,38 @@
 from util import *
 
-
-@apply
-def apply(self):
+def rewrite(self, deep=True):
+    shape = self.shape
     for i, block in enumerate(self.args):
-        if isinstance(block, BlockMatrix):
+        if isinstance(block, BlockMatrix) and block.shape == shape:
             break
     else:
-        return
+        return self
     
     args = [*self.args]
-    args[i] = 1
+    del args[i]
     factor = Mul(*args)
-    assert not factor.shape
-    block = [b * factor for b in block.args]
-    return Equal(self, BlockMatrix(block))
+    axis = block.axis
+    if axis == 0 or not factor.shape: 
+        if deep:
+            return BlockMatrix[axis]([rewrite(b * factor, deep=True) for b in block.args])
+        return BlockMatrix[axis]([b * factor for b in block.args])
+
+    if axis == 1:
+        if factor.is_BlockMatrix:
+            if len(factor.shape) == 1:
+                args = []
+                for b, f in zip(block.args, factor.args):
+                    if b.shape[-len(f.shape):] != f.shape:
+                        break
+                    args.append(b * f)
+                else:
+                    return BlockMatrix[axis](args)
+                
+    return self
+    
+@apply
+def apply(self, deep=True):
+    return Equal(self, rewrite(self, deep=deep))
 
 
 @prove

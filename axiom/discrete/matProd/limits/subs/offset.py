@@ -15,7 +15,7 @@ def prove(Eq):
     k = Symbol(integer=True, positive=True)
     f = Function(real=True, shape=(k, k))
     m = Symbol(integer=True, nonnegative=True, given=False)
-    Eq << apply(MatProduct[n:0:m](f(n)), d)
+    Eq << apply(MatProduct[n:m](f(n)), d)
 
     Eq << Eq[0].subs(m, 0)
 

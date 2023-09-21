@@ -7,12 +7,12 @@ def apply(eq, infer, eq_piece, all_et):
     x, S[(~x) @ A @ x] = infer.of(Infer[Unequal[0], Expr > 0])
     (j, i), ((L, S[i], S[j]), (sub, S[L[j, j]])) = \
     eq_piece.of(Less >> Equal[Indexed, Expr / Expr])
-    
+
     S[A[i, j]], (S[L[i, :j]], S[L[j, :j]]) = sub.of(Expr - Expr @ Conjugate)
-    
+
     (S[Equal(A[i, i], Norm(L[i,:i + 1]) ** 2)], S[Element(L[i, i], Interval.open(0, oo))], S[All[j:i](Equal(A[i, j], L[i, :j + 1] @ ~L[j, :j + 1]) & Element(L[i, j], S.Complexes))]), (S[i], S[0], t) = \
     all_et.of(All[And])
-    
+
     return A[t, t] > Norm(L[t, :t]) ** 2, All[j:t](Equal(A[t, j], L[t, :j + 1] @ ~L[j, :j + 1]) & Element(L[t, j], S.Complexes))
 
 @prove
@@ -93,7 +93,7 @@ def prove(Eq):
 
     Eq << algebra.all_eq.cond.imply.all.subs.apply(Eq[-1], Eq[-2])
 
-    Eq << Eq[-1].this.find(Indexed * Norm ** 2 * Conjugate).args[::2].apply(algebra.mul_conj.to.square.abs)
+    Eq << Eq[-1].this.find(Indexed * Norm ** 2 * Conjugate).args[::2].apply(algebra.mul.conj.to.square.abs)
 
     Eq << Eq[-1].this.lhs.find(Add).args[:2].apply(algebra.add.to.mul.re)
 
@@ -117,7 +117,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Re, Add).apply(discrete.add.to.matmul)
 
-    Eq << Eq[-1].this.find(Re, Add).apply(discrete.add.to.matmul.block.one.push)
+    Eq << Eq[-1].this.find(Re, Add).apply(discrete.add.to.matmul.block)
+
+    Eq << Eq[-1].this.find(BlockMatrix[Conjugate]).apply(algebra.block.to.conj)
 
     Eq << discrete.all_is_positive.gt_zero.imply.gt_zero.Cholesky.apply(Eq.Lii_is_positive, Eq[-1])
 
@@ -128,4 +130,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-06-22
-# updated on 2023-06-29
+# updated on 2023-09-18

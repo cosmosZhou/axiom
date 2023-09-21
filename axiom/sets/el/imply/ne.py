@@ -12,7 +12,7 @@ def apply(given):
 def prove(Eq):
     n = Symbol(integer=True, positive=True, given=True)
     x, y = Symbol(complex=True, shape=(n,), given=True)
-    C = Symbol(etype=dtype.complex * n, given=True)
+    C = Symbol(etype=dtype.complex[n], given=True)
     Eq << apply(Element(x, C - {y}))
 
     Eq << ~Eq[1]

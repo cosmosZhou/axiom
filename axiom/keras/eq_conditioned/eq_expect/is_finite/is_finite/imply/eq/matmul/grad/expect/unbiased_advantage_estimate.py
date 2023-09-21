@@ -89,21 +89,21 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Expectation[~Expectation]).apply(stats.expect.to.mul)
 
-    Eq << Eq[-1].this.find(Mul[~Expectation]).apply(stats.expect_conditioned.to.zero.st.grad.log.prob)
+    Eq << Eq[-1].this.find(Mul[~Expectation]).apply(stats.expect.conditioned.to.zero.st.grad.log.prob)
 
     Eq << Eq[-4].subs(Eq[-1])
 
     Eq << Eq[2].subs(Eq[1])
 
-    Eq << Eq[-1].this.find(Derivative).apply(calculus.grad_matmul.to.matmul.grad)
+    Eq << Eq[-1].this.find(Derivative).apply(calculus.grad.matmul.to.matmul.grad)
 
     Eq << keras.eq_conditioned.is_finite.imply.eq.matmul.grad.expect.policy_gradient_theorem.apply(Eq[0], Eq[-1])
 
     Eq << Eq[-1].this.rhs.find(Expectation).simplify()
 
     #https://arxiv.org/pdf/1506.02438.pdf#page=4
-    
-    
+
+
 
 
 if __name__ == '__main__':

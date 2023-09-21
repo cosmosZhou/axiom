@@ -26,13 +26,11 @@ def prove(Eq):
     a, b = Symbol(real=True, given=True)
     x = Symbol(real=True)
     f = Function(real=True)
-
     Eq << apply(a < b, is_continuous(f, a, b), is_differentiable(f, a, b))
 
     @Function(real=True)
     def g(x):
         return (b - a) * f(x) - (f(b) - f(a)) * x
-
     Eq.g_definition = g(x).this.defun()
 
     Eq << Eq.g_definition.subs(x, a)
@@ -58,7 +56,7 @@ def prove(Eq):
 
     Eq <<= Eq[1] & Eq[-1]
 
-    Eq << Eq[-1].this.expr.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.cond.given.et.subs, swap=True)
 
     Eq << algebra.all_et.given.et.all.apply(Eq[-1])
 
@@ -88,7 +86,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr - f(a)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2020-04-22
+# updated on 2023-08-26

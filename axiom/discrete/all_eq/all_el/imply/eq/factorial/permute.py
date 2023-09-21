@@ -29,7 +29,7 @@ def prove(Eq):
     from axiom import discrete, algebra, sets
 
     n = Symbol(domain=Range(2, oo))
-    S = Symbol(etype=dtype.integer * n)
+    S = Symbol(etype=dtype.integer[n])
     x = Symbol(**S.element_symbol().type.dict)
     i, j = Symbol(integer=True)
     Eq << apply(All[j:1:n, x:S](Element(Lamda[i:n](Piecewise((x[0], Equal(i, j)), (x[j], Equal(i, 0)), (x[i], True))), S)),
@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << Eq.permutation.limits[0][1].this.definition
 
-    Eq << discrete.abs_cup.to.factorial.apply(n)
+    Eq << discrete.abs.cup.to.factorial.apply(n)
 
     Eq << Eq[-1].this.lhs.arg.limits_subs(Eq[-1].lhs.arg.variable, Eq[-2].rhs.variable)
 
@@ -49,7 +49,7 @@ def prove(Eq):
 
     Eq <<= Eq[-2] & Eq[-1]
 
-    F = Function(etype=dtype.integer * n)
+    F = Function(etype=dtype.integer[n])
     F.eval = lambda e: conditionset(x, Equal(x.cup_finiteset(), e), S)
     e = Symbol(etype=dtype.integer)
     Eq << Subset(F(e), S, plausible=True)

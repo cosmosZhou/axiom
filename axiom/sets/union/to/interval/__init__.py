@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq <<= Eq[1] & Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq, index=0)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
     Eq << algebra.infer.given.et.infer.apply(Eq[-1])
 
@@ -40,7 +40,7 @@ def prove(Eq):
 
     Eq <<= Eq[-2] & Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq, index=0)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
     Eq << algebra.infer.given.et.infer.apply(Eq[-1])
 
@@ -50,7 +50,7 @@ def prove(Eq):
 
     Eq <<= Eq[-2] & Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq, index=0)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
     Eq << Infer(a <= b, Equal(Max(a, b), b), plausible=True)
 
@@ -58,7 +58,7 @@ def prove(Eq):
 
     Eq <<= Eq[2] & Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq, index=0)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
     Eq << algebra.infer.given.et.infer.apply(Eq[-1])
 
@@ -68,7 +68,7 @@ def prove(Eq):
 
     Eq <<= Eq[-2] & Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq, index=0)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
     Eq << algebra.infer.given.et.infer.apply(Eq[-1])
 
@@ -78,11 +78,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(sets.subset.imply.eq.union)
 
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-06-04
 from . import abs
-# updated on 2023-06-18
+# updated on 2023-08-26

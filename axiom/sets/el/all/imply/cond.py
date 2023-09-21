@@ -31,7 +31,7 @@ def apply(contains, forall):
 def prove(Eq):
     from axiom import algebra
     n = Symbol(complex=True, positive=True)
-    A = Symbol(etype=dtype.complex * n)
+    A = Symbol(etype=dtype.complex[n])
     a, b = Symbol(complex=True, shape=(n,))
 
     f = Function(complex=True, shape=())

@@ -5,6 +5,7 @@
 <?php
 require_once 'utility.php';
 require_once 'mysql.php';
+require_once 'init.php';
 
 // ^ *error_log
 
@@ -35,7 +36,8 @@ switch ($keyInput) {
 $module = $_GET[$keyInput];
 $module = str_replace('/', '.', $module);
 
-$graph = mysql\establish_hierarchy($module, $invert);
+$user = get_user();
+$graph = establish_hierarchy($user, $module, $invert);
 
 // $graph->convert_set_to_list();
 $graph->detect_cycle_traceback($module, $parent);
@@ -76,11 +78,11 @@ if ($parent) {
 
 <script type=module>
 createApp('hierarchy', {
-	module : <?php echo \std\encode($module)?>,
-	graph : <?php echo \std\encode($graph)?>,
-	traceback: <?php echo \std\encode($traceback)?>,
-	keyInput : <?php echo \std\encode($keyInput)?>,
-    deep: <?php echo \std\encode($deep)?>,
+	module : <?php echo std\encode($module)?>,
+	graph : <?php echo std\encode($graph)?>,
+	traceback: <?php echo std\encode($traceback)?>,
+	keyInput : <?php echo std\encode($keyInput)?>,
+    deep: <?php echo std\encode($deep)?>,
 });
 
 </script>

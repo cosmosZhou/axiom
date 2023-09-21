@@ -85,11 +85,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(calculus.grad.to.integral)
 
-    Eq << Eq[-1].this.find(Derivative).apply(calculus.grad_mul.to.add)
+    Eq << Eq[-1].this.find(Derivative).apply(calculus.grad.mul.to.add)
 
-    Eq << Eq[-1].this.find(Derivative[Bool]).apply(calculus.grad_bool.to.zero)
+    Eq << Eq[-1].this.find(Derivative[Bool]).apply(calculus.grad.bool.to.zero)
 
-    Eq << Eq[-1].this.find(Derivative).apply(calculus.grad_integral.to.mul.grad)
+    Eq << Eq[-1].this.find(Derivative).apply(calculus.grad.integral.to.mul.grad)
 
     Eq << Eq[-1].this.find(Bool ** 2).apply(algebra.square.to.bool)
 
@@ -101,7 +101,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Pow * Pow).args[1:3].apply(algebra.mul.to.pow.add.exponent)
 
-    Eq << Eq[-1] * (sqrt(S.Pi) * gamma(k / 2))
+    Eq << Eq[-1] * (sqrt(S.Pi) * Gamma(k / 2))
 
     Eq << Eq[-1].this.lhs.apply(calculus.integral.limits.absorb)
 
@@ -109,7 +109,7 @@ def prove(Eq):
     Y = Eq[-1].lhs.variable
     Eq << Eq[-1].this.lhs.apply(calculus.integral.limits.subs, Y, y * sin(t) ** 2)
 
-    Eq << Eq[-1].this.find(-sin ** 2).args[2].apply(geometry.square_sin.to.sub.square.cos)
+    Eq << Eq[-1].this.find(-sin ** 2).args[2].apply(geometry.square.sin.to.sub.square.cos)
 
     Eq << Eq[-1].this.find(Mul[One - cos ** 2]).apply(algebra.mul.to.add)
 
@@ -121,14 +121,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(sin * Pow).apply(algebra.mul.to.pow.add.exponent)
 
-    Eq << Eq[-1].this.find(Integral).apply(calculus.integral_sin.to.mul.gamma.wallis)
+    Eq << Eq[-1].this.find(Integral).apply(calculus.integral.sin.to.mul.gamma.wallis)
 
     Eq << Infer(Eq[2], Eq.induct, plausible=True)
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=k, start=1)
     #https://www.asmeurer.com/blog/
-    
-    
+
+
 
 
 if __name__ == '__main__':

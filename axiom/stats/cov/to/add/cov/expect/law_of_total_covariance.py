@@ -7,12 +7,12 @@ def apply(self, *vars):
     for v in vars:
         given &= Equal(v, v.surrogate)
         assert v.is_probable
-    
+
     lhs, rhs = self.of(Covariance)
     assert not lhs.is_Conditioned
     assert not rhs.is_Conditioned
 
-    return Equal(self, 
+    return Equal(self,
                  Covariance(Expectation(lhs | given), Expectation(rhs | given)) + Expectation(Covariance(lhs, rhs, given=given)))
 
 @prove
@@ -24,14 +24,14 @@ def prove(Eq):
     z = Symbol(real=True, probable=True)
     Eq << apply(Covariance(x, y), z)
 
-    Eq << Eq[0].this.rhs.find(Covariance).apply(stats.cov_expect.to.sub.expect)
+    Eq << Eq[0].this.rhs.find(Covariance).apply(stats.cov.expect.to.sub.expect)
 
-    Eq << Eq[-1].this.find(Expectation[Covariance]).apply(stats.expect_cov.to.sub.expect)
+    Eq << Eq[-1].this.find(Expectation[Covariance]).apply(stats.expect.cov.to.sub.expect)
 
     Eq << Eq[-1].this.lhs.apply(stats.cov.to.sub.expect)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

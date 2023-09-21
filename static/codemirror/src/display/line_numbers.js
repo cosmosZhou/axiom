@@ -1,8 +1,7 @@
 import { lineNumberFor } from "../line/utils_line.js"
 import { compensateForHScroll } from "../measurement/position_measurement.js"
 import { elt } from "../util/dom.js"
-
-import { updateGutterSpace } from "./update_display.js"
+import { updateGutterSpace } from "../util/operation_group.js"
 
 // Re-align line numbers and gutter marks to compensate for
 // horizontal scrolling.
@@ -45,4 +44,15 @@ export function maybeUpdateLineNumberWidth(cm) {
     return true
   }
   return false
+}
+
+// Sync scroller and scrollbar, ensure the gutter elements are
+// aligned.
+export function setScrollLeft(cm, val, isScroller, forceScroll) {
+  val = Math.max(0, Math.min(val, cm.display.scroller.scrollWidth - cm.display.scroller.clientWidth))
+  if ((isScroller ? val == cm.doc.scrollLeft : Math.abs(cm.doc.scrollLeft - val) < 2) && !forceScroll) return
+  cm.doc.scrollLeft = val
+  alignHorizontally(cm)
+  if (cm.display.scroller.scrollLeft != val) cm.display.scroller.scrollLeft = val
+  cm.display.scrollbars.setScrollLeft(val)
 }

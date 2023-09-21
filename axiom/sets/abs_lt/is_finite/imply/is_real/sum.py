@@ -8,7 +8,7 @@ def apply(lt, is_finite):
     if cond:
         S[0], S[oo] = cond
     assert k.is_integer
-    return Element(Sum[k:0:oo](γ ** k * fk), Interval(-oo, oo))
+    return Element(Sum[k:oo](γ ** k * fk), Interval(-oo, oo))
 
 
 
@@ -19,7 +19,7 @@ def prove(Eq):
     r = Symbol(shape=(oo,), real=True)
     γ = Symbol(real=True)
     k = Symbol(integer=True)
-    Eq << apply(Abs(γ) < 1, Less(Sup[k:0:oo](Abs(r[k])), oo))
+    Eq << apply(Abs(γ) < 1, Less(Sup[k:oo](Abs(r[k])), oo))
 
     Eq.gt_zero, Eq.le_zero = algebra.cond.given.et.infer.split.apply(Eq[-1], cond=γ > 0)
 

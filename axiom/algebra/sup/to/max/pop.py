@@ -14,7 +14,7 @@ def prove(Eq):
     i = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
     f = Function(real=True)
-    Eq << apply(Sup[i:0:n + 1](f(i)))
+    Eq << apply(Sup[i:n + 1](f(i)))
     
     
     Eq << Eq[-1].this.lhs.apply(algebra.sup.to.max.split, cond={n})

@@ -15,7 +15,7 @@ def prove(Eq):
 
     b, D = Symbol(integer=True, positive=True)
     s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    
+
     a = Symbol(shape=(oo,), integer=True, random=True) #actions
     r = Symbol(shape=(oo,), real=True, random=True) #rewards
     π = Symbol(shape=(D,), real=True) #trainable weights for the agent
@@ -45,7 +45,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Expectation[~Expectation]).apply(stats.expect.to.mul)
 
-    Eq << Eq[-1].this.find(Mul[~Expectation]).apply(stats.expect_conditioned.to.zero.st.grad.log.prob)
+    Eq << Eq[-1].this.find(Mul[~Expectation]).apply(stats.expect.conditioned.to.zero.st.grad.log.prob)
 
     Eq << Eq.hypothesis.subs(Eq[-1])
 

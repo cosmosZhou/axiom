@@ -22,12 +22,12 @@ def prove(Eq):
     from axiom import sets, algebra
 
     k = Symbol(integer=True, positive=True)
-    s = Symbol(etype=dtype.integer * k, given=True)
+    s = Symbol(etype=dtype.integer[k], given=True)
     Eq << apply(Card(s) > 0)
 
     Eq << sets.gt.imply.el.range.apply(Eq[0])
 
-    m = Symbol(domain=Range(1, oo))
+    m = Symbol(integer=True, positive=True)
     Eq << sets.el.imply.any_eq.apply(Eq[-1], var=m)
 
     Eq << Eq[-1].this.expr.apply(sets.eq.imply.any_et, simplify=None)
@@ -36,7 +36,17 @@ def prove(Eq):
 
     Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], 1)
 
+    Eq << sets.el.imply.eq.intersect.apply(Eq[2])
+
+    Eq << Eq[-2].subs(Eq[-1])
+
+    Eq << Eq[-1].this.apply(algebra.any.limits.separate)
+
+    Eq << Eq[-1].this.apply(algebra.any.to.ou.doit.setlimit)
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2021-02-03
+# updated on 2023-08-26

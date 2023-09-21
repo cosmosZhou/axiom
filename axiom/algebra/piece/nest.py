@@ -8,7 +8,6 @@ def apply(self, index=0, pivot=-1):
     expr, cond = ecs[index]
     tail = ecs[index + 1:]
     
-    import std
     if cond.is_And:
         eqs = cond.args
         
@@ -19,10 +18,10 @@ def apply(self, index=0, pivot=-1):
         eqs = [NotElement(cond.lhs, u) for u in cond.rhs.of(Union)]
         
     elif cond.is_Subset:
-        eqs = [is_Subset(cond.lhs, u) for u in cond.rhs.of(Intersection)]
+        eqs = [Subset(cond.lhs, u) for u in cond.rhs.of(Intersection)]
         
     elif cond.is_Supset:
-        eqs = [is_Supset(cond.lhs, u) for u in cond.rhs.of(Union)]
+        eqs = [Supset(cond.lhs, u) for u in cond.rhs.of(Union)]
         
     former, latter = std.array_split(eqs, pivot)
 
@@ -38,7 +37,7 @@ def prove(Eq):
 
     k = Symbol(integer=True, positive=True)
     x, y = Symbol(real=True, shape=(k,))
-    A, B, C = Symbol(etype=dtype.real * k)
+    A, B, C = Symbol(etype=dtype.real[k])
     f, g, h = Function(shape=(), real=True)
     Eq << apply(Piecewise((g(x), Element(x, C)), (f(x) * g(y), Element(x, A & B)), (h(x, y), True)), index=1)
 

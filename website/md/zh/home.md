@@ -13,7 +13,7 @@
 * 所述公理化，是指所有已证明的数学定理，归根结底是通过有限个公理经过有限次逻辑运算推导出来的，而公理是不需要证明的，其真伪是人为假定成立的，整个数学定理库就是建立在公理的假设之上展开构建的；当然根据哥德尔不完备性定理（Goedel Incompleteness Theorem），任何一个自洽的推理系统，必然存在不能证明，亦不能证伪的命题，此类命题不能通过有限个公理经过有限次逻辑运算（布尔运算）导出；
 * 所述严密的推理逻辑，就是依据[希尔伯特纲领](https://en.wikipedia.org/wiki/Hilbert%27s_program)中的申明，在论证过程中，以[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定逻辑来引导程序进行推理，力求确保计算结果在[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定语法规则内有效，且所有推理都依据某个公理或者定理进行。在本系统中，所有数学命题都将被[Python](https://www.python.org/)语句精确描述出来，不存在自然语言描述数学问题时存在的歧义性，也不存在浮点数引起的误差问题。
 
-该系统的三个基本要件是[Symbol](../index.php?symbol=Symbol), [Function](../index.php?symbol=Function), Theorem；
+该系统的三个基本要件是[Symbol](../?symbol=Symbol), [Function](../?symbol=Function), Theorem；
 * Symbol是一个字母或者数字组合的变量。变量命名规则与[Python](https://www.python.org/)一致。用于定义任意类型的抽象数学符号，比如  
 n = Symbol(integer=True, positive=True, random=True)表示一个正整数随机变量,   
 p, q = Symbol(prime=True)表示p是一个素数, q也是一个素数；   
@@ -24,7 +24,7 @@ b = Symbol(hyper_real=True, shape=(oo, oo))表示一个无限大的hyper real矩
 c = Symbol(complex=True, shape=(n, n, n))表示一个n * n * n的复数张量，  
 A = Symbol(etype=dtype.real, measurable=True)，表示一个[可测](https://en.wikipedia.org/wiki/Measure_(mathematics))实数集合，etype意思为element type;  
 B = Symbol(etype=dtype.real, countable=True)，表示一个[可数](https://en.wikipedia.org/wiki/Countable_set)实数集合;  
-C = Symbol(etype=dtype.integer, shape=(n,))，表示一个整数集合的列表，该列表有n个元素；  
+C = Symbol(etype=dtype.integer[k], shape=(n,))，表示一个元素为一个列表（该列表长度为k，列表元素为整数）的集合的列表，该列表有n个元素；  
 Q = Symbol(etype=dtype.rational.set)，表示一个集合，它的元素是一个有理数集合。
 * Function表示对其它符号或者函数的某种运算；  
 f, f1 = Function(hyper_real=True)，表示f, f1都是抽象hyper real函数。  
@@ -34,12 +34,12 @@ f = Function(real=True, continuous=True)，表示一个实数抽象（在任意�
 f = Function(real=True, differentiable=True)，表示一个实数抽象（在任意点）可微函数。  
 f = Function(measurable=True, domain=Interval(0, 1))，表示一个可测实数抽象函数，值域为[0, 1]。  
 f = Function(real=True, integrable=True)，表示一个实数抽象（在任意区间内）Lebesgue可积函数。  
-以及系统内置函数，比如[cos](../index.php?symbol=cos)(x), [sin](../index.php?symbol=sin)(x), [tan](../index.php?symbol=tan)(x), [log](../index.php?symbol=log)(x), [exp](../index.php?symbol=exp)(x), 以及大型运算符[Sum](../index.php?symbol=Sum)\[k:a:b\](h\[k\]), [Product](../index.php?symbol=Product)\[k:a:b\](h\[k\]), [All](../index.php?symbol=All)\[k:a:b\](h\[k\] > t\[k\]), [Any](../index.php?symbol=Any)\[k:a:b\](h\[k\] > t\[k\])等等，所有函数都不会进行浮点数运算，因为在定理推导系统中，没有浮点数的概念，一切都是严格意义上的数学符号与函数。  
+以及系统内置函数，比如[cos](../?symbol=cos)(x), [sin](../?symbol=sin)(x), [tan](../?symbol=tan)(x), [log](../?symbol=log)(x), [exp](../?symbol=exp)(x), 以及大型运算符[Sum](../?symbol=Sum)\[k:a:b\](h\[k\]), [Product](../?symbol=Product)\[k:a:b\](h\[k\]), [All](../?symbol=All)\[k:a:b\](h\[k\] > t\[k\]), [Any](../?symbol=Any)\[k:a:b\](h\[k\] > t\[k\])等等。  
 * Theorem表示一个定理或者公理；    
 Theorem的入参是一个python表达式,可以是布尔（Boolean）表达式或者是关于Symbol与Function的表达式，出参是一个布尔（Boolean）表达式。它以定理库的形式储存。基本用法就是Theorem.apply(...);  
 比如  
 a, b, c = Symbol(complex=True)  
-[algebra.poly_is_zero.imply.et.infer.cubic.apply](../index.php?module=algebra.poly_is_zero.imply.et.infer.cubic)(Equal(x ** 3 + a * x ** 2 + b * x + c, 0), x=x),  表示对一个一元三次方程在复数域内求解。  
+[algebra.poly_is_zero.imply.et.infer.cubic.apply](../?module=algebra.poly_is_zero.imply.et.infer.cubic)(Equal(x ** 3 + a * x ** 2 + b * x + c, 0), x=x),  表示对一个一元三次方程在复数域内求解。  
 
 其中数集的关系定义为：  
 [prime](https://en.wikipedia.org/wiki/Prime_number) ⊂ [natural](https://en.wikipedia.org/wiki/Natural_number) ⊂ [integer](https://en.wikipedia.org/wiki/Integer) ⊂ extended_integer  
@@ -64,7 +64,7 @@ extended_integer ⊂ extended_rational ⊂ [extended_real](https://en.wikipedia.
 5，分治法  
 分治法(divide & conquer)就是分类讨论法，将一个复杂的问题拆解为若干简单问题的推理过程  
 6，溯因法  
-溯因法(abduction)是一种已知结果倒推可能原因的推理方法  ，
+溯因法(abduction)是一种已知结果倒推可能原因的推理方法
 <br><br>
 ------
 
@@ -74,29 +74,26 @@ extended_integer ⊂ extended_rational ⊂ [extended_real](https://en.wikipedia.
   
 目前积累了<label id=count>____</label>个已知数学定理用于交互式半机械化数学推导。涉及：	
 	
-* [algebra](../index.php?module=algebra) 初等代数，主要涉及等式的恒等、换元变换、有限级数[∑裂项求和](../index.php?module=algebra.sum.to.add.telescope)、∏裂项求积技巧，[一元一次方程](../index.php?module=algebra.poly_is_zero.imply.et.infer.simple_equation)，[一元二次方程](../index.php?module=algebra.poly_is_zero.imply.et.infer.quadratic)，[一元三次方程](../index.php?module=algebra.poly_is_zero.imply.et.infer.cubic)，[一元四次方程](../index.php?module=algebra.poly_is_zero.imply.et.infer.quartic)的求解问题，[分部求和](../index.php?module=algebra.sum.to.add.by_parts)定理(Abel变换)；
-[数学归纳法](../index.php?module=algebra.ne_zero.infer.imply.ne_zero.induct)的证明；
-* [sets](../index.php?module=sets) 集合论, 即sets theory，集合论是整个数学分析、数学推导系统的理论核心；涉及用集合论术语ForAll（任意）, Exists（存在）, ‘属于’ （Element），‘包含’（Subset）描述的命题，比如
-[容斥原理](../index.php?module=sets/imply/eq/principle/inclusion_exclusion/basic)的证明。可以说，集合论是数学推理的根本语法。
-* [geometry](../index.php?module=geometry) 几何学，包含不少三角函数恒等式，比如
-[和差化积](../index.php?module=geometry.cos.to.add.principle)，[积化和差](../index.php?module=geometry.mul.to.add.sin)，等等。
-* [calculus](../index.php?module=calculus) 微积分，主要包含以下内容： 
-[极限定义](../index.php?module=calculus/eq/to/any_all/limit_definition) 及其理论，它是微积分的理论基础； 
-[无穷级数](../index.php?module=calculus.eq.imply.eq.series.infinite.coefficient) 的运算性质；
-[分部积分](../index.php?module=calculus.integral.to.add.by_parts) 定理；
-三角函数及其它少数超越函数的积分；
-* [discrete](../index.php?module=discrete) 数论，离散数学，组合数学，线性代数，[第二类Stirling数](../index.php?module=discrete.stirling2.to.add.recurrence)的组合学推导，
-[Catalan数](../index.php?module=discrete.eq.eq.imply.eq.catalan.recurrence)的推导）， 
-[连分数](../index.php?module=discrete.add.to.pow.HK.recurrence)初步理论；[Cholesky矩阵分解](../index.php?module=discrete.eq_adjoint.infer_gt_zero.imply.any.eq.Cholesky)存在定理。
-* [stats](../index.php?module=stats) 概率统计学，比如[Bayes公式](../index.php?module=stats.prob.to.div.prob.bayes)，[大数定理](../index.php?module=stats.eq_conditioned.eq_expect.eq_var.imply.eq.limit.prob.law_of_large_numbers)；
-* [keras](../index.php?module=keras) 机器学习，深度学习中的数学模型，
-[LSTM](../index.php?module=keras.eq.eq.imply.eq.long_short_term_memory)，
-[GRU](../index.php?module=keras.imply.eq.gated_recurrent_unit)，
-[CNN](../index.php?module=keras.eq_lamda_bool.imply.eq.conv1d)，
-[BERT](../index.php?module=keras.matmul_softmax.to.lamda.div.scaled_dot_product_attention)，
-[GPT](../index.php?module=keras.matmul_softmax.to.lamda.matmul.gpt)，
-条件自由场[CRF](../index.php?module=keras.ne_zero.eq.eq.eq.imply.et.crf)模型的计算公式的推导，以及KMeans
-[聚类收敛性](../index.php?module=sets.el.notin.le.imply.le.st.variance)证明。强化学习的[策略梯度定理](../index.php?module=keras.eq_conditioned.eq_expect.is_finite.is_finite.imply.eq.matmul.grad.expect.unbiased_advantage_estimate)。  
+* [algebra](../?module=algebra) 初等代数，主要涉及等式的恒等、换元变换、有限级数[∑裂项求和](../?module=algebra.sum.to.add.telescope)、∏裂项求积技巧，[一元一次方程](../?module=algebra.poly_is_zero.imply.et.infer.simple_equation)，[一元二次方程](../?module=algebra.poly_is_zero.imply.et.infer.quadratic)，[一元三次方程](../?module=algebra.poly_is_zero.imply.et.infer.cubic)，[一元四次方程](../?module=algebra.poly_is_zero.imply.et.infer.quartic)的求解问题，[分部求和](../?module=algebra.sum.to.add.by_parts)定理；
+[数学归纳法](../?module=algebra.ne_zero.infer.imply.ne_zero.induct)的证明；
+* [sets](../?module=sets) 集合论, 即sets theory，集合论是整个数学分析、数学推导系统的理论核心；比如
+[容斥原理](../?module=sets/imply/eq/principle/inclusion_exclusion/basic)的证明。
+* [geometry](../?module=geometry) 几何学，包含不少三角函数恒等式，比如
+[和差化积](../?module=geometry.cos.to.add.principle)，[积化和差](../?module=geometry.mul.to.add.sin)，等等。
+* [calculus](../?module=calculus) 微积分，主要包含以下内容： 
+[极限定义](../?module=calculus/eq/to/any_all/limit_definition) 及其理论；[无穷级数](../?module=calculus.eq.imply.eq.series.infinite.coefficient) 的运算性质；
+[分部积分](../?module=calculus.integral.to.add.by_parts) 定理；
+* [discrete](../?module=discrete) 数论，离散数学，组合数学，线性代数，[第二类Stirling数](../?module=discrete.stirling2.to.add.recurrence)的组合学推导，
+[Catalan数](../?module=discrete.eq.eq.imply.eq.catalan.recurrence)的推导，[连分数](../?module=discrete.add.to.pow.HK.recurrence)初步理论；[Cholesky矩阵分解](../?module=discrete.eq_adjoint.infer_gt_zero.imply.any.eq.Cholesky)存在定理。
+* [stats](../?module=stats) 概率统计学，比如[Bayes公式](../?module=stats.prob.to.div.prob.bayes)，[大数定理](../?module=stats.eq_conditioned.eq_expect.eq_var.imply.eq.limit.prob.law_of_large_numbers)；
+* [keras](../?module=keras) 机器学习，深度学习中的数学模型，
+[LSTM](../?module=keras.eq.eq.imply.eq.long_short_term_memory)，
+[GRU](../?module=keras.imply.eq.gated_recurrent_unit)，
+[CNN](../?module=keras.eq_lamda_bool.imply.eq.conv1d)，
+[BERT](../?module=keras.matmul_softmax.to.lamda.div.scaled_dot_product_attention)，
+[GPT](../?module=keras.matmul_softmax.to.lamda.matmul.gpt)，
+条件自由场[CRF](../?module=keras.ne_zero.eq.eq.eq.imply.et.crf)，KMeans
+[聚类收敛性](../?module=sets.el.notin.le.imply.le.st.variance)、用于Vision Transformer的[广义旋转位置编码](../?module=module=keras.eq_mul.eq_mul.eq_block.imply.eq.matmul.softmax.to.lamda.sum.plane)、强化学习的[策略梯度定理](../?module=keras.eq_conditioned.eq_expect.is_finite.is_finite.imply.eq.matmul.grad.expect.unbiased_advantage_estimate)的推导及证明。  
 
 <br><br>
 -------

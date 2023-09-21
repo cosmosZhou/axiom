@@ -2,7 +2,8 @@ import { chrome, gecko, ie, mac, presto, safari, webkit } from "../util/browser.
 import { e_preventDefault } from "../util/event.js"
 
 import { updateDisplaySimple } from "./update_display.js"
-import { setScrollLeft, updateScrollTop } from "./scrolling.js"
+import { updateScrollTop } from './highlight_worker.js'
+import { setScrollLeft } from "./line_numbers.js"
 
 // Since the delta values reported on mouse wheel events are
 // unstandardized between browsers and even browser versions, and

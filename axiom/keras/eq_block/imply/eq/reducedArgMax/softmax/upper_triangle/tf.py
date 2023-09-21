@@ -42,15 +42,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(ReducedArgMax[Lamda]).apply(algebra.reducedArgMax.to.lamda.reducedArgMax)
 
-    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.add)
+    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.add)
 
-    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.reducedArgMax)
+    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.reducedArgMax)
 
-    Eq << Eq[-1].this.rhs.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax_exp.to.reducedArgMax)
+    Eq << Eq[-1].this.rhs.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax.exp.to.reducedArgMax)
 
-    Eq << Eq[-1].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.add)
+    Eq << Eq[-1].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.add)
 
-    Eq << Eq[-1].this.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax_exp.to.reducedArgMax)
+    Eq << Eq[-1].this.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax.exp.to.reducedArgMax)
 
     Eq << Eq[-1].this.find(BlockMatrix).apply(algebra.block.to.lamda.piece)
 
@@ -58,7 +58,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.add)
 
-    Eq.eq_reducedArgMax = Eq[-1].this.find(Lamda[Piecewise]).apply(algebra.lamda_piece.to.block)
+    Eq.eq_reducedArgMax = Eq[-1].this.find(Lamda[Piecewise]).apply(algebra.lamda.piece.to.block)
 
     Eq.eq_lamda = Equal(
         Lamda[i:Min(u, n) - 1](z[i + n + 1 - Min(n, u)]),
@@ -88,7 +88,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.reducedArgMax.to.lamda.reducedArgMax)
 
-    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.reducedArgMax)
+    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.reducedArgMax)
 
     Eq << Eq[-1].subs(Eq.zi_min_def.reversed)
 
@@ -104,8 +104,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(ReducedArgMax).arg.definition
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

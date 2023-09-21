@@ -17,7 +17,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     n = Symbol(complex=True, positive=True)
-    A, B = Symbol(etype=dtype.complex * n, given=True)
+    A, B = Symbol(etype=dtype.complex[n], given=True)
     Eq << apply(Subset(B, A))
 
     Eq << sets.subset.given.is_empty.complement.apply(Eq[0])

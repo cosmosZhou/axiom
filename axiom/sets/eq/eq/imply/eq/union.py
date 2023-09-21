@@ -13,7 +13,7 @@ def apply(equality_A, equality_B):
 @prove
 def prove(Eq):
     n = Symbol(integer=True, positive=True)
-    A, B, X, Y = Symbol(etype=dtype.integer * n)
+    A, B, X, Y = Symbol(etype=dtype.integer[n])
 
     Eq << apply(Equal(A, B), Equal(X, Y))
 

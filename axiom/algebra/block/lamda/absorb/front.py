@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << algebra.eq.given.is_zero.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.add_piece.to.piece)
+    Eq << Eq[-1].this.lhs.apply(algebra.add.piece.to.piece)
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.et.invert, 0)
 

@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << Eq[-1].lhs.indices[0].this.apply(discrete.matmul.to.sum)
 
-    Eq << Eq[-1].rhs.expr.args[1].this.apply(algebra.kroneckerDelta.to.piece)
+    Eq << Eq[-1].rhs.expr.args[1].this.apply(algebra.delta.to.piece)
 
     Eq << algebra.eq.eq.imply.eq.subs.rhs.apply(Eq[-1], Eq[-2])
 

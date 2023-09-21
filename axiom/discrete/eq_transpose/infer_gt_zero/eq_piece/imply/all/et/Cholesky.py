@@ -69,7 +69,7 @@ def prove(Eq):
 
     Eq <<= sets.is_real.imply.eq.square.abs.apply(Eq[-2], reverse=True), Eq[-1] - Add(*Eq[-1].lhs.args[1:])
 
-    Eq << Eq[-1].subs(Eq[-2]).this.find(Norm ** 2).apply(algebra.square_norm.to.sub.push)
+    Eq << Eq[-1].subs(Eq[-2]).this.find(Norm ** 2).apply(algebra.square.norm.to.sub.push)
 
     Eq.induct = Eq.hypothesis.subs(t, t + 1)
 

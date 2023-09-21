@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq <<= Eq.eq & Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
     Eq << algebra.infer.given.et.infer.apply(Eq[-1])
 
@@ -40,7 +40,7 @@ def prove(Eq):
 
     Eq <<= Eq.suffice_eq & Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
     Eq << algebra.infer.given.et.infer.apply(Eq[-1])
 
@@ -76,7 +76,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(sets.le.ge.el.notin.imply.le.st.variance)
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2021-03-25
+# updated on 2023-08-26

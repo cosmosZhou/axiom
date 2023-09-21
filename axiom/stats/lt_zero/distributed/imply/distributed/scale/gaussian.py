@@ -19,7 +19,7 @@ def prove(Eq):
     Eq << apply(a < 0, Distributed(x, NormalDistribution(mu, sigma ** 2)), b)
 
     y = Symbol(real=True)
-    
+
     Eq << stats.distributed.given.eq.prob.apply(Eq[-1], y)
 
     Eq << algebra.lt_zero.imply.eq.abs.apply(Eq[0])
@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq << Eq.eq_prob.lhs.this.apply(stats.prob.to.grad)
 
-    
+
     Eq << stats.distributed.imply.eq.prob.apply(Eq[1])
 
     Eq << Eq[-2].subs(Eq[-1])
@@ -47,14 +47,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Integral).apply(calculus.integral.doit.bool)
 
-    Eq << Eq[-1].this.find(Derivative).apply(calculus.grad_integral.to.mul.grad)
+    Eq << Eq[-1].this.find(Derivative).apply(calculus.grad.integral.to.mul.grad)
 
     Eq << Eq[-1].this.find(Derivative).doit()
 
     Eq << Eq[-1].this.find(Exp[~Mul]).find(Add).apply(algebra.add.to.mul.together)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

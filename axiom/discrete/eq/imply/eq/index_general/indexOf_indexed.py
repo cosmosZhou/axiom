@@ -7,10 +7,10 @@ def apply(given, j=None):
     x_cup_finiteset, interval = given.of(Equal)
     n = interval.max() + 1
     assert interval.min() == 0
-    
+
     arg, (k, a, S[a + n]) = x_cup_finiteset.of(Cup[FiniteSet])
     x = Lamda[k:a:a + n](arg).simplify()
-    
+
     if j is None:
         j = Symbol(domain=Range(n), given=True)
 
@@ -48,7 +48,7 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq.xj_notcontains
 
-    Eq << discrete.eq.imply.eq.index.kroneckerDelta.indexed.apply(Eq[0], i, j)
+    Eq << discrete.eq.imply.eq.index.delta.indexed.apply(Eq[0], i, j)
 
     Eq.ou1 = algebra.cond.imply.ou.subs.apply(Eq[-1], i, Eq[1].lhs)
 
@@ -70,12 +70,12 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq.equality)
 
-    Eq << Eq[-1].this.apply(algebra.eq.simplify.kroneckerDelta)
+    Eq << Eq[-1].this.apply(algebra.eq.simplify.delta)
 
     Eq << Eq[-1].reversed
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

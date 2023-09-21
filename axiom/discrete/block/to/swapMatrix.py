@@ -27,7 +27,7 @@ def prove(Eq):
     h, k = Symbol(domain=Range(n + 1))
     Eq << (V[h, k].this.definition, W[h, k].this.definition)
 
-    Eq <<= Eq[-1].this.rhs.apply(algebra.piece.to.kroneckerDelta), Eq[-2].this.rhs.apply(algebra.piece.to.kroneckerDelta)
+    Eq <<= Eq[-1].this.rhs.apply(algebra.piece.to.delta), Eq[-2].this.rhs.apply(algebra.piece.to.delta)
 
     Eq << Eq[-2] - Eq[-1]
 
@@ -41,8 +41,8 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

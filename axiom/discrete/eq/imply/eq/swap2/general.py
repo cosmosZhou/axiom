@@ -22,7 +22,7 @@ def prove(Eq):
     from axiom import discrete, algebra
 
     n = Symbol(domain=Range(2, oo))
-    S = Symbol(etype=dtype.integer * n)
+    S = Symbol(etype=dtype.integer[n])
     x = Symbol(**S.element_symbol().type.dict)
     i, j = Symbol(integer=True)
     Eq << apply(All(Element(Lamda[i:n](Piecewise((x[0], Equal(i, j)), (x[j], Equal(i, 0)), (x[i], True))), S), (j, 1, n), (x, S)))
@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq.given = Eq[0].subs(Eq[-1].reversed)
 
-    Eq << discrete.lamda_indexed.to.matmul.swap.apply(x, w)
+    Eq << discrete.lamda.indexed.to.matmul.swap.apply(x, w)
 
     Eq << Eq[-1].subs(Eq[-1].rhs.args[0].indices[0], 0)
 

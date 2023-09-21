@@ -1,4 +1,4 @@
-import { onBlur } from "../display/focus.js"
+import { onBlur } from "../display/blur.js"
 import { on } from "../util/event.js"
 
 // These must be handled carefully, because naively registering a

@@ -14,7 +14,7 @@ def apply(imply, var=None):
 def prove(Eq):
     from axiom import sets
     n = Symbol(complex=True, positive=True)
-    A, B = Symbol(etype=dtype.complex * n, given=True)
+    A, B = Symbol(etype=dtype.complex[n], given=True)
 
     Eq << apply(Supset(B, A))
 

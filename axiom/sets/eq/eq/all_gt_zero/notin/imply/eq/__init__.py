@@ -1,1 +1,1 @@
-from . import stirling2
+from . import stirling

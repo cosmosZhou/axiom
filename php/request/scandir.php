@@ -30,12 +30,12 @@ foreach (scandir($folder) as $file) {
         case "__init__.py":
             break;
         default:
-            if (!\std\endsWith($file, '.py')) {
+            if (!std\endsWith($file, '.py')) {
                 $packages[] = $file;
             }
     }
 }
 
-echo \std\encode($packages);
+echo std\encode($packages);
 
 ?>

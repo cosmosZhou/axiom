@@ -15,7 +15,7 @@ def prove(Eq):
     n = Symbol(positive=True, integer=True)
     x = Symbol(integer=True, shape=(n,))
     i = Symbol(integer=True)
-    S = Symbol(etype=dtype.integer * n)
+    S = Symbol(etype=dtype.integer[n])
 
     Eq << apply(Element(x, S), index=i)
 

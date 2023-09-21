@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    from axiom.algebra.abs_sum.to.mul.sum import dissect_distance
+    from axiom.algebra.abs.sum.to.mul.sum import dissect_distance
 
     dx, dy = given.of(LessEqual)
 
@@ -36,7 +36,7 @@ def prove(Eq):
     i, j = Symbol(integer=True)
     Eq << apply(abs(y[m - 1] - Sum[i](x[i]) / n) <= abs((y[m - 1] - Sum[j](y[j]) / m)))
 
-    Eq << Eq[-1].rhs.args[0].this.apply(algebra.sum_square.to.mul.st.variance)
+    Eq << Eq[-1].rhs.args[0].this.apply(algebra.sum.square.to.mul.st.variance)
 
     Eq << Eq[-1].subs(n, n + 1)
 
@@ -52,11 +52,11 @@ def prove(Eq):
 
     Eq << Eq[1].subs(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.find(Sum).apply(algebra.sum_square.to.mul.st.variance)
+    Eq << Eq[-1].this.lhs.find(Sum).apply(algebra.sum.square.to.mul.st.variance)
 
-    Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum_square.to.mul.st.variance)
+    Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.square.to.mul.st.variance)
 
-    Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum_square.to.mul.st.variance)
+    Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum.square.to.mul.st.variance)
 
     Eq << algebra.le.imply.le.st.square.pop.apply(Eq[0])
 
@@ -68,7 +68,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[0].find(Sum).limits_subs(i, j)
 
-    
+
 
 
 if __name__ == '__main__':

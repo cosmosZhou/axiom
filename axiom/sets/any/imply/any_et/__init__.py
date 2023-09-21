@@ -3,8 +3,8 @@ from util import *
 
 @apply
 def apply(given):
-    function, *limits = given.of(Any)
-    return Any[given.variables](And(function, given.limits_cond).simplify())
+    expr, *limits = given.of(Any)
+    return Any[given.variables](And(expr, given.limits_cond).simplify())
 
 
 @prove

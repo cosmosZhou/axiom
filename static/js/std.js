@@ -62,20 +62,16 @@ function form_post(url, data) {
 	});
 }
 
-function json_post(url, data) {
+function json_post(url, data, header) {
 	if (url.match(/^https?:\/\//)) {
 		data = {url, data};
 		url = 'php/request/post.php';
+		data.header = header;
 	}
 
-	return axios({
-		url: url,
-		method: 'post',
-		data: data,
-		header: {
-			'Content-Type':'application/json'
-		}
-	}).then(result => {
+	var header = {'Content-Type': 'application/json'};
+	var method = 'post';
+	return axios({url, method, data, header}).then(result => {
 		var {data} = result;
 		if (data.isString && data.back() == '\n') {
 			data = data.slice(0, -1);
@@ -5171,6 +5167,175 @@ function is_same(list) {
             return false;
 	}
     return true;
+}
+
+class Cookie {
+	constructor() {
+		this.dict = {};
+		//console.log("document.cookie : " + document.cookie);
+		var cookie = document.cookie.split(";");
+		// console.log(cookie);
+		for (var i = 0; i < cookie.length; ++i) {
+			var pair = cookie[i].trim().split("=");
+			if (pair.length != 2)
+				continue;
+			console.log(pair);
+			this.dict[pair[0]] = unescape(pair[1]);
+		}
+	}
+
+	set(key, value) {
+		if (!key || !value) {
+			this.del(key);
+			return;
+		}
+
+		document.cookie = key + "=" + escape(value);
+		this.dict[key] = value;
+		console.log("cookie : " + document.cookie);
+		console.log("this.dict = ");
+		console.log(this.dict);
+	}
+
+	get(key) {
+		return this.dict[key];
+	}
+
+	del(key) {
+		var expires = new Date();
+		expires.setTime(expires.getTime() - 10);
+		document.cookie = key + '=' + escape('null') + ';expires=' + expires.toGMTString();
+		delete this.dict[key];
+	}
+}
+
+Cookie.instance = new Cookie();
+
+async function createApp(component, data, id) {
+	const options = {
+		moduleCache: { vue: Vue },
+	
+		async getFile(url) {
+			var res;
+			try{
+				res = await fetch(url);
+			}
+			catch(err){
+				var dotIndex = url.lastIndexOf('.');
+				var ext = url.slice(dotIndex + 1);
+				var name = url.slice(0, dotIndex).split('/');
+				switch (ext){
+				case 'js':
+					var text = getitem(window.js, ...name.slice(1));
+					//console.log(text);
+                    return {
+						getContentData(){
+							return text;
+						}, 
+						type: ".mjs"
+					};
+				case 'vue':
+					return getitem(window.vue, ...name.slice(2));
+				}
+			}
+	
+			if (!res.ok)
+				throw Object.assign(new Error(res.statusText + ' ' + url), { res });
+			
+			if (url.endsWith(".js")) {
+				return res.text().then(text => {
+                    return {
+						getContentData(){
+							return text;	
+						}, 
+						type: ".mjs"
+					};
+                });
+            }	
+			
+			return res.text();
+		},
+	
+		addStyle(textContent) {
+			document.head.insertBefore(
+				Object.assign(document.createElement('style'), { textContent }),
+				document.head.getElementsByTagName('style')[0] || null);
+		},
+	};
+	
+	const { loadModule } = window['vue3-sfc-loader'];
+	
+	id ||= 'root';
+	var div = document.createElement('div');
+	div.setAttribute('id', id);
+	
+	if (document.body == null){
+		document.body = document.createElement('body');
+	}
+	document.body.appendChild(div);
+	
+	var components = {};
+	components[component] = await loadModule(`static/components/${component}.vue`, options);
+	
+	var args = [];
+	for (let key in data){
+		args.push(`:${key}=${key}`);	
+	}
+	
+	var App = {
+		components: components,
+		
+		data() {
+			return data;
+		},
+		
+		template: `<${component} ref=${component} ${args.join(' ')}></${component}>`,
+	};
+	
+	var app = Vue.createApp(App);
+	app.mount('#' + id);
+	return app;
+}
+
+function setAttribute(self, key, value){
+	while (!(key in self.$data)){
+		self = self.$parent;
+	}
+	self.$data[key] = value;
+}
+
+function track_mounted(tag){
+	return {
+		mounted(el, binding){
+			++binding.instance.mounted[tag];
+		},
+		
+		unmounted(el, binding){
+			--binding.instance.mounted[tag];
+			console.assert(binding.instance.mounted[tag] >= 0, "binding.instance.mounted[tag] >= 0");
+		},
+	};
+}
+
+function create_ClipboardJS(tag) {
+	var clipboard = new ClipboardJS(tag);
+
+	clipboard.on('success', function(e) {
+		console.log(e);
+	});
+
+	clipboard.on('error', function(e) {
+		console.log(e);
+	});
+}
+
+async function query(host, user, token, sql) {
+	var data = {sql};
+	data.token = token;
+	var kwargs = {user};
+	if (host && host != 'localhost')
+		kwargs.host = host;	
+	return await form_post(`query.php` + get_url(kwargs), data);
 }
 
 console.log("import std.js");

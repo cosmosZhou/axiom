@@ -80,15 +80,11 @@ from . import all_is_complex
 from . import all_is_real
 
 from . import all_is_real
-from . import interval_max
-from . import range_min
-from . import interval_min
 from . import cap
 from . import cup
 from . import union
 from . import interval
 from . import piece
-from . import range_max
 from . import conditionset
 from . import notin_range
 from . import notin_interval
@@ -103,7 +99,6 @@ from . import cond
 from . import subset_range
 from . import supset_cup
 from . import subset_cup
-from . import intersect_finiteset
 from . import eq_ceiling
 from . import eq_floor
 from . import card

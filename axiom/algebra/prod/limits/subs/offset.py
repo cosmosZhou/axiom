@@ -14,7 +14,7 @@ def prove(Eq):
     n, d = Symbol(integer=True)
     f = Function(real=True)
     m = Symbol(integer=True, nonnegative=True, given=False)
-    Eq << apply(Product[n:0:m](f(n)), d)
+    Eq << apply(Product[n:m](f(n)), d)
 
     Eq << Eq[0].subs(m, 0)
 

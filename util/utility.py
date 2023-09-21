@@ -254,8 +254,9 @@ class Eq:
                     assert rhs.is_equivalent_of(eq) or rhs.is_given_by(eq)
 
             self.process(rhs, index)
-    
-    def process(self, rhs, index=None, flush=True): 
+
+    def process(self, rhs, index=None, flush=True):
+        # load_data(rhs)
         latex = rhs.latex
     
         infix = str(rhs)
@@ -555,12 +556,16 @@ def run():
     
     from run import prove_with_timing, import_module, tackle_type_error 
     res = import_module(package)
-    from std import MySQL
+    try:
+        from std import MySQL
+    except:
+        from util import javaScript as MySQL
+
     try:
         state, lapse, latex = prove_with_timing(res, debug=True, slow=True)
-        if len(latex) > 65535:
-            print('truncating date to 65535 bytes, original length =', len(latex))
-            latex = latex[:65535]
+#         if len(latex) > 65535:
+#             print('truncating date to 65535 bytes, original length =', len(latex))
+#             latex = latex[:65535]
         
         sql = 'update axiom set state = "%s", lapse = %s, latex = %s where user = "%s" and axiom = "%s"' % (state, lapse, json_encode(latex), user, package)
         # print(sql)
@@ -712,7 +717,11 @@ def _prove(func, debug=True, **kwargs):
                 kwargs = detect_error_in_invoke(py, messages) or detect_error_in_apply(py, messages) or detect_error_in_prove(py, messages)
                 print(json_encode(kwargs))
                 if kwargs and not kwargs.get('error'):
-                    kwargs['error'] = str(e)    
+                    kwargs['error'] = str(e)
+                    
+            else:
+                print(e)
+                traceback.print_exc()
 
         if str(e) == "'NoneType' object has no attribute 'definition_set'":
             lines = Text(py).collect()
@@ -1500,7 +1509,27 @@ def source_error(index=-2):
     error_source = error_source.strip()
     return error_source.splitlines()
 
+def load_data(obj):
+    from std import MySQL
+    data = []
+    for v in obj.preorder_traversal():
+        if v.is_Symbol or v.is_ExprCondPair or v.is_BooleanAtom or v.is_Integer or v.is_Tuple:
+            continue
+        
+        if v.is_Equal:
+            lhs, rhs = v.args
+            if lhs.is_symbol and rhs.is_symbol:
+                if lhs.is_random and lhs.var == rhs:
+                    continue
 
+        data.append(dict(id=0, python=v.python, latex=v.latex, training=1))
+
+    try:
+        rowcount = MySQL.instance.load_data('latex_', data)
+        print('rowcount =', rowcount)
+    except Exception as e:
+        print(e)
+    
 class cout:
 
     def __lshift__(self, rhs):
@@ -1508,6 +1537,12 @@ class cout:
 
         
 cout = cout()
+
+def workingDirectory():
+    return os.path.dirname(__file__) + '/../'
+
+def assetsDirectory():
+    return workingDirectory() + "../assets/"
 
 if __name__ == '__main__':
     ...

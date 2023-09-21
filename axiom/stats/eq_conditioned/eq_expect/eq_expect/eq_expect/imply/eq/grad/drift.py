@@ -8,9 +8,9 @@ def apply(eq, Q_def, V_def, MDV_def):
     (((S[Q_st_var._subs(a[t].var, a[t])], S[s[t].as_boolean()]), (a, π_quote)), ((), (S[Probability[a:π_quote](a[t] | s[t])], S[Probability[a:π](a[t] | s[t])]), S[Probability[π, π_quote](s[t])], S[Probability[s:π](s[t])])), MDV_st_var = MDV_def.of(Equal[Expectation[Conditioned] - KL * Expr / Expr])
 
     return Equal(
-        Subs(Derivative[π_quote](MDV_st_var), (π_quote,), (π,)), 
+        Subs[π_quote:π](Derivative[π_quote](MDV_st_var)),
         Expectation[a:π](
-            Subs(Derivative[π_quote](Probability[a:π_quote](a[t].surrogate | s[t])), (π_quote,), (π,)) / Probability[a:π](a[t].surrogate | s[t]) * Q_st_var._subs(a[t].var, a[t]) | s[t]))
+            Subs[π_quote:π](Derivative[π_quote](Probability[a:π_quote](a[t].surrogate | s[t]))) / Probability[a:π](a[t].surrogate | s[t]) * Q_st_var._subs(a[t].var, a[t]) | s[t]))
 
 
 @prove
@@ -40,13 +40,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(calculus.grad.to.add)
 
-    Eq << Eq[-1].this.find(Derivative[Expectation]).apply(stats.grad_expect.to.expect.grad)
+    Eq << Eq[-1].this.find(Derivative[Expectation]).apply(stats.grad.expect.to.expect.grad)
 
     Eq << Eq[-1].this.find(Conditioned[~Derivative]).apply(calculus.grad.to.mul)
 
     Eq << Eq[-1].subs(π_quote, π)
 
-    Eq << Eq[-1].this.rhs.find(Subs).apply(stats.subs_grad.to.zero.st.KL)
+    Eq << Eq[-1].this.rhs.find(Subs).apply(stats.subs.grad.to.zero.st.KL)
 
     Eq << Eq[-1].this.rhs.apply(stats.expect.limits.desimplify)
 
@@ -54,8 +54,8 @@ def prove(Eq):
     #https://arxiv.org/pdf/2211.11030.pdf
     #https://arxiv.org/pdf/2205.01447.pdf
     #https://arxiv.org/pdf/2210.05639.pdf
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 from util.utility import user
 from _collections import defaultdict
 from util.search import py_to_module, read_directory, read_all_files, \
-    yield_from_py, axiom_directory, is_py_theorem
+    yield_callee_from_py, axiom_directory, is_py_theorem
 from os.path import basename
 from std import MySQL
 import time
@@ -29,7 +29,7 @@ def retrieve_all_dependency():
         count = defaultdict(int)        
         if is_py_theorem(py):
             print("py =", py)
-            for to in yield_from_py(py):
+            for to in yield_callee_from_py(py):
                 count[to] += 1
 
             yield source, count

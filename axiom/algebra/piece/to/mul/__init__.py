@@ -41,21 +41,21 @@ def prove(Eq):
     k = Symbol(integer=True, positive=True)
     x, y = Symbol(real=True, shape=(k,), given=True)
     r = Symbol(real=True, given=True)
-    A = Symbol(etype=dtype.real * k, given=True)
+    A = Symbol(etype=dtype.real[k], given=True)
     g, f, h = Function(shape=(), real=True)
     Eq << apply(Piecewise((r * g(x), Equal(x, y)), (r * f(x), Element(y, A)), (r * h(x), True)))
 
     Eq << algebra.cond_piece.given.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, 0)
+    Eq << Eq[-1].this.args[0].apply(algebra.cond.cond.given.et.subs)
 
-    Eq << Eq[-1].this.args[1].apply(algebra.et.given.et.subs.bool)
+    Eq << Eq[-1].this.args[1].args[::2].apply(algebra.cond.cond.given.et.subs)
 
-    Eq << Eq[-1].this.args[1].apply(algebra.et.given.et.subs.bool, 1, invert=True)
+    Eq << Eq[-1].this.args[1].args[:2].apply(algebra.cond.cond.given.et.subs, invert=True)
 
-    Eq << Eq[-1].this.args[-1].apply(algebra.et.given.et.subs.bool, invert=True)
+    Eq << Eq[-1].this.args[-1].args[::2].apply(algebra.cond.cond.given.et.subs, invert=True)
 
-    Eq << Eq[-1].this.args[-1].apply(algebra.et.given.et.subs.bool, 1, invert=True)
+    Eq << Eq[-1].this.args[-1].args[:2].apply(algebra.cond.cond.given.et.subs, invert=True)
 
     Eq << algebra.ou.given.ou.collect.apply(Eq[-1], cond=Unequal(x, y), simplify=None)
 
@@ -66,5 +66,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2019-08-15
-# updated on 2023-05-20
+# updated on 2023-08-26
 from . import bool

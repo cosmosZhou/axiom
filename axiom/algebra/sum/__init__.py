@@ -1,7 +1,12 @@
 from . import bool
 from . import limits
 from . import to
-from . import simplify, doit
 from . import imageset
-from . import halve
+from . import doit
 from . import st
+from . import halve
+from . import square
+from . import reciprocal
+from . import mul
+from . import sum
+from . import complement

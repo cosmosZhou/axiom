@@ -4,7 +4,7 @@ import { getLine } from "../line/utils_line.js"
 import { charCoords, cursorCoords, displayWidth, paddingH, wrappedLineExtentChar } from "../measurement/position_measurement.js"
 import { getOrder, iterateBidiSections } from "../util/bidi.js"
 import { elt } from "../util/dom.js"
-import { onBlur } from "./focus.js"
+import { onBlur } from "./blur.js"
 
 export function updateSelection(cm) {
   cm.display.input.showSelection(cm.display.input.prepareSelection())

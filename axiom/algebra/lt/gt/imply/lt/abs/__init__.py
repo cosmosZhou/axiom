@@ -19,15 +19,11 @@ def prove(Eq):
 
     Eq << Eq[-1].apply(algebra.cond_piece.given.ou)
 
-    Eq << algebra.cond.given.et.restrict.apply(Eq[-1], cond=Eq[0])
-
-    Eq << algebra.et.given.et.subs.bool.apply(Eq[-1], 0)
+    Eq << algebra.cond.cond.given.et.subs.apply(Eq[0], Eq[-1])
 
     Eq << -Eq[1]
 
-    Eq << algebra.cond.given.et.restrict.apply(Eq[-2], cond=Eq[-1])
-
-    Eq << algebra.et.given.et.subs.bool.apply(Eq[-1], index=0)
+    Eq << algebra.cond.cond.given.et.subs.apply(Eq[-1], Eq[-2])
 
     
     
@@ -39,4 +35,4 @@ if __name__ == '__main__':
 from . import both
 from . import max
 # created on 2018-07-29
-# updated on 2023-05-20
+# updated on 2023-08-26

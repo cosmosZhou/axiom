@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << Eq[1].lhs.this.find(ReducedSum).apply(algebra.reducedSum.to.sum)
 
-    Eq << Eq[-1].this.rhs.apply(stats.var_sum.to.add.sum)
+    Eq << Eq[-1].this.rhs.apply(stats.var.sum.to.add.sum)
 
     Eq.eq_var = Eq[-1].this.find(Sum[2]).apply(algebra.sum.to.add)
 
@@ -47,11 +47,11 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1])
 
-    
+
     Eq << algebra.infer.imply.eq.piece.apply(Eq.infer, Eq[-1].find(Piecewise))
     Eq << Eq[-2].subs(Eq[-1])
-    
-    
+
+
 
 
 if __name__ == '__main__':

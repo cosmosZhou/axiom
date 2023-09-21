@@ -4,7 +4,6 @@ from util import *
 @apply
 def apply(self):
     expr, *limits = self.of(Sup)
-
     return Equal(self, self.func(Piecewise((expr, self.limits_cond), (-oo, True)), *((x,) for x, *_ in limits)))
 
 

@@ -41,13 +41,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Derivative).apply(calculus.grad.to.integral)
 
-    Eq << Eq[-1].this.find(Derivative).apply(calculus.grad_integral.to.mul.grad)
+    Eq << Eq[-1].this.find(Derivative).apply(calculus.grad.integral.to.mul.grad)
 
     Eq << Eq[-1].this.find(Derivative).doit()
 
     Eq << Eq[-1].this.find(Exp * Exp).apply(algebra.mul.to.exp)
 
-    Eq << Eq[-1].this.find(Integral).apply(calculus.integral_exp.to.mul.quadratic)
+    Eq << Eq[-1].this.find(Integral).apply(calculus.integral.exp.to.mul.quadratic)
 
     Eq << Eq[-1].this.find(Exp[Mul[~Add]]).apply(algebra.poly.square_completing, y)
 

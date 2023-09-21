@@ -3,10 +3,7 @@ from util import *
 
 @apply
 def apply(le, contains):
-    if le.is_Element:
-        le, contains = contains, le
-
-    from axiom.algebra.abs_sum.to.mul.sum import dissect_distance
+    from axiom.algebra.abs.sum.to.mul.sum import dissect_distance
     dx, dy = le.of(LessEqual)
 
     yt, x, i, n = dissect_distance(dx)

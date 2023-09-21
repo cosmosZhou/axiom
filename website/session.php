@@ -9,7 +9,7 @@ $user = $_POST['login'];
 $password = $_POST['password'];
 
 $sql = "select * from login where user = '$user'";
-foreach (\mysql\select("select password from login where user = '$user'") as list($password_mysql)){
+foreach (mysql\select("select password from login where user = '$user'") as [$password_mysql]){
     if ($password == $password_mysql){
         break;
     }

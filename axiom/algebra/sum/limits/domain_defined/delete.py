@@ -27,7 +27,7 @@ def prove(Eq):
     f = Function(etype=dtype.integer)
     h = Function(real=True)
 
-    Eq << apply(Sum[j:f(i), i:0:k](h(x[i], j)))
+    Eq << apply(Sum[j:f(i), i:k](h(x[i], j)))
 
     s = Symbol(Sum[j:f(i)](h(x[i], j)))
     Eq << s.this.definition

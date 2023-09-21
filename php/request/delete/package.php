@@ -1,10 +1,11 @@
 <?php
 require_once '../../utility.php';
 require_once '../../mysql.php';
+require_once '../../init.php';
 use std\Graph, std\Text, std\Set;
 
 $dict = empty($_POST) ? $_GET : $_POST;
-
+$user = get_user();
 if (! $dict) {
     // https://www.php.net/manual/en/function.getopt.php
     $dict = getopt("", [
@@ -42,7 +43,7 @@ if (file_exists($initPath)){
                 default:
                     $file = "$path/$file";
                     if (is_dir($file)) {
-                        \std\deleteDirectory($file);
+                        std\deleteDirectory($file);
                     } else {
                         unlink($file);
                     }
@@ -51,42 +52,39 @@ if (file_exists($initPath)){
         
         rename($initPath, "$path.py");
         
-        \mysql\delete_from_suggest($module, true);
-        
-        \mysql\delete_from_axiom("$module\..+", true);
+        delete_from_suggest($user, $module, true);
+        delete_from_axiom($user, "$module\..+", true);
     } else {
-        \std\deleteDirectory($path);
+        std\deleteDirectory($path);
         delete_from_init($package, $section);
-        
-        \mysql\delete_from_suggest($module);
-        
-        \mysql\delete_from_axiom('$module\b', true);
+        delete_from_suggest($user, $module);
+        delete_from_axiom($user, '$module\b', true);
     }    
 }
 else{
-    \std\deleteDirectory($path);
+    std\deleteDirectory($path);
     $path = dirname($path);
     error_log("dirname(path)= ".$path);
-    $files = iterator_to_array(\std\read_files($path, "py"));
-    error_log("files = ".\std\encode($files));
+    $files = iterator_to_array(std\read_files($path, "py"));
+    error_log("files = ".std\encode($files));
     if (count($files) == 1){
-        list($__init__) = $files;
-        if (\std\endsWith($__init__, "/__init__.py") || \std\endsWith($__init__, "\\__init__.py")){
+        [$__init__] = $files;
+        if (std\endsWith($__init__, "/__init__.py") || std\endsWith($__init__, "\\__init__.py")){
             $substrPyInit = substr($__init__, 0, -12) . ".py";
             if (!rename($__init__, $substrPyInit)){
                 error_log("failed in renaming $__init__ to $substrPyInit");
             }
             
-            \std\deleteDirectory($path);
+            std\deleteDirectory($path);
         }
     }
     
     delete_from_init($package, $section);
     
-    \mysql\delete_from_suggest($module);
+    delete_from_suggest($user, $module);
     
-    \mysql\delete_from_axiom('$module\b', true);    
+    delete_from_axiom($user, '$module\b', true);    
 }
 
-echo \std\encode("deleted!");
+echo std\encode("deleted!");
 ?>

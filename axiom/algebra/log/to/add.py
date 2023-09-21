@@ -11,12 +11,10 @@ def apply(self, pivot=None):
             adds.append(Log(arg).simplify())
         rhs = Add(*adds)
     else:
-        import std
         left, right = std.array_split(args, pivot)
         left = log(Mul(*left))
         right = log(Mul(*right))
         rhs = left + right
-        
 
     return Equal(self, rhs, evaluate=False)
 

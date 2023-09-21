@@ -14,7 +14,7 @@ def apply(eq, f_eq, *, reverse=False, simplify=True, assumptions={}, index=None)
 def prove(Eq):
     m, n = Symbol(integer=True, positive=True)
     a, b, c = Symbol(real=True, shape=(m, n))
-    S = Symbol(etype=dtype.real * (m, n))
+    S = Symbol(etype=dtype.real[m][n])
     Eq << apply(Equal(a, 2 * c), Element(a * b, S))
 
     Eq << Eq[1].subs(Eq[0])

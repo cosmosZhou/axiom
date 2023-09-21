@@ -19,7 +19,7 @@ def prove(Eq):
     n = Symbol(integer=True, nonnegative=True)
     m = Symbol(integer=True, positive=True)
     f = Function(real=True, shape=(m, m))
-    Eq << apply(MatProduct[i:0:n + 1](f(i)))
+    Eq << apply(MatProduct[i:n + 1](f(i)))
 
     Eq << algebra.cond.given.et.infer.split.apply(Eq[0], cond=n > 0)
 

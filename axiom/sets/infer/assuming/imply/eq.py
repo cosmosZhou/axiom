@@ -20,7 +20,7 @@ def prove(Eq):
     from axiom import sets, algebra
     n = Symbol(integer=True, positive=True)
     x = Symbol(complex=True, shape=(n,))
-    A, B = Symbol(etype=dtype.integer * n)
+    A, B = Symbol(etype=dtype.integer[n])
 
     Eq << apply(Infer(Element(x, A), Element(x, B)), Assuming(Element(x, A), Element(x, B)))
 

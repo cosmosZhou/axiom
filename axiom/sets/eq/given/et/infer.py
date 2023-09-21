@@ -17,7 +17,7 @@ def prove(Eq):
 
     n = Symbol(integer=True, positive=True)
     x = Symbol(complex=True, shape=(n,))
-    A, B = Symbol(etype=dtype.integer * n)
+    A, B = Symbol(etype=dtype.integer[n])
     Eq << apply(Equal(A, B), wrt=x)
 
     Eq << sets.infer.infer.imply.eq.apply(Eq[1], Eq[2])

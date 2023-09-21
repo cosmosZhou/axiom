@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Bool).apply(algebra.bool.to.piece)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul_piece.to.piece)
+    Eq << Eq[-1].this.rhs.apply(algebra.mul.piece.to.piece)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest, index=0)
 

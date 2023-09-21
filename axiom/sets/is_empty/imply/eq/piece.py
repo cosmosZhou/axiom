@@ -35,7 +35,7 @@ def prove(Eq):
         Piecewise((f(x), Element(x, A)), (f_quote(x), True)),
         Piecewise((g(x), Element(x, B)), (g_quote(x), True)))
 
-    Eq << Eq[1].this.lhs.apply(algebra.add_piece.to.piece)
+    Eq << Eq[1].this.lhs.apply(algebra.add.piece.to.piece)
 
     Eq << Eq[-1].apply(algebra.cond.given.et.all, cond=Element(x, A))
 

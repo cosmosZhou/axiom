@@ -17,7 +17,7 @@ def prove(Eq):
     i = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
     f, h = Function(real=True)
-    Eq << apply(Sum[i:0:n](f(i) + h(i)))
+    Eq << apply(Sum[i:n](f(i) + h(i)))
 
     Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.add.split, cond={n})
 

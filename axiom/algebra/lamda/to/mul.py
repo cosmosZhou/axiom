@@ -4,7 +4,6 @@ from util import *
 @apply
 def apply(self, pivot=-1):
     args, *limits = self.of(Lamda[Mul])
-    import std
     first, second = std.array_split(args, pivot)
     first, second = Mul(*first), Mul(*second)
 

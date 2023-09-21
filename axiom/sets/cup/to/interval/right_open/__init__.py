@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[-2]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.eq.eq.given.et.subs)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
     Eq << algebra.infer.given.et.infer.apply(Eq[-1])
 
@@ -35,10 +35,14 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[-2]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.eq.eq.given.et.subs)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 from . import negative
 # created on 2021-02-23
+# updated on 2023-08-26

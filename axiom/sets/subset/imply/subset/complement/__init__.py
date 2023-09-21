@@ -11,7 +11,7 @@ def prove(Eq):
     from axiom import sets
 
     n = Symbol(integer=True, positive=True)
-    A, B, S = Symbol(etype=dtype.complex * n)
+    A, B, S = Symbol(etype=dtype.complex[n])
     Eq << apply(Subset(A, B), S)
 
 

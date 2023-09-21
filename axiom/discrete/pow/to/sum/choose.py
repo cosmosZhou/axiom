@@ -22,7 +22,7 @@ def prove(Eq):
     Eq << apply((x[0] + x[1] + x[2]) ** n)
 
     i = Symbol(integer=True)
-    Eq << algebra.pow_sum.to.sum.apply(Sum[i:3](x[i]) ** n)
+    Eq << algebra.pow.sum.to.sum.apply(Sum[i:3](x[i]) ** n)
 
     Eq << Eq[-1].this.lhs.find(Sum).apply(algebra.sum.to.add.doit)
 

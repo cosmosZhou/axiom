@@ -39,7 +39,7 @@ def prove(Eq):
 
     Eq << Eq[2].subs(Eq[1])
 
-    Eq << Eq[-1].this.rhs.apply(calculus.grad_mul.to.add)
+    Eq << Eq[-1].this.rhs.apply(calculus.grad.mul.to.add)
 
 
 

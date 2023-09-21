@@ -8,7 +8,6 @@ def apply(self, pivot=-1, j=None):
     if not n >= i:
         print(n >= i, 'possibly logic error')
         
-    import std
     fk, gk = std.array_split(args, pivot)
     fk = Mul(*fk)
     gk = Mul(*gk)

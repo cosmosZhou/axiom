@@ -19,7 +19,7 @@ def prove(Eq):
     n, m = Symbol(integer=True, positive=True)
     x = Symbol(complex=True, shape=(n,))
     y = Symbol(complex=True, shape=(m,))
-    A = Symbol(etype=dtype.complex * n)
+    A = Symbol(etype=dtype.complex[n])
     f = Function(shape=(), integer=True)
     g = Function(shape=(m,))
     P = Symbol(conditionset(y, Equal(f(y), 1)))

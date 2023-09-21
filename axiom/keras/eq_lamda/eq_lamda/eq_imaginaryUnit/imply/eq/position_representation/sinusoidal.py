@@ -65,15 +65,15 @@ def prove(Eq):
 
     Eq << Eq[0][i, j] * Eq.F_def[k, j]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul_piece.to.piece, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(algebra.mul.piece.to.piece, simplify=None)
 
     Eq << Eq[1][i, j] * Eq.F_quote_def[k, j]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul_piece.to.piece, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(algebra.mul.piece.to.piece, simplify=None)
 
     Eq << Eq[-1] + Eq[-3]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.add_piece.to.piece, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(algebra.add.piece.to.piece, simplify=None)
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.cossin, Eq[-1])
 
@@ -95,15 +95,15 @@ def prove(Eq):
 
     Eq << Eq[0][i, j] * Eq.F_quote_def[k, j]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul_piece.to.piece, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(algebra.mul.piece.to.piece, simplify=None)
 
     Eq << Eq[1][i, j] * Eq.F_def[k, j]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul_piece.to.piece, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(algebra.mul.piece.to.piece, simplify=None)
 
     Eq << Eq[-1] - Eq[-3]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.add_piece.to.piece)
+    Eq << Eq[-1].this.rhs.apply(algebra.add.piece.to.piece)
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.coscos, Eq[-1])
 
@@ -167,7 +167,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[Piecewise]).apply(algebra.mul.to.piece, simplify=None)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.add_piece.to.piece, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(algebra.add.piece.to.piece, simplify=None)
 
     Eq << Eq.geometric_progression.subs(Eq[-1])
 
@@ -197,7 +197,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[Piecewise]).apply(algebra.mul.to.piece, simplify=None)
 
-    Eq << Eq[-1].this.find(Add).apply(algebra.add_piece.to.piece, simplify=None)
+    Eq << Eq[-1].this.find(Add).apply(algebra.add.piece.to.piece, simplify=None)
 
 
 

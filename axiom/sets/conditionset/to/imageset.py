@@ -20,7 +20,7 @@ def prove(Eq):
     x = Symbol(complex=True, shape=(n,))
     y = Symbol(complex=True, shape=(m,))
 
-    A = Symbol(etype=dtype.complex * n)
+    A = Symbol(etype=dtype.complex[n])
     f = Function(complex=True, shape=(m,))
 
     g = Function(shape=(), real=True)

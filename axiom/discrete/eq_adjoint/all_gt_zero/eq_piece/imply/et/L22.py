@@ -84,7 +84,7 @@ def prove(Eq):
 
     Eq << Eq[-1].find(Norm ** 2).this.base.apply(algebra.norm.to.sqrt).this.rhs.apply(algebra.sum.to.add.doit)
 
-    Eq << Eq[-1].this.find(Abs ** 2).apply(algebra.square_abs.to.mul.conj)
+    Eq << Eq[-1].this.find(Abs ** 2).apply(algebra.square.abs.to.mul.conj)
 
     Eq << sets.is_positive.imply.eq.abs.apply(Eq.L11_is_positive)
 
@@ -116,9 +116,9 @@ def prove(Eq):
 
     Eq << sets.is_positive.imply.is_positive.sqrt.apply(Eq[-1])
 
-    Eq << Eq[-1].this.find(Mul).args[1:].apply(algebra.mul_conj.to.square.abs)
+    Eq << Eq[-1].this.find(Mul).args[1:].apply(algebra.mul.conj.to.square.abs)
 
-    Eq << Eq[-1].this.find(Mul).args[1:].apply(algebra.mul_conj.to.square.abs)
+    Eq << Eq[-1].this.find(Mul).args[1:].apply(algebra.mul.conj.to.square.abs)
 
     Eq << Eq[2].subs(i, 2).subs(j, 2).reversed
 

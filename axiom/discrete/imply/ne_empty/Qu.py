@@ -42,17 +42,17 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.given.subset.cup.finiteset)
 
-    Eq << Eq[-1].this.args[1:].apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.args[1:].apply(algebra.eq.cond.given.et.subs)
 
     Eq << sets.any_el.imply.ne_empty.apply(Eq.plausible)
 
     Eq << algebra.cond.imply.all.apply(Eq[-1], _t)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-11-07
-# updated on 2023-05-20
+# updated on 2023-08-26

@@ -1,12 +1,9 @@
-import { addClass, elt, rmClass } from "../util/dom.js"
+import { elt } from "../util/dom.js"
 import { on } from "../util/event.js"
 import { scrollGap, paddingVert } from "../measurement/position_measurement.js"
 import { ie, ie_version, mac, mac_geMountainLion } from "../util/browser.js"
 import { updateHeightsInViewport } from "./update_lines.js"
 import { Delayed } from "../util/misc.js"
-
-import { setScrollLeft, updateScrollTop } from "./scrolling.js"
-
 // SCROLLBARS
 
 // Prepare DOM reads needed to update the scrollbars. Done in one
@@ -170,24 +167,3 @@ function updateScrollbarsInner(cm, measure) {
 
 export let scrollbarModel = {"native": NativeScrollbars, "null": NullScrollbars}
 
-export function initScrollbars(cm) {
-  if (cm.display.scrollbars) {
-    cm.display.scrollbars.clear()
-    if (cm.display.scrollbars.addClass)
-      rmClass(cm.display.wrapper, cm.display.scrollbars.addClass)
-  }
-
-  cm.display.scrollbars = new scrollbarModel[cm.options.scrollbarStyle](node => {
-    cm.display.wrapper.insertBefore(node, cm.display.scrollbarFiller)
-    // Prevent clicks in the scrollbars from killing focus
-    on(node, "mousedown", () => {
-      if (cm.state.focused) setTimeout(() => cm.display.input.focus(), 0)
-    })
-    node.setAttribute("cm-not-content", "true")
-  }, (pos, axis) => {
-    if (axis == "horizontal") setScrollLeft(cm, pos)
-    else updateScrollTop(cm, pos)
-  }, cm)
-  if (cm.display.scrollbars.addClass)
-    addClass(cm.display.wrapper, cm.display.scrollbars.addClass)
-}

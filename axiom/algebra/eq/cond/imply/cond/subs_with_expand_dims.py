@@ -23,7 +23,7 @@ def prove(Eq):
     a = Symbol(real=True, shape=(n,))
     b, c = Symbol(real=True, shape=(m, n))
 
-    S = Symbol(etype=dtype.real * (m, n))
+    S = Symbol(etype=dtype.real[m][n])
     Eq << apply(Equal(a * OneMatrix(m, n), c), Element(a * b, S))
 
     a = Symbol(a * OneMatrix(m, n))

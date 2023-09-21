@@ -21,7 +21,7 @@ def prove(Eq):
     x = Symbol(real=True, shape=(oo,))
     γ = Symbol(real=True)
     n = Symbol(integer=True)
-    Eq << apply(Element(γ, Interval(0, 1, left_open=True, right_open=True)), Less(Sup[n:0:oo](Abs(x[n])), oo))
+    Eq << apply(Element(γ, Interval(0, 1, left_open=True, right_open=True)), Less(Sup[n:oo](Abs(x[n])), oo))
 
     Eq << algebra.imply.all.le_sup.apply(Eq[1].find(Sup))
 

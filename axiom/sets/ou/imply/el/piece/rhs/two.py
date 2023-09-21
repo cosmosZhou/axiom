@@ -18,8 +18,8 @@ def prove(Eq):
 
     k = Symbol(integer=True, positive=True)
     x, y = Symbol(real=True, shape=(k,), given=True)
-    A, S = Symbol(etype=dtype.real * k, given=True)
-    f, g = Function(etype=dtype.real * (k,))
+    A, S = Symbol(etype=dtype.real[k], given=True)
+    f, g = Function(etype=dtype.real[k])
     Eq << apply(Element(y, f(x)) & Element(x, A) | Element(y, g(x)) & NotElement(x, A), wrt=y)
 
     Eq << Eq[1].apply(algebra.cond.given.et.ou, cond=Element(x, A))

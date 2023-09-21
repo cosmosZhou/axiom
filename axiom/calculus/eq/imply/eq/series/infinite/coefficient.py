@@ -29,7 +29,7 @@ def prove(Eq):
     A, B = Symbol(shape=(oo,), real=True)
     x = Symbol(real=True)
     n = Symbol(integer=True)
-    Eq << apply(Equal(Sum[n:0:oo](A[n] * x ** n), Sum[n:0:oo](B[n] * x ** n)), x=x)
+    Eq << apply(Equal(Sum[n:oo](A[n] * x ** n), Sum[n:oo](B[n] * x ** n)), x=x)
 
     Eq << Eq[0].this.lhs.simplify()
 

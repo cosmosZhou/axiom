@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq <<= Eq[-2] & Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
     Eq << algebra.all.imply.all.limits.restrict.apply(Eq[2], Interval(a, b, left_open=True, right_open=True))
 
@@ -46,8 +46,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.any.imply.any.limits.relax, domain=Interval(a, b))
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-04-29
+# updated on 2023-08-26

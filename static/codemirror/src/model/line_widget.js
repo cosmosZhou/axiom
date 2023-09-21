@@ -1,5 +1,4 @@
-import { runInOp } from "../display/operations.js"
-import { addToScrollTop } from "../display/scrolling.js"
+import { runInOp, addToScrollTop } from "../display/highlight_worker.js"
 import { regLineChange } from "../display/view_tracking.js"
 import { heightAtLine, lineIsHidden } from "../line/spans.js"
 import { lineNo, updateLineHeight } from "../line/utils_line.js"

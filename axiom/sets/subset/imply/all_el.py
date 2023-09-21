@@ -19,7 +19,7 @@ def apply(given, wrt=None):
 def prove(Eq):
     from axiom import sets
     n = Symbol(complex=True, positive=True)
-    A, B = Symbol(etype=dtype.complex * n)
+    A, B = Symbol(etype=dtype.complex[n])
 
     Eq << apply(Subset(B, A))
 

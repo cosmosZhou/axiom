@@ -17,13 +17,13 @@ def prove(Eq):
     x = Symbol(complex=True)
     Eq << apply(Element(x, Interval(-oo, oo)))
 
-    Eq << Eq[1].this.lhs.apply(algebra.square_abs.to.mul.conj)
+    Eq << Eq[1].this.lhs.apply(algebra.square.abs.to.mul.conj)
 
     Eq << sets.is_real.imply.eq.conj.apply(Eq[0])
 
     Eq << Eq[-2].subs(Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

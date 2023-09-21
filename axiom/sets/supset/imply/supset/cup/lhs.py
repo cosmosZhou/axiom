@@ -13,8 +13,8 @@ def prove(Eq):
     from axiom import algebra
     n = Symbol(integer=True, positive=True)
     i = Symbol(integer=True)
-    x = Symbol(shape=(oo,), etype=dtype.complex * n)
-    A = Symbol(etype=dtype.complex * n)
+    x = Symbol(shape=(oo,), etype=dtype.complex[n])
+    A = Symbol(etype=dtype.complex[n])
     m = Symbol(integer=True, positive=True, given=False)
 
     Eq << apply(Supset(A, x[i]), (i, 0, m))

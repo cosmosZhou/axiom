@@ -38,9 +38,9 @@ def prove(Eq):
 
     Eq << Eq[1] - Eq[1].rhs
 
-    Eq << Eq[-1].this.lhs.apply(algebra.add_piece.to.piece)
+    Eq << Eq[-1].this.lhs.apply(algebra.add.piece.to.piece)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.add_piece.to.piece)
+    Eq << Eq[-1].this.rhs.apply(algebra.add.piece.to.piece)
 
     Eq << algebra.cond_piece.given.ou.apply(Eq[-1])
 
@@ -50,8 +50,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(sets.el_intersect.imply.el)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

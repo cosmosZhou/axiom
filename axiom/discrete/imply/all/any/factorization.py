@@ -51,7 +51,7 @@ def prove(Eq):
 
     Eq <<= Eq.equation & Eq.p1_equality
 
-    Eq << Eq[-1].this.expr.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.cond.given.et.subs)
 
     Eq << algebra.all_et.given.et.all.apply(Eq[-1])
 
@@ -63,7 +63,7 @@ def prove(Eq):
 
     Eq << algebra.all_et.imply.et.all.apply(Eq[-1])
 
-    Eq << Eq[-2].this.expr.apply(sets.el.imply.eq.kroneckerDelta.zero).reversed
+    Eq << Eq[-2].this.expr.apply(sets.el.imply.eq.delta.zero).reversed
 
     Eq << -(Eq.premier - 1)
 
@@ -100,7 +100,7 @@ def prove(Eq):
 
     Eq << Eq.p_quote_definition.lhs[n].this.definition
 
-    Eq << Eq[-1].this.rhs.args[1].expr.apply(algebra.piece.to.kroneckerDelta)
+    Eq << Eq[-1].this.rhs.args[1].expr.apply(algebra.piece.to.delta)
 
     Eq << Eq[-1].this.rhs.apply(discrete.matmul.to.sum)
 
@@ -159,4 +159,4 @@ if __name__ == '__main__':
     run()
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 # created on 2020-09-01
-# updated on 2023-05-20
+# updated on 2023-08-26

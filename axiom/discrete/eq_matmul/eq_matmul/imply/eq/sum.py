@@ -22,7 +22,7 @@ def prove(Eq):
     from axiom import discrete, algebra
 
     n = Symbol(integer=True, positive=True)
-    x, y, a, b = Symbol(shape=(n,), real=True, given=True)
+    x, y, a, b = Symbol(shape=(n,), real=True)
     i, j = Symbol(domain=Range(n))
     Eq << apply(Equal(x @ SwapMatrix(n, i, j), y), Equal(a @ SwapMatrix(n, i, j), b))
 
@@ -38,13 +38,14 @@ def prove(Eq):
     Eq << Eq[-1] * Eq[-3]
 
     Eq << Eq[2].subs(Eq[-1])
+
     Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.domain_defined)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-11-13
-# updated on 2023-05-06
+# updated on 2023-09-16

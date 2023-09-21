@@ -22,15 +22,15 @@ def prove(Eq):
     x, y = Symbol(integer=True, given=True)
     A, B, C, D = Symbol(etype=dtype.integer, given=True)
     f, h = Function(real=True)
-    Eq << apply(Sum[j:D, i:C](Piecewise((f(i, j), Element(x, A) & Element(y, B)), (h(i, j), True))))
+    Eq << apply(Sum[j:D, i:C](Piecewise((f(i, j), Element(x, A & B)), (h(i, j), True))))
 
     Eq << algebra.cond_piece.given.ou.apply(Eq[0])
 
-    Eq << Eq[-1].this.args[1].apply(algebra.et.given.et.subs.bool, index=slice(1, 3))
+    Eq << Eq[-1].this.args[0].apply(algebra.cond.cond.given.et.subs)
 
-    Eq << Eq[-1].this.find(And).apply(algebra.et.given.et.subs.bool, index=1, invert=True)
+    Eq << Eq[-1].this.find(And).apply(algebra.cond.cond.given.et.subs, invert=True)
 
-    Eq << Eq[-1].this.apply(algebra.ou.given.infer, -1)
+    
 
     
     
@@ -41,6 +41,6 @@ if __name__ == '__main__':
 
 
 # created on 2020-03-17
-# updated on 2023-05-20
+# updated on 2023-08-26
 from . import pop
 from . import unshift

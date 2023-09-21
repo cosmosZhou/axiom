@@ -3,7 +3,6 @@ from util import *
 
 @apply
 def apply(self, *, simplify=True):
-    import std
     coefficient = []
     factors = []
     args, *limits = self.of(Sum[Mul])

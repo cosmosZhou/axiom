@@ -14,7 +14,7 @@ def prove(Eq):
     z = Symbol(complex=True)
     Eq << apply(Arg(exp(S.ImaginaryUnit * Arg(z))))
 
-    Eq << Eq[0].this.lhs.apply(algebra.arg_expi.to.add.ceiling)
+    Eq << Eq[0].this.lhs.apply(algebra.arg.expi.to.add.ceiling)
 
     Eq << Eq[-1].this.find(Ceiling).apply(algebra.ceiling.to.zero.arg)
 

@@ -17,7 +17,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     n = Symbol(integer=True)
-    S = Symbol(etype=dtype.integer * n)
+    S = Symbol(etype=dtype.integer[n])
     Eq << apply(Equal(Card(S), 1))
 
     Eq << sets.eq.imply.any_eq.one.apply(Eq[0]).reversed
@@ -26,10 +26,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.cond.any.given.any.et, simplify=None)
 
-    Eq << Eq[-1].this.expr.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.cond.given.et.subs)
+
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-07-21
+# updated on 2023-08-26

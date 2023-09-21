@@ -26,7 +26,7 @@ def prove(Eq):
     j = Symbol(domain=Range(n))
     Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.piece.to.kroneckerDelta)
+    Eq << Eq[-1].this.rhs.apply(algebra.piece.to.delta)
 
 
 

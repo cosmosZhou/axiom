@@ -16,8 +16,9 @@ def apply(all_historic):
 def prove(Eq):
     from axiom import algebra
 
-    a, i, j= Symbol(integer=True)
+    i, j = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
+    a = Symbol(integer=True, etype=dtype.integer)
     x = Symbol(shape=(oo,), etype=dtype.integer, finiteset=True)
     Eq << apply(All[j:i, i:n](Unequal(x[i], x[j])))
 

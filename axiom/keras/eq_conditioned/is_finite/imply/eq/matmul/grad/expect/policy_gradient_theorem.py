@@ -17,7 +17,7 @@ def prove(Eq):
 
     b, D = Symbol(integer=True, positive=True)
     s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    
+
     a = Symbol(shape=(oo,), integer=True, random=True) #actions
     r = Symbol(shape=(oo,), real=True, random=True) #rewards
     π = Symbol(shape=(D,), real=True) #trainable weights for the agent
@@ -44,7 +44,7 @@ def prove(Eq):
         return γ ** Lamda[t](t) @ Expectation[r[t:], a:π](r[t:] | Equal(s[t], st))
     Eq.V_Function = (V[π] ^ γ)(s[t].var).this.defun()
 
-    Eq << Eq[1].this.find(MatMul).apply(calculus.matmul_grad.to.grad.matmul)
+    Eq << Eq[1].this.find(MatMul).apply(calculus.matmul.grad.to.grad.matmul)
 
     Eq << Eq[-1].subs(Eq.V_Function.reversed)
 
@@ -54,7 +54,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[Expectation]).apply(stats.mul.to.expect)
 
-    Eq.eq_expect = Eq[-1].this.rhs.apply(stats.sum_expect.to.expect.sum)
+    Eq.eq_expect = Eq[-1].this.rhs.apply(stats.sum.expect.to.expect.sum)
 
     Eq << keras.eq_conditioned.imply.eq.expect.grad.log.prob.Q_Function.discounted.apply(Eq[0], γ, t, π)
 
@@ -70,9 +70,9 @@ def prove(Eq):
 
     Eq << algebra.eq.imply.eq.sum.apply(Eq[-1], (t, 0, oo))
 
-    Eq << Eq[-1].this.rhs.apply(stats.sum_expect.to.expect.sum)
+    Eq << Eq[-1].this.rhs.apply(stats.sum.expect.to.expect.sum)
 
-    Eq << Eq[-1].this.lhs.apply(stats.sum_expect.to.expect.sum)
+    Eq << Eq[-1].this.lhs.apply(stats.sum.expect.to.expect.sum)
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.eq_expect, Eq[-1])
 
@@ -82,7 +82,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Lamda).apply(algebra.lamda.to.pow)
 
-    Eq << Eq[-1].this.rhs.find(Expectation).apply(stats.expect_lamda.to.lamda.expect)
+    Eq << Eq[-1].this.rhs.find(Expectation).apply(stats.expect.lamda.to.lamda.expect)
 
     #https://spinningup.openai.com/en/latest/spinningup/rl_intro.html#bellman-equations
     #http://incompleteideas.net/book/bookdraft2017nov5.pdf (Page 47)

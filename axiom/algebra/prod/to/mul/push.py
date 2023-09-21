@@ -19,7 +19,7 @@ def prove(Eq):
 
     f, h = Function(real=True, positive=True)
 
-    Eq << apply(Product[i:0:n](f(i) + h(i)))
+    Eq << apply(Product[i:n](f(i) + h(i)))
 
     Eq << Eq[-1].this.rhs.find(Product).apply(algebra.prod.to.mul.split, cond={n})
 

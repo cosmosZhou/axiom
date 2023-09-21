@@ -24,7 +24,7 @@ def prove(Eq):
     f = Function(shape=(), integer=True)
     s = Symbol(etype=dtype.integer)
 
-    Eq << apply(All[x:0:n + 1](Element(f(x), s)), x, m)
+    Eq << apply(All[x:n + 1](Element(f(x), s)), x, m)
 
     Eq << algebra.cond.imply.all.apply(Eq[1])
 

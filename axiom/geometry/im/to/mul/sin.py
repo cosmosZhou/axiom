@@ -15,13 +15,13 @@ def prove(Eq):
     z = Symbol(complex=True, given=True)
     Eq << apply(Im(z))
 
-    Eq << Eq[0].this.find(sin).apply(geometry.sin_arg.to.piece)
+    Eq << Eq[0].this.find(sin).apply(geometry.sin.arg.to.piece)
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul.to.piece)
 
     Eq << Eq[-1].this.find(Abs).apply(algebra.abs.to.sqrt)
 
-    
+
 
 
 if __name__ == '__main__':

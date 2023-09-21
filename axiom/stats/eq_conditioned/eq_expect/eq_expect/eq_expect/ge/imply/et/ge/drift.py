@@ -7,7 +7,7 @@ def apply(eq, Q_def, V_def, MDV_def, ge):
     s, a, r, [π], γ, t, Q_st_var, V_st_var = extract_QVA(eq, Q_def, V_def)
     (((S[Q_st_var._subs(a[t].var, a[t])], S[s[t].as_boolean()]), (a, π_quote)), ((), (S[Probability[a:π_quote](a[t] | s[t])], S[Probability[a:π](a[t] | s[t])]), S[Probability[π, π_quote](s[t])], S[Probability[s:π](s[t])])), MDV_st_var = MDV_def.of(Equal[Expectation[Conditioned] - KL * Expr / Expr])
     S[MDV_st_var], S[MDV_st_var._subs(π_quote, π)] = ge.of(Expr >= Expr)
-    
+
     return V_st_var._subs(π, π_quote) >= V_st_var, \
         γ ** Lamda[t](t) @ Expectation[r, a:π_quote](r) >= γ ** Lamda[t](t) @ Expectation[r, a:π](r)
 
@@ -65,7 +65,7 @@ def prove(Eq):
 
     Eq << Eq.VV_quote - Eq.ge.find(Expectation)
 
-    Eq << Eq[-1].this.rhs.apply(stats.add_expect.to.expect)
+    Eq << Eq[-1].this.rhs.apply(stats.add.expect.to.expect)
 
     Eq << Eq[-1].this.rhs.find(Add).apply(algebra.add.to.mul)
 
@@ -129,8 +129,8 @@ def prove(Eq):
     #https://arxiv.org/pdf/2211.11030.pdf
     #https://arxiv.org/pdf/2205.01447.pdf
     #https://arxiv.org/pdf/2210.05639.pdf
-    
-    
+
+
 
 
 if __name__ == '__main__':

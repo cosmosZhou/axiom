@@ -24,9 +24,6 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(sets.el.imply.et.is_odd)
 
-    
-    
-
 
 if __name__ == '__main__':
     run()

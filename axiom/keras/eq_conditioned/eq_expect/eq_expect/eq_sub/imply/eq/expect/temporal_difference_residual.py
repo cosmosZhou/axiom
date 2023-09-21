@@ -33,13 +33,13 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed.simplify()
 
-    Eq << Eq[-1].this.rhs.apply(stats.add_expect.to.expect)
+    Eq << Eq[-1].this.rhs.apply(stats.add.expect.to.expect)
 
     Eq << keras.eq_conditioned.eq_expect.eq_expect.imply.et.eq.expect.Bellman.apply(*Eq[:3])[-1]
 
     #https://arxiv.org/pdf/1506.02438.pdf#page=4
-    
-    
+
+
 
 
 if __name__ == '__main__':

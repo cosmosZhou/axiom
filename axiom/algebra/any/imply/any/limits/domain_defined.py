@@ -37,7 +37,7 @@ def prove(Eq):
 
     Eq << algebra.any.given.any_et.limits.unleash.apply(Eq[1], simplify=None)
 
-    Eq << Eq[-1].this.find(Range).apply(sets.range_min.to.intersect, simplify=None)
+    Eq << Eq[-1].this.find(Range).apply(sets.range.min.to.intersect, simplify=None)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_intersect.given.et, simplify=None)
 

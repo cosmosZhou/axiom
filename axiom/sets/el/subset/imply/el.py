@@ -14,7 +14,7 @@ def prove(Eq):
 
     n = Symbol(integer=True, positive=True)
     x = Symbol(complex=True, shape=(n,), given=True)
-    A, B = Symbol(etype=dtype.complex * n, given=True)
+    A, B = Symbol(etype=dtype.complex[n], given=True)
     Eq << apply(Element(x, A), Subset(A, B))
 
     Eq << sets.el.imply.el.relax.apply(Eq[0], B)

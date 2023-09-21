@@ -29,15 +29,16 @@ def prove(Eq):
     Eq << discrete.imply.el.matmul.swap.apply(Eq[0])
 
     k = Eq[-1].lhs.args[0].indices[-1]
-    Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (k, 0, n), simplify=False)
+    Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (k, 0, n))
 
     Eq << sets.el_cartesianSpace.given.all.el.apply(Eq[2])
 
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 # created on 2020-11-04
-# updated on 2023-07-02
+# updated on 2023-08-26

@@ -24,9 +24,10 @@ def apply(given):
             eqs = [eq._subs(old, new) for eq in eqs]
 
             domain = limits_dict[old]
-            if isinstance(domain, list):
+            if domain is None:
                 limit = (old,)
             else:
+                assert not isinstance(domain, list)
                 limit = (old, domain)
             eq = given.func(eq, limit).simplify()
             eqs.append(eq)

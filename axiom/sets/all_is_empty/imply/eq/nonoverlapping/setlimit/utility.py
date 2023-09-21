@@ -13,7 +13,7 @@ def apply(given):
         xi = xj
         assert xj.has(i)
 
-    eq = Equal(Card(Cup[i:0:n](xi)), Sum[i:0:n](Card(xi)))
+    eq = Equal(Card(Cup[i:n](xi)), Sum[i:n](Card(xi)))
     if limits:
         return All(eq, *limits)
     else:

@@ -3,11 +3,11 @@
 ## windows版本安装
 
 直接使用wampserver内置的mysql使用方法：  
-清空D:\wamp64\bin\mysql\mysql8.0.21\data内的所有内容！  
+清空D:\wamp64\binmysql\mysql8.0.21\data内的所有内容！  
 如果没有data文件夹，新建一个data文件夹。  
 
 ![delete-data](mysql/delete-data.png)  
-cd D:\wamp64\bin\mysql\mysql8.0.21\bin  
+cd D:\wamp64\binmysql\mysql8.0.21\bin  
 然后执行：  
 mysqld --initialize --console  
 
@@ -57,8 +57,8 @@ lc-messages-dir="D:/wamp64/bin/mysql/mysql8.0.17/share"
 
 ![my-ini](mysql/my-ini.png)  
 
-设置环境变量: (D:\wamp64\bin\mysql\mysql8.0.17\bin =>PATH)  
-Path += D:\wamp64\bin\mysql\mysql8.0.21\bin  
+设置环境变量: (D:\wamp64\binmysql\mysql8.0.17\bin =>PATH)  
+Path += D:\wamp64\binmysql\mysql8.0.21\bin  
 
 ![PATH](mysql/PATH.png)  
 
@@ -345,7 +345,7 @@ CREATE TABLE `structure` (
 2, ALTER TABLE structure DISCARD TABLESPACE;  
 
 3, copy the structure.idb to the folder:   
-D:\wamp64\bin\mysql\mysql8.0.17\data\corpus  
+D:\wamp64\binmysql\mysql8.0.17\data\corpus  
 
 4, ALTER TABLE structure IMPORT TABLESPACE;  
 

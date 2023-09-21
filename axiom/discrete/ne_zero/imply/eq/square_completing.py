@@ -3,7 +3,6 @@ from util import *
 
 @apply
 def apply(ne_zero, self):
-    import std
     AT, A = std.array_split(ne_zero.of(Unequal[Det[Add], 0]), lambda arg: arg.is_Transpose)
 
     A = Add(*A)

@@ -19,11 +19,11 @@ def prove(Eq):
 
     Eq << algebra.cond_piece.given.ou.apply(Eq[0])
 
-    Eq << Eq[-1].this.find(And).apply(algebra.et.given.et.subs.bool)
+    Eq << Eq[-1].this.find(And).apply(algebra.cond.cond.given.et.subs)
 
-    Eq << Eq[-1].this.find(And).apply(algebra.et.given.et.subs.bool, invert=True)
+    Eq << Eq[-1].this.find(And).apply(algebra.cond.cond.given.et.subs, invert=True)
 
-    
+
 
 
 if __name__ == '__main__':

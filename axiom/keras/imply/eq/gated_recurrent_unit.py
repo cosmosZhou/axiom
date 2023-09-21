@@ -51,7 +51,7 @@ def prove(Eq):
     Eq << Eq[-1].subs(Eq[-3].reversed)
 
     Eq << Eq[-1].subs(*(Eq[i].reversed for i in range(1, 13)))
-
+    #https://arxiv.org/abs/1412.3555v1
 
 if __name__ == '__main__':
     run()

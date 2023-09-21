@@ -18,11 +18,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.max.to.piece)
 
-    Eq <<= Eq[0] & Eq[-1]
+    Eq << algebra.cond.cond.given.et.subs.apply(Eq[0], Eq[-1])
 
-    Eq << algebra.et.given.et.subs.bool.apply(Eq[-1], index=1)
 
-    
 
 
 if __name__ == '__main__':

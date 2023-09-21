@@ -21,7 +21,7 @@ def prove(Eq):
 
     f, g = Function(shape=(), integer=True)
 
-    S_x, S_y = Symbol(etype=dtype.integer.set * k)
+    S_x, S_y = Symbol(etype=dtype.integer.set[k])
 
     Eq << apply(All[x:S_x](Any[y:S_y](Equal(f(x), g(y)))))
 

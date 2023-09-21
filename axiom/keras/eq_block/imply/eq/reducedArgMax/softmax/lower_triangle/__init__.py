@@ -47,15 +47,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(ReducedArgMax[Lamda]).apply(algebra.reducedArgMax.to.lamda.reducedArgMax)
 
-    Eq << Eq[-1].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.reducedArgMax)
+    Eq << Eq[-1].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.reducedArgMax)
 
-    Eq << Eq[-1].this.rhs.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax_exp.to.reducedArgMax)
+    Eq << Eq[-1].this.rhs.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax.exp.to.reducedArgMax)
 
-    Eq << Eq[-1].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.add)
+    Eq << Eq[-1].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.add)
 
-    Eq << Eq[-1].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.reducedArgMax)
+    Eq << Eq[-1].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.reducedArgMax)
 
-    Eq.eq_reducedArgMax = Eq[-1].this.rhs.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax_exp.to.reducedArgMax)
+    Eq.eq_reducedArgMax = Eq[-1].this.rhs.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax.exp.to.reducedArgMax)
 
     Eq.eq_lamda = Equal(
         Lamda[i:Min(l, n)](z[i]),
@@ -87,7 +87,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.reducedArgMax.to.lamda.reducedArgMax)
 
-    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.add)
+    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.add)
 
     Eq << Eq[-1].subs(Eq.zi_min_def.reversed)
 

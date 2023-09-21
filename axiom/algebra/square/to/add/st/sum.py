@@ -25,10 +25,6 @@ def prove(Eq):
     x = Symbol(real=True, shape=(oo,))
     Eq << apply(Sum[i:n](x[i]) ** 2)
 
-    Eq.initial = Eq[0].subs(n, 1)
-
-    Eq << Eq.initial.this.find(Sum).apply(algebra.sum.to.add.doit.outer)
-
     Eq.induct = Eq[0].subs(n, n + 1)
 
     Eq << Eq.induct.this.find(Sum).apply(algebra.sum.to.add.split, cond={n})
@@ -46,9 +42,13 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
+    Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n=n, start=1)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-11-03
+# updated on 2023-08-26

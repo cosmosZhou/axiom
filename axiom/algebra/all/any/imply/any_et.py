@@ -13,12 +13,12 @@ def apply(forall, exists):
 
         domain_e = dict_e[key]
 
-        if domain_f == []:
+        if domain_f is None:
             domain_f = key.universalSet
         elif domain_f.is_bool:
             domain_f = conditionset(key, domain_f)
 
-        if domain_e == []:
+        if domain_e is None:
             domain_e = key.universalSet
         elif domain_e.is_bool:
             domain_e = conditionset(key, domain_e)

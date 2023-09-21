@@ -16,7 +16,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     n = Symbol(complex=True, positive=True)
-    A = Symbol(etype=dtype.complex * n)
+    A = Symbol(etype=dtype.complex[n])
     x, y = Symbol(complex=True, shape=(n,))
     Eq << apply(Subset({x, y}, A))
 

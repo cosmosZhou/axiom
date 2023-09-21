@@ -12,7 +12,6 @@ def apply(self):
     
     scope_variables = self.scope_variables
     
-    import std
     variable, constant = std.array_split(args, lambda arg: any(any(V.index_contains(v) for V in scope_variables) for v in arg.random_symbols))
 
     constant = Mul(*constant)

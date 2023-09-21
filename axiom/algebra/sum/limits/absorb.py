@@ -15,12 +15,13 @@ def rewrite(Sum, self):
     function = Mul(*args)
 
     cond = b.arg
-    variables = self.variables_set
+    variables = self.variables
+    variables_set = {*variables}
     if cond.is_And:
         eqs = {*cond.args}
         dic = defaultdict(set)
         for v in variables:
-            otherVars = variables - {v}
+            otherVars = variables_set - {v}
             for eq in eqs:
                 if eq._has(v) and not eq.has(*otherVars):
                     dic[v].add(eq)
@@ -42,12 +43,12 @@ def rewrite(Sum, self):
                 cond = Element(v, cond)
             dic[v].add(cond)
 
-        graph = {x: set() for x in variables}
+        graph = {x: set() for x in variables_set}
         for y, eqs in dic.items():
             if not eqs:
                 continue
 
-            free_symbols = set.union(*(eq.free_symbols for eq in eqs)) & (variables - {y})
+            free_symbols = set.union(*(eq.free_symbols for eq in eqs)) & (variables_set - {y})
             for x in free_symbols:
                 # y is dependent on x, so x is a parent of y
                 graph[x].add(y)
@@ -79,7 +80,7 @@ def rewrite(Sum, self):
             limits.append(limit)
 
     else:
-        for i, v in enumerate(self.variables):
+        for i, v in enumerate(variables):
             if cond._has(v):
                 v, *ab = limits[i]
                 if ab:

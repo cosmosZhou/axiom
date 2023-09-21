@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << algebra.eq.given.eq.div.apply(Eq[-1], Eq[-1].lhs.args[0])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.pow_exp.to.exp)
+    Eq << Eq[-1].this.lhs.apply(algebra.pow.exp.to.exp)
 
     Eq << Eq[-1].this.lhs.find(Arg).simplify()
 

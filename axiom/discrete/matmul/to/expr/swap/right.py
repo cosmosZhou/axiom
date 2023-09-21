@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(discrete.matmul.to.lamda)
 
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.kroneckerDelta)
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.delta)
 
     Eq << Eq[-1].this.rhs.apply(algebra.add.to.lamda)
 
@@ -38,9 +38,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda[~Add]).apply(algebra.add.collect, factor=KroneckerDelta(j, k))
 
-    Eq << Eq[-1].this.find(Mul[Add]).apply(algebra.mul_kroneckerDelta.to.zero)
+    Eq << Eq[-1].this.find(Mul[Add]).apply(algebra.mul.delta.to.zero)
 
-    
+
 
 
 if __name__ == '__main__':

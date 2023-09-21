@@ -3,7 +3,7 @@ from util import *
 
 def rewrite(self):
     e, (space, *shape) = self.of(Element[CartesianSpace])
-    indices, limits = ZeroMatrix(*shape).variables_with_limits()
+    indices, limits = ZeroMatrix(*shape).variables_with_limits({*self.free_symbols})
     return ForAll(Element(e[indices], space), *limits)
 
 @apply
@@ -22,11 +22,11 @@ def prove(Eq):
 
     Eq << Eq[0].this.apply(sets.el_cartesianSpace.to.all.el)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-07-02
-# updated on 2023-08-20
+# updated on 2023-08-26

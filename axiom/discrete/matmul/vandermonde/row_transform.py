@@ -34,13 +34,13 @@ def prove(Eq):
     j = Symbol(domain=Range(n))
     Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], [i, j])
 
-    Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum_sum.limits.swap)
+    Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum.sum.limits.swap)
 
     Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum.limits.subs.offset, -i)
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul.to.sum)
 
-    Eq << Eq[-1].this.find(Mul[~Sum]).apply(discrete.sum_binom.to.pow.Newton)
+    Eq << Eq[-1].this.find(Mul[~Sum]).apply(discrete.sum.binom.to.pow.Newton)
 
 
 

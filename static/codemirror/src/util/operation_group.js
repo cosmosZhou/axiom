@@ -70,3 +70,11 @@ function fireOrphanDelayed() {
   orphanDelayedCallbacks = null
   for (let i = 0; i < delayed.length; ++i) delayed[i]()
 }
+
+export function updateGutterSpace(display) {
+  let width = display.gutters.offsetWidth
+  display.sizer.style.marginLeft = width + "px"
+  // Send an event to consumers responding to changes in gutter width.
+  signalLater(display, "gutterChanged", display)
+}
+

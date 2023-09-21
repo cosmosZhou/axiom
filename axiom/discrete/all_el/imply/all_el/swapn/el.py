@@ -26,13 +26,13 @@ def prove(Eq):
     from axiom import discrete
 
     n = Symbol(domain=Range(2, oo))
-    S = Symbol(etype=dtype.integer * n)
+    S = Symbol(etype=dtype.integer[n])
     x = Symbol(**S.element_symbol().type.dict)
     i, j, k = Symbol(integer=True)
     w = Symbol(Lamda[j, i](SwapMatrix(n, i, j)))
     Eq.swap, (Eq.P_definition, Eq.w_definition), Eq.axiom = apply(All[x:S](Element(Lamda[k:n](x[(w[i, j] @ Lamda[k:n](k))[k]]), S)))
 
-    Eq << discrete.lamda_indexed.to.matmul.swap.apply(x, w)
+    Eq << discrete.lamda.indexed.to.matmul.swap.apply(x, w)
 
     Eq << Eq.swap.subs(Eq[-1])
 

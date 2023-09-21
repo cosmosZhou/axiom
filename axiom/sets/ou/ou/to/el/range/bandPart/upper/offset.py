@@ -37,7 +37,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(NotElement).apply(sets.notin_range.to.ou)
 
-    Eq << Eq[-1].this.find(Range).apply(sets.range_min.to.intersect)
+    Eq << Eq[-1].this.find(Range).apply(sets.range.min.to.intersect)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_intersect.to.et)
 
@@ -47,8 +47,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_range.to.et)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

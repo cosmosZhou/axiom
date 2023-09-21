@@ -1,19 +1,238 @@
 from std.file import createNewFile
-import std
 from os.path import dirname, basename, abspath, sep
 import re
+from std import computed
+from util.search import yield_from_py
+import std
 
 workingDirectory = dirname(dirname(__file__)) + '/'
 
-def get_args_for_writing(module):
-    prove = [{"py":"Eq.induct = keras.ne_zero.eq.eq.eq.eq.imply.eq.policy_gradient.induct.apply(*Eq[:4], n)","latex":"\\[{\\nabla_{θ} V^\\pi_{θ}({s}_{0})} = {{\\color{green} {γ}}^{n} \\int \\nabla_{θ} V^\\pi_{θ}({s}_{n}) \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:n + 1} + \\sum\\limits_{k:n}{\\color{green} {γ}}^{k} \\int \\prod\\limits_{t:k}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right) \\cdot \\sum_{{a}_{k}} \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right) Q^\\pi_{θ}({s}_{k}, {a}_{k})\\, d{s}_{1:k + 1}}\\tag*{Eq.induct}\\]"},{"py":"Eq << calculus.eq.imply.eq.limit.apply(Eq.induct, (n, oo))","latex":"\\[{\\nabla_{θ} V^\\pi_{θ}({s}_{0})} = {\\lim\\limits_{n \\to \\infty}\\left({\\color{green} {γ}}^{n} \\int \\nabla_{θ} V^\\pi_{θ}({s}_{n}) \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:n + 1} + \\sum\\limits_{k:n}{\\color{green} {γ}}^{k} \\int \\prod\\limits_{t:k}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right) \\cdot \\sum_{{a}_{k}} \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right) Q^\\pi_{θ}({s}_{k}, {a}_{k})\\, d{s}_{1:k + 1}\\right)}\\tag*{Eq[5]}\\]"},{"py":"Eq.limit = Eq[-1].this.find(Limit).apply(calculus.limit.to.add)","latex":"\\[{\\nabla_{θ} V^\\pi_{θ}({s}_{0})} = {\\lim\\limits_{n \\to \\infty} {\\color{green} {γ}}^{n} \\int \\nabla_{θ} V^\\pi_{θ}({s}_{n}) \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:n + 1} + \\lim\\limits_{n \\to \\infty} \\sum\\limits_{k:n}{\\color{green} {γ}}^{k} \\int \\prod\\limits_{t:k}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right) \\cdot \\sum_{{a}_{k}} \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right) Q^\\pi_{θ}({s}_{k}, {a}_{k})\\, d{s}_{1:k + 1}}\\tag*{Eq.limit}\\]"},{"py":"Eq << algebra.imply.all.le_sup.apply(Eq[4].find(Sup))","latex":"\\[\\left|{\\nabla_{θ} V^\\pi_{θ}({s}_{t})}\\right| \\leq \\sup\\limits_{{s}_{t}} \\left|{\\nabla_{θ} V^\\pi_{θ}({s}_{t})}\\right|\\tag*{Eq[6]}\\]"},{"py":"Eq << algebra.le.imply.le.mul.apply(Eq[-1].subs(t, n), Eq[-2].find(Product))","latex":"\\[\\left|{\\nabla_{θ} V^\\pi_{θ}({s}_{n})}\\right| \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right) \\leq \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right) \\cdot \\sup\\limits_{{s}_{n}} \\left|{\\nabla_{θ} V^\\pi_{θ}({s}_{n})}\\right|\\tag*{Eq[7]}\\]"},{"py":"Eq << calculus.le.imply.le.integral.apply(Eq[-1], (s[1:n + 1].var,))","latex":"\\[\\int \\left|{\\nabla_{θ} V^\\pi_{θ}({s}_{n})}\\right| \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:n + 1} \\leq \\left(\\int \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:n + 1}\\right) \\sup\\limits_{{s}_{n}} \\left|{\\nabla_{θ} V^\\pi_{θ}({s}_{n})}\\right|\\tag*{Eq[8]}\\]"},{"py":"Eq << Eq[-1].this.find(Integral[Product]).apply(stats.integral_prod.to.one)","latex":"\\[\\int \\left|{\\nabla_{θ} V^\\pi_{θ}({s}_{n})}\\right| \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:n + 1} \\leq \\sup\\limits_{{s}_{n}} \\left|{\\nabla_{θ} V^\\pi_{θ}({s}_{n})}\\right|\\tag*{Eq[9]}\\]"},{"py":"Eq << Eq[4].this.lhs.limits_subs(s[t].var, s[n].var)","latex":"\\[\\sup\\limits_{{s}_{n}} \\left|{\\nabla_{θ} V^\\pi_{θ}({s}_{n})}\\right| < \\infty\\tag*{Eq[4]}\\]"},{"py":"Eq << algebra.le.lt.imply.lt.transit.apply(Eq[-1], Eq[4])","latex":"\\[\\int \\left|{\\nabla_{θ} V^\\pi_{θ}({s}_{n})}\\right| \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:n + 1} < \\infty\\tag*{Eq[10]}\\]"},{"py":"Eq << calculus.imply.abs_le.integral.apply(Eq.induct.find(Integral))","latex":"\\[\\left|{\\int \\nabla_{θ} V^\\pi_{θ}({s}_{n}) \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:n + 1}}\\right| \\leq \\int \\left|{\\nabla_{θ} V^\\pi_{θ}({s}_{n})}\\right| \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:n + 1}\\tag*{Eq[11]}\\]"},{"py":"Eq << algebra.le.lt.imply.lt.transit.apply(Eq[-1], Eq[-2])","latex":"\\[\\left|{\\int \\nabla_{θ} V^\\pi_{θ}({s}_{n}) \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:n + 1}}\\right| < \\infty\\tag*{Eq[12]}\\]"},{"py":"Eq << Less(Abs(γ, evaluate=False), 1, plausible=True)","latex":"\\[\\left|{{\\color{green} {γ}}}\\right| < 1\\tag*{Eq[13]}\\]"},{"py":"Eq << Eq[-1].this.lhs.doit()","latex":"\\[\\text{True}\\]"},{"py":"Eq << calculus.lt.is_finite.imply.is_zero.limit.apply(Eq[-2], Eq[-1], n)","latex":"\\[{\\lim\\limits_{n \\to \\infty} {\\color{green} {γ}}^{n} \\int \\nabla_{θ} V^\\pi_{θ}({s}_{n}) \\prod\\limits_{t:n}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:n + 1}} = {\\mathbf{0}}\\tag*{Eq[14]}\\]"},{"py":"Eq << Eq.limit.subs(Eq[-1])","latex":"\\[{\\nabla_{θ} V^\\pi_{θ}({s}_{0})} = {\\lim\\limits_{n \\to \\infty} \\sum\\limits_{k:n}{\\color{green} {γ}}^{k} \\int \\prod\\limits_{t:k}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right) \\cdot \\sum_{{a}_{k}} \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right) Q^\\pi_{θ}({s}_{k}, {a}_{k})\\, d{s}_{1:k + 1}}\\tag*{Eq[15]}\\]"},{"py":"Eq << Eq[-1].this.rhs.apply(calculus.limit.to.sum)","latex":"\\[{\\nabla_{θ} V^\\pi_{θ}({s}_{0})} = {\\sum\\limits_{k=0}^{\\infty} {\\color{green} {γ}}^{k} \\int \\prod\\limits_{t:k}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right) \\cdot \\sum_{{a}_{k}} \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right) Q^\\pi_{θ}({s}_{k}, {a}_{k})\\, d{s}_{1:k + 1}}\\tag*{Eq[16]}\\]"},{"py":"Eq << Eq[-1].this.find(Derivative[Probability]).apply(calculus.grad.to.mul.grad.log)","latex":"\\[{\\nabla_{θ} V^\\pi_{θ}({s}_{0})} = {\\sum_{k} {\\color{green} {γ}}^{k} \\int \\prod\\limits_{t:k}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right) \\cdot \\sum_{{a}_{k}} \\nabla_{θ} \\log {\\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right) Q^\\pi_{θ}({s}_{k}, {a}_{k})\\, d{s}_{1:k + 1}}\\tag*{Eq[17]}\\]"},{"py":"Eq << Eq[-1].this.rhs.find(Sum).apply(stats.sum.to.expect)","latex":"\\[{\\nabla_{θ} V^\\pi_{θ}({s}_{0})} = {\\sum_{k} {\\color{green} {γ}}^{k} \\int \\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ} \\left(\\nabla_{θ} \\log {\\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right) \\prod\\limits_{t:k}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:k + 1}}\\tag*{Eq[18]}\\]"},{"py":"Eq << Eq.hypothesis.find(Expectation).this.apply(stats.expect.conditioned.importance_sampling, θ)","latex":"\\[{\\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ'} \\left(\\frac{\\left(Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) - V^\\pi_{θ}({s}_{k})\\right) \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}{\\mathbb{P}_{θ'}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} = {\\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ} \\left(\\frac{\\left(Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) - V^\\pi_{θ}({s}_{k})\\right) \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}{\\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}\\tag*{Eq[19]}\\]"},{"py":"Eq << Eq[-1].this.rhs.find(Derivative[Probability]).apply(calculus.grad.to.mul.grad.log)","latex":"\\[{\\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ'} \\left(\\frac{\\left(Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) - V^\\pi_{θ}({s}_{k})\\right) \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}{\\mathbb{P}_{θ'}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} = {\\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ} \\left(\\left(Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) - V^\\pi_{θ}({s}_{k})\\right) \\nabla_{θ} \\log {\\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}\\tag*{Eq[20]}\\]"},{"py":"Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(algebra.mul.to.add)","latex":"\\[{\\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ'} \\left(\\frac{\\left(Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) - V^\\pi_{θ}({s}_{k})\\right) \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}{\\mathbb{P}_{θ'}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} = {\\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ} \\left(\\nabla_{θ} \\log {\\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) - \\nabla_{θ} \\log {\\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} V^\\pi_{θ}({s}_{k}) \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}\\tag*{Eq[21]}\\]"},{"py":"Eq << Eq[-1].this.rhs.apply(stats.expect.to.add)","latex":"\\[{\\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ'} \\left(\\frac{\\left(Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) - V^\\pi_{θ}({s}_{k})\\right) \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}{\\mathbb{P}_{θ'}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} = {\\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ} \\left(\\nabla_{θ} \\log {\\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right) + \\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ} \\left(- \\nabla_{θ} \\log {\\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} V^\\pi_{θ}({s}_{k}) \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}\\tag*{Eq[22]}\\]"},{"py":"Eq << Eq[-1].this.find(Expectation[Conditioned[Mul[NegativeOne]]]).apply(stats.expect.to.mul)","latex":"\\[{\\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ'} \\left(\\frac{\\left(Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) - V^\\pi_{θ}({s}_{k})\\right) \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}{\\mathbb{P}_{θ'}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} = {\\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ} \\left(\\nabla_{θ} \\log {\\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right) - V^\\pi_{θ}({s}_{k}) \\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ} \\left(\\nabla_{θ} \\log {\\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}\\tag*{Eq[23]}\\]"},{"py":"Eq << Eq[-1].this.find(Mul[~Expectation[Conditioned[Derivative]]]).apply(stats.expect_conditioned.to.zero.st.grad.log.prob)","latex":"\\[{\\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ'} \\left(\\frac{\\left(Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) - V^\\pi_{θ}({s}_{k})\\right) \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}{\\mathbb{P}_{θ'}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} = {\\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ} \\left(\\nabla_{θ} \\log {\\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}\\tag*{Eq[24]}\\]"},{"py":"Eq << Eq.hypothesis.subs(Eq[-1])","latex":"\\[{\\nabla_{θ} V^\\pi_{θ}({s}_{0})} = {\\sum_{k} {\\color{green} {γ}}^{k} \\int \\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ} \\left(\\nabla_{θ} \\log {\\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right) \\prod\\limits_{t:k}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:k + 1}}\\tag*{Eq[18]}\\]"}]
-    given = {"py":"b, D = Symbol(integer=True, positive=True)\ns = Symbol(shape=(oo, b), real=True, random=True) #states \/ observation\n\na = Symbol(shape=(oo,), integer=True, random=True) #actions\nr = Symbol(shape=(oo,), real=True, random=True) #rewards\nθ, θ_quote = Symbol(shape=(D,), real=True) #trainable weights for the agent\nt, k = Symbol(integer=True) #time step counter\nV = Function(r'V^\\pi', real=True, shape=()) #State-Value Function\nQ = Function(r'Q^\\pi', real=True, shape=()) #Action-Value Function\nγ = Symbol(domain=Interval(0, 1, right_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1\nG = Lamda[t](Sum[k:0:oo](γ ** k * r[t + k + 1])) #sum of discounted future reward\nn = Symbol(integer=True, positive=True, given=False)\n*Eq[-5:], Eq.hypothesis = apply(Unequal(Probability[a:θ](s, a), 0),\n            Equal(r[t + 2:] | s[t] & a[t], r[t + 2:]), #history-irrelevant conditional independence assumption for rewards based on states and actions\n            Equal((Q[π] ^ γ)(s[t].var, a[t].var), Expectation[r[t + 1:], a:θ](G[t] | s[t] & a[t])),\n            Equal((V[π] ^ γ)(s[t].var), Expectation[r[t + 1:], a:θ](G[t] | s[t])),\n            Less(Sup[s[t].var](Abs(Derivative[π]((V[π] ^ γ)(s[t].var)))), oo, evaluate=False),\n            n, θ_quote)","latex":"\\[\\mathbb{p}_{θ}\\left({\\color{red} {a}}\\wedge {\\color{red} {s}}\\right) \\neq 0\\tag*{Eq[0]}\\]\\[{{{\\color{red} {r}}}_{t + 2:} \\mathrel{\\bigg|} {{\\color{red} {a}}}_{t}\\wedge {{\\color{red} {s}}}_{t}} = {{{\\color{red} {r}}}_{t + 2:}}\\tag*{Eq[1]}\\]\\[{Q^\\pi_{θ}({s}_{t}, {a}_{t})} = {\\mathop{\\mathbb{E}}\\limits_{\\begin{subarray}{c}{{\\color{red} {r}}}_{t + 1:}\\\\{\\color{red} {a}} \\sim θ\\end{subarray}} \\left(\\sum\\limits_{k=0}^{\\infty} {\\color{green} {γ}}^{k} {{\\color{red} {r}}}_{k + t + 1} \\mathrel{\\bigg|} {{\\color{red} {a}}}_{t}\\wedge {{\\color{red} {s}}}_{t}\\right)}\\tag*{Eq[2]}\\]\\[{V^\\pi_{θ}({s}_{t})} = {\\mathop{\\mathbb{E}}\\limits_{\\begin{subarray}{c}{{\\color{red} {r}}}_{t + 1:}\\\\{\\color{red} {a}} \\sim θ\\end{subarray}} \\left(\\sum\\limits_{k=0}^{\\infty} {\\color{green} {γ}}^{k} {{\\color{red} {r}}}_{k + t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)}\\tag*{Eq[3]}\\]\\[\\sup\\limits_{{s}_{t}} \\left|{\\nabla_{θ} V^\\pi_{θ}({s}_{t})}\\right| < \\infty\\tag*{Eq[4]}\\]"}
-    imply = "\\[{\\nabla_{θ} V^\\pi_{θ}({s}_{0})} = {\\sum_{k} {\\color{green} {γ}}^{k} \\int \\mathop{\\mathbb{E}}\\limits_{{\\color{red} {a}} \\sim θ'} \\left(\\frac{\\left(Q^\\pi_{θ}({s}_{k}, {{\\color{red} {a}}}_{k}) - V^\\pi_{θ}({s}_{k})\\right) \\nabla_{θ} \\mathbb{P}_{θ}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)}{\\mathbb{P}_{θ'}\\left({{\\color{red} {a}}}_{k} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right)} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{k}\\right) \\prod\\limits_{t:k}\\mathbb{p}\\left({{\\color{red} {s}}}_{t + 1} \\mathrel{\\bigg|} {{\\color{red} {s}}}_{t}\\right)\\, d{s}_{1:k + 1}}\\tag*{Eq.hypothesis}\\]"
-    unused = ["#https:\/\/spinningup.openai.com\/en\/latest\/spinningup\/rl_intro.html#bellman-equations\n#http:\/\/incompleteideas.net\/book\/bookdraft2017nov5.pdf (Page 47)\n#https:\/\/lilianweng.github.io\/posts\/2018-04-08-policy-gradient\/\n#https:\/\/danieltakeshi.github.io\/2017\/04\/02\/notes-on-the-generalized-advantage-estimation-paper\/\n#https:\/\/spinningup.openai.com\/en\/latest\/spinningup\/rl_intro.html#id4\n#https:\/\/huggingface.co\/deep-rl-course\/unit4\/pg-theorem?fw=pt\n#https:\/\/www.youtube.com\/watch?v=cQfOQcpYRzE\n#https:\/\/www.52coding.com.cn\/tags\/Reinforcement-Learning\/\n#TRPO\n#https:\/\/arxiv.org\/pdf\/1502.05477.pdf\n\n"]
-    createdTime = '2023-03-30'
-    updatedTime = '2023-04-03'
+def has_unterminated_parantheses(statement):
+    return statement.count("(") > statement.count(")")
+
+def piece_together(input):
+    code = "\n".join(input)
+    input.clear()
+    return code 
+
+#(?:\( *Eq\.\w+ *(?:, (*Eq\.\w+|\*Eq\[-\d+:\]))+ *\)
+#(?:, *(?:\( *Eq\.\w+ *(?:, *Eq\.\w+)+ *\)|Eq\.\w+|\[\*Eq\[-\d+:\]\]))
+def is_latex_print(latex):
+    # Eq.first, Eq.result = ...
+    # Eq.first, result = ...
+    # Eq.first, *result = ...
+    # Eq.given, Eq.where, Eq.imply = ...
+    # Eq.given, (Eq.where, Eq.where1), Eq.imply = ...
+    # Eq[-2:], (Eq.where, *Eq[-2:]), Eq[-2:] = ...
+    # (*Eq[-4:], Eq.eq_s, Eq.eq_x, Eq.eq_G), Eq[-1] = ...
+    # *Eq[-5:], Eq.hypothesis = ...
+
+    res = []
+    while matches := re.match('(Eq\.\w+|\((Eq\.\w+|\*Eq\[-\d+:\]) *(, *Eq\.\w+)+ *\)|Eq\[-(\d+:|1)\]|\*Eq\[-\d+:\]|\*\w+|\w+)', latex):
+        res.append(matches[0])
+        latex = latex[len(matches[0]):]
+        if re.match(' *= *', latex):
+            return res
+        
+        if matchComma := re.match(' *, *', latex):
+            latex = latex[len(matchComma[0]):]
+        else:    
+            return []
     
-    imply = imply.replace('\\', '\\\\')
+    return []
+
+
+def get_args_for_writing(module, latexStr):
+    inputs = []
+    input = []
+    counterOfLengths = 0
+    lengths = []
+    m = re.search('([\w.]+)\.(imply|given)\.', module)
+    numOfRequisites = len(m[1].split(".")) - 1 if m else 0
+    createdTime = updatedTime = None
+
+    for dict in yield_from_py(module):
+        if 'statement' not in dict:
+            continue
+
+        statement = dict['statement']
+
+        if 'module' in dict:
+            module = dict['module']
+            indexOfYield = counterOfLengths
+            input.append(statement)
+        elif 'a' in dict:
+            if (not input) and inputs and inputs[-1][-1] == '\\':
+                length = len(inputs)
+                inputs[length - 1] += f"\n{statement}"
+            else:
+                input.append(statement)
+            
+        else:
+            del dict['statement']
+            if 'comment' in dict:
+                del dict['comment']
+
+                if 'unused' in dict:
+                    ...
+                elif inputs and has_unterminated_parantheses(inputs[-1]):
+                    inputs[-1] += f"\n{statement}"
+                    continue
+                else:
+                    if dict:
+                        for key, value in dict.items():
+                            match key:
+                                case "created":
+                                    createdTime = value
+                                case "updated":
+                                    updatedTime = value
+
+                input.append(statement)
+                continue
+
+            if 'unused' in dict:
+                input.append(statement)
+                continue
+
+            text = statement
+            if statement.startswith('    ') and not input:
+                #starting with more than 4 spaces indicates this line is a continuation of the previous line of code!
+                inputs[-1] += f"\n{text}"
+            else:
+                input.append(text)
+        
+        if matches := re.match('Eq *(<<|\[ *(- *\d+ *)?(: *)?\] *=) *', statement):
+            inputs.append(piece_together(input))
+
+            counterOfLengths += 1
+            lengths.append(1)
+        elif matches := is_latex_print(statement):
+
+            regexp = 'Eq\.\w+|Eq\[-(\d+:|1)\]'
+            if 'module' in dict:
+                count = len(matches)
+                match count:
+                    case 1:
+                        lengthOfGiven = lengthOfWhere = 0                        
+                    case 2:
+                        if numOfRequisites:
+                            matchGiven = re.findall(regexp, matches[0])
+                            lengthOfGiven = len(matchGiven)
+                            lengthOfWhere = 0
+                        else:
+                            matchWhere = re.findall(regexp, matches[0])
+                            lengthOfWhere = len(matchWhere)
+                            lengthOfGiven = 0
+                    case 3:
+                        matchGiven = re.findall(regexp, matches[0])
+                        lengthOfGiven = len(matchGiven)
+
+                        matchWhere = re.findall(regexp, matches[1])
+                        lengthOfWhere = len(matchWhere)
+
+                matchImply = re.findall(regexp, matches[count - 1])
+                lengthOfImply = len(matchImply)
+                lengths.append(lengthOfGiven + lengthOfWhere + lengthOfImply)
+                
+            elif assgnment_count := sum(len(re.findall(regexp, text)) for text in matches):
+                lengths.append(assgnment_count)
+            else:
+                continue
+
+            inputs.append(piece_together(input))
+            counterOfLengths += 1
+
+    if input:
+        inputs.append(piece_together(input))
+    
+    numOfReturnsFromApply = lengths[indexOfYield]
+    
+    i = 0
+    latex = []
+    where = statements = ''
+    given = imply = None
+    
+    def is_latex_with_tabs(latex):
+        if "\t" in latex:
+            matches = []
+            for tex in latex.split("\t"):
+                if m := re.findall('\\\\\[.+?\\\\\]', tex):
+                    matches.append(''.join(m))
+                else:
+                    return []
+            return matches
+        
+        return re.findall('\\\\\[.+?\\\\\]', latex)
+    
+    resultsFromApply = []
+    for statement in latexStr.split("\n"):
+        if i == indexOfYield:
+            if numOfReturnsFromApply == 1:
+                lengths[i] -= 1
+                if not lengths[i]:
+                    if matches := is_latex_with_tabs(statement):
+                        match len(matches):
+                            case 3:
+                                given, where, imply = matches
+                            case 2:
+                                if numOfRequisites:
+                                    given, imply = matches
+                                    where = ''
+                                else:
+                                    where, imply = matches
+                                    given = ''
+                            case 1:
+                                where = ''
+                                given = ''
+                                imply, = matches
+                    
+                    given = {
+                        'py' : inputs.pop(0),
+                        'latex' : given
+                    }
+    
+                    statements = ''
+                    i += 1
+            else:
+                resultsFromApply.append(statement)
+    
+                lengths[i] -= 1
+                if lengths[i] == 0:
+                    given = resultsFromApply[:lengthOfGiven]
+                    given = ''.join(given)
+                    given = {
+                        'py' : inputs[0],
+                        'latex' : given
+                    }
+    
+                    if lengthOfWhere:
+                        where = resultsFromApply[lengthOfGiven:lengthOfWhere]
+                        where = ''.join(where)
+                    else:
+                        where = ''
+    
+                    imply = resultsFromApply[lengthOfGiven + lengthOfWhere:]
+                    imply = ''.join(imply)
+    
+                    statements = ''
+                    inputs = inputs[1:]
+                    i += 1
+        else:
+            statements += statement
+            if i >= len(lengths):
+                continue
+    
+            lengths[i] -= 1
+            if not lengths[i]:
+                latex.append(statements)
+                statements = ''
+                i += 1
+    
+    size = len(latex)
+    unused = inputs[size:]
+    prove = [{'py' : inputs[i], 'latex' : latex[i]} for i in range(size)]
+    if imply is None:
+        print(module, 'is eronuous!')
     return module, prove, given, imply, unused, createdTime, updatedTime
 
 class LocalJsWriter:
@@ -26,23 +245,58 @@ class LocalJsWriter:
     def select_axiom_lapse_from_axiom(self):
         return {}
 
+    @computed
+    def targetFiles(self):
+        targetFiles = []
+
+        for file in std.listdir(workingDirectory + 'static/components', 'vue'):
+            if basename(file) == 'codeMirror.vue':
+                def transform(text):
+                    return text.replace('//import CodeMirror', 'import CodeMirror') 
+            else:
+                transform = None
+            generate_js(file, transform)
+            targetFiles.append('vue/' + basename(file))
+        
+        parentPath = workingDirectory + 'static/'
+        for file in std.listdir(workingDirectory + 'static/codemirror', 'js', recursive=True):
+            file = abspath(file)
+            if file.endswith('lib' + sep + 'codemirror.js'):
+                def transform(text):
+                    with open(parentPath + 'codemirror/mode/python/python.js', 'r', encoding='utf8') as file:
+                        python = file.read()
+                        python = re.search("function\(CodeMirror\) \{(.+)\}\);\s*$", python, re.S)[1]
+                        
+                    with open(parentPath + 'codemirror/addon/selection/active-line.js', 'r', encoding='utf8') as file:
+                        active_line = file.read()
+                        active_line = re.search("function\(CodeMirror\) \{(.+)\}\);\s*$", active_line, re.S)[1]
+                        
+                    with open(parentPath + 'codemirror/addon/hint/show-hint.js', 'r', encoding='utf8') as file:
+                        show_hint = file.read()
+                        show_hint = re.search("function\(CodeMirror\) \{(.+)\}\);\s*$", show_hint, re.S)[1]
+                        
+                    with open(parentPath + 'codemirror/addon/edit/matchbrackets.js', 'r', encoding='utf8') as file:
+                        matchbrackets = file.read()
+                        matchbrackets = re.search("function\(CodeMirror\) \{(.+)\}\);\s*$", matchbrackets, re.S)[1]
+                        
+                    text = re.sub("\(function\(global, factory\) \{.+\}\)\)\);\s*$", "export default CodeMirror\n", text, flags=re.S)
+                    text += python + active_line + show_hint + matchbrackets
+                    text = text.replace('"use strict";', '')
+                    return text
+            else:
+                transform = None
+            generate_js(file, transform, file[len(parentPath):-3].split(sep))
+            targetFiles.append(abspath(file)[len(parentPath):])
+        
+        return targetFiles
+
     def load_data(self, table, data, **kwargs):
         from _collections import defaultdict
         state_count_pairs = defaultdict(int)
         repertoire = defaultdict(dict)
         total = 0
         
-        targetFiles = []
-
-        for file in std.listdir(workingDirectory + 'static/components', 'vue'):
-            generate_js(file)
-            targetFiles.append('vue/' + basename(file))
-        
-#         parentPath = workingDirectory + 'static/'
-#         for file in std.listdir(workingDirectory + 'static/codemirror', 'js', recursive=True):
-#             generate_js(file, None, abspath(file)[len(parentPath):-3].split(sep))
-#             targetFiles.append(abspath(file)[len(parentPath):])
-            
+        targetFiles = self.targetFiles
         for package, module, state, lapse, latex in data:
             state_count_pairs[state.name] += 1
             total += 1
@@ -54,12 +308,22 @@ class LocalJsWriter:
                     section[state.name] = []
                 section[state.name].append(module)
                 
-            write_html(module, generate_theorem(*get_args_for_writing(module)), targetFiles)
+            write_html(module, generate_theorem(*get_args_for_writing(module, latex), targetFiles))
             
         state_count_pairs['total'] = total
         state_count_pairs = [dict(state=state, count=count) for state, count in state_count_pairs.items()]
         write_js_object('target/js/axiomSummary.js', '', state_count_pairs=state_count_pairs, repertoire=repertoire)
+        return len(targetFiles)
     
+    def execute(self, sql):
+        m = re.match('update axiom set state = "\w+", lapse = \S+, latex = ("[\s\S]+") where user = "\w+" and axiom = "(\S+)"', sql)
+        if m:
+            latex, module = m.groups()
+            latex = eval(latex)
+            html = write_html(module, generate_theorem(*get_args_for_writing(module, latex), self.targetFiles))
+            print(html)
+        return 1
+        
 instance = LocalJsWriter()
             
 def write_js_object(path, namespace, **kwargs):
@@ -84,11 +348,11 @@ def write_js_object(path, namespace, **kwargs):
 
 def generate_js(file, transform=None, attributes=None):
     name = basename(file)
-    name, ext = std.split_filename(name)    
+    name, ext = std.split_filename(name)
     with open(file, 'r', encoding='utf8') as file:
         text = file.read()
         if transform:
-            text = transform(name, text)
+            text = transform(text)
 
         text = text.replace('\\', '\\\\')
         text = text.replace('`', "\`")
@@ -113,28 +377,28 @@ def generate_js(file, transform=None, attributes=None):
 
     file = workingDirectory + mjs
     createNewFile(file)
-    # Text(file).write('')
     with open(file, 'w', encoding='utf8') as file:
         print(text, file=file)
 
     return mjs
     
-def write_html(module, textContent, targetFiles):
-    parentPath = '../' * len(module.split('.'))
-    textContent = textContent % '\n'.join([f"<script src='{parentPath}target/{mjs}'></script>" for mjs in targetFiles])        
-
+def write_html(module, textContent):
     mjs = 'target/%s.html' % module.replace('.', '/')
-    file = workingDirectory + mjs
-    createNewFile(file)
-    # Text(file).write('')
-    with open(file, 'w', encoding='utf8') as file:
+    filePath = workingDirectory + mjs
+    createNewFile(filePath)    
+    with open(filePath, 'w', encoding='utf8') as file:
         print(textContent, file=file)
 
-    return mjs
+    return filePath
     
         
-def generate_theorem(module, prove, given, imply, unused, createdTime, updatedTime):
-    parentPath = '../' * len(module.split('.'))
+def generate_theorem(module, prove, given, imply, unused, createdTime, updatedTime, mjs):
+    parentPath = '../' * (len(module.split('.')) - 1)
+    mjs = '\n'.join([f"<script src='{parentPath}{mjs}'></script>" for mjs in mjs])
+    parentPath += '../'
+    imply = std.json_encode(imply)
+    createdTime = std.json_encode(createdTime)
+    updatedTime = std.json_encode(updatedTime)
     return f"""
 <!DOCTYPE html>
 <meta charset="UTF-8">
@@ -150,50 +414,6 @@ div {{
 }}
 </style>
 <body></body>
-
-<script>
-MathJax = {{
-    startup: {{
-        ready(){{
-              console.log('MathJax is loaded, but not yet initialized');
-              MathJax.startup.defaultReady();
-              console.log('MathJax is initialized, and the initial typeset is queued');
-              
-              MathJax.startup.promise.then(() => {{
-                  console.log('MathJax initial typesetting complete');
-                  setTimeout(() => {{
-                      var p = document.querySelectorAll('p');
-                      if (p.length) {{
-                          for (let p of document.querySelectorAll('p')){{
-                              if (p.innerText.startsWith("\\\\[")) {{
-                                  console.log("unfinished work detected!");
-                                  console.log(p.innerText);
-                                  console.log('trying MathJax.typesetPromise() again;');
-                                  MathJax.typesetPromise();
-                                  break;
-                              }}
-                          }}
-                      }}
-                      else {{
-                          console.log("no p tags have been detected!");
-                          setTimeout(() => {{
-                              console.log("MathJax.typesetPromise() due to absence of p tags");
-                              MathJax.typesetPromise();
-                          }}, 1000);
-                      }}
-                  }}, 1000);
-              }});                  
-         }}
-      }},
-
-    tex: {{
-        maxBuffer: 60 * 1024,       // maximum size for the internal TeX string (10K)
-        //reference: http://docs.mathjax.org/en/latest/options/input/tex.html?highlight=MAXBUFFER#the-configuration-block
-    }},
-}};
-</script>
-
-<script async src="{parentPath}static/unpkg.com/mathjax@3.2.0/es5/tex-chtml.js"></script>
 <script src="{parentPath}static/unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
 <script src="{parentPath}static/unpkg.com/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
 
@@ -203,37 +423,15 @@ MathJax = {{
 <script src='{parentPath}static/js/std.js'></script>
 <script src='{parentPath}static/js/utility.js'></script>
 <script>
+MathJax = InitMathJax(1000);
+</script>
+<script async src="{parentPath}static/unpkg.com/mathjax@3.2.0/es5/tex-chtml.js"></script>
+<script>
 window.vue = {{}};
 window.js = {{}};
 </script>
-%s
-
+{mjs}
 <script type=module>
-//import * as codemirror from "{parentPath}static/codemirror/lib/codemirror.js";
-//import * as python from "{parentPath}static/codemirror/mode/python/python.js";
-//import * as active_line from "{parentPath}static/codemirror/addon/selection/active-line.js";
-//import * as show_hint from "{parentPath}static/codemirror/addon/hint/show-hint.js";
-//import * as matchbrackets from "{parentPath}static/codemirror/addon/edit/matchbrackets.js";
-
-var logs = [];
-
-var error = [];
-//console.log(logs);
-for (let i = 0; i < logs.length; ++i){{
-    var log = logs[i];
-    if (log.startsWith('{{') && log.endsWith('}}')){{
-        error.push(JSON.parse(log));
-        logs.delete(i);
-        break;
-    }}
-    
-    if (log.startsWith('[') && log.endsWith(']')){{
-        logs.delete(i);
-        error = JSON.parse(log);
-        break;
-    }}
-}}
-
 createApp('render', {{
     error : [],
     logs : [],
@@ -241,14 +439,11 @@ createApp('render', {{
     unused : {unused},
     module: "{module}",
     given: {given},
-    imply: `{imply}`,
+    imply: {imply},
     where: "",
-    createdTime: `{createdTime}`,
-    updatedTime: `{updatedTime}`,
+    createdTime: {createdTime},
+    updatedTime: {updatedTime},
 }});
-
-//http://codemirror.net/doc/manual.html
-//http://docs.mathjax.org/en/latest/
 </script>"""
 
     

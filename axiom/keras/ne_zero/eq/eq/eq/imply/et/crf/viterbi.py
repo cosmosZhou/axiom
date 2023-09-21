@@ -97,7 +97,7 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(t, n - 1)
 
-    
+    #https://arxiv.org/abs/1603.01360    
     
 
 

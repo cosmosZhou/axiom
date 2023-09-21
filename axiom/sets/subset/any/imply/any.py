@@ -26,7 +26,7 @@ def prove(Eq):
     from axiom import algebra, sets
 
     n = Symbol(complex=True, positive=True)
-    A, B = Symbol(etype=dtype.complex * n)
+    A, B = Symbol(etype=dtype.complex[n])
     x = Symbol(complex=True, shape=(n,))
     f = Function(complex=True, shape=())
     Eq << apply(Subset(B, A), Any[x:B](f(x) > 1))

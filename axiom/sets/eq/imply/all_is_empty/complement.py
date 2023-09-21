@@ -30,7 +30,7 @@ def prove(Eq):
     i = Symbol(integer=True)
     k = Symbol(integer=True, positive=True, given=True)
     x = Symbol(shape=(k + 1,), etype=dtype.integer, finiteset=True, given=True)
-    Eq << apply(Equal(Card(Cup[i:0:k](x[i])), Sum[i:0:k](Card(x[i]))))
+    Eq << apply(Equal(Card(Cup[i:k](x[i])), Sum[i:k](Card(x[i]))))
 
     j = Eq[-1].variables[0]
     Eq << ~Eq[-1]

@@ -7,7 +7,7 @@ def apply(self, *vars):
     for v in vars:
         given &= Equal(v, v.surrogate)
         assert v.is_probable
-        
+
     expr, *limits_v = self.of(Variance)
     return Equal(self,
                  Variance(Expectation(expr | given, *limits_v)) + Expectation(Variance(expr | given, *limits_v)))
@@ -21,14 +21,14 @@ def prove(Eq):
     x = Symbol(real=True, probable=True)
     Eq << apply(Variance(y), x)
 
-    Eq << Eq[0].this.rhs.find(Variance).apply(stats.var_expect.to.sub.expect)
+    Eq << Eq[0].this.rhs.find(Variance).apply(stats.var.expect.to.sub.expect)
 
-    Eq << Eq[-1].this.find(Expectation[Variance]).apply(stats.expect_var.to.sub.expect)
+    Eq << Eq[-1].this.find(Expectation[Variance]).apply(stats.expect.var.to.sub.expect)
 
     Eq << Eq[-1].this.find(Variance).apply(stats.var.to.sub.expect)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

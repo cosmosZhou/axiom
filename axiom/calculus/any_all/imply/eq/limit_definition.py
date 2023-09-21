@@ -18,7 +18,6 @@ def apply(given):
 
     fx_A = abs_fx_A.of(Abs)
 
-    import std
     if fx_A.is_Add:
         fx, A = std.array_split(fx_A.of(Add), lambda arg: arg._has(x))
         fx = Add(*fx)

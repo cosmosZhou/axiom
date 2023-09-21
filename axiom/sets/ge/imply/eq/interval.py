@@ -36,12 +36,13 @@ def prove(Eq):
 
     Eq <<= Eq[3] & Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-09-15
-# updated on 2023-05-20
+# updated on 2023-08-26

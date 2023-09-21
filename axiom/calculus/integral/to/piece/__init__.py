@@ -32,10 +32,10 @@ def prove(Eq):
 
     Eq << algebra.cond_piece.given.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.find(And).apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.find(And).apply(algebra.eq.cond.given.et.subs)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
@@ -44,4 +44,4 @@ if __name__ == '__main__':
 
 from . import st
 # created on 2020-05-24
-# updated on 2023-05-14
+# updated on 2023-08-26

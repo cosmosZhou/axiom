@@ -5,7 +5,7 @@ from util import *
 def apply(ou, ou_et):
     ((j, i), (S[0], (n, u))), ((S[j], S[i]), (S[i], S[n - Min(n, u)])) = ou_et.of(Element[Expr - Expr, Range[Min]] | GreaterEqual & GreaterEqual)
     (S[j], S[i]), (S[i], S[n - Min(n, u)]) = ou.of(GreaterEqual | Less)
-    
+
     assert i in Range(n) and j in Range(n)
     return Element(j - i, Range(0, u))
 
@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(NotElement).apply(sets.notin_range.to.ou)
 
-    Eq << Eq[-1].this.find(Range).apply(sets.range_min.to.intersect)
+    Eq << Eq[-1].this.find(Range).apply(sets.range.min.to.intersect)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_intersect.to.et)
 
@@ -46,8 +46,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_range.to.et)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

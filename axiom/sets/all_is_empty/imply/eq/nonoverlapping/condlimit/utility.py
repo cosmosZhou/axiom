@@ -13,7 +13,7 @@ def apply(given, n):
 
     assert xj._subs(j, i) == xi
 
-    return Equal(Card(Cup[i:0:n](xi)), Sum[i:0:n](Card(xi)))
+    return Equal(Card(Cup[i:n](xi)), Sum[i:n](Card(xi)))
 
 
 @prove

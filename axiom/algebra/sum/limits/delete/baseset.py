@@ -3,16 +3,16 @@ from util import *
 
 @apply
 def apply(self):
-    function, (x, cond, space) = self.of(Sum)
+    expr, (x, cond, space) = self.of(Sum)
     cond &= Element(x, space)
-    return Equal(self, Sum[x:cond](function))
+    return Equal(self, Sum[x:cond](expr))
 
 
 @prove
 def prove(Eq):
     from axiom import algebra
     n = Symbol(integer=True, positive=True)
-    A = Symbol(etype=dtype.integer*n)
+    A = Symbol(etype=dtype.integer[n])
 
     x = Symbol(integer=True, shape=(oo,))
     f, g = Function(real=True, shape=())

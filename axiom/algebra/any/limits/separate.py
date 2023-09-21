@@ -18,7 +18,7 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True)
     f = Symbol(shape=(oo,), bool=True)
     g = Symbol(shape=(oo, oo), bool=True)
-    Eq << apply(Any[i:0:n, j:0:n](f[j] & g[i, j]))
+    Eq << apply(Any[i:n, j:n](f[j] & g[i, j]))
 
     Eq << algebra.iff.given.et.infer.apply(Eq[0])
 

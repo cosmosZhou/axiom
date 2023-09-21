@@ -3,17 +3,17 @@ from util import *
 
 @apply
 def apply(given, x):
-    function, limit = given.of(Equal[Sum, 1])
+    expr, limit = given.of(Equal[Sum, 1])
 
     if len(limit) == 1:
         j = limit[0]
-        a, b = function.domain_defined(j).of(Range)
+        a, b = expr.domain_defined(j).of(Range)
     else:
         j, a, b = limit
 
     n = b - a
 
-    t = Lamda[j:0:n](function).simplify()
+    t = Lamda[j:n](expr).simplify()
     assert n >= 2
     y = softmax(x)
     return Equal(Derivative[x](crossentropy(t, y)), y - t)

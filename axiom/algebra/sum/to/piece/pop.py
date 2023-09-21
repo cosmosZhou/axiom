@@ -15,7 +15,7 @@ def prove(Eq):
 
     i, n = Symbol(integer=True)
     f = Function(real=True)
-    Eq << apply(Sum[i:0:n + 1](f(i)))
+    Eq << apply(Sum[i:n + 1](f(i)))
 
     Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.split, cond={n})
 

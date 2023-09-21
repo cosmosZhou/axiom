@@ -16,7 +16,7 @@ def prove(Eq):
     i = Symbol(integer=True)
     k = Symbol(integer=True, positive=True, given=True)
     x = Symbol(shape=(k + 1,), etype=dtype.integer, given=True)
-    Eq << apply(Equal(Cup[i:0:k + 1](x[i]), x[i].etype.emptySet))
+    Eq << apply(Equal(Cup[i:k + 1](x[i]), x[i].etype.emptySet))
 
     j = Symbol(domain=Range(k + 1))
     Eq << Eq[-1].limits_subs(i, j)

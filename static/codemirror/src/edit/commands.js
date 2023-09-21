@@ -1,6 +1,5 @@
 import { deleteNearSelection } from "./deleteNearSelection.js"
-import { runInOp } from "../display/operations.js"
-import { ensureCursorVisible } from "../display/scrolling.js"
+import { runInOp, ensureCursorVisible } from "../display/highlight_worker.js"
 import { endOfLine } from "../input/movement.js"
 import { clipPos, Pos } from "../line/pos.js"
 import { visualLine, visualLineEnd } from "../line/spans.js"

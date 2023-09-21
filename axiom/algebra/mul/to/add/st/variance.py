@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq.y_sum = algebra.eq_piece.imply.eq.sum.apply(Eq[1], Sum[i:n-1](y[i]))
 
-    Eq << algebra.sum_square.to.mul.st.variance.apply(Sum[i:n-1]((y[i] - Sum[i:n - 1](y[i]) / (n - 1)) ** 2))
+    Eq << algebra.sum.square.to.mul.st.variance.apply(Sum[i:n-1]((y[i] - Sum[i:n - 1](y[i]) / (n - 1)) ** 2))
 
     Eq << Eq[-1].subs(Eq.y_sum).reversed
 
@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-2], Eq[-1])
 
-    Eq << algebra.sum_square.to.add.st.double_limits.apply(Eq[-1].lhs.args[1])
+    Eq << algebra.sum.square.to.add.st.double_limits.apply(Eq[-1].lhs.args[1])
 
     Eq << Eq[-1].subs(Eq.y_sum)
 
@@ -58,7 +58,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Add ** 2).apply(algebra.square.to.add)
 
-    Eq << Eq[0].lhs.find(Sum).this.apply(algebra.sum_square.to.add.st.double_limits)
+    Eq << Eq[0].lhs.find(Sum).this.apply(algebra.sum.square.to.add.st.double_limits)
 
     Eq << Eq[-2] - Eq[-1]
 
@@ -72,8 +72,8 @@ def prove(Eq):
 
     Eq << Eq[0].subs(Eq[-1].reversed)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

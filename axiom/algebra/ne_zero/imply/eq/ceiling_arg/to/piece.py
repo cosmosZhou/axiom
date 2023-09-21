@@ -35,19 +35,19 @@ def prove(Eq):
 
     Eq << Eq[1].subs(Eq.U.reversed, Eq.V.reversed)
 
-    Eq << Eq[-1].this.find(Arg[~Mul[Pow]]).apply(algebra.mul_root.to.mul_piece.cubic_root)
+    Eq << Eq[-1].this.find(Arg[~Mul[Pow]]).apply(algebra.mul.root.to.mul.piece.cubic_root)
 
     Eq << Eq[-1].subs(Eq.UV)
 
     Eq << Eq[-1].this.find(Mul[Piecewise]).apply(algebra.mul.to.piece)
 
-    Eq << Eq[-1].this.find(Arg[Piecewise]).apply(algebra.arg_piece.to.piece)
+    Eq << Eq[-1].this.find(Arg[Piecewise]).apply(algebra.arg.piece.to.piece)
 
     Eq << Eq[-1].this.find(Mul[Piecewise]).apply(algebra.mul.to.piece)
 
     Eq << Eq[-1].this.find(Add[Piecewise]).apply(algebra.add.to.piece)
 
-    Eq << Eq[-1].this.find(Ceiling[Piecewise]).apply(algebra.ceiling_piece.to.piece)
+    Eq << Eq[-1].this.find(Ceiling[Piecewise]).apply(algebra.ceiling.piece.to.piece)
 
     Eq.eq = Eq[-1].this.find(Ceiling[~Mul]).apply(algebra.mul.to.add)
 
@@ -83,9 +83,9 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-1], Eq[-2])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.arg_expi.to.mul.arg)
+    Eq << Eq[-1].this.rhs.apply(algebra.arg.expi.to.mul.arg)
 
-    Eq << Eq[-1].this.find(Arg[Mul]).apply(algebra.arg_mul.to.add.st.pow)
+    Eq << Eq[-1].this.find(Arg[Mul]).apply(algebra.arg.mul.to.add.st.pow)
 
     Eq << Eq[-6].subs(Eq[-1])
 
@@ -109,11 +109,11 @@ def prove(Eq):
 
     Eq << sets.el.imply.el.div.interval.apply(Eq[-1], 3, simplify=None)
 
-    Eq << sets.el.imply.eq.arg_expi.apply(Eq[-1])
+    Eq << sets.el.imply.eq.arg.expi.apply(Eq[-1])
 
     Eq << Eq.arg_p3_w.subs(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.find(Arg[Mul]).apply(algebra.arg_mul.to.add.st.pow)
+    Eq << Eq[-1].this.rhs.find(Arg[Mul]).apply(algebra.arg.mul.to.add.st.pow)
 
     Eq << Eq.eq_simplified.subs(Eq[-1])
 
@@ -137,11 +137,11 @@ def prove(Eq):
 
     Eq << sets.el.imply.el.div.interval.apply(Eq[-1], 3, simplify=None)
 
-    Eq << sets.el.imply.eq.arg_expi.apply(Eq[-1])
+    Eq << sets.el.imply.eq.arg.expi.apply(Eq[-1])
 
     Eq << Eq.arg_p3_w.subs(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.find(Arg[Mul]).apply(algebra.arg_mul.to.add.st.pow)
+    Eq << Eq[-1].this.rhs.find(Arg[Mul]).apply(algebra.arg.mul.to.add.st.pow)
 
     Eq << Eq.eq_simplified.subs(Eq[-1])
 

@@ -10,7 +10,9 @@ def limits_dependent(limits_x, limits_y, dir=None):
 
     for x, domain_x in dict_x.items():
         for y, domain_y in dict_y.items():
-            if isinstance(domain_y, list):
+            if domain_y is None:
+                ...
+            elif isinstance(domain_y, list):
                 if any(d._has(x) for d in domain_y):
                     return True
             elif domain_y.is_set:
@@ -20,7 +22,9 @@ def limits_dependent(limits_x, limits_y, dir=None):
             if dir:
                 continue
 
-            if isinstance(domain_x, list):
+            if domain_x is None:
+                ...
+            elif isinstance(domain_x, list):
                 if any(d._has(x) for d in domain_x):
                     return True
             elif domain_x.is_set:

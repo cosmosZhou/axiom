@@ -28,7 +28,7 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True)
     x = Symbol(real=True, shape=(oo,))
 
-    A, B = Symbol(etype=dtype.real * n)
+    A, B = Symbol(etype=dtype.real[n])
 
     f = Function(shape=(), integer=True)
 

@@ -55,7 +55,7 @@ def apply(self, old, new):
         eqs = []
 
         for domain in domains:
-            if not isinstance(domain, list):
+            if not isinstance(domain, list) and domain:
                 if not domain.is_set:
                     domain = old.domain_conditioned(domain)
                 eqs.append(Element(new, domain))

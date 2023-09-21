@@ -31,14 +31,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Max).apply(algebra.max.to.piece)
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, index=1, invert=True)
+    Eq << Eq[-1].this.args[0].apply(algebra.cond.cond.given.et.subs, invert=True)
 
     Eq << Eq[-1].this.find(Min).apply(algebra.min.to.piece.lt)
 
-    Eq << Eq[-1].this.find(And).apply(algebra.et.given.et.subs.bool, index=1, invert=True)
+    Eq << Eq[-1].this.find(And).apply(algebra.cond.cond.given.et.subs, invert=True)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

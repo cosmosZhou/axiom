@@ -64,17 +64,17 @@ def prove(Eq):
 
     Eq << Eq.limit.subs(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.find(Expectation[Sum]).apply(stats.expect_sum.to.sum.expect)
+    Eq << Eq[-1].this.rhs.find(Expectation[Sum]).apply(stats.expect.sum.to.sum.expect)
 
     Eq << Eq[-1].this.find(Limit).apply(calculus.limit.to.sum)
 
-    Eq << Eq[-1].this.rhs.apply(stats.sum_expect.to.expect.sum)
+    Eq << Eq[-1].this.rhs.apply(stats.sum.expect.to.expect.sum)
 
     Eq << Eq[-1].this.find(Sum).apply(discrete.sum.to.matmul, 1)
 
     Eq << Eq[-1].this.rhs.apply(stats.expect.to.matmul)
 
-    Eq << Eq[-1].this.rhs.find(Expectation).apply(stats.expect_lamda.to.lamda.expect)
+    Eq << Eq[-1].this.rhs.find(Expectation).apply(stats.expect.lamda.to.lamda.expect)
 
     Eq << Eq[-1].this.rhs.find(Lamda).apply(algebra.lamda.to.pow)
 

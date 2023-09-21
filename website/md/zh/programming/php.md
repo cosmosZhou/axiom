@@ -163,6 +163,21 @@ xdebug.client_port=9003
 xdebug.client_host=localhost  
 xdebug.output_dir="D:\wamp64\tmp\xdebug"  
 
+如果是PHP8.0版本的，php.ini设置如下 ：  
+zend_extension="d:/wamp64/bin/php/php8.0.26/zend_ext/php_xdebug-3.1.6-8.0-vs16-x86_64.dll"  
+;xdebug.mode allowed are : off develop coverage debug gcstats profile trace  
+xdebug.mode =debug  
+xdebug.output_dir ="d:/wamp64/tmp"  
+;xdebug.show_local_vars=0  
+xdebug.log="d:/wamp64/logs/xdebug.log"  
+xdebug.log_level : 0 Criticals, 1 Connection, 3 Warnings, 5 Communication, 7 Information, 10  Debug	Breakpoint  
+xdebug.log_level=7  
+xdebug.profiler_output_name=trace.%H.%t.%p.cgrind  
+xdebug.use_compression=false  
+xdebug.start_with_request = yes  
+xdebug.client_port=9003  
+xdebug.client_host=localhost  
+
 eclipse的配置是：  
 
 ![eclipse-settings](php/eclipse-settings.png)  

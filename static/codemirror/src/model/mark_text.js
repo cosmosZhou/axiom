@@ -1,6 +1,7 @@
 import { eltP } from "../util/dom.js"
 import { eventMixin, hasHandler, on } from "../util/event.js"
-import { endOperation, operation, runInOp, startOperation } from "../display/operations.js"
+import { startOperation } from "../display/operations.js"
+import { operation, runInOp, endOperation } from "../display/highlight_worker.js"
 import { clipPos, cmp, Pos } from "../line/pos.js"
 import { lineNo, updateLineHeight } from "../line/utils_line.js"
 import { clearLineMeasurementCacheFor, findViewForLine, textHeight } from "../measurement/position_measurement.js"

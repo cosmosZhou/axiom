@@ -3,7 +3,6 @@ from util import *
 
 @apply
 def apply(self, pivot=-1):
-    import std
     a, b = std.array_split(self.of(MatMul), pivot)
     a = MatMul(*a)
     b = MatMul(*b)

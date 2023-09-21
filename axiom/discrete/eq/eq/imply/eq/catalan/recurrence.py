@@ -28,7 +28,7 @@ def prove(Eq):
 
     Eq << algebra.eq.imply.eq.sum.apply(Eq[-1], (n, 0, oo))
 
-    Eq << calculus.mul_sum.to.sum_sum.apply(C, C, n=n, k=k, x=x)
+    Eq << calculus.mul.sum.to.sum.sum.apply(C, C, n=n, k=k, x=x)
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-2], Eq[-1])
 

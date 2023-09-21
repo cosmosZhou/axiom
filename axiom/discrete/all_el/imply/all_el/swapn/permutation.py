@@ -23,7 +23,7 @@ def prove(Eq):
     from axiom import discrete, algebra
 
     n = Symbol(domain=Range(2, oo))
-    S = Symbol(etype=dtype.integer * n, given=True)
+    S = Symbol(etype=dtype.integer[n], given=True)
     x = Symbol(shape=(oo,), integer=True)
     i, j = Symbol(integer=True)
     w = Symbol(Lamda[j, i](SwapMatrix(n, i, j)))
@@ -52,7 +52,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.cond.any.given.any.et, simplify=None)
 
-    Eq << Eq[-1].this.expr.expr.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.expr.expr.apply(algebra.eq.cond.given.et.subs)
 
     Eq << Eq[-1].this.expr.apply(algebra.any_et.given.et, index=-1)
 
@@ -60,8 +60,11 @@ def prove(Eq):
 
     Eq << discrete.all_el.imply.all_el.swapn.matProd.apply(Eq.swap.T, n, b)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 # created on 2020-09-03
+# updated on 2023-08-26

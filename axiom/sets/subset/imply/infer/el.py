@@ -12,7 +12,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     n = Symbol(integer=True, positive=True)
-    A, B = Symbol(etype=dtype.integer * n)
+    A, B = Symbol(etype=dtype.integer[n])
     x = Symbol(complex=True, shape=(n,), given=True)
     Eq << apply(Subset(A, B), x)
 

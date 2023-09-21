@@ -5,7 +5,7 @@ use std\Graph, std\Text, std\Set;
 
 function detect($theorem)
 {
-    // error_log(\std\encode($theorem));
+    // error_log(std\encode($theorem));
     $G = establish_dialetic_graph($theorem);
     $graph = new Graph();
     foreach ($G as $key => $value) {
@@ -17,7 +17,7 @@ function detect($theorem)
     if (array_key_exists($theorem, $G)) {
         foreach ($G[$theorem] as $prerequisite) {
             if ($graph->detect_cycle($prerequisite)) {
-                return \std\encode($prerequisite);
+                return std\encode($prerequisite);
             }
         }
     }
@@ -27,7 +27,7 @@ function detect($theorem)
 
 function save($codeObject)
 {
-    error_log("codeObject = " . \std\encode($codeObject));
+    error_log("codeObject = " . std\encode($codeObject));
 
     $module = $codeObject['module'];
 
@@ -54,9 +54,9 @@ function save($codeObject)
 
     $py = module_to_py($module);
 
-    $py = new \std\Text($py);
+    $py = new std\Text($py);
     $py->write($code);
-    return \std\encode("saved");
+    return std\encode("saved");
 }
 
 $dict = empty($_POST) ? $_GET : $_POST;
@@ -67,7 +67,7 @@ foreach ($dict as $key => $args) {
             echo detect($args);
             break;
         case 'apply':
-            echo \std\encode(fetch_codes($args));
+            echo std\encode(fetch_codes($args));
             break;
         case 'save':
             echo save($args);

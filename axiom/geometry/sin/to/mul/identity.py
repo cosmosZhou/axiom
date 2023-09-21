@@ -21,9 +21,9 @@ def prove(Eq):
     j = Symbol(domain=Range(n))
     Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
 
-    Eq << Eq[-1].this.lhs.apply(geometry.sin.to.mul.kroneckerDelta)
+    Eq << Eq[-1].this.lhs.apply(geometry.sin.to.mul.delta)
 
-    
+
 
 
 if __name__ == '__main__':

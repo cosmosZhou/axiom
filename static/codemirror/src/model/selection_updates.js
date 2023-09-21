@@ -1,5 +1,5 @@
 import { signalLater } from "../util/operation_group.js"
-import { ensureCursorVisible } from "../display/scrolling.js"
+import { ensureCursorVisible } from "../display/highlight_worker.js"
 import { clipPos, cmp, Pos } from "../line/pos.js"
 import { getLine } from "../line/utils_line.js"
 import { hasHandler, signal, signalCursorActivity } from "../util/event.js"

@@ -33,20 +33,6 @@ def extract_latex(symbol):
     return lines
 
 
-def compile_definition_statement(line):
-    m = re.match('(.+?) *= *(Symbol|Function)\((.+)\) *$', line)
-    if m:
-        name, func, kwargs = m.groups()
-        if ',' in name:
-            line = "%s = %s" % (name, ', '.join(["%s('%s', %s)" % (func, n, kwargs) for n in re.split("\s*,\s*", name)]))
-        elif re.match("'[^']+'", kwargs) or re.match('"[^"]+"', kwargs):
-            ...
-        else:
-            line = "%s = %s('%s', %s)" % (name, func, name, kwargs)
-            
-    return line
-
-
 keywords = ['False', 'None', 'True', 
             'and', 'as', 'assert', 'abs',
             'complex',
@@ -182,7 +168,7 @@ def insert_into_symbol():
         
         latex = []
         for line in script:
-            latex.append(local_eval(compile_definition_statement(line), __locals__))
+            latex.append(local_eval(Symbol.compile_definition_statement(line), __locals__))
                             
         script = [s.replace('\\', r'\\').replace('"', '\\"') for s in script]
         latex = [s.replace('"', '\\"') for s in latex]

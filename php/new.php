@@ -9,10 +9,10 @@ $size = $module ? strlen($module) : 32;
 
 $module = str_replace("/", ".", $module);
 
-list ($apply, $prove) = fetch_codes($module, true);
+[$apply, $prove] = fetch_codes($module, true);
 
-error_log("apply = " . \std\encode($apply));
-error_log("prove = " . \std\encode($prove));
+error_log("apply = " . std\encode($apply));
+error_log("prove = " . std\encode($prove));
 
 ?>
 
@@ -40,9 +40,9 @@ import * as show_hint from "./static/codemirror/addon/hint/show-hint.js";
 import * as matchbrackets from "./static/codemirror/addon/edit/matchbrackets.js";
 
 createApp('newTheorem', {
-    apply : <?php echo \std\encode($apply)?>,
-    prove : <?php echo \std\encode($prove)?>,
-    module : <?php echo \std\encode($module)?>,
+    apply : <?php echo std\encode($apply)?>,
+    prove : <?php echo std\encode($prove)?>,
+    module : <?php echo std\encode($module)?>,
 });
 
 </script>

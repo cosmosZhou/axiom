@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.find(Range).apply(sets.range_min.to.union, simplify=None)
+    Eq << Eq[-1].this.find(Range).apply(sets.range.min.to.union, simplify=None)
 
     Eq << Eq[-1].this(i).find(Element).simplify()
 

@@ -27,7 +27,7 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True)
     f = Function(real=True)
     x = Symbol(real=True, shape=(n,))
-    i, j = Symbol(integer=True)
+    j = Symbol(integer=True)
     Eq << apply(Derivative[x](f(x[j])))
 
     i = Symbol(domain=Range(n))

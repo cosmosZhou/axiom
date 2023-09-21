@@ -36,12 +36,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda)().find(Element[Complement]).simplify()
 
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.kroneckerDelta)
-    
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.kroneckerDelta)
-    
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.delta)
+
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.delta)
+
     Eq << Eq[-1].this.rhs.apply(algebra.add.to.lamda)
-    
+
     Eq << Eq[-1].this.rhs.simplify()
 
     Eq << (Eq[-1] @ w_quote[i, j]).this.rhs.subs(Eq[1])
@@ -49,23 +49,23 @@ def prove(Eq):
     Eq << Eq[-1].this.rhs.apply(discrete.matmul.to.lamda)
 
     Eq << Eq[-1].this.find(Lamda)().find(Element[Range]).simplify()
-    
+
     Eq << Eq[-1].this.find(Lamda)().find(Element[Complement]).simplify()
-    
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.kroneckerDelta)
 
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.kroneckerDelta)
-    
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.delta)
+
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.delta)
+
     Eq << Eq[-1].this.find(Mul[Add]).expand()
-    
-    Eq << Eq[-1].this.rhs.apply(algebra.add.to.lamda)
-    
-    Eq << Eq[-1].this.find(Add[Mul]).apply(algebra.add.collect, factor=KroneckerDelta(i, j))
-    
-    Eq << Eq[-1].this.find(Mul).apply(algebra.mul_kroneckerDelta.to.zero)
 
-    
-    
+    Eq << Eq[-1].this.rhs.apply(algebra.add.to.lamda)
+
+    Eq << Eq[-1].this.find(Add[Mul]).apply(algebra.add.collect, factor=KroneckerDelta(i, j))
+
+    Eq << Eq[-1].this.find(Mul).apply(algebra.mul.delta.to.zero)
+
+
+
 
 
 if __name__ == '__main__':

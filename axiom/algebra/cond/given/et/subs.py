@@ -15,7 +15,7 @@ def prove(Eq):
 
     m, n = Symbol(integer=True, positive=True)
     a, b, c = Symbol(real=True, shape=(m, n))
-    S = Symbol(etype=dtype.real * (m, n))
+    S = Symbol(etype=dtype.real[m][n])
     Eq << apply(Element(a * b, S), a, 2 * c)
 
     Eq << algebra.eq.cond.imply.cond.subs.apply(Eq[2].reversed, Eq[1])

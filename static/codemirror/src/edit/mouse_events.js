@@ -1,5 +1,5 @@
 import { delayBlurEvent, ensureFocus } from "../display/focus.js"
-import { operation } from "../display/operations.js"
+import { operation } from "../display/highlight_worker.js"
 import { visibleLines } from "../display/update_lines.js"
 import { clipPos, cmp, maxPos, minPos, Pos } from "../line/pos.js"
 import { getLine, lineAtHeight } from "../line/utils_line.js"

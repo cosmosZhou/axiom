@@ -23,7 +23,7 @@ def prove(Eq):
     x, y = Symbol(real=True, shape=(k,), given=True)
     f, g, h = Function(real=True)
     b = Symbol(shape=(k,), real=True)
-    B = Symbol(etype=dtype.real * k, given=True)
+    B = Symbol(etype=dtype.real[k], given=True)
     Eq << apply(And(Unequal(x, y), Unequal(f(x), g(y)), Any[b:B](Equal(f(x), h(b)))))
 
     Eq << Eq[0].this.args[1:].apply(algebra.cond.any.imply.any.et, simplify=None)

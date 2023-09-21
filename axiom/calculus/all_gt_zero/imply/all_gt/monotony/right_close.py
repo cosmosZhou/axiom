@@ -26,14 +26,18 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[-2]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.given.et.subs)
 
     Eq << algebra.cond.imply.infer.apply(Eq[0], cond=a < b)
 
     Eq << algebra.infer_et.imply.infer.et.apply(Eq[-1])
+
     Eq << Eq[-1].this.rhs.apply(calculus.lt.all_gt_zero.imply.all_gt.monotony.right_close)
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-04-23
+# updated on 2023-08-26

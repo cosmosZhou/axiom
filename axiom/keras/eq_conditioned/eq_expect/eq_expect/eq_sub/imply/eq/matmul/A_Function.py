@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << Eq.hypothesis.subs(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.find(Lamda).apply(stats.lamda_expect.to.expect.lamda)
+    Eq << Eq[-1].this.rhs.find(Lamda).apply(stats.lamda.expect.to.expect.lamda)
 
     Eq << Eq[-1].this.rhs.apply(stats.matmul.to.expect)
 
@@ -57,19 +57,19 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Expectation[-Sum]).apply(stats.expect.to.mul)
 
-    Eq << Eq[-1].this.find(Expectation[Sum[Expectation]]).apply(stats.expect_sum.to.sum.expect)
+    Eq << Eq[-1].this.find(Expectation[Sum[Expectation]]).apply(stats.expect.sum.to.sum.expect)
 
     Eq << Eq[-1].this.find(Sum[~Expectation]).simplify()
 
     Eq << Eq[-1].this.find(Sum[~Expectation]).apply(stats.expect.law_of_total_expectation)
 
-    Eq << Eq[-1].this.find(Sum[Expectation]).apply(stats.sum_expect.to.expect.sum)
+    Eq << Eq[-1].this.find(Sum[Expectation]).apply(stats.sum.expect.to.expect.sum)
 
     Eq << Eq[-1].this.find(Expectation[~Sum]).apply(discrete.sum.to.matmul)
 
     Eq << Eq[-1].this.find(Expectation[MatMul]).apply(stats.expect.to.matmul)
 
-    Eq << Eq[-1].this.find(Expectation[Sum]).apply(stats.expect_sum.to.sum.expect)
+    Eq << Eq[-1].this.find(Expectation[Sum]).apply(stats.expect.sum.to.sum.expect)
 
     Eq << Eq[-1].this.find(Sum[~Expectation]).apply(stats.expect.to.mul)
 
@@ -79,7 +79,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.subs.offset, -1)
 
-    Eq << Eq[-1].this.find(Expectation[Sum]).apply(stats.expect_sum.to.sum.expect)
+    Eq << Eq[-1].this.find(Expectation[Sum]).apply(stats.expect.sum.to.sum.expect)
 
     Eq << Eq[-1].this.find(Sum[~Expectation]).apply(stats.expect.to.mul)
 
@@ -98,8 +98,8 @@ def prove(Eq):
     Eq << Eq[-1].this.rhs.apply(discrete.add.to.matmul)
 
     #https://arxiv.org/pdf/1502.05477.pdf#page=10
-    
-    
+
+
 
 
 if __name__ == '__main__':

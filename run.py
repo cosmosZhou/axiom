@@ -1,7 +1,35 @@
+#!python
+#!/home/lizhi/miniconda3/bin/python
 #!/usr/local/python3/bin/python3
-#!/home/lizhi/python/bin/python
+# make sure to run: chmod 777 run.py
+import os, sys
+if os.environ.get('CONTENT_TYPE') == "application/json":
+    print("Content-type:text/html\n")
+    import ast, json
+    from sympy import *
+    data = json.loads(sys.stdin.read(int(os.environ["CONTENT_LENGTH"])))
+    try:
+        python = data['python']
+        lineno = ast.parse(python).body[-1].lineno - 1
+        lines = python.split('\n')
+        given, imply = lines[:lineno], lines[lineno:]
+        given = '\n'.join(Symbol.compile_definition_statement(given) for given in given)
+        imply = '\n'.join(imply)
+        __locals__ = globals()
+        exec(given, __locals__)
+        obj = eval(imply, __locals__)
+        latex = sympify(obj).latex
+        print(json.dumps(dict(latex=latex), ensure_ascii=False))
+    except Exception as e:
+        from std.error import Cout
+        print(e, file=Cout)
+        import traceback
+        traceback.print_exc(file=Cout)
+        print(json.dumps(dict(error=str(Cout), path='\n'.join(sys.path), version=sys.version), ensure_ascii=False))
+    
+    exit(0)
 
-import os, sys, re
+import re
 from std import batch_map, rindex
 
 from std.file import Text
@@ -309,7 +337,7 @@ CREATE TABLE `axiom` (
   `axiom` varchar(256) NOT NULL,
   `state` enum('proved', 'failed', 'plausible', 'unproved', 'unprovable', 'slow') NOT NULL,
   `lapse` double default NULL,
-  `latex` text NOT NULL,
+  `latex` mediumblob NOT NULL,
   PRIMARY KEY (`user`, `axiom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 PARTITION BY KEY() PARTITIONS 8'''
@@ -391,6 +419,19 @@ CREATE TABLE `breakpoint` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 PARTITION BY KEY () PARTITIONS 8'''
             self.execute(sql)
+
+            sql = '''\
+CREATE TABLE `latex` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `latex` text,
+  `python` text,
+  `training` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `training` (`training`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci 
+PARTITION BY KEY ()
+PARTITIONS 8'''
+            self.execute(sql)
             
         except Exception as e:
             print(type(e), e)
@@ -436,10 +477,10 @@ def prove(debug=False, parallel=True):
         print(command)
         exit_code = os.system(command)
         print('exit_code =', exit_code)
-        exit(exit_code)        
+        exit(exit_code)
         return
 
-    # taskSet = {*[*taskSet][:100]}
+#     taskSet = {*[*taskSet][:1000]}
 
     tasks = MySQL.instance.select_axiom_lapse_from_axiom()
     deleteSet = tasks.keys() - taskSet
@@ -468,6 +509,8 @@ def prove(debug=False, parallel=True):
     
     tasks = [*tasks.items()]
     tasks.sort(key=lambda pair: pair[1], reverse=True)
+#     tasks.sort(key=lambda pair: pair[0])
+#     tasks = tasks[0:500]
     
     pq = PriorityQueue()
     for i, t in enumerate(timings):
@@ -487,15 +530,15 @@ def prove(debug=False, parallel=True):
     
     data = []
     
-    if parallel == 0:
-        print('parallel set to 0, skipping running!')
+    if isinstance(parallel, bool):
+        for array in process(packages, debug=debug, parallel=parallel):
+            data += post_process(array)
+    else:
+        print(f'parallel set to {parallel}, skipping running!')
         return
 
-    for array in process(packages, debug=debug, parallel=parallel):
-        data += post_process(array)
-
-    MySQL.instance.load_data('axiom', data, replace=True, truncate=True)
-
+    rowcount = MySQL.instance.load_data('axiom', data, replace=True, truncate=True)
+    print('rowcount =', rowcount)
     print('in all %d axioms' % Globals.count)
     print_summary()
 
@@ -549,7 +592,7 @@ def process_debug(packages):
 @process.register(tuple) 
 def _(items, debug=False, parallel=True):  # @DuplicatedSignature
     proc = process_debug if debug else process
-    if parallel:        
+    if parallel:
         return batch_map(proc, items, processes=cpu_count()) 
     else:
         return map(proc, items)
@@ -581,6 +624,7 @@ def removeFile(path):
         os.remove(path)
     except PermissionError as e:
         print(e)
+        exit(0)
 
     
 def args_kwargs(argv):

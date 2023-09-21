@@ -22,11 +22,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(discrete.det.matmul.simplify.col_transformation)
 
-    Eq << Eq[-1].this.lhs.apply(discrete.det_block.to.mul.deux)
+    Eq << Eq[-1].this.lhs.apply(discrete.det.block.to.mul.deux)
 
-    Eq << Eq[-1].this.rhs.apply(discrete.det_block.to.mul.deux)
+    Eq << Eq[-1].this.rhs.apply(discrete.det.block.to.mul.deux)
 
-    Eq << Eq[-1].this.rhs.find(Det).apply(discrete.det_mul.to.mul)
+    Eq << Eq[-1].this.rhs.find(Det).apply(discrete.det.mul.to.mul)
 
     Eq << Eq[-1].this.find(Pow).apply(algebra.pow.to.one)
 

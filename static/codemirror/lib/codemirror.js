@@ -1,176 +1,126 @@
-function global_assignment(object){
-	Object.assign(globalThis, object);
-}
+//subs ^((?!^export (let|function|class|defualt) (\w+).*).)*[\r\n]+
+//with 
+//subs export (let|function|class|defualt) (\w+) *=.*[\r\n]+
+//with \1,
+import {gecko, ie, ie_version, webkit, chrome, presto, safari, mac_geMountainLion, phantom, ios, android, mobile, mac, chromeOS, windows, flipCtrlCmd, captureRightClick} from '../src/util/browser.js'
 
-import * as browser from '../src/util/browser.js';
-global_assignment(browser);
+import {classTest, rmClass, removeChildren, removeChildrenAndAdd, elt, eltP, range, contains, activeElt, addClass, joinClasses, selectInput} from '../src/util/dom.js'
 
-import * as dom from '../src/util/dom.js'; 
-global_assignment(dom);
+import {bind, copyObj, countColumn, Delayed, indexOf, scrollerGap, Pass, sel_dontScroll, findColumn, spaceStr, lst, map, insertSorted, createObj, isWordCharBasic, isWordChar, isEmpty, isExtendingChar, skipExtendingChars, findFirst} from '../src/util/misc.js' 
 
-import * as misc from '../src/util/misc.js'; 
-global_assignment(misc);
+import {iterateBidiSections, bidiOther, getBidiPartAt, getOrder} from '../src/util/bidi.js'
 
-import * as bidi from '../src/util/bidi.js';
-global_assignment(bidi);
+import {on, getHandlers, off, signal, signalDOMEvent, signalCursorActivity, hasHandler, eventMixin, e_preventDefault, e_stopPropagation, e_defaultPrevented, e_stop, e_target, e_button} from '../src/util/event.js'
 
-import * as event from '../src/util/event.js';
-global_assignment(event);
+import {dragAndDrop, zeroWidthElement, hasBadBidiRects, splitLinesAuto, hasSelection, hasCopyEvent, hasBadZoomedRects} from '../src/util/feature_detection.js'
 
-import * as feature_detection from '../src/util/feature_detection.js';
-global_assignment(feature_detection);
+import {modes, defineMode, defineMIME, resolveMode, getMode, modeExtensions, extendMode, copyState, innerMode, startState} from '../src/modes.js'
 
-import * as modes from '../src/modes.js';
-global_assignment(modes);
+import StringStream from '../src/util/StringStream.js'
 
-import StringStream from '../src/util/StringStream.js';
+import {getLine, getBetween, getLines, updateLineHeight, lineNo, lineAtHeight, isLine, lineNumberFor} from '../src/line/utils_line.js'
 
-import * as utils_line from '../src/line/utils_line.js';
-global_assignment(utils_line);
+import {cmp, equalCursorPos, copyPos, maxPos, minPos, clipLine, clipPos, clipPosArray} from '../src/line/pos.js'
 
-import * as line_pos from '../src/line/pos.js';
-global_assignment(line_pos);
+import {highlightLine, getLineStyles, getContextBefore, processLine, takeToken, retreatFrontier} from '../src/line/highlight.js'
 
-import * as line_highlight from '../src/line/highlight.js';
-global_assignment(line_highlight);
+import {sawReadOnlySpans, seeReadOnlySpans, seeCollapsedSpans} from '../src/line/saw_special_spans.js'
 
-import * as line_saw_special_spans from '../src/line/saw_special_spans.js';
-global_assignment(line_saw_special_spans);
+import {MarkedSpan, getMarkedSpanFor, removeMarkedSpan, addMarkedSpan, stretchSpansOverChange, removeReadOnlyRanges, detachMarkedSpans, attachMarkedSpans, compareCollapsedMarkers, collapsedSpanAtStart, collapsedSpanAtEnd, collapsedSpanAround, conflictingCollapsedRange, visualLine, visualLineEnd, visualLineContinued, visualLineNo, visualLineEndNo, lineIsHidden, heightAtLine, lineLength, findMaxLine} from '../src/line/spans.js'
 
-import * as line_spans from '../src/line/spans.js';
-global_assignment(line_spans);
+import {Line, updateLine, cleanUpLine, buildLineContent, defaultSpecialCharPlaceholder, LineView, buildViewArray} from '../src/line/line_data.js'
 
-import * as line_data from '../src/line/line_data.js';
-global_assignment(line_data);
+import {pushOperation, finishOperation, signalLater, updateGutterSpace} from '../src/util/operation_group.js'
 
-import * as operation_group from '../src/util/operation_group.js';
-global_assignment(operation_group);
+import {updateLineForChanges, buildLineElement} from '../src/display/update_line.js'
 
-import * as update_line from '../src/display/update_line.js';
-global_assignment(update_line);
+import {widgetHeight, eventInWidget} from '../src/measurement/widgets.js'
 
-import * as measurement_widgets from '../src/measurement/widgets.js';
-global_assignment(measurement_widgets);
+import {paddingTop, paddingVert, paddingH, scrollGap, displayWidth, displayHeight, mapFromLineView, measureChar, findViewForLine, prepareMeasureForLine, measureCharPrepared, nodeAndOffsetInLineMap, clearLineMeasurementCacheFor, clearLineMeasurementCache, clearCaches, intoCoordSystem, fromCoordSystem, charCoords, cursorCoords, estimateCoords, coordsChar, wrappedLineExtentChar, textHeight, charWidth, getDimensions, compensateForHScroll, estimateHeight, estimateLineHeights, posFromMouse, findViewIndex} from '../src/measurement/position_measurement.js'
 
-import * as position_measurement from '../src/measurement/position_measurement.js';
-global_assignment(position_measurement);
+import {regChange, regLineChange, resetView, adjustView, countDirtyView} from '../src/display/view_tracking.js'
 
-import * as view_tracking from '../src/display/view_tracking.js';
-global_assignment(view_tracking);
+import {updateSelection, prepareSelection, drawSelectionCursor, restartBlink} from '../src/display/selection.js'
 
-import * as display_selection from '../src/display/selection.js';
-global_assignment(display_selection);
+import {ensureFocus, delayBlurEvent, onFocus} from '../src/display/focus.js'
 
-import * as display_focus from '../src/display/focus.js';
-global_assignment(display_focus);
+import {onBlur} from '../src/display/blur.js'
 
-import * as update_lines from '../src/display/update_lines.js';
-global_assignment(update_lines);
+import {updateHeightsInViewport, visibleLines} from '../src/display/update_lines.js'
 
-import * as display_scrolling from '../src/display/scrolling.js';
-global_assignment(display_scrolling);
+import {measureForScrollbars, updateScrollbars, scrollbarModel} from '../src/display/scrollbars.js'
 
-import * as display_scrollbars from '../src/display/scrollbars.js';
-global_assignment(display_scrollbars);
+import {startOperation} from '../src/display/operations.js'
 
-import * as display_operations from '../src/display/operations.js';
-global_assignment(display_operations);
+import {startWorker, updateDisplayIfNeeded, endOperation, runInOp, operation, methodOp, docMethodOp, postUpdateDisplay, maybeScrollWindow, scrollPosIntoView, scrollIntoView, setScrollTop, scrollToCoordsRange, updateScrollTop, initScrollbars, scrollToCoords, addToScrollTop, ensureCursorVisible, scrollToRange} from '../src/display/highlight_worker.js'
 
-import * as display_highlight_worker from '../src/display/highlight_worker.js';
-global_assignment(display_highlight_worker);
+import {DisplayUpdate, maybeClipScrollbars, updateDisplaySimple, setDocumentHeight} from '../src/display/update_display.js'
 
-import * as update_display from '../src/display/update_display.js';
-global_assignment(update_display);
+import {alignHorizontally, maybeUpdateLineNumberWidth, setScrollLeft} from '../src/display/line_numbers.js'
 
-import * as display_line_numbers from '../src/display/line_numbers.js';
-global_assignment(display_line_numbers);
+import {getGutters, renderGutters, updateGutters} from '../src/display/gutters.js'
 
-import * as display_gutters from '../src/display/gutters.js';
-global_assignment(display_gutters);
+import {Display} from '../src/display/Display.js'
 
-import {Display} from '../src/display/Display.js';
+import {wheelEventPixels, onScrollWheel} from '../src/display/scroll_events.js'
 
-import * as display_scroll_events from '../src/display/scroll_events.js';
-global_assignment(display_scroll_events);
+import {Selection, Range, normalizeSelection, simpleSelection} from '../src/model/selection.js'
 
-import * as model_selection from '../src/model/selection.js';
-global_assignment(model_selection);
+import {changeEnd, computeSelAfterChange, computeReplacedSel} from '../src/model/change_measurement.js'
 
-import * as model_change_measurement from '../src/model/change_measurement.js';
-global_assignment(model_change_measurement);
+import {loadMode, resetModeState} from '../src/display/mode_state.js'
 
-import * as display_mode_state from '../src/display/mode_state.js';
-global_assignment(display_mode_state);
+import {isWholeLineUpdate, updateDoc, linkedDocs, attachDoc, directionChanged} from '../src/model/document_data.js'
 
-import * as model_document_data from '../src/model/document_data.js';
-global_assignment(model_document_data);
+import {History, historyChangeFromChange, addChangeToHistory, addSelectionToHistory, pushSelectionToHistory, mergeOldSpans, copyHistoryArray} from '../src/model/history.js'
 
-import * as model_history from '../src/model/history.js';
-global_assignment(model_history);
+import {extendRange, extendSelection, extendSelections, replaceOneSelection, setSimpleSelection, setSelectionReplaceHistory, setSelection, setSelectionNoUndo, reCheckSelection, skipAtomic, selectAll} from '../src/model/selection_updates.js'
 
-import * as model_selection_updates from '../src/model/selection_updates.js';
-global_assignment(model_selection_updates);
+import {makeChange, makeChangeFromHistory, replaceRange, changeLine} from '../src/model/changes.js'
 
-import * as model_changes from '../src/model/changes.js';
-global_assignment(model_changes);
+import {LeafChunk, BranchChunk} from '../src/model/chunk.js'
 
-import * as model_chunk from '../src/model/chunk.js';
-global_assignment(model_chunk);
+import {LineWidget, addLineWidget} from '../src/model/line_widget.js'
 
-import * as model_line_widget from '../src/model/line_widget.js';
-global_assignment(model_line_widget);
+import {TextMarker, markText, SharedTextMarker, findSharedMarkers, copySharedMarkers, detachSharedMarkers} from '../src/model/mark_text.js'
 
-import * as model_mark_text from '../src/model/mark_text.js';
-global_assignment(model_mark_text);
+import Doc from '../src/model/Doc.js'
 
-import Doc from '../src/model/Doc.js';
+import {onDrop, onDragStart, onDragOver, clearDragCursor} from '../src/edit/drop_events.js'
 
-import * as edit_drop_events from '../src/edit/drop_events.js';
-global_assignment(edit_drop_events);
+import {ensureGlobalHandlers} from '../src/edit/global_events.js'
 
-import * as edit_global_events from '../src/edit/global_events.js';
-global_assignment(edit_global_events);
+import {keyNames} from '../src/input/keynames.js'
 
-import {keyNames} from '../src/input/keynames.js';
+import {keyMap, normalizeKeyMap, lookupKey, isModifierKey, addModifierNames, keyName, getKeyMap} from '../src/input/keymap.js'
 
-import * as input_keymap from '../src/input/keymap.js';
-global_assignment(input_keymap);
+import {deleteNearSelection} from '../src/edit/deleteNearSelection.js'
 
-import {deleteNearSelection} from '../src/edit/deleteNearSelection.js';
+import {moveLogically, endOfLine, moveVisually} from '../src/input/movement.js'
 
-import * as input_movement from '../src/input/movement.js';
-global_assignment(input_movement);
+import {commands} from '../src/edit/commands.js'
 
-import {commands} from '../src/edit/commands.js';
+import {dispatchKey, onKeyDown, onKeyUp, onKeyPress} from '../src/edit/key_events.js'
 
-import * as edit_key_events from '../src/edit/key_events.js';
-global_assignment(edit_key_events);
+import {onMouseDown, clickInGutter, onContextMenu} from '../src/edit/mouse_events.js'
 
-import * as edit_mouse_events from '../src/edit/mouse_events.js';
-global_assignment(edit_mouse_events);
+import {themeChanged} from '../src/edit/utils.js'
 
-import {themeChanged} from '../src/edit/utils.js';
+import {Init, defaults, optionHandlers, defineOptions} from '../src/edit/options.js'
 
-import * as edit_options from '../src/edit/options.js';
-global_assignment(edit_options);
+import {indentLine} from '../src/input/indent.js'
 
-import * as edit_CodeMirror from '../src/edit/CodeMirror.js';
-global_assignment(edit_CodeMirror);
+import {lastCopied, setLastCopied, applyTextInput, handlePaste, triggerElectric, copyableRanges, disableBrowserMagic, hiddenTextarea} from '../src/input/input.js'
 
-import {indentLine} from '../src/input/indent.js';
+import addEditorMethods from '../src/edit/methods.js'
 
-import * as input_input from '../src/input/input.js';
-global_assignment(input_input);
+import ContentEditableInput from '../src/input/ContentEditableInput.js'
 
-import addEditorMethods from '../src/edit/methods.js';
+import {fromTextArea} from '../src/edit/fromTextArea.js'
 
-import ContentEditableInput from '../src/input/ContentEditableInput.js';
+import {addLegacyProps} from '../src/edit/legacy.js'
 
-import {fromTextArea} from '../src/edit/fromTextArea.js';
-
-import {addLegacyProps} from '../src/edit/legacy.js';
-
-import {CodeMirror} from '../src/edit/main.js';
+import {CodeMirror} from '../src/edit/main.js'
 
 (function(global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :

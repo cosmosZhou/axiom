@@ -22,7 +22,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     n, k = Symbol(integer=True, positive=True)
-    S = Symbol(etype=dtype.integer * k, given=True)
+    S = Symbol(etype=dtype.integer[k], given=True)
     Eq << apply(Equal(Card(S), n))
 
     Eq << sets.imply.all.any.eq.apply(n, etype=S.etype, elements=Eq[-1].variable)

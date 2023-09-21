@@ -1,5 +1,5 @@
-import CodeMirror from "../edit/CodeMirror.js"
-import { docMethodOp } from "../display/operations.js"
+//import CodeMirror from "../edit/CodeMirror.js"
+import { docMethodOp, ensureCursorVisible, scrollToCoords } from "../display/highlight_worker.js"
 import { Line } from "../line/line_data.js"
 import { clipPos, clipPosArray, Pos } from "../line/pos.js"
 import { visualLine } from "../line/spans.js"
@@ -7,7 +7,6 @@ import { getBetween, getLine, getLines, isLine, lineNo } from "../line/utils_lin
 import { classTest } from "../util/dom.js"
 import { splitLinesAuto } from "../util/feature_detection.js"
 import { createObj, map, isEmpty, sel_dontScroll } from "../util/misc.js"
-import { ensureCursorVisible, scrollToCoords } from "../display/scrolling.js"
 
 import { changeLine, makeChange, makeChangeFromHistory, replaceRange } from "./changes.js"
 import { computeReplacedSel } from "./change_measurement.js"

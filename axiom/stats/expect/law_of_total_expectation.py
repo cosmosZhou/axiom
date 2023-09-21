@@ -84,7 +84,6 @@ def rewrite(self):
                         break
 
     vars = {v for v, *_ in limits}
-    import std
     if (ret := std.deleteIndices(limits_weights, lambda limit: limit[0] in vars)) is not None:
         limits_weights = ret
         

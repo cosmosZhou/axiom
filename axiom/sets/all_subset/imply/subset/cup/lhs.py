@@ -14,9 +14,9 @@ def prove(Eq):
 
     n, m = Symbol(integer=True, positive=True)
     i = Symbol(integer=True)
-    x = Symbol(shape=(oo,), etype=dtype.complex * n)
-    A = Symbol(etype=dtype.complex * n)
-    Eq << apply(All[i:0:m](Subset(x[i], A)))
+    x = Symbol(shape=(oo,), etype=dtype.complex[n])
+    A = Symbol(etype=dtype.complex[n])
+    Eq << apply(All[i:m](Subset(x[i], A)))
 
     Eq.hypothesis = Infer(Eq[0], Eq[1], plausible=True)
 

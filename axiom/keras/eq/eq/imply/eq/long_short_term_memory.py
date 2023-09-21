@@ -64,10 +64,8 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(*(Eq[i].reversed for i in range(2, 6)))
 
-    
+    #https://www.mitpressjournals.org/doi/pdf/10.1162/089976600300015015    
 
-    
-    
 
 
 if __name__ == '__main__':

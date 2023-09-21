@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Product[2]).apply(algebra.prod.bool)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.mul_prod.to.prod)
+    Eq << Eq[-1].this.lhs.apply(algebra.mul.prod.to.prod)
 
     Eq << Eq[-1].this.lhs.expr.apply(algebra.mul.to.pow.add.exponent)
 

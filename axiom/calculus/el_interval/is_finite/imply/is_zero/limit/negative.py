@@ -22,7 +22,7 @@ def prove(Eq):
     x = Symbol(real=True, shape=(oo,))
     γ = Symbol(real=True)
     n = Symbol(integer=True)
-    Eq << apply(Element(γ, Interval(-1, 0, left_open=True, right_open=True)), Less(Sup[n:0:oo](Abs(x[n])), oo))
+    Eq << apply(Element(γ, Interval(-1, 0, left_open=True, right_open=True)), Less(Sup[n:oo](Abs(x[n])), oo))
 
     @Function
     def h(n):

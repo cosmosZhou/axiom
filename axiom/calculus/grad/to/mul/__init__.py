@@ -6,7 +6,6 @@ def apply(self):
     function, *limits_d = self.of(Derivative)
     vars = [var for var, _ in limits_d]
 
-    import std
     funcs, coeff = std.array_split(function.of(Mul), lambda arg: arg.has(*vars))
     coeff = Mul(*coeff)
     funcs = Mul(*funcs)

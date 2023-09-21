@@ -13,17 +13,17 @@ def prove(Eq):
     x, y = Symbol(real=True, given=True)
     Eq << apply(x, y)
 
-    Eq << Eq[0].this.lhs.apply(sets.intersect_finiteset.to.piece)
+    Eq << Eq[0].this.lhs.apply(sets.intersect.finiteset.to.piece)
 
     Eq << algebra.cond_piece.given.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.find(And).apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.find(And).apply(algebra.eq.cond.given.et.subs)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-09-11
-# updated on 2023-05-20
+# updated on 2023-08-26

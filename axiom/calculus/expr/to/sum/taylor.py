@@ -11,7 +11,7 @@ def apply(fx, a, x=None, n=None):
     else:
         assert x in fx.free_symbols
 
-    return Equal(fx, Sum[n:0:oo]((x - a) ** n / factorial(n) * Subs(Derivative(fx, (x, n)), x, a)))
+    return Equal(fx, Sum[n:oo]((x - a) ** n / factorial(n) * Subs[x:a](Derivative(fx, (x, n)))))
 
 
 @prove(proved=False)

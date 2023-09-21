@@ -27,7 +27,7 @@ def prove(Eq):
 
     w = Symbol(integer=True, shape=(oo, k, k))
 
-    S = Symbol(etype=dtype.integer * k)
+    S = Symbol(etype=dtype.integer[k])
 
     Eq << apply(Infer(All[x:S](Element(x @ MatProduct[i:n](w[i]), S)), All[x:S](Element(x @ MatProduct[i:n + 1](w[i]), S))), n=n)
 

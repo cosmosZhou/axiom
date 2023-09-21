@@ -7,7 +7,11 @@ def apply(self):
 
     assert limit[0].is_integer
 
-    rhs = ReducedSum(Lamda(expr, limit).simplify())
+    expr = Lamda(expr, limit).simplify()
+    if self.shape:
+        expr = expr.T
+
+    rhs = ReducedSum(expr)
     if limits:
         rhs = Sum(rhs, *limits)
 

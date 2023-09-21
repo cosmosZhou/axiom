@@ -7,12 +7,12 @@ def apply(eq, infer, eq_piece, all_et):
     x, S[x @ A @ x] = infer.of(Infer[Unequal[0], Expr > 0])
     (j, i), ((L, S[i], S[j]), (sub, S[L[j, j]])) = \
     eq_piece.of(Less >> Equal[Indexed, Expr / Expr])
-    
+
     S[A[i, j]], (S[L[i, :j]], S[L[j, :j]]) = sub.of(Expr - Expr @ Expr)
-    
+
     (S[Equal(A[i, i], Norm(L[i,:i + 1]) ** 2)], S[Element(L[i, i], Interval.open(0, oo))], S[All[j:i](Equal(A[i, j], L[i, :j + 1] @ L[j, :j + 1]) & Element(L[i, j], Reals))]), (S[i], S[0], t) = \
     all_et.of(All[And])
-    
+
     return A[t, t] > Norm(L[t, :t]) ** 2, All[j:t](Equal(A[t, j], L[t, :j + 1] @ L[j, :j + 1]) & Element(L[t, j], Reals))
 
 @prove
@@ -105,11 +105,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(MatMul + MatMul).apply(discrete.add.to.matmul)
 
-    Eq << Eq[-1].this.find(MatMul + Sliced).apply(discrete.add.to.matmul.block.one.push)
+    Eq << Eq[-1].this.find(MatMul + Sliced).apply(discrete.add.to.matmul.block)
 
     Eq << discrete.all_is_positive.gt_zero.imply.gt_zero.Cholesky.real.apply(Eq.Lii_is_positive, Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.args[1].apply(algebra.root.to.mul.expi.arg)
 
-    Eq << Eq[-1].rhs.find(Arg).this.apply(algebra.arg_mul.to.piece)
+    Eq << Eq[-1].rhs.find(Arg).this.apply(algebra.arg.mul.to.piece)
 
     Eq << algebra.cond.cond.imply.cond.subs.apply(Eq[0] & Eq[1], Eq[-1], invert=True)
 

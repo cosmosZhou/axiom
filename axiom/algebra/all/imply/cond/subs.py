@@ -46,7 +46,7 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True)
     f = Function(shape=(), integer=True)
     s = Symbol(etype=dtype.integer)
-    Eq << apply(All[x:0:n + 1](Element(f(x), s)), x, n)
+    Eq << apply(All[x:n + 1](Element(f(x), s)), x, n)
 
     Eq << algebra.all.imply.et.split.apply(Eq[0], cond={n})
 

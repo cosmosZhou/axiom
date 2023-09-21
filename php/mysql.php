@@ -3,191 +3,396 @@
 // ^ *error_log
 namespace mysql;
 
-require_once 'utility.php';
 include_once 'std.php';
-use mysqli, Exception;
+use mysqli, Exception, std;
 use std\Text, std\Set, std\Queue, std\Graph;
-$user = basename(dirname(dirname(__file__)));
 
 function desc_table($table)
 {
-    return iterator_to_array(select("desc $table"));
+    return get_rows("desc $table");
 }
 
-function load_data($table, $data, $replace = true, $step = 10000)
+function sift_data($table, &$data)
+{
+    //error_log('$table = '.$table);
+    $desc = desc_table($table);
+    //error_log('$desc = '.std\encode($desc));
+    $key2id = [];
+    $id2key = [];
+    foreach (std\range(0, count($desc)) as $i) {
+        $Field = $desc[$i]['Field'];
+        $Key = $desc[$i]['Key'];
+        if ($Key == 'PRI')
+            $PRI = $Field;
+        
+        $key2id[$Field] = $i;
+        $id2key[$i] = $Field;
+    }
+    
+    //error_log('$PRI = '.$PRI);
+    //error_log('$key2id = '.std\encode($key2id));
+    
+    $primary_keys = [];
+    $PRI2obj = [];
+    foreach ($data as &$obj) {
+        $dict = [];
+        foreach (std\enumerate($obj) as [$i, $arg]) {
+            $dict[$id2key[$i]] = $arg;
+        }
+        $primary_key = $obj[$key2id[$PRI]];
+        $primary_keys[] = $primary_key;
+        //error_log('$dict = '.std\encode($dict));
+        $PRI2obj[$primary_key] = $dict;
+    }
+    
+    //error_log('$PRI2obj = '.std\encode($PRI2obj));
+    $primary_keys_str = implode(",", array_map(fn($primary_key) => "'$primary_key'", $primary_keys));
+    //error_log('$primary_keys_str = '.$primary_keys_str);
+    if (count($primary_keys) == 1) {
+        $sql = "select * from $table where $PRI = $primary_keys_str";
+    }
+    else {
+        $sql = "select * from $table where $PRI in ($primary_keys_str)";
+    }
+    
+    //error_log("sql: $sql");
+    $difference = [];
+    foreach (get_rows($sql) as &$that_obj) {
+        $primary_key = $that_obj[$PRI];
+        //error_log('$primary_key = '.$primary_key);
+        
+        $this_obj = &$PRI2obj[$that_obj[$PRI]];
+        //error_log('$this_obj = '.std\encode($this_obj));
+        
+        if (empty(array_diff($this_obj, $that_obj)) && empty(array_diff($that_obj, $this_obj)))
+            continue;
+        
+        error_log('difference detected:');
+        error_log('$this_obj = '.std\encode($this_obj));
+        error_log('$that_obj = '.std\encode($that_obj));
+        $difference[] = &$that_obj;
+    }
+    //error_log('$difference: '.std\encode($difference));
+    return $difference;
+}
+
+function load_data($table, &$data, $replace = false, $ignore=true, $step = 1000)
 {
     if (is_array($data)) {
-        load_data_from_list($table, $data, $replace);
-    } else {
-        load_data_from_csv($table, $data, $replace);
+        return load_data_from_list($table, $data, $replace, $ignore, $step);
+    } else if ($data){
+        return load_data_from_csv($table, $data, $replace, $ignore);
     }
 }
 
-function load_data_from_list($table, $array, $replace = true, $step = 10000, $ignore = false, $truncate = false)
+function load_data_from_list($table, &$array, $replace = true, $ignore = false, $step = 1000, $truncate = false)
 {
     $desc = desc_table($table);
-
-    // error_log(\std\encode($desc));
 
     $has_training_field = False;
 
     $char_length = array_fill(0, count($desc), 256);
-    foreach (\std\range(0, count($desc)) as $i) {
-        list ($Field, $Type, , , ,) = $desc[$i];
-        // $Type = implode(array_map("chr", $Type));
-        if (\std\equals($Field, 'training')) {
+    $dtype = array_fill(0, count($desc), null);
+    foreach (std\range(0, count($desc)) as $i) {        
+        $Field = $desc[$i]['Field'];
+        $Type = $desc[$i]['Type'];
+        $dtype[$i] = $Type;
+
+        if ($Field == 'training') {
             $has_training_field = True;
         }
 
-        if (\std\equals($Type, 'text')) {
+        if ($Type == 'text' || $Type == 'json') {
             $char_length[$i] = 65535;
-            continue;
         }
 
-        if (preg_match("/varchar\((\d+)\)/", $Type, $m)) {
+        elseif ($Type == 'mediumblob') {
+            $char_length[$i] = 16 * 1024 * 1024 - 1;
+        }
+        
+        elseif (preg_match("/varchar\((\d+)\)/", $Type, $m)) {
             $char_length[$i] = (int) $m[1];
         }
     }
 
-    // error_log(\std\encode($char_length));
-
     $folder = sys_get_temp_dir();
-
-    foreach (\std\range(0, count($array), $step) as $i) {
+    $rowcount = 0;
+    foreach (std\range(0, count($array), $step) as $i) {
         $csv = $folder . "/$table-$i.csv";
 
-        // error_log("csv = " . $csv);
         $file = new Text($csv);
-
         foreach (array_slice($array, $i, $step) as $args) {
-            foreach (\std\range(0, count($args)) as $i) {
-                $arg = $args[$i];
+            if (!std\is_list($args))
+                $args = array_map(fn(&$desc) => std\get($args, $desc['Field'], ''), $desc);
 
-                if (is_string($arg)) {
-                    $arg = substr(\std\encode($arg), 1, - 1);
+            foreach (std\range(count($args)) as $i) {
+                $arg = $args[$i];
+                if (is_array($arg)) {
+                    $bytes = std\substring(std\encode(std\encode($arg)), 1, -1);
+                }
+                elseif (is_string($arg)) {
+                    $bytes = std\substring(std\encode($arg), 1, -1);
+                }
+                elseif ($arg === null) {
+                    $bytes = "null";
                 } else {
-                    $arg = \std\encode($arg);
+                    $bytes = "$arg";
                 }
 
-                if (! $ignore && strlen($arg) > $char_length[$i]) {
-                    if ($truncate) {
-                        $arg = substr($arg, 0, $char_length[$i]);
-                    } else {
-                        // error_log(\std\encode($args));
-                        // error_log("args[$i] exceeds the allowable length " . $char_length[$i]);
-                        $args = null;
-                        break;
+                if (! $ignore) {
+                    if (is_varchar($dtype[$i])) {
+                        if (std\len($arg) > $char_length[$i]) {
+                            if ($truncate) {
+                                error_log('truncating the data to maximum length: '.$char_length[$i].", since its length is ".std\len($arg));
+                                $arg = substr($arg, 0, $char_length[$i]);
+                                $bytes = std\substring(std\encode($arg), 1, -1);
+                            } else {
+                                error_log(std\encode($args));
+                                error_log("args[$i] exceeds the allowable length: " . $char_length[$i].", since its length is ".std\len($arg));
+                                $args = null;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        if (strlen($bytes) > $char_length[$i]) {
+                            if ($truncate) {
+                                error_log('truncating the data to maximum length: '.char_length[$i].", since its length is ".strlen($arg));
+                                $bytes = substr($bytes, 0, $char_length[$i]);
+                            } else {
+                                error_log(std\encode($args));
+                                error_log("args[$i] exceeds the allowable length " . $char_length[$i]);
+                                $args = null;
+                                break;
+                            }
+                        }
                     }
                 }
-                $args[$i] = $arg;
+
+                $args[$i] = $bytes;
             }
+
             if ($args != null) {
-                if ($has_training_field) {
+                if ($has_training_field && count($args) < count($desc)) {
                     $args[] = "" . rand(0, 1);
                 }
 
-                // error_log("args = " . \std\encode($args));
                 $line = join("\t", $args);
-                // error_log("line = " . $line);
                 $file->append($line);
             }
         }
         $file->flush();
 
-        // error_log(\std\encode($csv));
-
-        // error_log("csv = " . $csv);
-        load_data_from_csv($table, $csv, True, $replace, $ignore);
+        $rowcount += load_data_from_csv($table, $csv, $replace, $ignore);
     }
+
+    error_log('$rowcount = '.$rowcount);
+    return $rowcount;
 }
 
-function load_data_from_csv($table, $csv, $delete = True, $replace = true, $step = 10000)
+function load_data_from_csv($table, $csv, $replace = false, $ignore = true, $delete = True)
 {
     $start = time();
-    // error_log("csv = " . $csv);
     $csv = str_replace('\\', '/', $csv);
-    // error_log("csv = " . $csv);
 
     if ($replace)
-        $sql = "load data local infile '$csv' replace into table $table character set utf8";
+        $sql = "load data local infile '$csv' replace into table $table character set utf8mb4";
     else if ($ignore)
-        $sql = "load data local infile '$csv' ignore into table $table character set utf8";
+        $sql = "load data local infile '$csv' ignore into table $table character set utf8mb4";
     else
-        $sql = "load data local infile '$csv' into table $table character set utf8";
-    // add the following line into php.ini;
-    // mysqli.allow_local_infile = On
+        $sql = "load data local infile '$csv' into table $table character set utf8mb4";
+// add the following line into ~/php/etc/php.ini  / D:\wamp64\bin\apache\apache2.4.39\bin\php.ini (Windows Version);
+// mysqli.allow_local_infile = On
 
-    // add the following line into my.ini;
-    // [mysql]
-    // local-infile=1
-    // [mysqld]
-    // local-infile=1
+// add the following line into my.ini;
+// [mysql]
+// local-infile=1
+// [mysqld]
+// local-infile=1
+
+    $local_infile = True;
+    foreach (get_rows("show global variables like 'local_infile'") as $obj) {
+        $Variable_name = $obj['Variable_name'];
+        $Value = $obj['Value'];
+        assert($Variable_name == 'local_infile', "Variable_name == 'local_infile'");
+        if ($Value == 'OFF')
+            $local_infile = False;
+    }
+    
+    if (!$local_infile)
+        execute('set global local_infile = 1');
 
     try {
-        // error_log($sql);
-        execute($sql);
+        error_log("executing ".$sql);
+        $rowcount = execute($sql);
     } catch (Exception $e) {
-        // error_log($e->getMessage());
-        return;
+        error_log($e->getMessage());
+        $rowcount = 0;
     }
 
-    $cost = time() - $start;
-    // print('time cost =', (time.time() - start));
+//     if (!$rowcount && $connection['error'] == 'Malformed packet') {
+//         $password = get_password();
+//         $user = $_GET['user'];
+//         $host = HOST;
+//         [$host, $port] = explode(":", $host, 2);
+        
+//         $result_file = $csv.'.txt';
+//         $cmd = "mysql --local_infile=1 -h$host --port=$port -u$user -p$password -e\"$sql; select row_count();\" > $result_file";
+//         //error_log('$cmd = '.$cmd);
+//         $ret = shell_exec($cmd);        
+//         $content = file_get_contents($result_file);
+//         //error_log('sql $content = '.$content);
+//         [$title, $rowcount] = explode("\n", $content);
+//         $rowcount = (int)$rowcount;
+//         try {
+//             unlink($result_file);
+//         } catch (Exception $e) {
+//             // error_log($e->getMessage());
+//         }
+//     }
+
+    error_log('time cost = '.(time() - $start));
     if ($delete) {
-        // print("os.remove(csv)", csv);
-        unlink($csv);
+        error_log("os.remove(csv) ".$csv);
+        try {
+            unlink($csv);
+        } catch (Exception $e) {
+            // error_log($e->getMessage());
+            return;
+        }
     }
 
-    return $cost;
+    return $rowcount;
 }
 
-function commit()
+function multi_query($sql, $batch = true)
 {
-    $dbc = ConnectMysqli::getInstance();
-    $dbc->commit();
+    //error_log("sql = " . implode(";", $sql));
+    global $connection;
+
+    if ($batch) {
+        if (is_array($sql))
+            $sql = implode(';', $sql);
+
+        if (! $sql)
+            return 0;
+
+        $result = $connection->multi_query($sql);
+        if ($result === false) {
+            error_log("error occurred in");
+            error_log("sql = " . $sql);
+            error_log($connection->error);
+            return 0;
+            // throw new Exception($connection->error);
+        }
+
+        $array = [];
+        do {
+            $result = $connection->store_result();
+            if ($result instanceof mysqli_result) {
+
+                $rows = [];
+                while ($row = $result->fetch_assoc()) {
+                    // while ($row = $result->fetch_row()){}
+                    $rows[] = $row;
+                }
+                $array[] = $rows;
+
+                error_log(std\encode($rows));
+            } else {
+                $array[] = $connection->affected_rows;
+            }
+        } while ($connection->more_results() && $connection->next_result());
+
+        return array_sum($array);
+    } else {
+        if (is_string($sql))
+            $sql = explode(';', $sql);
+
+        if (! $sql)
+            return 0;
+
+        $rowcount = 0;
+        foreach ($sql as $line) {
+            execute($line);
+            $rowcount += $connection->affected_rows;
+        }
+        
+        return $rowcount;
+    }
 }
 
-function multi_query($sql, $resulttype = MYSQLI_ASSOC)
+function execute($sql, &$resulttype = MYSQLI_NUM)
 {
-    $dbc = ConnectMysqli::getInstance();
-    $array = $dbc->multi_query($sql);
-    return $array;
-}
-
-function execute($sql)
-{
-    $dbc = ConnectMysqli::getInstance();
-
+    global $connection;
     try {
-        $array = $dbc->query($sql);
-        assert($array === true);
-    } catch (Exception $e) {
-        error_log($e);
+        $array = $connection->query($sql);
+    }
+    catch (Exception $e) {
+        error_log($e->getMessage());
         return 0;
     }
+    
+    if ($array === true) {
+        return $connection->affected_rows;
+    }
 
-    return $dbc->affected_rows();
+    if ($array === false) {
+        error_log("error occurred in executing:");
+        error_log($sql);
+        error_log($connection->error);
+        if (is_array($resulttype)) {
+            $resulttype['error'] = $connection->error;
+        }
+        return 0;
+    }
+    
+    $result = [];
+    while ($row = $array->fetch_array($resulttype)) {
+        $result[] = $row;
+    }
+
+    return $result;
 }
 
 function insertmany($table, $matrix, $replace = true)
 {
     $insert = $replace ? 'replace' : 'insert';
 
-    $sql = "$insert into $table values" . implode(",", array_map(fn ($vector) => "(" . substr(\std\encode($vector), 1, - 1) . ")", $matrix));
+    $sql = "$insert into $table values" . implode(",", array_map(fn ($vector) => "(" . substr(std\encode($vector), 1, - 1) . ")", $matrix));
     // error_log("sql = $sql");
     return execute($sql);
 }
 
-function &select($sql, $resulttype = MYSQLI_NUM) // the other choice is MYSQLI_ASSOC
+function scan_data($sql, $resulttype, $fn, $limit, &$offset) // the other choice is MYSQLI_ASSOC
 {
-    $dbc = ConnectMysqli::getInstance();
+    $result = [];
+    $count = 0;
+
+    if ($resulttype === true) {
+        $resulttype = MYSQLI_ASSOC;
+    }
+
+    $result_mode = MYSQLI_USE_RESULT;
+    global $connection;
 
     // error_log("sql = $sql");
-    $array = $dbc->query($sql);
+    $array = $connection->query($sql, $result_mode);
 
     while ($row = $array->fetch_array($resulttype)) {
-        yield $row;
+        ++ $offset;
+        // error_log("\$offset = ".$offset);
+        if ($fn($row)) {
+            $result[] = $row;
+
+            if (++ $count >= $limit) {
+                $connection->__destruct();
+                return $result;
+            }
+        }
     }
+
+    return $result;
 }
 
 class ConnectMysqli
@@ -199,8 +404,8 @@ class ConnectMysqli
 
     private function __construct()
     {
-        $config = parse_ini_file(dirname(dirname(__file__)) . "/config.ini", true)['client'];
-        // error_log(\std\encode($config));
+        $config = parse_ini_file(dirname(__file__) . "/config.ini", true)['client'];
+        // error_log(std\encode($config));
 
         $this->link = new mysqli($config['host'], $config['user'], $config['password'], $config['database']);
         if (! $this->link) {
@@ -220,7 +425,10 @@ class ConnectMysqli
     public function __destruct()
     {
         // echo 'closing mysql!<br>';
-        $this->link->close();
+        if ($this->link) {
+            $this->link->close();
+            $this->link = null;
+        }
     }
 
     private function __clone()
@@ -236,10 +444,11 @@ class ConnectMysqli
         return self::$instance;
     }
 
-    public function query($sql)
+    public function query($sql, $result_mode = MYSQLI_STORE_RESULT)
     {
-        $array = $this->link->query($sql);
+        $array = $this->link->query($sql, $result_mode);
         if ($array === false) {
+            error_log("erroneous sql = " . $sql);
             throw new Exception($this->link->error);
         }
         return $array;
@@ -250,38 +459,36 @@ class ConnectMysqli
         if (is_array($sql))
             $sql = implode(';', $sql);
 
+        if (! $sql)
+            return [0];
+
         $link = $this->link;
         $result = $link->multi_query($sql);
         if ($result === false) {
-            throw new Exception($link->error);
+            error_log("sql = " . $sql);
+            return [0];
+            // throw new Exception($link->error);
         }
 
         $array = [];
         do {
             $result = $link->store_result();
             if ($result instanceof mysqli_result) {
-                
+
                 $rows = [];
-                while ($row = $result->fetch_row()) {                    
-                    //while ($row = $result->fetch_assoc()){}
+                while ($row = $result->fetch_row()) {
+                    // while ($row = $result->fetch_assoc()){}
                     $rows[] = $row;
                 }
                 $array[] = $rows;
-                
-                error_log(\std\encode($rows));
-            }
-            else{
+
+                error_log(std\encode($rows));
+            } else {
                 $array[] = $link->affected_rows;
             }
-            
         } while ($link->more_results() && $link->next_result());
 
         return $array;
-    }
-
-    public function affected_rows()
-    {
-        return $this->link->affected_rows;
     }
 
     public function getInsertid()
@@ -303,11 +510,7 @@ class ConnectMysqli
     public function getRow($sql, $type = "assoc")
     {
         $query = $this->query($sql);
-        if (! in_array($type, [
-            "assoc",
-            'array',
-            "row"
-        ])) {
+        if (! in_array($type, ["assoc", 'array', "row"])) {
             die("mysqli_query error");
         }
         $funcname = "mysqli_fetch_" . $type;
@@ -316,11 +519,7 @@ class ConnectMysqli
 
     public function getFormSource($query, $type = "assoc")
     {
-        if (! in_array($type, [
-            "assoc",
-            "array",
-            "row"
-        ])) {
+        if (! in_array($type, ["assoc", "array", "row"])) {
             die("mysqli_query error");
         }
         $funcname = "mysqli_fetch_" . $type;
@@ -413,430 +612,183 @@ class ConnectMysqli
     }
 }
 
-function select_axiom_by_state($state)
+function is_int($Type)
 {
-    global $user;
-    $result = select("select axiom from axiom where user = '$user' and state = '$state' order by axiom");
-    $array = [];
-    foreach ($result as &$value) {
-        $array[] = $value[0];
-    }
-    return $array;
+    return preg_match('/int\(\d+\)/', $Type);
 }
 
-function select_axiom_by_regex($regex, $binary = false)
+function is_float($Type)
 {
-    global $user;
-
-    if ($binary) {
-        $binary = " binary ";
-    } else {
-        $binary = " ";
-    }
-
-    $sql = "select axiom from axiom where user = '$user' and axiom regexp$binary'$regex'";
-    // echo $sql . "<br>";
-
-    $result = select($sql);
-    $array = [];
-    foreach ($result as &$value) {
-        $array[] = $value[0];
-    }
-    return $array;
+    return preg_match('/double/', $Type);
 }
 
-function select_axiom_by_like($keyword, $binary = false)
+function is_number($Type)
 {
-    global $user;
-
-    if ($binary) {
-        $binary = " binary ";
-    } else {
-        $binary = " ";
-    }
-
-    $keyword = str_replace('_', '\_', $keyword);
-    $sql = "select axiom from axiom where user = '$user' and axiom like$binary'%$keyword%'";
-    // echo $sql . "<br>";
-
-    $result = select($sql);
-    $array = [];
-    foreach ($result as &$value) {
-        $array[] = $value[0];
-    }
-
-    // echo "result = " . \std\encode($result) . "<br>";
-    // echo "array = " . \std\encode($array) . "<br>";
-    return $array;
+    return preg_match('/int|double/', $Type);
 }
 
-function select_count($state = null)
+function is_varchar($Type)
 {
-    global $user;
-
-    $sql = "select count(*) from axiom where user = '$user'";
-    if ($state) {
-        $sql .= " and state = '$state'";
-    }
-
-    foreach (select($sql) as $count) {
-        return $count[0];
-    }
+    if (preg_match('/varchar\((\d+)\)/', $Type, $m))
+        return (int)$m[1];
 }
 
-function select_axiom_by_state_not($state)
+function is_json($Type)
 {
-    global $user;
-    yield from select("select axiom, state from axiom where user = '$user' and state != '$state'");
+    return preg_match('/json/', $Type);
 }
 
-function yield_from_mysql($axiom)
+function is_enum($Type)
 {
-    global $user;
-    error_log("user = $user");
-
-    foreach (select("select latex from axiom where user = '$user' and axiom = '$axiom'") as list ($latex,)) {
-        return explode("\n", $latex);
-    }
+    return preg_match('/enum\((\S+)\)/', $Type);
 }
 
-function select_hierarchy($axiom, $reverse = false)
+function mysqlStr($value, $Type = '', $quote=true)
 {
-    global $user;
-    if ($reverse) {
-        $callee = 'caller';
-        $caller = 'callee';
-    } else {
-        $callee = 'callee';
-        $caller = 'caller';
-    }
-
-    try {
-        foreach (select("select $callee from hierarchy where user = '$user' and $caller = '$axiom'") as &$result) {
-            yield $result[0];
+    if (! is_number($Type)) {
+        $value = str_replace("'", "''", $value);
+        if ($Type != 'regexp') {
+            $value = preg_replace("/((?<![\\\\])[\\\\](?![ntvr\"\\\\])|[\\\\]{2,})/", '$1$1', $value);
+            if ($Type == 'json')
+                $value = preg_replace('/[\\\\]([n"])/', '\\\\\\\\$1', $value);
         }
-    } catch (Exception $e) {
-        if (preg_match("/Table '(\w+).(\w+)' doesn't exist/", $e->getMessage(), $matches)) {
-            assert(\std\equals($matches[1], "axiom"));
-            assert(\std\equals($matches[2], "hierarchy"));
-        } else {
-            die($e->getMessage());
+        else {
+            $value = preg_replace("/((?<![\\\\])[\\\\](?![ntv\"\\\\]))/", '$1$1', $value);
         }
 
-        $sql = <<<EOT
-        CREATE TABLE `hierarchy` (
-          `user` varchar(32) NOT NULL,
-          `caller` varchar(256) NOT NULL,
-          `callee` varchar(256) NOT NULL,  
-          `count` int default 0,
-          PRIMARY KEY (`user`, `caller`, `callee`) 
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-        PARTITION BY KEY () PARTITIONS 8;
-        EOT;
+        if ($quote)
+            $value = "'$value'";
+    }
 
-        execute($sql);
+    return $value;
+}
 
-        foreach (retrieve_all_dependency() as list ($caller, $counts)) {
-            foreach ($counts as $callee => $count) {
-                execute("insert into hierarchy values('$user', '$caller', '$callee', $count)");
+function is_admin()
+{
+    $remote_addr = $_SERVER['REMOTE_ADDR'];
+    if (in_array($remote_addr, ['::1', '127.0.0.1', '192.168.5.21']))
+        return true;
+
+    error_log("$remote_addr is not among the hosts allowable");
+    return false;
+}
+
+function get_primary_key($table)
+{
+    foreach (select("desc ${table}", true) as $desc) {
+        $key = $desc['Field'];
+        if ($desc['Key'] == 'PRI')
+            return $key;
+    }
+}
+
+function show_create_table($database, $table)
+{
+    if ($database) {
+        $table = "$database.$table";
+    }
+
+    [[$table_name, $createTableSQL]] = get_rows("show create table ${table}");
+    return [$table_name, $createTableSQL];
+}
+
+function show_collation($database, $table)
+{
+    [$table_name, $createTableSQL] = show_create_table($database, $table);
+
+    preg_match("/COLLATE=(\w+)/", $createTableSQL, $m);
+    return $m[1];
+}
+
+function is_collation_case_sensitive($table)
+{
+    return preg_match("/_cs$/", show_collation($table), $m);
+}
+
+function is_collation_case_insensitive($database, $table)
+{
+    return preg_match("/_ci$/", show_collation($database, $table), $m);
+}
+
+function field_to_type($database, $table)
+{
+    $Field2Type = [];
+    if ($database) {
+        $table = "${database}.${table}";
+    }
+
+    $indexKey = [];
+    $transform = [];
+    foreach (get_rows("show full columns from $table", true) as $desc) {
+        $Field = $desc['Field'];
+        $Key = $desc['Key'];
+        if ($Key) {
+            $indexKey[$Field] = true;
+
+            if ($Key == 'PRI')
+                $primary_key = $Field;
+        }
+
+        $Field2Type[$Field] = $desc['Type'];
+
+        $Comment = $desc['Comment'];
+        if ($Comment) {
+            $Comment = json_decode($Comment, true);
+            if ($fn = $Comment['transform']) {
+                $transform[$Field] = $fn;
+            } else {
+                $transform[$Field] = 'entity';
             }
         }
+    }
 
-        yield from select_hierarchy($axiom, $reverse);
+    return [$Field2Type, $primary_key, $indexKey, $transform];
+}
+
+function json_decode_by_field_to_type($Field2Type, &$data)
+{
+    foreach ($Field2Type as $Field => $Type) {
+        if ($Type == 'json') {
+            foreach ($data as &$dict) {
+                $value = &$dict[$Field];
+                if (! is_array($value)) {
+                    $value = std\decode($value);
+                }
+            }
+        }
     }
 }
 
-function establish_hierarchy($node, $reverse = false)
+function aggregate_type($type)
 {
-    $G = [];
-    $setProcessed = new Set();
+    switch ($value) {
+    case "count":
+    case 'bit_and':
+    case 'bit_or':
+    case 'bit_xor':
+        return 'int';
 
-    $queue = new Queue();
-    $queue->push($node);
+    case 'sum':
+    case 'agv':
+    case 'min':
+    case 'max':
+    case 'std':
+    case 'stddev_samp':
+    case 'variance':
+    case 'var_samp':
+    case 'var_pop':
+        return 'float';
 
-    while (! $queue->isEmpty()) {
-        $node = $queue->pop();
-        if ($setProcessed->contains($node))
-            continue;
+    case 'group_concat':
+        return 'text';
 
-        $setProcessed->add($node);
+    case 'json_arrayagg':
+    case 'json_objectagg':
+    case 'json_remove':
+        return 'json';
 
-        // error_log("theoremSetProcessed = " . \std\encode($setProcessed));
-        foreach (select_hierarchy($node, $reverse) as $child) {
-            $queue->push($child);
-            $G[$node][] = $child;
-        }
-    }
-
-    $graph = new Graph();
-    foreach ($G as $key => $value) {
-        foreach ($value as $node) {
-            $graph->insert($key, $node);
-        }
-    }
-
-    return $graph;
-}
-
-function suggest($prefix, $phrase)
-{
-    global $user;
-    $phrases = [];
-    try {
-        // $sql = "select phrase from suggest where user = '$user' and prefix = '$prefix' order by usage";
-        $sql = "select phrase from suggest where user = '$user' and prefix = '$prefix'";
-        if ($phrase) {
-            $sql .= " and phrase like '%$phrase%'";
-        }
-
-        // error_log("in suggest: " . $sql);
-
-        foreach (select($sql) as list ($word,)) {
-            $phrases[] = $word;
-        }
-    } catch (Exception $e) {
-        return [];
-    }
-
-    if ($phrase) {
-        $dict = [];
-
-        foreach ($phrases as &$word) {
-            $dict[$word] = \std\startsWith($word, $phrase);
-        }
-
-        arsort($dict);
-        $phrases = array_keys($dict);
-    }
-
-    return $phrases;
-}
-
-function hint($prefix)
-{
-    global $user;
-    $phrases = [];
-    // error_log($prefix);
-    try {
-        // $sql = "select phrase from suggest where user = '$user' and prefix = '$prefix' order by usage";
-        $sql = "select phrase from hint where prefix = binary'$prefix'";
-        // error_log($sql);
-        foreach (select($sql) as list ($phrase,)) {
-            $phrases[] = $phrase;
-        }
-    } catch (Exception $e) {
-        return [];
-    }
-
-    return $phrases;
-}
-
-function insert_into_suggest($theorem)
-{
-    global $user;
-    $phrases = explode('.', $theorem);
-    $size = count($phrases);
-    $phrases[] = 'apply';
-
-    $prefix = '';
-
-    $data = [];
-    foreach (\std\range(0, $size) as $i) {
-        $prefix .= $phrases[$i] . ".";
-        $data[] = [
-            $user,
-            $prefix,
-            $phrases[$i + 1],
-            1
-        ];
-    }
-
-    $rows_affected = insertmany('suggest', $data);
-}
-
-function delete_from_suggest($theorem, $__init__ = false, $regex = false)
-{
-    global $user;
-    preg_match('/(.+\.)(\w+)$/', $theorem, $m);
-
-    $prefix = $m[1];
-    $phrase = $m[2];
-
-    if ($regex) {
-        // using regex engine;
-        if ($__init__) {
-
-            $sql = "delete from suggest where user = '$user' and prefix = '$theorem.' and phrase = 'apply'";
-
-            $rows_affected = execute($sql);
-            if ($rows_affected != 1)
-                error_log("error found in $sql");
-            else
-                error_log("executing: $sql");
-        } else {
-            $sql = "delete from suggest where user = '$user' and prefix = '$prefix.' and phrase = '$phrase'";
-
-            $rows_affected = execute($sql);
-            if (! $rows_affected)
-                error_log("error found in $sql");
-            else
-                error_log("executing: $sql");
-
-            $sql = "delete from suggest where user = '$user' and prefix regexp '^$theorem\..*'";
-
-            $rows_affected = execute($sql);
-            if (! $rows_affected)
-                error_log("error found in $sql");
-            else
-                error_log("executing: $sql");
-        }
-    } else {
-
-        if (! $__init__) {
-            $sql = "delete from suggest where user = '$user' and prefix = '$prefix' and phrase = '$phrase'";
-
-            $rows_affected = execute($sql);
-            if (! $rows_affected)
-                error_log("error found in $sql");
-            else
-                error_log("executing: $sql");
-        }
-
-        $sql = "delete from suggest where user = '$user' and prefix = '$theorem.' and phrase = 'apply'";
-
-        $rows_affected = execute($sql);
-        if (! $rows_affected)
-            error_log("error found in $sql");
-        else
-            error_log("executing: $sql");
-    }
-}
-
-function update_suggest($package, $old, $new, $is_folder = false)
-{
-    global $user;
-    if ($new == null) {
-        $sql = "delete from suggest where user = '$user' and prefix = '$package.' and phrase = '$old'";
-    } else if ($is_folder) {
-        $package_regex = str_replace(".", "\\.", $package);
-        $sql = "update suggest set prefix = regexp_replace(prefix, '^$package_regex\\.$old\\.(.+)', '$package.$new.$1') where user = '$user' and prefix like '$package.$old.%'";
-    } else
-        $sql = "update suggest set phrase = '$new' where user = '$user' and prefix = '$package' and phrase = '$old'";
-
-    // error_log("sql = $sql");
-
-    $rows_affected = \mysql\execute($sql);
-    if ($rows_affected < 1) {
-        error_log("error found in $sql");
-    }
-}
-
-function delete_from_axiom($old, $regex = false)
-{
-    global $user;
-
-    if ($regex) {
-        // using regex engine;
-        $sql = "delete from axiom where user = '$user' and axiom regexp '^$old'";
-        $rows_affected = \mysql\execute($sql);
-    } else {
-        $sql = "delete from axiom where user = '$user' and axiom = '$old'";
-        $rows_affected = \mysql\execute($sql);
-    }
-
-    if (! $rows_affected) {
-        error_log("$sql");
-    }
-}
-
-function update_axiom($old, $new, $is_folder = false)
-{
-    global $user;
-
-    if ($is_folder) {
-        $old_regex = str_replace('.', "\\.", $old);
-        $sql = "update axiom set axiom = regexp_replace(axiom, '^$old_regex\.(.+)', '$new.$1') where user = '$user' and axiom like '$old.%'";
-    } else {
-        $sql = "update axiom set axiom = '$new' where user = '$user' and axiom = '$old'";
-    }
-
-    // error_log("sql = $sql");
-    $rows_affected = \mysql\execute($sql);
-    if ($rows_affected < 1) {
-        error_log("error found in $sql");
-    }
-}
-
-function replace_with_callee($old, $new)
-{
-    $old_regex = str_replace('.', "\\.", $old);
-    $old_regex_hierarchy = "$old_regex(?!\.)|$old_regex(?=\.apply\b)";
-    global $user;
-    foreach (\mysql\select("select caller from hierarchy where user = '$user' and callee = '$old'") as list ($caller,)) {
-        $pyFile = module_to_py($caller);
-        $pyFile = new Text($pyFile);
-
-        $pyFile->preg_replace($old_regex_hierarchy, $new);
-    }
-
-    $old_regex = "(?<=from axiom\.)$old_regex(?= import \w+)";
-    // php doesn't support variable-lenth looking-behind assertion
-    // $old_regex = "(?<=^ *from axiom\.)$old_regex(?= import \w+)";
-    foreach (\mysql\select("select caller from `function` where user = '$user' and callee = '$old'") as list ($caller,)) {
-        $pyFile = module_to_py($caller);
-        $pyFile = new Text($pyFile);
-
-        $pyFile->preg_replace($old_regex, $new);
-    }
-}
-
-function reaplce_axiom_in_hierarchy($old, $new)
-{
-    global $user;
-    error_log("sql = update hierarchy set caller = '$new' where user = '$user' and caller = '$old'");
-    $rows_affected = \mysql\execute("update hierarchy set caller = '$new' where user = '$user' and caller = '$old'");
-
-    error_log("sql = update hierarchy set callee = '$new' where user = '$user' and callee = '$old'");
-    $rows_affected = \mysql\execute("update hierarchy set callee = '$new' where user = '$user' and callee = '$old'");
-
-    error_log("sql = update `function` set caller = '$new' where user = '$user' and caller = '$old'");
-    $rows_affected = \mysql\execute("update `function` set caller = '$new' where user = '$user' and caller = '$old'");
-
-    error_log("sql = update `function` set callee = '$new' where user = '$user' and callee = '$old'");
-    $rows_affected = \mysql\execute("update `function` set callee = '$new' where user = '$user' and callee = '$old'");
-}
-
-function update_hierarchy($old, $new, $is_folder = false)
-{
-    global $user;
-    if ($is_folder) {
-        $old_regex = str_replace('.', "\\.", $old);
-
-        $replaceDict = [];
-        foreach (\mysql\select("select axiom from axiom where user = '$user' and axiom like '$old.%'") as list ($axiom,)) {
-            $oldAxiom = $axiom;
-            $newAxiom = preg_replace("/^$old_regex\.(.+)/", "$new.$1", $oldAxiom);
-
-            $replaceDict[$oldAxiom] = $newAxiom;
-            error_log("replace $oldAxiom with $newAxiom");
-        }
-
-        foreach ($replaceDict as $old => $new) {
-            replace_with_callee($old, $new);
-        }
-        // these two for loop cannot be combined because results of replace_with_callee depend on reaplce_axiom_in_hierarchy
-        foreach ($replaceDict as $old => $new) {
-            reaplce_axiom_in_hierarchy($old, $new);
-        }
-    } else {
-        // update the python files that contains $old theorem!
-        $sql = "select caller from hierarchy where user = '$user' and callee = '$old'";
-
-        // error_log("sql = $sql");
-
-        replace_with_callee($old, $new);
-
-        reaplce_axiom_in_hierarchy($old, $new);
+    default:
+        break;
     }
 }
 ?>

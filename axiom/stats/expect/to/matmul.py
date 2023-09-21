@@ -8,14 +8,14 @@ def apply(self):
         expr, given = expr.args
     else:
         given = None
-        
+
     [*args] = expr.of(MatMul)
     scope_variables = self.scope_variables
     from sympy.tensor.indexed import index_intersect
     for i, arg in enumerate(args):
         if index_intersect(arg.random_symbols, scope_variables):
             args[i] = Expectation(arg, *limits, given=given)
-    
+
     return Equal(self, MatMul(*args))
 
 
@@ -31,19 +31,19 @@ def prove(Eq):
 
     Eq << Eq[0].this.rhs.find(Sliced).apply(algebra.slice.to.lamda)
 
-    Eq << Eq[-1].this.rhs.find(Expectation).apply(stats.expect_lamda.to.lamda.expect)
+    Eq << Eq[-1].this.rhs.find(Expectation).apply(stats.expect.lamda.to.lamda.expect)
 
     Eq << Eq[-1].this.rhs.apply(discrete.matmul.to.lamda)
 
     Eq << Eq[-1].this.find(Mul).apply(stats.mul.to.expect)
 
-    Eq << Eq[-1].this.find(Sum).apply(stats.sum_expect.to.expect.sum)
+    Eq << Eq[-1].this.find(Sum).apply(stats.sum.expect.to.expect.sum)
 
-    Eq << Eq[-1].this.find(Lamda).apply(stats.lamda_expect.to.expect.lamda)
+    Eq << Eq[-1].this.find(Lamda).apply(stats.lamda.expect.to.expect.lamda)
 
     Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda.to.matmul)
 
-    
+
 
 
 if __name__ == '__main__':

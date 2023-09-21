@@ -4,7 +4,12 @@
 
 <script>
 console.log('import codeMirror.vue');
-//import {CodeMirror} from "../../static/codemirror/src/edit/main.js"
+//import CodeMirror from "../codemirror/lib/codemirror.js"
+
+function this_phrases() {
+	return ['apply', 'args', 'expr', 'lhs', 'rhs', 'find'];
+}
+
 export default {
     data() {
         return {
@@ -236,12 +241,14 @@ export default {
 		            }
 
 		            var user = axiom_user();
-		            var href = `/${user}/index.php?module=${module}`;
+                    var href = user? `/${user}/index.php?module=${module}`: location.href.replace(self.module.replace(/\./g, '/'), module.replace(/\./g, '/')).replace(/#\w+$/, '');
 
 		            if (apply)
 		                href += "#apply";
 		            else if (symbol)
 		                href += `#${symbol}`;
+		            else if (!user && text.slice(selectionStart).match(/^\.(?!apply\b)\w+/))
+	            		href = href.slice(0, -5);
 
 		            if (refresh)
 		                location.href = href;

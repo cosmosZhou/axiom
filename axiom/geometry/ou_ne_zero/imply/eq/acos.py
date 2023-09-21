@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq <<= Eq.x_is_nonnegative & Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.bool, index=1)
+    Eq << Eq[-1].this.rhs.apply(algebra.cond.cond.given.et.subs)
 
     Eq << algebra.infer.given.et.infer.apply(Eq[-1])
 
@@ -47,7 +47,7 @@ def prove(Eq):
 
     Eq <<= Eq.x_is_negative & Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.bool, index=1, invert=True)
+    Eq << Eq[-1].this.rhs.apply(algebra.cond.cond.given.et.subs, invert=True)
 
     Eq << algebra.infer.given.et.infer.apply(Eq[-1])
 

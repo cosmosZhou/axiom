@@ -15,7 +15,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     n = Symbol(integer=True, positive=True)
-    s = Function(etype=dtype.complex * n)
+    s = Function(etype=dtype.complex[n])
     x, t = Symbol(complex=True, shape=(n,))
     f, g = Function(integer=True, shape=())
     Eq << apply(Piecewise((s(x), (f(x) > 0) & (g(x) > 0)), (x.universalSet, True)))

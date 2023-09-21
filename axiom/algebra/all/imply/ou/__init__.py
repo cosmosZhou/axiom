@@ -2,15 +2,14 @@ from util import *
 
 
 def rewrite_as_Or(given):
-    function, *limits = given.of(All)
+    expr, *limits = given.of(All)
     limits_dict = given.limits_dict
     eqs = []
     for var, domain in limits_dict.items():
-        if isinstance(domain, list):
-            if domain:
-                cond = Element(var, conditionset(var, *domain).simplify()).simplify()
-            else:
-                cond = S.true
+        if domain is None:
+            cond = S.true
+        elif isinstance(domain, list):
+            cond = Element(var, conditionset(var, *domain).simplify()).simplify()
         elif domain.is_set:
             cond = Element(var, domain).simplify()
         else:
@@ -18,10 +17,10 @@ def rewrite_as_Or(given):
             cond = domain
         eqs.append(cond.invert().simplify())
 
-    if function.is_Or:
-        eqs += function.args
+    if expr.is_Or:
+        eqs += expr.args
     else:
-        eqs.append(function)
+        eqs.append(expr)
 
     return Or(*eqs)
 

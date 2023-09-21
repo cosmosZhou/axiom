@@ -117,7 +117,7 @@ def matmul(A, B, deep=False):
                         if deep:
                             return BlockMatrix(*(matmul(a, B, deep=True) for a in args_A))
                         return BlockMatrix(*(a @ B for a in args_A))
-                    
+
                     args_B = B.of(BlockMatrix)
                     if args_B and args_A:
                         assert len(args_A) == len(args_B)
@@ -203,9 +203,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(MatMul[BlockMatrix]).apply(discrete.matmul.to.block.basic)
 
-    Eq << Eq[-1].this.rhs.find(Add).apply(algebra.add_block.to.block)
+    Eq << Eq[-1].this.rhs.find(Add).apply(algebra.add.block.to.block)
 
-    Eq << Eq[-1].this.rhs.find(Add[BlockMatrix]).apply(algebra.add_block.to.block)
+    Eq << Eq[-1].this.rhs.find(Add[BlockMatrix]).apply(algebra.add.block.to.block)
 
 
 

@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq <<= ~Eq[-2], ~Eq[-1]
 
-    Eq <<= Eq[-2].this.apply(algebra.ne.cond.imply.cond.subs, ret=0), Eq[-1].this.apply(algebra.eq.cond.imply.cond.kroneckerDelta, ret=0)
+    Eq <<= Eq[-2].this.apply(algebra.ne.cond.imply.cond.subs, ret=0), Eq[-1].this.apply(algebra.eq.cond.imply.cond.delta, ret=0)
 
     Eq << Eq[-1].apply(sets.ne.ne.imply.notin, simplify=False)
 
@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq <<= ~Eq[-2], ~Eq[-1]
 
-    Eq.a00, Eq.a01 = Eq[-2].this.apply(algebra.ne.cond.imply.cond.subs, ret=0), Eq[-1].this.apply(algebra.eq.cond.imply.cond.kroneckerDelta, ret=0)
+    Eq.a00, Eq.a01 = Eq[-2].this.apply(algebra.ne.cond.imply.cond.subs, ret=0), Eq[-1].this.apply(algebra.eq.cond.imply.cond.delta, ret=0)
 
     Eq << Eq.a00.apply(sets.ne.ne.imply.notin, simplify=False)
 
@@ -78,7 +78,7 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    
+
 
 
 if __name__ == '__main__':

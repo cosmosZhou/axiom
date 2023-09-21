@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.arg.apply(algebra.mul.to.exp)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.arg_expi.to.add.ceiling)
+    Eq << Eq[-1].this.rhs.apply(algebra.arg.expi.to.add.ceiling)
 
 
 if __name__ == '__main__':

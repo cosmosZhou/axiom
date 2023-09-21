@@ -1,5 +1,5 @@
 from flask.blueprints import Blueprint
-from util import std
+import std
 from flask.globals import request
 
 system = Blueprint('system', __name__, static_folder='../static')
@@ -9,17 +9,6 @@ system = Blueprint('system', __name__, static_folder='../static')
 def favicon():
     return system.send_static_file('favicon.ico')
 
-# @system.route('/kill', methods=['POST', 'GET'])
-# def kill():
-#     import os
-#     pid = os.getpid()
-#     if std.is_Linux():
-#         os.system(f"kill -9 {pid}")
-#     else:
-#         os.system(f"taskkill /F /pid {pid}")
-#     return ""
-
-
 @system.route('/kill', methods=['GET'])
 def kill():
     import signal
@@ -27,30 +16,34 @@ def kill():
     os.kill(os.getpid(), signal.SIGILL)
     return std.json_encode({'text': 'kill myself'})
 
-    
+import ast
+from sympy import *
+
 @system.route('/eval', methods=['POST', 'GET'])
 def evaluate():
-#     decode = request.args.get('decode')
-#     if decode is None:
-#         decode = request.form.get('decode')
-
-    python = request.args.get('python')
-    if python is None:
-        python = request.form.get('python')
-
-    text = request.args.get('text')
-    if text is None:
-        text = request.form.get('text')
-
-#     print('python code:')
-#     print(python)
-
-    result = eval(python)
-    
-#     print('result =', result)
-    if text is None: 
-        return std.json_encode(result)
-    return result
+    data = {**request.args} | {**request.form}
+    if not data:
+        data = {**request.json}
+        
+    try:
+        python = data['python']
+        lineno = ast.parse(python).body[-1].lineno - 1
+        lines = python.split('\n')
+        given, imply = lines[:lineno], lines[lineno:]
+        given.insert(0, 'from sympy import *')
+        given = '\n'.join(Symbol.compile_definition_statement(given) for given in given)
+        imply = '\n'.join(imply)
+        __locals__ = {}
+        exec(given, __locals__)
+        obj = eval(imply, __locals__)
+        latex = sympify(obj).latex
+        return std.json_encode(dict(latex=latex))
+    except Exception as e:
+        from std.error import Cout
+        print(e, file=Cout)
+        import traceback
+        traceback.print_exc(file=Cout)
+        return std.json_encode(dict(error=str(Cout), path='\n'.join(sys.path), version=sys.version))
 
 
 @system.route('/system/user')

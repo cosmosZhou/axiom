@@ -1210,12 +1210,12 @@ function slice(&$s, $start, $stop = null, $step = 1)
     if (is_string($s)) {
         if ($step == 1) {
             if ($stop === null)
-                return substr($s, $start, $stop);
+                return mb_substr($s, $start, $stop, "utf8");
 
             if ($stop < 0)
                 $stop += len($s);
 
-            return substr($s, $start, $stop - $start);
+            return mb_substr($s, $start, $stop - $start, "utf8");
         }
         else {
             if ($stop === null)
@@ -3036,11 +3036,6 @@ function sample(&$data, $count)
     return $data;
 }
 
-function back($str)
-{
-    return substr($str, - 1);
-}
-
 function fullmatch($regexp, $str)
 {
     $slash = $regexp[0];
@@ -3292,5 +3287,4 @@ function boolval($bool) {
 function capitalize($s) {
     return strtoupper($s[0]).strtolower(substring($s, 1));
 }
-
 ?>

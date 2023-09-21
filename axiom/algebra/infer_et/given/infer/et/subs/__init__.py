@@ -26,8 +26,9 @@ def prove(Eq):
 
     Eq << algebra.infer.given.infer.et.apply(Eq[0])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.et.given.et.subs.eq, index=1)
+    Eq << Eq[-1].this.rhs.args[:2].apply(algebra.eq.cond.given.et.subs, swap=True)
 
+    
     
 
 
@@ -35,4 +36,4 @@ if __name__ == '__main__':
     run()
 # created on 2018-06-11
 from . import bool
-# updated on 2023-05-13
+# updated on 2023-08-26

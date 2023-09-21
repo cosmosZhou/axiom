@@ -20,10 +20,10 @@ def apply(all_a, all_b, equality_a, equality_b):
 def prove(Eq):
     from axiom import sets
     n, m = Symbol(integer=True, positive=True)
-    A = Symbol(etype=dtype.integer * n)
+    A = Symbol(etype=dtype.integer[n])
     a = Symbol(integer=True, shape=(n,))
 
-    B = Symbol(etype=dtype.integer * m)
+    B = Symbol(etype=dtype.integer[m])
     b = Symbol(integer=True, shape=(m,))
 
     f = Function(integer=True, shape=(m,))

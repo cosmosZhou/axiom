@@ -34,7 +34,7 @@ def prove(Eq):
 
     x = Symbol(real=True, shape=(oo,))
 
-    Eq << apply(And(All[i:0:n](x[i] > 0), x[n] > 0, x[n + 1] > 0))
+    Eq << apply(And(All[i:n](x[i] > 0), x[n] > 0, x[n + 1] > 0))
 
     Eq << algebra.iff.given.et.apply(Eq[-1])
 

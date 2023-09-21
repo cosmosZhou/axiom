@@ -377,8 +377,8 @@ function compile($infix)
                 $old = $caret;
                 for (;;) {
                     if ($caret == null) {
-                        \std\println(\std\slice($infix, 0, $i));
-                        \std\println(\std\slice($infix, $i));
+                        std\println(std\slice($infix, 0, $i));
+                        std\println(std\slice($infix, $i));
                         error_log("unnecessary right brace at position " . $i);
                         break;
                     }
@@ -402,9 +402,9 @@ function compile($infix)
                     throw new RuntimeException("lexeme not found!");
                 }
 
-                // \std\println(\std\slice($infix, $i, $end));
+                // std\println(std\slice($infix, $i, $end));
 
-                $caret = $caret->append_lexeme(\std\slice($infix, $i, $end));
+                $caret = $caret->append_lexeme(std\slice($infix, $i, $end));
 
                 $i = $end - 1;
         }

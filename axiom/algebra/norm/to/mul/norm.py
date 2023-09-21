@@ -4,7 +4,6 @@ from util import *
 @apply
 def apply(self):
     args = self.of(Norm[Mul])
-    import std
     vector, coeffs = std.array_split(args, lambda arg: arg.shape)
     return Equal(self, abs(Mul(*coeffs)) * Norm(Mul(*vector)))
 
@@ -22,11 +21,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Norm).apply(algebra.norm.to.sqrt)
 
-    Eq << Eq[-1].this.find(Abs ** 2).apply(algebra.square_abs.to.mul.conj)
+    Eq << Eq[-1].this.find(Abs ** 2).apply(algebra.square.abs.to.mul.conj)
 
-    Eq << Eq[-1].this.find(Expr * Conjugate).args[:2].apply(algebra.mul_conj.to.square.abs)
+    Eq << Eq[-1].this.find(Expr * Conjugate).args[:2].apply(algebra.mul.conj.to.square.abs)
 
-    Eq << Eq[-1].this.find(Expr * Conjugate).apply(algebra.mul_conj.to.square.abs)
+    Eq << Eq[-1].this.find(Expr * Conjugate).apply(algebra.mul.conj.to.square.abs)
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.domain_defined)
 

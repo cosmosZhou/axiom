@@ -95,7 +95,7 @@ def prove(Eq):
 
     Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.lhs.apply(discrete.square_norm.to.matmul.conj, swap=True)
+    Eq << Eq[-1].this.rhs.lhs.apply(discrete.square.norm.to.matmul.conj, swap=True)
 
     Eq << algebra.infer.imply.eq.piece.apply(Eq[-2], Eq[-3].rhs)
 
@@ -121,8 +121,8 @@ def prove(Eq):
 
     Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (j, 0, n), (i, 0, n))
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

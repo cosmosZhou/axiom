@@ -1,6 +1,7 @@
 <?php
 require_once '../../utility.php';
 require_once '../../mysql.php';
+require_once '../../init.php';
 use std\Graph, std\Text, std\Set;
 
 $dict = empty($_POST) ? $_GET : $_POST;
@@ -37,7 +38,7 @@ error_log("new = $new");
 if (file_exists($new . ".py")) {
     $new .= "/__init__.py";
 
-    $newFile = new \std\Text($new);
+    $newFile = new std\Text($new);
     if ($newFile->search('^@apply\b')) {
         die("$newFile already exists!");        
     }
@@ -47,7 +48,7 @@ if (file_exists($new . ".py")) {
 
     rename($old, $new);
 
-    $newFile = new \std\Text($new);
+    $newFile = new std\Text($new);
 
     $newFile->append("\n$content");
 } else {
@@ -62,11 +63,11 @@ insert_into_init($dest, $basename);
 $old = $oldPackage.".".$basename;
 $new = $dest.".".$basename;
 
-\mysql\update_axiom($old, $new);
-
-\mysql\delete_from_suggest($old);
-\mysql\insert_into_suggest($new);
-\mysql\update_hierarchy($old, $new);
+$user = get_user();
+update_axiom($user, $old, $new);
+delete_from_suggest($user, $old);
+insert_into_suggest($user, $new);
+update_hierarchy($user, $old, $new);
 
 echo true;
 ?>

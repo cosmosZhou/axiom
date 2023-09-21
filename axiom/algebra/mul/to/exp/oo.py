@@ -8,7 +8,7 @@ def apply(self):
     assert X[tuple(indices)] in FiniteSet(0, 1) or \
     X[tuple(indices)].defun() in FiniteSet(0, 1) or \
     X[tuple(indices)].defun().defun() in FiniteSet(0, 1)
-    
+
     return Equal(self, exp(a + (X - 1) * oo))
 
 
@@ -23,8 +23,8 @@ def prove(Eq):
     Ξ = Lamda[j:n, i:n](Bool(p(i, j)))
     Eq << apply(Ξ * exp(a))
 
-    Eq << Eq[-1].this.rhs.apply(algebra.exp_oo.to.mul)
-    
+    Eq << Eq[-1].this.rhs.apply(algebra.exp.oo.to.mul)
+
 
 
 if __name__ == '__main__':

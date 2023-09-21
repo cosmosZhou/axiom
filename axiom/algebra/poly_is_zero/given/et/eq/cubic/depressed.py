@@ -64,7 +64,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.mul.to.add)
 
-    Eq << Eq[-1].this.lhs.args[0].apply(algebra.mul.distribute, 1)
+    Eq << Eq[-1].this.lhs.args[0].apply(algebra.mul.distribute, 0)
 
     Eq << Eq[-1].subs(Eq.w_square)
 
@@ -80,7 +80,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.subs(Eq.A, Eq.B)
 
-    Eq << Eq[-1].this.find(Ceiling).apply(algebra.ceiling_arg.to.piece)
+    Eq << Eq[-1].this.find(Ceiling).apply(algebra.ceiling.arg.to.piece)
 
     Eq << Eq[-1].subs(Eq[1])
 
@@ -92,8 +92,8 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq.mul_ww)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

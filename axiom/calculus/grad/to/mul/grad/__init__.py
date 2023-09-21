@@ -28,7 +28,7 @@ def prove(Eq):
     i, j = Symbol(integer=True)
     Eq << apply(Derivative[x[i]](f(x[j])))
 
-    Eq << Eq[-1].this.find(KroneckerDelta).apply(algebra.kroneckerDelta.to.piece)
+    Eq << Eq[-1].this.find(KroneckerDelta).apply(algebra.delta.to.piece)
 
     Eq << algebra.cond.given.et.infer.split.apply(Eq[-1], cond=Eq[-1].find(Equal))
 

@@ -1,10 +1,11 @@
 <?php
 require_once '../../utility.php';
 require_once '../../mysql.php';
+require_once '../../init.php';
 use std\Graph, std\Text, std\Set;
 
 $dict = empty($_POST) ? $_GET : $_POST;
-
+$user = get_user();
 if (! $dict) {
     // https://www.php.net/manual/en/function.getopt.php
     $dict = getopt("", [
@@ -23,19 +24,19 @@ $module = "$package.$theorem";
 $py = module_to_py($module);
 error_log("py = $py");
 
-if (\std\endsWith($py, "/__init__.py")) {
+if (std\endsWith($py, "/__init__.py")) {
     $init = new Text($py);
     $lines = $init->preg_match('^from . import \w+');
     $init->writelines($lines);
 
-    \mysql\delete_from_suggest($module, true);
+    delete_from_suggest($user, $module, true);
 } else {
     unlink($py);
     delete_from_init($package, $theorem);
 
-    \mysql\delete_from_suggest($module);
+    delete_from_suggest($user, $module);
 }
 
-\mysql\delete_from_axiom($module);
-echo \std\encode("deleted!");
+delete_from_axiom($user, $module);
+echo std\encode("deleted!");
 ?>

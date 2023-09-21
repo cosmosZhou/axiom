@@ -41,7 +41,7 @@ def prove(Eq):
     Eq.initial = Eq.hypothesis.subs(m, 1)
 
     d = Eq[1].rhs.args[1].expr.indices[1].base
-    Eq << discrete.lamda_indexed.to.matmul.swap.apply(x, w, left=False, reference=None).subs(i, 0).subs(j, d[0])
+    Eq << discrete.lamda.indexed.to.matmul.swap.apply(x, w, left=False, reference=None).subs(i, 0).subs(j, d[0])
 
     Eq.induct = Eq.hypothesis.subs(m, m + 1)
 

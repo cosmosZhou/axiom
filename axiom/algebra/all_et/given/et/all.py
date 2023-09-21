@@ -21,7 +21,7 @@ def prove(Eq):
 
     k = Symbol(integer=True, positive=True)
     x, y = Symbol(real=True, shape=(k,), given=True)
-    A = Symbol(etype=dtype.real * k)
+    A = Symbol(etype=dtype.real[k])
     f, g = Function(real=True)
     b = Symbol(shape=(k,), real=True)
     Eq << apply(All[x:A](And(Unequal(x, y), Unequal(f(x), g(y)), Equal(f(x), b))))

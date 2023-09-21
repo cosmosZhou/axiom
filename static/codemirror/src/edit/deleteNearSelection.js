@@ -1,5 +1,4 @@
-import { runInOp } from "../display/operations.js"
-import { ensureCursorVisible } from "../display/scrolling.js"
+import { runInOp, ensureCursorVisible } from "../display/highlight_worker.js"
 import { cmp } from "../line/pos.js"
 import { replaceRange } from "../model/changes.js"
 import { lst } from "../util/misc.js"

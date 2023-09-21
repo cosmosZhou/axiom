@@ -14,7 +14,7 @@ def prove(Eq):
     i = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
     f, h = Function(real=True)
-    Eq << apply(Product[i:0:n + 1](f(i) + h(i)))
+    Eq << apply(Product[i:n + 1](f(i) + h(i)))
 
     Eq << Eq[-1].this.lhs.apply(algebra.prod.to.mul.split, cond={0})
 

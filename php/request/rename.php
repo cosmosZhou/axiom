@@ -1,9 +1,10 @@
 <?php
 require_once '../utility.php';
 require_once '../mysql.php';
+require_once '../init.php';
 use std\Graph, std\Text, std\Set;
 
-global $user;
+$user = get_user();
 
 $dict = empty($_POST) ? $_GET : $_POST;
 
@@ -27,7 +28,7 @@ error_log("new = $new");
 $oldPy = module_to_py($old);
 $newPy = module_to_py($new);
 
-if (! \std\endsWith($newPy, "/__init__.py")) {
+if (! std\endsWith($newPy, "/__init__.py")) {
     if (filesize($newPy)){
         die("$newPy already exists");
     }
@@ -41,7 +42,7 @@ error_log("oldPy = $oldPy");
 if (file_exists($newPy)) {
     error_log("newPy = $newPy");
     
-    if (\std\endsWith($oldPy, "/__init__.py")) {
+    if (std\endsWith($oldPy, "/__init__.py")) {
         $__init__ = new Text($oldPy);
 
         $newPyText = new Text($newPy);
@@ -63,9 +64,9 @@ if (file_exists($newPy)) {
     $newPy = substr($newPy, 0, - strlen("/__init__.py")) . ".py";
     error_log("newPy = $newPy");
     
-    \std\createDirectory(dirname($newPy));
+    std\createDirectory(dirname($newPy));
 
-    if (\std\endsWith($oldPy, "/__init__.py")) {
+    if (std\endsWith($oldPy, "/__init__.py")) {
         $__init__ = new Text($oldPy);
         
         $newPyText = new Text($newPy);
@@ -75,7 +76,7 @@ if (file_exists($newPy)) {
         
         $substr = substr($new, 0, strrpos($new, '.'));        
         $substrPy = module_to_py($substr);
-        if (! \std\endsWith($substrPy, "/__init__.py")) {
+        if (! std\endsWith($substrPy, "/__init__.py")) {
             $substrPyInit = substr($substrPy, 0, -3) . "/__init__.py";
             if (dirname($substrPyInit).".py" == $oldPy){
                 $__init__ = new Text($substrPyInit);
@@ -100,11 +101,11 @@ if (file_exists($newPy)) {
     }
 }
 
-\mysql\delete_from_suggest($old);
-\mysql\insert_into_suggest($new);
+delete_from_suggest($user, $old);
+insert_into_suggest($user, $new);
 
-\mysql\update_axiom($old, $new);
-\mysql\update_hierarchy($old, $new);
+update_axiom($user, $old, $new);
+update_hierarchy($user, $old, $new);
 
-echo \std\encode("renamed!");
+echo std\encode("renamed!");
 ?>

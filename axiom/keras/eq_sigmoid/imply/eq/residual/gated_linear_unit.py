@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(calculus.grad.to.add)
 
-    Eq << Eq[-1].this.find(Derivative[sigmoid]).apply(calculus.grad_sigmoid.to.mul.sigmoid.vector)
+    Eq << Eq[-1].this.find(Derivative[sigmoid]).apply(calculus.grad.sigmoid.to.mul.sigmoid.vector)
 
 
 

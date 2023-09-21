@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.find(BlockMatrix[1]).apply(algebra.block.split, n - Min(u, n))
 
-    Eq << Add(*Eq[-1].find(Add[BlockMatrix]).args[:2]).this.apply(algebra.add_block.to.block)
+    Eq << Add(*Eq[-1].find(Add[BlockMatrix]).args[:2]).this.apply(algebra.add.block.to.block)
 
     Eq.z_def = Eq[-2].subs(Eq[-1])
 
@@ -45,9 +45,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[Lamda]).apply(algebra.expr.to.lamda, simplify=None)
 
-    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda_kroneckerDelta.to.mul.lamda)
+    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.delta.to.mul.lamda)
 
-    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda_kroneckerDelta.to.block)
+    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.delta.to.block)
 
     Eq << Eq[-1].this.find(Mul[BlockMatrix]).apply(algebra.mul.to.block)
 
@@ -63,7 +63,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(-Piecewise).apply(algebra.mul.to.piece)
 
-    Eq << Eq[-1].this.rhs.find(Add).apply(algebra.add_piece.to.piece)
+    Eq << Eq[-1].this.rhs.find(Add).apply(algebra.add.piece.to.piece)
 
     Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.swap, 1)
 
@@ -73,7 +73,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Piecewise).apply(algebra.piece.unnest)
 
-    Eq.lower_part = Eq[-1].this.rhs.apply(algebra.lamda.piece.to.block)
+    Eq.lower_part = Eq[-1].this.rhs.apply(algebra.lamda.piece.to.lamda.block)
 
     Eq << Eq.A_def[i]#[i:i + Min(u, n)]
 
@@ -81,13 +81,13 @@ def prove(Eq):
 
     Eq << algebra.all_eq.imply.all_eq.slice.apply(Eq[-1], slice(i, i + Min(u, n)))
 
-    Eq << Eq[-1].this.find(KroneckerDelta).apply(algebra.kroneckerDelta.offset, -i)
+    Eq << Eq[-1].this.find(KroneckerDelta).apply(algebra.delta.offset, -i)
 
     Eq << Eq[-1].this.find(Mul).apply(algebra.expr.to.lamda, simplify=None)
 
-    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda_kroneckerDelta.to.mul.lamda)
+    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.delta.to.mul.lamda)
 
-    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda_kroneckerDelta.to.block)
+    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.delta.to.block)
 
     Eq << Eq[-1].this.find(Mul).apply(algebra.mul.to.block)
 
@@ -95,31 +95,33 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.lamda.to.add)
 
-    Eq.upper_part = Eq[-1].this.find(Lamda[BlockMatrix]).apply(algebra.lamda_block.to.block.lamda)
+    Eq.upper_part = Eq[-1].this.find(Lamda[BlockMatrix]).apply(algebra.lamda.block.to.block.lamda)
 
     Eq << Eq.A_def[i][i:Min(n, i + u)]
 
-    Eq << Eq[-1].this.find(KroneckerDelta).apply(algebra.kroneckerDelta.offset, -i)
+    Eq << Eq[-1].this.find(KroneckerDelta).apply(algebra.delta.offset, -i)
 
     Eq << Eq[-1].this.find(Mul[Lamda]).apply(algebra.expr.to.lamda, simplify=None)
 
-    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda_kroneckerDelta.to.mul.lamda)
+    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.delta.to.mul.lamda)
 
-    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda_kroneckerDelta.to.block)
+    Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.delta.to.block)
 
     Eq << Eq[-1].this.find(Mul[BlockMatrix]).apply(algebra.mul.to.block)
 
+    Eq << Eq[-1].this.find(ZeroMatrix).shape[0].find(Min).apply(algebra.min.to.add, i)
     Eq << Eq.z_def.subs(Eq[-1].reversed, Eq.upper_part.reversed, Eq.lower_part)
 
     Eq << keras.eq_block.imply.eq.softmax.upper_triangle.st.logsumexp.apply(Eq[-1])
 
     Eq << Eq[-1].this.find(Symbol).definition
 
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-03-13
-# updated on 2022-03-30
+# updated on 2023-09-17
 from . import tf

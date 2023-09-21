@@ -27,7 +27,7 @@ def prove(Eq):
     Eq << apply(is_differentiable(f, a, b, open=False))
 
     xi = Symbol(domain=Interval(a, b))
-    Eq << Element(Subs(Eq[0].expr.lhs, x, xi), Eq[0].expr.rhs, plausible=True)
+    Eq << Element(Subs[x:xi](Eq[0].expr.lhs), Eq[0].expr.rhs, plausible=True)
 
     Eq << Eq[-1].this.lhs.simplify()
 

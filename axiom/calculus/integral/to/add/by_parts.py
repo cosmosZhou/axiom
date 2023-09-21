@@ -4,7 +4,6 @@ from util import *
 @apply
 def apply(self, pivot=-1):
     args, (x, a, b) = self.of(Integral[Mul])
-    import std
     dv, u = std.array_split(args, pivot)
     u = Mul(*u)
     dv = Mul(*dv)
@@ -45,9 +44,6 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.defun()
 
     
-    
-
-
 if __name__ == '__main__':
     run()
 

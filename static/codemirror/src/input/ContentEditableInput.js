@@ -1,4 +1,4 @@
-import { operation, runInOp } from "../display/operations.js"
+import { operation, runInOp } from "../display/highlight_worker.js"
 import { prepareSelection } from "../display/selection.js"
 import { regChange } from "../display/view_tracking.js"
 import { applyTextInput, copyableRanges, disableBrowserMagic, handlePaste, hiddenTextarea, lastCopied, setLastCopied } from "./input.js"

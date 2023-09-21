@@ -84,7 +84,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expr.T
 
-    Eq << Eq[-1].this.rhs.apply(discrete.lamda_matmul.to.matmul)
+    Eq << Eq[-1].this.rhs.apply(discrete.lamda.matmul.to.matmul)
 
     Eq << Eq.zi_definition.this.rhs.subs(Eq[-1])
 

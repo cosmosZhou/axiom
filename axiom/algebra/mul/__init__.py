@@ -4,3 +4,10 @@ from . import negate
 from . import simplify
 from . import sum
 from . import scale
+from . import block
+from . import delta
+from . import piece
+from . import conj
+from . import root
+from . import lamda
+from . import prod

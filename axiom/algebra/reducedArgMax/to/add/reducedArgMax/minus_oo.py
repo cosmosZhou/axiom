@@ -19,7 +19,7 @@ def prove(Eq):
     X = Symbol(real=True, shape=(n,), nonnegative=True)
     Eq << apply(ReducedArgMax(X), k)
 
-    Eq << Eq[0].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.add)
+    Eq << Eq[0].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.add)
 
 
 if __name__ == '__main__':

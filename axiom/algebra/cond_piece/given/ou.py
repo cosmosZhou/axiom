@@ -13,7 +13,7 @@ def prove(Eq):
 
     k = Symbol(integer=True, positive=True)
     x, p = Symbol(real=True, shape=(k,), given=True)
-    A, B = Symbol(etype=dtype.real * k, given=True)
+    A, B = Symbol(etype=dtype.real[k], given=True)
     f, g, h = Function(shape=(k,), real=True)
     Eq << apply(Equal(p, Piecewise((f(x), Element(x, A)), (g(x), Element(x, B)), (h(x), True))))
 

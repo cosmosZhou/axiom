@@ -33,11 +33,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[Piecewise]).apply(algebra.mul.to.piece, simplify=None)
 
-    Eq << Eq[-1].this.find(Add[Piecewise]).apply(algebra.add_piece.to.piece, simplify=None)
+    Eq << Eq[-1].this.find(Add[Piecewise]).apply(algebra.add.piece.to.piece, simplify=None)
 
     Eq << Eq[-1].this.rhs.apply(geometry.cos.to.piece, simplify=None)
 
-    
+
 
 
 if __name__ == '__main__':

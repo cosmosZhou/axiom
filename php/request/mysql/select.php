@@ -3,8 +3,8 @@ require_once '../../mysql.php';
 
 $sql = $_POST['sql'];
 $array = [];
-foreach (\mysql\select($sql) as $row){
+foreach (mysql\select($sql) as $row){
     $array[] = $row;
 }
-echo \std\encode($array);
+echo std\encode($array);
 ?>

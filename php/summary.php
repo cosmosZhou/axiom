@@ -2,30 +2,30 @@
 <?php
 require_once 'utility.php';
 require_once 'mysql.php';
+require_once 'init.php';
 
 function section($axiom)
 {
-    list ($section,) = explode('.', $axiom, 2);
+    [$section] = explode('.', $axiom, 2);
     return $section;
 }
 
 $repertoire = [];
-
-foreach (\mysql\select_axiom_by_state_not('proved') as $tuple) {
-    list ($axiom, $state) = $tuple;
+$user = get_user();
+foreach (select_axiom_by_state_not($user, 'proved') as $tuple) {
+    [$axiom, $state] = $tuple;
     $repertoire[section($axiom)][$state][] = $axiom;
 }
 
 $state_count_pairs = [];
 
-global $user;
-foreach (\mysql\select("select state, count(*) as count from axiom where user = '$user' group by state order by count", MYSQLI_ASSOC) as $res) {
+foreach (get_rows("select state, count(*) as count from axiom where user = '$user' group by state order by count", MYSQLI_ASSOC) as $res) {
     $state_count_pairs[] = $res;
 }
 
 $state_count_pairs[] = [
     'state' => 'total',
-    'count' => \mysql\select_count()
+    'count' => select_count($user)
 ];
 ?>
 
@@ -39,8 +39,8 @@ $state_count_pairs[] = [
 
 <script type=module>    
 createApp('axiomSummary', {
-		state_count_pairs : <?php echo \std\encode($state_count_pairs)?>,
-		repertoire : <?php echo \std\encode($repertoire)?>,
+		state_count_pairs : <?php echo std\encode($state_count_pairs)?>,
+		repertoire : <?php echo std\encode($repertoire)?>,
 });
 
 </script>

@@ -36,11 +36,11 @@ def prove(Eq):
 
     Eq.Ξ_definition = Eq[-1].this.rhs.args[1]().expr.simplify()
 
-    Eq << Eq.Ξ_definition.this.rhs.args[-1].expr.apply(algebra.kroneckerDelta.to.piece)
+    Eq << Eq.Ξ_definition.this.rhs.args[-1].expr.apply(algebra.delta.to.piece)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest)
 
-    Eq << Eq[-1].this.rhs.args[0].expr.apply(algebra.kroneckerDelta.to.piece)
+    Eq << Eq[-1].this.rhs.args[0].expr.apply(algebra.delta.to.piece)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.unnest, index=0)
 

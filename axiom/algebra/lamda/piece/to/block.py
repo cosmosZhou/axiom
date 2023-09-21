@@ -1,54 +1,80 @@
 from util import *
 
-
-@apply
-def apply(self):
-    ecs, limit, *limits = self.of(Lamda[Piecewise])
+def try_axis(ecs, limits, axis=0, shape=None):
+    pivot = -axis - 1
+    
+    limit = limits[pivot]
     i, *ab = limit
     if len(ab) == 2:
-        a, b = ab
-        n = b - a
-    else:
+        start, stop = ab
+    elif len(ab) == 1:
         domain, = ab
-        n = Card(domain)
-
+        start, stop, S[1] = domain.args
+    else:
+        if ab:
+            return
+        start = 0
+        stop = shape[axis]
+        
     args = []
-    index = 0
     for e, c in ecs:
         if c:
-            X = Lamda(e, (i, index, n)).simplify()
+            limits[pivot] = (i, start, stop)
+            X = Lamda(e, *limits).simplify()
         else:
             _i, rows = c.of(Less)
             if _i != i:
                 diff = _i - i
-                assert not diff._has(i)
+                
+                if diff._has(i):
+                    return
+                 
                 rows -= diff
-            X = Lamda(e, (i, index, rows)).simplify()
+                
+            limits[pivot] = (i, start, rows)
+            X = Lamda(e, *limits).simplify()
 
         args.append(X)
-        index = rows
+        start = rows
+    return args
+    
+@apply
+def apply(self, axis=None):
+    [ecs, *limits] = self.of(Lamda[Piecewise])
+    
+    shape = self.shape
+    if axis is None:
+        for axis in range(len(limits)):
+            args = try_axis(ecs, limits, axis, shape)
+            if args:
+                break
+    else:
+        args = try_axis(ecs, limits, axis, shape)
 
-    return Equal(self, Lamda(BlockMatrix(args), *limits))
+    return Equal(self, BlockMatrix[axis](args))
 
 
 @prove
 def prove(Eq):
     from axiom import algebra
 
-    N, n0, n1, n2, n3, m = Symbol(positive=True, integer=True, given=False)
-    X0 = Symbol(shape=(N, n0, m), real=True)
-    X1 = Symbol(shape=(N, n1, m), real=True)
-    X2 = Symbol(shape=(N, n2, m), real=True)
-    X3 = Symbol(shape=(N, n3, m), real=True)
-    i, k = Symbol(integer=True)
-    Eq << apply(Lamda[i:n0 + n1 + n2 + n3, k:N](Piecewise((X0[k, i], i < n0), (X1[k, i - n0], i < n0 + n1), (X2[k, i - n0 - n1], i < n0 + n1 + n2), (X3[k, i - n0 - n1 - n2], True))))
+    n0, n1, n2, n3, m = Symbol(positive=True, integer=True, given=False)
+    X0 = Symbol(shape=(m, n0), real=True)
+    X1 = Symbol(shape=(m, n1), real=True)
+    X2 = Symbol(shape=(m, n2), real=True)
+    X3 = Symbol(shape=(m, n3), real=True)
+    i, j = Symbol(integer=True)
+    Eq << apply(Lamda[j:n0 + n1 + n2 + n3, i:m](Piecewise((X0[i, j], j < n0), (X1[i, j - n0], j < n0 + n1), (X2[i, j - n0 - n1], j < n0 + n1 + n2), (X3[i, j - n0 - n1 - n2], True))))
 
-    k = Symbol(domain=Range(N))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], k)
+    i = Symbol(domain=Range(m))
+    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.lamda_piece.to.block)
+    j = Symbol(domain=Range(n0 + n1 + n2 + n3))
+    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+    
 
 
 if __name__ == '__main__':
     run()
-# created on 2021-12-30
+# created on 2021-10-04
+# updated on 2022-01-15

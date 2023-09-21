@@ -4,15 +4,11 @@ from util import *
 def simplify_negative_terms(cls, given):
     lhs, rhs = given.of(cls)
 
-    lhs_positive = []
-    rhs_positive = []
-
     if lhs.is_Add:
         lhs_args = lhs.args
     else:
         lhs_args = [lhs]
 
-    import std
     rhs_positive, lhs_positive = std.array_split(lhs_args, lambda arg: arg._coeff_isneg())
     rhs_positive = (-arg for arg in rhs_positive)
     if rhs.is_Add:

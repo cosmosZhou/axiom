@@ -13,7 +13,7 @@ def prove(Eq):
 
     n = Symbol(integer=True, positive=True, given=True)
     x = Symbol(complex=True, shape=(n,), given=True)
-    S = Symbol(etype=dtype.complex * n, given=True)
+    S = Symbol(etype=dtype.complex[n], given=True)
     Eq << apply(Element(x, S))
 
     Eq << sets.el.imply.ne_empty.apply(Eq[0])

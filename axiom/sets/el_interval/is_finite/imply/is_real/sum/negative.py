@@ -11,7 +11,7 @@ def apply(el, is_finite):
     S[-1], S[0] = domain.of(Interval)
     assert domain.right_open and domain.left_open
 
-    return Element(Sum[k:0:oo](γ ** k * fk), Interval(-oo, oo))
+    return Element(Sum[k:oo](γ ** k * fk), Interval(-oo, oo))
 
 
 
@@ -22,7 +22,7 @@ def prove(Eq):
     r = Symbol(shape=(oo,), real=True)
     γ = Symbol(real=True)
     k = Symbol(integer=True)
-    Eq << apply(Element(γ, Interval(-1, 0, left_open=True, right_open=True)), Less(Sup[k:0:oo](Abs(r[k])), oo))
+    Eq << apply(Element(γ, Interval(-1, 0, left_open=True, right_open=True)), Less(Sup[k:oo](Abs(r[k])), oo))
 
     @Function
     def h(k):

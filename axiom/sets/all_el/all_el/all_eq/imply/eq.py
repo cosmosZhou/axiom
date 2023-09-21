@@ -30,12 +30,10 @@ def prove(Eq):
     from axiom import sets, algebra
 
     n, m = Symbol(integer=True, positive=True)
-    A = Symbol(etype=dtype.integer * n)
+    A = Symbol(etype=dtype.integer[n])
     a = Symbol(integer=True, shape=(n,))
-
-    B = Symbol(etype=dtype.integer * m)
+    B = Symbol(etype=dtype.integer[m])
     b = Symbol(integer=True, shape=(m,))
-
     f = Function(integer=True, shape=(m,))
     g = Function(integer=True, shape=(n,))
     Eq << apply(All[a:A](Element(f(a), B)), All[b:B](Element(g(b), A)),
@@ -53,7 +51,7 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[2]
 
-    Eq << Eq[-1].this.expr.apply(algebra.et.given.et.subs.eq)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.cond.given.et.subs)
 
     Eq << algebra.all_et.given.et.all.apply(Eq[-1])
 
@@ -65,8 +63,11 @@ def prove(Eq):
 
     Eq <<= Eq.supset_A & Eq.subset_A
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-07-30
+# updated on 2023-08-26

@@ -6,12 +6,11 @@ def apply(self, pivot=-1, *, simplify=True):
     assert self.is_BlockMatrix
     if not isinstance(pivot, (list, tuple)):
         pivot = [pivot] * len(self.args)
-    import std
     former, latter = zip(*([Mul(*s) for s in std.array_split(expr.of(Mul), pivot)] for expr, pivot in zip(self.args, pivot)))
     axis = self.axis
     former, latter = BlockMatrix[axis](*former), BlockMatrix[axis](*latter)
     if simplify:
-        former, latter = former.simplify(), latter.simplify() 
+        former, latter = former.simplify(), latter.simplify()
     return Equal(self, Mul(former, latter, evaluate=False), evaluate=False)
 
 
@@ -23,9 +22,9 @@ def prove(Eq):
     A, B, C, D = Symbol(real=True, shape=(m, n))
     Eq << apply(BlockMatrix(A * C, B * D))
 
-    Eq << Eq[0].this.rhs.apply(algebra.mul_block.to.block)
+    Eq << Eq[0].this.rhs.apply(algebra.mul.block.to.block)
 
-    
+
 
 
 if __name__ == '__main__':

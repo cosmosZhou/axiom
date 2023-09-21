@@ -57,14 +57,14 @@ def prove(Eq):
 
     Eq << Eq[-1][i]
 
-    Eq.four_blocks = Eq[-1].this.rhs.apply(algebra.add_piece.to.piece)
+    Eq.four_blocks = Eq[-1].this.rhs.apply(algebra.add.piece.to.piece)
 
     j = Symbol(integer=True)
     Eq << Eq.four_blocks.find(Add[BlockMatrix]).this.apply(algebra.expr.to.lamda, j)
 
     Eq << Eq[-1].this.find(Piecewise[2]).apply(algebra.piece.swap, 0)
 
-    Eq.block0 = Eq[-1].this.rhs.apply(algebra.lamda_piece.to.block)
+    Eq.block0 = Eq[-1].this.rhs.apply(algebra.lamda.piece.to.block)
 
     Eq << Eq.four_blocks.find(ExprCondPair[2]).find(BlockMatrix).this.apply(algebra.expr.to.lamda, j)
 
@@ -86,15 +86,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Or).apply(algebra.ou.to.et)
 
-    Eq.block2 = Eq[-1].this.find(Lamda).apply(algebra.lamda_piece.to.block)
+    Eq.block2 = Eq[-1].this.find(Lamda).apply(algebra.lamda.piece.to.block)
 
     Eq << Eq.four_blocks.find(ExprCondPair[4]).find(Add[BlockMatrix]).this.apply(algebra.expr.to.lamda, j)
 
     Eq << Eq[-1].this.find(Piecewise[ExprCondPair[3]]).apply(algebra.piece.swap, 1)
 
-    Eq << Eq[-1].this.find(Add[Piecewise]).apply(algebra.add_piece.to.piece)
+    Eq << Eq[-1].this.find(Add[Piecewise]).apply(algebra.add.piece.to.piece)
 
-    Eq.block3 = Eq[-1].this.find(Lamda).apply(algebra.lamda_piece.to.block)
+    Eq.block3 = Eq[-1].this.find(Lamda).apply(algebra.lamda.piece.to.block)
 
     Eq << Eq.four_blocks.subs(Eq.block0, Eq.block1, Eq.block2, Eq.block3)
 
@@ -102,21 +102,21 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.reducedArgMax.to.piece.reducedArgMax)
 
-    Eq << Eq[-1].this.rhs.find(ReducedArgMax).apply(algebra.reducedArgMax_block.to.reducedArgMax)
+    Eq << Eq[-1].this.rhs.find(ReducedArgMax).apply(algebra.reducedArgMax.block.to.reducedArgMax)
 
-    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.add)
+    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.add)
 
-    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.reducedArgMax)
+    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.reducedArgMax)
 
-    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.add)
+    Eq << Eq[-1].this.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.add)
 
-    Eq << Eq[-1].this.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax_exp.to.reducedArgMax)
+    Eq << Eq[-1].this.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax.exp.to.reducedArgMax)
 
-    Eq << Eq[-1].this.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax_exp.to.reducedArgMax)
+    Eq << Eq[-1].this.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax.exp.to.reducedArgMax)
 
-    Eq << Eq[-1].this.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax_exp.to.reducedArgMax)
+    Eq << Eq[-1].this.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax.exp.to.reducedArgMax)
 
-    Eq << Eq[-1].this.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax_exp.to.reducedArgMax)
+    Eq << Eq[-1].this.find(ReducedArgMax[Exp]).apply(algebra.reducedArgMax.exp.to.reducedArgMax)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.swap, -2)
 
@@ -134,14 +134,14 @@ def prove(Eq):
 
     Eq <<= Eq[-3].this.rhs.apply(algebra.eq.imply.eq.reducedArgMax), Eq[-2].this.rhs.apply(algebra.eq.imply.eq.reducedArgMax), Eq[-1].this.rhs.apply(algebra.eq.imply.eq.reducedArgMax)
 
-    Eq <<= Eq[-3].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.add), \
-        Eq[-2].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.add)
+    Eq <<= Eq[-3].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.add), \
+        Eq[-2].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.add)
 
-    Eq.block3 = Eq[-3].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.reducedArgMax)
+    Eq.block3 = Eq[-3].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.reducedArgMax)
 
     Eq.block0 = Eq[-2].this.rhs.apply(algebra.eq.transport, rhs=slice(0, 3))
 
-    Eq << Eq[-1].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax_block.to.reducedArgMax)
+    Eq << Eq[-1].this.rhs.find(ReducedArgMax[BlockMatrix]).apply(algebra.reducedArgMax.block.to.reducedArgMax)
 
     Eq.block1 = Eq[-1].this.rhs.apply(algebra.eq.transport, rhs=slice(0, 3))
 

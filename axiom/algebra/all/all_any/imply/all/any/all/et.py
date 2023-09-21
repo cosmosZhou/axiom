@@ -24,7 +24,7 @@ def prove(Eq):
     n, k = Symbol(integer=True, positive=True)
     i = Symbol(integer=True)
     j = Symbol(domain=Range(k + 1))
-    s = Symbol(etype=dtype.integer.set * (k + 1))
+    s = Symbol(etype=dtype.integer.set[k + 1])
     Eq << apply(All[i:Range(k + 1) - {j}, x[:k + 1]:s](Equal(x[i] & x[j], x[i].etype.emptySet)),
                 All[x[:k + 1]:s](Any[j](Subset({n}, x[j]))))
 

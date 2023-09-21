@@ -7,10 +7,14 @@ def apply(self):
     for i, piecewise in enumerate(args):
         if piecewise.is_Piecewise:
             del args[i]
-            s = Union(*args)
+            break
+    else:
+        return
+        
+    s = Union(*args)
 
-            ecs = ((e | s, c) for e, c in piecewise.args)
-            return Equal(self, Piecewise(*ecs))
+    ecs = ((e | s, c) for e, c in piecewise.args)
+    return Equal(self, Piecewise(*ecs))
 
 
 @prove
@@ -23,12 +27,12 @@ def prove(Eq):
 
     Eq << algebra.cond_piece.given.ou.apply(Eq[0])
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, index=1)
+    Eq << Eq[-1].this.args[0].apply(algebra.cond.cond.given.et.subs)
 
-    Eq << Eq[-1].this.args[1].apply(algebra.et.given.et.subs.bool, index=1, invert=True)
+    Eq << Eq[-1].this.args[1].apply(algebra.cond.cond.given.et.subs, invert=True)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

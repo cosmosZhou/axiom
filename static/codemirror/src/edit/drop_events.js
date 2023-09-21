@@ -1,5 +1,5 @@
 import { drawSelectionCursor } from "../display/selection.js"
-import { operation } from "../display/operations.js"
+import { operation } from "../display/highlight_worker.js"
 import { clipPos } from "../line/pos.js"
 import { posFromMouse } from "../measurement/position_measurement.js"
 import { eventInWidget } from "../measurement/widgets.js"

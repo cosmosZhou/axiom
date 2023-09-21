@@ -29,12 +29,12 @@ def prove(Eq):
 
     Eq << algebra.cond_piece.given.ou.apply(Eq[0])
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.given.et.subs.bool, 1)
+    Eq << Eq[-1].this.args[0].apply(algebra.cond.cond.given.et.subs)
 
-    Eq << Eq[-1].this.find(And).apply(algebra.et.given.et.subs.bool, 1, invert=True)
+    Eq << Eq[-1].this.find(And).apply(algebra.cond.cond.given.et.subs, invert=True)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

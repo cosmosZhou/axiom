@@ -14,7 +14,7 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True)
     k = Symbol(integer=True)
     f = Function(real=True)
-    Eq << apply(Sum[k:0:n](f(k)))
+    Eq << apply(Sum[k:n](f(k)))
 
     Eq << algebra.imply.le.abs.apply(f(k))
 

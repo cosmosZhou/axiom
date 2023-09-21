@@ -6,7 +6,6 @@ def split(given, index):
 
     if index is None:
         return eqs
-    import std
     lhs, rhs = std.array_split(eqs, index)
     return And(*lhs), And(*rhs)
 

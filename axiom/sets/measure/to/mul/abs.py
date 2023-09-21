@@ -4,7 +4,6 @@ from util import *
 @apply
 def apply(self):
     fx, (x, S) = self.of(Measure[Cup[FiniteSet]])
-    import std
     f, coeff = std.array_split(fx.of(Mul), lambda arg: arg._has(x))
     f = Mul(*f)
     coeff = Mul(*coeff)

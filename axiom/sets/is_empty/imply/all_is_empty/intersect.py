@@ -19,11 +19,11 @@ def prove(Eq):
     k = Symbol(integer=True, positive=True)
     x = Symbol(shape=(k + 1,), etype=dtype.integer)
 
-    Eq << apply(Equal(Cup[i:0:k](x[i]) & A, A.etype.emptySet))
+    Eq << apply(Equal(Cup[i:k](x[i]) & A, A.etype.emptySet))
 
     Eq << Eq[-1].simplify()
 
-    Eq << Cup[i:0:k](x[i] & A).this.simplify()
+    Eq << Cup[i:k](x[i] & A).this.simplify()
 
     Eq << Eq[-1].this.rhs.subs(Eq[0])
 

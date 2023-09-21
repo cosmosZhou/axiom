@@ -17,7 +17,7 @@ def prove(Eq):
     from axiom import algebra, sets
 
     k = Symbol(integer=True, positive=True)
-    S = Symbol(etype=dtype.integer * k)
+    S = Symbol(etype=dtype.integer[k])
     Eq << apply(Equal(Card(S), 2))
 
     Eq << algebra.eq.imply.ge.apply(Eq[0])
@@ -36,13 +36,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Card).apply(sets.card.to.add)
 
-    
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.kroneckerDelta)
+
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.delta)
     Eq << Eq[-1].subs(Eq[0])
     Eq << Eq[-1].this.expr - 2
     Eq << Eq[-1].this.expr.apply(algebra.is_zero.imply.eq)
     Eq << Any(Unequal(Eq[-1].rhs, 0), *Eq.S_supset.limits, plausible=True)
-    Eq << Eq[-1].this.expr.apply(algebra.ne_zero.imply.eq.kroneckerDelta)
+    Eq << Eq[-1].this.expr.apply(algebra.ne_zero.imply.eq.delta)
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1])
     Eq << ~Eq[-2]
     Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq[-4])
@@ -51,8 +51,8 @@ def prove(Eq):
     Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1])
     Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1])
     Eq << Eq[-1].this.expr.apply(sets.subset.subset.imply.eq.squeeze)
-    
-    
+
+
 
 
 if __name__ == '__main__':

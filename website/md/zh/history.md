@@ -52,6 +52,7 @@ Mathematica, [Matlab](https://www.mathworks.com/products/matlab.html), sympy; �
 在2023年, openAI公布了自动数学证明的数据集80万。  
 https://openai.com/research/improving-mathematical-reasoning-with-process-supervision  
 https://arxiv.org/abs/2305.20050  
-
-
-当然也面临很多问题，比如其中的难题就是：通用数学命题的自动证明并不是一个单纯的已知定理序列的预测过程，因为每个定理在调用时，我们往往要对参数进行一定的调整，这不光是一个序列预测的问题。
+我开始mathGPT的设想：  
+1，形式逻辑：将数学语言进行形式化，即用Python语言来表达思想，不推荐将自然语言用于推理，若非要使用自然语言来表达，可以将机器推导翻译成自然语言；  
+2，奖励模型：用Python解释器的执行结果(LaTex表达式)作为奖励模型的判断依据之一，使推导过程向有利于命题得证的方向发展；  
+3，强化学习：用GPT生成Python代码，用Python解释器生成LaTex表达式，用奖励模型作为算法进化的信号，最终实现真正的自动解题，机器证明的目标。  

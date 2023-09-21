@@ -3,7 +3,7 @@ require_once '../../mysql.php';
 
 global $user;
 $max = - 1;
-foreach (\mysql\select("select port from login") as list ($port)) {
+foreach (mysql\select("select port from login") as [$port]) {
     if ($port > $max) {
         $max = $port;
     }
@@ -11,7 +11,7 @@ foreach (\mysql\select("select port from login") as list ($port)) {
 
 $port = max($max + 1, 5000);
 
-\mysql\execute("update login set port = $port where user = '$user'");
+mysql\execute("update login set port = $port where user = '$user'");
 
 // dirname(dirname(__file__)) . "/run.py";
 

@@ -6,7 +6,6 @@ def apply(given, index=-1):
     eqs, *limits = given.of(All[And])
     if index is None:
         return tuple(All(eq, *limits) for eq in eqs)
-    import std
     former, latter = std.array_split(eqs, index)
     former = And(*former)
     latter = And(*latter)

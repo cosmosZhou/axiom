@@ -15,7 +15,7 @@ def prove(Eq):
 
     k = Symbol(integer=True, positive=True)
     x = Symbol(real=True, shape=(k,), given=True)
-    A, B = Symbol(etype=dtype.real * k, given=True)
+    A, B = Symbol(etype=dtype.real[k], given=True)
     f, g, h = Function(shape=(k,), real=True)
     p = Symbol(shape=(k,), real=True, given=True)
     Eq << apply(Unequal(f(x), p) & Element(x, A) | Unequal(p, g(x)) & Element(x, B - A) | Unequal(p, h(x)) & NotElement(x, A | B), wrt=p)

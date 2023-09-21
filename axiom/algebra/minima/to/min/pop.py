@@ -14,7 +14,7 @@ def prove(Eq):
     i = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
     f = Function(real=True)
-    Eq << apply(Minima[i:0:n + 1](f(i)))
+    Eq << apply(Minima[i:n + 1](f(i)))
     
     
     Eq << Eq[-1].this.lhs.apply(algebra.minima.to.min.split, cond={n})

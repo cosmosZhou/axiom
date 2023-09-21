@@ -47,7 +47,7 @@ def prove(Eq):
 
     Eq << algebra.ge.imply.ge_zero.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(stats.add_expect.to.expect)
+    Eq << Eq[-1].this.lhs.apply(stats.add.expect.to.expect)
 
     Eq << Eq[-1].this.lhs.simplify()
 

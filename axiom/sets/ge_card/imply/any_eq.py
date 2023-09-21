@@ -23,7 +23,7 @@ def prove(Eq):
     from axiom import algebra, sets
 
     k, l = Symbol(integer=True, positive=True)
-    s = Symbol(etype=dtype.integer * k, given=True)
+    s = Symbol(etype=dtype.integer[k], given=True)
     Eq << apply(Card(s) >= l)
 
     Eq << algebra.ge.imply.gt_zero.apply(Eq[0])

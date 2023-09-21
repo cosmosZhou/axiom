@@ -15,8 +15,8 @@ def prove(Eq):
 
     k = Symbol(integer=True, positive=True)
     x = Symbol(real=True, shape=(k,), given=True)
-    A, B, S = Symbol(etype=dtype.real * k, given=True)
-    f, g, h = Function(etype=dtype.real * k)
+    A, B, S = Symbol(etype=dtype.real[k], given=True)
+    f, g, h = Function(etype=dtype.real[k])
     Eq << apply(Supset(f(x), S) & Element(x, A) | Supset(g(x), S) & Element(x, B - A) | Supset(h(x), S) & NotElement(x, A | B), wrt=S)
 
     Eq << Eq[0].this.find(Element[Complement]).apply(sets.el_complement.imply.et, simplify=None)

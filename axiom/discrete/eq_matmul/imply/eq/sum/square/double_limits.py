@@ -5,7 +5,7 @@ from util import *
 def apply(given, i=None, j=None):
     (x, w), y = given.of(Equal[MatMul])
     n, = x.shape
-    _i, _j = w.of(SwapMatrix)    
+    _i, _j = w.of(SwapMatrix)
     assert 0 <= _i < n
     assert 0 <= _j < n
     if i is None:
@@ -26,9 +26,9 @@ def prove(Eq):
     Eq << apply(Equal(x @ SwapMatrix(n, i, j), y))
 
     j, i = Eq[1].lhs.variables
-    Eq << Eq[1].this.lhs.apply(algebra.sum_square.to.add.st.double_limits)
+    Eq << Eq[1].this.lhs.apply(algebra.sum.square.to.add.st.double_limits)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum_square.to.add.st.double_limits)
+    Eq << Eq[-1].this.rhs.apply(algebra.sum.square.to.add.st.double_limits)
 
     Eq << discrete.eq_matmul.imply.eq.sum.apply(Eq[0], i)
 
@@ -38,12 +38,12 @@ def prove(Eq):
 
     Eq << discrete.eq_matmul.imply.eq.sum.square.apply(Eq[0])
 
-    
 
-    
 
-    
-    
+
+
+
+
 
 
 if __name__ == '__main__':

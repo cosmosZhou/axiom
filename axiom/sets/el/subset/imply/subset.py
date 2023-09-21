@@ -14,8 +14,8 @@ def prove(Eq):
     from axiom import sets
     n = Symbol(integer=True, positive=True)
     x = Symbol(complex=True, shape=(n,), given=True)
-    A = Symbol(etype=dtype.complex * n)
-    B = Symbol(etype=dtype.complex * n, given=True)
+    A = Symbol(etype=dtype.complex[n])
+    B = Symbol(etype=dtype.complex[n], given=True)
     Eq << apply(Element(x, A), Subset(B, A))
 
     Eq << sets.el.imply.subset.apply(Eq[0])

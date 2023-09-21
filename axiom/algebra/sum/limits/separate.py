@@ -19,7 +19,7 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True)
     f = Symbol(shape=(oo,), real=True)
     g = Symbol(shape=(oo, oo), real=True)
-    Eq << apply(Sum[i:0:n, j:0:n](f[j] * g[i, j]))
+    Eq << apply(Sum[i:n, j:n](f[j] * g[i, j]))
 
     Eq << Eq[-1].this.rhs.expr.apply(algebra.mul.to.sum)
 

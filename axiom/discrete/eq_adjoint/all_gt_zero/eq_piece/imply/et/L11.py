@@ -68,7 +68,7 @@ def prove(Eq):
 
     Eq << sets.is_positive.imply.is_positive.sqrt.apply(Eq[-1])
 
-    Eq << Eq[-1].this.find(Mul).args[1:].apply(algebra.mul_conj.to.square.abs)
+    Eq << Eq[-1].this.find(Mul).args[1:].apply(algebra.mul.conj.to.square.abs)
 
     Eq << Eq[2].subs(i, 1).subs(j, 1).reversed
 

@@ -1,2 +1,2 @@
 from . import terms
-from . import kroneckerDelta
+from . import delta

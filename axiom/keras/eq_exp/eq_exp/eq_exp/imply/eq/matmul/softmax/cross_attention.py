@@ -109,11 +109,11 @@ def prove(Eq):
     Eq << Eq.divisor_definition * OneMatrix(d_z)
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul.to.add, simplify=None)
-    
+
     Eq << Eq[-1].this.rhs.subs(Eq.lower_part, Eq.upper_part, Eq.diagonal_part)
-    
+
     Eq << Eq[-1].this.rhs.simplify()
-    
+
     Eq.zi_definition = algebra.eq.cond.imply.cond.subs_with_expand_dims.apply(Eq[-1], Eq.zi_definition)
 
     Eq << Eq.zi_definition.find(MatMul).this.apply(discrete.matmul.to.lamda)
@@ -132,11 +132,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.lamda.to.add)
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum_mul.to.add)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.mul.to.add)
 
     Eq << Eq[-1].this.find(ExprCondPair)().find(Piecewise).simplify()
 
-    Eq << Eq[-1].this.find(Sum[Mul[Add]]).apply(algebra.sum_mul.to.add)
+    Eq << Eq[-1].this.find(Sum[Mul[Add]]).apply(algebra.sum.mul.to.add)
 
     Eq << Eq[-1].this.find(ExprCondPair[2])().find(Piecewise).simplify()
 
@@ -146,11 +146,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.piece)
 
-    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda_matmul.to.matmul)
+    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda.matmul.to.matmul)
 
     Eq << Eq[-1].this.rhs.find(MatMul).T
 
-    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda_matmul.to.matmul)
+    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda.matmul.to.matmul)
 
     Eq << Eq[-1].this.rhs.find(MatMul[Lamda]).T
 
@@ -164,11 +164,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Add[Piecewise]).apply(algebra.add.to.piece)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul_piece.to.piece)
+    Eq << Eq[-1].this.rhs.apply(algebra.mul.piece.to.piece)
 
     Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (i,))
 
-    Eq << Eq[-1].this.rhs.apply(algebra.lamda_piece.to.block)
+    Eq << Eq[-1].this.rhs.apply(algebra.lamda.piece.to.block)
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.mul)
 
@@ -188,8 +188,8 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.z_def, Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

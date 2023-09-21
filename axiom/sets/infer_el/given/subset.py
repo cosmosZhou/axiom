@@ -16,7 +16,7 @@ def prove(Eq):
 
     n = Symbol(integer=True, positive=True)
     x = Symbol(complex=True, shape=(n,), given=True)
-    A, B = Symbol(etype=dtype.integer * n)
+    A, B = Symbol(etype=dtype.integer[n])
     Eq << apply(Infer(Element(x, A), Element(x, B)))
 
     Eq << sets.subset.imply.infer.el.apply(Eq[1], x)

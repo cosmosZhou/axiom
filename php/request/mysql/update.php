@@ -1,6 +1,7 @@
 <?php
 require_once '../../utility.php';
 require_once '../../mysql.php';
+require_once '../../init.php';
 use std\Text;
 
 $dict = empty($_POST) ? $_GET : $_POST;
@@ -12,22 +13,20 @@ $data = json_decode($data);
 
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 
-list ($user, $axiom, $state, $lapse, $latex) = $data;
+[$user, $axiom, $state, $lapse, $latex] = $data;
 
 // $latex = str_replace('"', '\\"', $latex);
 // $latex = str_replace("\\'", "'", $latex);
 
-
 $latex = json_encode($latex, JSON_UNESCAPED_UNICODE);
 
-error_log("latex = $latex");
 $query = "update axiom set state = \"$state\", lapse = $lapse, latex = $latex where user = \"$user\" and axiom = \"$axiom\"";
-
-$affected_rows = \mysql\execute($query);
+// error_log("query = $query");
+$affected_rows = mysql\execute($query);
 if ($affected_rows < 1) {
     $query = "insert into axiom values(\"$user\", \"$axiom\", \"$state\", $lapse, $latex)";
     error_log("query = $query");
-    $affected_rows = \mysql\execute($query);
+    $affected_rows = mysql\execute($query);
 }
 
 // error_log("axiom = $axiom");
@@ -52,8 +51,8 @@ for ($i = 0; $i < $size; ++ $i) {
     ];
 }
 
-// error_log(\std\encode($tuples));
-\mysql\insertmany("suggest", $tuples);
+// error_log(std\encode($tuples));
+mysql\insertmany("suggest", $tuples);
 
 $theorem = str_replace('.', '/', $axiom);
 $dir = $ROOT . "/" . $user . "/axiom";
@@ -76,7 +75,7 @@ foreach (yield_from_py($py) as $dict) {
     }
 }
 
-// error_log("linkCount = " . \std\encode($linkCount));
+// error_log("linkCount = " . std\encode($linkCount));
 
 $tuples = [];
 $caller = $axiom;
@@ -89,9 +88,9 @@ foreach ($linkCount as $callee => $count) {
     ];
 }
 
-\mysql\execute("delete from hierarchy where user = '$user' and caller = '$caller'");
+mysql\execute("delete from hierarchy where user = '$user' and caller = '$caller'");
 
 if ($tuples)
-    \mysql\insertmany("hierarchy", $tuples, false);
+    mysql\insertmany("hierarchy", $tuples, false);
 
 ?>

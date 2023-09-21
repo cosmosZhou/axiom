@@ -30,16 +30,16 @@ def prove(Eq):
 
     Eq.induct = Eq.hypothesis.subs(k, k + 1)
 
-    Eq << Eq.hypothesis.find(Norm **  2).this.apply(discrete.sum_square_abs.to.add.norm.matmul.recursive.real)
+    Eq << Eq.hypothesis.find(Norm **  2).this.apply(discrete.sum.square.abs.to.add.norm.matmul.recursive.real)
 
     Eq << Eq.hypothesis.find(Sum).this.apply(algebra.sum.to.add.shift)
 
     Eq.gt_zero = Eq.hypothesis.subs(*Eq[-2:])
 
-    Eq <<= Eq.gt_zero.find(Indexed ** 2 * Norm ** 2).this.args[1].apply(algebra.square_norm.to.add.pop).this.rhs.apply(algebra.mul.to.add),\
+    Eq <<= Eq.gt_zero.find(Indexed ** 2 * Norm ** 2).this.args[1].apply(algebra.square.norm.to.add.pop).this.rhs.apply(algebra.mul.to.add),\
         Eq.gt_zero.find(-2 * Expr).this.find(Expr @ Expr @ Expr).apply(discrete.matmul.to.sub.push)
 
-    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda_matmul.to.matmul)
+    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda.matmul.to.matmul)
 
     Eq << Eq[-1].this.find(Mul[Add]).apply(algebra.mul.to.add)
 
@@ -58,12 +58,12 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(ξ[k], -Eq[-1].find(Indexed ** 2 * Add ** 2).find(Mul))
 
-    Eq << Eq[-1].this.find(Norm[BlockMatrix @ Sliced] ** 2).apply(algebra.square_norm.to.sub.push)
+    Eq << Eq[-1].this.find(Norm[BlockMatrix @ Sliced] ** 2).apply(algebra.square.norm.to.sub.push)
 
-    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda_matmul.to.matmul)
+    Eq << Eq[-1].this.find(Lamda).apply(discrete.lamda.matmul.to.matmul)
 
-    Eq << Eq[-1].this.find(Abs ** 2).apply(algebra.square_abs.to.mul.conj)
-    
+    Eq << Eq[-1].this.find(Abs ** 2).apply(algebra.square.abs.to.mul.conj)
+
 
     Eq << Infer(Eq.hypothesis, Eq.induct, plausible=True)
 
@@ -73,8 +73,8 @@ def prove(Eq):
 
     Eq << algebra.gt_zero.imply.gt.apply(Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

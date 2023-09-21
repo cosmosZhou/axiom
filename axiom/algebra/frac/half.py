@@ -25,17 +25,17 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this.rhs.apply(algebra.cond.any.given.any.et, simplify=None), Eq[-1].this.rhs.apply(algebra.cond.any.given.any.et, simplify=None)
 
-    Eq <<= Eq[-2].this.find(And).apply(algebra.et.given.et.subs.eq), Eq[-1].this.find(And).apply(algebra.et.given.et.subs.eq)
+    Eq <<= Eq[-2].this.find(And).apply(algebra.eq.cond.given.et.subs), Eq[-1].this.find(And).apply(algebra.eq.cond.given.et.subs)
 
     Eq << Eq[-2].this.lhs.apply(algebra.is_even.imply.any)
 
     Eq << Eq[-1].this.lhs.apply(algebra.mod_ne_zero.imply.any)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2019-05-10
-# updated on 2023-05-26
+# updated on 2023-08-26

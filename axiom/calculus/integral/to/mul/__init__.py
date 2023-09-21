@@ -5,7 +5,6 @@ from util import *
 def apply(self):
     expr, *limits_d = self.of(Integral)
     vars = [var for var, *_ in limits_d]
-    import std
     funcs, coeff = std.array_split(expr.of(Mul), lambda arg: arg.has(*vars))
     coeff = Mul(*coeff)
     funcs = Mul(*funcs)

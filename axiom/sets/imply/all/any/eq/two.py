@@ -24,7 +24,7 @@ def apply(x=None, y=None, **kwargs):
 def prove(Eq):
     from axiom import sets, algebra
     k = Symbol(integer=True, positive=True)
-    S = Symbol(etype=dtype.integer * k)
+    S = Symbol(etype=dtype.integer[k])
     Eq << apply(set=S)
 
     Eq << algebra.imply.all.limits_assert.apply(Eq[0].limits)

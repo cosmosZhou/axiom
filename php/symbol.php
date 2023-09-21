@@ -1,13 +1,13 @@
 <?php
 require_once 'std.php';
 require_once 'mysql.php';
+require_once 'init.php';
 
 $symbol = $_GET["symbol"];
 
-// list (list ($script, $latex)) = iterator_to_array();
-foreach (\mysql\select("select script, latex from symbol where symbol = '$symbol'") as list ($script, $latex)) {
-    error_log("script = " . \std\encode($script));
-    error_log("latex = " . \std\encode($latex));
+foreach (get_rows("select script, latex from symbol where symbol = '$symbol'", MYSQLI_NUM) as [$script, $latex]) {
+    error_log("script = " . std\encode($script));
+    error_log("latex = " . std\encode($latex));
     $latex = trim($latex);
     $latex = json_decode($latex, true);
 
@@ -44,6 +44,6 @@ MathJax = InitMathJax(300);
 
 <script type=module>
 createApp('console', {
-    statements : <?php echo \std\encode($statements)?>,
+    statements : <?php echo std\encode($statements)?>,
 });
 </script>

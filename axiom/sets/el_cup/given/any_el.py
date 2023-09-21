@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(imply):
     x, S = imply.of(Element)
-    function, *limits = S.of(Cup)
+    expr, *limits = S.of(Cup)
 
     for v in S.variables:
         if x._has(v):
