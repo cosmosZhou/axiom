@@ -53,7 +53,7 @@ or try to open and execute the python file directly:
 .\axiom\discrete/binom/to/add/Pascal.py  
 
 
-#online IDE
+# online IDE
 https://github.com/eclipse-theia/theia  
 https://github.com/jupyterlab/jupyterlab  
 https://github.com/sagemathinc/cocalc  
