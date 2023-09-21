@@ -23,9 +23,9 @@ yum -y install libpcap-devel
 yum -y install xz-devel 
 
 mkdir -p /usr/local/python3  
-wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz  
-tar -zxvf Python-3.6.8.tgz  
-cd Python-3.6.8  
+wget https://www.python.org/ftp/python/3.10.9/Python-3.10.9.tgz  
+tar -zxvf Python-3.10.9.tgz  
+cd Python-3.10.9  
 ./configure --prefix=/usr/local/python3
 
 如果是个人用户：  

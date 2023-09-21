@@ -96,7 +96,7 @@ basics of [continued fraction](../?module=discrete.add.to.pow.HK.recurrence); as
 [BERT](../?module=keras.matmul_softmax.to.lamda.div.scaled_dot_product_attention),
 [GPT](../?module=keras.matmul_softmax.to.lamda.matmul.gpt),
 Conditional Random Field [CRF](../?module=keras.ne_zero.eq.eq.eq.imply.et.crf),
-KMeans [clustering convergence](../?module=sets.el.notin.le.imply.le.st.variance), [General Rotary Position Embedding](../?module=module=keras.eq_mul.eq_mul.eq_block.imply.eq.matmul.softmax.to.lamda.sum.plane) for Vision Transformer, [Policy Gradient Theorem](../?module=keras.eq_conditioned.eq_expect.is_finite.is_finite.imply.eq.matmul.grad.expect.unbiased_advantage_estimate) from Reinforcement Learning. 
+KMeans [clustering convergence](../?module=sets.el.notin.le.imply.le.st.variance), [General Rotary Position Embedding](../?module=keras.eq_mul.eq_mul.eq_block.imply.eq.matmul.softmax.to.lamda.sum.plane) for Vision Transformer, [Policy Gradient Theorem](../?module=keras.eq_conditioned.eq_expect.is_finite.is_finite.imply.eq.matmul.grad.expect.unbiased_advantage_estimate) from Reinforcement Learning. 
 Probability theory provides the fundamental theoretical basis for machine learning so that this contemporary technique can be  explainable.  
 
 <br><br>

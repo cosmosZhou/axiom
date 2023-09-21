@@ -93,7 +93,7 @@ extended_integer ⊂ extended_rational ⊂ [extended_real](https://en.wikipedia.
 [BERT](../?module=keras.matmul_softmax.to.lamda.div.scaled_dot_product_attention)，
 [GPT](../?module=keras.matmul_softmax.to.lamda.matmul.gpt)，
 条件自由场[CRF](../?module=keras.ne_zero.eq.eq.eq.imply.et.crf)，KMeans
-[聚类收敛性](../?module=sets.el.notin.le.imply.le.st.variance)、用于Vision Transformer的[广义旋转位置编码](../?module=module=keras.eq_mul.eq_mul.eq_block.imply.eq.matmul.softmax.to.lamda.sum.plane)、强化学习的[策略梯度定理](../?module=keras.eq_conditioned.eq_expect.is_finite.is_finite.imply.eq.matmul.grad.expect.unbiased_advantage_estimate)的推导及证明。  
+[聚类收敛性](../?module=sets.el.notin.le.imply.le.st.variance)、用于Vision Transformer的[广义旋转位置编码](../?module=keras.eq_mul.eq_mul.eq_block.imply.eq.matmul.softmax.to.lamda.sum.plane)、强化学习的[策略梯度定理](../?module=keras.eq_conditioned.eq_expect.is_finite.is_finite.imply.eq.matmul.grad.expect.unbiased_advantage_estimate)的推导及证明。  
 
 <br><br>
 -------
