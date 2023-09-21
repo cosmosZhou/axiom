@@ -1210,7 +1210,8 @@ function slice(&$s, $start, $stop = null, $step = 1)
     if (is_string($s)) {
         if ($step == 1) {
             if ($stop === null)
-                return mb_substr($s, $start, $stop, "utf8");
+                return (new CString($s))->slice($start, $stop);
+                //return mb_substr($s, $start, $stop, "utf8");
 
             if ($stop < 0)
                 $stop += len($s);
