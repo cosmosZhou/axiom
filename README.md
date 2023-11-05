@@ -61,7 +61,7 @@ https://github.com/jupyterlab/jupyterlab
 https://github.com/sagemathinc/cocalc  
 
 # latex
-function£º$f(x)=\frac{P(x)}{Q(x)}$
+function: $f(x)=\frac{P(x)}{Q(x)}$
 
 
 $$
