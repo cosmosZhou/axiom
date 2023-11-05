@@ -2,10 +2,14 @@ from util import *
 
 
 @apply
-def apply(given):
+def apply(given, step=-1):
     lhs, rhs = given.of(Less)
     assert lhs.is_extended_integer and rhs.is_extended_integer
-    return LessEqual(lhs, rhs - 1)
+    if step > 0:
+        lhs += 1
+    else:
+        rhs -= 1
+    return LessEqual(lhs, rhs)
 
 
 @prove
@@ -17,8 +21,11 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[0]
 
+    
+
 
 if __name__ == '__main__':
     run()
 from . import plus
 # created on 2018-05-05
+# updated on 2023-11-05

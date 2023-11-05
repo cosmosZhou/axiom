@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(lt, eq, n=None, k=None):
     a, b = lt.of(Less)
-    (M, (n, S[oo], dir)), (m, (S[n], S[oo], S[dir:-1])) = eq.of(Equal[Limit, Limit])
+    (M, (n, S[oo])), (m, (S[n], S[oo])) = eq.of(Equal[Limit, Limit])
     M = M.of(Sum[Maxima, Tuple[0]] / Expr)
     m = m.of(Sum[Minima, Tuple[0]] / Expr)
     assert M == m

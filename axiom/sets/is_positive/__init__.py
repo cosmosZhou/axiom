@@ -4,3 +4,7 @@ from . import is_negative
 from . import is_real
 from . import is_complex
 from . import eq
+from . import le
+from . import ge
+from . import lt
+from . import gt

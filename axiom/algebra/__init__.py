@@ -190,3 +190,7 @@ from . import ou_any
 from . import any_piece
 from . import delta
 from . import sub
+from . import eq_add
+from . import eq_reducedArgMax
+from . import eq_reducedArgMin
+from . import mul_ge

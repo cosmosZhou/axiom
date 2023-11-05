@@ -4,7 +4,6 @@ from util import *
 @apply
 def apply(given):
     x = given.of(Expr > 0)
-    #assert x.is_hyper_real
     return Element(x, Interval(0, oo, left_open=True, right_open=False))
 
 

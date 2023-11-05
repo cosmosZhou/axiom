@@ -1,4 +1,3 @@
-from . import difference
 from . import factorial, mul
 from . import det
 from . import stirling1
@@ -57,3 +56,4 @@ from . import all_ge
 from . import abs
 from . import square
 from . import inverse
+from . import diff

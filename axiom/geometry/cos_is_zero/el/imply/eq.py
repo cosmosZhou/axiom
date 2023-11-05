@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << sets.gt.el.imply.el.intersect.apply(Eq.gt, Eq[1])
 
-    Eq << geometry.el.imply.cos_lt_zero.apply(Eq[-1])
+    Eq << geometry.el_interval.imply.lt_zero.cos.apply(Eq[-1])
 
     Eq <<= Eq[-1] & Eq[0]
 
@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << sets.lt.el.imply.el.intersect.apply(Eq.lt, Eq[1])
 
-    Eq << geometry.el.imply.cos_gt_zero.apply(Eq[-1])
+    Eq << geometry.el_interval.imply.gt_zero.cos.apply(Eq[-1])
 
     Eq <<= Eq[-1] & Eq[0]
     Eq <<= ~Eq.gt & ~Eq.lt

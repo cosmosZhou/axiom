@@ -1,6 +1,6 @@
 <template>
 	<form name=search enctype="multipart/form-data" method=post :action=action @keydown=keydown>
-		<input v-focus tabindex=1 type=text spellcheck=false name=keyword size=48 :value=keyword placeholder='input a hint for search of a theorem/axiom' @input=input>
+		<input v-focus tabindex=1 type=text spellcheck=false name=keyword size=48 :value=keyword placeholder='input a hint in search of a formula/theorem/axiom' @input=input>
 		<br>
 			 
 		<input tabindex=-1 type=checkbox name=caseSensitive :checked=caseSensitive><u>C</u>ase
@@ -9,14 +9,14 @@
 		
 		<input tabindex=-1 type=checkbox name=regularExpression :checked=regularExpression>Rege<u>x</u>
 		
-		<input tabindex=-1 type=checkbox name=nlp :checked=nlp><u>N</u>lp
+		<input tabindex=-1 type=checkbox name=latex :checked=latex><u>L</u>aTex
 	</form>
 </template>
 
 <script>
 console.log('import searchForm.vue');
 export default {
-	props : ['keyword', 'caseSensitive', 'wholeWord', 'regularExpression', 'nlp'],
+	props : ['keyword', 'caseSensitive', 'wholeWord', 'regularExpression', 'latex'],
 
 	computed: {
 		user(){
@@ -45,8 +45,8 @@ export default {
 				case 'x':
 					setAttribute(this, 'regularExpression', !this.regularExpression);
 					break;
-				case 'n':
-					setAttribute(this, 'nlp', !this.nlp);
+				case 'l':
+					setAttribute(this, 'latex', !this.latex);
 					break;
 				}
 			}

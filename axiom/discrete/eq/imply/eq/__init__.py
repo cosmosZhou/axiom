@@ -1,5 +1,3 @@
-from . import difference
-
 from . import inverse
 
 from . import det
@@ -12,3 +10,4 @@ from . import matmul
 from . import swapMatrix
 from . import matpow
 from . import bilinear
+from . import diff

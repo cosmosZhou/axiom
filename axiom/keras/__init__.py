@@ -39,3 +39,5 @@ from . import sum
 from . import add
 from . import log
 from . import eq_matrix
+from . import eq_im
+from . import eq_matmul

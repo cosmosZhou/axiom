@@ -93,9 +93,9 @@ bases de [fraction continue](../?module=discrete.add.to.pow.HK.recurrence); ains
 * [stats](../?module=stats) fait référence à la statistique et à la théorie des probabilités, comprenant: la dérivation de la formule de densité de probabilité d’une distribution commune (telle que, la distribution binomiale, la distribution gaussienne, la distribution de Poisson, la distribution de die, Χ<sup>2</sup>distribution)，ainsi que des propositions liées au [théorème de Bayes](../?module=stats/probability/to/mul);  
 * [keras](../?module=keras) est liée aux théories mathématiques derrière les techniques contemporaines d’apprentissage profond / apprentissage automatique, y compris la modélisation mathématique utilisée dans le traitement / compréhension du langage naturel, comme la formule d’inférence avant ou de propagation en arrière de
 [LSTM](../?module=keras.eq.eq.imply.eq.long_short_term_memory),
-[BERT](../index.php?module=keras.matmul.softmax.to.lamda.div.scaled_dot_product_attention),
-[CNN](../index.php?module=keras.eq_lamda_bool.imply.eq.conv1d),
-Champ aléatoire conditionnel [CRF](../index.php?module=keras.ne_zero.eq.eq.eq.imply.et.crf), 
+[BERT](../?module=keras.matmul.softmax.to.lamda.div.scaled_dot_product_attention),
+[CNN](../?module=keras.eq_lamda_bool.imply.eq.conv1d),
+Champ aléatoire conditionnel [CRF](../?module=keras.ne_zero.eq.eq.eq.imply.et.crf), 
 et preuve partielle de KMeans
 [convergence des regroupements](../?module=sets.el.notin.le.imply.le.st.variance). La théorie des probabilités fournit la base théorique fondamentale de l’apprentissage automatique afin que cette technique contemporaine puisse être explicable.  
 * Dans un avenir proche, des sections pour la physique, la chimie, la biologie et leurs sous-divisions seront créées pour révéler le développement de découvertes scientifiques qui ont été couronnées de succès grâce à l’application de l’analyse mathématique.  

@@ -13,16 +13,16 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import discrete, algebra
+    from axiom import algebra, discrete
+
     x = Symbol(real=True, shape=(oo,))
     i = Symbol(integer=True)
     n = Symbol(domain=Range(2, oo))
-
     Eq << apply(All[i:1:n + 1](x[i] >= 1))
 
     Eq << Eq[-1].this.find(K).defun()
 
-    Eq << algebra.all.imply.all.split.apply(Eq[0], cond={n})
+    Eq << algebra.all.imply.et.all.split.apply(Eq[0], cond={n})
 
     Eq << Eq[-1].this.expr.apply(algebra.ge.imply.gt_zero)
 
@@ -30,14 +30,18 @@ def prove(Eq):
 
     Eq << algebra.gt_zero.ge.imply.ge.mul.apply(Eq[-1], Eq[-4])
 
-    Eq << algebra.all.imply.all.split.apply(Eq[-3], cond={n - 1})
+    Eq << algebra.all.imply.et.all.split.apply(Eq[-3], cond={n - 1})
 
     Eq << discrete.all_gt_zero.imply.gt_zero.K.apply(Eq[-1])
 
     Eq << algebra.gt.ge.imply.gt.add.apply(Eq[-1], Eq[-4])
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-09-16
+# updated on 2023-10-22

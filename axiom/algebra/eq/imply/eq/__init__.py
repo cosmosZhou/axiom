@@ -34,8 +34,9 @@ from . import reducedArgMax
 from . import reducedArgMin
 from . import bool
 from . import transport
-from . import Re
-from . import Im
+from . import im
 from . import adjoint
 from . import conj
 from . import neg
+from . import norm
+from . import re

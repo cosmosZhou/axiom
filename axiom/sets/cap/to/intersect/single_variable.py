@@ -33,7 +33,7 @@ def prove(Eq):
     Eq <<= Eq[-2].this.rhs.find(Element).apply(sets.el_cap.given.all_el), \
     Eq[-1].this.lhs.find(Element).apply(sets.el_cap.imply.all_el)
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.all.imply.et.split, cond=A), Eq[-1].this.rhs.apply(algebra.all.given.et.all.split, cond=A)
+    Eq <<= Eq[-2].this.lhs.apply(algebra.all.imply.et.all.split, cond=A), Eq[-1].this.rhs.apply(algebra.all.given.et.all.split, cond=A)
 
     Eq <<= Eq[-2].this.lhs.args[0].apply(algebra.all.to.infer), Eq[-1].this.rhs.args[0].apply(algebra.all.to.infer)
 
@@ -62,7 +62,7 @@ def prove(Eq):
     Eq <<= Eq[-2].this.lhs.args[0].apply(algebra.infer.to.all, wrt=x), \
     Eq[-1].this.rhs.apply(algebra.infer.to.all, wrt=x)
 
-    
+
 
 
 if __name__ == '__main__':

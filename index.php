@@ -54,9 +54,8 @@ switch (count($key)) {
                 require_once 'php/new.php';
                 exit();
             case "state":
-                require_once 'php/search.php';
-                exit();
             case "keyword":
+            case "latex":
                 require_once 'php/search.php';
                 exit();
         }

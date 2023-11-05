@@ -58,25 +58,23 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[Integral]).apply(calculus.mul.to.integral)
 
-    Eq.eq_expect = Eq[-1].this.find(Integral).apply(calculus.integral.limits.swap)
+    Eq << Eq[-1].this.find(Integral).apply(calculus.integral.limits.swap)
+
+    Eq << Eq[-1].this.find(Probability).apply(stats.prob.conditioned.to.mul.prob.conditioned)
+
+    Eq.eq_expect = Eq[-1].this.rhs.apply(calculus.integral.limits.separate)
 
     Eq << algebra.cond.imply.cond.domain_defined.apply(Eq[0]).subs(t, t + 1)
 
     Eq << stats.ne_zero.imply.ne_zero.joint_slice.apply(Eq[-1], [t, slice(t, t + 2)])
 
-    Eq.joint_ne_zero = Eq[-1].this.find(Equal[Sliced]).apply(algebra.eq.to.et.eq.split)
-
-    Eq << stats.ne_zero.imply.eq.bayes.conditioned.st.joint.apply(Eq.joint_ne_zero, s[t + 1], r[t + 1:])
-
-    Eq << Eq.eq_expect.subs(Eq[-1])
-
-    Eq << Eq[-1].this.rhs.apply(calculus.integral.limits.separate)
+    Eq << Eq[-1].this.find(Equal[Sliced]).apply(algebra.eq.to.et.eq.split)
 
     Eq << stats.eq_conditioned.imply.eq_conditioned.joint.independence_assumption.apply(Eq[0])
 
-    Eq << stats.ne_zero.eq_conditioned.imply.eq.conditioned.joint.apply(Eq[-1], Eq.joint_ne_zero)
+    Eq << stats.ne_zero.eq_conditioned.imply.eq.conditioned.joint.apply(*Eq[-2:])
 
-    Eq << Eq[-3].subs(Eq[-1])
+    Eq << Eq.eq_expect.subs(Eq[-1])
 
     Eq << Eq.final.rhs.find(MatMul).this.apply(stats.matmul.to.expect)
 
@@ -96,5 +94,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-03-29
-# updated on 2023-04-27
+# updated on 2023-10-14
 from . import normalized

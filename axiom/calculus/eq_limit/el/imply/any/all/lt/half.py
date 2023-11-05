@@ -4,10 +4,11 @@ from util import *
 @apply
 def apply(eq, is_nonzero_real, delta=None):
     A, R = is_nonzero_real.of(Element)
-    assert R == Reals - {0}
-    fx, (x, x0, dir) = eq.of(Equal[Limit, A])
+    assert R in Reals - {0}
+    fx, (x, x0) = eq.of(Equal[Limit, A])
     if delta is None:
         delta = eq.generate_var(positive=True, var='delta')
+    x0, dir = x0.clear_infinitesimal()
     return Any[delta](All[x:(abs(x - x0) > 0) & ((abs(x - x0) < delta))](abs(fx) > abs(A) / 2))
 
 
@@ -34,7 +35,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(calculus.ne_zero.eq_limit.imply.any.all.gt)
 
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2020-05-15
+# updated on 2023-10-15

@@ -53,7 +53,22 @@ or try to open and execute the python file directly:
 .\axiom\discrete/binom/to/add/Pascal.py  
 
 
-# online IDE
+# IDE for online-debugging
+In future, an online IDE with debugging functionality will be developed, based on the following projects:  
+https://github.com/coder/code-server  
 https://github.com/eclipse-theia/theia  
 https://github.com/jupyterlab/jupyterlab  
 https://github.com/sagemathinc/cocalc  
+
+# latex
+function£º$f(x)=\frac{P(x)}{Q(x)}$
+
+
+$$
+X(m,n)=
+\begin{cases}
+x(n),\\
+x(n-1),\\
+x(n+1)
+\end{cases}
+$$

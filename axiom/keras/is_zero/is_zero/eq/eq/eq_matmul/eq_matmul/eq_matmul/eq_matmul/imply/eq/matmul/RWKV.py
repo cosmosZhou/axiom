@@ -55,7 +55,7 @@ def prove(Eq):
 
     #https://arxiv.org/pdf/2305.13048.pdf#page=5
     #compared to standard transformer of scaled dot product attention
-    #http://localhost/axiom/index.php?module=keras.matmul_softmax.to.lamda.sum.scaled_dot_product_attention
+    #http://localhost/axiom/?module=keras.matmul_softmax.to.lamda.sum.scaled_dot_product_attention
     
     
 

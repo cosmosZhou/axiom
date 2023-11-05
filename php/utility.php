@@ -779,7 +779,11 @@ function run($py)
     $logs[] = "module = " . str_replace(".", "/", $module);
     $user = basename(dirname(dirname(__file__)));
     if (std\is_linux()) {
-        $array = file_get_contents("https://www.axiom.top/$user/run.py?module=$module");
+        $array = file_get_contents("http://localhost:8000/$user/run.py?module=$module", 0, stream_context_create([
+            'http' => [
+                'timeout' => 3000
+            ]
+        ]));
         $array = explode("\n", $array);
     } else {
         $array = file_get_contents("http://localhost/$user/run.py?module=$module", 0, stream_context_create([

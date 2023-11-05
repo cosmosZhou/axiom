@@ -2,11 +2,11 @@ from util import *
 
 
 @apply
-def apply(lt, n):
+def apply(lt, n, evaluate=True):
     x, a = lt.of(Less)    
     assert x >= 0
     assert n > 0
-    return x ** n < a ** n
+    return Less(x ** n, a ** n, evaluate=evaluate)
 
 
 @prove
@@ -38,3 +38,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-04-15
+# updated on 2023-10-04

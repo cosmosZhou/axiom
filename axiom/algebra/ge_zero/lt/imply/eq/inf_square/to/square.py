@@ -55,7 +55,7 @@ def prove(Eq):
 
     Eq <<= Eq[-4].this.rhs.apply(algebra.lt.given.gt_zero), Eq[-3].this.rhs.apply(sets.el.given.el.mul.interval, 2), algebra.all.given.infer.apply(Eq[-2])
 
-    Eq <<= Eq[-3].this.rhs.lhs.apply(algebra.add.to.mul.st.square_difference), Eq[-2].this.lhs.apply(sets.el.imply.el.sqrt), Eq[-1].this.rhs.lhs.apply(algebra.add.to.mul.st.square_difference)
+    Eq <<= Eq[-3].this.rhs.lhs.apply(algebra.sub.square.to.mul), Eq[-2].this.lhs.apply(sets.el.imply.el.sqrt), Eq[-1].this.rhs.lhs.apply(algebra.sub.square.to.mul)
 
     Eq <<= Eq[-3].this.rhs.apply(algebra.mul_gt_zero.given.et.gt_zero), Eq[-2].subs(Eq.eq_abs_m, Eq.eq_abs_M), Eq[-1].this.rhs.apply(algebra.mul_gt_zero.given.et.gt_zero)
 
@@ -83,8 +83,8 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

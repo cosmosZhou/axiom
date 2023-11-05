@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << algebra.le.imply.le_zero.apply(Eq[0])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.add.to.mul.st.square_difference)
+    Eq << Eq[-1].this.lhs.apply(algebra.sub.square.to.mul)
 
     Eq << algebra.le_zero.imply.ou.split.mul.apply(Eq[-1])
 
@@ -40,7 +40,7 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed
 
-    
+
 
 
 if __name__ == '__main__':

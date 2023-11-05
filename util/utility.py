@@ -46,7 +46,7 @@ class Eq:
                 
         for line in self.latex:
             i = 0
-            res = []   
+            res = []
             for m in re.finditer(r"\\tag\*{(Eq(?:\[(\d+)\]|\.(\w+)))}", line):
                 expr, index, attr = m[1], m[2], m[3]
     
@@ -92,8 +92,8 @@ class Eq:
                                 arrow = '\N{RIGHTWARDS DOUBLE ARROW}'
                                 # arrow = '=>'
                             elif _expr_reference == eq.equivalent.imply:
-                                arrow = '\N{RIGHTWARDS DOUBLE ARROW}'
-                                # arrow = '=>'
+                                arrow = '\N{LEFTWARDS DOUBLE ARROW}'
+                                # arrow = '<='
                             elif _expr_reference == eq.equivalent.negation:
                                 arrow = '='
                             elif _expr_reference == eq.equivalent.equivalent:
@@ -550,7 +550,8 @@ def run():
     if len(s) == 2:
         file = s[0].filename
     else:
-        file = s[5].filename
+        #file = s[5].filename # for eclipse
+        file = s[8].filename# for vscode
         
     package = py_to_module(file)
     

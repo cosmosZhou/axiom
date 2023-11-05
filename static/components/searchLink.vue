@@ -35,7 +35,7 @@ export default {
 		},
 		
 		href(){
-			return `/${this.user}/index.php?module=${this.module}`;
+			return `/${this.user}/?module=${this.module}`;
 		},			
 	},
 	

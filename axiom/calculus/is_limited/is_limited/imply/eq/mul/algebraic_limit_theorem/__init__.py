@@ -5,11 +5,11 @@ from util import *
 def apply(limited_f, limited_g):
     from axiom.calculus.is_limited.imply.any.all.limit_definition import of_limited
     fx, limit = of_limited(limited_f, real=True)
-    (x, x0, dir) = limit
+    x, x0 = limit
 
     gx, S[limit] = of_limited(limited_g, real=True)
 
-    return Equal(Limit[x:x0:dir](fx * gx), limited_f.lhs * limited_g.lhs)
+    return Equal(Limit[x:x0](fx * gx), limited_f.lhs * limited_g.lhs)
 
 
 @prove
@@ -18,8 +18,7 @@ def prove(Eq):
 
     x, x0 = Symbol(real=True)
     f, g = Function(real=True)
-    dir = S.One
-    Eq << apply(Element(Limit[x:x0:dir](f(x)), Reals), Element(Limit[x:x0:dir](g(x)), Reals))
+    Eq << apply(Element(Limit[x:x0 + S.Infinitesimal](f(x)), Reals), Element(Limit[x:x0 + S.Infinitesimal](g(x)), Reals))
 
     is_zero = And(Equal(Eq[0].lhs, 0), Eq[1])
     Eq << Infer(is_zero, is_zero, plausible=True)

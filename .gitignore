@@ -89,3 +89,4 @@ ENV/
 *.npy
 *.pkl
 .idea/
+.vscode/

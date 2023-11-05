@@ -88,7 +88,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[Sum]).apply(algebra.mul.to.sum)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.all.imply.et.split, cond={n})
+    Eq << Eq[-1].this.lhs.apply(algebra.all.imply.et.all.split, cond={n})
 
     Eq << Eq[-1].this.apply(algebra.infer.fold)
 
@@ -181,8 +181,8 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

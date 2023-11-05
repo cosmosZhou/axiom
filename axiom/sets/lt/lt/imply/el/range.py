@@ -24,7 +24,7 @@ def prove(Eq):
 
 
 
-    Eq << algebra.ge.given.gt.apply(Eq[-1])
+    Eq << algebra.ge.given.gt.relax.apply(Eq[-1])
 
     Eq << Eq[-1].reversed
 

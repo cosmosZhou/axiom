@@ -62,14 +62,16 @@ def prove(Eq):
 
     Eq.eq_grad = Eq[-1].this.find(Sum[Integral]).apply(calculus.sum.to.integral)
 
-    
-
-    
     Eq << algebra.cond.imply.cond.domain_defined.apply(Eq[0]).subs(t, t + 1)
+
     Eq << stats.ne_zero.imply.ne_zero.joint_slice.apply(Eq[-1], [-1, -1])
+
     Eq << stats.cond.imply.cond.prob.weighted.apply(Eq[-1], (a, π))
+
     Eq << stats.ne_zero.imply.eq.bayes.conditioned.st.joint.apply(Eq[-1], s[t + 1], a[t])
+
     Eq << Eq.eq_grad.subs(Eq[-1].reversed)
+    
     Eq << Eq[-1].this.find(Sum[Probability]).apply(stats.sum.to.prob)
     #https://spinningup.openai.com/en/latest/spinningup/rl_intro.html#bellman-equations
     #http://incompleteideas.net/book/bookdraft2017nov5.pdf (Page 47)

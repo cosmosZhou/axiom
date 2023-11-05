@@ -14,7 +14,7 @@ def apply(lt, is_continuous, is_differentiable):
     fa = fz._subs(z, a)
     fb = fz._subs(z, b)
 
-    return Any[z:Interval(a, b, left_open=True, right_open=True)](Equal(fb - fa, (b - a) * Derivative(fz, z)))
+    return Any[z:a:b](Equal(fb - fa, (b - a) * Derivative(fz, z)))
 
 
 @prove
@@ -41,8 +41,9 @@ def prove(Eq):
 
     Eq.equal = Eq[-1].this.rhs.expand()
 
-    [[x, ksi, dir]] = Eq[1].expr.arg.limits
-    Eq.is_continuous = ForAll(Equal(Limit[x:ksi:dir](g(x)), g(ksi)), *Eq[1].limits, plausible=True)
+    [[x, ksi]] = Eq[1].expr.arg.limits
+    ksi, dir = ksi.clear_infinitesimal()
+    Eq.is_continuous = ForAll(Equal(Limit[x:ksi + dir](g(x)), g(ksi)), *Eq[1].limits, plausible=True)
 
     Eq << Eq.is_continuous.this.expr.lhs.expr.defun()
 

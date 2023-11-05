@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq << sets.el_interval.imply.ou.apply(Eq[-1], 0, left_open=True)
 
-    Eq << Eq[-1].this.args[1].apply(geometry.el.imply.sin_le_zero)
+    Eq << Eq[-1].this.args[1].apply(geometry.el_interval.imply.le_zero.sin)
 
     Eq << algebra.cond.ou.imply.cond.apply(Eq.sin_is_positive, Eq[-1])
 

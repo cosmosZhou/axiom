@@ -4,8 +4,8 @@ from util import *
 @apply
 def apply(is_limited):
     from axiom.calculus.is_limited.imply.any.all.limit_definition import of_limited
-    fx, (x, x0, dir) = of_limited(is_limited, positive=True)
-    return Equal(Limit[x:x0:dir](log(fx)), log(Limit[x:x0:dir](fx)))
+    fx, (x, x0) = of_limited(is_limited, positive=True)
+    return Equal(Limit[x:x0](log(fx)), log(Limit[x:x0](fx)))
 
 
 @prove(proved=False)

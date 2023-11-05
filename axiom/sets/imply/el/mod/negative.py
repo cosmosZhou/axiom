@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << sets.el_range.given.et.apply(Eq[-1], right_open=False)
 
-    Eq << algebra.ge.given.gt.apply(Eq[-2])
+    Eq << algebra.ge.given.gt.relax.apply(Eq[-2])
 
     Eq <<= Eq[-2] - n, Eq[-1] - n
 

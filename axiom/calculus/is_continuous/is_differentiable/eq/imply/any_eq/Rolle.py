@@ -28,7 +28,8 @@ def prove(Eq):
 
     Eq << calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle.apply(Eq[-1], Eq[0], Eq[1], Eq[2])
 
-
+    #https://math.stackexchange.com/questions/261903/rolle-and-mean-value-theorem?rq=1
+    
 if __name__ == '__main__':
     run()
 

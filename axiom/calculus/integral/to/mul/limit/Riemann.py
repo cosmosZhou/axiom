@@ -9,7 +9,7 @@ def apply(self, n=None, k=None):
 
     if k is None:
         k = self.generate_var(n, integer=True, var='k')
-    assert fx.is_continuous(x)
+    assert fx.is_continuous_at(x)
     return Equal(self, (b - a) * Limit[n:oo](Sum[k:n](fx._subs(x, a + (b - a) * k / n)) / n))
 
 

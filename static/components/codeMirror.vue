@@ -215,7 +215,7 @@ export default {
 		                        var symbol = module;
 		                        module = locate_definition(cm, cursor.line, symbol);
 		                        if (module == null){
-		                            var href = `/axiom/index.php?symbol=${symbol}`;
+		                            var href = `/axiom/?symbol=${symbol}`;
 		                            if (refresh)
 		                                location.href = href;
 		                            else
@@ -241,7 +241,7 @@ export default {
 		            }
 
 		            var user = axiom_user();
-                    var href = user? `/${user}/index.php?module=${module}`: location.href.replace(self.module.replace(/\./g, '/'), module.replace(/\./g, '/')).replace(/#\w+$/, '');
+                    var href = user? `/${user}/?module=${module}`: location.href.replace(self.module.replace(/\./g, '/'), module.replace(/\./g, '/')).replace(/#\w+$/, '');
 
 		            if (apply)
 		                href += "#apply";
@@ -393,7 +393,7 @@ export default {
                 if (module.match(/\W$/))
                 	module = module.slice(0, -1);
                 
-                var href = `/${self.user}/index.php?new=${module}`;
+                var href = `/${self.user}/?new=${module}`;
                 window.open(href);
             },
 
@@ -401,7 +401,7 @@ export default {
             	self.save();
             },
 
-            'Ctrl-F11': function(cm) {
+            'Ctrl-F5': function(cm) {
                 form.submit();
             },
 
@@ -520,7 +520,7 @@ export default {
             	F3(cm, false);
             },
 
-            F11(cm) {
+            F5(cm) {
                 self.debug();
             },
             

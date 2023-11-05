@@ -174,15 +174,6 @@ export default {
 			return this.height * this.scale;
 		},
 		
-		href_pn(){
-			return `https:\/\/analytics.zhihuiya.com/search/result/tablelist/1?sort=sdesc&q=${this.pn_simplified}&_type=query`;
-		},
-		
-		href_id(){
-			var source = this.pn.startsWith("US")? 'pdf': 'image';
-			return `https:\/\/analytics.zhihuiya.com/patent-view/${source}?patentId=${this.id}`;
-		},
-		
 		pn_simplified(){
 			return this.pn.match(/^[^$_-]+/)[0];
 		},

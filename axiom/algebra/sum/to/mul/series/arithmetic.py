@@ -28,7 +28,7 @@ def prove(Eq):
 
     Eq << algebra.eq.imply.eq.sum.apply(Eq[-1], (i, a, b)).reversed
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add.telescope)
+    Eq << Eq[-1].this.rhs.apply(algebra.sum.to.sub.telescope)
 
     Eq << Eq[-1].this.find(Binomial).apply(discrete.binom.to.mul.fallingFactorial.doit)
 

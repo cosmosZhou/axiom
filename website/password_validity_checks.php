@@ -408,7 +408,7 @@ switch($lang){
 		<div class="header header-logged-out width-full pt-5 pb-4"
 			role="banner">
 			<div class="container clearfix width-full text-center">
-				<a class="header-logo" href="index.php?lang=<?php echo $lang?>"
+				<a class="header-logo" href="?lang=<?php echo $lang?>"
 					aria-label="Homepage"
 					data-ga-click="(Logged out) Header, go to homepage, icon:logo-wordmark">
 					<svg aria-hidden="true" viewBox="0 0 16 16" version="1.1"

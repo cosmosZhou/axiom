@@ -27,7 +27,7 @@ def prove(Eq):
     k = Symbol(domain=Range(n))
     Eq << apply(Equal(f[k], g[k]), Equal(f[n], g[n]), wrt=k)
 
-    Eq << algebra.all.given.et.apply(Eq[-1], cond={n})
+    Eq << algebra.all.given.et.all.apply(Eq[-1], cond={n})
 
     Eq << algebra.cond.imply.all.apply(Eq[0], k)
 

@@ -525,10 +525,10 @@ export default {
 			autoLabellingType = autoLabellingType[setter];
 			switch (autoLabellingType) {
 			case 'syntax':
-				var url = `index.php?vue=${autoLabellingType}Labelling&table=${table}&setter=${setter}&repetition=6`;
+				var url = `?vue=${autoLabellingType}Labelling&table=${table}&setter=${setter}&repetition=6`;
 				break;
 			case 'entity':
-				var url = `index.php?vue=${autoLabellingType}Labelling&table=${table}&setter=${setter}&textField=text`;
+				var url = `?vue=${autoLabellingType}Labelling&table=${table}&setter=${setter}&textField=text`;
 				break;
 			}
 			

@@ -6,7 +6,7 @@ def apply(lt_r, γ, λ, k=None, i=None):
     (δ, t), [S[t]] = lt_r.of(Sup[Abs[Indexed]] < Infinity)
 
     return Equal((1 - λ) * Sum[k:oo](λ ** k * Sum[i: k + 1](γ ** i * δ[t + i])),
-                 γ ** Lamda[t](t) @ (λ ** Lamda[t](t) * Identity(oo)) @ δ[t:])
+                 (γ * λ) ** Lamda[i](i) @ δ[t:])    
 
 
 @prove
@@ -83,14 +83,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.pow)
 
-    Eq << Eq[-1].this.rhs.find(Pow).apply(discrete.pow.to.matmul, reverse=True)
+    
 
     #https://arxiv.org/pdf/1506.02438.pdf Eq(16)
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-04-08
-# updated on 2023-04-16
+# updated on 2023-10-08

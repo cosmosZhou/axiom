@@ -57,49 +57,41 @@ def apply(given):
                     if arg == x:
                         del args[i]
                         x0 = -Add(*args)
-                        dir = 1
+                        dir = S.Infinitesimal
                         break
                     if arg == -x:
                         del args[i]
                         x0 = Add(*args)
-                        dir = -1
+                        dir = -S.Infinitesimal
                         break
         elif domain.is_Greater:
-            dir = -1
+            dir = -S.Infinitesimal
             x0 = oo
         elif domain.is_Interval:
             assert domain.left_open and domain.right_open
             a, b = domain.args
             if b.is_Infinity:
-                dir = -1
+                dir = -S.Infinitesimal
                 x0 = oo
                 assert a == delta
             else:
                 assert delta == b - a
                 if b._has(delta):
                     x0 = a
-                    dir = 1
+                    dir = S.Infinitesimal
                 elif a._has(delta):
                     x0 = b
-                    dir = -1
+                    dir = -S.Infinitesimal
 
-        return Equal(Limit[x:x0:dir](fx).simplify(), A)
+        return Equal(Limit[x:x0 + dir](fx).simplify(), A)
 
 
 @prove
 def prove(Eq):
     from axiom import calculus
 
-    n, N = Symbol(integer=True, positive=True)
     x, x0, a = Symbol(real=True)
-    #x = Symbol(real=True, shape=(n,))
-    #x = Symbol(integer=True)
     f = Function(real=True, shape=())
-    #x0 = Symbol(real=True, shape=(n,))
-    #x0 = oo
-    #x0 = -oo
-    #a = oo
-    #a = -oo
     epsilon, delta = Symbol(real=True, positive=True)
     Eq << apply(Any[delta](All[x: (abs(x - x0) > 0) & (abs(x - x0) < delta)](abs(f(x) - a) < epsilon)))
 

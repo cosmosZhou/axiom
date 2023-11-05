@@ -9,7 +9,7 @@ def apply(fx, limit, xi=None):
     else:
         domain, = ab
 
-    assert fx.is_continuous(x, domain)
+    assert fx.is_continuous_at(x, domain)
     if xi is None:
         xi = fx.generate_var(real=True, var='xi')
 

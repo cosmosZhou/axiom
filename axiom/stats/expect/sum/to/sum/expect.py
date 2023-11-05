@@ -11,16 +11,19 @@ def extract(Sum, self):
     expr, *limits_s = expr.of(Sum)
 
     subs = []
-    for k, *ab in limits_s:
+    for k, *ab in reversed(limits_s):
         if len(ab) == 2 and k.is_integer:
             a, b = ab
+            for new, old in subs:
+                a = a.subs(old, new)
+                b = b.subs(old, new)
             _k = k.copy(domain=Range(a, b))
             expr = expr._subs(k, _k)
             subs.append((_k, k))
 
     expr = self.func(expr, *limits, given=given)
-    for _k, k in subs:
-        expr = expr._subs(_k, k)
+    for new, old in reversed(subs):
+        expr = expr._subs(new, old)
 
     return Sum(expr, *limits_s)
 

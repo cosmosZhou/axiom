@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << algebra.lt.imply.lt_zero.apply(Eq[0])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.add.to.mul.st.square_difference)
+    Eq << Eq[-1].this.lhs.apply(algebra.sub.square.to.mul)
 
     Eq << algebra.lt_zero.imply.ou.split.mul.apply(Eq[-1])
 

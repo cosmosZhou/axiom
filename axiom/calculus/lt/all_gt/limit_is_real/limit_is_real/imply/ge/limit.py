@@ -7,14 +7,15 @@ def apply(lt, all_gt, limit_is_real_fx, limit_is_real_gx):
     (lhs, rhs), (x, domain) = all_gt.of(All[Greater])
     S[a], S[b] = domain.of(Interval)
 
-    (S[lhs], (x, x0, dir)), R = limit_is_real_fx.of(Element[Limit])
+    (S[lhs], (x, x0)), R = limit_is_real_fx.of(Element[Limit])
     assert R in Reals
     (S[rhs], limit), R = limit_is_real_gx.of(Element[Limit])
     assert R in Reals
-    assert limit == (x, x0, dir)
+    assert limit == (x, x0)
 
-    assert lhs.is_continuous(x, domain)
-    assert rhs.is_continuous(x, domain)
+    x0, dir = x0.clear_infinitesimal()
+    assert lhs.is_continuous_at(x, domain)
+    assert rhs.is_continuous_at(x, domain)
     if dir < 0:
         x0 = b
         assert domain.right_open
@@ -22,7 +23,7 @@ def apply(lt, all_gt, limit_is_real_fx, limit_is_real_gx):
         x0 = a
         assert domain.left_open
 
-    return GreaterEqual(Limit[x:x0:dir](lhs), Limit[x:x0:dir](rhs))
+    return GreaterEqual(Limit[x:x0 + dir](lhs), Limit[x:x0 + dir](rhs))
 
 
 @prove
@@ -33,9 +34,7 @@ def prove(Eq):
     x = Symbol(real=True)
     domain = Interval(a, b, right_open=True)
     f, g = Function(real=True, continuous=domain)
-    Eq << apply(a < b, All[x:domain](Greater(f(x), g(x))), Element(Limit[x:b:-1](f(x)), Reals), Element(Limit[x:b:-1](g(x)), Reals))
-
-
+    Eq << apply(a < b, All[x:domain](Greater(f(x), g(x))), Element(Limit[x:b - S.Infinitesimal](f(x)), Reals), Element(Limit[x:b - S.Infinitesimal](g(x)), Reals))
 
     Eq <<= calculus.imply.is_continuous.interval.apply(f(x), (x, domain)), calculus.imply.is_continuous.interval.apply(g(x), (x, domain))
 

@@ -10,7 +10,7 @@ def apply(self, n=None, k=None):
     if k is None:
         k = self.generate_var(n, integer=True, var='k')
     assert a < b
-    assert fx.is_continuous(x, a, b)
+    assert fx.is_continuous_at(x, a, b)
     return Equal(self, (b - a) * Limit[n:oo](Sum[k:n](Maxima[x:a + (b - a) * k / n:a + (b - a) * (k + 1) / n](fx)) / n))
 
 

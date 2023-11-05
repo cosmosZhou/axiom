@@ -42,3 +42,6 @@ from . import imply
 from . import exp
 from . import ne
 from . import lamda
+from . import all_ge_zero
+from . import is_extended_real
+from . import is_infinite

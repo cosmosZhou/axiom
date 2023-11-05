@@ -7,3 +7,5 @@ from . import inf_le
 from . import ge_inf
 from . import minima_le
 from . import ge_minima
+from . import le
+from . import ge

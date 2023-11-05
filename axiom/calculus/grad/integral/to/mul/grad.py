@@ -6,7 +6,7 @@ def apply(self, *, simplify=True):
     (ft, (t, a, b)), (x, S[1]) = self.of(Derivative[Integral])
     criteria = 1
     if b._has(x):
-        if b.is_continuous(x):
+        if b.is_continuous_at(x):
             ...
         else:
             cond = Element(x, b.domain_defined(x, real=True)).simplify()
@@ -15,14 +15,14 @@ def apply(self, *, simplify=True):
         dfx = Derivative[x](b)
         ft = ft._subs(t, b)
     elif a._has(x):
-        assert a.is_continuous(x)
+        assert a.is_continuous_at(x)
         assert not b._has(x)
         dfx = Derivative[x](a)
         ft = -ft._subs(t, a)
 
     if simplify:
         dfx = dfx.simplify()
-    assert ft.is_continuous(t)
+    assert ft.is_continuous_at(t)
     return Equal(self, ft * dfx * criteria)
 
 

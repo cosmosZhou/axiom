@@ -2,10 +2,10 @@
 	<searchForm :keyword=keyword :regularExpression=regularExpression :wholeWord=wholeWord :caseSensitive=caseSensitive></searchForm>
 	search results:
 	<br>
-	in all, there are {{modules.length}} hits:
+	in all, there are {{list.length}} hits:
 	<br>
 	<ul>
-    	<li v-for="module of modules">
+    	<li v-for="module of list">
     		<searchLink :module=module></searchLink>
     	</li>
 	</ul>
@@ -19,7 +19,7 @@ import searchLink from "./searchLink.vue"
 export default {
 	components: {searchForm, searchLink},
 
-	props : ['modules', 'keyword', 'caseSensitive', 'wholeWord', 'regularExpression'],
+	props : ['list', 'keyword', 'caseSensitive', 'wholeWord', 'regularExpression'],
 
 	computed: {
 	},

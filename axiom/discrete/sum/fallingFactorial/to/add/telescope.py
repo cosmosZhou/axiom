@@ -40,13 +40,13 @@ def prove(Eq):
 
     Eq << Eq.final.subs(Eq[-1].reversed)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.telescope)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.sub.telescope)
 
     Eq << Eq[-1].this.rhs.apply(discrete.fallingFactorial.to.reciprocal.fallingFactorial)
 
     #https://en.wikipedia.org/wiki/Telescoping_series
-    
-    
+
+
 
 
 if __name__ == '__main__':

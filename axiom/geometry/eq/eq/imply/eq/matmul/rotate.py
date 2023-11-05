@@ -33,9 +33,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expand()
 
-    Eq.real_part = algebra.eq.imply.eq.Re.apply(Eq[-1])
+    Eq.real_part = algebra.eq.imply.eq.re.apply(Eq[-1])
 
-    Eq.imaginary_part = algebra.eq.imply.eq.Im.apply(Eq[-1])
+    Eq.imaginary_part = algebra.eq.imply.eq.im.apply(Eq[-1])
 
     Eq <<= Eq.p_def[0], Eq.p_def[1], Eq.p_def[2]
 
@@ -49,7 +49,7 @@ def prove(Eq):
 
     Eq << Eq[-1] + Eq[-1].find(-~Matrix)
 
-    
+
 
 
 if __name__ == '__main__':

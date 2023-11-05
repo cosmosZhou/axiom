@@ -23,7 +23,7 @@ def prove(Eq):
 
 
 
-    Eq << algebra.lt.given.le.apply(Eq[-1])
+    Eq << algebra.lt.given.le.strengthen.apply(Eq[-1])
 
 
 if __name__ == '__main__':

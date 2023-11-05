@@ -30,11 +30,11 @@ def subs(self, x, x0):
 
 @apply
 def apply(self):
-    expr, (x, x0, dir) = self.of(Limit)
+    expr, (x, x0) = self.of(Limit)
     assert x0 == oo
     _expr = subs(expr, x, x0)
     assert _expr != expr
-    return Equal(self, Limit[x:x0:dir](_expr))
+    return Equal(self, Limit[x:x0](_expr))
 
 
 @prove
@@ -66,7 +66,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Max).apply(algebra.max.to.add)
 
-    Eq << Eq[-1].this.expr.apply(algebra.all.imply.all.et)
+    Eq << Eq[-1].this.expr.apply(algebra.all.imply.all_et)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_range.imply.et)
 

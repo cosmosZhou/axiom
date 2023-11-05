@@ -1,1 +1,1 @@
-from . import difference
+from . import diff

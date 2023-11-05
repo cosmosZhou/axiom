@@ -35,3 +35,4 @@ if __name__ == '__main__':
 
 from . import split
 # created on 2018-02-01
+from . import invert

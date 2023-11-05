@@ -3,12 +3,12 @@ from util import *
 
 @apply
 def apply(given):
-    (fx, (x, x0, dir)), (epsilon, domain) = given.of(All[Limit > 0])
+    (fx, (x, x0)), (epsilon, domain) = given.of(All[Limit > 0])
     S[0], delta = domain.of(Interval)
     assert delta > 0
     b = x0 + epsilon
     assert not b._has(epsilon)
-    return GreaterEqual(Limit[x:b:-1](fx), 0)
+    return GreaterEqual(Limit[x:b - S.Infinitesimal](fx), 0)
 
 
 @prove(proved=False)

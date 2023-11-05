@@ -3,8 +3,9 @@ from util import *
 
 @apply
 def apply(self):
-    fx, (x, x0, dir) = self.of(Limit)
-    assert fx.is_continuous(x0)
+    fx, (x, x0) = self.of(Limit)
+    x0, dir = x0.clear_infinitesimal()
+    assert fx.is_continuous_at(x0)
     return Equal(self, fx._subs(x, x0))
 
 

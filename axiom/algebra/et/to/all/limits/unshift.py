@@ -39,9 +39,9 @@ def prove(Eq):
 
     Eq << algebra.iff.given.et.apply(Eq[-1])
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.all.given.et, cond={a - 2}), Eq[-1].this.rhs.apply(algebra.all.imply.et.split, cond={a - 2})
+    Eq <<= Eq[-2].this.rhs.apply(algebra.all.given.et.all, cond={a - 2}), Eq[-1].this.rhs.apply(algebra.all.imply.et.all.split, cond={a - 2})
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.all.given.et, cond={a - 1}), Eq[-1].this.rhs.find(All).apply(algebra.all.imply.et.split, cond={a - 1})
+    Eq <<= Eq[-2].this.rhs.apply(algebra.all.given.et.all, cond={a - 1}), Eq[-1].this.rhs.find(All).apply(algebra.all.imply.et.all.split, cond={a - 1})
 
 
 if __name__ == '__main__':

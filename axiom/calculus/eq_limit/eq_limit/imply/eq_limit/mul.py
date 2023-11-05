@@ -3,8 +3,8 @@ from util import *
 
 @apply
 def apply(limited_f, limited_g):
-    (fx, (x, x0, S[0])), A = limited_f.of(Equal[Limit])
-    (gx, (S[x], S[x0], S[0])), B = limited_g.of(Equal[Limit])
+    (fx, (x, x0)), A = limited_f.of(Equal[Limit])
+    (gx, (S[x], S[x0])), B = limited_g.of(Equal[Limit])
 
     return Equal(Limit[x:x0](fx * gx), A * B)
 

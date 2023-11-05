@@ -1,7 +1,7 @@
 <template>
 	<div>
 		the axiom in question is a
-		<a :href="'index.php?' + keyInput + '=' + this.$parent.module + (deep ? '#deep': '')" :title="'show ' + (deep?'deep':'only first-layer') + ' hierarchy'">{{keyInput}}</a>
+		<a :href="'?' + keyInput + '=' + this.$parent.module + (deep ? '#deep': '')" :title="'show ' + (deep?'deep':'only first-layer') + ' hierarchy'">{{keyInput}}</a>
 		in the following hierarchy, would you switch to
 		<a :href=href>{{key}}</a> hierarchy?	
 	</div>
@@ -18,7 +18,7 @@ export default {
 		},
 		
 		href(){ 
-			return 'index.php?' + this.key + '=' + this.$parent.module;
+			return '?' + this.key + '=' + this.$parent.module;
 		},
 	},
 	

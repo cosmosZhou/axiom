@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << Eq[-1].apply(algebra.cond.imply.all.restrict, (k_,))
 
-    Eq << algebra.all.given.et.apply(Eq[-2], cond=n.set)
+    Eq << algebra.all.given.et.all.apply(Eq[-2], cond=n.set)
 
     Eq << Eq[-1].this().expr.simplify()
 

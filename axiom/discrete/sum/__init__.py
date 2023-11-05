@@ -2,8 +2,9 @@ from . import to
 from . import mul
 from . import binom
 from . import square
-from . import difference
 from . import risingFactorial
 from . import stirling
 from . import fallingFactorial
 from . import choose
+from . import diff
+from . import sub

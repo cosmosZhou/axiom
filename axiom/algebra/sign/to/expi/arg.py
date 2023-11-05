@@ -15,13 +15,13 @@ def prove(Eq):
     z = Symbol(complex=True, zero=False)
     Eq << apply(Sign(z))
 
-    Eq << Eq[0].lhs.this.apply(algebra.sign.to.piece)
+    Eq << Eq[0].lhs.this.apply(algebra.sign.to.piece.abs)
 
     Eq << algebra.expr.to.mul.expi.apply(z)
 
     Eq << Eq[-2].this.rhs.subs(Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

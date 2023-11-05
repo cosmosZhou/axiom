@@ -11,13 +11,13 @@ def apply(given):
 @prove
 def prove(Eq):
     from axiom import algebra
-    n, b = Symbol(integer=True, given=True)
+    n, b = Symbol(integer=True)
 
     Eq << apply(n > b)
 
     Eq << Eq[-1].simplify()
 
-    Eq << algebra.gt.given.ge.apply(Eq[0])
+    Eq << algebra.gt.given.ge.strengthen.apply(Eq[0])
 
 
 

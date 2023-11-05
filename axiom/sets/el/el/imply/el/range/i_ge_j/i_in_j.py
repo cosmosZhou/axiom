@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed
 
-    Eq << algebra.lt.given.le.apply(Eq[7])
+    Eq << algebra.lt.given.le.strengthen.apply(Eq[7])
 
 
 if __name__ == '__main__':

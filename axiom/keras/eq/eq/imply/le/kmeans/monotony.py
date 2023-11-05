@@ -62,7 +62,7 @@ def prove(Eq):
 
     Eq << sets.eq.imply.all.apply(Eq[-1])
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq_argmin.imply.le)
+    Eq << Eq[-1].this.expr.apply(algebra.eq_argmin.imply.all_le)
 
     Eq << Eq[-1].this.expr.apply(algebra.le.imply.le.square)
 
@@ -88,7 +88,7 @@ def prove(Eq):
 
     Eq << algebra.sum_ge_zero.given.sum_ge_zero.apply(Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

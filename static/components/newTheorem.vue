@@ -50,7 +50,7 @@ export default {
    		
    		action(){
    			var module = this.module.replace(/\./g, '/');
-   			return `/${this.user}/index.php?module=${module}`;
+   			return `/${this.user}/?module=${module}`;
    		},
 	},
 	

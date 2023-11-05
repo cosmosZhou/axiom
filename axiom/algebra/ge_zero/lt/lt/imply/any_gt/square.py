@@ -52,7 +52,7 @@ def prove(Eq):
 
     Eq <<= Eq[-1].this.rhs.apply(algebra.gt.given.gt_zero), Eq[-3].this.rhs.apply(algebra.lt.transport, lhs=0)
 
-    Eq <<= Eq[-2].this.find(Add).apply(algebra.add.to.mul.st.square_difference), Eq[-1].this.rhs * 2
+    Eq <<= Eq[-2].this.find(Add).apply(algebra.sub.square.to.mul), Eq[-1].this.rhs * 2
 
     Eq <<= Eq[-2].this.lhs.apply(algebra.ge.imply.ge.relax, lower=0), Eq[-1].this.lhs.apply(algebra.ge.imply.ge.relax, lower=0)
 

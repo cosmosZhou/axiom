@@ -21,8 +21,6 @@ def prove(Eq):
 
     Eq << Eq[0].subs(Eq[-1])
 
-    Eq << Eq[-1].this.find(Re[Add]).apply(algebra.re.to.add)
-
 
 if __name__ == '__main__':
     run()

@@ -52,7 +52,7 @@ def prove(Eq):
 
     Eq.plausible = All(Element(w[i, j] @ x, S), (x, S), (j, Range(1, n)), plausible=True)
 
-    Eq << algebra.all.given.et.apply(Eq.plausible, cond=i.set, wrt=j)
+    Eq << algebra.all.given.et.all.apply(Eq.plausible, cond=i.set, wrt=j)
 
     Eq << sets.imply.eq.intersect.apply(i, Range(1, n))
 
@@ -68,7 +68,7 @@ def prove(Eq):
 
     Eq << Eq.given_i.subs(Eq[-1].reversed)
 
-    Eq << algebra.all.given.et.apply(Eq[2], cond=Equal(j, 0))
+    Eq << algebra.all.given.et.all.apply(Eq[2], cond=Equal(j, 0))
 
 
 

@@ -3,7 +3,10 @@ from util import *
 
 @apply
 def apply(self):
-    expr, (k, S[0], n) = self.of(Sum)
+    expr, (k, i, n) = self.of(Sum)
+    if i:
+        expr = expr._subs(k, k + i)
+        n -= i
     if expr.is_Pow:
         c, hk = expr.args
         assert not c._has(k)
@@ -46,3 +49,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-06-17
+# updated on 2023-10-22

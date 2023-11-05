@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(given, domain=None, wrt=None):
-    function, *limits = given.of(All)
+    expr, *limits = given.of(All)
 
     if isinstance(domain, tuple):
         wrt, *domain = domain
@@ -31,7 +31,7 @@ def apply(given, domain=None, wrt=None):
     limit = (x, domain)
 
     limits[i] = limit
-    return All(function, *limits)
+    return All(expr, *limits)
 
 
 @prove

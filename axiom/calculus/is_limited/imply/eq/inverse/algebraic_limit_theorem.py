@@ -4,9 +4,9 @@ from util import *
 @apply
 def apply(is_limited):
     from axiom.calculus.is_limited.imply.any.all.limit_definition import of_limited
-    fx, (x, x0, dir) = of_limited(is_limited, nonzero=True)
+    fx, (x, x0) = of_limited(is_limited, nonzero=True)
 
-    return Equal(Limit[x:x0:dir](1 / fx), 1 / is_limited.lhs)
+    return Equal(Limit[x:x0](1 / fx), 1 / is_limited.lhs)
 
 
 @prove

@@ -27,7 +27,7 @@ def prove(Eq):
     #Eq << apply(b > x, x >= a)
     Eq << sets.el_range.given.et.apply(Eq[-1])
 
-    Eq <<= algebra.lt.given.le.apply(Eq[-1]), algebra.ge.given.gt.apply(Eq[-2])
+    Eq <<= algebra.lt.given.le.strengthen.apply(Eq[-1]), algebra.ge.given.gt.relax.apply(Eq[-2])
 
     Eq << Eq[-1].reversed
 

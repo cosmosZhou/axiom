@@ -60,14 +60,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(sets.el_cartesianSpace.imply.all.el)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.all.imply.et.split, cond={n})
+    Eq << Eq[-1].this.lhs.apply(algebra.all.imply.et.all.split, cond={n})
 
     Eq << algebra.all.imply.infer.apply(Eq[0])
 
     Eq << Eq[-1].this.find(Element[CartesianSpace]).apply(sets.el_cartesianSpace.given.all.el)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

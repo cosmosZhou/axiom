@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.cond.domain_defined.apply(Eq[0])
 
-    Eq << stats.ne_zero.imply.et.ne_zero.apply(Eq[-1])
+    Eq << stats.ne_zero.imply.ne_zero.delete.apply(Eq[-1], 0)
 
     Eq << Eq[1].this.rhs.apply(stats.expect.to.sum)
 
@@ -43,11 +43,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[Integral]).apply(calculus.mul.to.integral)
 
-    Eq << stats.ne_zero.imply.eq.bayes.conditioned.st.joint.apply(Eq[2], a[t], r[t:])
-
-    Eq << Eq[-2].subs(Eq[-1].reversed)
-
-    Eq << algebra.et.given.et.apply(Eq[-1])
+    Eq << Eq[-1].this.find(Probability[2]).apply(stats.prob.conditioned.to.div.prob.conditioned)
 
     Eq << Eq[-1].this.rhs.find(Sum).apply(calculus.sum.to.integral)
 
@@ -58,8 +54,10 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.find(MatMul).apply(calculus.matmul.to.integral)
 
     
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-04-12
+# updated on 2023-10-14

@@ -14,13 +14,13 @@ def complement(argset, factor):
                     argset.remove(arg)
                     argset.add(b ** (e - 1))
                     return argset
-                
+
                 elif e.is_Add:
                     if any(e.is_Integer and e >= 1 for e in e.args):
                         argset.remove(arg)
                         argset.add(b ** (e - 1))
                         return argset
-                    
+
             elif factor.is_Pow and factor.base == b:
                 exp = factor.exp
                 if e.is_Integer:
@@ -28,10 +28,10 @@ def complement(argset, factor):
                         argset.remove(arg)
                         argset.add(b ** (e - exp))
                         return argset
-                    
+
         elif arg == -factor:
             argset.remove(arg)
-            argset.add(-1)
+            argset.add(S(-1))
             return argset
 
 #precondition: if y.is_Pow:
@@ -40,11 +40,11 @@ def extract_pow(x, y):
     if by == x:
         if ey.is_Integer and ey > 1:
             return x
-        
+
         elif ey.is_Add:
             if any(e.is_Integer and e >= 1 for e in ey.args):
                 return x
-                
+
     elif x.is_Pow:
         bx, ex = x.args
         if bx == by:
@@ -52,15 +52,15 @@ def extract_pow(x, y):
                 argset = {*ex.args}
                 if ey in argset or ey.is_Add and all(e in argset for e in ey.args):
                     return y
-                    
+
             if ex.is_Integer and ey.is_Integer:
                 if ex > 0 and ey > 0:
                     return bx ** min(ex, ey)
-                
+
                 if ex < 0 and ey < 0:
                     return bx ** max(ex, ey)
 
-    
+
 def intersect(lhs, rhs):
     ret = set()
     for x in lhs:
@@ -80,7 +80,7 @@ def intersect(lhs, rhs):
                         ret.add(y)
                     else:
                         ret.add(y)
-                
+
                 elif x.is_Add and y.is_Add:
                     if x.args[0]._coeff_isneg() and y.args[0]._coeff_isneg():
                         ret.add(y)
@@ -114,7 +114,7 @@ def factorize(args, common_terms):
         else:
             assert arg == factor
             additives.append(1)
-            
+
     return additives, factor
 
 def common_terms(args):
@@ -158,7 +158,6 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-from . import st
 from . import together
 # created on 2018-02-21
 # updated on 2023-04-30

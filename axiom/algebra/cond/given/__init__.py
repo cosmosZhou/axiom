@@ -3,3 +3,4 @@ from . import ou
 
 from . import all
 from . import cond
+from . import infer

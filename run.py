@@ -1,5 +1,5 @@
-#!python
 #!/home/lizhi/miniconda3/bin/python
+#!python
 #!/usr/local/python3/bin/python3
 # make sure to run: chmod 777 run.py
 import os, sys
@@ -136,6 +136,11 @@ def readFolder(rootdir, sufix='.py'):
                     except PermissionError as e:
                         print(e)
             else: 
+                from os.path import getsize
+                if not getsize(path):
+                    removeFile(path)
+                    raise RuntimeError(f"removeFile({path})")
+
                 path = path[:-len(sufix)]
 
             paths = re.split(r'[\\/]+', path)
@@ -439,7 +444,7 @@ PARTITIONS 8'''
         return {}
 
     MySQL.instance.select_axiom_lapse_from_axiom = lambda : select_axiom_lapse_from_axiom(MySQL.instance)
-    MySQL.instance.url_address = lambda package: f"http://localhost/{user}/index.php?module={package}"
+    MySQL.instance.url_address = lambda package: f"http://localhost/{user}/?module={package}"
     
 except Exception as e:
     from util import javaScript as MySQL
@@ -815,7 +820,11 @@ for (let line of lines){
     var el;
     if (line.startsWith('http')){
         el = document.createElement('a');
+        var prefix = 'http://localhost/axiom/';
+        if (line.startsWith(prefix))
+            line = line.slice(prefix.length);
         el.href = line;
+        el.target = '_blank';
         line = line.match(/module=(\S+)/)[1];
         el.innerText = line;
     }

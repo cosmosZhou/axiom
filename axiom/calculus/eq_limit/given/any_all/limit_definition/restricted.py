@@ -12,18 +12,10 @@ def apply(given, epsilon=None, delta=None, upper=1):
 def prove(Eq):
     from axiom import algebra, calculus
 
-    n = Symbol(integer=True, positive=True)
-    x, x0, a = Symbol(real=True)
-    #x = Symbol(real=True, shape=(n,))
+    x, a = Symbol(real=True)
     x = Symbol(integer=True)
     f = Function(real=True, shape=())
-    #x0 = Symbol(real=True, shape=(n,))
-    x0 = oo
-    #x0 = -oo
-    #a = oo
-    #a = -oo
-    direction = 1
-    Eq << apply(Equal(Limit[x:x0:direction](f(x)), a))
+    Eq << apply(Equal(Limit[x:oo](f(x)), a))
 
     Eq.all = algebra.cond.imply.all.apply(Eq[1], Eq[1].find(Abs < ~Symbol))
 

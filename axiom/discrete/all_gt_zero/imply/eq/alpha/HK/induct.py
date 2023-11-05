@@ -69,7 +69,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.lhs.apply(discrete.alpha.block)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.all.given.et, cond={n})
+    Eq << Eq[-1].this.lhs.apply(algebra.all.given.et.all, cond={n})
 
     Eq << Eq[-1].this.find(All)().expr.simplify()
 
@@ -107,8 +107,8 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[0], Eq.hypothesis)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

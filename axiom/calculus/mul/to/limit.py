@@ -6,12 +6,12 @@ def mul_to_limit(self):
     for i, limit in enumerate(args):
         if limit.is_Limit:
             del args[i]
-            function, (x, x0, dir) = limit.args
+            expr, (x, x0) = limit.args
 
             for arg in args:
                 assert not arg._has(x)
 
-            return Limit[x:x0:dir](Mul(function, *args))
+            return Limit[x:x0](Mul(expr, *args))
 
 
 @apply

@@ -7,7 +7,7 @@ def apply(dist):
     return Equal(μ, Expectation(x)), Equal(Σ, Variance(x))
 
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import stats, calculus, algebra
 
@@ -34,8 +34,10 @@ def prove(Eq):
     Eq << Eq[-1].this.find(Integral[2]).apply(calculus.integral.to.mul)
 
     #https://en.wikipedia.org/wiki/Cholesky_decomposition
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-04-30
+# updated on 2023-10-03

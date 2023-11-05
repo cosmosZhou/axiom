@@ -8,7 +8,7 @@ def extract(recurrence):
 
     p = rhs.as_poly(m[t - 1])
     if p is None or p.degree() != 1:
-        return None
+        return
     beta = p.coeff_monomial(m[t - 1])
     beta_gt = p.coeff_monomial(1)
 
@@ -20,13 +20,15 @@ def extract(recurrence):
 
 
 @apply
-def apply(initial_condition, recurrence):
-    m, g, beta, t = extract(recurrence)
+def apply(initial_condition, recurrence, k=None):
+    m, g, β, t = extract(recurrence)
     S[m[0]], S[0] = initial_condition.of(Equal)
 
-    k = Symbol(integer=True, nonnegative=True)
+    if k is None:
+        k = recurrence.generate_var(integer=True, var='k')        
 
-    return Equal(m[k], beta ** k * (1 - beta) * Sum[t:1:k + 1](beta ** (-t) * g[t]))
+    assert β.is_nonzero
+    return Equal(m[k], β ** k * (1 - β) * Sum[t:1:k + 1](β ** (-t) * g[t]))
 
 
 @prove
@@ -34,10 +36,9 @@ def prove(Eq):
     from axiom import algebra
 
     m, g = Symbol(shape=(oo,), real=True)
-    t = Symbol(integer=True, positive=True)
+    t, k = Symbol(integer=True)
     beta = Symbol(real=True, nonzero=True)
-    #beta = Symbol(real=True, zero=False)
-    Eq << apply(Equal(m[0], 0), Equal(m[t], beta * m[t - 1] + (1 - beta) * g[t]))
+    Eq << apply(Equal(m[0], 0), Equal(m[t], beta * m[t - 1] + (1 - beta) * g[t]), k=k)
 
     Eq << Eq[1] / beta ** t
 
@@ -64,6 +65,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Add).apply(algebra.add.to.mul)
 
+    #https://arxiv.org/abs/1412.6980
+    
     
 
 
@@ -71,4 +74,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2020-12-22
-# updated on 2023-05-20
+# updated on 2023-10-22

@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(GreaterEqual).apply(algebra.ge.to.ge_zero)
 
-    Eq << Eq[-1].this.find(GreaterEqual).lhs.apply(algebra.add.to.mul.st.square_difference)
+    Eq << Eq[-1].this.find(GreaterEqual).lhs.apply(algebra.sub.square.to.mul)
 
     Eq << Eq[-1].this.find(GreaterEqual).apply(algebra.ge_zero.to.ou.split.mul)
 
@@ -39,12 +39,12 @@ def prove(Eq):
     Eq << Eq[-1].this.find(LessEqual) + k * σ
 
     Eq << Eq[-1].this.find(GreaterEqual) - k * σ
-    
+
     Eq << Eq[-1].this.find(GreaterEqual) + k * σ
-    
+
     Eq << Eq[-1].this.find(Or).apply(algebra.ou.to.abs_ge)
-    
-    
+
+
 
 
 if __name__ == '__main__':

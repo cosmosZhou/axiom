@@ -2,7 +2,7 @@
 	<div tabindex=1 @keydown=keydown>
 		the whole math theory is composed of the following sections:
  
-		<searchForm v-if="issearch" :keyword=keyword :caseSensitive=caseSensitive :wholeWord=wholeWord :regularExpression=regularExpression :nlp=nlp></searchForm>		
+		<searchForm v-if="issearch" :keyword=keyword :caseSensitive=caseSensitive :wholeWord=wholeWord :regularExpression=regularExpression :latex=latex></searchForm>		
 		<ul>
 			<li v-for="(content, section) in repertoire">
 				<a :href=href_section(section)>
@@ -73,7 +73,7 @@ export default {
 			caseSensitive: false,
 			wholeWord: false, 
 			regularExpression: false,
-			nlp: false,
+			latex: null,
 		};
 	},
 
@@ -84,12 +84,12 @@ export default {
 	methods: {
 		href_section(section) {
 			var {user} = this;
-			return `/${user}/index.php?module=${section}`;
+			return `/${user}/?module=${section}`;
 		},
 
 		href_module(axiom) {
 			var {user} = this;
-			return `/${user}/index.php?module=${axiom}`;
+			return `/${user}/?module=${axiom}`;
 		},
 
 		href_state(state){
@@ -97,7 +97,7 @@ export default {
 				return `/${this.user}/run.py`;
 			}
 			var {user} = this;
-			return `/${user}/index.php?state=${state}`;
+			return `/${user}/?state=${state}`;
 		},
 	
 		keydown(event){

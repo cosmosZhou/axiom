@@ -14,9 +14,9 @@ def prove(Eq):
     x, y = Symbol(complex=True)
     Eq << apply(Sign(x - y))
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sign.to.piece)
+    Eq << Eq[-1].this.lhs.apply(algebra.sign.to.piece.abs)
 
-    Eq << Eq[-1].this.find(Sign).apply(algebra.sign.to.piece)
+    Eq << Eq[-1].this.find(Sign).apply(algebra.sign.to.piece.abs)
 
     Eq << Eq[-1].this.find(Equal[0]).apply(algebra.eq.transport)
 

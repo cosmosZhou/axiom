@@ -22,12 +22,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.expr.args[1].apply(algebra.mul.negate)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.telescope)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.sub.telescope)
 
     Eq << Eq[-1].this.lhs.apply(algebra.mul.negate, 1)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

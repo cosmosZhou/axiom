@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(eq_limit):
-    tangent, (epsilon, S[0], S[1]) = eq_limit.of(Equal[Limit, Infinity])
+    tangent, (epsilon, S[S.Infinitesimal]) = eq_limit.of(Equal[Limit, Infinity])
     delta = tangent * epsilon
     fx1, fx = delta.of(Expr - Expr)
     for x in fx.free_symbols:
@@ -12,7 +12,7 @@ def apply(eq_limit):
     else:
         raise
 
-    return Limit[epsilon:0:1](fx) > fx
+    return Limit[epsilon:S.Infinitesimal](fx) > fx
 
 
 @prove(proved=False)
@@ -21,11 +21,11 @@ def prove(Eq):
 
     x, epsilon = Symbol(real=True)
     f = Function(real=True)
-    Eq << apply(Equal(Limit[epsilon:0:1]((f(x + epsilon) - f(x)) / epsilon), oo))
+    Eq << apply(Equal(Limit[epsilon:S.Infinitesimal]((f(x + epsilon) - f(x)) / epsilon), oo))
 
     Eq << calculus.eq_limit.imply.any.all.limit_definition.apply(Eq[0], 'chi')
 
-    Eq << Eq[-1].this.expr.apply(algebra.all.imply.all.et)
+    Eq << Eq[-1].this.expr.apply(algebra.all.imply.all_et)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_interval.imply.gt)
 

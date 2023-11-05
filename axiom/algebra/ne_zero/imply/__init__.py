@@ -8,3 +8,4 @@ from . import iff
 from . import any
 from . import ou
 from . import is_odd
+from . import cond

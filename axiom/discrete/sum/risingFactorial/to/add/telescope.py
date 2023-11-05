@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self):
     (k, i), (k, S[1], n) = self.of(Sum[1 / RisingFactorial])
-    n -= 1    
+    n -= 1
     i -= 1
     assert i > 0
     return Equal(self, (1 / Factorial(i) - 1 / RisingFactorial(n + 1, i)) / i)
@@ -37,15 +37,15 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq[-4].reversed)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.telescope)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.sub.telescope)
 
-    
 
-    
+
+
 
     #https://en.wikipedia.org/wiki/Telescoping_series
-    
-    
+
+
 
 
 if __name__ == '__main__':

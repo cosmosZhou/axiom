@@ -33,10 +33,11 @@ def prove(Eq):
     f = Function(shape=(), integer=True)
     Eq << apply(Any[e:S - {t}](f(e) > 0), domain=S)
 
-    Eq << algebra.any.given.ou.apply(Eq[-1], cond={t})
+    Eq << algebra.any.given.ou.any.split.apply(Eq[-1], cond={t})
 
     Eq << algebra.ou.given.cond.apply(Eq[-1], index=1)
 
+    
     
 
 
@@ -44,4 +45,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2020-09-01
-# updated on 2023-05-20
+# updated on 2023-10-22

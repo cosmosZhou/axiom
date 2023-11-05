@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self):
-    expr, (x, x0, dir) = self.of(Limit)
+    expr, (x, x0) = self.of(Limit)
     factors, coefficient = std.array_split(expr.of(Mul), lambda arg: arg._has(x))
 
     coefficient = Mul(*coefficient)
     factors = Mul(*factors)
 
-    limited = Limit[x:x0:dir](factors).simplify()
+    limited = Limit[x:x0](factors).simplify()
     return Equal(self, coefficient * limited)
 
 

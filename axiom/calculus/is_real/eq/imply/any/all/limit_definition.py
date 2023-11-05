@@ -25,8 +25,7 @@ def prove(Eq):
     x, x0 = Symbol(real=True)
     f = Function(real=True, shape=())
     a = Symbol(complex=True)
-    direction = 1
-    Eq << apply(Element(a, Reals), Equal(Limit[x:x0:direction](f(x)), a))
+    Eq << apply(Element(a, Reals), Equal(Limit[x:x0 + S.Infinitesimal](f(x)), a))
 
     Eq << sets.el.imply.any_eq.apply(Eq[0], var='A')
 

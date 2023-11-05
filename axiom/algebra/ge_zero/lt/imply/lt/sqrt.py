@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << algebra.lt.imply.lt_zero.apply(Eq[1])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.add.to.mul.st.square_difference)
+    Eq << Eq[-1].this.lhs.apply(algebra.sub.square.to.mul)
 
     Eq << algebra.gt_zero.lt.imply.lt.div.apply(Eq[-3], Eq[-1])
 

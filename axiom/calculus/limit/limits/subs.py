@@ -3,12 +3,12 @@ from util import *
 
 @apply
 def apply(self, y):
-    fx, (x, x0, dir) = self.of(Limit)
+    fx, (x, x0) = self.of(Limit)
     assert not self._has(y)
     assert y.is_symbol and not y.is_given
     fy = fx._subs(x, y)
 
-    return Equal(self, Limit[y:x0:dir](fy))
+    return Equal(self, Limit[y:x0](fy))
 
 
 @prove

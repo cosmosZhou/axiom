@@ -41,9 +41,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.square.to.mul.st.sum)
 
-    Eq << Eq[-1].this.lhs.args[1].apply(algebra.square.to.add.st.sum)
+    Eq << Eq[-1].this.lhs.args[1].apply(algebra.square.sum.to.add.sum)
 
-    Eq << Eq[-1].this.rhs.args[1].apply(algebra.square.to.add.st.sum)
+    Eq << Eq[-1].this.rhs.args[1].apply(algebra.square.sum.to.add.sum)
 
     Eq.le_given = Eq[-1] * m ** 2
 
@@ -199,7 +199,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.ratsimp()
 
-    Eq << (Sum[i](x_[i]) ** 2).this.apply(algebra.square.to.add.st.sum)
+    Eq << (Sum[i](x_[i]) ** 2).this.apply(algebra.square.sum.to.add.sum)
 
     Eq << Eq[-1].this.rhs.args[0].simplify()
 

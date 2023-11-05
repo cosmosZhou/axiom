@@ -3042,8 +3042,8 @@ function fullmatch($regexp, $str)
     $slash = $regexp[0];
     $i = strrpos($regexp, $slash);
 
-    $flags = slice($regexp, $i + 1);
-    $regexp = slice($regexp, 1, $i);
+    $flags = substring($regexp, $i + 1);
+    $regexp = substring($regexp, 1, $i);
 
     $regexp = "$slash^(?:${regexp})\$${slash}$flags";
 

@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << algebra.lt.le.imply.lt.transit.apply(Eq[-4], Eq[-1])
 
-    Eq << algebra.ge.given.gt.apply(Eq[6])
+    Eq << algebra.ge.given.gt.relax.apply(Eq[6])
 
 
 if __name__ == '__main__':

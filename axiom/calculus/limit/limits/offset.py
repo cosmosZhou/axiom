@@ -3,10 +3,10 @@ from util import *
 
 @apply
 def apply(self, offset):
-    fx, (x, x0, dir) = self.of(Limit)
+    fx, (x, x0) = self.of(Limit)
     fx = fx._subs(x, x + offset)
 
-    return Equal(self, Limit[x:x0 - offset:dir](fx))
+    return Equal(self, Limit[x:x0 - offset](fx))
 
 
 @prove

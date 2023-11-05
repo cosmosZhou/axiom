@@ -1,9 +1,6 @@
 from util import *
 
 
-
-
-
 @apply
 def apply(given, ε=None, δ=None):
     from axiom.calculus.eq.to.any_all.limit_definition import any_all
@@ -16,18 +13,10 @@ def apply(given, ε=None, δ=None):
 def prove(Eq):
     from axiom import calculus, algebra
 
-    n = Symbol(integer=True, positive=True)
-    x, x0, a = Symbol(real=True)
-    #x = Symbol(real=True, shape=(n,))
+    a = Symbol(real=True)
     x = Symbol(integer=True)
     f = Function(real=True, shape=())
-    #x0 = Symbol(real=True, shape=(n,))
-    x0 = oo
-    #x0 = -oo
-    #a = oo
-    #a = -oo
-    direction = 1
-    Eq << apply(Equal(Limit[x:x0:direction](f(x)), a))
+    Eq << apply(Equal(Limit[x:oo](f(x)), a))
 
     Eq << calculus.eq.to.any_all.limit_definition.apply(Eq[0])
 

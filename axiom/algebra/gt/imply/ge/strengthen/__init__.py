@@ -2,11 +2,16 @@ from util import *
 
 
 @apply
-def apply(given):
+def apply(given, step=1):
     lhs, rhs = given.of(Greater)
 
     assert lhs.is_extended_integer and rhs.is_extended_integer
-    return GreaterEqual(lhs, rhs + 1)
+    if step > 0:
+        rhs += 1
+    else:
+        lhs -= 1
+    
+    return GreaterEqual(lhs, rhs)
 
 
 @prove
@@ -18,8 +23,11 @@ def prove(Eq):
 
     Eq <<= Eq[0] & Eq[-1]
 
+    
+
 
 if __name__ == '__main__':
     run()
 from . import minus
 # created on 2018-05-12
+# updated on 2023-11-05

@@ -4,10 +4,10 @@ from util import *
 @apply
 def apply(limited_f, limited_g):
     from axiom.calculus.is_limited.imply.any.all.limit_definition import of_limited
-    fx, (x, x0, dir) = of_limited(limited_f, real=True)
-    gx, S[(x, x0, dir)] = of_limited(limited_g, real=True)
+    fx, (x, x0) = of_limited(limited_f, real=True)
+    gx, S[(x, x0)] = of_limited(limited_g, real=True)
 
-    return Equal(Limit[x:x0:dir](fx - gx), limited_f.lhs - limited_g.lhs)
+    return Equal(Limit[x:x0](fx - gx), limited_f.lhs - limited_g.lhs)
 
 
 @prove

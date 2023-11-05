@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << algebra.iff.given.et.infer.apply(Eq[0])
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.lt.imply.le.strengthen), Eq[-1].this.rhs.apply(algebra.lt.given.le)
+    Eq <<= Eq[-2].this.lhs.apply(algebra.lt.imply.le.strengthen), Eq[-1].this.rhs.apply(algebra.lt.given.le.strengthen)
 
     Eq <<= Eq[-2].this.lhs.reversed, Eq[-1].this.rhs.reversed
 

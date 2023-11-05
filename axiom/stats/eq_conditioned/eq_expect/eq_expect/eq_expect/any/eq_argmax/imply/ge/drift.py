@@ -5,7 +5,7 @@ from util import *
 def apply(eq, Q_def, V_def, MDV_def, any, eq_argmax):
     from axiom.keras.eq_conditioned.eq_expect.eq_expect.imply.et.eq.expect.Bellman import extract_QVA
     s, a, r, [π], γ, t, Q_st_var, V_st_var = extract_QVA(eq, Q_def, V_def)
-    (((S[Q_st_var._subs(a[t].var, a[t])], S[s[t].as_boolean()]), (a, π_quote)), ((), (S[Probability[a:π_quote](a[t] | s[t])], S[Probability[a:π](a[t] | s[t])]), S[Probability[π, π_quote](s[t])], S[Probability[s:π](s[t])])), MDV_st_var = MDV_def.of(Equal[Expectation[Conditioned] - KL * Expr / Expr])
+    (((S[Q_st_var._subs(a[t].var, a[t])], S[s[t].as_boolean()]), (a, π_quote)), ((S[Probability[a:π_quote](a[t] | s[t])], S[Probability[a:π](a[t] | s[t])]), S[Probability[π, π_quote](s[t])], S[Probability[s:π](s[t])])), MDV_st_var = MDV_def.of(Equal[Expectation[Conditioned] - KL * Expr / Expr])
     ((S[MDV_st_var._subs(s[t].var, s[t])._subs(t, 0)], (s, π)), [S[π_quote]]), π_tilde = eq_argmax.of(Equal[ArgMax[Expectation]])
 
     return V_st_var._subs(π, π_tilde) >= V_st_var, \
@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq.ne_zero = Eq[-1].subs(t, 0)
 
-    Eq << algebra.eq_argmax.imply.ge.apply(Eq[5])
+    Eq << algebra.eq_argmax.imply.all_ge.apply(Eq[5])
 
     Eq << Eq[-1].subs(π_quote, π_hat)
 

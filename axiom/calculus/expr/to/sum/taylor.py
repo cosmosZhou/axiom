@@ -11,7 +11,7 @@ def apply(fx, a, x=None, n=None):
     else:
         assert x in fx.free_symbols
 
-    return Equal(fx, Sum[n:oo]((x - a) ** n / factorial(n) * Subs[x:a](Derivative(fx, (x, n)))))
+    return Equal(fx, Sum[n:oo]((x - a) ** n / factorial(n) * Subs[x:a](Derivative[x ** n](fx))))
 
 
 @prove(proved=False)
@@ -22,6 +22,7 @@ def prove(Eq):
     Eq << apply(f(x), a, n=n)
 
     #https://en.wikipedia.org/wiki/Taylor_series
+    #https://en.wikipedia.org/wiki/Taylor%27s_theorem
 
 
 if __name__ == '__main__':

@@ -7,7 +7,8 @@ def apply(given, epsilon=None, delta=None):
 
 
 def any_all(given, epsilon=None, delta=None, upper=None):
-    (fx, (x, x0, direction)), a = given.of(Equal[Limit])
+    (fx, (x, x0)), a = given.of(Equal[Limit])
+    x0, direction = x0.clear_infinitesimal()
 
     if isinstance(epsilon, Basic):
         assert not epsilon.is_given
@@ -59,10 +60,10 @@ def any_all(given, epsilon=None, delta=None, upper=None):
         cond = (0 < Norm(x - x0)) & (Norm(x - x0) < delta)
     elif not x.is_real or direction == 0:
         cond = (0 < abs(x - x0)) & (abs(x - x0) < delta)
-    elif direction == 1:
+    elif direction > 0:
         cond = Interval(x0, x0 + delta, left_open=True, right_open=True)
         #cond = (0 < x - x0) & (x - x0 < delta)
-    elif direction == -1:
+    elif direction < 0:
         cond = Interval(x0 - delta, x0, left_open=True, right_open=True)
         #cond = (0 < x0 - x) & (x0 - x < delta)
     else:
@@ -81,17 +82,9 @@ def any_all(given, epsilon=None, delta=None, upper=None):
 
 @prove(provable=False)
 def prove(Eq):
-    n = Symbol(integer=True, positive=True)
     x, x0, a = Symbol(real=True)
-    x, x0 = Symbol(real=True, shape=(n,))
-    x = Symbol(integer=True)
     f = Function(real=True, shape=())
-    x0 = oo
-    #x0 = -oo
-    #a = oo
-    #a = -oo
-    direction = 1
-    Eq << apply(Equal(Limit[x:x0:direction](f(x)), a))
+    Eq << apply(Equal(Limit[x:x0 + S.Infinitesimal](f(x)), a))
 
     
 

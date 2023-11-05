@@ -18,7 +18,7 @@ def prove(Eq):
     f, g = Function(integer=True)
     Eq << apply(All[e:g(e) > 0](f(e) > 0), All[e:g(e) < 0](f(e) > 0))
 
-    Eq << algebra.all.imply.et.split.apply(Eq[-1], cond=g(e) < 0)
+    Eq << algebra.all.imply.et.all.split.apply(Eq[-1], cond=g(e) < 0)
 
 
 

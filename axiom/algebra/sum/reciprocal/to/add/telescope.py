@@ -20,9 +20,9 @@ def prove(Eq):
 
     Eq << Eq[0].subs(Eq[-1].reversed)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.telescope)
+    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.sub.telescope)
     #https://en.wikipedia.org/wiki/Telescoping_series
-    
+
 
 
 if __name__ == '__main__':

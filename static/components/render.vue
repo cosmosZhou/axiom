@@ -6,7 +6,7 @@
             <template v-if=given.latex>
                 <hr>
                 <h3 title='callee hierarchy'>
-                    <a style='font-size: inherit' :href=`/${user}/index.php?callee=${module}`>
+                    <a style='font-size: inherit' :href=`/${user}/?callee=${module}`>
                         <font color=blue>{{given_hint}}:</font>
                     </a>
                 </h3>
@@ -16,7 +16,7 @@
             <template v-if=where>
                 <hr>
                 <h3 title='caller hierarchy'>
-                    <a style='font-size: inherit' :href=`/${user}/index.php?caller=${module}`>
+                    <a style='font-size: inherit' :href=`/${user}/?caller=${module}`>
                         <font color=blue>where:</font>
                     </a>
                 </h3>
@@ -25,7 +25,7 @@
 
             <hr>
             <h3 title='callee hierarchy'>
-                <a style='font-size: inherit' :href=`/${user}/index.php?callee=${module}`>
+                <a style='font-size: inherit' :href=`/${user}/?callee=${module}`>
                     <font color=blue>{{imply_hint}}:</font>
                 </a>
             </h3>
@@ -33,7 +33,7 @@
 
             <hr>
             <h3 title='caller hierarchy'>
-                <a style='font-size: inherit' :href=`/${user}/index.php?caller=${module}`>
+                <a style='font-size: inherit' :href=`/${user}/?caller=${module}`>
                     <font color=blue>prove:</font>
                 </a>
             </h3>

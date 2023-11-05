@@ -38,9 +38,9 @@ def prove(Eq):
 
     Eq << algebra.iff.given.et.apply(Eq[-1])
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.all.given.et, cond={n + 1}), Eq[-1].this.rhs.apply(algebra.all.imply.et.split, cond={n + 1})
+    Eq <<= Eq[-2].this.rhs.apply(algebra.all.given.et.all, cond={n + 1}), Eq[-1].this.rhs.apply(algebra.all.imply.et.all.split, cond={n + 1})
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.all.given.et, cond={n}), Eq[-1].this.rhs.args[1].apply(algebra.all.imply.et.split, cond={n})
+    Eq <<= Eq[-2].this.rhs.apply(algebra.all.given.et.all, cond={n}), Eq[-1].this.rhs.args[1].apply(algebra.all.imply.et.all.split, cond={n})
 
 
 if __name__ == '__main__':

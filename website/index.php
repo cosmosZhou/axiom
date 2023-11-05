@@ -128,7 +128,7 @@ switch ($lang) {
 
 			<div style="float:right">
 				<?php echo $languageSelect ?>
-				<select align='left' onchange="location.href = `index.php?lang=${this.value}`">
+				<select align='left' onchange="location.href = `?lang=${this.value}`">
 					<option value=en <?php echo $lang == 'en'? 'selected': ''?>>English</option>
 					<option value=zh <?php echo $lang == 'zh'? 'selected': ''?>>简体中文</option>
 					<option value=fr <?php echo $lang == 'fr'? 'selected': ''?>>Français</option>
@@ -146,52 +146,52 @@ switch ($lang) {
 
 			<div id='sidebar'>
 				<div class='sidebar_heading'>
-					<a href='index.php?lang=<?php echo $lang ?>'><?php echo $home ?></a>
+					<a href='?lang=<?php echo $lang ?>'><?php echo $home ?></a>
 				</div>
 				<br>
 				<div class='sidebar_body'>
-					<a href='index.php?lang=<?php echo $lang ?>&section=bugReport'><?php echo $bugReport ?></a>
+					<a href='?lang=<?php echo $lang ?>&section=bugReport'><?php echo $bugReport ?></a>
 				</div>
 				<div class='sidebar_body'>
-					<a href='index.php?lang=<?php echo $lang ?>&section=participation'><?php echo $participation ?></a>
+					<a href='?lang=<?php echo $lang ?>&section=participation'><?php echo $participation ?></a>
 				</div>
 				<div class='sidebar_body'>
-					<a href='index.php?lang=<?php echo $lang ?>&section=contact'><?php echo $contact ?></a>
+					<a href='?lang=<?php echo $lang ?>&section=contact'><?php echo $contact ?></a>
 				</div>
 				<div class='sidebar_body'>
-					<a href='index.php?lang=<?php echo $lang ?>&section=history'><?php echo $history ?></a>
+					<a href='?lang=<?php echo $lang ?>&section=history'><?php echo $history ?></a>
 				</div>
 				<div class='sidebar_body'>
-					<a href='index.php?lang=<?php echo $lang ?>&section=roadMap'><?php echo $roadMap ?></a>
+					<a href='?lang=<?php echo $lang ?>&section=roadMap'><?php echo $roadMap ?></a>
 				</div>
 
 				<br>
 				<div class='sidebar_heading'><?php echo $userGuide ?></div>
 				<br>
 				<div class='sidebar_body'>
-					<a href="index.php?lang=<?php echo $lang ?>&section=elementary"
+					<a href="?lang=<?php echo $lang ?>&section=elementary"
 						title="<?php echo $elementaryExamples ?>">
 						<?php echo $elementaryExamples ?></a>
 				</div>
 				<div class='sidebar_body'>
-					<a href="index.php?lang=<?php echo $lang ?>&section=intermediate"
+					<a href="?lang=<?php echo $lang ?>&section=intermediate"
 						title="<?php echo $intermediateExamples ?>"><?php echo $intermediateExamples ?></a>
 				</div>
 				<div class='sidebar_body'>
-					<a href="index.php?lang=<?php echo $lang ?>&section=advanced"
+					<a href="?lang=<?php echo $lang ?>&section=advanced"
 						title="<?php echo $advancedExamples ?>">
 						<?php echo $advancedExamples ?></a>
 				</div>
 				<div class='sidebar_body'>
-					<a href="index.php?lang=<?php echo $lang ?>&section=faq"
+					<a href="?lang=<?php echo $lang ?>&section=faq"
 						title="<?php echo $faq ?>"><?php echo $faq ?></a>
 				</div>
 				<div class='sidebar_body'>
-					<a href="index.php?lang=<?php echo $lang ?>&section=designManual"
+					<a href="?lang=<?php echo $lang ?>&section=designManual"
 						title="<?php echo $designManual ?>"><?php echo $designManual ?></a>
 				</div>
 				<div class='sidebar_body'>
-					<a href="index.php?lang=<?php echo $lang ?>&section=userManual"
+					<a href="?lang=<?php echo $lang ?>&section=userManual"
 						title="<?php echo $userManual ?>"><?php echo $userManual ?></a>
 				</div>
 				<div class='sidebar_body'>

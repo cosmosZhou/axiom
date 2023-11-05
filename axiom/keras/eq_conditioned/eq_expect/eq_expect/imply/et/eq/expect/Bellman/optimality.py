@@ -17,7 +17,7 @@ def apply(eq, Q_def, V_def, Q_star_def, V_star_def):
         Equal(V_star_st_var, Expectation((r[t] + γ * V_star_st) | s[t], *limits_V)), \
         Equal(Q_star_st_var, Expectation((r[t] + γ * V_star_st) | s[t] & a[t], *limits_V))
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     from axiom import keras
 
@@ -40,6 +40,7 @@ def prove(Eq):
     Eq << keras.eq_conditioned.eq_expect.eq_expect.imply.et.eq.expect.Bellman.apply(*Eq[:3])
 
     Eq << Eq[3].subs(Eq[-1])
+
     #https://spinningup.openai.com/en/latest/spinningup/rl_intro.html#bellman-equations
     #http://incompleteideas.net/book/RLbook2020.pdf#page=85
     
@@ -48,3 +49,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-04-26
+# updated on 2023-10-03

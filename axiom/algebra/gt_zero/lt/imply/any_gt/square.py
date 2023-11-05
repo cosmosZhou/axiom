@@ -48,7 +48,7 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this.rhs.apply(algebra.gt.given.gt_zero), Eq[-1].this.rhs.apply(sets.el_interval.given.et)
 
-    Eq <<= Eq[-2].this.find(Add).apply(algebra.add.to.mul.st.square_difference), algebra.infer.given.et.infer.apply(Eq[-1])
+    Eq <<= Eq[-2].this.find(Add).apply(algebra.sub.square.to.mul), algebra.infer.given.et.infer.apply(Eq[-1])
 
     Eq <<= Eq[-3].this.rhs.apply(algebra.mul_gt_zero.given.et.gt_zero), Eq[-2].this.rhs * 2, Eq[-1].this.rhs * 2
 

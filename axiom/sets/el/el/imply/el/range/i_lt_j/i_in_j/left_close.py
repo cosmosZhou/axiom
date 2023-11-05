@@ -37,7 +37,7 @@ def prove(Eq):
 
     Eq << Eq[-2].reversed
 
-    Eq << algebra.ge.given.gt.apply(Eq[6])
+    Eq << algebra.ge.given.gt.relax.apply(Eq[6])
 
     Eq << algebra.lt.lt.imply.lt.transit.apply(Eq[-3], Eq[7])
 

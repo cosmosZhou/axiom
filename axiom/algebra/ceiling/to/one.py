@@ -19,9 +19,9 @@ def prove(Eq):
 
     Eq << sets.el_interval.given.et.apply(Eq[-1])
 
-    Eq << Eq[-2].this.find(Sign).apply(algebra.sign.to.piece)
+    Eq << Eq[-2].this.find(Sign).apply(algebra.sign.to.piece.abs)
 
-    Eq << Eq[-1].this.find(Sign).apply(algebra.sign.to.piece)
+    Eq << Eq[-1].this.find(Sign).apply(algebra.sign.to.piece.abs)
 
     Eq << Eq[-1] * abs(d)
 
@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << algebra.lt.imply.le.strengthen.apply(Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

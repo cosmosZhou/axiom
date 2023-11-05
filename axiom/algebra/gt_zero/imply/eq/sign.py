@@ -16,7 +16,7 @@ def prove(Eq):
 
     Eq << algebra.gt_zero.imply.eq.abs.apply(Eq[0])
 
-    Eq << Eq[1].lhs.this.apply(algebra.sign.to.piece)
+    Eq << Eq[1].lhs.this.apply(algebra.sign.to.piece.abs)
 
     Eq << Eq[-1].subs(Eq[-2])
 
@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[-1], Eq[-2])
 
-    
+
 
 
 if __name__ == '__main__':

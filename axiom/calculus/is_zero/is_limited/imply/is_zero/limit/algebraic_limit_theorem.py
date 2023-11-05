@@ -6,12 +6,12 @@ def apply(limited_f, limited_g):
     from axiom.calculus.is_limited.imply.any.all.limit_definition import of_limited
     limited_f = limited_f.of(Equal[0])
     fx, limit = limited_f.of(Limit)
-    (x, x0, dir) = limit 
+    x, x0 = limit 
 
     gx, S[limit], R = of_limited(limited_g)
 
     assert R.is_Interval
-    return Equal(Limit[x:x0:dir](fx * gx), 0)
+    return Equal(Limit[x:x0](fx * gx), 0)
 
 
 @prove
@@ -20,8 +20,7 @@ def prove(Eq):
 
     x, x0 = Symbol(real=True)
     f, g = Function(real=True)
-    dir = S.One
-    Eq << apply(Equal(Limit[x:x0:dir](f(x)), 0), Element(Limit[x:x0:dir](g(x)), Reals))
+    Eq << apply(Equal(Limit[x:x0 + S.Infinitesimal](f(x)), 0), Element(Limit[x:x0 + S.Infinitesimal](g(x)), Reals))
 
     ε = Symbol(real=True, positive=True)
     δ_0 = Symbol(real=True, positive=True)

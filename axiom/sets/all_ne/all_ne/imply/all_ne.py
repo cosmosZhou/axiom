@@ -35,7 +35,7 @@ def prove(Eq):
     Eq << apply(All[j:i, i:n](Unequal(x[i], x[j])),
                 All[i:n](Unequal(x[n], x[i])))
 
-    Eq << algebra.all.given.et.apply(Eq[-1], cond={n}, wrt=i)
+    Eq << algebra.all.given.et.all.apply(Eq[-1], cond={n}, wrt=i)
 
 
 

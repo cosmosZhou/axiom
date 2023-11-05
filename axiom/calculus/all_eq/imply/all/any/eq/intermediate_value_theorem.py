@@ -18,8 +18,8 @@ def is_continuous(f, a, b, x=None, xi=None, plausible=None):
 
 @apply
 def apply(given):
-    ((f, (z, xi, S[0])), S[f._subs(z, xi)]), (S[xi], domain) = given.of(All[Equal[Limit]])
-
+    ((f, (z, xi)), S[f._subs(z, xi)]), (S[xi], domain) = given.of(All[Equal[Limit]])
+    assert not xi.infinitesimality
     assert domain.is_Interval
     assert domain.is_closed
     

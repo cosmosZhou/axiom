@@ -39,3 +39,7 @@ from . import sub
 from . import block
 from . import lamda
 from . import square
+from . import gt_zero
+from . import el_interval
+from . import sec
+from . import csc

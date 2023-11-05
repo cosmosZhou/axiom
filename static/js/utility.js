@@ -81,7 +81,7 @@ function find_and_jump(event) {
 			module = module.slice(0, indexOfDot);
 			module += "&apply=0";
 		}
-		href = `/${user}/index.php?module=${module}`;
+		href = `/${user}/?module=${module}`;
 	}
 	else {
 		switch (module) {
@@ -92,10 +92,10 @@ function find_and_jump(event) {
 			case 'keras':
 			case 'sets':
 			case 'stats':
-				href = `/${user}/index.php?module=${module}`;
+				href = `/${user}/?module=${module}`;
 				break;
 			default:
-				href = `/${user}/index.php?symbol=${module}`;
+				href = `/${user}/?symbol=${module}`;
 		}
 	}
 

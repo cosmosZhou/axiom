@@ -4,10 +4,10 @@ from util import *
 @apply
 def apply(self):
     print(__file__, 'is doubtable')
-    expr, (x, x0, dir) = self.of(Limit)
+    expr, (x, x0) = self.of(Limit)
     args = expr.of(Add)
 
-    return Equal(self, Add(*(Limit[x:x0:dir](arg) for arg in args)))
+    return Equal(self, Add(*(Limit[x:x0](arg) for arg in args)))
 
 
 @prove(proved=False)

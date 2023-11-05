@@ -5,7 +5,7 @@ from util import *
 def apply(lt, n):
     x, a = lt.of(GreaterEqual)    
     assert a >= 0
-    assert n > 0
+    assert n >= 0 #n could be zero!
     return x ** n >= a ** n
 
 
@@ -38,3 +38,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-04-15
+# updated on 2023-10-04

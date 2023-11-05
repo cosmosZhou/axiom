@@ -39,7 +39,7 @@ def prove(Eq):
 
     Eq << Eq.hypothesis.this.expr.apply(algebra.cond.imply.all.restrict, (x[n + 1], 1, oo), simplify=None)
 
-    Eq << algebra.all.imply.all.et.apply(Eq[-1], index=0)
+    Eq << algebra.all.imply.all_et.apply(Eq[-1], index=0)
 
     Eq << algebra.all.imply.all.limits.merge.apply(Eq[-1])
 

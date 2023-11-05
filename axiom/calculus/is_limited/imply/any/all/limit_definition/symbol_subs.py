@@ -5,8 +5,7 @@ from util import *
 def apply(given, ε=None, δ=None, var=None):
     from axiom.calculus.is_limited.imply.any.all.limit_definition import of_limited
     from axiom.calculus.eq.to.any_all.limit_definition import any_all
-    fn, (x, x0, dir), *R = of_limited(given)
-#     A = given.generate_var(definition=given)
+    fn, (x, x0), *R = of_limited(given)
 
     A = fn.generate_var(excludes={x}, **fn.type.dict)
 
@@ -19,18 +18,9 @@ def apply(given, ε=None, δ=None, var=None):
 def prove(Eq):
     from axiom import calculus
 
-    n = Symbol(integer=True, positive=True)
-    x, x0, a = Symbol(real=True)
-    #x = Symbol(real=True, shape=(n,))
     x = Symbol(integer=True)
     f = Function(real=True, shape=())
-    #x0 = Symbol(real=True, shape=(n,))
-    x0 = oo
-    #x0 = -oo
-    #a = oo
-    #a = -oo
-    direction = 1
-    Eq << apply(Element(Limit[x:x0:direction](f(x)), Reals), var='A')
+    Eq << apply(Element(Limit[x:oo](f(x)), Reals), var='A')
 
     Eq << calculus.is_limited.imply.any.all.limit_definition.apply(Eq[0])
 

@@ -5,9 +5,10 @@ from util import *
 def apply(is_nonzero, eq, delta=None):
     A = is_nonzero.of(Unequal[0])
     assert A.is_real
-    fx, (x, x0, dir) = eq.of(Equal[Limit, A])
+    fx, (x, x0) = eq.of(Equal[Limit, A])
     if delta is None:
         delta = eq.generate_var(positive=True, var='delta')
+    x0, dir = x0.clear_infinitesimal()
     return Any[delta](All[x:(abs(x - x0) > 0) & ((abs(x - x0) < delta))](abs(fx) > abs(A) / 2))
 
 

@@ -6,7 +6,7 @@ def extract(x, *ab, function=None):
             domain = x.universalSet
         else:
             domain = function.domain_defined(x)
-    elif len(ab) == 1: 
+    elif len(ab) == 1:
         domain = ab[0]
 #         if domain.is_bool:
 #             domain = x.domain_conditioned(domain)
@@ -34,7 +34,7 @@ def apply(given, old, new):
 
     if limits:
         cond = All(cond, *limits)
-        
+
     return cond._subs(old, new)
 
 
@@ -48,9 +48,9 @@ def prove(Eq):
     s = Symbol(etype=dtype.integer)
     Eq << apply(All[x:n + 1](Element(f(x), s)), x, n)
 
-    Eq << algebra.all.imply.et.split.apply(Eq[0], cond={n})
+    Eq << algebra.all.imply.et.all.split.apply(Eq[0], cond={n})
 
-    
+
 
 
 if __name__ == '__main__':

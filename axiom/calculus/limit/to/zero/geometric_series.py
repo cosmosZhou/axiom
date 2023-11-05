@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    (x, n), (S[n], S[oo], S[-1]) = self.of(Limit[Pow])
+    (x, n), (S[n], S[oo]) = self.of(Limit[Pow])
     assert -1 < x < 1
     return Equal(self, ZeroMatrix(*x.shape))
 

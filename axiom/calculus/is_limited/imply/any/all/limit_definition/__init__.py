@@ -31,9 +31,7 @@ def of_limited(given, **kwargs):
 @apply
 def apply(given, ε=None, δ=None):
     from axiom.calculus.eq.to.any_all.limit_definition import any_all
-    fn, (x, x0, dir) = of_limited(given, real=True)
-#     A = given.generate_var(definition=given)
-
+    fn, (x, x0) = of_limited(given, real=True)
     A = fn.generate_var(excludes={x}, **fn.type.dict)
 
     cond = any_all(Equal(given.lhs, A), ε, δ)
@@ -44,18 +42,9 @@ def apply(given, ε=None, δ=None):
 def prove(Eq):
     from axiom import sets, calculus
 
-    n = Symbol(integer=True, positive=True)
-    x, x0, a = Symbol(real=True)
-    #x = Symbol(real=True, shape=(n,))
     x = Symbol(integer=True)
     f = Function(real=True, shape=())
-    #x0 = Symbol(real=True, shape=(n,))
-    x0 = oo
-    #x0 = -oo
-    #a = oo
-    #a = -oo
-    direction = 1
-    Eq << apply(Element(Limit[x:x0:direction](f(x)), Reals))
+    Eq << apply(Element(Limit[x:oo](f(x)), Reals))
 
     Eq << sets.el.imply.any_eq.apply(Eq[0], var='A')
 

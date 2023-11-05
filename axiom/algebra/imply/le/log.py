@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << algebra.cond.given.all.domain_defined.apply(Eq[-1])
 
-    Eq << algebra.all.given.et.apply(Eq[-1], cond=x >= 1)
+    Eq << algebra.all.given.et.all.apply(Eq[-1], cond=x >= 1)
 
     x0 = Symbol(domain=Interval(0, 1, left_open=True, right_open=True))
     x1 = Symbol(domain=Interval(1, oo))
@@ -39,7 +39,7 @@ def prove(Eq):
 
     Eq << calculus.le_zero.imply.le.monotony.apply(Eq.is_nonpositive)
 
-    
+
 
 
 if __name__ == '__main__':

@@ -4,3 +4,4 @@ from . import matrix
 from . import matmul
 from . import risingFactorial
 from . import fallingFactorial
+from . import mul

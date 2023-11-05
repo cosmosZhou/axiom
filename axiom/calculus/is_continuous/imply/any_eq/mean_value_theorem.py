@@ -3,7 +3,8 @@ from util import *
 
 @apply
 def apply(given):
-    ((f, (z, xi, S[0])), _f), (S[xi], domain) = given.of(All[Equal[Limit]])
+    ((f, (z, xi)), _f), (S[xi], domain) = given.of(All[Equal[Limit]])
+    assert not xi.infinitesimality
     a, b = domain.of(Interval)
     assert domain.is_closed
     assert _f == f._subs(z, xi)

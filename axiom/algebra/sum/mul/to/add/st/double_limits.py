@@ -19,11 +19,11 @@ def prove(Eq):
     x = Symbol(real=True, shape=(oo,))
     Eq << apply(Sum[j:i, i:n](x[i] * x[j]))
 
-    Eq << algebra.square.to.add.st.sum.apply(Eq[0].find(Pow[Sum]))
+    Eq << algebra.square.sum.to.add.sum.apply(Eq[0].find(Pow[Sum]))
 
     Eq << Eq[0].subs(Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

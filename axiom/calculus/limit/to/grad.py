@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self, var=None):
-    ((fx_epsilon, fx), ε), (S[ε], S[0], S[0]) = self.of(Limit[(Expr - Expr) / Symbol])
+    ((fx_epsilon, fx), ε), (S[ε], S[0]) = self.of(Limit[(Expr - Expr) / Symbol])
     if var is None:
         x, = fx.free_symbols
     else:

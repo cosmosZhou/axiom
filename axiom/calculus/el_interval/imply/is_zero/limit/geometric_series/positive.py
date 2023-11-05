@@ -47,7 +47,7 @@ def prove(Eq):
 
     Eq << algebra.imply.ceiling_ge.apply(Eq.ceiling_el.lhs.arg)
 
-    Eq << algebra.ge.imply.gt.relax.apply(Eq[-1], plus=True)
+    Eq << algebra.ge.imply.gt.relax.apply(Eq[-1], step=1)
 
     Eq << algebra.cond.infer.given.et.infer.et.apply(Eq[-1], Eq[-3])
 
@@ -55,11 +55,13 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.given.et.infer.et.apply(Eq.lt_zero, Eq[-1])
 
-
     Eq << Eq[-1].this.lhs.apply(algebra.lt_zero.gt.imply.lt.mul)
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-04-16
-# updated on 2023-04-17
+# updated on 2023-11-05

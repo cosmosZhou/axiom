@@ -20,7 +20,7 @@ def prove(Eq):
     g = Function(integer=True)
     Eq << apply(g(a - 1) > 0, All[k:a:b](g(k) > 0))
 
-    Eq << algebra.all.imply.et.split.apply(Eq[-1], cond={a - 1})
+    Eq << algebra.all.imply.et.all.split.apply(Eq[-1], cond={a - 1})
 
 
 

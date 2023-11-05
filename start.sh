@@ -202,4 +202,4 @@ else
 fi
 
 echo $start
-tail -100f error.log        
+tail -100f error.log

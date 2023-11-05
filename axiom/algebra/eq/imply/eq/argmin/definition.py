@@ -3,9 +3,8 @@ from util import *
 
 @apply
 def apply(given):
-    (function, (x,)), x0 = given.of(Equal[ArgMin])
-    fx0 = function._subs(x, x0)
-    return Equal(fx0, Minima[x](function))
+    (expr, limit), x0 = given.of(Equal[ArgMin])
+    return Equal(expr._subs(limit[0], x0), Minima(expr, limit))
 
 
 @prove(provable=False)
@@ -14,7 +13,11 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Equal(x0, ArgMin[x](f(x))))
 
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2019-04-13
+# updated on 2023-11-05

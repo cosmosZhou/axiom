@@ -480,7 +480,7 @@ def test_sparsemax():
     print(sum(z), sum(_z))
     print(z == _z)
 
-def PLU():
+def test_PLU():
 #     from sympy import *
     import numpy as np
     n = 7
@@ -491,6 +491,7 @@ def PLU():
     
     # X[:2] = X[1::-1]
     
+    from sympy import Matrix, Stirling, FallingFactorial
     A = Matrix(X)
     P, L, U = A.LUdecomposition()
     
@@ -518,5 +519,6 @@ def PLU():
 
 
 if __name__ == '__main__':
-    test_complement()
+    test_PLU()
+    #test_complement()
 #     test_select_greater()

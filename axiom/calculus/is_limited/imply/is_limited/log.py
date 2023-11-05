@@ -4,8 +4,8 @@ from util import *
 @apply
 def apply(is_limited):
     from axiom.calculus.is_limited.imply.any.all.limit_definition import of_limited
-    fx, (x, x0, dir) = of_limited(is_limited, positive=True)
-    return Element(Limit[x:x0:dir](log(fx)), Reals)
+    fx, (x, x0) = of_limited(is_limited, positive=True)
+    return Element(Limit[x:x0](log(fx)), Reals)
 
 
 @prove(proved=False)
@@ -13,7 +13,7 @@ def prove(Eq):
     from axiom import calculus, sets, algebra
 
     x, x0 = Symbol(real=True)
-    f, g = Function(real=True)
+    f = Function(real=True)
     Eq << apply(Element(Limit[x:x0](f(x)), Interval.open(0, oo)))
 
     epsilon, epsilon0, delta0 = Symbol(positive=True)

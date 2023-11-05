@@ -3,7 +3,7 @@ from util import *
 
 def of_continuous(cond):
     (limit, fxi), (xi, domain) = cond.of(All[Equal])
-    fz, (z, S[xi], S[0]) = limit.of(Limit)
+    fz, (z, S[xi]) = limit.of(Limit)
     assert fz._subs(z, xi) == fxi
     assert domain.is_closed
     return fz, (z, *domain.args)
@@ -57,14 +57,21 @@ def apply(lt, is_continuous, is_differentiable, equal):
     return Any[z:a:b](Equal(Derivative(fz, z), 0))
 
 
-@prove(proved=False)
+@prove
 def prove(Eq):
+    from axiom import calculus
+
     a, b = Symbol(real=True)
     f = Function(shape=(), real=True)
     from axiom.calculus.all_eq.imply.all.any.eq.intermediate_value_theorem import is_continuous
     Eq << apply(a < b, is_continuous(f, a, b), is_differentiable(f, a, b), Equal(f(a), f(b)))
 
+    #https://en.wikipedia.org/wiki/Rolle%27s_theorem
+    
+    
+
 
 if __name__ == '__main__':
     run()
 # created on 2020-04-03
+# updated on 2023-10-15

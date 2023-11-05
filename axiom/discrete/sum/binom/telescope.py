@@ -19,13 +19,13 @@ def prove(Eq):
     k = Symbol(integer=True)
     Eq << apply(Sum[k:n + 1]((-1) ** (n - k) * Binomial(n, k) * (f(x + k + 1) - f(x + k))))
 
-    Eq.diff = discrete.difference.to.sum.binom.apply(Difference(f(x), (x, n)), k)
+    Eq.diff = discrete.diff.to.sum.binom.apply(Difference(f(x), (x, n)), k)
 
     Eq.diff_1 = Eq.diff.subs(x, x + 1)
 
     Eq <<= Eq.diff.subs(n, n + 1)
 
-    Eq << Eq[-1].this.lhs.apply(discrete.difference.split, n)
+    Eq << Eq[-1].this.lhs.apply(discrete.diff.split, n)
 
     Eq << Eq[-1].this.lhs.doit()
 
@@ -37,7 +37,7 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-1], Eq[-4])
 
-    
+
 
 
 if __name__ == '__main__':

@@ -4,9 +4,10 @@ from util import *
 @apply
 def apply(limited_f, limited_g):
     from axiom.calculus.is_limited.imply.any.all.limit_definition import of_limited
-    fx, (x, x0, S[0]) = of_limited(limited_f, real=True)
-    gx, S[(x, x0, 0)] = of_limited(limited_g, nonzero=True)
+    fx, (x, x0) = of_limited(limited_f, real=True)
+    gx, S[(x, x0)] = of_limited(limited_g, nonzero=True)
 
+    assert not x0.infinitesimality
     return Equal(Limit[x:x0](fx / gx), limited_f.lhs / limited_g.lhs)
 
 

@@ -19,7 +19,7 @@ def prove(Eq):
     g = Function(integer=True)
     Eq << apply(g(b) > 0, All[k:a:b](g(k) > 0))
 
-    Eq << algebra.all.imply.et.split.apply(Eq[-1], cond={b})
+    Eq << algebra.all.imply.et.all.split.apply(Eq[-1], cond={b})
 
 
 if __name__ == '__main__':

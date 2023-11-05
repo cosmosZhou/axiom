@@ -45,9 +45,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.all.limits.subs.offset, -1).reversed
 
-    Eq << algebra.all.given.et.apply(Eq[1], cond={a})
+    Eq << algebra.all.given.et.all.apply(Eq[1], cond={a})
 
-    
+
 
 
 if __name__ == '__main__':

@@ -11,8 +11,8 @@ def apply(given):
 def prove(Eq):
     from axiom import algebra
 
-    x = Symbol(extended_complex=True, given=True)
-    b = Symbol(real=True, given=True)
+    x = Symbol(extended_complex=True)
+    b = Symbol(real=True)
     Eq << apply(x > b)
 
     Eq << Eq[-1].simplify()

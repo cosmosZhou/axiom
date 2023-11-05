@@ -11,7 +11,7 @@ def apply(eq, distributed_x, distributed_y):
     m, = y.shape
     return Distributed(BlockMatrix(x, y), NormalDistribution(ZeroMatrix(n + m), BlockMatrix([[Σ_x, Σ_xy], [Σ_xy.T, Σ_y]])))
 
-@prove
+@prove(proved=False)
 def prove(Eq):
     m, n = Symbol(integer=True, positive=True)
     x = Symbol(shape=(n,), real=True, random=True)
@@ -31,3 +31,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-04-30
+# updated on 2023-10-03

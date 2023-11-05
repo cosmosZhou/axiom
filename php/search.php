@@ -6,25 +6,36 @@
 require_once 'utility.php';
 require_once 'mysql.php';
 require_once 'std.php';
-require_once 'init.php';
-
-$user = get_user();
 $dict = empty($_POST) ? $_GET : $_POST;
 
-if (! $dict) {
-    // https://www.php.net/manual/en/function.getopt.php
-    $dict = getopt("", [
-        'keyword::',
-        'regularExpression::',
-        'caseSensitive::',
-        'wholeWord::'
-    ]);
-}
+// if (! $dict) {
+//     // https://www.php.net/manual/en/function.getopt.php
+//     $dict = getopt("", [
+//         'keyword::',
+//         'regularExpression::',
+//         'caseSensitive::',
+//         'wholeWord::',
+//         'latex::',
+//     ]);
+// }
 
-if (! array_key_exists("keyword", $dict)) {
+if (array_key_exists("keyword", $dict)) {
+    if ($dict["latex"] == 'on') {
+        $latex = $dict["keyword"];
+    }
+}
+else  {
     if (array_key_exists("state", $dict)) {
         $state = $dict["state"];
         $dict["keyword"] = null;
+    }
+    elseif (array_key_exists("latex", $dict)) {
+        $latex = $dict["latex"];
+        if ($dict["keyword"]) {
+            $latex = $dict["keyword"];
+        }
+        else 
+            $dict["keyword"] = null;
     } else {
         $dict["keyword"] = ".*";
         $dict["regularExpression"] = true;
@@ -35,12 +46,11 @@ $keyword = $dict["keyword"];
 $wholeWord = array_key_exists("wholeWord", $dict) ? true : false;
 $caseSensitive = array_key_exists("caseSensitive", $dict) ? true : false;
 $regularExpression = array_key_exists("regularExpression", $dict) ? true : false;
-$nlp = array_key_exists("nlp", $dict) ? true : false;
 
-error_log("wholeWord = $wholeWord");
-error_log("caseSensitive = $caseSensitive");
-error_log("regularExpression = $regularExpression");
-error_log("nlp = $nlp");
+// error_log("wholeWord = $wholeWord");
+// error_log("caseSensitive = $caseSensitive");
+// error_log("regularExpression = $regularExpression");
+// error_log("latex = $latex");
 
 $like = false;
 
@@ -53,28 +63,28 @@ if ($wholeWord) {
     $like = true;
 }
 
-if ($nlp){    
-    $modules = [];
-    foreach (std\list_all_files(dirname(dirname(__file__)).'/axiom', 'py') as $py){
-        $file = new std\Text($py);
-        //error_log("py = $py");
-        if (!$regularExpression && $file->find($keyword) || $regularExpression && $file->search($keyword)){
-            error_log("py = $py");
-            $modules[] = py_to_module($py);
+if ($latex){
+    // $_GET['user'] = 'user';
+    // include "include/bootstrap.inc.php";
+    // include "include/tmpfile.inc.php";    
+    //error_log('$latex = '.$latex);
+    $list = std\json_post('http://localhost:5000/latex/similarity', ['latex' => $latex]);
+}
+else  {
+    require_once 'init.php';
+    $user = get_user();
+    if ($like) {
+        if ($regex == null) {
+            $list = select_axiom_by_state($user, $state);
+        } else {
+            $list = select_axiom_by_like($user, $regex, $caseSensitive);
         }
-    }
-}
-elseif ($like) {
-    if ($regex == null) {
-        $modules = select_axiom_by_state($user, $state);
     } else {
-        $modules = select_axiom_by_like($user, $regex, $caseSensitive);
+        $list = select_axiom_by_regex($user, $regex, $caseSensitive);
     }
-} else {
-    $modules = select_axiom_by_regex($user, $regex, $caseSensitive);
+    
+    $list = std\encode($list);
 }
-
-// error_log(std\encode($modules));
 ?>
 
 <script src="static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
@@ -85,14 +95,29 @@ elseif ($like) {
 
 <script src="static/js/std.js"></script>
 <script src="static/js/utility.js"></script>
-<script type=module>
-createApp('searchResult', {
-    modules : <?php echo std\encode($modules)?>,
-	user: <?php echo std\encode($user)?>,
-	keyword: <?php echo std\encode($keyword)?>,
-	regularExpression: <?php echo std\encode($regularExpression)?>,
-	wholeWord: <?php echo std\encode($wholeWord)?>,
-	caseSensitive: <?php echo std\encode($caseSensitive)?>,
-});
+<script>
+MathJax = InitMathJax(1000);
+</script>
+<script async src="static/unpkg.com/mathjax@3.2.0/es5/tex-chtml.js"></script>
 
+<script type=module>
+var latex = <?php echo std\encode($latex)?>;
+var list = <?php echo $list?>;
+if (latex) {
+    createApp('searchLatexResult', {
+        list,
+	    latex,
+    });
+}
+else {
+    createApp('searchResult', {
+        list,
+        user: <?php echo std\encode($user)?>,
+        keyword: <?php echo std\encode($keyword)?>,
+        regularExpression: <?php echo std\encode($regularExpression)?>,
+        wholeWord: <?php echo std\encode($wholeWord)?>,
+        caseSensitive: <?php echo std\encode($caseSensitive)?>,
+        latex: <?php echo std\encode($latex)?>,
+    });
+}
 </script>
