@@ -53,10 +53,10 @@ def prove(Eq):
     def column_transformation(*limits):
         n = limits[0][-1]
         (i, *_), (j, *_) = limits
-    #return Identity(n) + Lamda[j:n, i:n](Piecewise((0, i < n - 1), (KroneckerDelta(j, n - 1) - 1, True)))
-    #return Identity(n) + Lamda[j:n, i:n](Piecewise((KroneckerDelta(j, n - 1) - 1, Equal(i, n - 1)), (0, True)))
+    # return Identity(n) + Lamda[j:n, i:n](Piecewise((0, i < n - 1), (KroneckerDelta(j, n - 1) - 1, True)))
+    # return Identity(n) + Lamda[j:n, i:n](Piecewise((KroneckerDelta(j, n - 1) - 1, Equal(i, n - 1)), (0, True)))
         return Identity(n) + Lamda[j:n, i:n](KroneckerDelta(i, n - 1) * (KroneckerDelta(j, n - 1) - 1))
-    #return Lamda(Piecewise((KroneckerDelta(i, j), i < n - 1), (2 * KroneckerDelta(j, n - 1) - 1, True)), *limits)
+    # return Lamda(Piecewise((KroneckerDelta(i, j), i < n - 1), (2 * KroneckerDelta(j, n - 1) - 1, True)), *limits)
     Eq << (D @ column_transformation(*D.limits)).this.apply(discrete.matmul.to.lamda)
 
     Eq << Eq[-1].this.find(Sum[2]).apply(algebra.sum.to.add.pop)

@@ -14,11 +14,11 @@ def prove(Eq):
     from axiom import algebra, stats
 
     b = Symbol(integer=True, positive=True)
-    s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    r = Symbol(shape=(oo,), real=True, random=True) #rewards
-    t = Symbol(integer=True, positive=True) #time counter
+    s = Symbol(shape=(oo, b), real=True, random=True) # states / observation
+    r = Symbol(shape=(oo,), real=True, random=True) # rewards
+    t = Symbol(integer=True, positive=True) # time counter
     k = Symbol(integer=True, nonnegative=True, given=False)
-    Eq << apply(Equal(r[t] | s[:t], r[t]), k) #history-irrelevant conditional independence assumption
+    Eq << apply(Equal(r[t] | s[:t], r[t]), k) # history-irrelevant conditional independence assumption
 
     Eq << Eq[1].subs(k, 0)
 

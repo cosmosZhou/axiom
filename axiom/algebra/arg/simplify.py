@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Ceiling).apply(algebra.ceiling.to.zero.arg)
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 if __name__ == '__main__':

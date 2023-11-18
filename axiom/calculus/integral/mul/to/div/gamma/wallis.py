@@ -14,9 +14,9 @@ def apply(self):
 def prove(Eq):
     from axiom import calculus, algebra
 
-    #m is the inductive variable
+    # m is the inductive variable
     m = Symbol(integer=True, positive=True, given=False)
-    #n is not an inductive variable
+    # n is not an inductive variable
     n = Symbol(integer=True, positive=True)
     x = Symbol(real=True)
     Eq << apply(Integral[x:0:S.Pi / 2](cos(x) ** (m - 1) * sin(x) ** (n - 1)))

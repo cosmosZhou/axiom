@@ -21,7 +21,7 @@ def prove(Eq):
     Eq << Eq[0].this.lhs.apply(keras.matmul.softmax.to.lamda.matmul.scaled_dot_product_attention, i)
 
     Eq << Eq[-1].this.lhs.apply(discrete.matmul.to.sum)
-    #https://arxiv.org/abs/1706.03762
+    # https://arxiv.org/abs/1706.03762
 
 
 if __name__ == '__main__':

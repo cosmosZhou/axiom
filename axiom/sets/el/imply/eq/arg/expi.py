@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << Eq[2].subs(Eq[-1])
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 if __name__ == '__main__':

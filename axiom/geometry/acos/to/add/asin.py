@@ -21,7 +21,7 @@ def prove(Eq):
     Eq << Eq[0].subs(x, -S.One / 2)
     Eq << Eq[0].subs(x, -1)
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 

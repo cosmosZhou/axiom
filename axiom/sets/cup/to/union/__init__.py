@@ -17,7 +17,7 @@ def prove(Eq):
     f, g = Function(etype=dtype.real)
     Eq << apply(Cup[x:A, y:B](f(x, y) | g(x, y)))
 
-    #Eq << apply(Cup[x:A](f(x) | g(x)))
+    # Eq << apply(Cup[x:A](f(x) | g(x)))
     Eq << sets.eq.given.et.infer.apply(Eq[0], wrt=y)
 
     Eq <<= Eq[-2].this.rhs.apply(sets.el_union.given.ou, simplify=False), \

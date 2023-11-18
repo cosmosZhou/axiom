@@ -10,15 +10,15 @@ def apply(eq_R):
 def prove(Eq):
     from axiom import algebra, sets
 
-    #n denotes sequence length (seq_length)
-    #b denotes 10000
+    # n denotes sequence length (seq_length)
+    # b denotes 10000
     n, b = Symbol(integer=True, positive=True)
-    #d denotes embedding size which must be even
+    # d denotes embedding size which must be even
     d = Symbol(integer=True, positive=True, even=True)
-    #R denotes rotary matrix
+    # R denotes rotary matrix
     R = Symbol(shape=(n, d, d), real=True)
-    #k, t denote token index
-    #i denotes row index
+    # k, t denote token index
+    # i denotes row index
     i, j, k, t = Symbol(integer=True)
     Eq << apply(Equal(R[t].T @ R[k], R[k - t]))
 

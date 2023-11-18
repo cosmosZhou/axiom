@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(discrete.fallingFactorial.to.reciprocal.fallingFactorial)
 
-    #https://en.wikipedia.org/wiki/Telescoping_series
+    # https://en.wikipedia.org/wiki/Telescoping_series
 
 
 

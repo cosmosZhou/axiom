@@ -13,7 +13,7 @@ def prove(Eq):
 
     b = Symbol(integer=True, positive=True)
     s = Symbol(shape=(oo, b), real=True, random=True)  # states / observation
-    Z = Symbol(shape=(b,), real=True, random=True) #modality
+    Z = Symbol(shape=(b,), real=True, random=True) # modality
     k = Symbol(integer=True)  # time step counter
     n = Symbol(integer=True, nonnegative=True, given=False)  # total time step
     Eq << apply(Product[k:n](Probability(s[k] | s[:k] & Z)))

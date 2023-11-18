@@ -26,10 +26,10 @@ def prove(Eq):
     from axiom import discrete
 
     n, m = Symbol(integer=True, positive=True)
-    #A = Symbol(shape=(m, m), complex=True)
-    #B = Symbol(shape=(n, n), complex=True)
-    #C = Symbol(shape=(m, n), complex=True)
-    #Eq << apply(Determinant(BlockMatrix([[A, C],[ZeroMatrix(n, m), B]])))
+    # A = Symbol(shape=(m, m), complex=True)
+    # B = Symbol(shape=(n, n), complex=True)
+    # C = Symbol(shape=(m, n), complex=True)
+    # Eq << apply(Determinant(BlockMatrix([[A, C],[ZeroMatrix(n, m), B]])))
     A = Symbol(shape=(m, m), complex=True)
     B = Symbol(shape=(n, n), complex=True)
     C = Symbol(shape=(m, n), complex=True)
@@ -49,7 +49,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(discrete.det.matmul.to.mul.right)
 
-    #Eq << Eq[-1].this.rhs.apply(discrete.det_blockMatrix.to.mul)
+    # Eq << Eq[-1].this.rhs.apply(discrete.det_blockMatrix.to.mul)
     Eq << Eq[-1] * (-1) ** (m*n)
 
 

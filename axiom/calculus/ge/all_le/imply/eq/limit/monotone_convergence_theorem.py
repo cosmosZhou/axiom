@@ -69,8 +69,8 @@ def prove(Eq):
 
     Eq << calculus.any_all.imply.eq.limit_definition.apply(Eq[-1])
 
-    #https://en.wikipedia.org/wiki/Least-upper-bound_property
-    #https://en.wikipedia.org/wiki/Monotone_convergence_theorem
+    # https://en.wikipedia.org/wiki/Least-upper-bound_property
+    # https://en.wikipedia.org/wiki/Monotone_convergence_theorem
 
 
 

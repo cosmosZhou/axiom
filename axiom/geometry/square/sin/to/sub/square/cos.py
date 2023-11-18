@@ -16,7 +16,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.trigsimp()
 
-    #https://baike.baidu.com/item/%E5%92%8C%E8%A7%92%E5%85%AC%E5%BC%8F
+    # https://baike.baidu.com/item/%E5%92%8C%E8%A7%92%E5%85%AC%E5%BC%8F
     
     
 

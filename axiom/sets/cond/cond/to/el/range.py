@@ -12,31 +12,31 @@ def apply(cond0, cond1):
     assert b.is_integer
 
     if cond0.is_Less:
-        #x < y
+        # x < y
         if cond1.is_Greater:
-            #a > b
+            # a > b
             if x == a:
                 e = x
                 s = Range(b + 1, y)
             else:
                 ...
         elif cond1.is_Less:
-            #a < b
+            # a < b
             if y == a:
                 e = a
                 s = Range(x + 1, b)
-        #x < y
+        # x < y
         if cond1.is_GreaterEqual:
-            #a >= b
+            # a >= b
             if x == a:
                 e = x
                 s = Range(b, y)
             else:
                 ...
     elif cond0.is_LessEqual:
-        #x < y
+        # x < y
         if cond1.is_GreaterEqual:
-            #a >= b
+            # a >= b
             if x == a:
                 e = x
                 s = Range(b, y + 1)

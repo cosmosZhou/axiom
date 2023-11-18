@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << algebra.infer.imply.et.infer.apply(Eq[-1])
 
-    #Eq <<= Eq[-2].this.apply(algebra.suffice.flatten), Eq[-1].this.apply(algebra.suffice.flatten)
+    # Eq <<= Eq[-2].this.apply(algebra.suffice.flatten), Eq[-1].this.apply(algebra.suffice.flatten)
 
 
 if __name__ == '__main__':

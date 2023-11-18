@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Integral[2]).apply(calculus.integral.to.mul)
 
-    #https://en.wikipedia.org/wiki/Cholesky_decomposition
+    # https://en.wikipedia.org/wiki/Cholesky_decomposition
     
 
 

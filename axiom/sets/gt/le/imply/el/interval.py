@@ -22,7 +22,7 @@ def prove(Eq):
     from axiom import sets
 
     a, b, x = Symbol(real=True, given=True)
-    #Eq << apply(x > b, x <= a)
+    # Eq << apply(x > b, x <= a)
     Eq << apply(b > x, a <= x)
 
     Eq << sets.el_interval.given.et.apply(Eq[-1])

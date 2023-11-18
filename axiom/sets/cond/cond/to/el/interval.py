@@ -7,9 +7,9 @@ def apply(cond0, cond1):
     a, b = cond1.args
 
     if cond0.is_Less:
-        #x < y
+        # x < y
         if cond1.is_Greater:
-            #a > b
+            # a > b
             if x == a:
                 e = x
                 left_open = True
@@ -19,16 +19,16 @@ def apply(cond0, cond1):
             else:
                 ...
         elif cond1.is_Less:
-            #a < b
+            # a < b
             if y == a:
                 e = a
                 left_open = True
                 right_open = True
                 start = x
                 stop = b
-        #x < y
+        # x < y
         if cond1.is_GreaterEqual:
-            #a >= b
+            # a >= b
             if x == a:
                 e = x
                 left_open = False
@@ -38,9 +38,9 @@ def apply(cond0, cond1):
             else:
                 ...
     elif cond0.is_LessEqual:
-        #x < y
+        # x < y
         if cond1.is_GreaterEqual:
-            #a >= b
+            # a >= b
             if x == a:
                 e = x
                 left_open = False

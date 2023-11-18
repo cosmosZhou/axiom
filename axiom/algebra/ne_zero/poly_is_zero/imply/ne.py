@@ -36,8 +36,8 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    #https://planetmath.org/QuarticFormula
-    #https://en.wikipedia.org/wiki/Quartic_equation
+    # https://planetmath.org/QuarticFormula
+    # https://en.wikipedia.org/wiki/Quartic_equation
 
 
 if __name__ == '__main__':

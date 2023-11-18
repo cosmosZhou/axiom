@@ -17,7 +17,7 @@ def prove(Eq):
     from axiom import calculus, algebra
 
     ε = Symbol(domain=Interval(0, 1, left_open=True, right_open=True))
-    #0 < ε < 1
+    # 0 < ε < 1
     r_t = Function(real=True, positive=True, shape=())
     A_t = Function(real=True, shape=())
     D = Symbol(integer=True, positive=True)

@@ -19,8 +19,8 @@ def prove(Eq):
     i, j = Symbol(integer=True)
     Eq << apply(Det(BlockMatrix([Lamda[j:n + 3](r ** j), Lamda[j:n + 3](j * r ** j), Lamda[j:n + 3](j ** 2 * r ** j), Lamda[j:n + 3, i:n](j ** i)])))
 
-    #reference:
-    #http://localhost/axiom/?module=discrete.det_block.to.mul.prod.vandermonde.st.lamda.pow.n2
+    # reference:
+    # http://localhost/axiom/?module=discrete.det_block.to.mul.prod.vandermonde.st.lamda.pow.n2
     j, i = Eq[0].lhs.arg.args[-1].variables
     E = Lamda[j:n + 3, i:n + 3]((-1) ** (j - i) * binomial(j, i))
     Eq << (Eq[0].lhs.arg @ E).this.apply(discrete.matmul.to.block)

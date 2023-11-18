@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self):
     x = self.of(acos)
-    #assert x in Interval(-1, 1)
+    # assert x in Interval(-1, 1)
     return Equal(self, Piecewise((ArcSin(sqrt(1 - x ** 2)), x >= 0), (S.Pi - ArcSin(sqrt(1 - x ** 2)), True)))
 
 
@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(geometry.lt_zero.imply.eq.add.asin)
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 if __name__ == '__main__':

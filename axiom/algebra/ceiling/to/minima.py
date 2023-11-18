@@ -13,8 +13,8 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(Ceiling(x))
 
-    #Eq << Eq[0].reversed + 1 - Floor(x)
-    #Eq << Eq[-1].this.lhs.apply(algebra.add.to.frac)
+    # Eq << Eq[0].reversed + 1 - Floor(x)
+    # Eq << Eq[-1].this.lhs.apply(algebra.add.to.frac)
 
 
 if __name__ == '__main__':

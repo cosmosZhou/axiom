@@ -5,7 +5,7 @@ from util import *
 def apply(lt, n):
     x, a = lt.of(GreaterEqual)    
     assert a >= 0
-    assert n >= 0 #n could be zero!
+    assert n >= 0 # n could be zero!
     return x ** n >= a ** n
 
 

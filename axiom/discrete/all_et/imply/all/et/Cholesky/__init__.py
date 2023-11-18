@@ -27,7 +27,7 @@ def prove(Eq):
     Eq.Ati_def, Eq.Lii_is_positive = algebra.all_et.imply.et.all.apply(Eq[-1])
 
     k = Symbol(domain=Range(t), given=False)
-    #apply the second mathematical induction
+    # apply the second mathematical induction
     Eq.hypothesis = All[j:k](Element(L[t, j], S.Complexes), plausible=True)
 
     Eq.induct = Eq.hypothesis.subs(k, k + 1)

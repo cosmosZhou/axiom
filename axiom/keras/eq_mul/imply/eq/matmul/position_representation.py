@@ -38,16 +38,16 @@ def apply(eq_theta, t):
 def prove(Eq):
     from axiom import discrete, algebra, geometry
 
-    #n denotes sequence length (seq_length)
-    #b denotes 10000
+    # n denotes sequence length (seq_length)
+    # b denotes 10000
     n, b = Symbol(integer=True, positive=True)
-    #d denotes embedding size which must be even
+    # d denotes embedding size which must be even
     d = Symbol(integer=True, positive=True, even=True)
     θ = Symbol(shape=(n, d / 2), real=True)
-    #k, t denote token index
-    #i denotes row index
+    # k, t denote token index
+    # i denotes row index
     i, k, t = Symbol(integer=True)
-    #λ denotes scaling factor
+    # λ denotes scaling factor
     λ = Symbol(real=True)
     Eq << apply(eq_theta(θ, d, b, k, i, λ), t)
 

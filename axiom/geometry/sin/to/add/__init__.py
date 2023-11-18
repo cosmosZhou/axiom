@@ -16,7 +16,7 @@ def prove(Eq):
 
     Eq << geometry.cos.to.sub.apply(cos(x + y))
 
-    #x = Add(*x)
+    # x = Add(*x)
     Eq << Eq[-1].subs(x, x + S.Pi / 2)
     Eq << -Eq[-1]
 

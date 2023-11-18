@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq << Eq[-2].this.lhs.apply(calculus.abs_le.is_oo.imply.any.is_limited.sequential_compactness_theorem, a)
 
-    #https://en.wikipedia.org/wiki/Bolzano%E2%80%93Weierstrass_theorem
+    # https://en.wikipedia.org/wiki/Bolzano%E2%80%93Weierstrass_theorem
     
 
 

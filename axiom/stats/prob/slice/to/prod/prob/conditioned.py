@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.rhs.apply(stats.prod.prob.conditioned.to.prob.slice)
 
-    #https://arxiv.org/pdf/1909.08593.pdf#2
+    # https://arxiv.org/pdf/1909.08593.pdf# 2
 
 
 

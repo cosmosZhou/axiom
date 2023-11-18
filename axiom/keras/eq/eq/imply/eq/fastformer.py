@@ -24,9 +24,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(MatMul).apply(discrete.matmul.to.sum)
 
-    #https://arxiv.org/pdf/2108.09084.pdf
-    #pytorch implementation:
-    #https://github.com/wuch15/Fastformer/blob/main/Fastformer.ipynb
+    # https://arxiv.org/pdf/2108.09084.pdf
+    # pytorch implementation:
+    # https://github.com/wuch15/Fastformer/blob/main/Fastformer.ipynb
     
 
 

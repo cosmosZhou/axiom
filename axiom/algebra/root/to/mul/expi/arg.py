@@ -29,8 +29,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(Arg).simplify()
 
-    #Eq << Eq[-1].this.lhs.find(Arg).apply(algebra.arg_expi.to.add.ceiling)
-    #Eq << Eq[-1].this.find(Ceiling).apply(algebra.ceiling.to.zero.arg)
+    # Eq << Eq[-1].this.lhs.find(Arg).apply(algebra.arg_expi.to.add.ceiling)
+    # Eq << Eq[-1].this.find(Ceiling).apply(algebra.ceiling.to.zero.arg)
 
 
 if __name__ == '__main__':

@@ -46,8 +46,8 @@ def prove(Eq):
     a, cond = Eq[-1].limits[0]
     from axiom.discrete.eq.imply.et.index import index_function
     index = index_function(n)
-    #p= Lamda[j:n](index[j](x, a))
-    #x[index[j](x, a)] = a[j]
+    # p= Lamda[j:n](index[j](x, a))
+    # x[index[j](x, a)] = a[j]
     Eq << Any[a:cond](All[p:P](Element(Lamda[k:n](a[p[k]]), S)))
 
     Eq << Any[a:cond](All[p:P](Equal(p, Lamda[j:n](index[j](Lamda[k:n](a[p[k]]), a)))))

@@ -25,7 +25,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     m, n, d, d_quote, l, r = Symbol(integer=True, positive=True)
-    #r is the dilation rate
+    # r is the dilation rate
     β = Symbol(shape=(m,), domain=Range(n))
     ζ = Symbol(shape=(m,), domain=Range(1, n + 1))
     x = Symbol(real=True, shape=(m, n, d))
@@ -94,7 +94,7 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(C.this.definition, C_quote.this.definition)
 
-    #https://arxiv.org/pdf/1408.5882.pdf
+    # https://arxiv.org/pdf/1408.5882.pdf
 
 
 

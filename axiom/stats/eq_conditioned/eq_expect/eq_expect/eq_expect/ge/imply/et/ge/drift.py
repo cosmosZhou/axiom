@@ -17,15 +17,15 @@ def prove(Eq):
     from axiom import algebra, keras, stats
 
     b, D = Symbol(integer=True, positive=True)
-    s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    a = Symbol(shape=(oo,), integer=True, random=True) #actions
-    r = Symbol(shape=(oo,), real=True, random=True) #rewards
-    t = Symbol(integer=True) #time step counter
-    π, π_quote = Symbol(shape=(D,), real=True) #trainable weights for the agent
-    V, Q = Function(real=True, shape=()) #State-Value, Action-Value Function
-    γ = Symbol(domain=Interval(0, 1, right_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
+    s = Symbol(shape=(oo, b), real=True, random=True) # states / observation
+    a = Symbol(shape=(oo,), integer=True, random=True) # actions
+    r = Symbol(shape=(oo,), real=True, random=True) # rewards
+    t = Symbol(integer=True) # time step counter
+    π, π_quote = Symbol(shape=(D,), real=True) # trainable weights for the agent
+    V, Q = Function(real=True, shape=()) # State-Value, Action-Value Function
+    γ = Symbol(domain=Interval(0, 1, right_open=True)) # Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
     MDV = Function(r'\mathcal{M}_\mathfrak{D}V', real=True, shape=())
-    *Eq[-5:], (Eq.ge_VF, Eq.ge_reward) = apply(Equal(r[t] | s[:t] & a[:t], r[t]), #history-irrelevant conditional independence assumption for rewards based on states and actions
+    *Eq[-5:], (Eq.ge_VF, Eq.ge_reward) = apply(Equal(r[t] | s[:t] & a[:t], r[t]), # history-irrelevant conditional independence assumption for rewards based on states and actions
                 Equal((Q[π] ^ γ)(s[t].var, a[t].var), γ ** Lamda[t](t) @ Expectation[r[t:], a:π](r[t:] | s[t] & a[t])),
                 Equal((V[π] ^ γ)(s[t].var), γ ** Lamda[t](t) @ Expectation[r[t:], a:π](r[t:] | s[t])),
                 Equal((MDV[π, π_quote] ^ γ)(s[t].var), Expectation[a:π_quote]((Q[π] ^ γ)(s[t].var, a[t]) | s[t]) - Probability[π, π_quote](s[t]) / Probability[s:π](s[t]) * KL(Probability[a:π_quote](a[t] | s[t]), Probability[a:π](a[t] | s[t]))),
@@ -125,10 +125,10 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq[-3], Eq[-4])
 
-    #https://arxiv.org/pdf/2201.02373.pdf
-    #https://arxiv.org/pdf/2211.11030.pdf
-    #https://arxiv.org/pdf/2205.01447.pdf
-    #https://arxiv.org/pdf/2210.05639.pdf
+    # https://arxiv.org/pdf/2201.02373.pdf
+    # https://arxiv.org/pdf/2211.11030.pdf
+    # https://arxiv.org/pdf/2205.01447.pdf
+    # https://arxiv.org/pdf/2210.05639.pdf
 
 
 

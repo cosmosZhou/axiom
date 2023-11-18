@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_range.imply.et)
 
-    #if self implies a False proposition, then self must be False
+    # if self implies a False proposition, then self must be False
     Eq << Eq[-1].this.expr.apply(algebra.cond.cond.ou.given.ou, simplify=False)
 
     Eq.any_ax, Eq.any_by = Any(Eq[-1].expr.args[0], *Eq[-1].limits, plausible=True), Any(Eq[-1].expr.args[1], *Eq[-1].limits, plausible=True)

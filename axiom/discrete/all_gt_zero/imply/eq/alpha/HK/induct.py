@@ -64,7 +64,7 @@ def prove(Eq):
 
     Eq.alpha_recurrence = Eq.induct.lhs.this.apply(discrete.all_gt_zero.imply.eq.alpha.recurrence)
 
-    #try to avoid using reciprocal expression, instead, using find(1 / Expr) to ensure logical correctness!
+    # try to avoid using reciprocal expression, instead, using find(1 / Expr) to ensure logical correctness!
     Eq << algebra.cond.imply.cond.subs.apply(Eq.hypothesis, x[:n + 1], BlockMatrix(x[:n], Eq.alpha_recurrence.find(Indexed + 1 / Indexed)))
 
     Eq << Eq[-1].this.rhs.lhs.apply(discrete.alpha.block)

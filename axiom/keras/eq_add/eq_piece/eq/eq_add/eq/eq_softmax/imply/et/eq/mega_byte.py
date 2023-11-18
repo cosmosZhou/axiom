@@ -33,37 +33,37 @@ def apply(eq_h_embed, eq_h_global_in, eq_h_global_out, eq_h_local_in, eq_h_local
 def prove(Eq):
     from axiom import algebra
 
-    #T is the byte sequence length
-    #P is the patch size which is normally set to 4
-    #V is the size of bytes vocabulary, ie 256;
-    #D_G is the global model dimension
-    #D_L is the local model dimension
+    # T is the byte sequence length
+    # P is the patch size which is normally set to 4
+    # V is the size of bytes vocabulary, ie 256;
+    # D_G is the global model dimension
+    # D_L is the local model dimension
     T, P, V, D_G, D_L = Symbol(integer=True, positive=True)
-    #the patch size K is defined as:
+    # the patch size K is defined as:
     K = Ceiling(T / P)
-    #t is index iterating from 0 ~ T, notes: t = k * P + p
-    #k is index iterating from 0 ~ K
-    #p is index iterating from 0 ~ P
-    #i is index iterating from 0 ~ P * D_G
+    # t is index iterating from 0 ~ T, notes: t = k * P + p
+    # k is index iterating from 0 ~ K
+    # p is index iterating from 0 ~ P
+    # i is index iterating from 0 ~ P * D_G
     t, i, k, p = Symbol(integer=True)
-    #the byte sequence: (integer numbers ranging from 0 ~ 255)
+    # the byte sequence: (integer numbers ranging from 0 ~ 255)
     x = Symbol(domain=Range(V), shape=(T,), random=True)
-    #the byte embedding lookup table in global model, which maps a byte to a tensor of shape (D_G,)
+    # the byte embedding lookup table in global model, which maps a byte to a tensor of shape (D_G,)
     E_global_embed = Symbol("E^global-embed", real=True, shape=(V, D_G))
-    #the byte embedding lookup table in local model, which maps a byte to a tensor of shape (D_L,)
+    # the byte embedding lookup table in local model, which maps a byte to a tensor of shape (D_L,)
     E_local_embed = Symbol("E^local-embed", real=True, shape=(V, D_L))
-    #a trainable global patch-sized padding embedding
+    # a trainable global patch-sized padding embedding
     E_global_pad = Symbol("E^global-pad", real=True, shape=(P * D_G,))
-    #a trainable local padding embedding
+    # a trainable local padding embedding
     E_local_pad = Symbol("E^local-pad", real=True, shape=(D_L,))
-    #the absolute position embedding lookup table which maps a position to a tensor of shape (D_G,)
+    # the absolute position embedding lookup table which maps a position to a tensor of shape (D_G,)
     E_pos = Symbol("E^pos", real=True, shape=(oo, D_G))
-    #the byte embeddings
+    # the byte embeddings
     h_embed = Symbol("h^embed", real=True, shape=(T, D_G))
-    #inputs and outputs of global transformer model
+    # inputs and outputs of global transformer model
     h_global_in = Symbol("h^global-in", real=True, shape=(K, P * D_G))
     h_global_out = Symbol("h^global-out", real=True, shape=(K, P * D_G))
-    #inputs and outputs of local transformer model
+    # inputs and outputs of local transformer model
     h_local_in = Symbol("h^local-in", real=True, shape=(K, P, D_L))
     h_local_out = Symbol("h^local-out", real=True, shape=(K, P, D_L))
     w_GL = Symbol("w^GL", real=True, shape=(D_G, D_L))
@@ -103,7 +103,7 @@ def prove(Eq):
     Eq << Eq[-2].subs(k, t // P).subs(p, t % P)
 
     Eq << Eq[-1].subs(Eq[-2].reversed)
-    #https://arxiv.org/pdf/2305.07185.pdf#page=3
+    # https://arxiv.org/pdf/2305.07185.pdf# page=3
 
 
 

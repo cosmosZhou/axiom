@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(is_negative, ge):
     x = is_negative.of(Expr < 0)
-    #assert x.is_finite
+    # assert x.is_finite
     lhs, rhs = ge.of(GreaterEqual)
     return LessEqual(lhs * x, rhs * x)
 

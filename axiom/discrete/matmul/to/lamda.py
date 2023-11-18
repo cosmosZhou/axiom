@@ -49,11 +49,11 @@ def apply(self, var=None, *, simplify=True):
 @prove(provable=False)
 def prove(Eq):
     n = Symbol(integer=True, positive=True)
-    #a = Symbol(shape=(n,), complex=True)
-    #B = Symbol(shape=(n, n), complex=True)
-    #A = Symbol(shape=(n, n), complex=True)
-    #b = Symbol(shape=(n,), complex=True)
-    #Eq << apply(A @ b)
+    # a = Symbol(shape=(n,), complex=True)
+    # B = Symbol(shape=(n, n), complex=True)
+    # A = Symbol(shape=(n, n), complex=True)
+    # b = Symbol(shape=(n,), complex=True)
+    # Eq << apply(A @ b)
     A, B = Symbol(shape=(n, n), complex=True)
     Eq << apply(A @ B)
 

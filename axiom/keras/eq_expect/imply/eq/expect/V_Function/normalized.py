@@ -19,12 +19,12 @@ def prove(Eq):
     from axiom import algebra, stats, calculus
 
     b = Symbol(integer=True, positive=True)
-    s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    a = Symbol(shape=(oo,), integer=True, random=True) #actions
-    r = Symbol(shape=(oo,), real=True, random=True) #rewards
-    t, k = Symbol(integer=True) #time countor
-    Q = Function(real=True, shape=()) #Action-Value Function
-    γ = Symbol(domain=Interval(0, 1, left_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
+    s = Symbol(shape=(oo, b), real=True, random=True) # states / observation
+    a = Symbol(shape=(oo,), integer=True, random=True) # actions
+    r = Symbol(shape=(oo,), real=True, random=True) # rewards
+    t, k = Symbol(integer=True) # time countor
+    Q = Function(real=True, shape=()) # Action-Value Function
+    γ = Symbol(domain=Interval(0, 1, left_open=True)) # Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
     Eq << apply(Equal((Q ^ γ)(s[t].var, a[t].var), (1 - γ) * γ ** Lamda[k](k) @ Expectation(r[t:] | s[t] & a[t])))
 
     Eq << algebra.cond.imply.cond.domain_defined.apply(Eq[0])

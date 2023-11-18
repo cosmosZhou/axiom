@@ -8,7 +8,7 @@ def apply(eq_pow):
     A = cubic_root(A)
     B = cubic_root(B)
 
-    #w = -S.One / 2 + sqrt(3) / 2 * S.ImaginaryUnit
+    # w = -S.One / 2 + sqrt(3) / 2 * S.ImaginaryUnit
     w = exp(S.ImaginaryUnit * 2 * S.Pi / 3)
     d = Ceiling(3 * Arg(A) / (S.Pi * 2) - S.One / 2) - Ceiling(3 * Arg(B) / (S.Pi * 2) - S.One/ 2)
     return Equal(A, B * w ** d)

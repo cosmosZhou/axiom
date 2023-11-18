@@ -42,7 +42,7 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.apply(algebra.sum.to.sub.unshift)
     Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.pop)
 
-    #https://en.wikipedia.org/wiki/Telescoping_series
+    # https://en.wikipedia.org/wiki/Telescoping_series
 
 
 if __name__ == '__main__':

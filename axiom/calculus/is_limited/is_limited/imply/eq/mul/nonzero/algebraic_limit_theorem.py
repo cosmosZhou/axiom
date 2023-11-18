@@ -98,7 +98,7 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-# https://en.wikipedia.org/wiki/Limit_of_a_function#Properties
+# https://en.wikipedia.org/wiki/Limit_of_a_function# Properties
 
 # created on 2020-04-16
 # updated on 2021-10-02

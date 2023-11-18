@@ -33,7 +33,7 @@ def prove(Eq):
 
 
 
-    #https://en.wikipedia.org/wiki/Telescoping_series
+    # https://en.wikipedia.org/wiki/Telescoping_series
 
 
 

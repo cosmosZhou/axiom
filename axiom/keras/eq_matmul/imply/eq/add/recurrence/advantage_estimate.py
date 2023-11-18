@@ -12,9 +12,9 @@ def apply(eq):
 def prove(Eq):
     from axiom import discrete, algebra
 
-    t, i = Symbol(integer=True) #time step counter
+    t, i = Symbol(integer=True) # time step counter
     A, δ = Symbol(shape=(oo,), real=True) # advantages and TD residuals
-    γ = Symbol(domain=Interval(0, 1, right_open=True)) #Discount factor
+    γ = Symbol(domain=Interval(0, 1, right_open=True)) # Discount factor
     Eq << apply(Equal(A[t], γ ** Lamda[i](i) @ δ[t:]))
 
     Eq << Eq[0].this.rhs.apply(discrete.matmul.to.add.shift)

@@ -50,11 +50,11 @@ def rotary_matrix(i, j, k, clustered=False):
 def prove(Eq):
     from axiom import geometry, algebra
 
-    #n denotes sequence length (seq_length)
+    # n denotes sequence length (seq_length)
     n = Symbol(integer=True, positive=True)
-    #R denotes rotary matrix
+    # R denotes rotary matrix
     R = Symbol(shape=(n, n, n, 6, 6), real=True)
-    #k, t denote token index
+    # k, t denote token index
     i, j, k, i_quote, j_quote, k_quote = Symbol(integer=True)
     Eq << apply(Equal(R[i, j, k], rotary_matrix(i, j, k)), i_quote, j_quote, k_quote)
 

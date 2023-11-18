@@ -6,7 +6,7 @@ def rewrite(Sum, self, index):
     x, = limits[index]
     x, (start, stop) = x.of(Sliced)
     assert start <= stop - 1
-    #allow empty slices in summation??
+    # allow empty slices in summation??
     limits[index] = x[stop - 1],
     limits.insert(index, x[start:stop - 1])
     return Sum(expr, *limits)

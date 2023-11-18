@@ -368,8 +368,8 @@ CREATE TABLE `hierarchy` (
 PARTITION BY KEY() PARTITIONS 8'''
             self.execute(sql)
                       
-#ai = accent insensitivity; ci = case insensitivity
-#as = accent sensitivity  ; cs = case sensitivity 
+# ai = accent insensitivity; ci = case insensitivity
+# as = accent sensitivity  ; cs = case sensitivity 
             sql = '''\
 CREATE TABLE `hint` (
   `prefix` varchar(36) NOT NULL,

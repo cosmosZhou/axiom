@@ -70,12 +70,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.lt.imply.le.relax)
 
-    #reference:
-    #https://www.zhihu.com/question/355479801
-    #related paper:
-    #https://www.zhihu.com/question/431618787
-    #https://www.zhihu.com/question/534567781
-    #https://www.zhihu.com/question/471643309
+    # reference:
+    # https://www.zhihu.com/question/355479801
+    # related paper:
+    # https://www.zhihu.com/question/431618787
+    # https://www.zhihu.com/question/534567781
+    # https://www.zhihu.com/question/471643309
 
 
 

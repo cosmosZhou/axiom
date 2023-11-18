@@ -19,7 +19,7 @@ def prove(Eq):
     f, g = Function(real=True)
     Eq << apply(Limit[x:x0](f(x)), y)
 
-    #we assume this limit exists and is real
+    # we assume this limit exists and is real
     A = Symbol(Eq[0].rhs, real=True)
     Eq << A.this.definition
 

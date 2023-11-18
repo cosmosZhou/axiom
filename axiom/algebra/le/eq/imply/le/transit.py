@@ -12,11 +12,11 @@ def prove(Eq):
     from axiom import algebra
 
     a, x, b = Symbol(real=True)
-    #Eq << apply(a <= x, Equal(b, a))
-    #Eq << apply(a <= x, Equal(a, b))
+    # Eq << apply(a <= x, Equal(b, a))
+    # Eq << apply(a <= x, Equal(a, b))
     Eq << apply(a <= x, Equal(x, b))
 
-    #Eq << apply(a <= x, Equal(b, x))
+    # Eq << apply(a <= x, Equal(b, x))
     Eq << Eq[0] + Eq[1]
 
     Eq << Eq[-1].this.apply(algebra.le.simplify.terms.common)

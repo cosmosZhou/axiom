@@ -34,7 +34,7 @@ def prove(Eq):
     Eq <<= Eq[-1] & Eq[0]
     Eq <<= ~Eq.gt & ~Eq.lt
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 if __name__ == '__main__':

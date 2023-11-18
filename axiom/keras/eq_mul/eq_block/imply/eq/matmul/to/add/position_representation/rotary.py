@@ -13,20 +13,20 @@ def apply(eq_theta, eq_R, xt):
 def prove(Eq):
     from axiom import algebra, discrete, geometry
 
-    #n denotes sequence length (seq_length)
-    #b denotes 10000
+    # n denotes sequence length (seq_length)
+    # b denotes 10000
     n, b = Symbol(integer=True, positive=True)
-    #d denotes embedding size which must be even
+    # d denotes embedding size which must be even
     d = Symbol(integer=True, positive=True, even=True)
-    #x_k denotes token embedding at index k (ie, x denotes sentence embedding)
+    # x_k denotes token embedding at index k (ie, x denotes sentence embedding)
     x = Symbol(shape=(n, d), real=True)
-    #R denotes rotary matrix function
+    # R denotes rotary matrix function
     R = Function(shape=(d, d), real=True)
     θ = Symbol(shape=(n, d / 2), real=True)
-    #k denotes token index
-    #i denotes row index
+    # k denotes token index
+    # i denotes row index
     i, k, t = Symbol(integer=True)
-    #λ denotes scaling factor
+    # λ denotes scaling factor
     λ = Symbol(real=True)
     Eq << apply(*rotary_matrix(R, θ, d, b, k, i, λ), x[t])
 
@@ -63,8 +63,8 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq[0].reversed)
 
-    #reference:
-    #https://nn.labml.ai/transformers/rope/index.html
+    # reference:
+    # https://nn.labml.ai/transformers/rope/index.html
     
     
 

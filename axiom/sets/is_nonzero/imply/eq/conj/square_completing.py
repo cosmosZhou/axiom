@@ -36,7 +36,7 @@ def quadratic_coefficient(self, z=None):
 def apply(el, self, z=None):
     a, R = el.of(Element)
     assert not R & {0} and R in Reals
-    #coeffs[i, j] is the coefficient of z ** i * (~z) ** j
+    # coeffs[i, j] is the coefficient of z ** i * (~z) ** j
     z, coeffs = quadratic_coefficient(self, z)
 
     S[a] = coeffs[1][1]
@@ -45,7 +45,7 @@ def apply(el, self, z=None):
     c = coeffs[0][0]
     if c is None:
         c = 0
-    #assert a.is_real
+    # assert a.is_real
     rest = c - b * ~b / a
     z += ~b / a
     return Equal(self, a * z * ~z + rest, evaluate=False)

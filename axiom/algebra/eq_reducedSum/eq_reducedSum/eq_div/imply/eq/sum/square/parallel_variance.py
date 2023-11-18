@@ -56,7 +56,7 @@ def prove(Eq):
 
     
     Eq << Eq[-1].this.apply(algebra.eq.transport, lhs=slice(2, None))
-    #http://i.stanford.edu/pub/cstr/reports/cs/tr/79/773/CS-TR-79-773.pdf
+    # http://i.stanford.edu/pub/cstr/reports/cs/tr/79/773/CS-TR-79-773.pdf
     
 
 

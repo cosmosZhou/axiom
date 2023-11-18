@@ -28,7 +28,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Factorial2).apply(discrete.factorial2.to.mul.factorial)
 
-    #https://reference.wolfram.com/language/ref/Factorial2.html
+    # https://reference.wolfram.com/language/ref/Factorial2.html
 
     
 

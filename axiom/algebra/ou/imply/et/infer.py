@@ -27,9 +27,9 @@ def detect_nonoverlapping_conds(eqs):
             if x[i] >= len(eqs[i]):
                 break
         else:
-            #ensure that x[:i] and x[i] are coherent before continue
+            # ensure that x[:i] and x[i] are coherent before continue
             continue
-        #if in current position i, we couldn't find a feasible cond, it is possible to revert back and try again.
+        # if in current position i, we couldn't find a feasible cond, it is possible to revert back and try again.
         i -= 1
         x[i] += 1  # backtracking to the previous index.
         while not check_validity(eqs, x, i):

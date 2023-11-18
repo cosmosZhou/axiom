@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(eq, i):
     ((r, t), ((s, (S[0], S[t])), S[s[:t].var])), S[r[t]] = eq.of(Equal[Conditioned[Indexed, Equal[Sliced]]])
-    #assert t >= 0
+    # assert t >= 0
     assert s.is_random and r.is_random
     return All[i:t](Equal(r[t] | s[i], r[t]))
 
@@ -14,12 +14,12 @@ def prove(Eq):
     from axiom import stats, algebra, sets
 
     b = Symbol(integer=True, positive=True)
-    s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    r = Symbol(shape=(oo,), real=True, random=True) #rewards
-    t = Symbol(integer=True) #time counter
+    s = Symbol(shape=(oo, b), real=True, random=True) # states / observation
+    r = Symbol(shape=(oo,), real=True, random=True) # rewards
+    t = Symbol(integer=True) # time counter
     i = Symbol(integer=True)
     Eq << apply(
-        Equal(r[t] | s[:t], r[t]), i) #history-irrelevant conditional independence assumption
+        Equal(r[t] | s[:t], r[t]), i) # history-irrelevant conditional independence assumption
 
     Eq << stats.eq_conditioned.imply.eq_conditioned.independence_assumption.future.apply(Eq[0])
 

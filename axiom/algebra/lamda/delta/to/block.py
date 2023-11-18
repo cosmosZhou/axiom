@@ -8,7 +8,7 @@ def apply(self):
         c, hj = hj, c
 
     b, a = hj.of_simple_poly(j)
-    #a * j + b = c
+    # a * j + b = c
     if a == 1:
         i = c - b
     elif a == -1:

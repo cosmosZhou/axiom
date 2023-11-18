@@ -34,7 +34,7 @@ def prove(Eq):
 
     m, d, d_quote = Symbol(integer=True, positive=True)
     n, l, r = Symbol(shape=(2,), integer=True, positive=True)
-    #r = dilation rate
+    # r = dilation rate
     β0 = Symbol("β^0", shape=(m,), domain=Range(n[0]))
     ζ0 = Symbol("ζ^0", shape=(m,), domain=Range(1, n[0] + 1))
     β1 = Symbol("β^1", shape=(m,), domain=Range(n[1]))
@@ -67,7 +67,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.piece)
 
-    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.nest, pivot=slice(1, None, 2))#select cond with j
+    Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.nest, pivot=slice(1, None, 2))# select cond with j
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.separate.piece)
 

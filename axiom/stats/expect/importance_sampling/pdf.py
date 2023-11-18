@@ -30,7 +30,7 @@ def prove(Eq):
     from axiom import stats
 
     D = Symbol(integer=True, positive=True)
-    #D denotes the size of the trainable weights
+    # D denotes the size of the trainable weights
     x = Symbol(real=True, random=True)
     θ, θ_quote = Symbol(real=True, shape=(D,))
     f = Function(real=True, shape=())

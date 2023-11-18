@@ -20,20 +20,20 @@ def apply(eq_cosine_similarity, eq_rotary_ABF):
 def prove(Eq):
     from axiom import discrete, algebra, sets, geometry
 
-    #N denotes sequence length (seq_length)
-    #b denotes 10000 adjusted to 500000
+    # N denotes sequence length (seq_length)
+    # b denotes 10000 adjusted to 500000
     N, b = Symbol(integer=True, positive=True)
-    #d denotes embedding size which must be even
+    # d denotes embedding size which must be even
     d = Symbol(integer=True, positive=True, even=True)
-    #x denotes token embedding at index k (ie, x denotes sentence embedding)
+    # x denotes token embedding at index k (ie, x denotes sentence embedding)
     x = Symbol(shape=(d,), real=True)
-    #R denotes rotary matrix function
+    # R denotes rotary matrix function
     R = Function(shape=(d, d), real=True)
     θ = Symbol(shape=(N, d / 2), real=True)
-    #k denotes token index
-    #i denotes row index
+    # k denotes token index
+    # i denotes row index
     i, k, j, t = Symbol(integer=True)
-    #α, β denotes scaling factor
+    # α, β denotes scaling factor
     α = Symbol(domain=Interval.Lopen(0, 1))
     β = Symbol(domain=Interval.Lopen(1, oo))
     f_RoPE = Function('f^{RoPE}', complex=True, shape=(d / 2,))
@@ -169,7 +169,7 @@ def prove(Eq):
 
     Eq.sum_ge_piece = Eq[-1].this.find(Piecewise).apply(algebra.piece.swap)
 
-    #Eq << Less(1 / (b * β) ** (2 / d), 1, plausible=True)
+    # Eq << Less(1 / (b * β) ** (2 / d), 1, plausible=True)
     Eq << Less(1 / (b * β), 1, plausible=True)
 
     Eq << algebra.lt.imply.lt.pow.apply(Eq[-1], 2 / d, evaluate=False)
@@ -230,8 +230,8 @@ def prove(Eq):
 
     Eq << sets.gt_zero.el.imply.el.div.apply(Eq[-1], Eq[-3])
 
-    #reference:
-    #https://arxiv.org/pdf/2309.16039.pdf#page=18
+    # reference:
+    # https://arxiv.org/pdf/2309.16039.pdf# page=18
     
     
 

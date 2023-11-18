@@ -16,14 +16,14 @@ def prove(Eq):
     from axiom import discrete, algebra, keras
 
     k = Symbol(domain=Range(2, oo))
-    #k is the size of the rank list
+    # k is the size of the rank list
     r = Symbol(real=True, shape=(k,))
     R, D = Symbol(real=True, shape=(k, k))
     i, j = Symbol(integer=True)
     Eq << apply(
-    #the following is equivalent to r.unsqueeze(-2) in pytorch
+    # the following is equivalent to r.unsqueeze(-2) in pytorch
         Equal(R, r * OneMatrix(k, k)),
-    #the following is equivalent to torch.arange(k).unsqueeze(0) in pytorch
+    # the following is equivalent to torch.arange(k).unsqueeze(0) in pytorch
         Equal(D, Lamda[i:k](i) * OneMatrix(k, k)), j)
 
     A = Symbol(Eq[-1].find(Mul[Sign]))
@@ -73,8 +73,8 @@ def prove(Eq):
 
     Eq << algebra.eq.imply.eq.transport.apply(Eq[-1], rhs=0).reversed
 
-    #reference:
-    #https://arxiv.org/pdf/2203.02155.pdf#page=8
+    # reference:
+    # https://arxiv.org/pdf/2203.02155.pdf# page=8
     
     
 

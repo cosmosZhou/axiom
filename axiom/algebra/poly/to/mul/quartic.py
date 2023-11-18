@@ -14,7 +14,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.rhs.expand()
 
-    #https://en.wikipedia.org/wiki/Sophie_Germain#Memorials
+    # https://en.wikipedia.org/wiki/Sophie_Germain# Memorials
 
 
 if __name__ == '__main__':

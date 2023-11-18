@@ -19,7 +19,7 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Integral[x:a:b](f(x)) + Integral[x:b:c](f(x)))
 
-    #Eq << Eq[0].this.find(Integral).apply(calculus.integral.to.limit.maxima.Darboux)
+    # Eq << Eq[0].this.find(Integral).apply(calculus.integral.to.limit.maxima.Darboux)
 
     
 

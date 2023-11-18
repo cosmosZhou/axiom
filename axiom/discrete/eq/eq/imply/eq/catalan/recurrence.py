@@ -13,7 +13,7 @@ def prove(Eq):
     from axiom import algebra, calculus, discrete, sets
 
     n, k = Symbol(integer=True)
-    #n = Symbol(integer=True, nonnegative=True)
+    # n = Symbol(integer=True, nonnegative=True)
     C = Symbol(shape=(oo,), integer=True)
     Eq << apply(Equal(C[0], 1),
                 Equal(C[n + 1], Sum[k:n + 1](C[k] * C[n - k])))

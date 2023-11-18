@@ -15,7 +15,7 @@ def prove(Eq):
     from axiom import algebra
 
     ε = Symbol(domain=Interval(0, 1, left_open=True, right_open=True))
-    #0 < ε < 1
+    # 0 < ε < 1
     r_t = Symbol(real=True, positive=True)
     A_t = Symbol(real=True)
     Eq << apply(Min(r_t * A_t, clip(r_t, 1 - ε, 1 + ε) * A_t))

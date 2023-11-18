@@ -26,8 +26,8 @@ def prove(Eq):
 
     Eq << algebra.ne_zero.imply.eq.square_completing.apply(Eq[1], Eq[0].lhs, simplify=None)
 
-    #Eq << Eq[0].this.rhs.expand()
-    #https://en.wikipedia.org/wiki/Completing_the_square
+    # Eq << Eq[0].this.rhs.expand()
+    # https://en.wikipedia.org/wiki/Completing_the_square
 
 
 

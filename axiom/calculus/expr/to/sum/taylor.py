@@ -21,8 +21,8 @@ def prove(Eq):
     n = Symbol(integer=True)
     Eq << apply(f(x), a, n=n)
 
-    #https://en.wikipedia.org/wiki/Taylor_series
-    #https://en.wikipedia.org/wiki/Taylor%27s_theorem
+    # https://en.wikipedia.org/wiki/Taylor_series
+    # https://en.wikipedia.org/wiki/Taylor%27s_theorem
 
 
 if __name__ == '__main__':

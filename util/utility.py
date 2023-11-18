@@ -562,7 +562,7 @@ def run():
     if len(s) == 2:
         file = s[0].filename
     else:
-        #file = s[5].filename # for eclipse
+        # file = s[5].filename # for eclipse
         file = s[8].filename# for vscode
         
     package = py_to_module(file)

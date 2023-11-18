@@ -17,7 +17,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     a, b, x = Symbol(integer=True, given=True)
-    #Eq << apply(x > b, a > x)
+    # Eq << apply(x > b, a > x)
     Eq << apply(b > x, x > a)
 
     Eq << sets.el_range.given.et.apply(Eq[-1])
@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed
 
-    #Eq << Eq[-2].reversed
+    # Eq << Eq[-2].reversed
 
 
 if __name__ == '__main__':

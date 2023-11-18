@@ -46,9 +46,9 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-3], Eq[-1])
 
-    #reference:
-    #Self-Attention with Relative Position Representations.pdf
-    #https://arxiv.org/abs/1803.02155
+    # reference:
+    # Self-Attention with Relative Position Representations.pdf
+    # https://arxiv.org/abs/1803.02155
     
 
 

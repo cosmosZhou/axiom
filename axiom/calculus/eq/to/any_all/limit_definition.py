@@ -62,10 +62,10 @@ def any_all(given, epsilon=None, delta=None, upper=None):
         cond = (0 < abs(x - x0)) & (abs(x - x0) < delta)
     elif direction > 0:
         cond = Interval(x0, x0 + delta, left_open=True, right_open=True)
-        #cond = (0 < x - x0) & (x - x0 < delta)
+        # cond = (0 < x - x0) & (x - x0 < delta)
     elif direction < 0:
         cond = Interval(x0 - delta, x0, left_open=True, right_open=True)
-        #cond = (0 < x0 - x) & (x0 - x < delta)
+        # cond = (0 < x0 - x) & (x0 - x < delta)
     else:
         ...
 
@@ -92,7 +92,7 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # https://baike.baidu.com/item/戴德金定理
-# https://baike.baidu.com/item/单调有界定理#3
+# https://baike.baidu.com/item/单调有界定理# 3
 # The monotone bounded convergence theorem
 # created on 2020-04-03
 # updated on 2023-04-17

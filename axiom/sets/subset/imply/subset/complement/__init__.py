@@ -22,7 +22,7 @@ def prove(Eq):
     V = Symbol(B - S)
     Eq << V.this.definition
 
-    #Eq << sets.subset.imply.subset.intersection.apply(Eq[-1], V, simplify=None)
+    # Eq << sets.subset.imply.subset.intersection.apply(Eq[-1], V, simplify=None)
     Eq << sets.subset.imply.eq.intersect.apply(Eq[0])
 
     Eq <<= (C & V).this.subs(C.this.definition, V.this.definition)

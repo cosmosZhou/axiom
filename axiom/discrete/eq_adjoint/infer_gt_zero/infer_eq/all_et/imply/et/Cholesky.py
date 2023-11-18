@@ -77,12 +77,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.args[1:3].apply(algebra.add.to.sum)
 
-    #converting A[j, i] to ~A[i, j] if j < i
+    # converting A[j, i] to ~A[i, j] if j < i
     Eq << Eq[-1].subs(Eq[0][j, i].reversed)
 
     Eq << Eq[-1].this.find(Sum[2]).apply(algebra.sum.limits.swap.intlimit)
 
-    #converting all A expression to L expression: A[i, j] = L[i, j] + .... if i < j
+    # converting all A expression to L expression: A[i, j] = L[i, j] + .... if i < j
     Eq << algebra.all_et.imply.all.apply(Eq[5]).limits_subs(j, i)
 
     Eq << algebra.all_eq.cond.imply.all.subs.apply(Eq[-1], Eq[-2])

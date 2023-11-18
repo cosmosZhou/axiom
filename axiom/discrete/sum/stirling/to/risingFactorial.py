@@ -16,7 +16,7 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(Sum[k:n + 1](x ** k * Stirling1(n, k)))
 
-    #try to prove it by inspecting the recurrence relations of the coefficients!
+    # try to prove it by inspecting the recurrence relations of the coefficients!
     Eq << Eq[0].subs(n, n + 1)
 
     Eq << Eq[1].this.find(Stirling1).apply(discrete.stirling1.to.add.recurrence)

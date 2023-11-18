@@ -18,28 +18,28 @@ def apply(eq_theta_r, eq_theta_c, eq_R, Q, K, V, r, c, t):
 def prove(Eq):
     from axiom import keras, discrete, algebra, geometry
 
-    #n denotes sequence length (seq_length)
-    #b_r, b_c denotes 10000
+    # n denotes sequence length (seq_length)
+    # b_r, b_c denotes 10000
     n = Symbol(integer=True, positive=True)
     format_supscript = r"^{\color{magenta} %s}"
     format_r = '%s' + format_supscript % 'r'
     format_c = '%s' + format_supscript % 'c'
     b_r = Symbol(format_r.replace('^', '_') % 'b', integer=True, positive=True)
     b_c = Symbol(format_c.replace('^', '_') % 'b', integer=True, positive=True)
-    #d, d_r, d_c denotes embedding size which must be divisible by 2, under the condition that d = d_r + d_c
+    # d, d_r, d_c denotes embedding size which must be divisible by 2, under the condition that d = d_r + d_c
     d_r = Symbol(format_r % 'd', integer=True, positive=True, even=True)
     d_c = Symbol(format_c % 'd', integer=True, positive=True, even=True)
     d = d_r + d_c
-    #R denotes rotary matrix function
+    # R denotes rotary matrix function
     R = Function(shape=(d, d), real=True)
     θ_r = Symbol(format_r % "θ", shape=(n, d_r / 2), real=True)
     θ_c = Symbol(format_c % "θ", shape=(n, d_c / 2), real=True)
-    #t denotes time step
-    #i denotes row index, j denotes column index
+    # t denotes time step
+    # i denotes row index, j denotes column index
     i, j, t, k = Symbol(integer=True)
-    #r, c denote the row index and column index respectively, each token has a (r[t], c[t]) two-demensional index
+    # r, c denote the row index and column index respectively, each token has a (r[t], c[t]) two-demensional index
     r, c = Symbol(integer=True, shape=(n,))
-    #λ denotes scaling factor, default to 1
+    # λ denotes scaling factor, default to 1
     λ_r = Symbol(format_r % "λ", real=True)
     λ_c = Symbol(format_c % "λ", real=True)
     Q, K, V = Symbol(shape=(n, d), real=True)

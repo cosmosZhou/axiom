@@ -8,7 +8,7 @@ def apply(given, old, new):
     assert old == n
     m = new + n + 1
     assert not m._has(n)
-    #assert m == a + b
+    # assert m == a + b
     return All[n:m - b:m - a](expr._subs(old, new))
 
 

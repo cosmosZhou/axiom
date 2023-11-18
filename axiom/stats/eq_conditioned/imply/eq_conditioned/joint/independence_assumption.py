@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(eq):
     ((r, t), (((a, (S[0], S[t])), S[a[:t].var]), ((s, (S[0], S[t])), S[s[:t].var]))), S[r[t]] = eq.of(Equal[Conditioned[Indexed, Equal[Sliced] & Equal[Sliced]]])
-    #assert t >= 0
+    # assert t >= 0
     assert s.is_random and r.is_random and a.is_random
     return Equal(r[t + 1:] | s[t] & a[t], r[t + 1:])
 
@@ -14,13 +14,13 @@ def prove(Eq):
     from axiom import stats, algebra
 
     b = Symbol(integer=True, positive=True)
-    s = Symbol(shape=(oo, b), real=True, random=True) #states
-    a = Symbol(shape=(oo,), integer=True, random=True) #actions
-    r = Symbol(shape=(oo,), real=True, random=True) #rewards
-    t = Symbol(integer=True, positive=True) #time counter
+    s = Symbol(shape=(oo, b), real=True, random=True) # states
+    a = Symbol(shape=(oo,), integer=True, random=True) # actions
+    r = Symbol(shape=(oo,), real=True, random=True) # rewards
+    t = Symbol(integer=True, positive=True) # time counter
     k = Symbol(integer=True, positive=True, given=False)
     Eq << apply(
-        Equal(r[t] | s[:t] & a[:t], r[t])) #history-irrelevant conditional independence assumption
+        Equal(r[t] | s[:t] & a[:t], r[t])) # history-irrelevant conditional independence assumption
 
     Eq << stats.eq_conditioned.imply.eq_conditioned.getitem.apply(Eq[0])
 

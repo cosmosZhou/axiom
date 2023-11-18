@@ -16,7 +16,7 @@ def prove(Eq):
     A, B = Symbol(etype=dtype.integer)
     Eq << apply(Cup[x:A](f(x)), cond=B)
 
-    return #the following will result in recursive proving!
+    return # the following will result in recursive proving!
     Eq << sets.eq.given.suffice.apply(Eq[0], wrt='y')
     Eq <<= Eq[-2].this.rhs.apply(sets.element.given.ou.split.union), \
     Eq[-1].this.lhs.apply(sets.element.imply.ou.split.union)

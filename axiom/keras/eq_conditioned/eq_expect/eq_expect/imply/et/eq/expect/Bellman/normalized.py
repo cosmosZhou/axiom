@@ -50,13 +50,13 @@ def prove(Eq):
     from axiom import keras, algebra, stats
 
     b = Symbol(integer=True, positive=True)
-    s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    a = Symbol(shape=(oo,), integer=True, random=True) #actions
-    r = Symbol(shape=(oo,), real=True, random=True) #rewards
-    t = Symbol(integer=True) #time step counter
-    V, Q = Function(real=True, shape=()) #State-Value, Action-Value Function
-    γ = Symbol(domain=Interval(0, 1, right_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
-    Eq << apply(Equal(r[t] | s[:t] & a[:t], r[t]), #history-irrelevant conditional independence assumption for rewards based on states and actions
+    s = Symbol(shape=(oo, b), real=True, random=True) # states / observation
+    a = Symbol(shape=(oo,), integer=True, random=True) # actions
+    r = Symbol(shape=(oo,), real=True, random=True) # rewards
+    t = Symbol(integer=True) # time step counter
+    V, Q = Function(real=True, shape=()) # State-Value, Action-Value Function
+    γ = Symbol(domain=Interval(0, 1, right_open=True)) # Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
+    Eq << apply(Equal(r[t] | s[:t] & a[:t], r[t]), # history-irrelevant conditional independence assumption for rewards based on states and actions
                 Equal((Q ^ γ)(s[t].var, a[t].var), (1 - γ) * γ ** Lamda[t](t) @ Expectation(r[t:] | s[t] & a[t])),
                 Equal((V ^ γ)(s[t].var), (1 - γ) * γ ** Lamda[t](t) @ Expectation(r[t:] | s[t])))
 

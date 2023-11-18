@@ -18,7 +18,7 @@ def prove(Eq):
     from axiom import sets
 
     x, a, b = Symbol(real=True)
-    #t = Symbol(real=True)
+    # t = Symbol(real=True)
     d = 2
     Eq << apply(Element(x, Interval(a, b)), d)
 

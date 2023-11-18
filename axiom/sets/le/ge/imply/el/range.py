@@ -16,7 +16,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     a, b, x = Symbol(integer=True, given=True)
-    #Eq << apply(x >= b, a >= x)
+    # Eq << apply(x >= b, a >= x)
     Eq << apply(x <= b, x >= a)
 
     Eq << sets.el_range.given.et.apply(Eq[-1])

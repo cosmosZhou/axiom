@@ -7,7 +7,7 @@ def apply(eq0, eq1, wrt=None):
     f = lhs - rhs
     f = f.as_poly(wrt)
     assert f.degree() == 1
-    #f = a * x + b
+    # f = a * x + b
     a, b = f.nth(1), f.nth(0)
     assert a.is_zero == False
     f = -b / a

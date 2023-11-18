@@ -65,7 +65,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Add).apply(algebra.add.to.mul)
 
-    #https://arxiv.org/abs/1412.6980
+    # https://arxiv.org/abs/1412.6980
     
     
 

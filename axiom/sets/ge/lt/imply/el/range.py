@@ -22,11 +22,11 @@ def prove(Eq):
     a, b, x = Symbol(integer=True, given=True)
     Eq << apply(x >= b, x < a)
 
-    #Eq << apply(b >= x, a < x)
+    # Eq << apply(b >= x, a < x)
     Eq << sets.el_range.given.et.apply(Eq[-1])
 
-    #Eq << Eq[-1].reversed
-    #Eq << Eq[-2].reversed
+    # Eq << Eq[-1].reversed
+    # Eq << Eq[-2].reversed
     
 
 

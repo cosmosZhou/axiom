@@ -34,7 +34,7 @@ def prove(Eq):
     C = Symbol(complex=True, shape=(n, n - 1))
     Eq << apply(Determinant(BlockMatrix([[A, B],[C, ZeroMatrix(n, n + 1)]])))
 
-    #algebra.gt.imply.lt.add.min
+    # algebra.gt.imply.lt.add.min
     
 
 

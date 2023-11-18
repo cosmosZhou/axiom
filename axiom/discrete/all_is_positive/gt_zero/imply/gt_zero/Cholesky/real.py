@@ -49,7 +49,7 @@ def prove(Eq):
 
     Eq << Eq.gt_zero.subs(Eq[-4], Eq[-1], Eq.eq_square_Lkk)
 
-    #now start the square completing process:
+    # now start the square completing process:
     Eq << sets.is_positive.imply.is_positive.square.apply(Eq.Lkk_is_positive)
 
     Eq << sets.is_nonzero.imply.eq.square_completing.apply(Eq[-1], Add(*[arg for arg in Eq[-2].lhs.args if arg._has(ξ[k])]), ξ[k], simplify=None)

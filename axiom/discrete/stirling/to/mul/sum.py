@@ -32,7 +32,7 @@ def prove(Eq):
     Eq << Eq[-3].subs(Eq[-1].reversed, Eq[-2].reversed)
 
     j = Symbol(integer=True)
-    #Eq << Eq[-1].this.apply(algebra.eq.rsolve.linear, j)
+    # Eq << Eq[-1].this.apply(algebra.eq.rsolve.linear, j)
     Eq << algebra.eq.imply.eq.rsolve.apply(Eq[-1], j)
 
     Eq << Eq[-1].this.rhs.args[0].args[0].defun()

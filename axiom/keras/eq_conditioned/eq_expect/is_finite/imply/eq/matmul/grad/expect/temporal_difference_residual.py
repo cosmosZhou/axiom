@@ -15,20 +15,20 @@ def prove(Eq):
     from axiom import keras, stats
 
     b, D = Symbol(integer=True, positive=True)
-    s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
+    s = Symbol(shape=(oo, b), real=True, random=True) # states / observation
     
-    a = Symbol(shape=(oo,), integer=True, random=True) #actions
-    r = Symbol(shape=(oo,), real=True, random=True) #rewards
-    π = Symbol(shape=(D,), real=True) #trainable weights for the agent
-    t = Symbol(integer=True) #time step counter
-    V = Function(real=True, shape=()) #State-Value Function
-    γ = Symbol(domain=Interval(0, 1, right_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
+    a = Symbol(shape=(oo,), integer=True, random=True) # actions
+    r = Symbol(shape=(oo,), real=True, random=True) # rewards
+    π = Symbol(shape=(D,), real=True) # trainable weights for the agent
+    t = Symbol(integer=True) # time step counter
+    V = Function(real=True, shape=()) # State-Value Function
+    γ = Symbol(domain=Interval(0, 1, right_open=True)) # Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
     *Eq[-3:], Eq.hypothesis = apply(
-                Equal(r[t] | s[:t] & a[:t], r[t]), #history-irrelevant conditional independence assumption for rewards based on states and actions
+                Equal(r[t] | s[:t] & a[:t], r[t]), # history-irrelevant conditional independence assumption for rewards based on states and actions
                 Equal((V[π] ^ γ)(s[t].var), γ ** Lamda[t](t) @ Expectation[r[t:], a:π](r[t:] | s[t])),
                 Less(Sup[s[t].var, t](Abs(Derivative[π]((V[π] ^ γ)(s[t].var)))), oo))
 
-    @Function(real=True, shape=())#Action-Value Function
+    @Function(real=True, shape=())# Action-Value Function
     def Q(st, at, *limits):
         [π], [γ] = limits
         s_var, t = st.of(Indexed)
@@ -38,7 +38,7 @@ def prove(Eq):
     Eq.Q_Function = (Q[π] ^ γ)(s[t].var, a[t].var).this.defun()
 
     @Function(real=True, shape=())
-    def A(st, at, *limits): #Advantage Function
+    def A(st, at, *limits): # Advantage Function
         [π], [γ] = limits
         return (Q[π] ^ γ)(st, at) - (V[π] ^ γ)(st)
     Eq.A_Function = (A[π] ^ γ)(s[t].var, a[t].var).this.defun()

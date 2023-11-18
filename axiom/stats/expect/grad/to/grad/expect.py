@@ -16,7 +16,7 @@ def prove(Eq):
     from axiom import stats, calculus
 
     D, n = Symbol(integer=True, positive=True)
-    #D denotes the size of the trainable weights
+    # D denotes the size of the trainable weights
     x = Symbol(real=True, shape=(n,), random=True)
     θ = Symbol(real=True, shape=(D,))
     f = Function(real=True)

@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(discrete.binom.to.mul)
 
-    #Eq << Eq[-1] * Factorial(k)
+    # Eq << Eq[-1] * Factorial(k)
 
     Eq << Eq[-1].this.find(Factorial).apply(discrete.factorial.to.prod)
 

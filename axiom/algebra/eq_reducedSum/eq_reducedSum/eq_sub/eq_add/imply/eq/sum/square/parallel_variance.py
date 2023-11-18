@@ -41,7 +41,7 @@ def prove(Eq):
     Eq << algebra.eq_reducedSum.eq_reducedSum.eq_div.imply.eq.sum.square.parallel_variance.apply(*Eq[:2], Eq[-1], k)
 
     Eq << Eq[-1].subs(Eq[2].reversed)
-    #https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Parallel_algorithm
+    # https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance# Parallel_algorithm
     
 
 

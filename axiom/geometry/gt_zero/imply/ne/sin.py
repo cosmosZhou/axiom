@@ -77,7 +77,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Expr > 0).apply(algebra.gt_zero.imply.gt_zero.square)
 
-    #updated on 2023-10-03
+    # updated on 2023-10-03
 
 
 # updated on 2023-10-03

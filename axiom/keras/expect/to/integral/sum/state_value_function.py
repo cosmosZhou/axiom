@@ -15,12 +15,12 @@ def prove(Eq):
     from axiom import stats, calculus
 
     b, D = Symbol(domain=Range(2, oo))
-    #D denotes the size of the trainable weights
-    s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    a = Symbol(shape=(oo,), integer=True, random=True) #actions
-    r = Symbol(shape=(oo,), real=True, random=True) #rewards
-    t, k = Symbol(integer=True) #time countor
-    γ = Symbol(domain=Interval(0, 1, right_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
+    # D denotes the size of the trainable weights
+    s = Symbol(shape=(oo, b), real=True, random=True) # states / observation
+    a = Symbol(shape=(oo,), integer=True, random=True) # actions
+    r = Symbol(shape=(oo,), real=True, random=True) # rewards
+    t, k = Symbol(integer=True) # time countor
+    γ = Symbol(domain=Interval(0, 1, right_open=True)) # Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
     Eq << apply(Expectation[r[t + 1:], s[t + 1:], a[t:]](Sum[k:oo](γ ** k * r[t + k + 1]) | s[t]))
 
     Eq << Eq[-1].lhs.this.apply(stats.expect.to.sum)
@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[~Integral]).apply(stats.integral.to.prob.marginal)
 
-    #http://incompleteideas.net/book/bookdraft2017nov5.pdf (Bellman equation Eq. 3.14)
+    # http://incompleteideas.net/book/bookdraft2017nov5.pdf (Bellman equation Eq. 3.14)
 
 
 

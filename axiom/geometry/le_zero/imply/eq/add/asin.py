@@ -50,7 +50,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.imply.el.div.interval, S.Pi)
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 

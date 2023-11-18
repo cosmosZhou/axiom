@@ -15,7 +15,7 @@ def apply(ne_zero, self):
     [*terms] = self.of(Add)
 
     AI = A.inverse()
-    #find quadratic term
+    # find quadratic term
     for i, term in enumerate(terms):
         if term.is_MatMul:
             args = term.args
@@ -32,7 +32,7 @@ def apply(ne_zero, self):
         return
 
     del terms[i]
-    #find simple term
+    # find simple term
     for i, term in enumerate(terms):
         if term.is_MatMul:
             args = term.args
@@ -88,7 +88,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Add).apply(discrete.add.to.matmul)
 
-    #https://en.wikipedia.org/wiki/Completing_the_square#Matrix_case
+    # https://en.wikipedia.org/wiki/Completing_the_square# Matrix_case
     
 
 

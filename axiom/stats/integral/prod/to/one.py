@@ -12,8 +12,8 @@ def prove(Eq):
     from axiom import calculus, algebra, stats
 
     b = Symbol(integer=True, positive=True)
-    s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    t = Symbol(integer=True) #time step counter
+    s = Symbol(shape=(oo, b), real=True, random=True) # states / observation
+    t = Symbol(integer=True) # time step counter
     n = Symbol(integer=True, nonnegative=True, given=False)
     Eq.hypothesis = apply(Integral[s[1:n + 1].var](Product[t:n](Probability(s[t + 1] | s[t]))))
 

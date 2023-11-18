@@ -139,8 +139,8 @@ def prove(Eq):
 
     Eq << Eq.root.subs(Eq[-1], Eq[-2])
 
-    #https://planetmath.org/QuarticFormula
-    #https://en.wikipedia.org/wiki/Quartic_equation
+    # https://planetmath.org/QuarticFormula
+    # https://en.wikipedia.org/wiki/Quartic_equation
 
 
 if __name__ == '__main__':

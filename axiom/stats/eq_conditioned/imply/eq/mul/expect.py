@@ -13,7 +13,7 @@ def apply(self):
 def prove(Eq):
     from axiom import stats, calculus
 
-    y, x = Symbol(real=True, random=True) #rewards
+    y, x = Symbol(real=True, random=True) # rewards
     Eq << apply(Equal(y | x, y))
 
     Eq << Eq[-1].this.lhs.apply(stats.expect.to.integral)
@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Integral).apply(stats.integral.to.expect)
 
-    #https://danieltakeshi.github.io/2017/03/28/going-deeper-into-reinforcement-learning-fundamentals-of-policy-gradients/ (Approximation (ii))
+    # https://danieltakeshi.github.io/2017/03/28/going-deeper-into-reinforcement-learning-fundamentals-of-policy-gradients/ (Approximation (ii))
 
 
 if __name__ == '__main__':

@@ -18,18 +18,18 @@ def apply(eq_a, eq_b, eq_a_t, eq_b_t, eq_r, eq_k, eq_v, eq_o, i=None):
 def prove(Eq):
     from axiom import algebra, keras
 
-    #T is the sequence length
-    #d is the embedding size
+    # T is the sequence length
+    # d is the embedding size
     T, d = Symbol(integer=True, positive=True)
-    #x is the sequence
+    # x is the sequence
     x = Symbol(real=True, shape=(T, d))
-    #model weights:
+    # model weights:
     W_r = Symbol("W^r", real=True, shape=(d, d))
     W_k = Symbol("W^k", real=True, shape=(d, d))
     W_v = Symbol("W^v", real=True, shape=(d, d))
     W_o = Symbol("W^o", real=True, shape=(d, d))
     μ_r, μ_k, μ_v, u, w = Symbol(real=True, shape=(d,))
-    #w is the positional weight decay vector. A trainable model parameter
+    # w is the positional weight decay vector. A trainable model parameter
     R, K, V, O = Symbol(real=True, shape=(T, d))
     a, b = Symbol(real=True, shape=(T, d))
     i, t = Symbol(integer=True)
@@ -53,9 +53,9 @@ def prove(Eq):
 
     Eq << Eq[7].subs(Eq[-2], Eq[-1])
 
-    #https://arxiv.org/pdf/2305.13048.pdf#page=5
-    #compared to standard transformer of scaled dot product attention
-    #http://localhost/axiom/?module=keras.matmul_softmax.to.lamda.sum.scaled_dot_product_attention
+    # https://arxiv.org/pdf/2305.13048.pdf# page=5
+    # compared to standard transformer of scaled dot product attention
+    # http://localhost/axiom/?module=keras.matmul_softmax.to.lamda.sum.scaled_dot_product_attention
     
     
 

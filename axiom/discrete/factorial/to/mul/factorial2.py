@@ -14,7 +14,7 @@ def prove(Eq):
     n = Symbol(integer=True, nonnegative=True)
     Eq << apply(Factorial(n))
 
-    #https://en.wikipedia.org/wiki/Double_factorial
+    # https://en.wikipedia.org/wiki/Double_factorial
     
 
 

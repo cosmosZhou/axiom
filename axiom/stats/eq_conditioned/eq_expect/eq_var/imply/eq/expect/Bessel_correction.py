@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(*Eq[-2:]).reversed
 
-    #https://en.wikipedia.org/wiki/Bessel's_correction
+    # https://en.wikipedia.org/wiki/Bessel's_correction
     
     
 

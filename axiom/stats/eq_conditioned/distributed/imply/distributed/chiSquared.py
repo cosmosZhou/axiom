@@ -126,7 +126,7 @@ def prove(Eq):
     Eq << Infer(Eq[2], Eq.induct, plausible=True)
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=k, start=1)
-    #https://www.asmeurer.com/blog/
+    # https://www.asmeurer.com/blog/
 
 
 

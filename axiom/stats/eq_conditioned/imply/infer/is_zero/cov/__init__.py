@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(eq, i):
     ((x, t), ((S[x], (S[0], S[t])), S[x[:t].var])), S[x[t]] = eq.of(Equal[Conditioned[Indexed, Equal[Sliced]]])
-    #assert t >= 0
+    # assert t >= 0
     assert x.is_random
     return Infer(Unequal(i, t), Equal(Covariance(x[t], x[i]), ZeroMatrix(*x[t].shape).outer_product(ZeroMatrix(*x[i].shape))))
 
@@ -14,9 +14,9 @@ def prove(Eq):
     from axiom import algebra, stats
 
     x = Symbol(shape=(oo,), real=True, random=True)
-    t, i = Symbol(integer=True) #time counter
+    t, i = Symbol(integer=True) # time counter
     Eq << apply(
-        Equal(x[t] | x[:t], x[t]), i) #history-irrelevant conditional independence assumption
+        Equal(x[t] | x[:t], x[t]), i) # history-irrelevant conditional independence assumption
 
     Eq << Eq[1].this.lhs.apply(algebra.ne.imply.ou)
 
@@ -28,7 +28,7 @@ def prove(Eq):
 
     Eq << stats.eq_conditioned.imply.infer.is_zero.cov.using.lt.apply(Eq[0], i)
 
-    j = Symbol(integer=True) #time counter
+    j = Symbol(integer=True) # time counter
     Eq << Eq[-1].subs(i, j)
 
     Eq << Eq[-1].subs(t, i)

@@ -14,9 +14,9 @@ def apply(lt_r, γ, λ, k=None, i=None):
 def prove(Eq):
     from axiom import keras, discrete
 
-    t, k, i = Symbol(integer=True) #time step counter
-    δ = Symbol(shape=(oo,), real=True) #TD residual
-    λ, γ = Symbol(domain=Interval(0, 1, right_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
+    t, k, i = Symbol(integer=True) # time step counter
+    δ = Symbol(shape=(oo,), real=True) # TD residual
+    λ, γ = Symbol(domain=Interval(0, 1, right_open=True)) # Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
     Eq << apply(Less(Sup[t](Abs(δ[t])), oo), γ, λ, k, i)
 
     Eq << keras.is_finite.imply.eq.matmul.generalized_advantage_estimate.apply(Eq[0], γ, λ, k, i)

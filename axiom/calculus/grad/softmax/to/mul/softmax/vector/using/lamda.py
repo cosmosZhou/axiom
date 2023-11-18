@@ -31,7 +31,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this(i).find(Element).simplify()
 
-    #using lamda
+    # using lamda
     Eq << Eq[-1].this.lhs.doit()
 
     Eq << Eq[-1] * Eq[-1].find(Softmax)

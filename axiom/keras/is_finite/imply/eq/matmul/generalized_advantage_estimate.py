@@ -13,9 +13,9 @@ def apply(lt_r, γ, λ, k=None, i=None):
 def prove(Eq):
     from axiom import algebra, calculus, sets, discrete
 
-    t, k, i = Symbol(integer=True) #time step counter
-    δ = Symbol(shape=(oo,), real=True) #TD residual
-    λ, γ = Symbol(domain=Interval(0, 1, right_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
+    t, k, i = Symbol(integer=True) # time step counter
+    δ = Symbol(shape=(oo,), real=True) # TD residual
+    λ, γ = Symbol(domain=Interval(0, 1, right_open=True)) # Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
     Eq << apply(Less(Sup[t](Abs(δ[t])), oo), γ, λ, k, i)
 
     n = Symbol(integer=True)
@@ -85,7 +85,7 @@ def prove(Eq):
 
     
 
-    #https://arxiv.org/pdf/1506.02438.pdf Eq(16)
+    # https://arxiv.org/pdf/1506.02438.pdf Eq(16)
     
     
 

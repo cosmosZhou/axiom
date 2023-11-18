@@ -121,7 +121,7 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq.first
 
-    #reference: Neural Architectures for Named Entity Recognition.pdf
+    # reference: Neural Architectures for Named Entity Recognition.pdf
     
     
 

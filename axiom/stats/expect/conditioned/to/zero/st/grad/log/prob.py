@@ -15,7 +15,7 @@ def prove(Eq):
     from axiom import stats, calculus
 
     D, n = Symbol(integer=True, positive=True)
-    #D denotes the size of the trainable weights
+    # D denotes the size of the trainable weights
     x, s = Symbol(real=True, shape=(n,), random=True)
     θ = Symbol(real=True, shape=(D,))
     Eq << apply(Expectation[x:θ](Derivative[θ](log(Probability[x:θ](x.surrogate | s))) | s))
@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.doit()
 
-    #https://spinningup.openai.com/en/latest/spinningup/rl_intro3.html#expected-grad-log-prob-lemma
+    # https://spinningup.openai.com/en/latest/spinningup/rl_intro3.html# expected-grad-log-prob-lemma
     
 
 

@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << Eq[1].this.rhs.expand()
 
-    #https://en.wikipedia.org/wiki/Completing_the_square
+    # https://en.wikipedia.org/wiki/Completing_the_square
     
 
 

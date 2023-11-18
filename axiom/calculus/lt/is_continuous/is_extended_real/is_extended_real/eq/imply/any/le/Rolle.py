@@ -46,7 +46,7 @@ def prove(Eq):
     c0, c1 = Symbol(real=True)
     Eq << calculus.lt.is_continuous.imply.any.all.ge.extreme_value_theorem.apply(*Eq[:2]).limits_subs(ξ, c0)
 
-    #Eq << Eq[-1].this.expr.expr.reversed
+    # Eq << Eq[-1].this.expr.expr.reversed
     Eq << algebra.any.imply.ou.any.split.apply(Eq[-1], cond={a, b})
 
     Eq << Eq[-1].subs(Eq.eq_intersect)

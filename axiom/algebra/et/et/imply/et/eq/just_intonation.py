@@ -56,17 +56,17 @@ def prove(Eq):
     (Eq.et_h, Eq.et_c), (Eq.et_d5, Eq.et_d7, Eq.D_2, Eq.q_4) = apply(equate(λ_7 / λ_7_low, λ_1_dot / λ_1, λ_1_dot_sharp / λ_1_sharp, λ_2_dot / λ_2, λ_2_dot_sharp / λ_2_sharp, λ_3_dot / λ_3, S.One / 2),
                 equate(λ_4_sharp / λ_7_low, λ_5 / λ_1, λ_5_sharp / λ_1_sharp, λ_6 / λ_2, λ_6_sharp / λ_2_sharp, λ_7 / λ_3, λ_1_dot / λ_4,  λ_1_dot_sharp / λ_4_sharp,  λ_2_dot / λ_5,  λ_2_dot_sharp / λ_5_sharp,  λ_3_dot / λ_6,  Number(2) / 3))
 
-    #two degree of musical tones: d_*, deux
+    # two degree of musical tones: d_*, deux
     Eq.d_1_sharp, Eq.d_2_sharp, Eq.d_4_sharp, Eq.d_5_sharp, Eq.d_6_sharp = algebra.et.given.et.eq.continued.apply(Eq.et_d5, Number(2) ** 11 / 3 ** 7)
 
     Eq.d_1, Eq.d_2, Eq.d_3, Eq.d_4, Eq.d_5, Eq.d_6, Eq.d_7 = algebra.et.given.et.eq.continued.apply(Eq.et_d7, Number(3) ** 5 / 2 ** 8)
 
-    #eight degree of musical tones: h_*, huit
+    # eight degree of musical tones: h_*, huit
     Eq.h_7, Eq.h_1, Eq.h_1_sharp, Eq.h_2, Eq.h_2_sharp, Eq.h_3 = algebra.et.imply.et.eq.just_intonation.apply(Eq.et_h, S.One / 2)
 
     Eq << Eq.et_c.subs(Eq.h_7.reversed * λ_7_low * 2, Eq.h_1 * λ_1, Eq.h_1_sharp * λ_1_sharp, Eq.h_2 * λ_2, Eq.h_2_sharp * λ_2_sharp, Eq.h_3 * λ_3)
 
-    #five degree of musical tones: c_*, cinq
+    # five degree of musical tones: c_*, cinq
     Eq.c_4_sharp, Eq.c_5, Eq.c_5_sharp, Eq.c_6, Eq.c_6_sharp, Eq.c_7, Eq.c_1, Eq.c_1_sharp, Eq.c_2, Eq.c_2_sharp, Eq.c_3 = algebra.et.imply.et.eq.just_intonation.apply(Eq[-1], Number(2) / 3)
 
     Eq << Eq.c_5 * Eq.c_2 * 2
@@ -117,15 +117,15 @@ def prove(Eq):
 
     Eq << Eq.q_3 / Eq.T_3
 
-    #针对纯律，我的基本假设是：
-    #一，纯八度之间的波长之比为1/2, 即等式Eq[0]成立;
-    #二，根据三分损宜法，五度相生律，纯5度之间的波长之比为2/3，即等式Eq[1]成立(除了高音4/升6之外);
-    #根据以上两点，通过消元法解方程后（18个变量，17个方程），可以推导：
-    #一，5个升降音与还原音之间的波长比相等，也即一个升降音与还原音之间的波长比为2048/2187, 即等式组Eq[2]成立，等价说法：钢琴上黑键音与相邻上一个白键音的频率比相等;
-    #二，7个还原音与之前一个半音之间的波长比相等，也即一个小二度使波长/弦长变为原来的243/256，即等式组Eq[3]成立，等价说法：钢琴上一个白键音与相邻上一个音阶（白键或黑键）的频率比相等;
-    #三，一个大二度使波长/弦长变为原来的8/9；
-    #四，一个纯四度使波长/弦长变为原来的3/4；
-    #百科参考资料：https://baike.baidu.com/pic/%E7%BA%AF%E5%BE%8B/659996/0/834344afb490879efaed5021?fr=lemma&ct=single#aid=0&pic=834344afb490879efaed5021
+    # 针对纯律，我的基本假设是：
+    # 一，纯八度之间的波长之比为1/2, 即等式Eq[0]成立;
+    # 二，根据三分损宜法，五度相生律，纯5度之间的波长之比为2/3，即等式Eq[1]成立(除了高音4/升6之外);
+    # 根据以上两点，通过消元法解方程后（18个变量，17个方程），可以推导：
+    # 一，5个升降音与还原音之间的波长比相等，也即一个升降音与还原音之间的波长比为2048/2187, 即等式组Eq[2]成立，等价说法：钢琴上黑键音与相邻上一个白键音的频率比相等;
+    # 二，7个还原音与之前一个半音之间的波长比相等，也即一个小二度使波长/弦长变为原来的243/256，即等式组Eq[3]成立，等价说法：钢琴上一个白键音与相邻上一个音阶（白键或黑键）的频率比相等;
+    # 三，一个大二度使波长/弦长变为原来的8/9；
+    # 四，一个纯四度使波长/弦长变为原来的3/4；
+    # 百科参考资料：https://baike.baidu.com/pic/%E7%BA%AF%E5%BE%8B/659996/0/834344afb490879efaed5021?fr=lemma&ct=single# aid=0&pic=834344afb490879efaed5021
 
 
 

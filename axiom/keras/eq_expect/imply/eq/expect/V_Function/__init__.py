@@ -19,13 +19,13 @@ def prove(Eq):
     from axiom import algebra, stats, calculus
 
     b, D = Symbol(integer=True, positive=True)
-    s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    a = Symbol(shape=(oo,), integer=True, random=True) #actions
-    r = Symbol(shape=(oo,), real=True, random=True) #rewards
-    π = Symbol(shape=(D,), real=True) #trainable weights for the agent
-    t, k = Symbol(integer=True) #time countor
-    Q = Function(real=True, shape=()) #Action-Value Function
-    γ = Symbol(domain=Interval(0, 1, left_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
+    s = Symbol(shape=(oo, b), real=True, random=True) # states / observation
+    a = Symbol(shape=(oo,), integer=True, random=True) # actions
+    r = Symbol(shape=(oo,), real=True, random=True) # rewards
+    π = Symbol(shape=(D,), real=True) # trainable weights for the agent
+    t, k = Symbol(integer=True) # time countor
+    Q = Function(real=True, shape=()) # Action-Value Function
+    γ = Symbol(domain=Interval(0, 1, left_open=True)) # Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
     Eq << apply(Equal((Q[π] ^ γ)(s[t].var, a[t].var), γ ** Lamda[k](k) @ Expectation[r[t:], a:π](r[t:] | s[t] & a[t])))
 
     Eq << algebra.cond.imply.cond.domain_defined.apply(Eq[0])
@@ -66,14 +66,14 @@ def prove(Eq):
 
     
     Eq << Eq[-1].this.lhs.apply(calculus.matmul.to.integral)
-    #https://spinningup.openai.com/en/latest/spinningup/rl_intro.html#bellman-equations
-    #https://lilianweng.github.io/posts/2018-04-08-policy-gradient/
-    #http://incompleteideas.net/book/bookdraft2017nov5.pdf
-    #https://spinningup.openai.com/en/latest/spinningup/rl_intro.html#id4
-    #https://huggingface.co/deep-rl-course/unit4/pg-theorem?fw=pt
-    #https://www.52coding.com.cn/tags/Reinforcement-Learning/
-    #TRPO
-    #https://arxiv.org/pdf/1502.05477.pdf
+    # https://spinningup.openai.com/en/latest/spinningup/rl_intro.html# bellman-equations
+    # https://lilianweng.github.io/posts/2018-04-08-policy-gradient/
+    # http://incompleteideas.net/book/bookdraft2017nov5.pdf
+    # https://spinningup.openai.com/en/latest/spinningup/rl_intro.html# id4
+    # https://huggingface.co/deep-rl-course/unit4/pg-theorem?fw=pt
+    # https://www.52coding.com.cn/tags/Reinforcement-Learning/
+    # TRPO
+    # https://arxiv.org/pdf/1502.05477.pdf
     
     
 

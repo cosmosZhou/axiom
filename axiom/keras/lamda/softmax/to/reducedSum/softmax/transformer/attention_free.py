@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.sum.to.reducedSum)
 
-    #https://arxiv.org/pdf/2105.14103.pdf
+    # https://arxiv.org/pdf/2105.14103.pdf
 
 
 if __name__ == '__main__':

@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Eq[-1].rhs.shape
 
-    #https://baike.baidu.com/item/%E7%AD%89%E5%B7%AE%E6%95%B0%E5%88%97/1129192?fr=aladdin
+    # https://baike.baidu.com/item/%E7%AD%89%E5%B7%AE%E6%95%B0%E5%88%97/1129192?fr=aladdin
     
 
 

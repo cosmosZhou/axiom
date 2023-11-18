@@ -30,7 +30,7 @@ def prove(Eq):
     from axiom import discrete, algebra
 
     n, k, l = Symbol(integer=True, positive=True)
-    #X = Symbol(real=True, shape=(n - k - l, l))
+    # X = Symbol(real=True, shape=(n - k - l, l))
     X = Symbol(real=True, shape=(k, l))
     Eq << apply(
         BlockMatrix([

@@ -19,7 +19,7 @@ def apply(given, x=None):
     B = (-sqrt(delta) / 2 - q / 2) ** (S.One / 3)
     w = -S.One / 2 + sqrt(3) / 2 * S.ImaginaryUnit
     arg_p = Ceiling(3 * Arg(-p / 3) / (S.Pi * 2) - S.One / 2)
-    #arg_AB = Ceiling(3 * Arg(A * B) / (S.Pi * 2) - S.One / 2)
+    # arg_AB = Ceiling(3 * Arg(A * B) / (S.Pi * 2) - S.One / 2)
     arg_AB = Piecewise((0, Equal(p * Ceiling((Arg(U) + Arg(V)) / (2 * S.Pi) - S.One / 2), 0)), (1, Arg(U) + Arg(V) > S.Pi), (-1, True))
     d = arg_p - arg_AB
 

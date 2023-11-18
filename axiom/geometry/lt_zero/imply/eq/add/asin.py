@@ -18,7 +18,7 @@ def prove(Eq):
     Eq << algebra.lt_zero.imply.le_zero.apply(Eq[0])
     Eq << geometry.le_zero.imply.eq.add.asin.apply(Eq[-1])
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 if __name__ == '__main__':

@@ -26,7 +26,7 @@ def prove(Eq):
     Eq << Eq[0].subs(x, -1).subs(y, -1)
 
     Eq << Eq[0].subs(x, 1).subs(y, -1)
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 if __name__ == '__main__':

@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << Eq[-1].apply(algebra.eq.imply.eq.sqrt)
 
-    #https://ccjou.wordpress.com/2012/11/26/jacobian-矩陣與行列式/
+    # https://ccjou.wordpress.com/2012/11/26/jacobian-矩陣與行列式/
     
     
 

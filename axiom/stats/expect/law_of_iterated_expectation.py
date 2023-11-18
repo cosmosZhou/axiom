@@ -62,8 +62,8 @@ def apply(self, *vars):
 def prove(Eq):
     from axiom import stats
 
-    #this is the proof of the law of iterated expectations
-    #https://en.wikipedia.org/wiki/Law_of_total_expectation
+    # this is the proof of the law of iterated expectations
+    # https://en.wikipedia.org/wiki/Law_of_total_expectation
     x, y, z = Symbol(real=True, random=True)
     f = Function(real=True, shape=())
     Eq << apply(Expectation(f(x)), y, z)

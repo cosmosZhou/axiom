@@ -12,16 +12,16 @@ def apply(eq_R):
 def prove(Eq):
     from axiom import discrete, algebra, sets, geometry
 
-    #n denotes sequence length (seq_length)
-    #b denotes 10000
+    # n denotes sequence length (seq_length)
+    # b denotes 10000
     n, b = Symbol(integer=True, positive=True)
-    #d denotes embedding size which must be even
+    # d denotes embedding size which must be even
     d = Symbol(integer=True, positive=True, even=True)
-    #i denotes token index
-    #j denotes row index
-    #k denotes column index
+    # i denotes token index
+    # j denotes row index
+    # k denotes column index
     i, j, k = Symbol(integer=True)
-    #R denotes rotary matrix
+    # R denotes rotary matrix
     R = Function(shape=(d, d), real=True)
     Eq << apply(Equal(R(i), rotary_matrix(d, b, i, j, k)))
 

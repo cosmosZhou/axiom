@@ -30,24 +30,24 @@ def apply(eq_x, eq_a):
 def prove(Eq):
     from axiom import algebra, discrete
 
-    #n is the sequence lenth, d is the embedding size
+    # n is the sequence lenth, d is the embedding size
     n, d = Symbol(integer=True, positive=True)
-    #the follwoing parameters are advised to be equal to 3:
-    #0 means shorter distances, 1 means median-sized distances, 2 means long distances;
+    # the follwoing parameters are advised to be equal to 3:
+    # 0 means shorter distances, 1 means median-sized distances, 2 means long distances;
     h_r, h_c, h_l, h_o, h_p = Symbol(integer=True, positive=True) # is advised to be (3, 3, 3, 3, 3)
-    #the follwoing parameters are used for divisors in mapping possibly large relative positions finite integers:
+    # the follwoing parameters are used for divisors in mapping possibly large relative positions finite integers:
     d_r, d_c, d_l, d_o, d_p = Symbol(integer=True, positive=True) # is advised to be (2, 2, 3, 8, 16)
-    #W_Γ is the attention between inputs in each dimension:
-    #in this experiment, W_Γ is of shape (3, 3, 3, 3, 3, 32) in all 7776 parameters;
+    # W_Γ is the attention between inputs in each dimension:
+    # in this experiment, W_Γ is of shape (3, 3, 3, 3, 3, 32) in all 7776 parameters;
     W_Γ = Symbol("W^Γ", shape=(h_r, h_c, h_l, h_o, h_p, 32), real=True)
     Γ = Symbol(shape=(d, 32), real=True)
     a = Symbol(shape=(n, n, d, 32), real=True)
     x = Symbol(shape=(n, n, d, 5), real=True)
     i, j, t = Symbol(integer=True)
     r, c, l, o, p = Symbol(shape=(n,), integer=True)
-    #longest clipping distances for each dimension
+    # longest clipping distances for each dimension
     k_r, k_c, k_l, k_o, k_p = Symbol(integer=True, positive=True)
-    #positional embedding for each dimension
+    # positional embedding for each dimension
     w_r = Symbol("w^r", shape=(2 * k_r + 1, d), real=True)
     w_c = Symbol("w^c", shape=(2 * k_c + 1, d), real=True)
     w_l = Symbol("w^l", shape=(2 * k_l + 1, d), real=True)

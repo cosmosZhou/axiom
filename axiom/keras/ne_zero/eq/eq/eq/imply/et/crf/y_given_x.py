@@ -139,8 +139,8 @@ def prove(Eq):
 
     Eq << Eq[-1] + Eq[-2]
 
-    #reference: Neural Architectures for Named Entity Recognition.pdf
-    #https://spaces.ac.cn/archives/5542
+    # reference: Neural Architectures for Named Entity Recognition.pdf
+    # https://spaces.ac.cn/archives/5542
 
 
 

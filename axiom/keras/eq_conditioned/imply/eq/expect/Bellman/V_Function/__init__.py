@@ -6,10 +6,10 @@ def apply(eq, γ=None, k=None, weights=None):
     ((r, t), ((s, (S[0], S[t])), S[s[:t].var])), S[r[t]] = eq.of(Equal[Conditioned[Indexed, Equal[Sliced]]])
 
     if k is None:
-        k = Symbol(integer=True) #time counter
+        k = Symbol(integer=True) # time counter
 
     if γ is None:
-        γ = Symbol(domain=Interval(0, 1, right_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
+        γ = Symbol(domain=Interval(0, 1, right_open=True)) # Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
 
     assert 0 <= γ < 1
     assert s.is_random and r.is_random
@@ -31,12 +31,12 @@ def prove(Eq):
     from axiom import stats, calculus, keras, algebra
 
     b = Symbol(integer=True, positive=True)
-    s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    r = Symbol(shape=(oo,), real=True, random=True) #rewards
-    t, k = Symbol(integer=True) #time counter
-    γ = Symbol(domain=Interval(0, 1, right_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
+    s = Symbol(shape=(oo, b), real=True, random=True) # states / observation
+    r = Symbol(shape=(oo,), real=True, random=True) # rewards
+    t, k = Symbol(integer=True) # time counter
+    γ = Symbol(domain=Interval(0, 1, right_open=True)) # Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
     Eq << apply(
-        Equal(r[t] | s[:t], r[t]), #history-irrelevant conditional independence assumption for rewards based on states
+        Equal(r[t] | s[:t], r[t]), # history-irrelevant conditional independence assumption for rewards based on states
         γ, k)
 
     Eq << Eq[-1].this.rhs.apply(stats.expect.to.add)
@@ -90,7 +90,7 @@ def prove(Eq):
 
     Eq << Eq.eq_add.subs(Eq[-1])
 
-    #http://incompleteideas.net/book/bookdraft2017nov5.pdf (Bellman equation Eq. 3.14)
+    # http://incompleteideas.net/book/bookdraft2017nov5.pdf (Bellman equation Eq. 3.14)
     
     
 

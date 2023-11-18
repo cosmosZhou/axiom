@@ -22,9 +22,9 @@ def prove(Eq):
     from axiom import stats, algebra
 
     m, n, t = Symbol(integer=True, positive=True)
-    #suppose you have a set of documents y which is labeled with some semantic tags called keywords x;
-    #now that there is a large data set consisting of pairs of y and its respective set of keywords x;
-    #you are then given a new document y', how to figure out the way of choosing the keywords x with optimal probability?
+    # suppose you have a set of documents y which is labeled with some semantic tags called keywords x;
+    # now that there is a large data set consisting of pairs of y and its respective set of keywords x;
+    # you are then given a new document y', how to figure out the way of choosing the keywords x with optimal probability?
     x = Symbol(integer=True, shape=(n,), random=True)
     y = Symbol(integer=True, shape=(m,), random=True)
     Eq << apply(Equal(y[t] | y[:t], y[t]), Unequal(Probability(y, x), 0))

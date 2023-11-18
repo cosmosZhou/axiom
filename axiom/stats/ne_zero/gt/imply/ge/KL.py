@@ -26,8 +26,8 @@ def prove(Eq):
 
     Eq << stats.ne_zero.gt.imply.et.ne_zero.apply(Eq[1], Eq[2])
 
-    #notes: it is illegal to access x[n:m] because it is not proven to be existent due to indexOutOfBound error
-    #we can only access it through a proven result that containing the expression we want
+    # notes: it is illegal to access x[n:m] because it is not proven to be existent due to indexOutOfBound error
+    # we can only access it through a proven result that containing the expression we want
     Eq << stats.ne_zero.ne_zero.imply.ge.KL.pdf.apply(Eq[-4], Eq[-2], Eq[-1].lhs.arg.lhs)
 
     Eq << stats.gt.imply.eq.prob.joint.apply(Eq[2], Eq[0].lhs)

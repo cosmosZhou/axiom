@@ -39,9 +39,9 @@ def rotary_matrix(i, j, clustered=False):
 def prove(Eq):
     from axiom import geometry, algebra
 
-    #n denotes sequence length (seq_length)
+    # n denotes sequence length (seq_length)
     n = Symbol(integer=True, positive=True)
-    #R denotes rotary matrix
+    # R denotes rotary matrix
     R = Symbol(shape=(n, n, 4, 4), real=True)
     i, j, i_quote, j_quote = Symbol(integer=True)
     Eq << apply(Equal(R[i, j], rotary_matrix(i, j)), i_quote, j_quote)

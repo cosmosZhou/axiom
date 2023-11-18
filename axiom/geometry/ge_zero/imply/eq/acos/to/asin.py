@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << algebra.cond.given.cond.subs.bool.apply(Eq[-1], cond=Eq[0])
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 if __name__ == '__main__':

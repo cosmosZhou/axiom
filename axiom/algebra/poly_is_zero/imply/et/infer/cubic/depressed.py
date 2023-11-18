@@ -16,7 +16,7 @@ def apply(is_zero, x=None):
 
     w = -S.One / 2 + S.ImaginaryUnit * sqrt(3) / 2
     arg_p = Ceiling(3 * Arg(-p / 3) / (S.Pi * 2) - S.One / 2)
-    #arg_AB = Ceiling(3 * Arg(A * B) / (S.Pi * 2) - S.One / 2)
+    # arg_AB = Ceiling(3 * Arg(A * B) / (S.Pi * 2) - S.One / 2)
 
     arg_AB = Piecewise((0, Equal(p * Ceiling((Arg(U) + Arg(V)) / (2 * S.Pi) - S.One / 2), 0)), (1, Arg(U) + Arg(V) > S.Pi), (-1, True))
 
@@ -74,10 +74,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Equal[S(2)] & Equal[0]).apply(algebra.poly_is_zero.eq_ceiling.imply.cubic, x, ret=0)
 
-    #find Equal[S(1)] & Equal[S(-2)]
+    # find Equal[S(1)] & Equal[S(-2)]
     Eq << Eq[-1].this.args[:3:2].apply(algebra.ou.imply.et.collect)
 
-    #find Equal[S(-1)] & Equal[S(2)]
+    # find Equal[S(-1)] & Equal[S(2)]
     Eq << Eq[-1].this.args[:2].apply(algebra.ou.imply.et.collect)
 
     Eq << Eq[-1].this.find(Equal[Integer] | Equal[Integer]).apply(algebra.ou_eq.imply.eq.mod)

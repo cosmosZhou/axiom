@@ -19,7 +19,7 @@ def prove(Eq):
     n = Symbol(integer=True, given=False, nonnegative=True)
     Eq << apply(Equal(cos(x), 0), n, negative=True)
 
-    #Eq << Equal(cos(x + n * S.Pi), 0, plausible=True)
+    # Eq << Equal(cos(x + n * S.Pi), 0, plausible=True)
     Eq << Equal(cos(x - n * S.Pi), 0, plausible=True)
 
     Eq << Eq[-1].subs(n, 0)
@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.apply(Eq[2], n)
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
     
 
 

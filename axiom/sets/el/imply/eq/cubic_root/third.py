@@ -39,7 +39,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.args[1].apply(algebra.expr.to.add.complex)
 
-    #Eq << Eq[-1] / Eq[1].rhs.args[1]
+    # Eq << Eq[-1] / Eq[1].rhs.args[1]
 
     Eq << Eq[-1].this.rhs.apply(algebra.expr.to.mul.expi)
 

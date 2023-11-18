@@ -14,8 +14,8 @@ def apply(given, G, x, s):
 def prove(Eq):
     from axiom import algebra, sets
 
-    #d is the number of output labels
-    #oo is the length of the sequence
+    # d is the number of output labels
+    # oo is the length of the sequence
     d, n = Symbol(integer=True, positive=True)
     x = Symbol(shape=(n, d), real=True, random=True, given=True)
     y = Symbol(shape=(n,), domain=Range(d), random=True, given=True)
@@ -69,7 +69,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.ne_zero.given.gt_zero)
 
-    #reference: Neural Architectures for Named Entity Recognition.pdf
+    # reference: Neural Architectures for Named Entity Recognition.pdf
 
 
 

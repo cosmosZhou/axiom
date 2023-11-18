@@ -39,7 +39,7 @@ def prove(Eq):
     Eq << Eq[-1].this.find(Derivative).apply(calculus.grad.integral.to.mul.grad)
 
     Eq << Eq[-1].this.find(Derivative).doit()
-    #https://www.asmeurer.com/blog/
+    # https://www.asmeurer.com/blog/
 
 
 

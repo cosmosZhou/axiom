@@ -51,7 +51,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.add)
 
-    #Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.mul)
+    # Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.mul)
     Eq << Eq[-1].this.rhs.find(Mul).apply(algebra.mul.to.add)
 
     Eq << Eq[-1].subs(x_[i].this.definition)

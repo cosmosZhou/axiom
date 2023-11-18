@@ -21,8 +21,8 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True) # seq_length
     A = Symbol(integer=True, shape=(n,)) # attention_mask = (input_ids > 0).int()
     P = Symbol(integer=True, shape=(n,))
-    #position_ids = torch.arange(seq_length)[None, ].to(attention_mask.device)
-    #position_ids += attention_mask.argmax(-1, keepdim=True)
+    # position_ids = torch.arange(seq_length)[None, ].to(attention_mask.device)
+    # position_ids += attention_mask.argmax(-1, keepdim=True)
     P_quote = Symbol(integer=True, shape=(n,))# position_ids -= (position_ids >= seq_length).int() * seq_length
     I = Symbol(integer=True, nonnegative=True, shape=(n,)) # input_ids
     I_quote = Symbol(integer=True, shape=(n,)) # input_ids = torch.gather(input_ids, 1, position_ids)

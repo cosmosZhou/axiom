@@ -6,7 +6,7 @@ def apply(eq, k=None, π=None):
     ((r, t), (((a, (S[0], S[t])), S[a[:t].var]), ((s, (S[0], S[t])), S[s[:t].var]))), S[r[t]] = eq.of(Equal[Conditioned[Indexed, Equal[Sliced] & Equal[Sliced]]])
 
     if k is None:
-        k = Symbol(integer=True) #time counter
+        k = Symbol(integer=True) # time counter
 
     assert s.is_random and r.is_random and a.is_random
 
@@ -24,12 +24,12 @@ def prove(Eq):
 
     b, D = Symbol(integer=True, positive=True)
     π = Symbol(real=True, shape=(D,))
-    s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    a = Symbol(shape=(oo,), integer=True, random=True) #actions
-    r = Symbol(shape=(oo,), real=True, random=True) #rewards
-    t, k = Symbol(integer=True) #time counter
+    s = Symbol(shape=(oo, b), real=True, random=True) # states / observation
+    a = Symbol(shape=(oo,), integer=True, random=True) # actions
+    r = Symbol(shape=(oo,), real=True, random=True) # rewards
+    t, k = Symbol(integer=True) # time counter
     Eq << apply(
-        Equal(r[t] | a[:t] & s[:t], r[t]), #history-irrelevant conditional independence assumption
+        Equal(r[t] | a[:t] & s[:t], r[t]), # history-irrelevant conditional independence assumption
         k, π)
 
     Eq << Eq[-1].lhs.this.apply(stats.expect.law_of_iterated_expectation, a[:t + 1], s[:t + 1])
@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(ReducedSum[Expectation]).apply(stats.reducedSum.expect.to.expect.reducedSum)
 
-    #https://spinningup.openai.com/en/latest/spinningup/extra_pg_proof2.html
+    # https://spinningup.openai.com/en/latest/spinningup/extra_pg_proof2.html
 
 
 

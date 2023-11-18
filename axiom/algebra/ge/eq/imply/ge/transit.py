@@ -12,7 +12,7 @@ def prove(Eq):
     from axiom import algebra
 
     a, x, b = Symbol(real=True)
-    #Eq << apply(b >= x, Equal(x, a))
+    # Eq << apply(b >= x, Equal(x, a))
     Eq << apply(b >= x, Equal(a, b))
 
     Eq << Eq[0] + Eq[1]

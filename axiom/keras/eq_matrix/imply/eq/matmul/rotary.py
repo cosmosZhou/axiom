@@ -13,9 +13,9 @@ def apply(eq_R, t):
 def prove(Eq):
     from axiom import geometry, algebra
 
-    #R denotes rotary matrix
+    # R denotes rotary matrix
     R = Function(shape=(2, 2), real=True)
-    #k, t denote token index
+    # k, t denote token index
     k, t = Symbol(integer=True)
     Eq << apply(Equal(R(k), [
             [cos(k), -sin(k)],

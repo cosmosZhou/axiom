@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << ~Eq[0]
 
-    #Eq <<= Eq[1] & Eq[-1]
+    # Eq <<= Eq[1] & Eq[-1]
     Eq <<= Eq[-1] & Eq[1]
 
 

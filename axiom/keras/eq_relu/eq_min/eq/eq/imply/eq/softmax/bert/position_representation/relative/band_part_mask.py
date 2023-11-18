@@ -27,8 +27,8 @@ def prove(Eq):
     from axiom import keras, algebra, sets, discrete
 
     n, l, u = Symbol(integer=True, positive=True)
-    #l denotes the size of the preceding context including current position;
-    #u denotes the size of the subsequent context including current position;
+    # l denotes the size of the preceding context including current position;
+    # u denotes the size of the subsequent context including current position;
     d_z = Symbol(integer=True, positive=True)
     Q = Symbol(shape=(n, d_z), real=True)
     K = Symbol(shape=(n, d_z), real=True)

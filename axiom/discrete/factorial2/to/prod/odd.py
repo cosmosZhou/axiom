@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.prod.limits.subs.negate, i, n - i)
 
-    #https://en.wikipedia.org/wiki/Double_factorial
+    # https://en.wikipedia.org/wiki/Double_factorial
 
 
 

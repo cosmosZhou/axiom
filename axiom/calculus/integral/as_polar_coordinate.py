@@ -25,7 +25,7 @@ def prove(Eq):
     x, y = Symbol(real=True)
     Eq << apply(Integral[x, y](E ** (-x ** 2 / 2 - y ** 2 / 2)))
 
-    #https://ccjou.wordpress.com/2012/11/26/jacobian-矩陣與行列式/
+    # https://ccjou.wordpress.com/2012/11/26/jacobian-矩陣與行列式/
     
 
 

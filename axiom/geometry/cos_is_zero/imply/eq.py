@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.eq.transport)
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 if __name__ == '__main__':

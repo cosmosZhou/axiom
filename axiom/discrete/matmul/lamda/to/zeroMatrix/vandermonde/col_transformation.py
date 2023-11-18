@@ -31,9 +31,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Pow[-Symbol]).apply(algebra.pow.to.mul.neg)
 
-    #j < m - d
-    #k <= d + j < d + (m - d) = m
-    #k < m
+    # j < m - d
+    # k <= d + j < d + (m - d) = m
+    # k < m
     Eq << Eq[-1].this.lhs().expr.simplify()
 
     Eq << Eq[-1].this.find(Sum).apply(discrete.sum.binom.to.mul.diff)

@@ -66,7 +66,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[:-1].apply(algebra.add.to.mul)
 
-    #https://arxiv.org/abs/2307.13813
+    # https://arxiv.org/abs/2307.13813
 
 
 if __name__ == '__main__':

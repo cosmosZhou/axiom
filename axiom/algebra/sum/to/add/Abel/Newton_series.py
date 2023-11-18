@@ -55,7 +55,7 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], d, 1)
 
-    #https://en.wikipedia.org/wiki/Summation_by_parts
+    # https://en.wikipedia.org/wiki/Summation_by_parts
 
 
 

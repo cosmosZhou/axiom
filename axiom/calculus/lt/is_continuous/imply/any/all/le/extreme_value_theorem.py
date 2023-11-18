@@ -38,7 +38,7 @@ def prove(Eq):
     Eq << Eq[-1].subs(Eq.g_def, Eq.g_def.subs(x, ξ))
 
     Eq << -Eq[-1].this.expr.expr
-    #https://en.wikipedia.org/wiki/Extreme_value_theorem
+    # https://en.wikipedia.org/wiki/Extreme_value_theorem
     
 
 

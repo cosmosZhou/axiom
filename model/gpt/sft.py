@@ -50,9 +50,9 @@ class SFTModel(KerasModel):
     weight_decay = 0.0
     class_weight = None
     label_smoothing = 0.0
-    #training = False, for prediction purposes;
-    #training = True,  for training from scratch, this will delete the previously trained model;
-    #training = None,  for continue training;
+    # training = False, for prediction purposes;
+    # training = True,  for training from scratch, this will delete the previously trained model;
+    # training = None,  for continue training;
     def __init__(self, modelPretrained, table, training=None):
         self.table = table
         if not modelPretrained.endswith('/'):
@@ -109,7 +109,7 @@ class SFTModel(KerasModel):
 
     def __call__(self, text):
         device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-        #text += '[AI]'
+        # text += '[AI]'
         prefix_length = len(text)
         vocab = self.vocab
         input_ids = vocab(text, return_tensors="pt")["input_ids"]
@@ -176,14 +176,14 @@ class SFTModel(KerasModel):
                 yield Instance(**kwargs).convert_example(self.vocab)
 
     def loss(self, y_true, y_pred):
-        #import pydevd; pydevd.settrace('172.16.11.42')
+        # import pydevd; pydevd.settrace('172.16.11.42')
         return F.cross_entropy(
             y_pred[..., :-1, :].reshape(-1, y_pred.shape[-1]), 
             y_true[..., 1:].reshape(-1),
             reduction='none')
 
     def accuracy(self, y_true, y_pred):
-        #import pydevd; pydevd.settrace('172.16.11.42')
+        # import pydevd; pydevd.settrace('172.16.11.42')
         y_pred = y_pred[..., :-1, :]
         y_true = y_true[..., 1:]
         

@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[2].expand()
 
-    #Eq << Eq[-1].this.rhs.args[2].apply(algebra.add.to.mul)
+    # Eq << Eq[-1].this.rhs.args[2].apply(algebra.add.to.mul)
     @Function(real=True)
     def h(x):
         return x ** 2 * (cos(x) + 1) - sin(x) * (x + sin(x))
@@ -55,7 +55,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.add.to.mul)
 
-    #https://www.zhihu.com/question/355479801
+    # https://www.zhihu.com/question/355479801
     
 
 

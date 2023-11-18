@@ -24,7 +24,7 @@ def prove(Eq):
     Eq << Eq[-1].this.apply(algebra.all.limits.subs.reverse, Eq[-1].variable, -Eq[-1].variable)
     Eq <<= Eq[-1] & Eq[-3]
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 if __name__ == '__main__':

@@ -22,10 +22,10 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True) # seq_length
     A = Symbol(integer=True, shape=(n,)) # attention_mask = (input_ids > 0).int()
     P = Symbol(integer=True, shape=(n,))
-    #position_ids = torch.arange(1, seq_length + 1)[None, ].to(attention_mask.device)
-    #position_ids += attention_mask.argmax(-1, keepdim=True)
+    # position_ids = torch.arange(1, seq_length + 1)[None, ].to(attention_mask.device)
+    # position_ids += attention_mask.argmax(-1, keepdim=True)
     P_quote = Symbol(integer=True, shape=(n,))
-    #position_ids *= (position_ids >= 0).int()
+    # position_ids *= (position_ids >= 0).int()
     I = Symbol(integer=True, nonnegative=True, shape=(n,)) # input_ids
     I_quote = Symbol(integer=True, shape=(n + 1,)) # input_ids = hstack(input_ids, 1)
     I_dquote = Symbol('I^"', integer=True, shape=(n,)) # input_ids = torch.gather(input_ids, 1, position_ids)

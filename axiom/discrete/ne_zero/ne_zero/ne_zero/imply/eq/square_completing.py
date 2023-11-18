@@ -87,10 +87,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(MatMul[Add]).apply(discrete.matmul.to.add, 5)
 
-    #combine y square terms
+    # combine y square terms
     Eq << Eq[-1].this.rhs.args[0:4:2].apply(discrete.add.to.matmul)
 
-    #combine z square terms
+    # combine z square terms
     Eq << Eq[-1].this.rhs.args[::4].apply(discrete.add.to.matmul)
 
     Eq << Eq[-1].this.rhs.args[-1].T
@@ -147,7 +147,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.definition
 
-    #https://en.wikipedia.org/wiki/Normal_distribution#Vector_form
+    # https://en.wikipedia.org/wiki/Normal_distribution# Vector_form
     
     
 

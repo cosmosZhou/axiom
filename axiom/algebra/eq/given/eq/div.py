@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(given, divisor=None):
     lhs, rhs = given.of(Equal)
-    #assert divisor.is_nonzero
+    # assert divisor.is_nonzero
     return Equal(lhs / divisor, rhs / divisor)
 
 

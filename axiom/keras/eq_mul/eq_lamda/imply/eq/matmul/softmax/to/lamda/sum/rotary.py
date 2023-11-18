@@ -16,17 +16,17 @@ def apply(eq_theta, eq_R, Q, K, V):
 def prove(Eq):
     from axiom import keras, algebra, discrete
 
-    #n denotes sequence length (seq_length)
-    #b denotes 10000
+    # n denotes sequence length (seq_length)
+    # b denotes 10000
     n, b = Symbol(integer=True, positive=True)
-    #d denotes embedding size which must be even
+    # d denotes embedding size which must be even
     d = Symbol(integer=True, positive=True, even=True)
-    #i denotes token index
-    #j denotes row index
-    #k denotes column index
+    # i denotes token index
+    # j denotes row index
+    # k denotes column index
     i, j, k = Symbol(integer=True)
     Q, K, V = Symbol(shape=(n, d), real=True)
-    #R denotes rotary matrix function
+    # R denotes rotary matrix function
     R = Function(shape=(d, d), real=True)
     T = Symbol(shape=(n, n), real=True)
     θ = Symbol(shape=(n, d / 2), real=True)

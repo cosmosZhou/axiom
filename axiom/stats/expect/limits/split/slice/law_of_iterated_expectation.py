@@ -34,8 +34,8 @@ def apply(self, *indices):
 def prove(Eq):
     from axiom import algebra, stats, calculus
 
-    #this is the proof of the law of iterated expectations
-    #https://en.wikipedia.org/wiki/Law_of_total_expectation
+    # this is the proof of the law of iterated expectations
+    # https://en.wikipedia.org/wiki/Law_of_total_expectation
     n = Symbol(domain=Range(2, oo))
     i = Symbol(domain=Range(1, n))
     x = Symbol(real=True, shape=(oo,), random=True)
@@ -62,7 +62,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(f[~Sliced]).apply(algebra.expr.to.block, i)
 
-    #https://spinningup.openai.com/en/latest/spinningup/extra_pg_proof2.html
+    # https://spinningup.openai.com/en/latest/spinningup/extra_pg_proof2.html
 
 
 

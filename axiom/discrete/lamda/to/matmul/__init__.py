@@ -29,8 +29,8 @@ def prove(Eq):
     i, j, k = Symbol(integer=True)
     n, m, d = Symbol(integer=True, positive=True)
     A = Symbol(shape=(n, m), real=True)
-    #b = Symbol(real=True, shape=(m,))
-    #Eq << apply(Lamda[i:n](Sum[j:m](A[i, j] * b[j])))
+    # b = Symbol(real=True, shape=(m,))
+    # Eq << apply(Lamda[i:n](Sum[j:m](A[i, j] * b[j])))
 
     B = Symbol(real=True, shape=(m, d))
     Eq << apply(Lamda[j:d, i:n](Sum[k:m](A[i, k] * B[k, j])))

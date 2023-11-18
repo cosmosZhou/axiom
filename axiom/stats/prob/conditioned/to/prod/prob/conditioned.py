@@ -13,14 +13,14 @@ def prove(Eq):
 
     b = Symbol(integer=True, positive=True)
     s = Symbol(shape=(oo, b), real=True, random=True)  # states / observation
-    Z = Symbol(shape=(b,), real=True, random=True) #modality
+    Z = Symbol(shape=(b,), real=True, random=True) # modality
     k = Symbol(integer=True)  # time step counter
     n = Symbol(integer=True, nonnegative=True)  # total time step
     Eq << apply(Probability(s[:n] | Z), k)
 
     Eq << Eq[0].this.rhs.apply(stats.prod.prob.conditioned.to.prob.conditioned)
 
-    #https://arxiv.org/pdf/2309.16058.pdf#3
+    # https://arxiv.org/pdf/2309.16058.pdf# 3
 
 
 

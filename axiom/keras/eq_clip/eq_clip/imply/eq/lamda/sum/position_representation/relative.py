@@ -41,9 +41,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(MatMul).apply(keras.matmul.softmax.to.lamda.sum.scaled_dot_product_attention, j, k, simplify=1)
 
-    #reference:
-    #Self-Attention with Relative Position Representations.pdf
-    #https://arxiv.org/abs/1803.02155
+    # reference:
+    # Self-Attention with Relative Position Representations.pdf
+    # https://arxiv.org/abs/1803.02155
 
 
 

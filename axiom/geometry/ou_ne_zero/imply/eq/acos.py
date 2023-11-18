@@ -53,7 +53,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Pow[~Add]).apply(algebra.add.to.mul.together)
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 if __name__ == '__main__':

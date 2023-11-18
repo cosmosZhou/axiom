@@ -22,7 +22,7 @@ def cubic_root(_a, _b, _c, _d):
     A = (sqrt(delta) / 2 - q / 2) ** (S.One / 3)
     B = (-sqrt(delta) / 2 - q / 2) ** (S.One / 3)
     arg_p = Ceiling(3 * Arg(-p / 3) / (S.Pi * 2) - S.One / 2)
-    #arg_AB = Ceiling(3 * Arg(A * B) / (S.Pi * 2) - S.One / 2)
+    # arg_AB = Ceiling(3 * Arg(A * B) / (S.Pi * 2) - S.One / 2)
     arg_AB = Piecewise((0, Equal(p * Ceiling((Arg(U) + Arg(V)) / (2 * S.Pi) - S.One / 2), 0)), (1, Arg(U) + Arg(V) > S.Pi), (-1, True))
     d = arg_p - arg_AB
     return d, A, B, a
@@ -61,7 +61,7 @@ def prove(Eq):
 
     Eq <<= algebra.infer.imply.et.infer.apply(Eq[-2], None), algebra.infer.imply.et.infer.apply(Eq[-1].this.rhs.apply(algebra.poly_is_zero.imply.et.infer.cubic.one_leaded, x), None)
 
-    #Eq <<= Eq[-6].this.apply(algebra.suffice.flatten), Eq[-5].this.apply(algebra.suffice.flatten), Eq[-4].this.apply(algebra.suffice.flatten), Eq[-3].this.apply(algebra.suffice.flatten), Eq[-2].this.apply(algebra.suffice.flatten), Eq[-1].this.apply(algebra.suffice.flatten)
+    # Eq <<= Eq[-6].this.apply(algebra.suffice.flatten), Eq[-5].this.apply(algebra.suffice.flatten), Eq[-4].this.apply(algebra.suffice.flatten), Eq[-3].this.apply(algebra.suffice.flatten), Eq[-2].this.apply(algebra.suffice.flatten), Eq[-1].this.apply(algebra.suffice.flatten)
 
 
 if __name__ == '__main__':

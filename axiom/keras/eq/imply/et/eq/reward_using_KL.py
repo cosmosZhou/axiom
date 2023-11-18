@@ -13,18 +13,18 @@ def prove(Eq):
     from axiom import algebra, sets
 
     n, b, D = Symbol(integer=True, positive=True)
-    #n is the sequence length
-    #b is the hidden embedding size of the state
-    #D is the total size of the traininable weights
-    s = Symbol(shape=(n, b), real=True, random=True) #states / observation
-    a = Symbol(shape=(n,), integer=True, random=True) #actions
-    r = Symbol(shape=(n,), real=True) #rewards
-    R_human = Symbol(real=True) #human reward
+    # n is the sequence length
+    # b is the hidden embedding size of the state
+    # D is the total size of the traininable weights
+    s = Symbol(shape=(n, b), real=True, random=True) # states / observation
+    a = Symbol(shape=(n,), integer=True, random=True) # actions
+    r = Symbol(shape=(n,), real=True) # rewards
+    R_human = Symbol(real=True) # human reward
     θ, SFT = Symbol(shape=(D,), real=True)
-    #θ is the trainable weights for the reinforcement-learning model
-    #SFT is the untrainable weights for supervised fine-tuning model
-    β = Symbol(real=True) #β is the constant to control the KL penalty
-    t = Symbol(integer=True) #time step counter
+    # θ is the trainable weights for the reinforcement-learning model
+    # SFT is the untrainable weights for supervised fine-tuning model
+    β = Symbol(real=True) # β is the constant to control the KL penalty
+    t = Symbol(integer=True) # time step counter
     Eq << apply(Equal(r[t], -log(Probability[θ](a[t] | s[t]) / Probability[SFT](a[t] | s[t])) * β + KroneckerDelta(t, n - 1) * R_human))
 
     Eq << Eq[0].this.find(KroneckerDelta).apply(algebra.delta.to.piece)
@@ -45,7 +45,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(And).apply(algebra.ne.lt.given.lt)
 
-    #https://arxiv.org/pdf/1909.08593.pdf#page=3
+    # https://arxiv.org/pdf/1909.08593.pdf# page=3
 
 
 

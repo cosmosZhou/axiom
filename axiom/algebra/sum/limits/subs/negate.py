@@ -10,10 +10,10 @@ def limits_subs(Sum, self, old=None, new=None):
 
     assert old == i
     c = new + i + 1
-    #new = c - i - 1
+    # new = c - i - 1
     assert not c._has(i)
-    #i = a => new = c - a - 1
-    #i = b - 1 => new = c - (b - 1) - 1 = c - b
+    # i = a => new = c - a - 1
+    # i = b - 1 => new = c - (b - 1) - 1 = c - b
     return Sum[i:c - b: c - a](expr._subs(old, new))
 
 @apply

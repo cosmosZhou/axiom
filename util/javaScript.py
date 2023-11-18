@@ -96,7 +96,7 @@ def get_args_for_writing(module, latexStr):
 
             text = statement
             if statement.startswith('    ') and not input:
-                #starting with more than 4 spaces indicates this line is a continuation of the previous line of code!
+                # starting with more than 4 spaces indicates this line is a continuation of the previous line of code!
                 inputs[-1] += f"\n{text}"
             else:
                 input.append(text)

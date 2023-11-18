@@ -39,7 +39,7 @@ def prove(Eq):
 
     Eq << algebra.eq.imply.eq.transport.apply(Eq[-1], lhs=2)
 
-    #https://en.wikipedia.org/wiki/Normal_distribution#Scalar_form
+    # https://en.wikipedia.org/wiki/Normal_distribution# Scalar_form
     
 
 

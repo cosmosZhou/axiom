@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << Eq.induct.lhs.this.expand()
 
-    #Integration by parts
+    # Integration by parts
     Eq << Eq[-1].this.rhs.apply(calculus.integral.to.add.by_parts) / n
 
     Eq << Eq[-1].this.lhs.args[1].expr.powsimp()

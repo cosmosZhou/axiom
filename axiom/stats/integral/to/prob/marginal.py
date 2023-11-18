@@ -15,8 +15,8 @@ def prove(Eq):
     x, y, z = Symbol(real=True, random=True)
     Eq << apply(Integral[x.var](Probability(x, y, z)))
 
-    #the following will result in a recursive reasoning:
-    #Eq << Eq[-1].this.rhs.apply(stats.probability.to.integral.joint, x)
+    # the following will result in a recursive reasoning:
+    # Eq << Eq[-1].this.rhs.apply(stats.probability.to.integral.joint, x)
     
     
 

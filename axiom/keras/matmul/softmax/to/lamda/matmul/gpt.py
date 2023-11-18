@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-3].subs(*Eq[-2:])
 
-    #https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf
+    # https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf
 
 
 if __name__ == '__main__':

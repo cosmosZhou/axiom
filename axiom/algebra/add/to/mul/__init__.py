@@ -34,7 +34,7 @@ def complement(argset, factor):
             argset.add(S(-1))
             return argset
 
-#precondition: if y.is_Pow:
+# precondition: if y.is_Pow:
 def extract_pow(x, y):
     by, ey = y.args
     if by == x:

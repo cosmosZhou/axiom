@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Factorial).apply(discrete.factorial.to.mul.factorial2)
 
-    #https://en.wikipedia.org/wiki/Double_factorial
+    # https://en.wikipedia.org/wiki/Double_factorial
 
 
 

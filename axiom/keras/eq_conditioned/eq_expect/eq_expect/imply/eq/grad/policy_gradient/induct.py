@@ -18,16 +18,16 @@ def prove(Eq):
     from axiom import keras, algebra, calculus
 
     b, D = Symbol(integer=True, positive=True)
-    s = Symbol(shape=(oo, b), real=True, random=True) #states / observation
-    a = Symbol(shape=(oo,), integer=True, random=True) #actions
-    r = Symbol(shape=(oo,), real=True, random=True) #rewards
-    π = Symbol(shape=(D,), real=True) #trainable weights for the agent
-    t = Symbol(integer=True) #time step counter
-    V, Q = Function(real=True, shape=()) #State-Value, Action-Value Function
-    γ = Symbol(domain=Interval(0, 1, right_open=True)) #Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
+    s = Symbol(shape=(oo, b), real=True, random=True) # states / observation
+    a = Symbol(shape=(oo,), integer=True, random=True) # actions
+    r = Symbol(shape=(oo,), real=True, random=True) # rewards
+    π = Symbol(shape=(D,), real=True) # trainable weights for the agent
+    t = Symbol(integer=True) # time step counter
+    V, Q = Function(real=True, shape=()) # State-Value, Action-Value Function
+    γ = Symbol(domain=Interval(0, 1, right_open=True)) # Discount factor: penalty to uncertainty of future rewards; myopic for γ = 0; and far-sighted for γ = 1
     n = Symbol(integer=True, nonnegative=True, given=False)
     *Eq[-3:], Eq.hypothesis = apply(
-                Equal(r[t] | s[:t] & a[:t], r[t]), #history-irrelevant conditional independence assumption for rewards based on states and actions
+                Equal(r[t] | s[:t] & a[:t], r[t]), # history-irrelevant conditional independence assumption for rewards based on states and actions
                 Equal((Q[π] ^ γ)(s[t].var, a[t].var), γ ** Lamda[t](t) @ Expectation[r[t:], a:π](r[t:] | s[t] & a[t])),
                 Equal((V[π] ^ γ)(s[t].var), γ ** Lamda[t](t) @ Expectation[r[t:], a:π](r[t:] | s[t])), n)
 
@@ -61,15 +61,15 @@ def prove(Eq):
 
     Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=0)
 
-    #https://spinningup.openai.com/en/latest/spinningup/rl_intro.html#bellman-equations
-    #http://incompleteideas.net/book/bookdraft2017nov5.pdf (Page 47)
-    #https://lilianweng.github.io/posts/2018-04-08-policy-gradient/
-    #https://danieltakeshi.github.io/2017/04/02/notes-on-the-generalized-advantage-estimation-paper/
-    #https://spinningup.openai.com/en/latest/spinningup/rl_intro.html#id4
-    #https://huggingface.co/deep-rl-course/unit4/pg-theorem?fw=pt
-    #https://www.52coding.com.cn/tags/Reinforcement-Learning/
-    #TRPO
-    #https://arxiv.org/pdf/1502.05477.pdf
+    # https://spinningup.openai.com/en/latest/spinningup/rl_intro.html# bellman-equations
+    # http://incompleteideas.net/book/bookdraft2017nov5.pdf (Page 47)
+    # https://lilianweng.github.io/posts/2018-04-08-policy-gradient/
+    # https://danieltakeshi.github.io/2017/04/02/notes-on-the-generalized-advantage-estimation-paper/
+    # https://spinningup.openai.com/en/latest/spinningup/rl_intro.html# id4
+    # https://huggingface.co/deep-rl-course/unit4/pg-theorem?fw=pt
+    # https://www.52coding.com.cn/tags/Reinforcement-Learning/
+    # TRPO
+    # https://arxiv.org/pdf/1502.05477.pdf
     
     
 

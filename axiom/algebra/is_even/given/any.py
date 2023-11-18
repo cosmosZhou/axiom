@@ -14,7 +14,7 @@ def apply(given, k=None):
 def prove(Eq):
     from axiom import algebra
 
-    #n = q * d + r
+    # n = q * d + r
     n = Symbol(integer=True, given=True)
     r = Symbol(integer=True)
     Eq << apply(Equal(n % 2, 0))

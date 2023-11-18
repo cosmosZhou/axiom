@@ -92,7 +92,7 @@ def prove(Eq):
     Eq << Eq[-1].this.expr.apply(algebra.square_is_zero.imply.is_zero)
 
     Eq << Eq[-1].this.expr.lhs.definition
-    #https://en.wikipedia.org/wiki/Rolle%27s_theorem
+    # https://en.wikipedia.org/wiki/Rolle%27s_theorem
 
 
 

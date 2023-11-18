@@ -16,19 +16,19 @@ def apply(eq_theta, eq_R, Q, K, V, j):
 def prove(Eq):
     from axiom import keras, algebra, discrete
 
-    #n denotes sequence length (seq_length)
-    #b denotes 10000
+    # n denotes sequence length (seq_length)
+    # b denotes 10000
     n, b = Symbol(integer=True, positive=True)
-    #d denotes embedding size which must be even
+    # d denotes embedding size which must be even
     d = Symbol(integer=True, positive=True, even=True)
-    #R denotes rotary matrix
+    # R denotes rotary matrix
     R = Function(shape=(d, d), real=True)
     θ = Symbol(shape=(n, d / 2), real=True)
-    #k, t denote token index
-    #i denotes row index
+    # k, t denote token index
+    # i denotes row index
     i, j, k, t = Symbol(integer=True)
     Q, K, V = Symbol(shape=(n, d), real=True)
-    #λ denotes scaling factor
+    # λ denotes scaling factor
     λ = Symbol(real=True)
     Eq << apply(*rotary_matrix(R, θ, d, b, k, i, λ), Q, K, V, j)
 

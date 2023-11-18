@@ -50,7 +50,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(Sum).apply(algebra.sum.to.mul.series.arithmetic).reversed
 
-    #https://en.wikipedia.org/wiki/Bessel's_correction
+    # https://en.wikipedia.org/wiki/Bessel's_correction
     
 
 

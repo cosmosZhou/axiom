@@ -28,7 +28,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum).expr.subs(Eq[2])
 
-    #Eq << Eq.hypothesis.find(ReducedSum / Symbol)
+    # Eq << Eq.hypothesis.find(ReducedSum / Symbol)
     sample_mean = Eq.hypothesis.find(Mul[ReducedSum])
     Eq << Variance(sample_mean).this.apply(stats.var.to.mul)
 

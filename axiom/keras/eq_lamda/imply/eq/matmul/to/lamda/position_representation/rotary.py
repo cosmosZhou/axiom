@@ -55,18 +55,18 @@ def apply(eq_R, x):
 def prove(Eq):
     from axiom import discrete, algebra
 
-    #n denotes sequence length (seq_length)
-    #b denotes 10000
+    # n denotes sequence length (seq_length)
+    # b denotes 10000
     n, b = Symbol(integer=True, positive=True)
-    #d denotes embedding size which must be even
+    # d denotes embedding size which must be even
     d = Symbol(integer=True, positive=True, even=True)
-    #x_i denotes token embedding at index i (ie, x denotes sentence embedding)
+    # x_i denotes token embedding at index i (ie, x denotes sentence embedding)
     x = Symbol(shape=(n, d), real=True)
-    #R denotes rotary matrix function
+    # R denotes rotary matrix function
     R = Function(shape=(d, d), real=True)
-    #i denotes token index
-    #j denotes row index
-    #k denotes column index
+    # i denotes token index
+    # j denotes row index
+    # k denotes column index
     i, j, k = Symbol(integer=True)
     Eq << apply(Equal(R(i), rotary_matrix(d, b, i, j, k)), x[i])
 
@@ -88,8 +88,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.mul)
 
-    #reference:
-    #https://arxiv.org/pdf/2104.09864.pdf#page=7
+    # reference:
+    # https://arxiv.org/pdf/2104.09864.pdf# page=7
     
     
 

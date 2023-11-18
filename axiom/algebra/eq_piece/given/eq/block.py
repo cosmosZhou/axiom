@@ -21,7 +21,7 @@ def apply(eq, axis=0):
     prefix = [slice(None)] * axis
     
     n = [0] * len(ecs)
-    X = []#blocks
+    X = []# blocks
     for i, (expr, cond) in enumerate(ecs):
         if not cond:
             S[b], n[i] = cond.of(LessEqual)

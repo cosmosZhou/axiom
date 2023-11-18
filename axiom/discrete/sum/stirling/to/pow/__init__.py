@@ -16,7 +16,7 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(Sum[k:n + 1](FallingFactorial(x, k) * Stirling(n, k)))
 
-    #try to prove it by inspecting the recurrence relations of the coefficients! We can induct on n:
+    # try to prove it by inspecting the recurrence relations of the coefficients! We can induct on n:
 
 
     Eq << Eq[0].subs(n, n + 1)

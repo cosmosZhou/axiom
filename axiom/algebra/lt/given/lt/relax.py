@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq <<= Eq[1] & Eq[-1]
 
-    #Eq <<= Eq[-1] & Eq[1]
+    # Eq <<= Eq[-1] & Eq[1]
 
 
 if __name__ == '__main__':

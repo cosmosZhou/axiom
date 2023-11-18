@@ -24,7 +24,7 @@ def prove(Eq):
     Eq << geometry.cos_is_zero.imply.eq.apply(Eq[0])
     Eq << algebra.any.given.cond.subs.apply(Eq[1], Eq[1].variable, Floor(x / S.Pi))
 
-    #https://en.wikipedia.org/wiki/Argument_(complex_analysis)
+    # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 
 
 if __name__ == '__main__':

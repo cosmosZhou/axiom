@@ -23,7 +23,7 @@ def prove(Eq):
     from axiom import sets, algebra
 
     a, b, x = Symbol(integer=True, given=True)
-    #Eq << apply(x >= b, a > x)
+    # Eq << apply(x >= b, a > x)
     Eq << apply(x <= b, x > a)
 
     Eq << sets.el_range.given.et.apply(Eq[-1])
@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << algebra.ge.given.gt.relax.apply(Eq[-2])
 
-    #Eq << Eq[-2].reversed
+    # Eq << Eq[-2].reversed
 
 
 if __name__ == '__main__':
