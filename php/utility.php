@@ -313,7 +313,7 @@ function yield_from_py($python_file)
                     // cope with comments starting with #
                     if (preg_match('/^\s*#(.*)/', $statement, $matches)) {
                         $yield['comment'] = true;
-                        $yield['statement'] = "#" . ltrim($matches[1]);
+                        $yield['statement'] = "#" . $matches[1];
                         yield $yield;
                         continue;
                     }
@@ -333,7 +333,7 @@ function yield_from_py($python_file)
             // cope with comments starting with #
             if (preg_match('/^\s*#(.*)/', $statement, $matches)) {
                 $yield['comment'] = true;
-                $yield['statement'] = "#" . ltrim($matches[1]);
+                $yield['statement'] = "#" . $matches[1];
 
                 yield $yield;
                 continue;
