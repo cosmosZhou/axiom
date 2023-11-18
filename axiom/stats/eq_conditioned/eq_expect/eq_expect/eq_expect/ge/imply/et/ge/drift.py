@@ -107,7 +107,7 @@ def prove(Eq):
 
     Eq << algebra.ge.ge.imply.ge.transit.apply(Eq.ge, Eq[-1])
 
-    Eq << algebra.inf_ge.imply.all_ge.apply(Eq[-1])
+    Eq << algebra.inf_ge.imply.all.ge.apply(Eq[-1])
 
     Eq <<= Eq[2].subs(s[t].var, s[t]).subs(t, 0), Eq.V_quote.subs(s[t].var, s[t]).subs(t, 0)
 

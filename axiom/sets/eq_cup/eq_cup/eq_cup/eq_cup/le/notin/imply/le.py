@@ -92,7 +92,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, ret=0)
 
-    Eq << algebra.any.imply.any_et.limits.cond.apply(Eq[-1], 0, simplify=None)
+    Eq << algebra.any.imply.any.et.limits.cond.apply(Eq[-1], 0, simplify=None)
 
     Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], simplify=None)
 
@@ -108,7 +108,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, simplify=None)
 
-    Eq << algebra.any.imply.any_et.limits.cond.apply(Eq[-1], 0, simplify=None)
+    Eq << algebra.any.imply.any.et.limits.cond.apply(Eq[-1], 0, simplify=None)
 
     Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], -1, simplify=None)
 
@@ -127,13 +127,13 @@ def prove(Eq):
 
     Eq << algebra.cond.any.imply.any.et.apply(Eq[1] & Eq[3], Eq[-1], simplify=None)
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[-1], simplify=None)
 
     Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], -2, simplify=None)
 
     Eq << Eq[-1].this.expr.apply(sets.eq.eq.eq.el.imply.eq.sum, Eq[-1].find(Sum[2]).find(Sum), simplify=None, ret=slice(None))
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.args[3:5].apply(algebra.eq.cond.imply.cond.subs, simplify=None)
 
@@ -141,7 +141,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(sets.eq.eq.eq.el.imply.eq.sum, Eq[-1].find(Sum[2]), simplify=None)
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[-1], simplify=None)
 
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)

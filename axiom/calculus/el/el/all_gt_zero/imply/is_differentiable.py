@@ -8,7 +8,7 @@ def apply(contains0, contains1, all_is_positive):
     a, b = domain.of(Interval)
     (fx, (x, S[2])), (S[x], S[a], S[b]) = all_is_positive.of(All[Derivative > 0])
     assert domain.is_open
-    from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle import is_differentiable
+    from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any.eq.Rolle import is_differentiable
     f = lambda t: fx._subs(x, t)
     return is_differentiable(f, x0, x1, open=False)
 
@@ -25,7 +25,7 @@ def prove(Eq):
     Eq << calculus.all_gt_zero.imply.is_differentiable.apply(Eq[2])
 
     Eq << sets.el.el.imply.subset.interval.apply(Eq[0], Eq[1])
-    
+
     Eq << sets.subset.all.imply.all.apply(Eq[-1], Eq[-2])
 
 

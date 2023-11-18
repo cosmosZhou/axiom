@@ -18,7 +18,7 @@ def prove(Eq):
     f = Function(integer=True)
     Eq << apply(Any[n:m + 1](f(n) > 0), n, m - n)
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[0], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[0], simplify=None)
 
     Eq << algebra.any.imply.any.limits.negate.oo.apply(Eq[-1])
 

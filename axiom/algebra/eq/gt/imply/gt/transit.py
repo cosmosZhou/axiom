@@ -1,15 +1,19 @@
 from util import *
 
+def transit(cls, eq, cond):
+    lhs, x = eq.of(Equal)
+    _x, rhs = cond.of(cls)
+    if x != _x:
+        if lhs == _x:
+            lhs = x
+        elif x == rhs:
+            lhs, rhs = _x, lhs
+
+    return cls(lhs, rhs)
 
 @apply
-def apply(eq, gt):
-    a, x = eq.of(Equal)
-    _x, y = gt.of(Greater)
-    if x != _x:
-        assert a == _x
-        a = x
-
-    return a > y
+def apply(eq, cond):
+    return transit(Greater, eq, cond)
 
 
 @prove

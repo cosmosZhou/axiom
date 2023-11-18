@@ -29,7 +29,7 @@ def prove(Eq):
     Eq <<= Eq[-2].this.rhs.args[0].apply(sets.el_cap.given.all_el), \
     Eq[-1].this.lhs.args[0].apply(sets.el_cap.imply.all_el)
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.all.all.given.all_et), \
+    Eq <<= Eq[-2].this.rhs.apply(algebra.all.all.given.all.et), \
     Eq[-1].this.lhs.apply(algebra.all.all.imply.all.et)
 
     Eq <<= Eq[-2].this.lhs.apply(sets.el_cap.imply.all_el), \

@@ -64,7 +64,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (x, Interval(0, S.Pi, right_open=True)))
 
-    Eq << calculus.all_gt_zero.imply.all_gt.monotony.right_open.apply(Eq[-1])
+    Eq << calculus.all_gt_zero.imply.all.gt.monotony.right_open.apply(Eq[-1])
 
     Eq << Eq[-1].subs(Eq[2])
 
@@ -77,7 +77,7 @@ def prove(Eq):
 
     Eq << algebra.gt_zero.imply.gt.apply(Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

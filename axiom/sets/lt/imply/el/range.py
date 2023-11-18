@@ -4,7 +4,7 @@ from util import *
 @apply(simplify=None)
 def apply(given):
     n, b = given.of(Less)
-    assert n.is_integer
+    assert n.is_extended_integer
     return Element(n, Range(-oo, b))
 
 
@@ -15,8 +15,11 @@ def prove(Eq):
 
     Eq << Eq[-1].simplify()
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-02-28
+# updated on 2023-11-13

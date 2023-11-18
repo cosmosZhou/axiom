@@ -27,4 +27,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2019-05-04
+del collect
 from . import collect

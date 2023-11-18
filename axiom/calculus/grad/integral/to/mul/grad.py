@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << calculus.imply.is_continuous.interval.apply(*Eq[-1].find(Integral).args)
 
-    Eq << calculus.is_continuous.imply.any_eq.interval01.mean_value_theorem.apply(Eq[-1], 'lamda')
+    Eq << calculus.is_continuous.imply.any.eq.interval01.mean_value_theorem.apply(Eq[-1], 'lamda')
 
     Eq.exists = Eq[-1].this.expr.apply(calculus.eq.imply.eq.limit.div, epsilon)
 

@@ -16,7 +16,7 @@ def prove(Eq):
     a = Symbol(integer=True, given=True)
     Eq << apply(Equal(Card(A), 1), Element(a, A))
 
-    Eq << sets.eq.imply.any_eq.one.apply(Eq[0], reverse=True)
+    Eq << sets.eq.imply.any.eq.one.apply(Eq[0], reverse=True)
 
     Eq << algebra.cond.any.imply.any.et.apply(Eq[1], Eq[-1], simplify=None)
 

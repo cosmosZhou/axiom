@@ -4,7 +4,6 @@ from . import all_notin
 from . import is_empty
 from . import et
 from . import ne
-from . import all_ne
 from . import gt
 from . import ge
 from . import lt
@@ -14,3 +13,4 @@ from . import ne_zero
 from . import le
 from . import ou
 from . import any
+from . import all

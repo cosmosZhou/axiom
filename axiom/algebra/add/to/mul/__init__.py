@@ -109,7 +109,11 @@ def factorize(args, common_terms):
             additives.append(Mul(*argset))
         elif arg.is_Pow:
             b, e1 = arg.args
-            S[b], e0 = factor.of(Pow)
+            if be := factor.of(Pow):
+                S[b], e0 = be
+            else:
+                assert factor == b
+                e0 = 1
             additives.append(b ** (e1 - e0))
         else:
             assert arg == factor
@@ -158,6 +162,7 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
+del together
 from . import together
 # created on 2018-02-21
 # updated on 2023-04-30

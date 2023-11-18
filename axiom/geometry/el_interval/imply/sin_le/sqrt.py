@@ -44,9 +44,9 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-2], Eq[-1])
 
-    Eq << calculus.is_continuous.is_differentiable.eq.imply.any_eq.Rolle.apply(Eq.all_eq, Eq.all_el, Eq[-1])
+    Eq << calculus.is_continuous.is_differentiable.eq.imply.any.eq.Rolle.apply(Eq.all_eq, Eq.all_el, Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

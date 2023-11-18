@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << ~Eq[1]
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq[-2], Eq[-1])
+    Eq << algebra.all.any.imply.any.et.apply(Eq[-2], Eq[-1])
 
     Eq << Eq[-1].this.expr.lhs.apply(calculus.grad.to.limit)
 
@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.args[1].apply(calculus.limit_is_infinite.imply.gt.limit)
 
-    
+
 
 
 if __name__ == '__main__':

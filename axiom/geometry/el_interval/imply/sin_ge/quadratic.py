@@ -43,7 +43,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (x, Interval(0, S.Pi / 2)))
 
-    Eq << calculus.all_ge_zero.imply.all_ge.monotony.right_close.apply(Eq[-1])
+    Eq << calculus.all_ge_zero.imply.all.ge.monotony.right_close.apply(Eq[-1])
 
     Eq << Eq[-1].this.find(f).defun()
 
@@ -55,7 +55,7 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[0], Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

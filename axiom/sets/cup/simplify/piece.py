@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.lhs.expr.apply(sets.intersect.to.piece)
 
-    Eq << Eq[-1].this.lhs.apply(sets.cup.to.union.st.piece)
+    Eq << Eq[-1].this.lhs.apply(sets.cup_piece.to.union)
 
 
 if __name__ == '__main__':

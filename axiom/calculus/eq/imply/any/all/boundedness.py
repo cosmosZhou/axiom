@@ -50,13 +50,12 @@ def prove(Eq):
 
     Eq << Eq[-2].this.expr.apply(algebra.ge.le.imply.le.transit, Eq[-1])
 
-    Eq << algebra.any_all.all.imply.any.all.apply(Eq.less_than, Eq[-1])
-
-    Eq.any = Eq[-1].this.expr.simplify()
+    Eq.any = algebra.any_all.all.imply.any.all.apply(Eq.less_than, Eq[-1])
 
     Eq << algebra.any.given.any.subs.apply(Eq[1], Eq[1].variable, M)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.given.gt_zero)
+    Eq << Eq[-1].this.find(All).apply(algebra.all.limits.domain_defined)
 
     Eq.is_nonzero = Unequal(M, 0, plausible=True)
 
@@ -84,12 +83,12 @@ def prove(Eq):
 
     Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq.any)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-05-16
-# updated on 2023-05-15
+# updated on 2023-11-17

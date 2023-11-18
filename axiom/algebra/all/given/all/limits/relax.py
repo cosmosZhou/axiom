@@ -1,15 +1,20 @@
 from util import *
 
 
-
 @apply
-def apply(given, domain=None, wrt=None):
-    function, *limits = given.of(All)
+def apply(given, limit):
+    if isinstance(limit, tuple):
+        wrt, *domain = limit
+    else:
+        domain = limit
+        wrt = None
 
-    if isinstance(domain, tuple):
-        wrt, *domain = domain
+    expr, *limits = given.of(All)
+    if isinstance(domain, list):
         if len(domain) == 1:
             domain = domain[0]
+        elif len(domain) == 2:
+            domain = wrt.range(*domain)
 
     if wrt is None:
         i = 0
@@ -25,7 +30,7 @@ def apply(given, domain=None, wrt=None):
     limit = (x, domain)
 
     limits[i] = limit
-    return All(function, *limits)
+    return All(expr, *limits)
 
 
 @prove
@@ -35,11 +40,11 @@ def prove(Eq):
     e = Symbol(real=True)
     f = Function(shape=(), integer=True)
 
-    Eq << apply(All[e:A](f(e) > 0), domain=A | B)
+    Eq << apply(All[e:A](f(e) > 0), (e, A | B))
 
     Eq << ~Eq[0]
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq[1], Eq[-1])
+    Eq << algebra.all.any.imply.any.et.apply(Eq[1], Eq[-1])
 
 
 if __name__ == '__main__':

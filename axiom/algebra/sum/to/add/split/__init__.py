@@ -28,7 +28,7 @@ def process_slice(index, self_start, self_stop):
     return mid
 
 def split(cls, self, indices, wrt=None, simplify=True, evaluate=False):
-    function, *limits = self.of(cls)
+    expr, *limits = self.of(cls)
     if len(limits) > 1:
         if wrt is None:
             x, *ab = limits[-1]
@@ -46,12 +46,12 @@ def split(cls, self, indices, wrt=None, simplify=True, evaluate=False):
                         if isinstance(mid, tuple):
                             ...
                             assert False
-                        return cls.operator(cls(function, *limits[:-1], (x, a, mid - 1)).simplify(), cls(function, *limits[:-1], (x, mid, b)).simplify(), evaluate=evaluate)
+                        return cls.operator(cls(expr, *limits[:-1], (x, a, mid - 1)).simplify(), cls(expr, *limits[:-1], (x, mid, b)).simplify(), evaluate=evaluate)
                     elif isinstance(indices, (set, Set)):
                         intersection = universe & indices
                         if intersection:
-                            return cls.operator(cls(function, *limits[:-1], (x, intersection)).simplify(),
-                                                      cls(function, *limits[:-1], (x, universe - indices)).simplify(), evaluate=evaluate)
+                            return cls.operator(cls(expr, *limits[:-1], (x, intersection)).simplify(),
+                                                      cls(expr, *limits[:-1], (x, universe - indices)).simplify(), evaluate=evaluate)
 
             return self
 
@@ -70,14 +70,14 @@ def split(cls, self, indices, wrt=None, simplify=True, evaluate=False):
             limits2 = [*limits]
             limits2[i] = (x, universe - indices)
 
-            return cls.operator(cls(function, *limits1).simplify(), cls(function, *limits2), evaluate=evaluate)
+            return cls.operator(cls(expr, *limits1).simplify(), cls(expr, *limits2), evaluate=evaluate)
         return self
 
-    (x, *ab), *_ = limits
+    (x, *ab), = limits
     if x.is_Sliced:
         if not ab:
             x, z = x.bisect(indices, allow_empty=True).args
-            return cls(cls(function, (x,)).simplify(), (z,))
+            return cls(cls(expr, (x,)).simplify(), (z,))
 
     if not isinstance(indices, slice):
         if len(ab) == 1:
@@ -97,8 +97,8 @@ def split(cls, self, indices, wrt=None, simplify=True, evaluate=False):
             indices = x.domain_conditioned(indices)
         intersection = universe & indices
         if intersection:
-            first = cls(function, (x, intersection))
-            second = cls(function, (x, universe - indices))
+            first = cls(expr, (x, intersection))
+            second = cls(expr, (x, universe - indices))
 
             if simplify:
                 first = first.simplify()
@@ -119,8 +119,8 @@ def split(cls, self, indices, wrt=None, simplify=True, evaluate=False):
                 ...
                 assert False
 
-            lhs = cls(function, (x, a, mid))
-            rhs = cls(function, (x, mid, b))
+            lhs = cls(expr, (x, a, mid))
+            rhs = cls(expr, (x, mid, b))
             return cls.operator(lhs.simplify(), rhs.simplify(), evaluate=evaluate)
 
     return self

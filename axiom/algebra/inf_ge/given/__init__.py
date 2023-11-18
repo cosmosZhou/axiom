@@ -1,1 +1,1 @@
-from . import all_ge
+from . import all

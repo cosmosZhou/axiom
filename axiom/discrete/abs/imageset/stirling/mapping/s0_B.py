@@ -45,7 +45,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(sets.el_cup.imply.any_el)
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq.x_union_s0, Eq[-1].reversed, simplify=None)
+    Eq << algebra.all.any.imply.any.et.apply(Eq.x_union_s0, Eq[-1].reversed, simplify=None)
 
     Eq << Eq[-1].this.expr.apply(sets.eq.eq.imply.eq.union)
 
@@ -68,7 +68,7 @@ def prove(Eq):
 
     Eq << algebra.cond.all.imply.all.et.apply(Eq.all_s0_equality, Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.expr.apply(algebra.all.any.imply.any_et)
+    Eq << Eq[-1].this.expr.apply(algebra.all.any.imply.any.et)
 
     Eq.all_B_contains = Eq[-1].this.expr.expr.apply(algebra.eq.eq.imply.eq.subs, swap=True).limits_subs(Eq[-1].variable, Eq.all_s0_equality.variable)
 

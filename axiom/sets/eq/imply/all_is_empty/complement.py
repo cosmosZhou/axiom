@@ -63,7 +63,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this().expr.lhs.simplify()
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[-1], simplify=None)
 
     Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], index=1, simplify=None)
 

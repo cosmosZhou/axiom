@@ -2,13 +2,9 @@ from util import *
 
 
 @apply
-def apply(eq, gt):
-    a, x = eq.of(Equal)
-    _x, y = gt.of(GreaterEqual)
-    if x != _x:
-        S[a] = _x
-
-    return a >= y
+def apply(eq, cond):
+    from axiom.algebra.eq.gt.imply.gt.transit import transit
+    return transit(GreaterEqual, eq, cond)
 
 
 @prove
@@ -24,3 +20,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-05-01
+# updated on 2023-11-12

@@ -12,7 +12,7 @@ def apply(self, i=None):
             return
     else :
         eq = args[i]
-            
+
     del args[i]
     this = self.func(*args)
     return Or(*((arg & this).simplify() for arg in eq.of(Or)))
@@ -35,13 +35,14 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[-2]
 
-    
-    
+
+
 
 
 if __name__ == '__main__':
     run()
 
+del collect
 from . import collect
 # created on 2018-01-06
 # updated on 2023-05-13

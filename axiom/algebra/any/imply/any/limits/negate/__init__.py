@@ -16,7 +16,7 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Any[i:a:b](f(i) >= 0))
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[0], simplify=False)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[0], simplify=False)
 
     Eq << algebra.any.imply.any.limits.negate.oo.apply(Eq[-1])
 

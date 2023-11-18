@@ -16,9 +16,9 @@ def prove(Eq):
     x = Symbol(hyper_real=True)
     Eq << apply(Element(x, Interval.open(-oo, 0)))
 
-    Eq << sets.el.imply.any_eq.apply(Eq[0])
+    Eq << sets.el.imply.any.eq.apply(Eq[0])
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.find(Element).simplify()
 
@@ -28,7 +28,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, reverse=True)
 
-    
+
 
 
 if __name__ == '__main__':

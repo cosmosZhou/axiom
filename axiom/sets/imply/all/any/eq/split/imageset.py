@@ -26,7 +26,7 @@ def prove(Eq):
     Eq << algebra.all.given.infer.apply(Eq[1])
 
     Eq << Eq[-1].this.lhs.rhs.definition
-    Eq << Eq[-1].this.lhs.apply(sets.el.imply.any_eq.split.imageset)
+    Eq << Eq[-1].this.lhs.apply(sets.el.imply.any.eq.split.imageset)
 
     Eq << Eq[-1].this.args[0].expr.reversed
 

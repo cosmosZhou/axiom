@@ -31,7 +31,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.expr.apply(sets.subset.imply.subset.union.rhs, Eq[1].find(Cup))
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq[-2], Eq[-1])
+    Eq << algebra.all.any.imply.any.et.apply(Eq[-2], Eq[-1])
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)
 

@@ -40,8 +40,6 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Abs[Mul]).apply(algebra.abs.to.mul)
 
-    
-
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.lhs, Eq[1] * y)
 
     

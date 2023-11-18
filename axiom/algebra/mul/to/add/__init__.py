@@ -11,7 +11,7 @@ def convert(self, i=None, deep=False, simplify=True):
             return self
     else :
         arg = args[i]
-    
+
     summand = []
     for e in arg.args:
         _args = [*args]
@@ -20,12 +20,12 @@ def convert(self, i=None, deep=False, simplify=True):
         if deep and prod.is_Mul:
             prod = convert(prod, deep=deep, simplify=simplify)
         summand.append(prod)
-        
+
     summand = Add(*summand)
     if simplify:
         summand = summand.simplify()
     return summand
-    
+
 
 @apply
 def apply(self, i=None, deep=False, *, simplify=True):
@@ -40,14 +40,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.expand()
 
-    
-    
+
+
 
 
 if __name__ == '__main__':
     run()
 
 from . import st, square
+del poly
 from . import poly
 # created on 2018-03-01
 # updated on 2022-01-15

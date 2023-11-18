@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq.ne_zero = Eq[-1].subs(t, 0)
 
-    Eq << algebra.eq_argmax.imply.all_ge.apply(Eq[5])
+    Eq << algebra.eq_argmax.imply.all.ge.apply(Eq[5])
 
     Eq << Eq[-1].subs(π_quote, π_hat)
 
@@ -118,7 +118,7 @@ def prove(Eq):
 
     Eq << ~Eq.ge_MDV
 
-    Eq << algebra.any.any.imply.any_et.apply(Eq[-1], Eq[-2])
+    Eq << algebra.any.any.imply.any.et.apply(Eq[-1], Eq[-2])
 
     Eq << Eq[-1].this.expr.args[:2].apply(algebra.ge.lt.imply.lt.transit)
 

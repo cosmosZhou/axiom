@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(n):
-    from axiom.discrete.imply.all_et.mapping.Qu2v import predefined_symbols
+    from axiom.discrete.imply.all.et.mapping.Qu2v import predefined_symbols
     Q, w, x = predefined_symbols(n)
 
     Pn1 = Symbol("P_{n+1}", conditionset(x[:n + 1], Equal(x[:n + 1].cup_finiteset(), Range(n + 1))))
@@ -47,7 +47,7 @@ def prove(Eq):
 
     Eq <<= Eq.subset_P & Eq.subset_Q
 
-    
+
 
 
 if __name__ == '__main__':

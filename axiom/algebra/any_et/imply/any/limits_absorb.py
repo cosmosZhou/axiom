@@ -80,7 +80,7 @@ def prove(Eq):
     Eq << apply(Any[x[:n]:f(x[:n]) > 0, x[n]]((g(x[n]) > f_quote(x[:n])) & (h(x[:n + 1]) > 0)), index=0)
 
     S = Symbol(conditionset(x[:n + 1], (g(x[n]) > f_quote(x[:n])) & (f(x[:n]) > 0)))
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[0])
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[0])
 
     Eq << Any[x[:n + 1]](Element(x[:n + 1], S) & (h(x[:n + 1]) > 0), plausible=True)
 
@@ -90,7 +90,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.limits[0][1].definition
 
-    
+
 
 
 if __name__ == '__main__':

@@ -20,11 +20,11 @@ def prove(Eq):
 
     Eq << sets.lt.el.imply.lt.transit.apply(Eq[0], Eq[2])
 
-    Eq.x_contains = sets.lt.el.imply.el.intersect.apply(Eq[-1], Eq[1])
+    Eq.x_contains = sets.lt.el_interval.imply.el.interval.intersect.apply(Eq[-1], Eq[1])
 
     Eq << sets.gt.el.imply.gt.transit.apply(Eq[0].reversed, Eq[1])
 
-    Eq.y_contains = sets.gt.el.imply.el.intersect.apply(Eq[-1], Eq[2])
+    Eq.y_contains = sets.gt.el_interval.imply.el.interval.intersect.apply(Eq[-1], Eq[2])
 
     Eq << algebra.cond.given.et.infer.split.apply(Eq[3], cond=Equal(x, -1))
 

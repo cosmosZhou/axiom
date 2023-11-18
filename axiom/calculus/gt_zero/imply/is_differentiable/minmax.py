@@ -7,7 +7,7 @@ def apply(is_positive, x0, x1):
     assert d == 2
     domain = x_.domain
     assert x0.domain == domain == x1.domain
-    from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle import is_differentiable
+    from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any.eq.Rolle import is_differentiable
     f = lambda x: fx._subs(x_, x)
     x0, x1 = Min(x0, x1), Max(x0, x1)
     return is_differentiable(f, x0, x1, open=False)

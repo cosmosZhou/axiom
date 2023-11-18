@@ -22,11 +22,11 @@ def prove(Eq):
     x, y = Symbol(super_real=True)
     Eq << apply(Element(x, Reals), Element(y, Reals))
 
-    Eq << sets.el.imply.any_eq.apply(Eq[0], var='a')
+    Eq << sets.el.imply.any.eq.apply(Eq[0], var='a')
 
-    Eq << sets.el.imply.any_eq.apply(Eq[1], var='b')
+    Eq << sets.el.imply.any.eq.apply(Eq[1], var='b')
 
-    Eq << algebra.any.any.imply.any_et.apply(Eq[-1], Eq[-2], simplify=None)
+    Eq << algebra.any.any.imply.any.et.apply(Eq[-1], Eq[-2], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.mul)
 
@@ -34,7 +34,7 @@ def prove(Eq):
     c = Symbol(real=True)
     Eq << algebra.any.imply.any.subs.apply(Eq[-1], a * b, c)
 
-    
+
 
 
 if __name__ == '__main__':

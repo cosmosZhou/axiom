@@ -24,7 +24,7 @@ def prove(Eq):
     k = k.copy(domain=Range(*ab))
     Eq << Eq.is_continuous.apply(algebra.cond.imply.all.restrict, (x0, Interval(k, k + 1)))
 
-    Eq.mean_value_theorem = calculus.is_continuous.imply.any_eq.mean_value_theorem.apply(Eq[-1])
+    Eq.mean_value_theorem = calculus.is_continuous.imply.any.eq.mean_value_theorem.apply(Eq[-1])
 
     Eq << algebra.imply.all.limits_assert.apply(Eq[-1].limits)
 
@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq << algebra.all_et.imply.et.all.apply(Eq[-1])
 
-    Eq <<= algebra.all.any.imply.any_et.apply(Eq[-2], Eq.mean_value_theorem), algebra.all.any.imply.any_et.apply(Eq[-1], Eq.mean_value_theorem)
+    Eq <<= algebra.all.any.imply.any.et.apply(Eq[-2], Eq.mean_value_theorem), algebra.all.any.imply.any.et.apply(Eq[-1], Eq.mean_value_theorem)
 
     Eq <<= Eq[-2].this.expr.apply(algebra.eq.cond.imply.cond.subs, reverse=True), \
     Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, reverse=True)

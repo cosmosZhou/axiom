@@ -12,7 +12,7 @@ def split(given, index):
 
 @apply
 def apply(given, index=-1):
-    return split(given, index)    
+    return split(given, index)
 
 
 @prove
@@ -33,8 +33,8 @@ def prove(Eq):
 
     Eq << algebra.cond.infer.imply.cond.transit.apply(Eq[0], Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
 
 from . import delete
-from . import subs
+del collect
 from . import collect
 # created on 2018-01-04
 # updated on 2023-04-24

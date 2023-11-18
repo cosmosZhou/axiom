@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(n, Q=None):
     if Q is None:
-        from axiom.discrete.imply.all_et.mapping.Qu2v import predefined_symbols
+        from axiom.discrete.imply.all.et.mapping.Qu2v import predefined_symbols
         Q, w, x = predefined_symbols(n)
     else:
         x = Q.definition.expr.variable
@@ -25,9 +25,9 @@ def prove(Eq):
     Eq << Eq[2].subs(Eq[-1].reversed)
 
     u = Eq[-1].lhs.arg.indices[0]
-    Eq << discrete.imply.all_et.mapping.Qu2v.apply(n, n, u)
+    Eq << discrete.imply.all.et.mapping.Qu2v.apply(n, n, u)
 
-    Eq << discrete.imply.all_et.mapping.Qu2v.apply(n, u, n)
+    Eq << discrete.imply.all.et.mapping.Qu2v.apply(n, u, n)
 
     Eq << sets.all_et.all_et.imply.eq.apply(Eq[-1], Eq[-2])
 

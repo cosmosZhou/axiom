@@ -37,7 +37,7 @@ def prove(Eq):
                 All[x:S, p[:n]:P](Element(Lamda[k:n](x[p[k]]), S)),
                 Equal(Card(e), n))
 
-    Eq << sets.eq.imply.any_eq.condset.all.apply(Eq[2])
+    Eq << sets.eq_card.imply.any.eq.apply(Eq[2])
 
     Eq << algebra.all.any.imply.any.all.et.apply(Eq[0], Eq[-1])
 

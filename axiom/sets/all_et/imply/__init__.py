@@ -1,1 +1,1 @@
-from . import all_ne
+from . import all

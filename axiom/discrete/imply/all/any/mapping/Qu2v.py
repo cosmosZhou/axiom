@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(n, u, v):
-    from axiom.discrete.imply.all_et.mapping.Qu2v import predefined_symbols
+    from axiom.discrete.imply.all.et.mapping.Qu2v import predefined_symbols
     Q, w, x = predefined_symbols(n)
     j = w.definition.variables[0]
     x_quote = Symbol(w[n, j] @ x[:n + 1])
@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << algebra.all_et.imply.all.apply(Eq[-1], 1)
 
-    Eq.x_j_equality = Eq[-1].this.expr.apply(discrete.eq.imply.any_eq.index, v)
+    Eq.x_j_equality = Eq[-1].this.expr.apply(discrete.eq.imply.any.eq.index, v)
 
     Eq << Eq.x_j_equality.this.expr.limits_subs(Eq.x_j_equality.expr.variable, j)
 

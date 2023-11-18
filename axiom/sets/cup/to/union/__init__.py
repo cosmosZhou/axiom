@@ -29,8 +29,8 @@ def prove(Eq):
     Eq <<= Eq[-2].this.rhs.args[0].apply(sets.el_cup.given.any_el), \
     Eq[-1].this.lhs.args[0].apply(sets.el_cup.imply.any_el)
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.ou.given.any_ou), \
-    Eq[-1].this.lhs.apply(algebra.ou.imply.any_ou)
+    Eq <<= Eq[-2].this.rhs.apply(algebra.ou.given.any.ou), \
+    Eq[-1].this.lhs.apply(algebra.ou.imply.any.ou)
 
     Eq <<= Eq[-2].this.rhs.expr.apply(sets.ou.given.el), \
     Eq[-1].this.lhs.expr.apply(sets.ou.imply.el)
@@ -43,7 +43,6 @@ if __name__ == '__main__':
     run()
 
 from . import doit
-from . import st
 from . import single_variable
 from . import split
 # created on 2021-02-10

@@ -46,7 +46,7 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq[0])
+    Eq << algebra.all.any.imply.any.et.apply(Eq[-1], Eq[0])
 
 
 if __name__ == '__main__':

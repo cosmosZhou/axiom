@@ -47,7 +47,7 @@ def prove(Eq):
 
     Eq.any_lt = Eq[-1].this.expr - a[N]
 
-    Eq << algebra.ge.imply.all_ge.monotone.apply(Eq[0], n, N)
+    Eq << algebra.ge.imply.all.ge.monotone.apply(Eq[0], n, N)
 
     Eq << algebra.all.imply.all.limits.restrict.apply(Eq[-1], domain=Range(N + 1, oo))
 
@@ -69,7 +69,13 @@ def prove(Eq):
 
     Eq << calculus.any_all.imply.eq.limit_definition.apply(Eq[-1])
 
+    #https://en.wikipedia.org/wiki/Least-upper-bound_property
+    #https://en.wikipedia.org/wiki/Monotone_convergence_theorem
+
+
+
 
 if __name__ == '__main__':
     run()
 # created on 2020-05-20
+# updated on 2023-11-11

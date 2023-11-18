@@ -23,10 +23,10 @@ def prove(Eq):
 
     Eq <<= algebra.eq.imply.et.squeeze.apply(Eq[-1].reversed), Eq[1].subs(Eq[-1].reversed).reversed
 
-    Eq <<= algebra.inf_le.imply.all.any.lt.apply(Eq[-3]), algebra.inf_ge.imply.all_ge.apply(Eq[-2]), algebra.eq.given.et.squeeze.apply(Eq[-1])
+    Eq <<= algebra.inf_le.imply.all.any.lt.apply(Eq[-3]), algebra.inf_ge.imply.all.ge.apply(Eq[-2]), algebra.eq.given.et.squeeze.apply(Eq[-1])
 
     y_ = Eq[-4].variable
-    Eq <<= algebra.all.imply.infer.apply(Eq[-4]), algebra.inf_ge.given.all_ge.apply(Eq[-1]), algebra.inf_le.given.all_any_lt.apply(Eq[-2])
+    Eq <<= algebra.all.imply.infer.apply(Eq[-4]), algebra.inf_ge.given.all.ge.apply(Eq[-1]), algebra.inf_le.given.all_any_lt.apply(Eq[-2])
 
     Eq <<= Eq[-3].subs(y_, Eq[2].lhs * y_), Eq[-2].this.expr.apply(algebra.ge.given.et.scale.positive, a, div=True), algebra.all.given.infer.apply(Eq[-1])
 

@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (x, Interval(0, oo)))
 
-    Eq << calculus.all_ge_zero.imply.all_ge.monotony.right_open.apply(Eq[-1])
+    Eq << calculus.all_ge_zero.imply.all.ge.monotony.right_open.apply(Eq[-1])
 
     Eq << Eq[-1].subs(Eq[2])
 

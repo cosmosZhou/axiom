@@ -3,11 +3,11 @@ from util import *
 
 @apply
 def apply(el_interval, is_continuous, is_extended_real, all_le):
-    from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle import of_continuous
+    from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any.eq.Rolle import of_continuous
     fx, limit = of_continuous(is_continuous)
     x, a, b = limit
 
-    from axiom.calculus.lt.is_continuous.is_extended_real.is_extended_real.eq.imply.any_le.Rolle import is_differentiable_at
+    from axiom.calculus.lt.is_continuous.is_extended_real.is_extended_real.eq.imply.any.le.Rolle import is_differentiable_at
     S[fx], S[limit] = is_differentiable_at(is_extended_real, -1)
 
     c, S[Interval.open(a, b)] = el_interval.of(Element)
@@ -53,7 +53,7 @@ def prove(Eq):
     Eq << sets.lt_zero.imply.is_negative.apply(Eq.lt_zero, simplify=None)
 
     δ = Symbol(real=True, negative=True)
-    Eq << sets.el.imply.any_eq.apply(Eq[-1], var=δ)
+    Eq << sets.el.imply.any.eq.apply(Eq[-1], var=δ)
 
     Eq << algebra.cond.any.imply.any.et.apply(Eq[-3], Eq[-1], simplify=None)
 
@@ -71,9 +71,9 @@ def prove(Eq):
 
     Eq << algebra.cond.any.imply.any.et.apply(Eq[-1], Eq.any_all, simplify=None)
 
-    
+
     Eq << Eq[-1].this.expr.apply(calculus.is_extended_real.all_ge.imply.ge_zero.limit.one_sided)
-    
+
 
 
 if __name__ == '__main__':

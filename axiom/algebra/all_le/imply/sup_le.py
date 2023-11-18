@@ -22,7 +22,7 @@ def prove(Eq):
     m = Symbol(Eq[-1].lhs)
     Eq << m.this.definition
 
-    Eq << algebra.eq_reducedMin.imply.all_le.apply(Eq[-1])
+    Eq << algebra.eq_reducedMin.imply.all.le.apply(Eq[-1])
 
     y = Eq[-1].variable
     Eq << algebra.all.imply.infer.apply(Eq[-1])
@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.definition
 
-    
+
 
 
 if __name__ == '__main__':

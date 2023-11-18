@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << sets.ne_empty.imply.any_el.st.complement.apply(Eq[-1], simplify=False, wrt=Eq[1].variable)
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq[1])
+    Eq << algebra.all.any.imply.any.et.apply(Eq[-1], Eq[1])
 
 
 if __name__ == '__main__':

@@ -22,12 +22,12 @@ def prove(Eq):
     s = a[:n].cup_finiteset()
     Eq << apply(Equal(Card(s), n), Sum[x:s](f(x)))
 
-    Eq << sets.eq.imply.all_ne.apply(Eq[0])
+    Eq << sets.eq.imply.all.ne.apply(Eq[0])
 
     Eq << algebra.all_ne.imply.eq.sum.double_limits.apply(Eq[-1], Eq[1].lhs)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

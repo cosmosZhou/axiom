@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(sets.notin_interval.imply.ou)
 
-    Eq << algebra.any.imply.any_et.limits.single_variable.apply(Eq[-1], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.single_variable.apply(Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_interval.imply.et)
 
@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << ~(~Eq.any_ax & ~Eq.any_by)
 
-    
+
 
 
 if __name__ == '__main__':

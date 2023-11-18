@@ -22,9 +22,9 @@ def prove(Eq):
 
     Eq <<= algebra.eq.imply.et.squeeze.apply(Eq[-1]), Eq[0].reversed.subs(Eq[-1])
 
-    Eq <<= algebra.inf_le.imply.all.any.lt.apply(Eq[-3]), algebra.inf_ge.imply.all_ge.apply(Eq[-2]), algebra.eq.given.et.squeeze.apply(Eq[-1])
+    Eq <<= algebra.inf_le.imply.all.any.lt.apply(Eq[-3]), algebra.inf_ge.imply.all.ge.apply(Eq[-2]), algebra.eq.given.et.squeeze.apply(Eq[-1])
 
-    Eq <<= algebra.inf_le.given.all_any_lt.apply(Eq[-2]), algebra.inf_ge.given.all_ge.apply(Eq[-1])
+    Eq <<= algebra.inf_le.given.all_any_lt.apply(Eq[-2]), algebra.inf_ge.given.all.ge.apply(Eq[-1])
 
     Eq << Eq[-2].this.expr.apply(algebra.any.given.any.limits.subs.offset, -t)
     Eq << algebra.all.given.all.limits.subs.offset.apply(Eq[-1], -t)

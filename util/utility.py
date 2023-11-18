@@ -440,6 +440,18 @@ class Eq:
                                                     ...
                                         else:
                                             lhs_plausible.imply = rhs_equivalent
+                                elif not rhs_is_equivalent and not is_equivalent:
+                                    if rhs.imply is not None and lhs.imply is not None:
+                                        if isinstance(rhs.imply, tuple):
+                                            if isinstance(lhs.imply, tuple):
+                                                rhs.imply = *lhs.imply, *rhs.imply
+                                            else:
+                                                rhs.imply = lhs.imply, *rhs.imply
+                                        else:
+                                            if isinstance(lhs.imply, tuple):
+                                                rhs.imply = *lhs.imply, rhs.imply
+                                            else:
+                                                rhs.imply = lhs.imply, rhs.imply
                     else:
                         rhs_plausibles, rhs_is_equivalent = rhs.plausibles_set()
                         if len(rhs_plausibles) == 1:
@@ -613,6 +625,9 @@ def run():
 
 
 def analyze_results_from_run(lines, latex=True):
+    if not lines:
+        return -1, ''
+
     for line in lines:
         line = line.rstrip()
         m = re.match(r'''b(".+")|b('.+')''', line)
@@ -707,12 +722,38 @@ def _prove(func, debug=True, **kwargs):
         if m:
             t = m[1]
             if t == 'function':
-                * _, statement = messages
-                statement = statement.strip()
-                m = re.search('(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+', statement)
-                if m:
-                    section, *_ = m[0].split('.')
-                    return from_axiom_import(py, section, eqs)
+                attribute = m[2]
+                statement = messages[1].strip()
+                from run import tackle_type_error
+                if m := re.search('(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+', statement):
+                    package = m[0]
+                    paths = package.split('.')
+                    if attribute == 'apply':
+                        index = paths.index('apply')
+                        paths = paths[:index]
+                        lines = tackle_type_error('.'.join(paths), False)
+                        args = analyze_results_from_run(lines)
+                        if len(args) != 2:
+                            state, latex = args[:4:2]
+                            import json
+                            latex = json.loads(latex)
+                            return state, latex
+                        return args
+                    else:
+                        section = paths[0]
+                        return from_axiom_import(py, section, eqs)
+                elif attribute == 'apply' and statement == '__kwdefaults__ = axiom.apply.__closure__[0].cell_contents.__kwdefaults__':
+                    messages = source_error(index=-4)
+                    statement = messages[1].strip()
+                    if m := re.search('(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+', statement):
+                        lines = tackle_type_error(m[0], False)
+                        args = analyze_results_from_run(lines)
+                        if len(args) != 2:
+                            state, latex = args[:4:2]
+                            import json
+                            latex = json.loads(latex)
+                            return state, latex
+                        return args
             
             elif t[0].isupper():
                 kwargs = detect_error_in_invoke(py, messages) or detect_error_in_apply(py, messages) or detect_error_in_prove(py, messages)
@@ -1052,11 +1093,12 @@ def imply(apply, **kwargs):
             _simplify = simplify
             
         ret = kwargs.pop('ret', None)
+        local = kwargs.pop('local', None)
 
         __kwdefaults__ = apply.__kwdefaults__
         if __kwdefaults__ is not None and 'simplify' in __kwdefaults__ and _simplify != __kwdefaults__['simplify']:
             kwargs['simplify'] = _simplify
-            
+        
         try:
             statement = apply(*map(lambda inf: inf.cond if isinstance(inf, Inference) else inf, args), **kwargs)
         except Exception as e:
@@ -1082,7 +1124,7 @@ def imply(apply, **kwargs):
         if is_given:
             given = tuple(eq for eq in args if isinstance(eq, (Boolean, Inference)))
             if len(given) == 1:
-                given = given[0]
+                given, = given
             elif not given:
                 given = None
         else:
@@ -1146,9 +1188,9 @@ def imply(apply, **kwargs):
                 return Inference(statement, plausible=None)
             
             if isinstance(statement, tuple):
-                return tuple(s.simplify(emplace=True) for s in statement)
+                return tuple(s.simplify(emplace=True, local=local) for s in statement)
             
-            return statement.simplify(emplace=True)
+            return statement.simplify(emplace=True, local=local)
         
         dependency = {}
         
@@ -1210,6 +1252,7 @@ def given(apply, **kwargs):
         if __kwdefaults__ and 'simplify' in __kwdefaults__ and _simplify != __kwdefaults__['simplify']:
             kwargs['simplify'] = _simplify
         
+        local = kwargs.pop('local', None)
         try:
             statement = apply(*map(lambda inf: inf.cond if isinstance(inf, Inference) else inf, args), **kwargs)
         except Exception as e:
@@ -1255,7 +1298,7 @@ def given(apply, **kwargs):
                 if imply.is_Inference:
                     statement = tuple(s.copy(imply=imply) for s in statement)
                     if _simplify:
-                        statement = tuple((s.simplify(emplace=True) for s in statement))
+                        statement = tuple((s.simplify(emplace=True, local=local) for s in statement))
                     
                     imply.given = statement
                     return statement
@@ -1265,7 +1308,7 @@ def given(apply, **kwargs):
                 statement = statement.copy(imply=imply)
                 
             if _simplify:
-                statement = statement.simplify(emplace=True)
+                statement = statement.simplify(emplace=True, local=local)
             
             return statement
         

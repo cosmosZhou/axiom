@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq << algebra.lt.imply.le.relax.apply(Eq[3])
 
-    Eq.any = calculus.le.is_continuous.is_differentiable.imply.any_eq.mean_value_theorem.Lagrange.close.apply(Eq[-1], Eq[-2], Eq.is_positive_real)
+    Eq.any = calculus.le.is_continuous.is_differentiable.imply.any.eq.mean_value_theorem.Lagrange.close.apply(Eq[-1], Eq[-2], Eq.is_positive_real)
 
     Eq << Eq.is_positive_real.this.expr.apply(sets.is_positive.imply.gt_zero)
 
@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.gt_zero.gt_zero.imply.gt_zero)
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq.any)
+    Eq << algebra.all.any.imply.any.et.apply(Eq[-1], Eq.any)
 
     Eq << Eq[-1].this.expr.apply(algebra.gt.eq.imply.gt.transit)
 

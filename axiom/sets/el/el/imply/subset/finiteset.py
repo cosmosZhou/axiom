@@ -1,7 +1,6 @@
 from util import *
 
 
-
 @apply
 def apply(contains1, contains2):
     x, A = contains1.of(Element)

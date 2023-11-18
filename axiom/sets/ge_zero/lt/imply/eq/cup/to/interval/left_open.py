@@ -57,7 +57,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(sets.el_cup.imply.any_el)
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_range.imply.et)
 
@@ -81,8 +81,8 @@ def prove(Eq):
 
     Eq << sets.intersect_is_empty.eq_complement.imply.eq.apply(Eq.is_empty, Eq.eq_complement)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

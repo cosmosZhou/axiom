@@ -29,36 +29,28 @@ def prove(Eq):
     Eq << algebra.et.imply.cond.apply(Eq[-1], 0)
 
     a, b, a_quote, b_quote = Symbol(shape=(oo,), integer=True)
-    Eq << sets.card_ne_zero.imply.any_eq.apply(Eq[-1], a)
+    Eq << sets.card_ne_zero.imply.any.eq.apply(Eq[-1], a)
 
-    Eq << sets.ge_card.imply.any_eq.apply(Eq[1], b)
+    Eq << algebra.ge.imply.gt_zero.apply(Eq[1])
 
-    Eq.any_et = algebra.any.any.imply.any_et.apply(Eq[-2], Eq[-1], simplify=None)
+    Eq << sets.card_gt_zero.imply.any.eq.apply(Eq[-1], b)
 
+
+
+    Eq.any_et = algebra.any.any.imply.any.et.apply(Eq[-3], Eq[-1], simplify=None)
     Eq.abs_complement = sets.el.imply.eq.card.complement.apply(Eq[2])
-
     Eq << algebra.eq.ge.imply.ge.subs.apply(Eq.abs_complement, Eq[1])
-
-    Eq << sets.ge_card.imply.any_eq.apply(Eq[-1], b_quote)
-
+    Eq << algebra.ge.imply.gt_zero.apply(Eq[-1])
+    Eq << sets.card_gt_zero.imply.any.eq.apply(Eq[-1], b_quote)
     Eq << Eq[-1].subs(Eq.abs_complement)
-
     Eq.abs_union = sets.notin.imply.eq.card.apply(Eq[3])
-
     Eq << algebra.eq.imply.gt_zero.apply(Eq.abs_union)
-
-    Eq << sets.card_gt_zero.imply.any_eq.apply(Eq[-1], a_quote)
-
+    Eq << sets.card_gt_zero.imply.any.eq.apply(Eq[-1], a_quote)
     Eq << Eq[-1].subs(Eq.abs_union)
-
-    Eq << algebra.any.any.imply.any_et.apply(Eq[-1], Eq[-4], simplify=None)
-
-    Eq << algebra.any.any.imply.any_et.apply(Eq.any_et, Eq[-1], simplify=None)
-
+    Eq << algebra.any.any.imply.any.et.apply(Eq[-1], Eq[-4], simplify=None)
+    Eq << algebra.any.any.imply.any.et.apply(Eq.any_et, Eq[-1], simplify=None)
     Eq << algebra.cond.any.imply.any.et.apply(Eq[0] & Eq[3], Eq[-1], simplify=None)
-
     Eq << Eq[-1].this.expr.apply(sets.eq_cup.eq_cup.eq_cup.eq_cup.le.notin.imply.le)
-
 
 
 
@@ -66,4 +58,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2021-03-25
-# updated on 2023-04-05
+# updated on 2023-11-11

@@ -31,7 +31,7 @@ def prove(Eq):
     f = Function(complex=True, shape=())
     Eq << apply(Subset(B, A), Any[x:B](f(x) > 1))
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[1], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[1], simplify=None)
 
     Eq << algebra.cond.any.imply.any.et.apply(Eq[0], Eq[-1], simplify=None)
 

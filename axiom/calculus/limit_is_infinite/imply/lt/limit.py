@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << calculus.eq_limit.imply.any.all.limit_definition.apply(Eq[0], 'chi')
 
-    Eq << Eq[-1].this.expr.apply(algebra.all.imply.all_et)
+    Eq << Eq[-1].this.expr.apply(algebra.all.imply.all.et)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_interval.imply.lt)
 

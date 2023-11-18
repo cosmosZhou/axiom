@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(sets.el.subset.imply.el, Eq[0])
 
-    Eq << algebra.any.imply.any_et.limits.single_variable.apply(Eq[-1])
+    Eq << algebra.any.imply.any.et.limits.single_variable.apply(Eq[-1])
 
 
 if __name__ == '__main__':

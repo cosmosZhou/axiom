@@ -60,9 +60,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.definition
 
-    Eq << sets.eq.imply.all.apply(Eq[-1])
+    Eq << sets.eq_cup.imply.all.apply(Eq[-1])
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq_argmin.imply.all_le)
+    Eq << Eq[-1].this.expr.apply(algebra.eq_argmin.imply.all.le)
 
     Eq << Eq[-1].this.expr.apply(algebra.le.imply.le.square)
 

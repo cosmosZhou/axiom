@@ -15,7 +15,7 @@ def prove(Eq):
     r = Symbol(real=True)
     Eq << apply(r > 0, z)
 
-    Eq << algebra.gt_zero.imply.any_eq.apply(Eq[0])
+    Eq << algebra.gt_zero.imply.any.eq.apply(Eq[0])
 
     Eq <<= Eq[2] & Eq[1]
 
@@ -23,8 +23,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.given.et.subs)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

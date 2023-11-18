@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << ~Eq[-1].simplify()
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq[1])
+    Eq << algebra.all.any.imply.any.et.apply(Eq[-1], Eq[1])
 
     Eq << algebra.any_et.imply.any.getitem.apply(Eq[-1], index=1)
 

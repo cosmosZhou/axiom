@@ -6,4 +6,4 @@ from . import le
 from . import is_differentiable
 
 from . import infer
-from . import all_gt
+from . import all

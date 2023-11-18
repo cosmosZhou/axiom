@@ -23,13 +23,13 @@ def prove(Eq):
 
     Eq << calculus.is_continuous.imply.any.all.ge.extreme_value_theorem.apply(Eq[0])
 
-    Eq << Eq[-1].this.expr.apply(algebra.all_ge.imply.ge_minima)
+    Eq << Eq[-1].this.expr.apply(algebra.all_ge.imply.minima_ge)
 
     Eq << algebra.imply.all.minima_le.apply(Eq[1].lhs)
 
     Eq << Eq[-1].limits_subs(Eq[-1].variable, Eq[-2].variable)
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq[-2])
+    Eq << algebra.all.any.imply.any.et.apply(Eq[-1], Eq[-2])
 
     Eq << Element(Eq[-1].expr.rhs, Reals, plausible=True)
 

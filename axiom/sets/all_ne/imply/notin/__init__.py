@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    Eq << sets.el.imply.any_eq.apply(Eq[-1], reverse=True)
+    Eq << sets.el.imply.any.eq.apply(Eq[-1], reverse=True)
 
     Eq << ~Eq[-1]
 

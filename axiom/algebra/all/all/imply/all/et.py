@@ -22,9 +22,11 @@ def prove(Eq):
 
     Eq << algebra.all_et.given.et.all.apply(Eq[-1])
 
-    Eq << algebra.all.given.all.limits.relax.apply(Eq[-2], domain=A)
+    Eq << algebra.all.given.all.limits.relax.apply(Eq[-2], A)
 
-    Eq << algebra.all.given.all.limits.relax.apply(Eq[-1], domain=B)
+    Eq << algebra.all.given.all.limits.relax.apply(Eq[-1], B)
+
+    
 
 
 if __name__ == '__main__':
@@ -32,3 +34,4 @@ if __name__ == '__main__':
 
 
 # created on 2018-09-30
+# updated on 2023-11-12

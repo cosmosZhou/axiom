@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << ~Eq[1]
 
-    Eq << sets.any.imply.any_et.single_variable.apply(Eq[-1])
+    Eq << sets.any.imply.any.et.single_variable.apply(Eq[-1])
 
     Eq << sets.any_el.imply.ne_empty.apply(Eq[-1])
 

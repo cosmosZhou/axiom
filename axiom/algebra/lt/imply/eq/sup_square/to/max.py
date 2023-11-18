@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.infer.et.apply(Eq[0], cond=Eq[-1].lhs)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.lt.lt_max.imply.any_gt.square)
+    Eq << Eq[-1].this.rhs.apply(algebra.lt.lt_max.imply.any.square_gt)
 
 
 if __name__ == '__main__':

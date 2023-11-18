@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq.induct = Eq.hypothesis.subs(n, n + 1)
 
-    Eq << Eq.induct.this.lhs.apply(calculus.integral.limits.split.slice.pop)
+    Eq << Eq.induct.this.lhs.apply(calculus.integral.limits.pop.slice)
 
     Eq << Eq[-1].this.find(Product).apply(algebra.prod.to.mul.pop)
 

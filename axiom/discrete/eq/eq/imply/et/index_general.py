@@ -87,7 +87,7 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-1], Eq[0])
 
-    Eq << sets.eq.imply.all_ne.complement.apply(Eq[-1], exclude=a)
+    Eq << sets.eq.imply.all.ne.complement.apply(Eq[-1], exclude=a)
 
     Eq << Eq[-1].subs(k_, a)
 
@@ -101,15 +101,15 @@ def prove(Eq):
 
     Eq << Eq.j_equality.limits_subs(k, a)
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq.j_equality.reversed, Eq.distribute_ab)
+    Eq << algebra.all.any.imply.any.et.apply(Eq.j_equality.reversed, Eq.distribute_ab)
 
-    Eq << Eq[-1].this.expr.apply(algebra.et.imply.et.subs)
+    Eq << Eq[-1].this.expr.args[::2].apply(algebra.eq.cond.imply.cond.subs, ret=0)
 
     Eq << Eq[-1].this.expr.apply(algebra.et.imply.et.delete)
 
     Eq << Eq.j_equality.limits_subs(a, b)
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq.j_equality, Eq[-1])
+    Eq << algebra.all.any.imply.any.et.apply(Eq.j_equality, Eq[-1])
 
     Eq <<= Eq.ou & ~Eq.inequality_ab
 
@@ -147,4 +147,4 @@ if __name__ == '__main__':
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 
 # created on 2020-07-22
-# updated on 2023-05-20
+# updated on 2023-11-11

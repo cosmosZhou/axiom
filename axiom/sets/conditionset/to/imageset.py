@@ -15,25 +15,20 @@ def apply(self):
 @prove
 def prove(Eq):
     from axiom import sets, algebra
-    n, m = Symbol(integer=True, positive=True)
 
+    n, m = Symbol(integer=True, positive=True)
     x = Symbol(complex=True, shape=(n,))
     y = Symbol(complex=True, shape=(m,))
-
     A = Symbol(etype=dtype.complex[n])
     f = Function(complex=True, shape=(m,))
-
     g = Function(shape=(), real=True)
-
     s = Symbol(imageset(x, f(x), A))
-
     Eq << apply(conditionset(y, g(y) > 0, s))
 
     Eq << Eq[1].this.lhs.limits[0][2].definition
 
     B = Symbol(Eq[-1].lhs)
     B_quote = Symbol(Eq[-1].rhs)
-
     Eq << B.this.definition
 
     Eq << B_quote.this.definition
@@ -42,13 +37,13 @@ def prove(Eq):
 
     Eq << Eq.suffice.this.rhs.rhs.definition
 
-    Eq << Eq[-1].this.rhs.apply(sets.el.given.any_eq.split.imageset)
+    Eq << Eq[-1].this.rhs.apply(sets.el.given.any.eq.split.imageset)
 
     Eq << Eq[-1].this.lhs.rhs.definition
 
-    Eq << Eq[-1].this.rhs.apply(algebra.any.given.any_et.limits.unleash)
+    Eq << Eq[-1].this.rhs.apply(algebra.any.given.any.et.limits.unleash)
 
-    Eq << Eq[-1].this.lhs.args[1].apply(sets.el.imply.any_eq.split.imageset)
+    Eq << Eq[-1].this.lhs.args[1].apply(sets.el.imply.any.eq.split.imageset)
 
     Eq << Eq[-1].this.rhs.expr.apply(algebra.eq.cond.given.et.subs, reverse=True)
 
@@ -56,15 +51,15 @@ def prove(Eq):
 
     Eq << Eq.necessary.this.rhs.rhs.definition
 
-    Eq << Eq[-1].this.rhs.apply(sets.el.imply.any_eq.split.imageset)
+    Eq << Eq[-1].this.rhs.apply(sets.el.imply.any.eq.split.imageset)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.any.imply.any_et.limits.single_variable)
+    Eq << Eq[-1].this.rhs.apply(algebra.any.imply.any.et.limits.single_variable)
 
-    Eq << Eq[-1].this.rhs.expr.apply(algebra.et.imply.et.subs, reverse=True)
+    Eq << Eq[-1].this.rhs.expr.apply(algebra.eq.cond.imply.cond.subs, reverse=True, ret=0)
 
     Eq << Eq[-1].this.lhs.rhs.definition
 
-    Eq << Eq[-1].this.lhs.args[1].apply(sets.el.given.any_eq.split.imageset)
+    Eq << Eq[-1].this.lhs.args[1].apply(sets.el.given.any.eq.split.imageset)
 
     Eq << sets.infer.assuming.imply.eq.apply(Eq.suffice, Eq.necessary)
 
@@ -73,7 +68,11 @@ def prove(Eq):
     Eq << Eq[-1].this.rhs.definition
 
 
+
+
+
 if __name__ == '__main__':
     run()
 
 # created on 2021-02-04
+# updated on 2023-11-11

@@ -15,7 +15,7 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Any[x:Interval(a, b, left_open=True)](f(x) > 0), x, c - x)
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[0], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[0], simplify=None)
 
     Eq << algebra.any.imply.any.limits.negate.oo.apply(Eq[-1])
 

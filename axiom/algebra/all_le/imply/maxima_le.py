@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    Eq << algebra.gt_maxima.imply.all_gt.apply(Eq[-1])
+    Eq << algebra.maxima_gt.imply.any.gt.apply(Eq[-1])
 
     Eq << ~Eq[-1]
 

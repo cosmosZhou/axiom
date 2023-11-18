@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.find(Element).simplify()
 

@@ -46,7 +46,7 @@ def prove(Eq):
     f_quote = Function("f'", shape=(), integer=True)
     Eq << apply(Any[x[:n]:f(x[:n]) > 0, i:k]((g(i) > f_quote(j, x[:n])) & Equal(i, j)))
 
-    Eq << Eq[-1].this.expr.apply(algebra.cond.imply.any_et, wrt=j)
+    Eq << Eq[-1].this.expr.apply(algebra.cond.imply.any.et, wrt=j)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.delta, delta=False, simplify=None, ret=0)
 

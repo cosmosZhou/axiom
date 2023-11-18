@@ -25,5 +25,6 @@ if __name__ == '__main__':
 # created on 2023-03-27
 
 
+del limit
 from . import limit
 from . import bool

@@ -118,7 +118,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (i, 0, n + 1 - Min(u, n)))
 
-    Eq << algebra.all_eq.imply.all_eq.slice.apply(Eq[-1], slice(i, i + Min(u, n)))
+    Eq << algebra.all_eq.imply.all.eq.slice.apply(Eq[-1], slice(i, i + Min(u, n)))
 
     Eq << Eq[-1].this.find(KroneckerDelta).apply(algebra.delta.offset, -i)
 
@@ -157,8 +157,8 @@ def prove(Eq):
     Eq << Eq.z_def.subs(Eq.left_upper_part.reversed, Eq.left_lower_part.reversed, Eq[-1].reversed, Eq.upper_part.reversed, Eq.lower_part)
     Eq << keras.eq_block.imply.eq.softmax.st.logsumexp.tf.apply(Eq[-1])
     Eq << Eq[-1].this.find(Symbol).definition
-    
-    
+
+
 
 
 if __name__ == '__main__':

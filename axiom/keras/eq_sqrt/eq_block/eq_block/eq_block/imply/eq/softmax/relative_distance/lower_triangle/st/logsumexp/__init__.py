@@ -57,11 +57,11 @@ def prove(Eq):
             Lamda[i:l](BlockMatrix(-oo * OneMatrix(l - i - 1), A[i, :i + 1] + V_quote[i, :i + 1] * (1 + C_quote[i] @ C_quote[:i + 1].T))),
             V_quote[l:] * Lamda[i:n - l](1 + C_quote[i + l] @ C_quote[i + 1:i + l + 1].T) + Lamda[i:n - l](A[i + l, i + 1:i + l + 1])) - Lamda[i:n](OneMatrix(l) * logsumexp(A[i, relu(i + 1 - l):i + 1] + V_quote[i, :Min(i + 1, l)] * (1 + C_quote[i] @ C_quote[relu(i - l + 1):i + 1].T)))))
 
-    Eq << keras.eq_block.eq_block.imply.all_eq.relative_distance.lower_triangle.upper_part.apply(Eq[1], Eq[2])
+    Eq << keras.eq_block.eq_block.imply.all.eq.relative_distance.lower_triangle.upper_part.apply(Eq[1], Eq[2])
 
     Eq << algebra.all_eq.imply.eq.lamda.apply(Eq[-1].this.expr.reversed, Eq[3].find(Lamda).expr)
 
-    Eq << keras.eq_block.eq_block.imply.all_eq.relative_distance.lower_triangle.lower_part.apply(Eq[1], Eq[2])
+    Eq << keras.eq_block.eq_block.imply.all.eq.relative_distance.lower_triangle.lower_part.apply(Eq[1], Eq[2])
 
     Eq << algebra.all_eq.imply.eq.lamda.apply(Eq[-1].this.expr.reversed)
 

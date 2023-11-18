@@ -206,6 +206,7 @@ def run(package, debug=True):
             return os.popen('python %s %s' % args).readlines()
         except UnicodeDecodeError as e:
             print(e)
+            return []
 
     
 def import_module(package):
@@ -250,16 +251,25 @@ def tackle_type_error(package, debug=True):
     __init__ = __init__.__file__
     print("__init__.__file__ =", __init__)
     
-    file = Text(__init__)
-    index = file.find('from . import ' + func, False)
-    if index < 0:
+    lock = __init__ + '.lock'
+    if os.path.exists(lock):
         return
     
-    print("editing on line", index, __init__, ":", 'del ' + func)
-    lines = file.readlines()
-    lines.insert(index, 'del ' + func)
-    file.writelines(lines)
-    return run(package, debug=debug)
+    with open(lock, 'w+') as _:
+        file = Text(__init__)
+        index = file.find('from . import ' + func, False)
+        if index >= 0:
+            print("editing on line", index, __init__, ":", 'del ' + func)
+            lines = file.readlines()
+            if any('del ' + func == line for line in lines):
+                ret = -1 if debug else []
+            else:
+                lines.insert(index, 'del ' + func)
+                file.writelines(lines)
+                ret = run(package, debug=debug)
+
+    os.remove(lock)
+    return ret
     
 @singledispatch
 def process(package, debug=False):
@@ -704,7 +714,6 @@ def run_with_module(*modules, debug=True):
             else: 
                 try:
                     args = prove_with_timing(module, debug=debug, slow=True)
-                    file = module.__file__
                 except AttributeError as e:
                     if m := re.match("'(\w+)' object has no attribute 'prove'", str(e)):
                         if m[1] == 'function':
@@ -732,7 +741,7 @@ def run_with_module(*modules, debug=True):
 
                     else: 
                         continue
-                
+                file = module.__file__
             yield package, file, *args
 
     for args in post_process(generator()):

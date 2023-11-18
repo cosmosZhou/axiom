@@ -2,7 +2,6 @@ from . import eq, lt
 from . import gt
 
 
-from . import any_eq
 from . import abs_gt_zero
 from . import gt_zero
 from . import lt_zero

@@ -33,18 +33,18 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this(i).find(Min).simplify(), algebra.infer.given.cond.apply(Eq[-1])
 
-    Eq <<= Eq[-2].this(j).expr.args[1].args[0].apply(algebra.expr.to.block, i + 1), Eq[-1].this(i).apply(algebra.any.limits.split.slice.pop)
+    Eq <<= Eq[-2].this(j).expr.args[1].args[0].apply(algebra.expr.to.block, i + 1), Eq[-1].this(i).apply(algebra.any.limits.pop.slice)
 
     Eq <<= Eq[-2].this(j).expr.simplify(), Eq[-1].this.apply(algebra.any.limits.swap)
 
     Eq << Eq[-1].this.apply(algebra.any.limits.separate)
 
-    Eq << Eq[-2].this(i).expr.apply(algebra.any.limits.split.slice.pop)
+    Eq << Eq[-2].this(i).expr.apply(algebra.any.limits.pop.slice)
 
     Eq << Eq[-1].this.expr.apply(algebra.any.limits.swap)
 
     Eq << Eq[-1].this(j).expr.apply(algebra.any.limits.separate)
-    Eq << Eq[-1].this(j).expr.apply(algebra.any.limits.split.slice.pop)
+    Eq << Eq[-1].this(j).expr.apply(algebra.any.limits.pop.slice)
     Eq << Eq[-1].this.expr.apply(algebra.any.limits.swap)
     Eq << Eq[-1].this(j).expr.apply(algebra.any.limits.separate)
 
@@ -54,7 +54,7 @@ def prove(Eq):
 
     Eq << algebra.any.given.any.subs.apply(Eq[2], L, L_quote)
 
-    
+
 
 
 if __name__ == '__main__':

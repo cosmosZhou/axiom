@@ -25,6 +25,7 @@ if __name__ == '__main__':
     run()
 
 
+del collect
 from . import collect
 from . import transit
 # created on 2018-01-16

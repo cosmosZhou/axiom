@@ -20,7 +20,7 @@ def prove(Eq):
     Eq << algebra.eq.given.et.squeeze.apply(Eq[-1])
 
     y = Symbol(real=True)
-    Eq <<= algebra.inf_le.given.all_any_lt.apply(Eq[-2], y), algebra.inf_ge.given.all_ge.apply(Eq[-1])
+    Eq <<= algebra.inf_le.given.all_any_lt.apply(Eq[-2], y), algebra.inf_ge.given.all.ge.apply(Eq[-1])
 
     Eq <<= algebra.all.given.et.all.split.apply(Eq[-2], cond=y <= M), algebra.all.given.ou.apply(Eq[-1])
 

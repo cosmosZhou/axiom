@@ -22,7 +22,7 @@ def prove(Eq):
     m = Symbol(Eq[-1].find(ReducedArgMax))
     Eq.m_def = m.this.definition
 
-    Eq << algebra.eq_reducedArgMax.imply.all_ge.apply(Eq.m_def, k, simplify=None)
+    Eq << algebra.eq_reducedArgMax.imply.all.ge.apply(Eq.m_def, k, simplify=None)
 
     Eq << Eq[0][m] * m
 
@@ -40,7 +40,7 @@ def prove(Eq):
 
     Eq << Eq[0][k] * k
     Eq << Eq[-2].subs(Eq[-1])
-    Eq << algebra.all.imply.all_et.apply(Eq[-1])
+    Eq << algebra.all.imply.all.et.apply(Eq[-1])
     Eq << Eq[-1].this.find(Element).apply(sets.el_range.imply.ge)
     Eq << Eq[-1].this.find(GreaterEqual[2]).apply(algebra.ge.imply.gt_zero, ret=True, simplify=None)
     Eq << Eq[-1].this.find(Greater).apply(algebra.gt_zero.imply.gt_zero.div)
@@ -54,7 +54,7 @@ def prove(Eq):
     Eq << Eq[-1].this.expr.apply(algebra.le_zero.imply.is_zero)
     Eq << algebra.all_eq.imply.eq.sum.apply(Eq[-1])
     Eq << Eq[-1].subs(Eq.m_def)
-    
+
 
 
 if __name__ == '__main__':

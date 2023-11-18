@@ -65,7 +65,7 @@ export default {
 				undeletables = await form_post(`php/request/rename.php`, { old: this.module.replace(/\//g, '.'), new: module.replace(/\//g, '.')});
 				console.log('undeletables = ' + undeletables);
 				
-				var modules = this.$root.modules;
+				var modules = this.$root.list;
 				if (!modules){
 					console.assert(this.module == this.$root.module, "this.module == this.$root.module");
 					this.$root.graph[module] = this.$root.graph[this.module];

@@ -17,9 +17,9 @@ def prove(Eq):
     f_quote = Function(shape=(), integer=True)
     Eq << apply(Any[x[:n]:f(x[:n]) > 0, x[n]]((g(x[n]) > f_quote(x[:n])) & (h(x[:n + 1]) > 0)), index=0)
 
-    Eq << algebra.any.imply.any_et.limits.single_variable.apply(Eq[1])
+    Eq << algebra.any.imply.any.et.limits.single_variable.apply(Eq[1])
 
-    Eq << algebra.any.given.any_et.limits.unleash.apply(Eq[0])
+    Eq << algebra.any.given.any.et.limits.unleash.apply(Eq[0])
 
 
 if __name__ == '__main__':

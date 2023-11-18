@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(n, P_quote=None):
-    from axiom.discrete.imply.all_et.mapping.Qu2v import predefined_symbols
+    from axiom.discrete.imply.all.et.mapping.Qu2v import predefined_symbols
     Q, w, x = predefined_symbols(n)
     if P_quote is None:
         P_quote = Symbol("P'", conditionset(x[:n + 1], Equal(x[:n].cup_finiteset(), Range(n)) & Equal(x[n], n)))

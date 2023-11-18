@@ -29,9 +29,9 @@ def prove(Eq):
 
     Eq << algebra.imply.all.limits_assert.apply(Eq.ge.limits)
 
-    Eq << Eq[-1].this.expr.apply(sets.ge.imply.any_ne)
+    Eq << Eq[-1].this.expr.apply(sets.ge.imply.any.ne)
 
-    
+
 
 
 if __name__ == '__main__':

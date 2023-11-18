@@ -48,7 +48,7 @@ def prove(Eq):
 
     Eq <<= algebra.cond.imply.infer.et.apply(Eq[1], cond=x > 0), algebra.cond.imply.infer.et.apply(Eq[2], cond=y > 0)
 
-    Eq <<= Eq[-2].this.rhs.apply(sets.gt.el.imply.el.intersect), Eq[-1].this.rhs.apply(sets.gt.el.imply.el.intersect)
+    Eq <<= Eq[-2].this.rhs.apply(sets.gt.el_interval.imply.el.interval.intersect), Eq[-1].this.rhs.apply(sets.gt.el_interval.imply.el.interval.intersect)
 
     Eq << algebra.infer.infer.imply.infer.et.apply(Eq[-1], Eq[-2])
 
@@ -60,7 +60,7 @@ def prove(Eq):
 
     Eq <<= algebra.cond.imply.infer.et.apply(Eq[1], cond=x <= 0), algebra.cond.imply.infer.et.apply(Eq[2], cond=y <= 0)
 
-    Eq <<= Eq[-2].this.rhs.apply(sets.le.el.imply.el.intersect), Eq[-1].this.rhs.apply(sets.le.el.imply.el.intersect)
+    Eq <<= Eq[-2].this.rhs.apply(sets.le.el_interval.imply.el.interval.intersect), Eq[-1].this.rhs.apply(sets.le.el_interval.imply.el.interval.intersect)
 
     Eq << algebra.infer.infer.imply.infer.et.apply(Eq[-1], Eq[-2])
 

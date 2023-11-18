@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << Eq[-1].limits_subs(Eq[-1].variable, Eq[-2].variable)
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq[-2])
+    Eq << algebra.all.any.imply.any.et.apply(Eq[-1], Eq[-2])
 
     Eq << Element(Eq[-1].expr.rhs, Reals, plausible=True)
 

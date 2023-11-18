@@ -23,7 +23,7 @@ def prove(Eq):
 
     a, b, x = Symbol(real=True)
     f = Function(real=True)
-    from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle import is_differentiable
+    from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any.eq.Rolle import is_differentiable
     Eq << apply(is_differentiable(f, a, b, open=False))
 
     xi = Symbol(domain=Interval(a, b))

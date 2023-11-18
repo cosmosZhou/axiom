@@ -71,9 +71,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum[Mul[~Integral]]).apply(calculus.integral.limits.concat)
 
-    Eq << Eq[-1].this.find(Integral).apply(calculus.integral.limits.split.slice.pop)
+    Eq << Eq[-1].this.find(Integral).apply(calculus.integral.limits.pop.slice)
 
-    Eq << Eq[-1].this.rhs.find(Sum)().find(Integral).apply(calculus.integral.limits.split.slice.pop)
+    Eq << Eq[-1].this.rhs.find(Sum)().find(Integral).apply(calculus.integral.limits.pop.slice)
 
     Eq << Eq[-1].this.find(Integral).apply(calculus.integral.limits.separate)
 

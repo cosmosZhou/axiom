@@ -57,3 +57,5 @@ from . import abs
 from . import square
 from . import inverse
 from . import diff
+from . import eq_reducedSum
+from . import imply

@@ -21,11 +21,11 @@ def prove(Eq):
     m = Symbol(Eq[-1].find(ReducedArgMax))
     Eq.m_def = m.this.definition
 
-    Eq << algebra.eq_reducedArgMax.imply.all_gt.apply(Eq.m_def, k)
+    Eq << algebra.eq_reducedArgMax.imply.all.gt.apply(Eq.m_def, k)
 
     Eq << Eq[0][m]
 
-    
+
     Eq << Eq[-2].subs(Eq[-1])
     Eq << Eq[-1].this.expr.apply(algebra.gt.imply.gt.relax, upper=1)
     Eq << Eq[0][k]
@@ -36,7 +36,7 @@ def prove(Eq):
     Eq << Eq[-1].this.expr.apply(algebra.le_zero.imply.is_zero)
     Eq << Eq[-1].subs(Eq.m_def)
     Eq << algebra.all_eq.imply.eq.sum.apply(Eq[-1])
-    
+
 
 
 if __name__ == '__main__':

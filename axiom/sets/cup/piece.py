@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << Eq[1].this.rhs.subs(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.apply(sets.cup.to.union.st.piece)
+    Eq << Eq[-1].this.rhs.apply(sets.cup_piece.to.union)
 
 
 if __name__ == '__main__':

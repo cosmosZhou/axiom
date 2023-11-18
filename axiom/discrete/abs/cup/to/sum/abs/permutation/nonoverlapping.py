@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(n, Q=None):
     if Q is None:
-        from axiom.discrete.imply.all_et.mapping.Qu2v import predefined_symbols
+        from axiom.discrete.imply.all.et.mapping.Qu2v import predefined_symbols
         Q, w, x = predefined_symbols(n)
 
     t = Q.definition.variable
@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << algebra.all_et.imply.all.apply(Eq[-1], index=0)
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq[-3])
+    Eq << algebra.all.any.imply.any.et.apply(Eq[-1], Eq[-3])
 
     Eq << sets.all_is_empty.imply.eq.nonoverlapping.setlimit.apply(Eq.nonoverlapping)
 

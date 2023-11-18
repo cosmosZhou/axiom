@@ -36,17 +36,17 @@ def prove(Eq):
 
     Eq << calculus.is_differentiable.imply.is_continuous.apply(Eq[-1])
 
-    Eq.any = calculus.le.is_continuous.is_differentiable.imply.any_eq.mean_value_theorem.Lagrange.close.apply(Eq[0], Eq[-1], Eq[-2])
+    Eq.any = calculus.le.is_continuous.is_differentiable.imply.any.eq.mean_value_theorem.Lagrange.close.apply(Eq[0], Eq[-1], Eq[-2])
 
     Eq << sets.subset.all.imply.all.apply(Eq.subset, Eq[3])
 
-    Eq << sets.all.imply.all_et.apply(Eq[-1], simplify=None)
+    Eq << sets.all.imply.all.et.apply(Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.find(Unequal).apply(sets.interval_ne_empty.imply.ge_zero, simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.ge_zero.gt_zero.imply.ge_zero)
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq.any)
+    Eq << algebra.all.any.imply.any.et.apply(Eq[-1], Eq.any)
 
     Eq << Eq[-1].this.expr.apply(algebra.ge.eq.imply.ge.transit)
 
@@ -54,8 +54,8 @@ def prove(Eq):
 
     Eq << algebra.ge_zero.imply.le.apply(Eq[-2])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

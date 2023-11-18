@@ -20,7 +20,7 @@ def prove(Eq):
     S = Symbol(etype=dtype.integer[n])
     Eq << apply(Equal(Card(S), 1))
 
-    Eq << sets.eq.imply.any_eq.one.apply(Eq[0]).reversed
+    Eq << sets.eq.imply.any.eq.one.apply(Eq[0]).reversed
 
     Eq <<= Eq[1] & Eq[-1]
 
@@ -28,7 +28,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.given.et.subs)
 
-    
+
 
 
 if __name__ == '__main__':

@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(all_is_positive):
     (fx, (x, S[2])), (S[x], a, b) = all_is_positive.of(All[Derivative > 0])
-    from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle import is_differentiable
+    from axiom.calculus.lt.is_continuous.is_differentiable.eq.imply.any.eq.Rolle import is_differentiable
     f = lambda t: fx._subs(x, t)
     return is_differentiable(f, a, b)
 

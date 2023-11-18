@@ -4,8 +4,8 @@ from util import *
 
 @apply
 def apply(given):
-    fn1, *limits = given.of(All)
-    return Infer(given.limits_cond.simplify(), fn1)
+    expr, *limits = given.of(All)
+    return Infer(given.limits_cond.simplify(), expr)
 
 
 @prove

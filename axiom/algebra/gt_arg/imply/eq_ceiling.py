@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << Eq[0] / (S.Pi * 2)
 
-    Eq << sets.gt.el.imply.el.intersect.apply(Eq[-1], Eq[-2])
+    Eq << sets.gt.el_interval.imply.el.interval.intersect.apply(Eq[-1], Eq[-2])
 
     Eq << sets.el.imply.el.sub.apply(Eq[-1], S.One / 2)
     Eq << sets.el_interval.imply.el_range.ceiling.apply(Eq[-1])

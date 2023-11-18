@@ -106,7 +106,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(NotElement).apply(sets.notin_interval.imply.ou)
 
-    Eq << Eq[-1].this.args[1].apply(algebra.ge.imply.eq.squeeze.interval)
+    Eq << Eq[-1].this.args[1].apply(algebra.ge.imply.eq.squeeze)
 
     Eq.all_ne = algebra.ou.imply.all.apply(Eq[-1], wrt=x)
 

@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq.gt = Greater(x, S.Pi / 2, plausible=True)
 
-    Eq << sets.gt.el.imply.el.intersect.apply(Eq.gt, Eq[1])
+    Eq << sets.gt.el_interval.imply.el.interval.intersect.apply(Eq.gt, Eq[1])
 
     Eq << geometry.el_interval.imply.lt_zero.cos.apply(Eq[-1])
 
@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq.lt = Less(x, S.Pi / 2, plausible=True)
 
-    Eq << sets.lt.el.imply.el.intersect.apply(Eq.lt, Eq[1])
+    Eq << sets.lt.el_interval.imply.el.interval.intersect.apply(Eq.lt, Eq[1])
 
     Eq << geometry.el_interval.imply.gt_zero.cos.apply(Eq[-1])
 

@@ -30,5 +30,6 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
+del collect
 from . import collect
 # created on 2018-01-04

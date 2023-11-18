@@ -65,7 +65,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.eq.eq.imply.eq.subs.rhs)
 
-    Eq << Eq[-1].this.find(Maxima).apply(algebra.maxima.limits.split.slice.pop)
+    Eq << Eq[-1].this.find(Maxima).apply(algebra.maxima.limits.pop.slice)
 
     Eq << Eq[-1].this.find(Maxima).simplify()
 
@@ -97,8 +97,8 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(t, n - 1)
 
-    #https://arxiv.org/abs/1603.01360    
-    
+    #https://arxiv.org/abs/1603.01360
+
 
 
 if __name__ == '__main__':

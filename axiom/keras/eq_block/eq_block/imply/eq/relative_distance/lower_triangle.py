@@ -38,7 +38,7 @@ def prove(Eq):
 
     Eq <<= algebra.cond.imply.all.restrict.apply(Eq[-1], (i, 0, n), simplify=None)
 
-    Eq << algebra.all_eq.imply.all_eq.slice.apply(Eq[-1], slice(i + 1 - Min(i + 1, l), i + 1))
+    Eq << algebra.all_eq.imply.all.eq.slice.apply(Eq[-1], slice(i + 1 - Min(i + 1, l), i + 1))
 
     Eq << Eq[-1].this.rhs.find(~Indexed - Indexed).args[1].apply(algebra.expr.to.piece, upper=n - 1)
 
@@ -50,12 +50,12 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (i, 0, n), simplify=None)
 
-    Eq << algebra.all_eq.imply.all_eq.slice.apply(Eq[-1], slice(0, Min(i + 1, l)))
+    Eq << algebra.all_eq.imply.all.eq.slice.apply(Eq[-1], slice(0, Min(i + 1, l)))
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.V_relu, Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

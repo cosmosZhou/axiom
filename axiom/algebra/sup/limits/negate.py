@@ -30,13 +30,13 @@ def prove(Eq):
 
     Eq << algebra.eq.imply.et.squeeze.apply(Eq[-1])
 
-    Eq <<= algebra.sup_le.imply.all_le.apply(Eq[-2]), algebra.sup_ge.imply.all.any.gt.apply(Eq[-1])
+    Eq <<= algebra.sup_le.imply.all.le.apply(Eq[-2]), algebra.sup_ge.imply.all.any.gt.apply(Eq[-1])
 
     Eq << Eq[0].subs(Eq[1]).reversed
 
     Eq << algebra.eq.given.et.squeeze.apply(Eq[-1])
 
-    Eq <<= algebra.sup_le.given.all_le.apply(Eq[-2]), algebra.sup_ge.given.all_any_gt.apply(Eq[-1])
+    Eq <<= algebra.sup_le.given.all.le.apply(Eq[-2]), algebra.sup_ge.given.all_any_gt.apply(Eq[-1])
 
     Eq <<= Eq[-2].this.apply(algebra.all.limits.negate), Eq[-1].this.expr.apply(algebra.any.limits.negate)
 

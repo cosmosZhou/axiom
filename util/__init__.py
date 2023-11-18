@@ -1,4 +1,4 @@
 from .utility import prove, apply, run
 from sympy import *
-import std
-del limits, mul, add, collect, together, invert, function, poly, limit, expand, utility, basic, prod, div, indexed
+del utility
+del prod, div

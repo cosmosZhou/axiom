@@ -38,7 +38,6 @@ from . import card_gt_zero
 from . import eq_card
 from . import eq_cup
 from . import le_abs
-from . import ge_card
 from . import card_ne_zero
 from . import range
 from . import imageset, finiteset
@@ -108,3 +107,4 @@ from . import subset_union
 from . import square_lt
 from . import square_le
 from . import el_cartesianSpace
+from . import cup_piece

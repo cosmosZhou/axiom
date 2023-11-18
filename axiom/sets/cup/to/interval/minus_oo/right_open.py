@@ -26,7 +26,7 @@ def prove(Eq):
     x = Eq[-1].lhs.lhs
     Eq <<= Eq[-2].this.lhs.expr.apply(sets.el_interval.imply.lt), Eq[-1].this.rhs.apply(algebra.any.given.cond.subs, k, -Floor(x) - 1)
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.any.imply.any_et.limits.unleash, simplify=None), algebra.infer.given.et.infer.apply(Eq[-1])
+    Eq <<= Eq[-2].this.lhs.apply(algebra.any.imply.any.et.limits.unleash, simplify=None), algebra.infer.given.et.infer.apply(Eq[-1])
 
     Eq <<= Eq[-3].this.lhs.find(Element).apply(sets.el_range.imply.le), Eq[-1].this.rhs.apply(sets.el_range.given.et), algebra.infer.given.cond.apply(Eq[-2])
 
@@ -46,8 +46,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.lt_zero.imply.floor_lt_zero)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

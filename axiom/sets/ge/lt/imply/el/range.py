@@ -11,7 +11,7 @@ def apply(greater_than, strict_greater_than):
         a += 1
         b += 1
 
-    assert x.is_integer
+    assert x.is_extended_integer
     return Element(x, Range(b, a))
 
 
@@ -25,13 +25,13 @@ def prove(Eq):
     #Eq << apply(b >= x, a < x)
     Eq << sets.el_range.given.et.apply(Eq[-1])
 
-
-
     #Eq << Eq[-1].reversed
     #Eq << Eq[-2].reversed
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2021-04-10
+# updated on 2023-11-13

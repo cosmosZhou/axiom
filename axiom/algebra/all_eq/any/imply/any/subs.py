@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << apply(All[c:C](Equal(a, f(c))), Any[c:C](Element(a * b + c, S)))
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq[0], Eq[1])
+    Eq << algebra.all.any.imply.any.et.apply(Eq[0], Eq[1])
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)
 

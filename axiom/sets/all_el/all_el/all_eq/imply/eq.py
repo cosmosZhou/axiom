@@ -47,7 +47,7 @@ def prove(Eq):
 
     Eq << sets.supset.given.all_el.apply(Eq.supset_A, var=Eq[0].variable)
 
-    Eq << Eq[-1].this.expr.apply(sets.el.given.any_eq.split.imageset)
+    Eq << Eq[-1].this.expr.apply(sets.el.given.any.eq.split.imageset)
 
     Eq <<= Eq[-1] & Eq[2]
 
@@ -63,7 +63,7 @@ def prove(Eq):
 
     Eq <<= Eq.supset_A & Eq.subset_A
 
-    
+
 
 
 if __name__ == '__main__':

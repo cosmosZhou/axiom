@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self, index=0, offset=None):
     from axiom.algebra.sum.limits.subs.offset import limits_subs
-    return limits_subs(All, self, index, offset)
+    return limits_subs(All, self, index, offset, simplify=False)
 
 
 @prove

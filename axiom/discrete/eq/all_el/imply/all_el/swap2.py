@@ -40,7 +40,7 @@ def prove(Eq):
 
     Eq.final_statement = algebra.cond.imply.all.restrict.apply(Eq[-1], (i_,), (j_,))
 
-    Eq << discrete.eq.lamda.swapMatrix.imply.all_eq.swap2.eq.apply(Eq[0])
+    Eq << discrete.eq.lamda.swapMatrix.imply.all.eq.swap2.eq.apply(Eq[0])
 
     Eq << Eq[-1].this.expr @ x
 

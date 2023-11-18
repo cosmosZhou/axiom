@@ -33,9 +33,9 @@ def prove(Eq):
     i = Symbol(integer=True)
     Eq << apply(Any[i:Range(m)](f[i] > 0))
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[0], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[0], simplify=None)
 
-    Eq << algebra.any.given.any_et.limits.unleash.apply(Eq[1], simplify=None)
+    Eq << algebra.any.given.any.et.limits.unleash.apply(Eq[1], simplify=None)
 
     Eq << Eq[-1].this.find(Range).apply(sets.range.min.to.intersect, simplify=None)
 

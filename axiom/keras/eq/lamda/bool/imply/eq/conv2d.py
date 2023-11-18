@@ -69,7 +69,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.nest, pivot=slice(1, None, 2))#select cond with j
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.split.piece)
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.separate.piece)
 
     Eq << Eq[-1].this.find(Min, Add[Min]).apply(algebra.add.to.min).this.find(Min, Add[Min]).apply(algebra.add.to.min)
 

@@ -38,18 +38,18 @@ def prove(Eq):
 
     Eq.all_el = All[t:0:x](Element(Derivative[t](f(t)), Interval(-oo, oo)), plausible=True)
 
-    
+
     Eq << Eq.all_el.subs(Eq.ft)
 
     Eq << Eq[-1].this.find(Derivative).apply(calculus.grad.to.add)
 
-    Eq << calculus.lt.is_continuous.is_differentiable.eq.imply.any_eq.Rolle.apply(Eq.lt, Eq.all_eq, Eq.all_el, Eq.eq)
+    Eq << calculus.lt.is_continuous.is_differentiable.eq.imply.any.eq.Rolle.apply(Eq.lt, Eq.all_eq, Eq.all_el, Eq.eq)
 
     Eq << Eq[-1].subs(Eq.ft)
 
     Eq << Eq[-1].this.find(Derivative).apply(calculus.grad.to.add)
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_interval.imply.et)
 

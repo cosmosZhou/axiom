@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq.is_zero = Eq[-1].this.rhs.apply(calculus.is_zero.is_limited.imply.is_zero.limit.algebraic_limit_theorem)
 
-    Eq << Eq[-1].this.rhs.args[1].apply(sets.el.imply.any_eq, var='B', simplify=None)
+    Eq << Eq[-1].this.rhs.args[1].apply(sets.el.imply.any.eq, var='B', simplify=None)
 
     Eq << Eq[-1].this.rhs.apply(algebra.cond.any.imply.any.et, simplify=None)
 

@@ -45,3 +45,5 @@ from . import lamda
 from . import all_ge_zero
 from . import is_extended_real
 from . import is_infinite
+from . import eq_grad
+from . import abs_le

@@ -19,7 +19,7 @@ def prove(Eq):
     y = Symbol(Eq[0].find(Inf))
     Eq << y.this.definition
 
-    Eq << algebra.eq_inf.imply.all_le.apply(Eq[-1])
+    Eq << algebra.eq_inf.imply.all.le.apply(Eq[-1])
 
     Eq << Eq[-1].subs(Eq[1])
 

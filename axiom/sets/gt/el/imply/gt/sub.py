@@ -20,7 +20,7 @@ def prove(Eq):
     Eq << sets.el.imply.el.relax.apply(Eq[1], Reals, simplify=None)
 
     z = Symbol(real=True)
-    Eq << sets.el.imply.any_eq.apply(Eq[-1], var=z)
+    Eq << sets.el.imply.any.eq.apply(Eq[-1], var=z)
 
     Eq << Eq[0] - z
 

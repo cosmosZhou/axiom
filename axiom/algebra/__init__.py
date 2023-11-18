@@ -108,11 +108,6 @@ from . import eq_reducedMax
 from . import reducedMax
 from . import lt_sup
 from . import gt_inf
-from . import le_maxima
-from . import ge_maxima
-from . import gt_maxima
-from . import lt_minima
-from . import ge_minima
 from . import abs_le
 from . import eq_abs
 from . import abs_gt
@@ -194,3 +189,12 @@ from . import eq_add
 from . import eq_reducedArgMax
 from . import eq_reducedArgMin
 from . import mul_ge
+from . import eq_reducedSum
+from . import minima_lt
+from . import maxima_gt
+from . import maxima_le
+from . import maxima_ge
+from . import inf_gt
+from . import sup_lt
+from . import maxima_lt
+from . import minima_gt

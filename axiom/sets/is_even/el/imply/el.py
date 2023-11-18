@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << algebra.cond.any.imply.any.et.apply(Eq[1], Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.expr.apply(algebra.et.imply.et.subs)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, ret=0)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.imply.el.div.range, 2, simplify=None)
 
@@ -46,8 +46,11 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq[-2])
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-05-26
+# updated on 2023-11-11

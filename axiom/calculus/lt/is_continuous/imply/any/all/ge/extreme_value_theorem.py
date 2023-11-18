@@ -21,6 +21,7 @@ def prove(Eq):
     from axiom.calculus.all_eq.imply.all.any.eq.intermediate_value_theorem import is_continuous
     Eq << apply(a < b, is_continuous(f, a, b))
 
+    #https://en.wikipedia.org/wiki/Bolzano%E2%80%93Weierstrass_theorem
     #https://en.wikipedia.org/wiki/Extreme_value_theorem
     
 
@@ -28,3 +29,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-10-15
+# updated on 2023-11-10

@@ -12,7 +12,7 @@ def apply(self, i=None):
             return
     else:
         eq = args[i]
-        
+
     del args[i]
     this = self.func(*args)
     return Or(*((arg & this).simplify() for arg in eq.of(Or)))
@@ -32,12 +32,13 @@ def prove(Eq):
     #Eq << Eq[-2].this.lhs.apply(algebra.et.imply.ou, simplify=False)
     Eq << Eq[-1].this.rhs.apply(algebra.ou.imply.et.collect, cond=f(x) < g(y), simplify=False)
 
-    
+
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-01-21
+del collect
 from . import collect
 # updated on 2023-05-10

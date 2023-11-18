@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << calculus.is_differentiable.imply.is_continuous.apply(Eq[-1])
 
-    Eq << calculus.le.is_continuous.is_differentiable.imply.any_eq.mean_value_theorem.Lagrange.close.apply(Eq[0], Eq[-1], Eq[-2])
+    Eq << calculus.le.is_continuous.is_differentiable.imply.any.eq.mean_value_theorem.Lagrange.close.apply(Eq[0], Eq[-1], Eq[-2])
 
     Eq << Eq[-1].this.expr * w
 
@@ -65,7 +65,7 @@ def prove(Eq):
 
     Eq <<= calculus.is_differentiable.imply.is_continuous.apply(Eq[-2]), calculus.is_differentiable.imply.is_continuous.apply(Eq[-1])
 
-    Eq <<= calculus.le.is_continuous.is_differentiable.imply.any_eq.mean_value_theorem.Lagrange.close.apply(Eq.ge.reversed, Eq[-2], Eq[-4]), calculus.le.is_continuous.is_differentiable.imply.any_eq.mean_value_theorem.Lagrange.close.apply(Eq.le, Eq[-1], Eq[-3])
+    Eq <<= calculus.le.is_continuous.is_differentiable.imply.any.eq.mean_value_theorem.Lagrange.close.apply(Eq.ge.reversed, Eq[-2], Eq[-4]), calculus.le.is_continuous.is_differentiable.imply.any.eq.mean_value_theorem.Lagrange.close.apply(Eq.le, Eq[-1], Eq[-3])
 
     Eq <<= Eq[-2].this.expr.rhs.args[0].apply(algebra.add.collect), Eq[-1].this.expr.rhs.find(Mul[Add]).apply(algebra.mul.to.add)
 
@@ -73,11 +73,11 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this.expr * w, Eq[-1].this.expr * (1 - w)
 
-    Eq << algebra.any.any.imply.any_et.apply(Eq[-2], Eq[-1], simplify=None)
+    Eq << algebra.any.any.imply.any.et.apply(Eq[-2], Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.sub, swap=True)
 
-    
+
     Eq << Eq[-1].this.expr.lhs.find(Mul[Add]).apply(algebra.mul.to.add)
     Eq << Eq[-1].this.expr.lhs.find(Mul[Add]).apply(algebra.mul.to.add)
     Eq << Eq[-1].this.expr.lhs.find(Mul[Add]).apply(algebra.mul.to.add)
@@ -99,12 +99,12 @@ def prove(Eq):
     Eq <<= Eq[-1] & Eq.is_nonnegative
     Eq <<= Eq[-1].this.rhs.apply(algebra.ge_zero.ge_zero.imply.ge_zero)
     Eq << algebra.infer.imply.all.apply(Eq[-1], wrt=(x_, x__))
-    Eq << algebra.all.any.imply.any_et.apply(Eq[-1], Eq.any)
+    Eq << algebra.all.any.imply.any.et.apply(Eq[-1], Eq.any)
     Eq << Eq[-1].this.expr.apply(algebra.ge.eq.imply.ge.transit)
     Eq << algebra.et.imply.et.apply(Eq[-1])
     Eq << Eq[-1] + Eq[2].rhs
-    
-    
+
+
 
 
 if __name__ == '__main__':

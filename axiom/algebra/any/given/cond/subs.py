@@ -10,23 +10,28 @@ def apply(self, old, new):
     exists = self.limits_dict
     if old in exists:
         domain = exists[old]
-        if not domain:
+        if domain is None:
             domain = old.domain
         eqs = []
 
         if not isinstance(domain, list):
             if not domain.is_set:
                 domain = old.domain_conditioned(domain)
-            if new.is_symbol:
-                domain_defined = self.expr.domain_defined(new)
-                if domain_defined not in domain:
+                if domain.is_ConditionSet and domain.variable == self.variable:
+                    domain = exists[old]
+
+            if domain.is_set:
+                if new.is_symbol:
+                    domain_defined = self.expr.domain_defined(new)
+                    if domain_defined not in domain:
+                        eqs.append(Element(new, domain))
+                else:
                     eqs.append(Element(new, domain))
             else:
-                eqs.append(Element(new, domain))
+                eqs.append(domain._subs(old, new))
 
         if self.expr.is_And:
-            for equation in self.expr.args:
-                eqs.append(equation.subs(old, new))
+            eqs.extend(eq.subs(old, new) for eq in self.expr.args)
         else:
             eqs.append(self.expr._subs(old, new))
 

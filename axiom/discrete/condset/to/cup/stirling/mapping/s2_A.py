@@ -106,13 +106,13 @@ def prove(Eq):
 
     Eq << algebra.all_et.given.et.all.apply(Eq[-1])
 
-    Eq << Eq[-1].apply(algebra.all.given.all_ou.limits.delete, simplify=None)
+    Eq << Eq[-1].apply(algebra.all.given.all.ou.limits.delete, simplify=None)
 
     Eq << Eq[-1].this.find(NotElement).apply(sets.notin_complement.given.ou, simplify=None)
 
     Eq << Eq[-1].this.find(Greater).apply(algebra.cond.given.ou.domain_defined, wrt=i, simplify=None)
 
-    Eq << Eq.xi_is_positive.apply(algebra.all.imply.all_ou.limits.delete, simplify=None)
+    Eq << Eq.xi_is_positive.apply(algebra.all.imply.all.ou.limits.delete, simplify=None)
 
     Eq << Eq[-1].this.find(NotElement).apply(sets.notin_complement.imply.ou, simplify=None)
 

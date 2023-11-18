@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << apply(All[i:n](Unequal(i, j)))
 
-    Eq << sets.notin.imply.all_ne.apply(Eq[1], reverse=True)
+    Eq << sets.notin.imply.all.ne.apply(Eq[1], reverse=True)
 
 
 if __name__ == '__main__':

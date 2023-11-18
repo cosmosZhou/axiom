@@ -6,7 +6,7 @@
             <template v-if=given.latex>
                 <hr>
                 <h3 title='callee hierarchy'>
-                    <a style='font-size: inherit' :href=`/${user}/?callee=${module}`>
+                    <a style='font-size: inherit' :href="`/${user}/?callee=${module}`">
                         <font color=blue>{{given_hint}}:</font>
                     </a>
                 </h3>
@@ -16,7 +16,7 @@
             <template v-if=where>
                 <hr>
                 <h3 title='caller hierarchy'>
-                    <a style='font-size: inherit' :href=`/${user}/?caller=${module}`>
+                    <a style='font-size: inherit' :href="`/${user}/?caller=${module}`">
                         <font color=blue>where:</font>
                     </a>
                 </h3>
@@ -25,7 +25,7 @@
 
             <hr>
             <h3 title='callee hierarchy'>
-                <a style='font-size: inherit' :href=`/${user}/?callee=${module}`>
+                <a style='font-size: inherit' :href="`/${user}/?callee=${module}`">
                     <font color=blue>{{imply_hint}}:</font>
                 </a>
             </h3>
@@ -33,7 +33,7 @@
 
             <hr>
             <h3 title='caller hierarchy'>
-                <a style='font-size: inherit' :href=`/${user}/?caller=${module}`>
+                <a style='font-size: inherit' :href="`/${user}/?caller=${module}`">
                     <font color=blue>prove:</font>
                 </a>
             </h3>
@@ -79,7 +79,6 @@
 
 <script>
 console.log('import render.vue');
-var renderedAlready = false;
 import renderProve from "./renderProve.vue"
 import renderApply from "./renderApply.vue"
 
@@ -176,7 +175,7 @@ export default {
                 }
                 else{
                     var href = location.href;
-                    href = href.match(/(.+\/index.php\?module=).+/)[1];                    
+                    href = href.match(/(.+\/(index.php)?\?module=).+/)[1]
                     href += `${module}#${line}`;
                     window.open(href);
                 }
@@ -185,7 +184,7 @@ export default {
             	var file = error.file;
             	var line = error.line;
             	var href = location.href;
-                href = href.match(/(.+\/index.php\?).+/)[1];
+                href = href.match(/(.+\/(index.php)?\?).+/)[1];
                 var index = file.indexOf('.');
                 var key = file.slice(0, index);
                 var value = file.slice(index + 1);

@@ -18,15 +18,15 @@ def prove(Eq):
     x, y = Symbol(hyper_real=True)
     Eq << apply(Element(x, Interval.open(0, oo)), Element(y, Interval.open(0, oo)))
 
-    Eq << sets.el.imply.any_eq.apply(Eq[0], var='a')
+    Eq << sets.el.imply.any.eq.apply(Eq[0], var='a')
 
-    Eq << sets.el.imply.any_eq.apply(Eq[1], var='b')
+    Eq << sets.el.imply.any.eq.apply(Eq[1], var='b')
 
-    Eq << algebra.any.any.imply.any_et.apply(Eq[-1], Eq[-2], simplify=None)
+    Eq << algebra.any.any.imply.any.et.apply(Eq[-1], Eq[-2], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.mul)
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.find(Element).apply(sets.is_positive.imply.gt_zero, simplify=None)
 
@@ -42,7 +42,7 @@ def prove(Eq):
 
     Eq << algebra.any_et.imply.any.limits_absorb.apply(Eq[-1], 0)
 
-    
+
 
 
 if __name__ == '__main__':

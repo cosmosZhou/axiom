@@ -21,7 +21,7 @@ def prove(Eq):
     m = Symbol(Eq[-1].lhs)
     Eq << m.this.definition
 
-    Eq << algebra.eq_reducedMax.imply.all_ge.apply(Eq[-1])
+    Eq << algebra.eq_reducedMax.imply.all.ge.apply(Eq[-1])
 
     y = Eq[-1].variable
     Eq << algebra.all.imply.infer.apply(Eq[-1])
@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.definition
 
-    
+
 
 
 if __name__ == '__main__':

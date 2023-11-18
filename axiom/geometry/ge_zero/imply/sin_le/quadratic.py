@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (x, Interval(0, oo)))
 
-    Eq << calculus.all_ge_zero.imply.all_ge.monotony.right_open.apply(Eq[-1])
+    Eq << calculus.all_ge_zero.imply.all.ge.monotony.right_open.apply(Eq[-1])
 
     Eq << Eq[-1].this.find(f).defun()
 
@@ -48,7 +48,7 @@ def prove(Eq):
 
     Eq << algebra.ge_zero.imply.le.apply(Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

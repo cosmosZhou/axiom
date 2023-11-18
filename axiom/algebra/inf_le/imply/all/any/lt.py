@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.le.ge.imply.le.transit)
 
-    Eq << algebra.any.imply.any_et.limits.unleash.apply(Eq[-1])
+    Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[-1])
 
 
 

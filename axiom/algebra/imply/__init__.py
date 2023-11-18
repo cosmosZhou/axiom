@@ -19,3 +19,5 @@ from . import ge_zero
 from . import sum_le
 from . import ceiling_ge
 from . import add_ge
+from . import le_minima
+from . import ge_maxima

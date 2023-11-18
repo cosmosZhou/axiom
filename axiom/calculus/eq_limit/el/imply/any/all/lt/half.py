@@ -21,13 +21,13 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Equal(Limit[x:x0](f(x)), A), Element(A, Reals - {0}))
 
-    Eq << sets.el.imply.any_eq.apply(Eq[1], var='a')
+    Eq << sets.el.imply.any.eq.apply(Eq[1], var='a')
 
     Eq << algebra.cond.any.imply.any.et.apply(Eq[0], Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, simplify=None, ret=0)
 
-    Eq << algebra.any.imply.any_et.limits.single_variable.apply(Eq[-1], simplify=None)
+    Eq << algebra.any.imply.any.et.limits.single_variable.apply(Eq[-1], simplify=None)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.imply.ne_zero)
 
@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(calculus.ne_zero.eq_limit.imply.any.all.gt)
 
-    
+
 
 
 if __name__ == '__main__':

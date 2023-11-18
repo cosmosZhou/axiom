@@ -14,16 +14,16 @@ def apply(is_odd, contains_n):
 
 @prove
 def prove(Eq):
-    from axiom import sets, algebra
-    a, b, n = Symbol(integer=True)
+    from axiom import algebra, sets
 
+    a, b, n = Symbol(integer=True)
     Eq << apply(Equal(n % 2, 1), Element(n, Range(a, b + 1)))
 
     Eq << algebra.is_odd.imply.any.apply(Eq[0])
 
     Eq << algebra.cond.any.imply.any.et.apply(Eq[1], Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.expr.apply(algebra.et.imply.et.subs)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, ret=0)
 
     Eq << Eq[-1].this.find(Element).apply(sets.el.imply.el.sub, 1, simplify=None)
 
@@ -46,8 +46,11 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq[-2])
 
+    
+
 
 if __name__ == '__main__':
     run()
 
 # created on 2018-05-29
+# updated on 2023-11-11

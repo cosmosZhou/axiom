@@ -50,7 +50,7 @@ def prove(Eq):
 
     Eq.any_gt = Eq[-1].this.expr + a[N]
 
-    Eq << algebra.le.imply.all_le.monotone.apply(Eq[0], n, N)
+    Eq << algebra.le.imply.all.le.monotone.apply(Eq[0], n, N)
 
     Eq << algebra.all.imply.all.limits.restrict.apply(Eq[-1], domain=Range(N + 1, oo))
 

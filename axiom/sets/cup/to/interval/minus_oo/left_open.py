@@ -26,7 +26,7 @@ def prove(Eq):
     x = Eq[-1].lhs.lhs
     Eq <<= Eq[-2].this.lhs.expr.apply(sets.el_interval.imply.ge), Eq[-1].this.rhs.apply(algebra.any.given.cond.subs, k, -Ceiling(x))
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.any.imply.any_et.limits.unleash, simplify=None), algebra.infer.given.et.infer.apply(Eq[-1])
+    Eq <<= Eq[-2].this.lhs.apply(algebra.any.imply.any.et.limits.unleash, simplify=None), algebra.infer.given.et.infer.apply(Eq[-1])
 
     Eq <<= Eq[-3].this.lhs.find(Element).apply(sets.el_range.imply.ge), Eq[-1].this.rhs.apply(sets.el_range.given.et), algebra.infer.given.cond.apply(Eq[-2])
 
@@ -42,8 +42,8 @@ def prove(Eq):
 
     Eq << algebra.imply.le_ceiling.apply(x)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -63,7 +63,7 @@ def prove(Eq):
 
     Eq << algebra.cond_piece.imply.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[0].apply(algebra.et.imply.et.subs)
+    Eq << Eq[-1].this.args[0].args[:2].apply(algebra.eq.cond.imply.cond.subs, ret=0)
 
     Eq << algebra.ou.imply.eq.piece.apply(Eq[-1], wrt=p)
 
@@ -79,4 +79,4 @@ if __name__ == '__main__':
     run()
 
 # created on 2018-02-04
-# updated on 2023-05-30
+# updated on 2023-11-11

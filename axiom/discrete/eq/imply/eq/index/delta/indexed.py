@@ -42,7 +42,7 @@ def prove(Eq):
 
     Eq << Eq[0].apply(sets.eq.imply.eq.card)
 
-    Eq << sets.eq.imply.all_ne.complement.apply(Eq[-1])
+    Eq << sets.eq.imply.all.ne.complement.apply(Eq[-1])
 
     Eq << Eq[-1].subs(Eq[-1].lhs.index, j)
 

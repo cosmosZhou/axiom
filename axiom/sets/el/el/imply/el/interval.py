@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq.open_interval, Eq.ge = Eq[-2].this.apply(algebra.infer.flatten), Eq[-1].this.apply(algebra.infer.flatten)
 
-    Eq << (w >= 1).this.apply(algebra.ge.imply.eq.squeeze.interval)
+    Eq << (w >= 1).this.apply(algebra.ge.imply.eq.squeeze)
 
     Eq <<= Eq[-1] & Eq.ge
 
@@ -54,8 +54,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(sets.el.el.el.imply.el.interval.open)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

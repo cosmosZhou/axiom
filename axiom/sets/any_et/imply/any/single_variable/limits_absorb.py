@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq << apply(Any[x[:n]: A](Element(x[:n], B) & (f(x[:n]) > 0)), index=1)
 
-    Eq << sets.any.imply.any_et.single_variable.apply(Eq[0])
+    Eq << sets.any.imply.any.et.single_variable.apply(Eq[0])
 
 
 if __name__ == '__main__':

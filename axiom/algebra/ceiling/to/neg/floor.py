@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << algebra.cond.given.et.infer.split.apply(Eq[-1], cond=Element(x, Integers))
 
-    Eq << Eq[-2].this.lhs.apply(sets.el.imply.any_eq)
+    Eq << Eq[-2].this.lhs.apply(sets.el.imply.any.eq)
 
     Eq << Eq[-1].this.lhs.expr.apply(algebra.eq.imply.eq.ceiling, ret=0)
 

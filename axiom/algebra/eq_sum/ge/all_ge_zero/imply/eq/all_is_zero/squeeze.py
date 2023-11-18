@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << ~Eq[4]
 
-    Eq << algebra.all.any.imply.any_et.apply(Eq.all_is_nonnegative, Eq[-1])
+    Eq << algebra.all.any.imply.any.et.apply(Eq.all_is_nonnegative, Eq[-1])
 
     Eq << Eq[-3].this.lhs.apply(algebra.sum.to.add.split, cond={i})
 

@@ -142,7 +142,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.lhs.apply(algebra.piece.swap)
 
-    Eq << Eq[-1].this.find(GreaterEqual).apply(algebra.ge.to.eq.squeeze.range)
+    Eq << Eq[-1].this.find(GreaterEqual).apply(algebra.ge.to.eq.squeeze)
 
 
 if __name__ == '__main__':

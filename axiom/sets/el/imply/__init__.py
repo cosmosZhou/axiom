@@ -2,7 +2,6 @@ from . import subset
 from . import eq
 from . import el
 from . import ne
-from . import any_eq
 from . import is_zero
 
 from . import is_real
@@ -21,3 +20,4 @@ from . import ge_zero
 from . import sqrt_ge_zero
 from . import le_zero
 from . import ne_zero
+from . import any

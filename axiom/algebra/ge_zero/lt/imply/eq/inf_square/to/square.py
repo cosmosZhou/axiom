@@ -37,7 +37,7 @@ def prove(Eq):
     Eq << algebra.eq.given.et.squeeze.apply(Eq[2])
 
     y = Symbol(real=True)
-    Eq <<= algebra.inf_le.given.all_any_lt.apply(Eq[-2], y), algebra.inf_ge.given.all_ge.apply(Eq[-1])
+    Eq <<= algebra.inf_le.given.all_any_lt.apply(Eq[-2], y), algebra.inf_ge.given.all.ge.apply(Eq[-1])
 
     Eq <<= algebra.all.given.et.all.split.apply(Eq[-2], cond=y <= M ** 2), algebra.all.given.infer.apply(Eq[-1])
 

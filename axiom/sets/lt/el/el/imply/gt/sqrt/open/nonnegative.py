@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << algebra.ge.lt.imply.gt.transit.apply(Eq[-1], Eq[0])
 
-    Eq.y_contains = sets.gt.el.imply.el.intersect.apply(Eq[-1], Eq[2])
+    Eq.y_contains = sets.gt.el_interval.imply.el.interval.intersect.apply(Eq[-1], Eq[2])
 
     Eq << algebra.cond.given.et.infer.split.apply(Eq[3], cond=Equal(x, 0))
 

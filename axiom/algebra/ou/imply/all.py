@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    Eq << algebra.any.imply.any_et.limits.single_variable.apply(Eq[-1])
+    Eq << algebra.any.imply.any.et.limits.single_variable.apply(Eq[-1])
 
     Eq << algebra.cond.any.imply.any.et.apply(Eq[0], Eq[-1])
 

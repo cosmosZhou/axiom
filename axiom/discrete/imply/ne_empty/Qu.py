@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(n, u=None):
-    from axiom.discrete.imply.all_et.mapping.Qu2v import predefined_symbols
+    from axiom.discrete.imply.all.et.mapping.Qu2v import predefined_symbols
     Q, *_ = predefined_symbols(n)
     if u is None:
         u = Q.definition.variable
@@ -48,8 +48,8 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.apply(Eq[-1], _t)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

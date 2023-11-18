@@ -141,22 +141,23 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq.any_n_plausible
 
-    Eq << Eq[-1].this.expr.apply(algebra.any.any.imply.any_et, simplify=None)
+    Eq << Eq[-1].this.expr.apply(algebra.any.any.imply.any.et, simplify=None)
 
     Eq << Eq[-1].this.expr.expr.apply(algebra.eq.eq.imply.eq.subs, swap=True)
 
+    Eq << Eq[-1].this.find(Any).apply(algebra.any.limits.concat)
     Eq << Infer(Eq.hypothesis, Eq.induct, plausible=True)
 
     Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
 
     Eq << Eq[1].subs(Eq[0])
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # https://docs.sympy.org/latest/modules/combinatorics/permutations.html
 # created on 2020-09-01
-# updated on 2023-08-26
+# updated on 2023-11-18

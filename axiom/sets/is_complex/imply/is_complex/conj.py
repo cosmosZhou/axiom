@@ -15,15 +15,15 @@ def prove(Eq):
     x, y = Symbol(super_complex=True)
     Eq << apply(Element(x, S.Complexes))
 
-    Eq << sets.el.imply.any_eq.apply(Eq[0], var='a')
+    Eq << sets.el.imply.any.eq.apply(Eq[0], var='a')
 
     Eq << Eq[-1].this.expr.apply(algebra.eq.imply.eq.conj)
 
     a = Eq[-1].variable
-    
+
     c = Symbol(complex=True)
     Eq << algebra.any.imply.any.subs.apply(Eq[-1], ~a, c)
-    
+
 
 
 if __name__ == '__main__':

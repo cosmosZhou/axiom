@@ -4,4 +4,6 @@ from . import domain_defined
 from . import subs
 
 from . import negate
-from . import split
+from . import shift
+from . import concat
+from . import pop

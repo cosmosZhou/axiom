@@ -53,11 +53,11 @@ def prove(Eq):
             Lamda[i:l](BlockMatrix(-oo * OneMatrix(l - i - 1), A[i, :i + 1] + V_quote[i, :i + 1])),
             V_quote[l:] + Lamda[i:n - l](A[i + l, i + 1:i + l + 1])) - Lamda[i:n](OneMatrix(l) * logsumexp(A[i, relu(i + 1 - l):i + 1] + V_quote[i, :Min(i + 1, l)]))))
 
-    Eq << keras.eq_block.eq_block.imply.all_eq.relative_distance.lower_triangle.upper_part.apply(Eq[0], Eq[1])
+    Eq << keras.eq_block.eq_block.imply.all.eq.relative_distance.lower_triangle.upper_part.apply(Eq[0], Eq[1])
 
     Eq << algebra.all_eq.imply.eq.lamda.apply(Eq[-1].this.expr.reversed, Eq[2].find(Lamda).expr)
 
-    Eq << keras.eq_block.eq_block.imply.all_eq.relative_distance.lower_triangle.lower_part.apply(Eq[0], Eq[1])
+    Eq << keras.eq_block.eq_block.imply.all.eq.relative_distance.lower_triangle.lower_part.apply(Eq[0], Eq[1])
 
     Eq << algebra.all_eq.imply.eq.lamda.apply(Eq[-1].this.expr.reversed)
 
@@ -84,8 +84,8 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(Eq.A_quote_def)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

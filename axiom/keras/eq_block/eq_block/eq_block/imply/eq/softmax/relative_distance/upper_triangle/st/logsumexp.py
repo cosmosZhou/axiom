@@ -50,11 +50,11 @@ def prove(Eq):
             V_quote[:n - u] + Lamda[i:n - u](A[i, i:i + u]),
             Lamda[i:u](BlockMatrix(A[i + n - u, n - u + i:] + V_quote[i + n - u, :u - i], -oo * OneMatrix(i)))) - Lamda[i:n](OneMatrix(u) * logsumexp(A[i, i:Min(n, i + u)] + V_quote[i, :Min(n, i + u) - i]))))
 
-    Eq << keras.eq_block.eq_block.imply.all_eq.relative_distance.upper_triangle.lower_part.apply(Eq[0], Eq[1])
+    Eq << keras.eq_block.eq_block.imply.all.eq.relative_distance.upper_triangle.lower_part.apply(Eq[0], Eq[1])
 
     Eq << algebra.all_eq.imply.eq.lamda.apply(Eq[-1].this.expr.reversed, Eq[2].find(Lamda).expr)
 
-    Eq << keras.eq_block.eq_block.imply.all_eq.relative_distance.upper_triangle.upper_part.apply(Eq[0], Eq[1])
+    Eq << keras.eq_block.eq_block.imply.all.eq.relative_distance.upper_triangle.upper_part.apply(Eq[0], Eq[1])
 
     Eq << algebra.all_eq.imply.eq.lamda.apply(Eq[-1].this.expr.reversed)
 
@@ -71,7 +71,7 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (i, 0, n - u))
 
-    Eq << algebra.all_eq.imply.all_eq.slice.apply(Eq[-1], slice(i, i + u))
+    Eq << algebra.all_eq.imply.all.eq.slice.apply(Eq[-1], slice(i, i + u))
 
     Eq << algebra.all_eq.imply.eq.lamda.apply(Eq[-1])
 

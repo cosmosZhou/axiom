@@ -22,5 +22,6 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
+del invert
 from . import invert
 # created on 2018-02-16

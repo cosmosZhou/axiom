@@ -50,7 +50,7 @@ def prove(Eq):
 
     Eq << sets.el.subset.imply.el.apply(Eq.contains, Eq[-1])
 
-    Eq << sets.el.imply.any_eq.apply(Eq[-1])
+    Eq << sets.el.imply.any.eq.apply(Eq[-1])
 
     Eq << Eq[-1] * 2 + 1
 

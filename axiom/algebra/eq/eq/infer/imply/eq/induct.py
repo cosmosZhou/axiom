@@ -71,9 +71,9 @@ def prove(Eq):
 
     Eq.even = Eq[-1].reversed
 
-    Eq << algebra.eq.imply.all_eq.limit_is_odd.apply(Eq.odd, m)
+    Eq << algebra.eq.imply.all.eq.limit_is_odd.apply(Eq.odd, m)
 
-    Eq << algebra.eq.imply.all_eq.limit_is_even.apply(Eq.even, m)
+    Eq << algebra.eq.imply.all.eq.limit_is_even.apply(Eq.even, m)
 
     Eq << Eq[-1].this.apply(algebra.all.limits.subs.offset, -2)
 
