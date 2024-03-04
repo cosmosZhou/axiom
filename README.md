@@ -62,13 +62,3 @@ https://github.com/sagemathinc/cocalc
 
 # latex
 function: $f(x)=\frac{P(x)}{Q(x)}$
-
-
-$$
-X(m,n)=
-\begin{cases}
-x(n),\\
-x(n-1),\\
-x(n+1)
-\end{cases}
-$$
