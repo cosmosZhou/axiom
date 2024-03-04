@@ -2,7 +2,7 @@ from util import *
 
 
 @apply
-def apply(self):
+def apply(self, *, evaluate=False):
     n, d = self.of(Floor[Expr / Expr])
 
     q = 0
@@ -23,7 +23,7 @@ def apply(self):
 
         m += arg
 
-    return Equal(self, m // d + q)
+    return Equal(self, m // d + q, evaluate=evaluate)
 
 
 @prove
@@ -31,7 +31,7 @@ def prove(Eq):
     from axiom import algebra
 
     x, d, k = Symbol(integer=True)
-    Eq << apply((x + d * k - 1 - d) // d)
+    Eq << apply(Floor((x + d * k - 1 - d) / d, evaluate=False))
 
     Eq << Eq[0].this.lhs.apply(algebra.floor.to.mul.div)
 

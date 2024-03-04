@@ -4,3 +4,6 @@ from . import piece
 from . import sub
 from . import re
 from . import block
+from . import cosh
+from . import mul
+from . import inverse

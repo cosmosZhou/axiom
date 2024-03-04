@@ -1,3 +1,5 @@
+import os
+os.environ['MYSQL_DATABASE'] = 'axiom'
 from std import MySQL
 from std.unicode import ascii2greek
 import traceback

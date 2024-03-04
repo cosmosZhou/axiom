@@ -49,24 +49,29 @@ def prove(Eq):
     w = Symbol(real=True, shape=(l[0], l[1], l[2], d, d_quote))
     M = Symbol(real=True, shape=(m, n[0], n[1], n[2]))
     i, j, t, k = Symbol(integer=True)
-    Eq << apply(Equal(M, Lamda[t:n[2], j:n[1], i:n[0], k:m](Bool(Element(i, Range(β0[k], ζ0[k])) & Element(j, Range(β1[k], ζ1[k])) & Element(t, Range(β2[k], ζ2[k]))))),
-                x, w, r)
+    Eq << apply(Equal(M, Lamda[t:n[2], j:n[1], i:n[0], k:m](Bool(Element(i, Range(β0[k], ζ0[k])) & Element(j, Range(β1[k], ζ1[k])) & Element(t, Range(β2[k], ζ2[k]))))), x, w, r)
 
     Eq.M_def = Eq[0].this.find(Element).apply(sets.el_range.to.et).this.find(Element).apply(sets.el_range.to.et).this.find(Element).apply(sets.el_range.to.et)
 
     Eq << Eq[1].rhs.find(conv3d).this.defun()
 
     d0 = Symbol((l[0] - 1) // 2 * r[0] + (r[0] // 2) * (1 - l[0] % 2))
+    Eq.mul_floor_0 = d0.this.definition.reversed.this.apply(algebra.eq.transport, lhs=0)
+
     d1 = Symbol((l[1] - 1) // 2 * r[1] + (r[1] // 2) * (1 - l[1] % 2))
+    Eq.mul_floor_1 = d1.this.definition.reversed.this.apply(algebra.eq.transport, lhs=0)
+
     d2 = Symbol((l[2] - 1) // 2 * r[2] + (r[2] // 2) * (1 - l[2] % 2))
-    Eq.conv3d = Eq[-1].subs(d0.this.definition.reversed, simplify=False).subs(d1.this.definition.reversed, simplify=False).subs(d2.this.definition.reversed, simplify=False)
+    Eq.mul_floor_2 = d2.this.definition.reversed.this.apply(algebra.eq.transport, lhs=0)
+
+    Eq.conv3d = Eq[-1].subs(Eq.mul_floor_0, Eq.mul_floor_1, Eq.mul_floor_2)
 
     C = Symbol(Eq[1].lhs)
     Eq << C.this.definition
 
-    Eq << Eq[-1].this.rhs.args[0].defun()
+    Eq << Eq[-1].this.find(conv3d).defun()
 
-    Eq << Eq[-1].subs(d0.this.definition.reversed, simplify=False).subs(d1.this.definition.reversed, simplify=False).subs(d2.this.definition.reversed, simplify=False)
+    Eq << Eq[-1].subs(Eq.mul_floor_0, Eq.mul_floor_1, Eq.mul_floor_2)
 
     Eq << Eq[-1][k, i, j, t]
 

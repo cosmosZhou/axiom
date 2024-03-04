@@ -47,3 +47,4 @@ from . import is_extended_real
 from . import is_infinite
 from . import eq_grad
 from . import abs_le
+from . import eq_matmul

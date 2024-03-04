@@ -1,8 +1,6 @@
 from util import *
 
-
-@apply
-def apply(self, *vars):
+def rewrite(self, *vars):
     assert self.shape
     
     limits = []
@@ -25,9 +23,12 @@ def apply(self, *vars):
             excludes.add(j)
     
     limits.reverse()
-    rhs = Lamda(self[tuple(vars)], *limits)
-        
-    return Equal(self, rhs, evaluate=False)
+    return Lamda(self[tuple(vars)], *limits)
+
+
+@apply
+def apply(self, *vars):        
+    return Equal(self, rewrite(self, *vars), evaluate=False)
 
 
 @prove

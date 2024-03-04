@@ -6,7 +6,7 @@ def apply(self, index=None):
     axis = self.axis
     [*args] = self.of(Transpose[axis][Mul])
     
-    if axis == len(self.shape) - 1:
+    if axis == self.default_axis:
         matrices = []
         vector = []
         coeff = []

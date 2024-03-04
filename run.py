@@ -334,6 +334,7 @@ user = basename(dirname(realpath(__file__)))
 assert user, 'user should not be empty!'
 
 try:
+    os.environ['MYSQL_DATABASE'] = 'axiom'
     from std import MySQL
 
     def select_axiom_lapse_from_axiom(self):
@@ -854,6 +855,13 @@ clearInterval(ret);
     else: 
         run_with_module(*args)
 
+
+# slow:
+# python run.py algebra.poly_is_zero.imply.et.infer.quartic
+# python run.py algebra.poly_is_zero.imply.et.infer.quartic.one_leaded
+# python run.py discrete.det.to.sum.expansion_by_minors
+# python run.py keras.eq.lamda.bool.imply.eq.conv2d
+# python run.py keras.eq.lamda.bool.imply.eq.conv3d
 
 # python -c "exec(open('./util/function.py').read())"
 # python -c "exec(open('./util/hierarchy.py').read())"

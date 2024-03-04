@@ -2,10 +2,8 @@ from util import *
 
 
 @apply
-def apply(self, axis=-1, *, simplify=True):
-    if axis < 0:
-        axis += len(self.shape)
-
+def apply(self, axis=(-2, 1), *, simplify=True):
+    axis = self.normalize_axis(axis)
     if axis == self.default_axis:
         f, *limits = self.of(Lamda)
         limits = [*limits]
@@ -17,7 +15,7 @@ def apply(self, axis=-1, *, simplify=True):
         limits[0], limits[1] = limits[1], limits[0]
         expr = Lamda(f, *limits).simplify() 
 
-    elif axis == 1:
+    elif axis == (0, 1):
         f, *limits, j_limit, i_limit = self.of(Lamda)
         expr = Lamda(f, *limits, i_limit, j_limit).simplify()
     

@@ -8,13 +8,15 @@ def apply(self):
     variables = {var for var, *ab in limits}
     j = self.generate_var(variables, integer=True)
     
-    assert axis >= len(limits)
+    t, k = axis
+    assert k >= len(limits)
     if axis == self.default_axis:
         [(i, S[0], m)] = limits
         n, = f.shape
         rhs = Lamda[i:m, j:n](f[j]).simplify()
     else:
         index = -axis - 1
+        raise NotImplementedError
         
     return Equal(self, rhs, evaluate=False)
 
@@ -23,7 +25,7 @@ def apply(self):
 def prove(Eq):
     from axiom import algebra
 
-    i, j, k = Symbol(integer=True)
+    i, j = Symbol(integer=True)
     n, m = Symbol(integer=True, positive=True)
     d = Symbol(integer=True, shape=(oo,))
     h = Symbol(real=True, shape=(oo, n, n))

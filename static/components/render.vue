@@ -68,7 +68,7 @@
         
         <div class=bottom-right>
             <p>
-                <font size=2>Created on {{createdTime}}</font>
+                <a :href="href_remote" target="_blank"><font size=2>Created on {{createdTime}}</font></a>
                 <br>
                 <font v-if=updatedTime size=2>Updated on {{updatedTime}}</font>
             </p>
@@ -128,7 +128,14 @@ export default {
         	if (hash){
         		return hash.slice(1);
         	}
-        }
+        },
+
+        href_remote(){
+            var hostname = location.hostname == 'localhost'? '192.168.18.132': 'localhost';
+			var port = location.hostname == 'localhost'? '8000': '80';
+			var {pathname, search, hash, protocol} = location;
+			return `${protocol}\/\/${hostname}:${port}${pathname}${search}${hash}`;
+        },
     },
 
     updated(){

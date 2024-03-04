@@ -3,21 +3,8 @@ from util import *
 
 @apply
 def apply(self):
-    x = self.of(cos)
-    if x.is_Mul:
-        [*args] = x.args
-        for i, arg in enumerate(args):
-            if arg.is_Add:
-                args[i] = -arg
-                break
-        else:
-            return
-        
-        x = Mul(*args)
-    else:
-        x = -x
-    
-    return Equal(self, cos(x), evaluate=False)
+    from axiom.algebra.abs.neg import rewrite
+    return Equal(self, rewrite(cos, self), evaluate=False)
 
 
 @prove
@@ -38,4 +25,4 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 # created on 2023-05-20
-# updated on 2023-06-02
+# updated on 2023-11-26

@@ -1,14 +1,14 @@
+import time, os, re
 from util.utility import user
-from _collections import defaultdict
+from collections import defaultdict
 from util.search import py_to_module, read_directory, read_all_files, \
     yield_callee_from_py, axiom_directory, is_py_theorem
 from os.path import basename
-from std import MySQL
-import time
+
 import datetime
 from std.file import Text
-import re
-
+os.environ['MYSQL_DATABASE'] = 'axiom'
+from std import MySQL
 
 def read_all_axioms(dir):
 

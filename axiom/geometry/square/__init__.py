@@ -2,3 +2,9 @@ from . import cos
 from . import sin
 from . import cot
 from . import tan
+from . import sec
+from . import csc
+from . import sech
+from . import sinh
+from . import cosh
+from . import csch

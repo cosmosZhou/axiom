@@ -58,16 +58,22 @@ def prove(Eq):
 
     Eq <<= algebra.eq.imply.eq.lamda.apply(Eq[-2], (j, 0, m)), algebra.eq.imply.eq.lamda.apply(Eq[-1], (j, 0, m))
 
-    Eq <<= algebra.eq.imply.eq.transpose.apply(Eq[-2], 1), algebra.eq.imply.eq.transpose.apply(Eq[-1], 1)
+    Eq <<= algebra.eq.imply.eq.transpose.apply(Eq[-2], (0, 1)), algebra.eq.imply.eq.transpose.apply(Eq[-1], (0, 1))
 
     Eq <<= algebra.eq.eq.imply.eq.transit.apply(Eq[-2], Eq[4]), algebra.eq.eq.imply.eq.transit.apply(Eq[-1], Eq[5])
+
+    Eq << algebra.eq.imply.eq.transpose.apply(Eq[-2], (1, 1))
 
     Eq << keras.eq_card.subset_cup.imply.eq.matmul.softmax.position_representation.relative.gather.apply(Eq[0], Eq[1], Q, K, V, K_quote, V_quote)
 
     Eq << Eq[-1].subs(Eq[-3], Eq[-2])
+
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2022-01-11
 from . import indexed
+# updated on 2023-12-16

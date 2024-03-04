@@ -10,3 +10,4 @@ from . import reciprocal
 from . import mul
 from . import sum
 from . import complement
+from . import cubic

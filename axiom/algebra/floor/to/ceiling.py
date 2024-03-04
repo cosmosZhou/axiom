@@ -2,10 +2,10 @@ from util import *
 
 
 @apply
-def apply(self):
+def apply(self, *, evaluate=False):
     plus, d = self.of(Floor[Expr / Expr])
     n = plus - d + sign(d)
-    return Equal(self, ceiling(n / d))
+    return Equal(self, Ceiling(n / d, evaluate=evaluate))
 
 
 @prove

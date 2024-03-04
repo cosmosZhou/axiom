@@ -4,7 +4,7 @@ import traceback
 from sympy.utilities.iterables import topological_sort_depth_first
 from enum import unique, Enum
 from sympy.core.inference import Inference, process_options, equivalent_ancestor
-from _collections import deque, defaultdict
+from collections import deque, defaultdict
 from util.search import py_to_module
 from os.path import dirname, basename
 from std import json_encode

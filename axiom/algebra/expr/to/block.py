@@ -1,5 +1,16 @@
 from util import *
 
+def squeeze_shape(shape):
+    shapes = []
+    indices = []
+    for index, s in enumerate(shape):
+        if s == 1:
+            indices.append(index)
+        else:
+            shapes.append(s)
+    return tuple(shapes), indices
+
+
 def trim_leading(shape):
     while shape:
         if shape[0] == 1:
@@ -9,6 +20,7 @@ def trim_leading(shape):
 
     return shape
         
+
 def split(self, *pivot, axis=0):
     rhs = self
     shape = self.shape
@@ -20,13 +32,23 @@ def split(self, *pivot, axis=0):
         former = rhs[prev_slices + [slice(0, k)]]
         latter = rhs[prev_slices + [slice(k, shape[axis])]]
         assert former.shape == trim_leading(shape[:axis] + (k,) + shape[axis + 1:])
-        assert latter.shape == trim_leading(shape[:axis] + (shape[axis] - k,) + shape[axis + 1:])
-        rhs = BlockMatrix[axis](former, latter, shape=shape)
+        if latter.shape == trim_leading(shape[:axis] + (shape[axis] - k,) + shape[axis + 1:]):
+            rhs = BlockMatrix[axis](former, latter, shape=shape)
+        else:
+            shape_squeezed, indices = squeeze_shape(shape[:axis] + (shape[axis] - k,) + shape[axis + 1:])
+            assert latter.shape == shape_squeezed
+            index_omitted, = indices
+            former = Transpose[0, index_omitted](former)
+#           shape = *shape[:index_omitted], shape[index_omitted], shape[shape[:index_omitted] + 1:]
+#                   -----------------swap-----------------------
+#           shape = shape[index_omitted], *shape[:index_omitted], shape[shape[:index_omitted] + 1:]
+            rhs = Transpose[0, index_omitted]([former, latter])
 
         assert rhs.shape == shape
         axis += 1
     
     return rhs
+
 
 @apply
 def apply(self, *pivot, axis=0):

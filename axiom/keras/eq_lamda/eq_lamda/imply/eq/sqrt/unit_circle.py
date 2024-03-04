@@ -33,15 +33,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Add).apply(algebra.add.piece.to.piece)
 
-    Eq << Eq[-1].this.find(Cos ** 2).apply(geometry.square.cos.to.add.square_sin, simplify=None)
+    Eq << Eq[-1].this.find(Cos ** 2).apply(geometry.square.cos.to.sub.square.sin, simplify=None)
 
-    Eq << Eq[-1].this.find(Cos ** 2).apply(geometry.square.cos.to.add.square_sin)
+    Eq << Eq[-1].this.find(Cos ** 2).apply(geometry.square.cos.to.sub.square.sin)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-12-14
-# updated on 2022-01-23
+# updated on 2023-11-26

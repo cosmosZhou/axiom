@@ -2,7 +2,7 @@ from util import *
 
 
 @apply(simplify=None)
-def apply(given, axis=-1):
+def apply(given, axis=(-2, 1)):
     lhs, rhs = given.of(Equal)
     return Equal(Transpose[axis](lhs), Transpose[axis](rhs))
 

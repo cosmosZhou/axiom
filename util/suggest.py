@@ -1,4 +1,6 @@
+import os
 from util import utility
+os.environ['MYSQL_DATABASE'] = 'axiom'
 from std import MySQL
 
 

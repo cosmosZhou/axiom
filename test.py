@@ -1,5 +1,5 @@
-import std
-from os.path import dirname
-for file in std.listdir(dirname(__file__), sufix='.py', recursive=True):
-    print(file)
-    std.eol_convert(file)
+#!python
+print("Content-type:text/html\n")
+print("Hello World!")
+# check the output at:
+# http://localhost/axiom/test.py

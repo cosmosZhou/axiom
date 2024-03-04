@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expr.powsimp()
 
-    Eq << Eq[-1].this.find(Cos ** 2).apply(geometry.square.cos.to.add.square_sin)
+    Eq << Eq[-1].this.find(Cos ** 2).apply(geometry.square.cos.to.sub.square.sin)
 
     Eq << Eq[-1].this.rhs.expr.apply(algebra.mul.to.add)
 
@@ -60,12 +60,12 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.infer.imply.eq.induct.apply(Eq[1], Eq[2], Eq[-1], n=n, start=1)
 
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2020-07-01
-# updated on 2023-07-03
+# updated on 2023-11-26

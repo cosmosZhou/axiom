@@ -9,16 +9,19 @@ def apply(self):
 
 @prove
 def prove(Eq):
+    from axiom import geometry
+
     x = Symbol(real=True)
     Eq << apply(cos(x) ** 2)
+
+    Eq << Eq[0].this.find(sin ** 2).apply(geometry.square.sin.to.sub.square.cos)
+
     
-    Eq << Eq[-1] - Eq[-1].rhs.args[1]
+
     
-    Eq << Eq[-1].this.lhs.trigsimp()
-    
-    # https://baike.baidu.com/item/%E5%92%8C%E8%A7%92%E5%85%AC%E5%BC%8F
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-06-21
+# updated on 2023-11-26

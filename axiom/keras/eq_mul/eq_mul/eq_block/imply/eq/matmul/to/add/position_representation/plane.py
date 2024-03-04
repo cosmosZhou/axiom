@@ -70,8 +70,8 @@ def prove(Eq):
     Eq << Eq[-1].this.find(BlockMatrix[2]).apply(geometry.block.to.sin)
 
     # reference:
-    # https://nn.labml.ai/transformers/rope/index.html
-    
+    # https://arxiv.org/pdf/2402.12376.pdf#page=11
+    # https://arxiv.org/pdf/2312.17172.pdf#page=4
     
 
 

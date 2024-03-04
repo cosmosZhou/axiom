@@ -54,8 +54,8 @@ def prove(Eq):
         Equal(V_dquote, Lamda[j:Min(n, l + u - 1), i:n](w_V[k + clip(j - i + β[i], -k, k)])),
         Q, K, V)
 
-    K_dquote = Symbol('K^\"', Transpose[1](Lamda[j:Min(n, l + u - 1)](K_quote[:, Min(n - 1, j + β[i])])))
-    V_dquote = Symbol('V^\"', Transpose[1](Lamda[j:Min(n, l + u - 1)](V_quote[:, Min(n - 1, j + β[i])])))
+    K_dquote = Symbol('K^\"', Transpose[0, 1](Lamda[j:Min(n, l + u - 1)](K_quote[:, Min(n - 1, j + β[i])])))
+    V_dquote = Symbol('V^\"', Transpose[0, 1](Lamda[j:Min(n, l + u - 1)](V_quote[:, Min(n - 1, j + β[i])])))
     Eq <<= K_dquote.this.definition, V_dquote.this.definition
 
     Eq << keras.eq_relu.eq_min.eq.eq.imply.eq.softmax.bert.position_representation.relative.band_part_mask.apply(Eq.beta, Eq.zeta, Eq[-2], Eq[-1], Q, K, V)

@@ -6,3 +6,4 @@ from . import neg
 from . import im
 from . import block
 from . import mul
+from . import inverse

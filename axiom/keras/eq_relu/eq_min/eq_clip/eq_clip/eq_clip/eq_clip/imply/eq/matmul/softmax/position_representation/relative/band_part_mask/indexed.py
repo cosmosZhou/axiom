@@ -60,10 +60,10 @@ def prove(Eq):
 
     Eq <<= Eq.K_dquote.subs(Eq[-2].reversed), Eq.V_dquote.subs(Eq[-1].reversed)
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.lamda.to.transpose, axis=1), Eq[-1].this.rhs.apply(algebra.lamda.to.transpose, axis=1)
+    Eq <<= Eq[-2].this.rhs.apply(algebra.lamda.to.transpose, axis=(0, 1)), Eq[-1].this.rhs.apply(algebra.lamda.to.transpose, axis=(0, 1))
 
     Eq << keras.eq_relu.eq_min.eq.eq.imply.eq.softmax.bert.position_representation.relative.band_part_mask.apply(Eq.beta, Eq.zeta, Eq[-2], Eq[-1], Q, K, V)
-
+ 
     Eq << Eq.K_dquote[i, j - β[i]]
 
     

@@ -65,6 +65,7 @@ def prove(Eq):
 
     # reference:
     # https://nn.labml.ai/transformers/rope/index.html
+    # https://openaccess.thecvf.com/content/WACV2022/papers/Jeevan_Resource-Efficient_Hybrid_X-Formers_for_Vision_WACV_2022_paper.pdf
     
     
 

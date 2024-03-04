@@ -11,7 +11,7 @@ def apply(self):
 def prove(Eq):
     from axiom import algebra
 
-    M, x = Symbol(real=True)
+    x = Symbol(real=True)
     S = Symbol(etype=dtype.real)
     f = Function(real=True)
     Eq << apply(Inf[x:S](f(x)))

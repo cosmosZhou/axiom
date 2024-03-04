@@ -20,9 +20,9 @@ def apply(self):
                 factors.append(arg.base)
     assert factors
     
-    from axiom.algebra.add.to.mul import common_terms, factorize
+    from axiom.algebra.add.to.mul import common_terms
     if c := common_terms(factors):
-        factors, c = factorize(factors, c)
+        factors, c = Mul.factorize(factors, c)
         factor = Mul(*factors) * c
     else:
         factor = Mul(*factors)

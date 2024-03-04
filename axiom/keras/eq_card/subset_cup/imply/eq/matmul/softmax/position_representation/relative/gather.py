@@ -9,8 +9,7 @@ def apply(eq_cup, subset, Q, K, V, K_quote, V_quote):
     n, d_z = Q.shape
     S[cup], (S[0], S[n]) = subset.of(Subset[Expr, Range])
     return Equal(softmax(Q @ (K + K_quote).T / sqrt(d_z) + (Lamda[j:n](Bool(Element(j, cup))) - OneMatrix(n, n)) * oo) @ (V + V_quote), \
-                 softmax(Q @ (Lamda[j:m](K[d[j]]).T + Transpose[1, 2](Lamda[j:m](K_quote[:, d[j]]))) / sqrt(d_z)) @ (Lamda[j:m](V[d[j]]) + Transpose[1](Lamda[j:m](V_quote[:, d[j]]))))
-
+                 softmax(Q @ (Lamda[j:m](K[d[j]]).T + Transpose[0, 2](Lamda[j:m](K_quote[:, d[j]]))) / sqrt(d_z)) @ (Lamda[j:m](V[d[j]]) + Transpose[0, 1](Lamda[j:m](V_quote[:, d[j]]))))
 
 
 @prove
@@ -115,7 +114,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda[Add]).apply(algebra.lamda.to.add)
 
-    Eq << Eq[-1].this.find(Add[~Lamda[Tuple[2]]]).apply(algebra.lamda.to.transpose, axis=1)
+    Eq << Eq[-1].this.find(Add[~Lamda[Tuple[2]]]).apply(algebra.lamda.to.transpose, axis=(0, 1))
 
     Eq << Eq[-1].this.find(Lamda[Add]).apply(algebra.lamda.to.add)
 
@@ -123,11 +122,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda[Tuple[3]]).apply(algebra.lamda.to.transpose)
 
-    Eq << Eq[-1].this.find(Lamda[Tuple[2]]).apply(algebra.lamda.to.transpose, axis=1)
+    Eq << Eq[-1].this.find(Lamda[Tuple[2]]).apply(algebra.lamda.to.transpose, axis=(0, 1))
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.z_def, Eq[-1])
-
-
 
 
 if __name__ == '__main__':

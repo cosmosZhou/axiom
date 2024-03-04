@@ -6,3 +6,4 @@ from . import min
 from . import mul
 from . import bool
 from . import matmul
+from . import div

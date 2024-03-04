@@ -43,3 +43,10 @@ from . import gt_zero
 from . import el_interval
 from . import sec
 from . import csc
+from . import tanh
+from . import sinh
+from . import cosh
+from . import coth
+from . import sech
+from . import csch
+from . import grad

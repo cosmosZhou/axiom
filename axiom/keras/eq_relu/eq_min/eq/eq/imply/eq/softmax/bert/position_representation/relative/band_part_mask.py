@@ -8,8 +8,8 @@ def apply(eq_relu, eq_min, eq_K, eq_V, Q, K, V):
 
     ((S[n], (S[i], u)), S[i_limit]), ζ = eq_min.of(Equal[Lamda[Min[Add]]])
 
-    ((K_quote, range_n, j_index), j_limit), K_dquote = eq_K.of(Equal[Transpose[1][Lamda[SlicedIndexed]]])
-    ((V_quote, S[range_n], S[j_index]), S[j_limit]), V_dquote = eq_V.of(Equal[Transpose[1][Lamda[SlicedIndexed]]])
+    ((K_quote, range_n, j_index), j_limit), K_dquote = eq_K.of(Equal[Transpose[0, 1][Lamda[SlicedIndexed]]])
+    ((V_quote, S[range_n], S[j_index]), S[j_limit]), V_dquote = eq_V.of(Equal[Transpose[0, 1][Lamda[SlicedIndexed]]])
 
     S[0], S[n] = range_n
     j, S[0], S[Min(n, l + u - 1)] = j_limit
@@ -41,8 +41,8 @@ def prove(Eq):
     V_dquote = Symbol('V^\"', real=True, shape=(n, Min(n, l + u - 1), d_z))
     (Eq.beta, Eq.zeta, Eq.K_dquote, Eq.V_dquote), Eq.objective = apply(Equal(β, Lamda[i:n](relu(i - l + 1))), \
                                                                        Equal(ζ, Lamda[i:n](Min(i + u, n))), \
-                                                                       Equal(K_dquote, Transpose[1](Lamda[j:Min(n, l + u - 1)](K_quote[:, Min(n - 1, j + β[i])]))), \
-                                                                       Equal(V_dquote, Transpose[1](Lamda[j:Min(n, l + u - 1)](V_quote[:, Min(n - 1, j + β[i])]))), Q, K, V)
+                                                                       Equal(K_dquote, Transpose[0, 1](Lamda[j:Min(n, l + u - 1)](K_quote[:, Min(n - 1, j + β[i])]))), \
+                                                                       Equal(V_dquote, Transpose[0, 1](Lamda[j:Min(n, l + u - 1)](V_quote[:, Min(n - 1, j + β[i])]))), Q, K, V)
 
     band_part = Eq.objective.find(BandPart)
     a = Symbol(Eq.objective.find(Mul[MatMul]))

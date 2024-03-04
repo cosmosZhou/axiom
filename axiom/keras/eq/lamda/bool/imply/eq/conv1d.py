@@ -32,22 +32,23 @@ def prove(Eq):
     w = Symbol(real=True, shape=(l, d, d_quote))
     M = Symbol(real=True, shape=(m, n))
     i, k = Symbol(integer=True)
-    Eq << apply(Equal(M, Lamda[i:n, k:m](Bool(Element(i, Range(β[k], ζ[k]))))),
-                x, w, r)
+    Eq << apply(Equal(M, Lamda[i:n, k:m](Bool(Element(i, Range(β[k], ζ[k]))))), x, w, r)
 
     Eq.M_def = Eq[0].this.find(Element).apply(sets.el_range.to.et)
 
     Eq << Eq[-1].rhs.expr.args[1].this.defun()
 
     d0 = Symbol((l - 1) // 2 * r + (r // 2) * (1 - l % 2))
-    Eq.conv1d = Eq[-1].subs(d0.this.definition.reversed, evaluate=False)
+    Eq.mul_floor = d0.this.definition.reversed.this.apply(algebra.eq.transport, lhs=0)
+
+    Eq.conv1d = Eq[-1].subs(Eq.mul_floor)
 
     C = Symbol(Eq[1].lhs)
     Eq << C.this.definition
 
-    Eq << Eq[-1].this.rhs.args[0].defun()
+    Eq << Eq[-1].this.find(conv1d).defun()
 
-    Eq << Eq[-1].subs(d0.this.definition.reversed)
+    Eq << Eq[-1].subs(Eq.mul_floor)
 
     Eq << Eq[-1][k, i]
 
@@ -95,10 +96,11 @@ def prove(Eq):
     Eq << Eq[-1].subs(C.this.definition, C_quote.this.definition)
 
     # https://arxiv.org/pdf/1408.5882.pdf
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2021-01-01
-# updated on 2022-01-23
+# updated on 2023-12-17
