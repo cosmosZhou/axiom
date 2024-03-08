@@ -12,6 +12,7 @@
 * 所述半机械化，是指目前做不到全自动根据数学命题题设直接打印出证明过程，而是需要人脑的辅助，人必须通过检索定理库，告诉计算机，面对什么样的题型使用什么样的定理；全机械化，自动化的符号推理算法尚未有可演示的研究成果；
 * 所述公理化，是指所有已证明的数学定理，归根结底是通过有限个公理经过有限次逻辑运算推导出来的，而公理是不需要证明的，其真伪是人为假定成立的，整个数学定理库就是建立在公理的假设之上展开构建的；当然根据哥德尔不完备性定理（Goedel Incompleteness Theorem），任何一个自洽的推理系统，必然存在不能证明，亦不能证伪的命题，此类命题不能通过有限个公理经过有限次逻辑运算（布尔运算）导出；
 * 所述严密的推理逻辑，就是依据[希尔伯特纲领](https://en.wikipedia.org/wiki/Hilbert%27s_program)中的申明，在论证过程中，以[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定逻辑来引导程序进行推理，力求确保计算结果在[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定语法规则内有效，且所有推理都依据某个公理或者定理进行。在本系统中，所有数学命题都将被[Python](https://www.python.org/)语句精确描述出来，不存在自然语言描述数学问题时存在的歧义性，也不存在浮点数引起的误差问题。
+目前开源社区中与之功能最相近的项目为：[leanprover](https://leanprover-community.github.io/mathlib_docs/algebra/algebra/basic.html)。
 
 该系统的三个基本要件是[Symbol](../?symbol=Symbol), [Function](../?symbol=Function), Theorem；
 * Symbol是一个字母或者数字组合的变量。变量命名规则与[Python](https://www.python.org/)一致。用于定义任意类型的抽象数学符号，比如  

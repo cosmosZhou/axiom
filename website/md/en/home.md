@@ -15,7 +15,8 @@ The whole mathematical theorem knowledge bank is built step by step on these pre
 * the above-mentioned pursuit of logic correctness is so defined that:  
 during the processing of conducting reasoning, in accordance with the statements defined in 
 [Hilbert's program](https://en.wikipedia.org/wiki/Hilbert%27s_program), the program strives to be logically valid within the grammars defined by [formal language](https://en.wikipedia.org/wiki/Formal_language).   
-Each theorem is proved according to the assumptions and correctness of some previously proved theorems or axioms. In this project, each mathematical problem will be expressed as a [Python](https://www.python.org/) statement which is precisely defined with no ambiguity which can emerge when one use natural language to express a mathematical problem.  
+Each theorem is proved according to the assumptions and correctness of some previously proved theorems or axioms. In this project, each mathematical problem will be expressed as a [Python](https://www.python.org/) statement which is precisely defined with no ambiguity which can emerge when one use natural language to express a mathematical problem. 
+In the open-source community, the most similar project so far is [leanprover](https://leanprover-community.github.io/mathlib_docs/algebra/algebra/basic.html).
 
 
 This system is comprised of three basic elements: [Symbol](../?symbol=Symbol), [Function](../?symbol=Function), Theorem; 
