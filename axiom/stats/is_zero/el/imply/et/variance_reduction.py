@@ -15,7 +15,7 @@ def apply(eq, el):
     random_symbols = index_intersect(gx.random_symbols, fx.random_symbols)
     assert random_symbols
     assert all (v in vars for v in random_symbols)
-    return Variance(fx * (gx - b)) < Variance(fx * gx)
+    return Equal(Expectation(fx * (gx - b)), Expectation(fx * gx)), Variance(fx * (gx - b)) < Variance(fx * gx)
 
 
 @prove
@@ -63,11 +63,17 @@ def prove(Eq):
 
     Eq << algebra.gt_zero.lt.imply.lt.mul.apply(Eq[-1], Eq[-3])
 
-    
+    Eq << Eq[2].this.find(Mul).apply(algebra.mul.to.add)
+
+    Eq << Eq[-1].this.lhs.apply(stats.expect.to.add)
+
+    Eq << Eq[-1].this.lhs.apply(stats.expect.to.mul)
+
+    Eq << Eq[-1].subs(Eq[0])
     
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-04-14
-# updated on 2023-04-15
+# updated on 2024-03-11
