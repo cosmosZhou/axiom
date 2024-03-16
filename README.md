@@ -72,3 +72,8 @@ x(n-1),\\
 x(n+1)
 \end{cases}
 $$
+
+# multiprocessing debugging 
+## VSCode
+* debug the single-process program run.py using .vscode/launch.json where name = "Python: Current File"
+* debug the multiprocessing program run.py using .vscode/launch.json where name = "Python: Current File"

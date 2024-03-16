@@ -65,12 +65,14 @@ except ImportError as e:
     print('exit_code =', exit_code)
     exit(exit_code)
 
+
 import time
 from multiprocessing import cpu_count
 from queue import PriorityQueue
 from functools import singledispatch
 import random
 from util.utility import RetCode
+
 
 def axiom_directory():
     directory = dirname(__file__)
@@ -641,19 +643,7 @@ def removeFile(path):
     except PermissionError as e:
         print(e)
         exit(0)
-
     
-def args_kwargs(argv):
-    args = []
-    kwargs = {}
-    for arg in argv:
-        arr = arg.split('=')
-        if len(arr) == 2:
-            key, value = arr
-            kwargs[key] = eval(value)
-        else:
-            args.append(arg)
-    return args, kwargs
 
 def retry(package):
     from util.search import module_to_py
@@ -776,11 +766,17 @@ if __name__ == '__main__':
 #         print("kwargs =", kwargs, "<br>")        
         args = ''
         
-    else: 
-        args, kwargs = args_kwargs(sys.argv[1:])
+    else:
+        from std import argparse
+        args, kwargs = argparse()
         
     debug = kwargs.pop('debug', False)
     parallel = kwargs.pop('parallel', not sys.gettrace())
+    if processes := kwargs.pop('processes', None):
+        # redefinition of cpu_count
+        def cpu_count():
+            return processes
+        
     if not args:
         if kwargs:
             for key, value in kwargs.items():

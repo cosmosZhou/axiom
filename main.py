@@ -49,8 +49,8 @@ def run(port):
 
 
 if __name__ == '__main__':
-    from run import args_kwargs
-    args, kwargs = args_kwargs(sys.argv[1:])
+    from std import argparse
+    args, kwargs = argparse()
     
     user = MySQL.user
     [[port]] = MySQL.instance.select(f"select port from login where user = '{user}'")
