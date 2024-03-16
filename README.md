@@ -76,4 +76,4 @@ $$
 # multiprocessing debugging 
 ## VSCode
 * debug the single-process program run.py using .vscode/launch.json where name = "Python: Current File"
-* debug the multiprocessing program run.py using .vscode/launch.json where name = "Python: Current File"
+* debug the multiprocessing program run.py using .vscode/launch.json where name = "Python: run.py"
