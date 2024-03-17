@@ -60,20 +60,7 @@ https://github.com/eclipse-theia/theia
 https://github.com/jupyterlab/jupyterlab  
 https://github.com/sagemathinc/cocalc  
 
-# latex
-function: $f(x)=\frac{P(x)}{Q(x)}$
-
-
-$$
-X(m,n)=
-\begin{cases}
-x(n),\\
-x(n-1),\\
-x(n+1)
-\end{cases}
-$$
-
-# multiprocessing debugging 
+# Multiprocessing Debugging 
 ## VSCode
 * debug the single-process program run.py using .vscode/launch.json where name = "Python: Current File"
 * debug the multiprocessing program run.py using .vscode/launch.json where name = "Python: run.py"
@@ -94,12 +81,12 @@ $$
  | Condition |                    |
 * make necessary settings in Python Debug Configurations:
 
- | Option                      | Config                           |
- |-----------------------------|----------------------------------| 
- | Name                        | run.py                           |
- | Python interpreter          | a local Python interpreter       |
- | Run Python script or module | script                           |
- | script                      | `$`ProjectFileDir`$`/run.py      |
- | Script parameters           | --parallel --debug --processes=4 |
- | Working directory           | `$`ProjectFileDir`$`             |
+ | Option                      | Config                            |
+ |-----------------------------|-----------------------------------| 
+ | Name                        | run.py                            |
+ | Python interpreter          | a local/remote Python interpreter |
+ | Run Python script or module | script                            |
+ | script                      | `$`ProjectFileDir`$`/run.py       |
+ | Script parameters           | --parallel --processes=4          |
+ | Working directory           | `$`ProjectFileDir`$`              |
 * press Shift+F9 to start multiprocessing debugging 
