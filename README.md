@@ -77,3 +77,29 @@ $$
 ## VSCode
 * debug the single-process program run.py using .vscode/launch.json where name = "Python: Current File"
 * debug the multiprocessing program run.py using .vscode/launch.json where name = "Python: run.py"
+
+## PyCharm
+* In Settings (Ctrl+Alt+S)(File | Settings | Build, Execution, Deployment | Python Debugger): make these settings:
+
+ | Option                                            | Config             |
+ |---------------------------------------------------|--------------------| 
+ | gevent compatible                                 | :x:                |
+ | Attach to subprocess automatically when debugging | :white_check_mark: |
+* Set Breakpoint, make sure it is set with the following property (Ctrl+Shift+F8):
+
+ | Option    | Config             |
+ |-----------|--------------------| 
+ | Enabled   | :white_check_mark: |
+ | Suspended | Thread             |
+ | Condition |                    |
+* make necessary settings in Python Debug Configurations:
+
+ | Option                      | Config                           |
+ |-----------------------------|----------------------------------| 
+ | Name                        | run.py                           |
+ | Python interpreter          | a local Python interpreter       |
+ | Run Python script or module | script                           |
+ | script                      | $ProjectFileDir$/run.py          |
+ | Script parameters           | --parallel --debug --processes=4 |
+ | Working directory           | $ProjectFileDir$                 |
+* press Shift+F9 to start multiprocessing debugging 

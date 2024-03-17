@@ -754,7 +754,7 @@ def run_with_module(*modules, debug=True):
 if __name__ == '__main__':
     is_http = 'HTTP_HOST' in os.environ
     if is_http:
-        print("Content-type:text/html\n")        
+        print("Content-type:text/html\n")
         QUERY_STRING = os.environ['QUERY_STRING']
 #         print("QUERY_STRING =", QUERY_STRING, "<br>")
         
