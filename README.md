@@ -99,7 +99,7 @@ $$
  | Name                        | run.py                           |
  | Python interpreter          | a local Python interpreter       |
  | Run Python script or module | script                           |
- | script                      | $ProjectFileDir$/run.py          |
+ | script                      | \$ProjectFileDir\$/run.py        |
  | Script parameters           | --parallel --debug --processes=4 |
- | Working directory           | $ProjectFileDir$                 |
+ | Working directory           | \$ProjectFileDir\$               |
 * press Shift+F9 to start multiprocessing debugging 
