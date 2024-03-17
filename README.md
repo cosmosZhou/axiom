@@ -89,4 +89,6 @@ https://github.com/sagemathinc/cocalc
  | script                      | `$`ProjectFileDir`$`/run.py       |
  | Script parameters           | --parallel --processes=4          |
  | Working directory           | `$`ProjectFileDir`$`              |
-* press Shift+F9 to start multiprocessing debugging 
+ | Environment variables       | PYTHONUNBUFFERED=1                |
+* press Shift+F9 to start multiprocessing debugging
+* Uncheck `Tool | Deployment | Automatic Upload` if you want to manage the files uploading manually
