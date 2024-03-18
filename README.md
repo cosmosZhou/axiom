@@ -66,12 +66,10 @@ https://github.com/sagemathinc/cocalc
 * debug the multiprocessing program run.py using .vscode/launch.json where name = "Python: run.py"
 
 ## PyCharm
-* In Settings (Ctrl+Alt+S)(File | Settings | Build, Execution, Deployment | Python Debugger): make these settings:
-
- | Option                                            | Config             |
- |---------------------------------------------------|--------------------| 
- | gevent compatible                                 | :x:                |
- | Attach to subprocess automatically when debugging | :white_check_mark: |
+* In Settings (Ctrl+Alt+S)(File | Settings | Build, Execution, Deployment | Python Debugger) make these settings:
+ - [x] Attach to subprocess automatically when debugging
+ - [ ] Gevent compatible
+ 
 * Set Breakpoint, make sure it is set with the following property (Ctrl+Shift+F8):
 
  | Option    | Config             |
