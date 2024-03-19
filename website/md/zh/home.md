@@ -11,7 +11,9 @@
 	
 * 所述半机械化，是指目前做不到全自动根据数学命题题设直接打印出证明过程，而是需要人脑的辅助，人必须通过检索定理库，告诉计算机，面对什么样的题型使用什么样的定理；全机械化，自动化的符号推理算法尚未有可演示的研究成果；
 * 所述公理化，是指所有已证明的数学定理，归根结底是通过有限个公理经过有限次逻辑运算推导出来的，而公理是不需要证明的，其真伪是人为假定成立的，整个数学定理库就是建立在公理的假设之上展开构建的；当然根据哥德尔不完备性定理（Goedel Incompleteness Theorem），任何一个自洽的推理系统，必然存在不能证明，亦不能证伪的命题，此类命题不能通过有限个公理经过有限次逻辑运算（布尔运算）导出；
-* 所述严密的推理逻辑，就是依据[希尔伯特纲领](https://en.wikipedia.org/wiki/Hilbert%27s_program)中的申明，在论证过程中，以[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定逻辑来引导程序进行推理，力求确保计算结果在[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定语法规则内有效，且所有推理都依据某个公理或者定理进行。在本系统中，所有数学命题都将被[Python](https://www.python.org/)语句精确描述出来，不存在自然语言描述数学问题时存在的歧义性，也不存在浮点数引起的误差问题。
+* 所述严密的推理逻辑，就是依据[希尔伯特纲领](https://en.wikipedia.org/wiki/Hilbert%27s_program)中的申明，在论证过程中，以[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定逻辑来引导程序进行推理，力求确保计算结果在[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定语法规则内有效，且所有推理都依据某个公理或者定理进行。在本系统中，所有数学命题都将被[Python](https://www.python.org/)语句精确描述出来，不存在自然语言描述数学问题时存在的歧义性(显然，同理，一般地，以此类推，反之亦然，综上所述等证明用语)，也不存在浮点数引起的误差问题。  
+
+我们可以在Google搜索引擎中定位到网站信息：[定理库](https://www.google.com.hk/search?q=%E5%AE%9A%E7%90%86%E5%BA%93)。  
 目前开源社区中与之功能最相近的项目为：[leanprover](https://leanprover-community.github.io/mathlib_docs/algebra/algebra/basic.html)。
 
 该系统的三个基本要件是[Symbol](../?symbol=Symbol), [Function](../?symbol=Function), Theorem；
@@ -100,7 +102,7 @@ extended_integer ⊂ extended_rational ⊂ [extended_real](https://en.wikipedia.
 -------
 该公理化半机械化数学证明工具可以简化论证过程，实现“给思考加上发动机”，研究者只需掌握论证的宏观脉络，具体计算交付给计算机即可。主要可以用于理论性数学证明，对数学学院的学生，算法工程师、研究员在算法研究，数学分析过程中有一定参考价值，
 也可以用于数学工作者整理数学定理知识，无需手动编辑繁琐的数学公式，无需手动进行纸笔演算，通过在线的[Python](https://www.python.org/)集成开发环境IDE,就可以对定理过程进行编辑，从而完成数学定理的整理工作。其中在线IDE提供F3快捷键可以方便定位任意定理，函数，符号的定义，
-对于研究和教学都有化繁为简的实用价值，是一本电子版的数学定理、算法模型参考书。
+对于研究和教学都有化繁为简的实用价值，是一本用Python语言编写的数学教材，电子版的数学、算法参考书。
 <br><br>
 
 ![](png/national_emblem.png)

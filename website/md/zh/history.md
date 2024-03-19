@@ -17,13 +17,13 @@ cout << "Hello World";
 符号lambda表达式（Lamda[k] (h[k])）的定义在latex输出上也极像C++的lambda表达式：  
 例如C++风格的lambda表达式： [k]{return h[k];}  
 
-在定理证明过程中对数学Object的操作也用了this关键字，也是没用了C++的写作风格。例如  
+在定理证明过程中对数学Object的操作也用了this关键字，也是沿用了C++的写作风格。例如：  
 Eq << Eq[-1].this.rhs.simplify()  
 
 
 
 ------
-在2016年, 作者发现了其它许多不同编程编写的开源符号计算工程，比如[sympy](https://www.sympy.org/en/index.html), 及其C++子项目 [symengine](https://github.com/symengine/symengine.git)，还有一个Common-Lisp项目[Maxima](http://maxima.sourceforge.net)，一个集成各种符号计算的工具集项目[sagemath](https://www.sagemath.org/)，包含了Maxima, [Maple](https://www.maplesoft.com/products/Maple/),
+在2016年, 作者发现了许多不同编程编写的开源符号计算工程，比如[sympy](https://www.sympy.org/en/index.html), 及其C++子项目 [symengine](https://github.com/symengine/symengine.git)，还有一个Common-Lisp项目[Maxima](http://maxima.sourceforge.net)，一个集成各种符号计算的工具集项目[sagemath](https://www.sagemath.org/)，包含了Maxima, [Maple](https://www.maplesoft.com/products/Maple/),
 Mathematica, [Matlab](https://www.mathworks.com/products/matlab.html), sympy; 以及一些自动化机器证明的资料： [theoremprover-museum](https://theoremprover-museum.github.io/),
 [Proof_assistant](https://en.wikipedia.org/wiki/Proof_assistant), 
 [Interactive_proof_system](https://en.wikipedia.org/wiki/Interactive_proof_system).
@@ -53,7 +53,7 @@ Mathematica, [Matlab](https://www.mathworks.com/products/matlab.html), sympy; �
 在2023年, openAI公布了自动数学证明的数据集80万。  
 https://openai.com/research/improving-mathematical-reasoning-with-process-supervision  
 https://arxiv.org/abs/2305.20050  
-一个mathGPT的设想是：  
+一个形式化的mathGPT的设想是：  
 1，形式逻辑：将数学语言进行形式化，即用Python语言来表达思想，不推荐将自然语言用于推理，若非要使用自然语言来表达，可以将机器推导翻译成自然语言；  
 2，奖励模型：用Python解释器的执行结果(LaTex表达式)作为奖励模型的判断依据之一，使推导过程向有利于命题得证的方向发展；  
 3，强化学习：用GPT生成Python代码，用Python解释器生成LaTex表达式，用奖励模型作为算法进化的信号，最终实现真正的自动解题，机器证明的目标。  

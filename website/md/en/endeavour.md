@@ -8,7 +8,7 @@
 		world wide, Mathematics Mechanization is still a challenging problem.
 		The final goal of sagemath.tech is to develop fully-mechanized
 		axiomatized mathematical analysis system, which is open to the general
-		public. So far, it has collected roughly 800 mathematical theorems,
+		public. So far, it has collected roughly 5000 mathematical theorems,
 		which are proved by this semi-mechanized mathematical proving system.
 		The ultimate goal will be realized through the following phases:
 	</p>

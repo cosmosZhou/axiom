@@ -38,31 +38,6 @@ if (array_key_exists('section', $_GET)) {
 }
 
 switch ($lang) {
-    case 'fr':
-        $title = "Système d'analyse mathématique axiomatisé";
-        $home = "page d'accueil";
-        $faq = 'Foire aux questions';
-        $bugReport = 'Rapport de bogue';
-        
-        $userGuide = 'Guide de l’utilisateur';
-        $participation = 'Participation';
-        $contact = 'Contactez-nous';
-        $roadMap = 'Carte routière';
-        $elementaryExamples = 'Exemples élémentaires';
-        $intermediateExamples = 'Exemples intermédiaires';
-        $advancedExamples = 'Exemples avancés';
-        $designManual = 'Manuel de conception';
-        
-        $languageSelect = 'sélectionner d’autres langues';
-        
-        $history = 'Histoire de Breif';
-        
-        $userManual = 'Manuel';
-        $signIn = 'Connexion';
-        $signUp = "S'enregistrer";
-        $programmingReference = "consulter des programmation";
-        break;
-
     case 'zh':
         $title = '公理化定理库';
         $home = '网站主页';
@@ -72,10 +47,10 @@ switch ($lang) {
         $userGuide = '用户指南';
         $participation = '项目参与';
         $contact = '联系作者';
-        $roadMap = '奋斗目标';
-        $elementaryExamples = '初级例题';
-        $intermediateExamples = '中级例题';
-        $advancedExamples = '高级例题';
+        $endeavour = '我的奋斗';
+        // $elementaryExamples = '初级例题';
+        // $intermediateExamples = '中级例题';
+        // $advancedExamples = '高级例题';
         $designManual = '设计文档';
         $languageSelect = '选择语言';
 
@@ -96,10 +71,10 @@ switch ($lang) {
         $userGuide = 'User Guide';
         $participation = 'Participation';
         $contact = 'Contact Us';
-        $roadMap = 'Road Map';
-        $elementaryExamples = 'Elementary Examples';
-        $intermediateExamples = 'Intermediate Examples';
-        $advancedExamples = 'Advanced Examples';
+        $endeavour = 'Lifelong Endeavour';
+        // $elementaryExamples = 'Elementary Examples';
+        // $intermediateExamples = 'Intermediate Examples';
+        // $advancedExamples = 'Advanced Examples';
         $designManual = 'Design Manual';
         
         $languageSelect = 'Select Language';
@@ -162,26 +137,12 @@ switch ($lang) {
 					<a href='?lang=<?php echo $lang ?>&section=history'><?php echo $history ?></a>
 				</div>
 				<div class='sidebar_body'>
-					<a href='?lang=<?php echo $lang ?>&section=roadMap'><?php echo $roadMap ?></a>
+					<a href='?lang=<?php echo $lang ?>&section=endeavour'><?php echo $endeavour ?></a>
 				</div>
 
 				<br>
 				<div class='sidebar_heading'><?php echo $userGuide ?></div>
 				<br>
-				<div class='sidebar_body'>
-					<a href="?lang=<?php echo $lang ?>&section=elementary"
-						title="<?php echo $elementaryExamples ?>">
-						<?php echo $elementaryExamples ?></a>
-				</div>
-				<div class='sidebar_body'>
-					<a href="?lang=<?php echo $lang ?>&section=intermediate"
-						title="<?php echo $intermediateExamples ?>"><?php echo $intermediateExamples ?></a>
-				</div>
-				<div class='sidebar_body'>
-					<a href="?lang=<?php echo $lang ?>&section=advanced"
-						title="<?php echo $advancedExamples ?>">
-						<?php echo $advancedExamples ?></a>
-				</div>
 				<div class='sidebar_body'>
 					<a href="?lang=<?php echo $lang ?>&section=faq"
 						title="<?php echo $faq ?>"><?php echo $faq ?></a>
