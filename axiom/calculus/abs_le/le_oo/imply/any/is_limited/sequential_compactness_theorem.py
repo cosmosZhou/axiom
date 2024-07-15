@@ -20,6 +20,7 @@ def prove(Eq):
     x = Symbol(real=True, shape=(oo,))
     M = Symbol(real=True, positive=True)
     n, m = Symbol(integer=True)
+    # n is a sequence "peak" if x[m] <= x[n] foreach m > n
     Eq << apply(Abs(x[n]) <= M, Card({n: All[m:n + 1:oo](x[m] <= x[n])}) < oo)
 
     Eq << GreaterEqual(Eq[1].lhs, 0, plausible=True)

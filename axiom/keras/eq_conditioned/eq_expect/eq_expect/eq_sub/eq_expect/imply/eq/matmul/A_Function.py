@@ -42,7 +42,7 @@ def prove(Eq):
 
     Eq << keras.eq_conditioned.eq_expect.eq_expect.eq_sub.imply.eq.matmul.A_Function.apply(*Eq[:4], π_quote)
 
-    # https://arxiv.org/pdf/1502.05477.pdf# page=10
+    # https://arxiv.org/pdf/1502.05477.pdf#page=10
     
     
 

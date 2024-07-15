@@ -68,10 +68,10 @@ def prove(Eq):
 
     Eq << stats.cond.imply.cond.prob.weighted.apply(Eq[-1], (a, π))
 
-    Eq << stats.ne_zero.imply.eq.bayes.conditioned.st.joint.apply(Eq[-1], s[t + 1], a[t])
+    Eq << stats.ne_zero.imply.eq.prob.conditioned.to.mul.prob.conditioned.bayes.apply(Eq[-1], s[t + 1], a[t])
 
     Eq << Eq.eq_grad.subs(Eq[-1].reversed)
-    
+
     Eq << Eq[-1].this.find(Sum[Probability]).apply(stats.sum.to.prob)
     # https://spinningup.openai.com/en/latest/spinningup/rl_intro.html# bellman-equations
     # http://incompleteideas.net/book/bookdraft2017nov5.pdf (Page 47)
@@ -82,8 +82,8 @@ def prove(Eq):
     # https://www.52coding.com.cn/tags/Reinforcement-Learning/
     # TRPO
     # https://arxiv.org/pdf/1502.05477.pdf
-    
-    
+
+
 
 
 if __name__ == '__main__':

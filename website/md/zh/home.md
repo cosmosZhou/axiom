@@ -14,7 +14,7 @@
 * 所述严密的推理逻辑，就是依据[希尔伯特纲领](https://en.wikipedia.org/wiki/Hilbert%27s_program)中的申明，在论证过程中，以[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定逻辑来引导程序进行推理，力求确保计算结果在[形式语言](https://en.wikipedia.org/wiki/Formal_language)的既定语法规则内有效，且所有推理都依据某个公理或者定理进行。在本系统中，所有数学命题都将被[Python](https://www.python.org/)语句精确描述出来，不存在自然语言描述数学问题时存在的歧义性(显然，同理，一般地，以此类推，反之亦然，综上所述等证明用语)，也不存在浮点数引起的误差问题。  
 
 我们可以在Google搜索引擎中定位到网站信息：[定理库](https://www.google.com.hk/search?q=%E5%AE%9A%E7%90%86%E5%BA%93)。  
-目前开源社区中与之功能最相近的项目为：[leanprover](https://leanprover-community.github.io/mathlib_docs/algebra/algebra/basic.html)。
+目前开源社区中与之功能最相近的项目为：[leanprover](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Algebra/Algebra/Basic.html)、[coq](https://github.com/coq/coq)和[isabelle](https://isabelle.in.tum.de/)
 
 该系统的三个基本要件是[Symbol](../?symbol=Symbol), [Function](../?symbol=Function), Theorem；
 * Symbol是一个字母或者数字组合的变量。变量命名规则与[Python](https://www.python.org/)一致。用于定义任意类型的抽象数学符号，比如  

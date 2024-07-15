@@ -97,7 +97,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(discrete.add.to.matmul)
 
-    # https://arxiv.org/pdf/1502.05477.pdf# page=10
+    # https://arxiv.org/pdf/1502.05477.pdf#page=10
 
 
 

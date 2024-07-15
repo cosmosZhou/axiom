@@ -40,3 +40,4 @@ from . import conj
 from . import neg
 from . import norm
 from . import re
+from . import pow

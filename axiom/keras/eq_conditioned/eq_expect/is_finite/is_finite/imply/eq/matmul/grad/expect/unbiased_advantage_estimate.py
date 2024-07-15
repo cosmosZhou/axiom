@@ -101,7 +101,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Expectation).simplify()
 
-    # https://arxiv.org/pdf/1506.02438.pdf# page=4
+    # https://arxiv.org/pdf/1506.02438.pdf#page=4
 
 
 

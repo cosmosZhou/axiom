@@ -50,7 +50,7 @@ def prove(Eq):
 
     Eq << stats.ne_zero.imply.ne_zero.conditioned.apply(Eq[-3], y[:k])
 
-    Eq << stats.ne_zero.imply.eq.bayes.apply(Eq[-2], x[:k + 1], y[k])
+    Eq << stats.ne_zero.imply.eq.prob.to.mul.prob.bayes.apply(Eq[-2], x[:k + 1], y[k])
 
     Eq << Eq[-1].this.lhs.arg.apply(algebra.et.concat, i=2, j=0)
 
@@ -60,7 +60,7 @@ def prove(Eq):
 
     Eq << Eq[-3].subs(Eq[-1])
 
-    Eq.xy_joint_probability = stats.ne_zero.imply.eq.bayes.apply(Eq[2], x[:k])
+    Eq.xy_joint_probability = stats.ne_zero.imply.eq.prob.to.mul.prob.bayes.apply(Eq[2], x[:k])
 
     Eq << Eq[-1].subs(Eq.xy_joint_probability.reversed)
 
@@ -68,7 +68,7 @@ def prove(Eq):
 
     Eq << stats.ne_zero.imply.ne_zero.joint_slice.apply(Eq.xy_nonzero_assumption, [k, k])
 
-    Eq << stats.eq_conditioned.imply.eq_conditioned.getitem.apply(Eq.x_independence)
+    Eq << stats.eq_conditioned.imply.eq.conditioned.getitem.apply(Eq.x_independence)
 
     Eq << stats.eq_conditioned.eq_conditioned.imply.eq.prob.joint.apply(Eq[-1], Eq.xy_independence)
 
@@ -96,7 +96,7 @@ def prove(Eq):
 
     Eq.recursion = Eq.recursion.subs(Eq.first_order_markov_assumption)
 
-    Eq << stats.eq_conditioned.imply.eq_conditioned.getitem.apply(Eq.x_independence, wrt=y[:k])
+    Eq << stats.eq_conditioned.imply.eq.conditioned.getitem.apply(Eq.x_independence, wrt=y[:k])
 
     Eq << stats.ne_zero.eq_conditioned.imply.eq.conditioned.joint.apply(Eq.y_joint_y_historic, Eq[-1])
 
@@ -122,8 +122,8 @@ def prove(Eq):
     Eq <<= Eq[-1] & Eq.first
 
     # reference: Neural Architectures for Named Entity Recognition.pdf
-    
-    
+
+
 
 
 if __name__ == '__main__':

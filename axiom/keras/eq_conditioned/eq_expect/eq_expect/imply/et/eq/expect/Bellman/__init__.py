@@ -3,7 +3,7 @@ from util import *
 
 def extract_QVA(eq, Q_def=None, V_def=None, A_def=None, lt_dV=None):
     ((r, t), (((a, (S[0], S[t])), S[a[:t].var]), ((s, (S[0], S[t])), S[s[:t].var]))), S[r[t]] = eq.of(Equal[Conditioned[Indexed, Equal[Sliced] & Equal[Sliced]]])
-    
+
     if Q_def is not None:
         (discount, ((S[r[t:]], S[s[t] & a[t]]), (S[r[t:]],), *weights)), Q_st_var = Q_def.of(Equal[MatMul[Expectation[Conditioned]]])
         if V_def is not None:
@@ -13,35 +13,35 @@ def extract_QVA(eq, Q_def=None, V_def=None, A_def=None, lt_dV=None):
     else:
         (discount, ((S[r[t:]], S[s[t].as_boolean()]), (S[r[t:]],), *weights)), V_st_var = V_def.of(Equal[MatMul[Expectation[Conditioned]]])
         Q_st_var = None
-        
+
     if A_def is not None:
         (S[Q_st_var], S[V_st_var]), A_st_var = A_def.of(Equal[Expr - Expr])
     else:
         A_st_var = None
-        
+
     γ, (S[t], [S[t]]) = discount.of(Pow[Lamda])
     assert a.is_random and s.is_random and r.is_random
 
     (S[a], π), = weights
     weights = [(π,),]
-    
+
     funcs = []
-    
+
     if Q_st_var:
         S[s[t].var], S[a[t].var], *S[weights], [S[γ]] = Q_st_var.of(Function)
         funcs.append(Q_st_var)
-    
+
     if V_st_var:
         S[s[t].var], *S[weights], [S[γ]] = V_st_var.of(Function)
         funcs.append(V_st_var)
-        
+
         if lt_dV is not None:
             S[Derivative[π](V_st_var)], [S[s[t].var]], [S[t]] = lt_dV.of(Sup[Abs] < Infinity)
 
     if A_st_var:
         S[s[t].var], S[a[t].var], *S[weights], [S[γ]] = A_st_var.of(Function)
         funcs.append(A_st_var)
-    
+
     return s, a, r, *weights, γ, t, *funcs
 
 @apply
@@ -73,7 +73,7 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[2], Eq[-1])
 
-    Eq << stats.eq_conditioned.imply.eq_conditioned.getitem.apply(Eq[0], 1)
+    Eq << stats.eq_conditioned.imply.eq.conditioned.getitem.apply(Eq[0], 1)
 
     Eq << keras.eq_conditioned.imply.eq.expect.Bellman.V_Function.apply(Eq[-1], γ, t, (a, π))
 
@@ -99,8 +99,8 @@ def prove(Eq):
     # https://www.52coding.com.cn/tags/Reinforcement-Learning/
     # TRPO
     # https://arxiv.org/pdf/1502.05477.pdf
-    
-    
+
+
 
 
 if __name__ == '__main__':

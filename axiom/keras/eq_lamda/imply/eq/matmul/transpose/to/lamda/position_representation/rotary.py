@@ -80,7 +80,7 @@ def prove(Eq):
     Eq << Eq[-2].subs(Eq[-1])
 
     # reference:
-    # https://arxiv.org/pdf/2104.09864.pdf# page=7
+    # https://arxiv.org/pdf/2104.09864.pdf#page=7
     
     
 

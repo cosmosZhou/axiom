@@ -48,3 +48,5 @@ from . import is_infinite
 from . import eq_grad
 from . import abs_le
 from . import eq_matmul
+from . import any_all_et_le
+from . import any_all_et_ge

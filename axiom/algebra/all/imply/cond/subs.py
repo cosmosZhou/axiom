@@ -21,6 +21,7 @@ def extract(x, *ab, function=None):
                 domain = Interval(a, b, left_open=True, right_open=True)
     return x, domain
 
+
 @apply
 def apply(given, old, new):
     cond, *limits, limit = given.of(All)

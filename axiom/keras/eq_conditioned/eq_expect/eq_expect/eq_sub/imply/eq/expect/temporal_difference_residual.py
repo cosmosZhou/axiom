@@ -37,7 +37,7 @@ def prove(Eq):
 
     Eq << keras.eq_conditioned.eq_expect.eq_expect.imply.et.eq.expect.Bellman.apply(*Eq[:3])[-1]
 
-    # https://arxiv.org/pdf/1506.02438.pdf# page=4
+    # https://arxiv.org/pdf/1506.02438.pdf#page=4
 
 
 

@@ -16,8 +16,8 @@ def apply(eq, γ=None, k=None, π=None):
 
     st = s[t].as_boolean(surrogate=True)
     at = a[t].as_boolean(surrogate=True)
-    prob = Probability[a:π](at, given=st)    
-    
+    prob = Probability[a:π](at, given=st)
+
     return Equal(Expectation[r[t:], a[t]:π, s[t]](Derivative[π](log(prob)) * (γ ** Lamda[k](k) @ r[t:])),
                  Expectation[a[t]:π, s[t]](Derivative[π](log(prob)) * (γ ** Lamda[k](k) @ Expectation[r[t:], a:π](r[t:] | at & st))))
 
@@ -43,15 +43,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Expectation[Conditioned[MatMul]]).apply(stats.expect.to.matmul)
 
-    Eq << stats.eq_conditioned.imply.eq_conditioned.independence_assumption.bidirectional.forget_histories.apply(Eq[0])#.subs(t, t + 1)
+    Eq << stats.eq_conditioned.imply.eq.conditioned.independence_assumption.bidirectional.forget_histories.apply(Eq[0])#.subs(t, t + 1)
 
     Eq << Eq[-2].subs(Eq[-1])
 
     Eq << Eq[-1].this.rhs.simplify()
 
     # https://spinningup.openai.com/en/latest/spinningup/extra_pg_proof2.html
-    
-    
+
+
 
 
 if __name__ == '__main__':

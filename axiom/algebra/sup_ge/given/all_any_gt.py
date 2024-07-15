@@ -23,7 +23,7 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Sup[x:a:b](f(x)) >= M0)
 
-    Eq << algebra.all_any_gt.imply.ge_sup.apply(Eq[1])
+    Eq << algebra.all_any_gt.imply.sup_ge.apply(Eq[1])
 
 
 if __name__ == '__main__':

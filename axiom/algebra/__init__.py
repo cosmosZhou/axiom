@@ -106,8 +106,6 @@ from . import eq_reducedMin
 from . import reducedMin
 from . import eq_reducedMax
 from . import reducedMax
-from . import lt_sup
-from . import gt_inf
 from . import abs_le
 from . import eq_abs
 from . import abs_gt

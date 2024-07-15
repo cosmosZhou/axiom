@@ -111,7 +111,7 @@ def prove(Eq):
     Eq << stats.ne_zero.imply.et.ne_zero.apply(Eq.xy_joint_nonzero)
 
     y = Eq[-1].lhs.arg.lhs.base
-    Eq << stats.ne_zero.imply.eq.bayes.apply(Eq[-2], y[:t + 1])
+    Eq << stats.ne_zero.imply.eq.prob.to.mul.prob.bayes.apply(Eq[-2], y[:t + 1])
 
     Eq << stats.sum.to.prob.apply(Sum[pspace(y[:t + 1]).symbol](Eq[-1].lhs))
 

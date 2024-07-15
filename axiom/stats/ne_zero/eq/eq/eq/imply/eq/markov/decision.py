@@ -70,7 +70,7 @@ def prove(Eq):
     a, k = Eq[1].rhs.of(Indexed)
     Eq.ne_zero = stats.ne_zero.imply.ne_zero.joint_slice.apply(Eq[3], [slice(0, k), slice(0, k), slice(0, k + 1)])
 
-    Eq << stats.ne_zero.imply.eq.bayes.apply(Eq.ne_zero, s[k + 1], a[k], r[k])
+    Eq << stats.ne_zero.imply.eq.prob.to.mul.prob.bayes.apply(Eq.ne_zero, s[k + 1], a[k], r[k])
 
     Eq << Eq[-1].this.lhs.arg.apply(algebra.et.concat, i=3, j=0)
 
@@ -124,7 +124,7 @@ def prove(Eq):
 
     Eq << stats.ne_zero.imply.ne_zero.slice.apply(Eq.ne_zero_s, 0)
 
-    Eq << stats.ne_zero.imply.eq.bayes.apply(Eq[-1], a[0], r[0], s[1])
+    Eq << stats.ne_zero.imply.eq.prob.to.mul.prob.bayes.apply(Eq[-1], a[0], r[0], s[1])
 
     Eq.final = Eq[-3].subs(Eq[-1])
 
@@ -140,8 +140,8 @@ def prove(Eq):
 
     Eq << Eq[4].this.find(Product).apply(algebra.prod.to.mul.shift)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

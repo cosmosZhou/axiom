@@ -18,13 +18,13 @@ def prove(Eq):
 
     Eq << algebra.cond.imply.cond.domain_defined.apply(Eq[0])
 
-    Eq << stats.ne_zero.imply.eq.bayes.apply(Eq[-1], x)
+    Eq << stats.ne_zero.imply.eq.prob.to.mul.prob.bayes.apply(Eq[-1], x)
 
     Eq << algebra.ne_zero.ne_zero.imply.ne_zero.mul.apply(Eq[0], Eq[2])
 
     Eq << Eq[-1].subs(Eq[-2].reversed)
 
-    
+
 
 
 if __name__ == '__main__':

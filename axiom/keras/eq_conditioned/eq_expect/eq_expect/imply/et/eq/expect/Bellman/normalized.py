@@ -3,23 +3,23 @@ from util import *
 
 def extract_QVA(eq, Q_def, V_def=None):
     ((r, t), (((a, (S[0], S[t])), S[a[:t].var]), ((s, (S[0], S[t])), S[s[:t].var]))), S[r[t]] = eq.of(Equal[Conditioned[Indexed, Equal[Sliced] & Equal[Sliced]]])
-    
+
     (γ, (discount, ((S[r[t:]], S[s[t] & a[t]]), [S[r[t:]]], *weights))), Q_st_var = Q_def.of(Equal[(1 - Symbol) * MatMul[Expectation[Conditioned]]])
-    
+
     if V_def is not None:
         (S[γ], (S[discount], ((S[r[t:]], S[s[t].as_boolean()]), [S[r[t:]]], *S[weights]))), V_st_var = V_def.of(Equal[(1 - Symbol) * MatMul[Expectation[Conditioned]]])
     else:
         V_st_var = None
-        
+
     S[γ], (S[t], [S[t]]) = discount.of(Pow[Lamda])
     assert a.is_random and s.is_random and r.is_random
 
     if weights:
         (S[a], π), = weights
         weights = [(π,),]
-        
+
     S[s[t].var], S[a[t].var], *S[weights], [S[γ]] = Q_st_var.of(Function)
-    
+
     if V_st_var:
         if weights:
             S[s[t].var], *S[weights] = V_st_var.of(Function)
@@ -64,7 +64,7 @@ def prove(Eq):
 
     Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[2], Eq[-1])
 
-    Eq << stats.eq_conditioned.imply.eq_conditioned.getitem.apply(Eq[0], 1)
+    Eq << stats.eq_conditioned.imply.eq.conditioned.getitem.apply(Eq[0], 1)
 
     Eq << keras.eq_conditioned.imply.eq.expect.Bellman.V_Function.normalized.apply(Eq[-1], γ, t)
 

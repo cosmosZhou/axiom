@@ -1,2 +1,2 @@
 from . import imply
-from . import all_le
+from . import any_all_le

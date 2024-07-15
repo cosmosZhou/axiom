@@ -13,9 +13,9 @@ def rewrite(Sum, self, *sym):
     for s in sym:
         conds &= s
         limits.append((s.var,))
-    
+
     expr = Probability(conds, given=given)
-    
+
     for limit in limits:
         if limit[0].is_integer:
             expr = Sum(expr, limit)
@@ -38,7 +38,7 @@ def prove(Eq):
 
     Eq << algebra.cond.given.et.infer.split.apply(Eq[0], cond=Equal(Probability(x), 0))
 
-    Eq << Eq[-1].this.lhs.apply(stats.ne_zero.imply.eq.bayes, y)
+    Eq << Eq[-1].this.lhs.apply(stats.ne_zero.imply.eq.prob.to.mul.prob.bayes, y)
 
     Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
 
@@ -54,7 +54,7 @@ def prove(Eq):
 
     Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

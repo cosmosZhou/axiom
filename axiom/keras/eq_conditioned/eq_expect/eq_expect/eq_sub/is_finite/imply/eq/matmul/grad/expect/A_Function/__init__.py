@@ -49,7 +49,7 @@ def prove(Eq):
 
     Eq << Eq.hypothesis.subs(Eq[-1])
 
-    # https://arxiv.org/pdf/1506.02438.pdf# page=13 (Proof of Proposition 1)
+    # https://arxiv.org/pdf/1506.02438.pdf#page=13 (Proof of Proposition 1)
 
 
 

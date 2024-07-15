@@ -7,7 +7,7 @@ def apply(Q_def):
     r, (t, S[oo]) = limit_rt.of(Sliced)
     ((S[a], S[t]), S[a[t].var]), ((s, S[t]), S[s[t].var]) = et.of(Equal[Indexed] & Equal[Indexed])
     γ, (k, [S[k]]) = discount.of(Pow[Lamda])
-    
+
     assert a.is_random and s.is_random and r.is_random
     S[s[t].var], S[a[t].var], [S[π]], [S[γ]] = Q_st_var.of(Function)
 
@@ -48,7 +48,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[Integral]).apply(calculus.mul.to.integral)
 
-    Eq << stats.ne_zero.imply.eq.bayes.conditioned.st.joint.apply(Eq[2], a[t], r[t:])
+    Eq << stats.ne_zero.imply.eq.prob.conditioned.to.mul.prob.conditioned.bayes.apply(Eq[2], a[t], r[t:])
 
     Eq << Eq[-2].subs(Eq[-1].reversed)
 
@@ -64,7 +64,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum[Probability]).apply(stats.sum.to.prob)
 
-    
+
     Eq << Eq[-1].this.lhs.apply(calculus.matmul.to.integral)
     # https://spinningup.openai.com/en/latest/spinningup/rl_intro.html# bellman-equations
     # https://lilianweng.github.io/posts/2018-04-08-policy-gradient/
@@ -74,8 +74,8 @@ def prove(Eq):
     # https://www.52coding.com.cn/tags/Reinforcement-Learning/
     # TRPO
     # https://arxiv.org/pdf/1502.05477.pdf
-    
-    
+
+
 
 
 if __name__ == '__main__':

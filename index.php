@@ -6,8 +6,6 @@
 require_once 'php/utility.php';
 require_once 'php/mysql.php';
 
-//$_GET['module'] = 'keras.matmul.softmax.to.lamda.matmul.gpt';
-//$_GET['state'] = 'plausible';
 
 $key = array_keys($_GET);
 switch (count($key)) {
@@ -86,17 +84,14 @@ function is_latex_print($latex, &$res)
     // Eq[-2:], (Eq.where, *Eq[-2:]), Eq[-2:] = ...
     // (*Eq[-4:], Eq.eq_s, Eq.eq_x, Eq.eq_G), Eq[-1] = ...
     // *Eq[-5:], Eq.hypothesis = ...
-
     while (preg_match('/^(Eq\.\w+|\((Eq\.\w+|\*Eq\[-\d+:\]) *(, *Eq\.\w+)+ *\)|Eq\[-(\d+:|1)\]|\*Eq\[-\d+:\]|\*\w+|\w+)/u', $latex, $match)){
         $res[] = $match[0];
         $latex = std\slice($latex, strlen($match[0]));
-        if (preg_match('/^ *= */', $latex, $matchEqual)){
+        if (preg_match('/^ *= */', $latex, $matchEqual))
             return true;
-        }
         
-        if (!preg_match('/^ *, */', $latex, $matchComma)){
+        if (!preg_match('/^ *, */', $latex, $matchComma))
             return false;
-        }
         
         $latex = std\slice($latex, strlen($matchComma[0]));
     }
@@ -131,9 +126,9 @@ if (! std\endsWith($path_info, '/')) {
         $proveCodes = $_POST['prove'];
 
         $proveCodes = insert_section($proveCodes);
-        if (is_array($proveCodes)) {
+        if (is_array($proveCodes))
             modify_codes($py, $proveCodes, $applyCodes);
-        } else {
+        else {
             error_log("create new py file = $py");
 
             $base_py = dirname($py) . ".py";
@@ -184,9 +179,8 @@ if (! std\endsWith($path_info, '/')) {
 
         [$logs, $data] = run($py);
     }
-    else{
+    else
         $data = null;
-    }
 
     $lengths = [];
 
@@ -195,8 +189,7 @@ if (! std\endsWith($path_info, '/')) {
     $inputs = [];
     $input = [];
 
-    preg_match('/([\w.]+)\.(imply|given)\./', $module, $m);
-    $numOfRequisites = $m ? count(explode(".", $m[1])) - 1 : 0;
+    $numOfRequisites = preg_match('/([\w.]+)\.(imply|given)\./', $module, $m)? count(explode(".", $m[1])) - 1 : 0;
 
     foreach (yield_from_py($py) as $dict) {
         if (! array_key_exists('statement', $dict))
@@ -208,23 +201,26 @@ if (! std\endsWith($path_info, '/')) {
             $module = $dict['module'];
             $indexOfYield = $counterOfLengths;
             $input[] = $statement;
-        } else if (array_key_exists('a', $dict)) {
+        } 
+        elseif (array_key_exists('a', $dict)) {
             if (! $input && $inputs && end($inputs)[-1] == '\\') {
                 $length = count($inputs);
                 $inputs[$length - 1] .= "\n$statement";
-            } else {
-                $input[] = $statement;
             }
-        } else {
+            else
+                $input[] = $statement;
+        } 
+        else {
             unset($dict['statement']);
             if (array_key_exists('comment', $dict)) {
                 unset($dict['comment']);
 
-                if (array_key_exists('unused', $dict)) {
-                } elseif ($inputs && has_unterminated_parantheses(end($inputs))) {
+                if (array_key_exists('unused', $dict));
+                elseif ($inputs && has_unterminated_parantheses(end($inputs))) {
                     $inputs[count($inputs) - 1] .= "\n$statement";
                     continue;
-                } else {
+                } 
+                else {
                     if ($dict) {
                         foreach ($dict as $key => $value) {
                             switch ($key) {
@@ -249,12 +245,11 @@ if (! std\endsWith($path_info, '/')) {
             }
 
             $text = $statement;
-            if (std\startsWith($statement, '    ') && !$input) {
+            if (!$input && (std\startsWith($statement, '    ') || $statement == ")"))
                 // starting with more than 4 spaces indicates this line is a continuation of the previous line of code!
                 $inputs[count($inputs) - 1] .= "\n$text";
-            } else {
+            else
                 $input[] = $text;
-            }
         }
         
         if (preg_match('/^Eq *(<<|\[ *(- *\d+ *)?(: *)?\] *=) */', $statement, $matches)) {
@@ -262,7 +257,8 @@ if (! std\endsWith($path_info, '/')) {
 
             ++ $counterOfLengths;
             $lengths[] = 1;
-        } else if (is_latex_print($statement, $matches)) {
+        } 
+        elseif (is_latex_print($statement, $matches)) {
             // https://www.php.net/manual/en/function.preg-match-all.php
             $regexp = '/Eq\.\w+|Eq\[-(\d+:|1)\]/u';
             if (array_key_exists('module', $dict)) {
@@ -294,7 +290,8 @@ if (! std\endsWith($path_info, '/')) {
                 preg_match_all($regexp, $matches[$count - 1], $matchImply, PREG_SET_ORDER);
                 $lengthOfImply = count($matchImply);
                 $lengths[] = $lengthOfGiven + $lengthOfWhere + $lengthOfImply;
-            } else {
+            } 
+            else {
                 $assgnment_count = 0;
                 foreach ($matches as $text){
                     preg_match_all($regexp, $text, $matches, PREG_SET_ORDER);

@@ -1,1 +1,1 @@
-from . import ge_sup
+from . import sup_ge

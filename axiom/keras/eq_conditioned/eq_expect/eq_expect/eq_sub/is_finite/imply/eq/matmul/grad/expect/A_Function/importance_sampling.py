@@ -43,7 +43,7 @@ def prove(Eq):
 
     Eq << Eq.hypothesis.this.rhs.find(Expectation).simplify()
 
-    # https://arxiv.org/pdf/1506.02438.pdf# page=13 (Proof of Proposition 1)
+    # https://arxiv.org/pdf/1506.02438.pdf#page=13 (Proof of Proposition 1)
 
 
 

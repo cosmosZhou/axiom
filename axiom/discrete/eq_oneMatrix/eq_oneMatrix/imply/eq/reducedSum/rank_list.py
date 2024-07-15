@@ -74,7 +74,7 @@ def prove(Eq):
     Eq << algebra.eq.imply.eq.transport.apply(Eq[-1], rhs=0).reversed
 
     # reference:
-    # https://arxiv.org/pdf/2203.02155.pdf# page=8
+    # https://arxiv.org/pdf/2203.02155.pdf#page=8
     
     
 

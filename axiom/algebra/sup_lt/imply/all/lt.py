@@ -16,7 +16,7 @@ def prove(Eq):
     Eq << apply(Sup[x:Interval(m, M, left_open=True, right_open=True)](f(x)) < y)
 
     z = Symbol(real=True)
-    Eq << algebra.lt_sup.imply.any.all.lt.apply(Eq[0], z)
+    Eq << algebra.sup_lt.imply.any.all.lt.apply(Eq[0], z)
 
     Eq << algebra.any.imply.any.et.limits.unleash.apply(Eq[-1], simplify=None)
 

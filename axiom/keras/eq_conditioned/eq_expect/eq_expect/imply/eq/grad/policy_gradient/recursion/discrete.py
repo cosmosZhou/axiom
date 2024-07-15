@@ -49,7 +49,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum[Probability]).apply(stats.sum.to.prob)
 
-    
+
     Eq << Eq[-1].this.find(Mul[Add]).apply(algebra.mul.to.add)
     Eq << Eq[-1].this.find(Integral).apply(calculus.integral.to.add)
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add)
@@ -69,7 +69,7 @@ def prove(Eq):
     Eq << algebra.cond.imply.cond.domain_defined.apply(Eq[0]).subs(t, t + 1)
     Eq << stats.ne_zero.imply.ne_zero.joint_slice.apply(Eq[-1], [-1, -1])
     Eq << stats.cond.imply.cond.prob.weighted.apply(Eq[-1], (a, π))
-    Eq << stats.ne_zero.imply.eq.bayes.conditioned.st.joint.apply(Eq[-1], s[t + 1], a[t])
+    Eq << stats.ne_zero.imply.eq.prob.conditioned.to.mul.prob.conditioned.bayes.apply(Eq[-1], s[t + 1], a[t])
     Eq << Eq.eq_grad.subs(Eq[-1].reversed)
     Eq << Eq[-1].this.find(Sum[Probability]).apply(stats.sum.to.prob)
     # https://spinningup.openai.com/en/latest/spinningup/rl_intro.html# bellman-equations
@@ -81,8 +81,8 @@ def prove(Eq):
     # https://www.52coding.com.cn/tags/Reinforcement-Learning/
     # TRPO
     # https://arxiv.org/pdf/1502.05477.pdf
-    
-    
+
+
 
 
 if __name__ == '__main__':

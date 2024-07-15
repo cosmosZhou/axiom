@@ -10,7 +10,7 @@ def apply(equality, inequality):
 
     if x != _x:
         S[x], y = y, _x
-        
+
     assert rhs == Probability(x) * Probability(y)
     return Equal(Probability(y, given=x), Probability(y))
 
@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << Eq[-1].simplify()
 
-    Eq << stats.ne_zero.imply.eq.bayes.apply(Eq[1], y)
+    Eq << stats.ne_zero.imply.eq.prob.to.mul.prob.bayes.apply(Eq[1], y)
 
     Eq << Eq[-1].subs(Eq[0])
 

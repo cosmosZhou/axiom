@@ -2,7 +2,7 @@ from util import *
 
 
 @apply
-def apply(given, index, wrt=None):
+def apply(given, index=0, wrt=None):
     [*eqs], *limits = given.of(All[Or])
 
     cond = eqs.pop(index)
@@ -47,10 +47,11 @@ def prove(Eq):
     Eq << algebra.all.imply.ou.apply(Eq[0])
 
     
+    
 
 
 if __name__ == '__main__':
     run()
 
 # created on 2019-02-07
-# updated on 2023-05-12
+# updated on 2024-06-28

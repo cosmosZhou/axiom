@@ -17,7 +17,7 @@ during the processing of conducting reasoning, in accordance with the statements
 [Hilbert's program](https://en.wikipedia.org/wiki/Hilbert%27s_program), the program strives to be logically valid within the grammars defined by [formal language](https://en.wikipedia.org/wiki/Formal_language).   
 Each theorem is proved according to the assumptions and correctness of some previously proved theorems or axioms. In this project, each mathematical problem will be expressed as a [Python](https://www.python.org/) statement which is precisely defined with no ambiguity which can emerge when one use natural language to express a mathematical problem, such as evidently/conspicuously, likewise, equivalently, conversely, in summary/put it in a nutshell.   
 One can easily locate the website information in the Google search engine: [定理库](https://www.google.com.hk/search?q=%E5%AE%9A%E7%90%86%E5%BA%93).  
-In the open-source community, the most similar project so far is [leanprover](https://leanprover-community.github.io/mathlib_docs/algebra/algebra/basic.html).
+In the open-source community, the most similar project so far is [leanprover](https://leanprover-community.github.io/mathlib4_docs/Mathlib/Algebra/Algebra/Basic.html), [coq](https://github.com/coq/coq) and [isabelle](https://isabelle.in.tum.de/).
 
 
 This system is comprised of three basic elements: [Symbol](../?symbol=Symbol), [Function](../?symbol=Function), Theorem; 

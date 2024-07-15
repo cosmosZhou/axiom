@@ -17,7 +17,7 @@ def rewrite(Sum, self, simplify=True):
 
     for i, (v, *cond) in enumerate(limits_e):
         if v.has(*vars_s):
-            v = v.enlarge_indices(limits_s, expr=expr)
+            v = v.expand_indices(limits_s, expr=expr)
             limits_e[i] = (v, *cond)
     rhs = Expectation(expr_s, *limits_e, given=given)
     assert self.random_symbols == rhs.random_symbols

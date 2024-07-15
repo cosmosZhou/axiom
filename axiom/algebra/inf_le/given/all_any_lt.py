@@ -22,7 +22,7 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Inf[x:a:b](f(x)) <= M0)
 
-    Eq << algebra.all_any_lt.imply.le_inf.apply(Eq[1])
+    Eq << algebra.all_any_lt.imply.inf_le.apply(Eq[1])
 
 
 if __name__ == '__main__':

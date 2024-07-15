@@ -42,7 +42,7 @@ def prove(Eq):
     Eq << Eq[3].subs(Eq[-1])
 
     # https://spinningup.openai.com/en/latest/spinningup/rl_intro.html# bellman-equations
-    # http://incompleteideas.net/book/RLbook2020.pdf# page=85
+    # http://incompleteideas.net/book/RLbook2020.pdf#page=85
     
 
 

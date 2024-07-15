@@ -21,7 +21,7 @@ def prove(Eq):
     Eq << apply(
         Equal(r[t] | s[:t], r[t]), i) # history-irrelevant conditional independence assumption
 
-    Eq << stats.eq_conditioned.imply.eq_conditioned.independence_assumption.future.apply(Eq[0])
+    Eq << stats.eq_conditioned.imply.eq.conditioned.independence_assumption.future.apply(Eq[0])
 
     j = Symbol(integer=True, nonnegative=True)
     Eq << Eq[2][j]
@@ -43,13 +43,13 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(j, t)
 
-    
+
 
     Eq << algebra.all.given.infer.apply(Eq[1])
 
     Eq << Eq[-1].this.find(Element).apply(sets.el_range.imply.lt)
 
-    
+
 
 
 if __name__ == '__main__':

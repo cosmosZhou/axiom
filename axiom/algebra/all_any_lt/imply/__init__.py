@@ -1,1 +1,1 @@
-from . import le_inf
+from . import inf_le

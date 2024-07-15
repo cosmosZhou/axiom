@@ -107,23 +107,9 @@ export default {
 			},
 		},
 		
-		lang: {
-			get() {
-				return this.$parent.data[this.index].lang;	
-			},
-			
-			set(lang) {
-				this.$parent.data[this.index].lang = lang;
-			},
-		},
-		
-		replyStr() {
-			return JSON.stringify(this.reply).replace(/\\r\\n/g, "\\n");
-		},
-		
 		json() {
-			var {id, lang, text, replyStr: reply, training, label, source} = this;
-			return {id, lang, text, reply, training, label, source};
+			var {id, latex, python, training} = this;
+			return {id, latex, python, training};
 		},
 		
 		style_input(){

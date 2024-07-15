@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << stats.ne_zero.imply.et.ne_zero.apply(Eq[0], 1)
 
-    Eq << stats.ne_zero.imply.eq.bayes.apply(Eq[-1], x)
+    Eq << stats.ne_zero.imply.eq.prob.to.mul.prob.bayes.apply(Eq[-1], x)
 
     Eq << Eq[0].subs(Eq[-1])
 

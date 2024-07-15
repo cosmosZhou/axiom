@@ -70,7 +70,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Equal[Sliced]).apply(algebra.eq.to.et.eq.split)
 
-    Eq << stats.eq_conditioned.imply.eq_conditioned.joint.independence_assumption.apply(Eq[0])
+    Eq << stats.eq_conditioned.imply.eq.conditioned.joint.independence_assumption.apply(Eq[0])
 
     Eq << stats.ne_zero.eq_conditioned.imply.eq.conditioned.joint.apply(*Eq[-2:])
 
@@ -87,8 +87,8 @@ def prove(Eq):
     # http://incompleteideas.net/book/bookdraft2017nov5.pdf (Bellman equation Eq. 3.14)
     # http://incompleteideas.net/book/RLbook2020.pdf
     # http://incompleteideas.net/book/the-book-2nd.html
-    
-    
+
+
 
 
 if __name__ == '__main__':

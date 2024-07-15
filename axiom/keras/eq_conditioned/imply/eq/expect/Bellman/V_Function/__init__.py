@@ -61,13 +61,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Integral).apply(calculus.integral.limits.swap)
 
-    
 
-    
 
-    
 
-    
+
+
+
+
 
     Eq << Eq[-1].this.find(Probability).apply(stats.prob.conditioned.to.mul.prob.conditioned)
 
@@ -76,7 +76,7 @@ def prove(Eq):
     Eq << algebra.cond.imply.cond.domain_defined.apply(Eq[0]).subs(t, t + 1)
     Eq << stats.ne_zero.imply.ne_zero.slice.apply(Eq[-1], slice(t, t + 2))
     Eq << Eq[-1].this.find(Equal[Sliced]).apply(algebra.eq.to.et.eq.split)
-    Eq << stats.eq_conditioned.imply.eq_conditioned.independence_assumption.future.apply(Eq[0])
+    Eq << stats.eq_conditioned.imply.eq.conditioned.independence_assumption.future.apply(Eq[0])
 
     Eq << stats.ne_zero.eq_conditioned.imply.eq.conditioned.joint.apply(*Eq[-2:])
 
@@ -91,8 +91,8 @@ def prove(Eq):
     Eq << Eq.eq_add.subs(Eq[-1])
 
     # http://incompleteideas.net/book/bookdraft2017nov5.pdf (Bellman equation Eq. 3.14)
-    
-    
+
+
 
 
 if __name__ == '__main__':

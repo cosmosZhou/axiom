@@ -10,6 +10,8 @@ def applicable(multiplicand, e):
             if not x.is_real:
                 unrealCount += 1
         return unrealCount < 2
+    elif e.is_real and e > 0:
+        return all(x.is_real and x > 0 for x in multiplicand)
 
 
 @apply

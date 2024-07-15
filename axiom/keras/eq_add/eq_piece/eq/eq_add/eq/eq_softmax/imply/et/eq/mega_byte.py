@@ -103,7 +103,7 @@ def prove(Eq):
     Eq << Eq[-2].subs(k, t // P).subs(p, t % P)
 
     Eq << Eq[-1].subs(Eq[-2].reversed)
-    # https://arxiv.org/pdf/2305.07185.pdf# page=3
+    # https://arxiv.org/pdf/2305.07185.pdf#page=3
 
 
 

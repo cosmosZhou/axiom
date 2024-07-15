@@ -45,7 +45,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(And).apply(algebra.ne.lt.given.lt)
 
-    # https://arxiv.org/pdf/1909.08593.pdf# page=3
+    # https://arxiv.org/pdf/1909.08593.pdf#page=3
 
 
 

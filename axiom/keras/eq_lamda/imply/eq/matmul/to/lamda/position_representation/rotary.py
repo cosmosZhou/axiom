@@ -89,7 +89,7 @@ def prove(Eq):
     Eq << Eq[-1].this.find(Piecewise).apply(algebra.piece.to.mul)
 
     # reference:
-    # https://arxiv.org/pdf/2104.09864.pdf# page=7
+    # https://arxiv.org/pdf/2104.09864.pdf#page=7
     
     
 

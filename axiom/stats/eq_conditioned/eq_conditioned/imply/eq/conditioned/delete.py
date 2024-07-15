@@ -30,15 +30,15 @@ def prove(Eq):
 
     _, Eq.z_nonzero = stats.ne_zero.imply.et.ne_zero.apply(Eq.yz_nonzero)
 
-    Eq << stats.ne_zero.imply.eq.bayes.apply(Eq.yz_nonzero, x)
+    Eq << stats.ne_zero.imply.eq.prob.to.mul.prob.bayes.apply(Eq.yz_nonzero, x)
 
     Eq << Eq[-1].subs(Eq[0])
 
-    Eq << stats.ne_zero.imply.eq.bayes.apply(Eq.y_nonzero, z)
+    Eq << stats.ne_zero.imply.eq.prob.to.mul.prob.bayes.apply(Eq.y_nonzero, z)
 
     Eq << Eq[-2].subs(Eq[-1])
 
-    Eq.xy_probability = stats.ne_zero.imply.eq.bayes.apply(Eq.y_nonzero, x)
+    Eq.xy_probability = stats.ne_zero.imply.eq.prob.to.mul.prob.bayes.apply(Eq.y_nonzero, x)
 
     Eq << Eq[-1].subs(Eq.xy_probability.reversed)
 
@@ -47,7 +47,7 @@ def prove(Eq):
     y_ = pspace(y).symbol
     Eq << stats.integral.to.prob.marginal.apply(Integral[y_](Eq[-1].lhs))
 
-    Eq << Eq[-1].subs(stats.ne_zero.imply.eq.bayes.apply(Eq.z_nonzero, x))
+    Eq << Eq[-1].subs(stats.ne_zero.imply.eq.prob.to.mul.prob.bayes.apply(Eq.z_nonzero, x))
 
     Eq << calculus.eq.imply.eq.integral.apply(Eq[-3], (y_,))
 
@@ -57,8 +57,8 @@ def prove(Eq):
 
     Eq << algebra.ne_zero.eq.imply.eq.scalar.apply(Eq[-1], Eq.z_nonzero)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

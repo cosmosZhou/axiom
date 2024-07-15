@@ -23,12 +23,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.ne_zero.eq.given.et.mul)
 
-    Eq << Eq[-1].this.lhs.args[1].apply(stats.ne_zero.imply.eq.bayes.conditioned.st.joint, x, y)
+    Eq << Eq[-1].this.lhs.args[1].apply(stats.ne_zero.imply.eq.prob.conditioned.to.mul.prob.conditioned.bayes, x, y)
 
     Eq << Eq[-1].this.rhs.reversed
 
-    
-    
+
+
 
 
 if __name__ == '__main__':
