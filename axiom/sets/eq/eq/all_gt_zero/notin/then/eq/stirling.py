@@ -41,7 +41,7 @@ def prove(Eq):
     return
     Eq << sets.eq.eq.then.is_empty.stirling2.apply(Eq[0], Eq[1])
 
-    Eq << sets.is_empty.imply.eq.complement.apply(Eq[-1], reverse=True)
+    Eq << sets.is_empty.then.eq.complement.apply(Eq[-1], reverse=True)
 
 
 if __name__ == '__main__':

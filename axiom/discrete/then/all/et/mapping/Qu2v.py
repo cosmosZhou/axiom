@@ -77,16 +77,16 @@ def prove(Eq):
     Eq << algebra.all_eq.cond.then.all.subs.apply(Eq.x_h_equality, Eq[-1])
 
     return
-    Eq << Eq[-1].this.expr.apply(algebra.eq_piecewise.imply.ou)
-    Eq << algebra.all_et.imply.all.apply(Eq[-1] & Eq.h_domain)
+    Eq << Eq[-1].this.expr.apply(algebra.eq_piecewise.then.ou)
+    Eq << algebra.all_et.then.all.apply(Eq[-1] & Eq.h_domain)
     return
     Eq <<= Eq.x_n1_cup_finiteset & Eq[-1]
-    Eq.Xv_in_Qv, Eq.x_eq_swap_Xv = algebra.all_et.given.all.apply(Eq[3])
+    Eq.Xv_in_Qv, Eq.x_eq_swap_Xv = algebra.all_et.of.all.apply(Eq[3])
     Eq << Eq.Xv_in_Qv.this.expr.rhs.definition
     Eq.indexu_eq_indexu = Eq.x_eq_swap_Xv.function.rhs.args[0].indices[1].this.subs(Eq.Xv_definition)
     Eq.indexu_eq_indexv = Eq.x_slice_domain.this.expr.apply(discrete.combinatorics.permutation.index.swap, u, v, w=w)
     Eq << Eq.x_slice_domain.this.expr.apply(discrete.eq.then.et.index, u)
-    Eq.indexu_contains, Eq.x_indexu_equality = algebra.all_et.imply.all.apply(Eq[-1], simplify=None)
+    Eq.indexu_contains, Eq.x_indexu_equality = algebra.all_et.then.all.apply(Eq[-1], simplify=None)
     Eq.equality_of_indexu_and_n = (Eq.x_indexu_equality & Eq.x_slice_last).this.expr.apply(algebra.eq.eq.then.eq.transit)
     i, j, m = Symbol(domain=Range(n + 1))
     Eq << Eq.x_slice_domain.this.expr.apply(discrete.combinatorics.permutation.index.kronecker_delta.indexOf, i, j)
@@ -95,7 +95,7 @@ def prove(Eq):
     Eq << Any(Eq.ou.function.args[0], *Eq.ou.limits, plausible=True)
     Eq << algebra.all.any.then.any_et.apply(Eq.x_slice_last, Eq[-1])
     Eq <<= Eq.ou & ~Eq[-1]
-    Eq << algebra.all_et.imply.all.apply(Eq[-1], index=1)
+    Eq << algebra.all_et.then.all.apply(Eq[-1], index=1)
     Eq.indexOf_indexed = Eq.x_slice_domain.this.expr.apply(discrete.combinatorics.permutation.index.indexOf_indexed, j=m)
     Eq << Eq.indexOf_indexed.subs(m, n)
     Eq << (Eq[-2] & Eq[-1]).this.expr.apply(algebra.eq.eq.then.eq.subs)
@@ -103,11 +103,11 @@ def prove(Eq):
     Eq << Any(Eq.ou.function.args[0], *Eq.ou.limits, plausible=True)
     Eq << algebra.all.any.then.any_et.apply(Eq.x_indexu_equality, Eq[-1])
     Eq <<= Eq.ou & ~Eq[-1]
-    Eq << algebra.all_et.imply.all.apply(Eq[-1], index=1)
+    Eq << algebra.all_et.then.all.apply(Eq[-1], index=1)
     Eq.ou = Eq.indexOf_indexed.subs(m, Eq.equality_of_indexu_and_n.function.lhs.indices[0])
     Eq << Any(Eq.ou.function.args[0], *Eq.ou.limits, plausible=True)
     Eq <<= Eq.indexu_contains & Eq[-1]
-    Eq.index_equality = algebra.all_et.imply.all.apply(Eq.ou & ~Eq[-1], index=1)
+    Eq.index_equality = algebra.all_et.then.all.apply(Eq.ou & ~Eq[-1], index=1)
     Eq << discrete.combinatorics.permutation.is_nonempty.Qu.apply(n, u)
     Eq <<= Eq[-3] & Eq.index_equality
     Eq << Eq[-1].this.expr.apply(algebra.eq.eq.then.eq.subs)
@@ -118,7 +118,7 @@ def prove(Eq):
     Eq << algebra.all_eq.cond.then.all.subs.apply(Eq[-1], Eq.indexu_eq_indexu)
     Eq <<= Eq.x_eq_swap_Xv & Eq[-1]
     Eq << Eq[-1].this.expr.apply(algebra.et.of.et.subs.eq, index=0)
-    Eq << algebra.all_et.given.all.apply(Eq[-1])
+    Eq << algebra.all_et.of.all.apply(Eq[-1])
     Eq << Eq[-1].subs(Eq.Xv_definition)
     Eq << discrete.matrix.elementary.swap.multiply.left.apply(x[:n + 1], i=n, j=Eq.h_domain.lhs, w=w)
     Eq << Eq[-2].subs(Eq[-1])

@@ -179,7 +179,7 @@ def prove(Eq):
     Eq.s2_hat_n_hypothesis = Eq.s2_hat_n_assertion.this.limits[0].subs(Eq[-1])
     Eq << sets.then.all.conditionset.apply(s2_quote_n)
     Eq << Eq[-1].this.expr.apply(sets.eq.eq.all_is_positive.notcontains.then.eq.stirling2, s1=s1_quote)
-    Eq << algebra.all_any.imply.all_any.limits_swap.apply(Eq[-1])
+    Eq << algebra.all_any.then.all_any.limits_swap.apply(Eq[-1])
     Eq << Eq.s2_hat_n_hypothesis.this.expr.expr.apply(sets.eq.of.eq.cup_finiteset)
     Eq << Eq[-1].subs(Eq.x_quote_definition)
     Eq.supset_A = sets.supset.then.supset.cup.lhs.apply(Eq.supset_A, (j,), simplify=False)

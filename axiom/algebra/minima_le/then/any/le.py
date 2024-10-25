@@ -19,7 +19,7 @@ def prove(Eq):
     return
     Eq << ~Eq[-1]
 
-    Eq << algebra.all_gt.imply.minima_gt.apply(Eq[-1])
+    Eq << algebra.all_gt.then.minima_gt.apply(Eq[-1])
 
     Eq <<= Eq[-1] & Eq[0]
 

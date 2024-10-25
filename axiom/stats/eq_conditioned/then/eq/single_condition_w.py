@@ -30,13 +30,13 @@ def prove(Eq):
     Eq << apply(Equal(x | y & z & w, x | w), wrt=y)
 
     return
-    Eq << stats.eq_conditioned.imply.is_nonzero.apply(Eq[0])
+    Eq << stats.eq_conditioned.then.is_nonzero.apply(Eq[0])
     Eq.xyz_nonzero, Eq.w_nonzero = algebra.et.then.conds.apply(Eq[-1])
-    Eq << stats.is_nonzero.imply.et.apply(Eq.xyz_nonzero)
+    Eq << stats.is_nonzero.then.et.apply(Eq.xyz_nonzero)
     Eq.y_nonzero, Eq.z_nonzero = algebra.et.then.cond.apply(Eq[-1], index=slice(1, 3))
     Eq.xy_probability = stats.bayes.corollary.apply(Eq.y_nonzero, var=x | w)
-    Eq << stats.is_nonzero.imply.is_nonzero.conditioned.apply(Eq.xyz_nonzero, wrt=w)
-    Eq << stats.is_nonzero.imply.eq.bayes.apply(Probability(x | w, y, z), y, z)
+    Eq << stats.is_nonzero.then.is_nonzero.conditioned.apply(Eq.xyz_nonzero, wrt=w)
+    Eq << stats.is_nonzero.then.eq.bayes.apply(Probability(x | w, y, z), y, z)
     Eq << algebra.all.then.ou.apply(Eq[-1])
     Eq <<= Eq[-1] & Eq[-3]
     Eq << algebra.et.then.conds.apply(Eq[-1])

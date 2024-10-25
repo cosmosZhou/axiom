@@ -460,7 +460,7 @@ class Inference:
         
         if new in old.domain:
             if self.is_Quantifier:
-                assert old not in self.variables, 'not supported in built-in axioms, please employ proved theorems: algebra.all.imply.cond.subs.apply(...)'
+                assert old not in self.variables, 'not supported in built-in axioms, please employ proved theorems: algebra.all.then.cond.subs.apply(...)'
                 function = self.expr._subs(old, new, **kwargs)
                 limits = []
                 for x, *ab in self.limits:
@@ -480,7 +480,7 @@ class Inference:
         if domain is not None and new not in domain:
             from sympy import NotElement
             if self.is_ForAll:
-                assert old not in self.variables, 'not supported in built-in axioms, please employ proved theorems: algebra.all.imply.ou.subs'
+                assert old not in self.variables, 'not supported in built-in axioms, please employ proved theorems: algebra.all.then.ou.subs'
                 if self.expr._has(old):
                     function = self.expr._subs(old, new) | NotElement(new, domain)
                     cond = self.func(function, *limits)

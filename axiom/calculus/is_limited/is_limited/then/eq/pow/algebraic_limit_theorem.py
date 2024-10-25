@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(limited_f, limited_g):
-    from axiom.calculus.is_limited.imply.any.all.limit_definition import of_limited
+    from axiom.calculus.is_limited.then.any.all.limit_definition import of_limited
     fx, (x, x0) = of_limited(limited_f, positive=True)
     gx, S[(x, x0)] = of_limited(limited_g, real=True)
 

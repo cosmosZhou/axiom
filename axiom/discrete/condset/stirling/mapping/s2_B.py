@@ -104,7 +104,7 @@ def prove(Eq):
     Eq << Eq[-1].subs(Eq.x_union_s0)
     assert num_plausibles == len(Eq.plausibles_dict)
     Eq << Eq.plausible_notcontains.apply(sets.notcontains.then.is_empty.intersection)
-    Eq << Eq[-1].apply(sets.is_empty.imply.eq.complement).limits_subs(Eq[-1].variable, Eq.subset_B_definition.expr.variable)
+    Eq << Eq[-1].apply(sets.is_empty.then.eq.complement).limits_subs(Eq[-1].variable, Eq.subset_B_definition.expr.variable)
     Eq << Eq.subset_B_definition.subs(Eq[-1])
     s2_n = Symbol("s_{2, n}", conditionset(*Eq[-1].limits[0]))
     Eq.s2_n_definition = s2_n.this.definition
@@ -120,7 +120,7 @@ def prove(Eq):
     Eq << Eq[-1].this.expr.apply(sets.eq.eq.then.eq.complement, swap=True)
     Eq << Eq[-1].this.expr.lhs.args[0].bisect({j})
     Eq << Eq[-1].this.expr.lhs.apply(sets.complement.to.union, evaluate=True)
-    Eq << Eq.s2_quote_definition.this.expr.apply(sets.eq.eq.all_is_positive.imply.eq.stirling2)
+    Eq << Eq.s2_quote_definition.this.expr.apply(sets.eq.eq.all_is_positive.then.eq.stirling2)
     Eq << Eq[-2].subs(Eq[-1])
     x_tilde = Symbol(r"\tilde{x}", Lamda[i:k](Piecewise((x[i], i < j), (x[i + 1], True))))
     Eq.x_tilde_definition = x_tilde[i].this.definition

@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << Eq[1].subs(Eq[-1].reversed)
 
-    Eq << algebra.eq_maxima.imply.all_ge.apply(Eq[-1])
+    Eq << algebra.eq_maxima.then.all_ge.apply(Eq[-1])
 
     Eq << Eq[0].subs(y.this.definition.reversed)
 

@@ -115,8 +115,8 @@ def prove(Eq):
     Eq << algebra.et.of.conds.apply(Eq[-1])
     return
     Eq <<= ~Eq[-1], ~Eq[-2]
-    Eq << algebra.any_et.imply.any.limits_delete.apply(Eq[-2])
-    Eq << algebra.any_et.imply.any.split.apply(Eq[-2], simplify=False, index=1).apply(sets.eq.then.eq.intersect, {n})
+    Eq << algebra.any_et.then.any.limits_delete.apply(Eq[-2])
+    Eq << algebra.any_et.then.any.split.apply(Eq[-2], simplify=False, index=1).apply(sets.eq.then.eq.intersect, {n})
     Eq << Eq[-1].subs(Eq.nonoverlapping_s1_quote)
     Eq << Eq[-2].this.expr.apply(sets.eq.then.eq.complement, {n})
     Eq << Eq[-1].limits_subs(j_quote, i)
@@ -137,7 +137,7 @@ def prove(Eq):
     Eq << Eq[-1].this.expr.lhs.astype(Intersection)
     Eq << Eq.A_definition_simplified.subs(j, j_quote)
     Eq << Eq[-2].subs(Eq[-1].reversed, Eq.A_definition_simplified.reversed)
-    Eq << sets.all_is_empty.imply.eq.nonoverlapping.setlimit.apply(Eq[-1])
+    Eq << sets.all_is_empty.then.eq.nonoverlapping.setlimit.apply(Eq[-1])
     Eq << Eq[-1].this.lhs.arg.limits_subs(j_quote, j)
     Eq << Eq[-1].this.rhs.limits_subs(j_quote, j)
 
