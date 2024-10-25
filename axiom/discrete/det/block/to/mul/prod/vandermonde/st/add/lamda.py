@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << Eq[-1].lhs.arg.this.args[1].apply(discrete.lamda.to.block.split, 1)
 
-    Eq << discrete.eq.imply.eq.rmatmul.apply(Eq[-1], SwapMatrix(n + 1, 0, 1))
+    Eq << discrete.eq.then.eq.rmatmul.apply(Eq[-1], SwapMatrix(n + 1, 0, 1))
 
     Eq << Eq[-1].this.rhs.args[0].apply(algebra.oneMatrix.to.block, 1)
 
@@ -96,7 +96,7 @@ def prove(Eq):
 
     Eq << MulMatrix(n + 1, 1, -1) @ (MulMatrix(n + 1, 0, -1) @ Eq[-1])
 
-    Eq << discrete.eq.imply.eq.det.apply(Eq[-1])
+    Eq << discrete.eq.then.eq.det.apply(Eq[-1])
 
     Eq << Eq[-1].this.lhs.apply(discrete.det.to.mul).reversed.subs(Eq[1])
 

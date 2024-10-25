@@ -20,16 +20,16 @@ def prove(Eq):
     x, a = Symbol(integer=True)
     Eq << apply(x > a)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.gt.imply.ge.strengthen), Eq[-1].this.rhs.apply(algebra.gt.given.ge.strengthen)
+    Eq <<= Eq[-2].this.lhs.apply(algebra.gt.then.ge.strengthen), Eq[-1].this.rhs.apply(algebra.gt.of.ge.strengthen)
 
     Eq <<= Eq[-2].this.lhs.reversed, Eq[-1].this.rhs.reversed
 
     Eq <<= Eq[-2].this.lhs + 1, Eq[-1].this.rhs + 1
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

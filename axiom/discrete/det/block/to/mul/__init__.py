@@ -115,7 +115,7 @@ def prove(Eq):
 
     Eq << Eq[-4].subs(Eq[-1].reversed)
 
-    Eq << discrete.eq.imply.eq.det.apply(Eq[-1])
+    Eq << discrete.eq.then.eq.det.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(discrete.det.block.to.mul.deux)
 

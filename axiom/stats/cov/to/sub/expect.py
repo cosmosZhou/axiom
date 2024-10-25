@@ -11,7 +11,7 @@ def apply(self):
         given = None
 
     rhs = Expectation(x.outer_product(y), given=given) - Expectation(x, given=given).outer_product(Expectation(y, given=given))
-                
+
     return Equal(self, rhs)
 
 @prove
@@ -46,11 +46,11 @@ def prove(Eq):
     Eq << Eq[-1].this.find(Expectation[Conditioned[Mul]]).apply(stats.expect.to.mul)
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
     j = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
-    
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
+
 
 
 if __name__ == '__main__':

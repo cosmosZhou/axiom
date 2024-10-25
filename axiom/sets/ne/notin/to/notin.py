@@ -20,11 +20,11 @@ def prove(Eq):
     s = Symbol(etype=dtype.integer, given=True)
     Eq << apply(Unequal(x, y), NotElement(x, s))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[-1])
+    Eq << algebra.iff.of.et.infer.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(sets.ne.notin.imply.notin)
+    Eq << Eq[-2].this.lhs.apply(sets.ne.notin.then.notin)
 
-    Eq << Eq[-1].this.rhs.apply(sets.ne.notin.given.notin)
+    Eq << Eq[-1].this.rhs.apply(sets.ne.notin.of.notin)
 
 
 if __name__ == '__main__':

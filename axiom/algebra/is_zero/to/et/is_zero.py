@@ -16,21 +16,21 @@ def prove(Eq):
     z = Symbol(complex=True, given=True)
     Eq << apply(Equal(z, 0))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
     Eq << Eq[-2].this.lhs.lhs.apply(algebra.expr.to.add.complex)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.eq.imply.eq.abs)
+    Eq << Eq[-1].this.lhs.apply(algebra.eq.then.eq.abs)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.eq.imply.eq.pow, exp=2)
+    Eq << Eq[-1].this.lhs.apply(algebra.eq.then.eq.pow, exp=2)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.poly_is_zero.imply.et.is_zero)
+    Eq << Eq[-1].this.lhs.apply(algebra.poly_is_zero.then.et.is_zero)
 
     Eq << Eq[2].this.rhs.lhs.apply(algebra.expr.to.add.complex)
 
-    Eq << algebra.infer_et.given.infer.et.subs.apply(Eq[-1], 1)
+    Eq << algebra.infer_et.of.infer.et.subs.apply(Eq[-1], 1)
 
-    
+
 
 
 if __name__ == '__main__':

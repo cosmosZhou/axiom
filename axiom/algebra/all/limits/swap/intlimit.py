@@ -25,10 +25,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.iff.contraposition).reversed
 
-    Eq << algebra.iff.imply.iff.ou.apply(Eq[-1], cond=Eq[0].lhs.expr)
+    Eq << algebra.iff.then.iff.ou.apply(Eq[-1], cond=Eq[0].lhs.expr)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -48,19 +48,19 @@ def prove(Eq):
 
     Eq << Eq[-1] + z
 
-    Eq << algebra.cond_piece.given.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.of.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[0].apply(algebra.cond.cond.given.et.subs)
+    Eq << Eq[-1].this.args[0].apply(algebra.cond.cond.of.et.subs)
 
-    Eq << Eq[-1].this.args[1].args[::2].apply(algebra.cond.cond.given.et.subs)
+    Eq << Eq[-1].this.args[1].args[::2].apply(algebra.cond.cond.of.et.subs)
 
-    Eq << Eq[-1].this.args[1].args[:2].apply(algebra.cond.cond.given.et.subs, invert=True)
+    Eq << Eq[-1].this.args[1].args[:2].apply(algebra.cond.cond.of.et.subs, invert=True)
 
-    Eq << Eq[-1].this.args[-1].args[::2].apply(algebra.cond.cond.given.et.subs, invert=True)
+    Eq << Eq[-1].this.args[-1].args[::2].apply(algebra.cond.cond.of.et.subs, invert=True)
 
-    Eq << Eq[-1].this.args[-1].args[:2].apply(algebra.cond.cond.given.et.subs, invert=True)
+    Eq << Eq[-1].this.args[-1].args[:2].apply(algebra.cond.cond.of.et.subs, invert=True)
 
-    Eq << algebra.ou.given.ou.collect.apply(Eq[-1], cond=Unequal(x, y), simplify=None)
+    Eq << algebra.ou.of.ou.collect.apply(Eq[-1], cond=Unequal(x, y), simplify=None)
 
 
 

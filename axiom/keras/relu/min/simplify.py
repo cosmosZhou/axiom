@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << LessEqual(k, n, plausible=True)
 
-    Eq << keras.le.imply.eq.relu.apply(Eq[1], l)
+    Eq << keras.le.then.eq.relu.apply(Eq[1], l)
 
 
 

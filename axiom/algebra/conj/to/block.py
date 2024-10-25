@@ -16,11 +16,11 @@ def prove(Eq):
     Eq << apply(Conjugate(BlockMatrix([[A, B], [C, D]]), evaluate=False))
 
     i = Symbol(domain=Range(n * 2))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
-    
 
-    
+
+
 
 
 if __name__ == '__main__':

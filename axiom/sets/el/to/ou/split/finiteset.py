@@ -16,11 +16,11 @@ def prove(Eq):
     x, a, b = Symbol(real=True)
     Eq << apply(Element(x, {a, b}))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.el.imply.ou.split.finiteset.two, simplify=False)
+    Eq << Eq[-2].this.lhs.apply(sets.el.then.ou.split.finiteset.two, simplify=False)
 
-    Eq << Eq[-1].this.rhs.apply(sets.ou_eq.imply.el.finiteset)
+    Eq << Eq[-1].this.rhs.apply(sets.ou_eq.then.el.finiteset)
 
 
 if __name__ == '__main__':

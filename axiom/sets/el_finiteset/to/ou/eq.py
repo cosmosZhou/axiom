@@ -15,11 +15,11 @@ def prove(Eq):
     e, a, b, c = Symbol(integer=True, given=True)
     Eq << apply(Element(e, {a, b, c}))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.el_finiteset.imply.ou.eq)
+    Eq << Eq[-2].this.lhs.apply(sets.el_finiteset.then.ou.eq)
 
-    Eq << Eq[-1].this.rhs.apply(sets.el_finiteset.given.ou.eq)
+    Eq << Eq[-1].this.rhs.apply(sets.el_finiteset.of.ou.eq)
 
 
 if __name__ == '__main__':

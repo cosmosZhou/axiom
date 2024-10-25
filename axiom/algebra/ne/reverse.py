@@ -14,7 +14,7 @@ def prove(Eq):
     b, a = Symbol(real=True, given=True)
     Eq << apply(Unequal(a, b))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
 
 

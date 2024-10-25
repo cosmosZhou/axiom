@@ -20,13 +20,13 @@ def prove(Eq):
     g = Symbol(shape=(oo, oo), bool=True)
     Eq << apply(Any[i:n, j:n](f[j] & g[i, j]))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-1].this.lhs.expr.apply(algebra.cond.any.imply.any.et, simplify=None)
+    Eq << Eq[-1].this.lhs.expr.apply(algebra.cond.any.then.any.et, simplify=None)
 
-    Eq << Eq[-2].this.rhs.expr.apply(algebra.cond.any.given.any.et, simplify=None)
+    Eq << Eq[-2].this.rhs.expr.apply(algebra.cond.any.of.any.et, simplify=None)
 
-    
+
 
 
 if __name__ == '__main__':

@@ -30,12 +30,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.swap, -2)
 
-    Eq << algebra.cond_piece.given.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.of.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.find(And).apply(algebra.eq.cond.given.et.subs)
+    Eq << Eq[-1].this.find(And).apply(algebra.eq.cond.of.et.subs)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

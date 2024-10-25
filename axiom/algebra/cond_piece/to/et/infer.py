@@ -43,14 +43,14 @@ def prove(Eq):
     f, g, h = Function(shape=(), real=True)
     Eq << apply(Equal(p, Piecewise((f(x), Element(x, A)), (g(x), Element(x, B)), (h(x), True))))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.cond_piece.imply.et.infer)
+    Eq <<= Eq[-2].this.lhs.apply(algebra.cond_piece.then.et.infer)
 
-    Eq <<= Eq[-1].this.rhs.apply(algebra.cond_piece.given.et.infer)
+    Eq <<= Eq[-1].this.rhs.apply(algebra.cond_piece.of.et.infer)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

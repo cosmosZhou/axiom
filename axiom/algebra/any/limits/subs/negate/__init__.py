@@ -15,10 +15,10 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Any[i:a:b](f(i)), i, c - i)
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.any.imply.any.limits.subs.negate, i, c - i)
-    Eq << Eq[-1].this.rhs.apply(algebra.any.imply.any.limits.subs.negate, i, c - i)
+    Eq << Eq[-2].this.lhs.apply(algebra.any.then.any.limits.subs.negate, i, c - i)
+    Eq << Eq[-1].this.rhs.apply(algebra.any.then.any.limits.subs.negate, i, c - i)
 
 
 if __name__ == '__main__':

@@ -25,14 +25,14 @@ def prove(Eq):
     y = Symbol(Eq[0].rhs.args[1])
     Eq << y.this.definition.reversed
 
-    Eq <<= algebra.eq.imply.et.squeeze.apply(Eq[-1]), Eq[0].subs(Eq[-1])
+    Eq <<= algebra.eq.then.et.squeeze.apply(Eq[-1]), Eq[0].subs(Eq[-1])
 
     z = Symbol(real=True)
-    Eq <<= algebra.sup_le.imply.all.le.apply(Eq[-3]), algebra.sup_ge.imply.all.any.gt.apply(Eq[-2], z), algebra.eq.given.et.squeeze.apply(Eq[-1])
+    Eq <<= algebra.sup_le.then.all.le.apply(Eq[-3]), algebra.sup_ge.then.all.any.gt.apply(Eq[-2], z), algebra.eq.of.et.squeeze.apply(Eq[-1])
 
-    Eq <<= algebra.sup_le.given.all.le.apply(Eq[-2]), algebra.sup_ge.given.all_any_gt.apply(Eq[-1], z)
+    Eq <<= algebra.sup_le.of.all.le.apply(Eq[-2]), algebra.sup_ge.of.all_any_gt.apply(Eq[-1], z)
 
-    Eq << algebra.all.given.all.limits.subs.offset.apply(Eq[-1], h)
+    Eq << algebra.all.of.all.limits.subs.offset.apply(Eq[-1], h)
 
     Eq << Eq[-1].this.expr.expr - h
 

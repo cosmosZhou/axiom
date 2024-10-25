@@ -61,18 +61,18 @@ def prove(Eq):
     p = Symbol(Eq[0].lhs)
     Eq << p.this.definition
 
-    Eq << algebra.cond_piece.imply.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.then.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[0].args[:2].apply(algebra.eq.cond.imply.cond.subs, ret=0)
+    Eq << Eq[-1].this.args[0].args[:2].apply(algebra.eq.cond.then.cond.subs, ret=0)
 
-    Eq << algebra.ou.imply.eq.piece.apply(Eq[-1], wrt=p)
+    Eq << algebra.ou.then.eq.piece.apply(Eq[-1], wrt=p)
 
     Eq << Eq[0].this.rhs.apply(algebra.piece.et.invert)
 
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[1], Eq[-2])
+    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[1], Eq[-2])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

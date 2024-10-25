@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self):
     expr, (i, *ab) = self.of(Any)
-    from axiom.algebra.all.imply.all.limits.negate import negate
+    from axiom.algebra.all.then.all.limits.negate import negate
     return Any(expr._subs(i, -i), negate(i, *ab))
 
 
@@ -16,11 +16,11 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Any[i:a:b](f(i) >= 0))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.any.imply.any.limits.negate)
+    Eq << Eq[-2].this.lhs.apply(algebra.any.then.any.limits.negate)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.any.given.any.limits.negate)
+    Eq << Eq[-1].this.lhs.apply(algebra.any.of.any.limits.negate)
 
 
 if __name__ == '__main__':

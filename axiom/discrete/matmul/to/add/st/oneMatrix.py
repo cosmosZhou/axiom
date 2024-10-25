@@ -39,13 +39,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(discrete.matmul.to.block, deep=True)
 
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.A_def_expand, Eq[-1])
+    Eq << algebra.eq.eq.then.eq.trans.apply(Eq.A_def_expand, Eq[-1])
 
     Eq << Eq[-1].this.find(MatMul[Add]).apply(discrete.matmul.to.add)
 
     Eq << Eq[-1].this.find(Transpose[~Mul]).apply(algebra.mul.to.add)
 
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[1], Eq[-1])
+    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[1], Eq[-1])
 
 
 if __name__ == '__main__':

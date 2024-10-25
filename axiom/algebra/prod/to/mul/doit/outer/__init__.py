@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << s[i].this.definition
 
-    Eq << algebra.eq.imply.eq.prod.apply(Eq[-1], (i, 0, n))
+    Eq << algebra.eq.then.eq.prod.apply(Eq[-1], (i, 0, n))
 
     Eq << Eq[-1].this.lhs.apply(algebra.prod.to.mul.doit).reversed
 

@@ -10,15 +10,15 @@ def apply(self):
 @prove
 def prove(Eq):
     from axiom import algebra
-    
+
     x, y = Symbol(real=True, given=True)
     Eq << apply(x < y)
-    
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
-    
-    Eq << Eq[-2].this.lhs.apply(algebra.lt.imply.lt_zero)
-    
-    Eq << Eq[-1].this.rhs.apply(algebra.lt.given.lt_zero)
+
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
+
+    Eq << Eq[-2].this.lhs.apply(algebra.lt.then.lt_zero)
+
+    Eq << Eq[-1].this.rhs.apply(algebra.lt.of.lt_zero)
 
 
 if __name__ == '__main__':

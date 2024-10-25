@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.pow.to.mul.split.base)
 
-    Eq << algebra.eq.given.eq.div.apply(Eq[-1], Eq[-1].lhs.args[0])
+    Eq << algebra.eq.of.eq.div.apply(Eq[-1], Eq[-1].lhs.args[0])
 
     Eq << Eq[-1].this.lhs.apply(algebra.pow.exp.to.exp)
 

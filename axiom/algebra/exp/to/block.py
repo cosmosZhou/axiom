@@ -19,15 +19,15 @@ def rewrite(self):
         args = block.args
         args = [exp(b * e) for b in args]
         axis = block.axis
-        
+
     elif arg.is_BlockMatrix:
         args = arg.args
         axis = arg.axis
         args = [rewrite(exp(e)) for e in args]
-        
+
     else:
         return self
-        
+
     return BlockMatrix[axis](args)
 
 @apply
@@ -45,11 +45,11 @@ def prove(Eq):
     Eq << apply(exp(BlockMatrix(A, B)))
 
     i = Symbol(domain=Range(a + b))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     Eq << Eq[-1].this.lhs.apply(algebra.exp.to.piece)
 
-    
+
 
 
 if __name__ == '__main__':

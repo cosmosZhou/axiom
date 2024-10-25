@@ -26,10 +26,10 @@ def prove(Eq):
 
     Eq << Less(a, b, plausible=True)
 
-    Eq << calculus.lt.imply.eq.integral.to.mul.limit.maxima.Darboux.apply(Eq[-1], Eq[0].lhs, n)
+    Eq << calculus.lt.then.eq.integral.to.mul.limit.maxima.Darboux.apply(Eq[-1], Eq[0].lhs, n)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

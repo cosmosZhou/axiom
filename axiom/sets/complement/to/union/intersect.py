@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << Eq[0].rhs.this.subs(Eq[-1].reversed)
 
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-3], Eq[-1])
+    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[-3], Eq[-1])
 
 
 if __name__ == '__main__':

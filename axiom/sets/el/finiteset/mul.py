@@ -17,13 +17,13 @@ def prove(Eq):
     d = Symbol(real=True, zero=False)
     Eq << apply(Element(e, {a, b, c}), d)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.el.imply.el.mul.finiteset, d)
+    Eq << Eq[-2].this.lhs.apply(sets.el.then.el.mul.finiteset, d)
 
-    Eq << Eq[-1].this.rhs.apply(sets.el.given.el.mul.finiteset, d)
+    Eq << Eq[-1].this.rhs.apply(sets.el.of.el.mul.finiteset, d)
 
-    
+
 
 
 if __name__ == '__main__':

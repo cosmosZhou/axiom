@@ -22,11 +22,11 @@ def prove(Eq):
     d = Symbol(integer=True, positive=True)
     Eq << apply(Element(x, Range(a, b)), d)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.el.imply.el.mul.range.dilated, d)
+    Eq << Eq[-2].this.lhs.apply(sets.el.then.el.mul.range.dilated, d)
 
-    Eq << Eq[-1].this.rhs.apply(sets.el.given.el.mul.range.dilated, d)
+    Eq << Eq[-1].this.rhs.apply(sets.el.of.el.mul.range.dilated, d)
 
 
 if __name__ == '__main__':

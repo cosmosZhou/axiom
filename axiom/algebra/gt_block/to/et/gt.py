@@ -16,18 +16,18 @@ def apply(le):
 @prove
 def prove(Eq):
     from axiom import algebra
-    
+
     n, m = Symbol(integer=True, positive=True)
     a = Symbol(shape=(n,), real=True)
     b = Symbol(shape=(m,), real=True)
     x = Symbol(real=True)
     Eq << apply(x > BlockMatrix(a, b))
-    
-    Eq << algebra.iff.given.et.apply(Eq[0])
-    
-    Eq << Eq[-2].this.lhs.apply(algebra.gt_block.imply.et.gt)
-    
-    Eq << Eq[-1].this.lhs.apply(algebra.gt_block.given.et.gt)
+
+    Eq << algebra.iff.of.et.apply(Eq[0])
+
+    Eq << Eq[-2].this.lhs.apply(algebra.gt_block.then.et.gt)
+
+    Eq << Eq[-1].this.lhs.apply(algebra.gt_block.of.et.gt)
 
 
 if __name__ == '__main__':

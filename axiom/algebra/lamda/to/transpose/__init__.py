@@ -11,14 +11,14 @@ def apply(self, axis=(-2, 1), *, simplify=True):
             indices, limits_i = f.variables_with_limits()
             f = f[tuple(indices)]
             limits = limits_i + limits
-            
+
         limits[0], limits[1] = limits[1], limits[0]
-        expr = Lamda(f, *limits).simplify() 
+        expr = Lamda(f, *limits).simplify()
 
     elif axis == (0, 1):
         f, *limits, j_limit, i_limit = self.of(Lamda)
         expr = Lamda(f, *limits, i_limit, j_limit).simplify()
-    
+
     if simplify:
         rhs = Transpose[axis](expr)
     else:
@@ -36,10 +36,10 @@ def prove(Eq):
     Eq << apply(Lamda[j:n, i:m](h[j + k, i]))
 
     i = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

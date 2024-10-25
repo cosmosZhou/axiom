@@ -43,7 +43,7 @@ def prove(Eq):
 
     Eq << s[i].this.definition
 
-    Eq << algebra.eq.imply.eq.sum.apply(Eq[-1], (i, finiteset))
+    Eq << algebra.eq.then.eq.sum.apply(Eq[-1], (i, finiteset))
 
     Eq << Eq[-1].reversed
 

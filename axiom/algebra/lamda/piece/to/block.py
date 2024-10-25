@@ -2,7 +2,7 @@ from util import *
 
 def try_axis(ecs, limits, axis=0, shape=None):
     pivot = -axis - 1
-    
+
     limit = limits[pivot]
     i, *ab = limit
     if len(ab) == 2:
@@ -15,7 +15,7 @@ def try_axis(ecs, limits, axis=0, shape=None):
             return
         start = 0
         stop = shape[axis]
-        
+
     args = []
     for e, c in ecs:
         if c:
@@ -25,23 +25,23 @@ def try_axis(ecs, limits, axis=0, shape=None):
             _i, rows = c.of(Less)
             if _i != i:
                 diff = _i - i
-                
+
                 if diff._has(i):
                     return
-                 
+
                 rows -= diff
-                
+
             limits[pivot] = (i, start, rows)
             X = Lamda(e, *limits).simplify()
 
         args.append(X)
         start = rows
     return args
-    
+
 @apply
 def apply(self, axis=None):
     [ecs, *limits] = self.of(Lamda[Piecewise])
-    
+
     shape = self.shape
     if axis is None:
         for axis in range(len(limits)):
@@ -67,11 +67,11 @@ def prove(Eq):
     Eq << apply(Lamda[j:n0 + n1 + n2 + n3, i:m](Piecewise((X0[i, j], j < n0), (X1[i, j - n0], j < n0 + n1), (X2[i, j - n0 - n1], j < n0 + n1 + n2), (X3[i, j - n0 - n1 - n2], True))))
 
     i = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     j = Symbol(domain=Range(n0 + n1 + n2 + n3))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
-    
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
+
 
 
 if __name__ == '__main__':

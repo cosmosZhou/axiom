@@ -16,11 +16,11 @@ def prove(Eq):
 
     Eq << apply(Element(x, Interval(a, b)), t)
 
-    Eq << algebra.iff.given.et.apply(Eq[-1])
+    Eq << algebra.iff.of.et.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(sets.el.imply.el.sub, t)
+    Eq << Eq[-2].this.lhs.apply(sets.el.then.el.sub, t)
 
-    Eq << Eq[-1].this.rhs.apply(sets.el.imply.el.add, t)
+    Eq << Eq[-1].this.rhs.apply(sets.el.then.el.add, t)
 
 
 if __name__ == '__main__':

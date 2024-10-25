@@ -19,7 +19,7 @@
 //modifier: icnmx
 //https://dev.mysql.com/doc/refman/8.0/en/regexp.html#function_regexp-like
 //detect duplicates:
-//http://192.168.18.132:8000/label/query.php?user=user&sql=select group_concat(json_quote(pn)) from corpus.markush group by text having count(*) > 1 limit 40
+//http://localhost/label/query.php?user=user&sql=select group_concat(json_quote(pn)) from corpus.markush group by text having count(*) > 1 limit 40
 /*
 //remove duplicates:
 with _t as (
@@ -30,7 +30,7 @@ with _t as (
 )
 delete from markush where pn in (select pn from _t);
 //url representation:
-//http://192.168.18.132:8000/label/query.php?user=user&sql=with _t as (with _t as (select json_remove(json_unquote(concat('[', group_concat(json_quote(pn)), ']')), '$[0]') as pn from corpus.markush group by text having count(*) > 1) select _s.pn from _t cross join json_table(pn, '$[*]' columns(pn varchar(36) path '$')) as _s) select pn, text from corpus.markush where pn in (select pn from _t) limit 1000		
+//http://localhost/label/query.php?user=user&sql=with _t as (with _t as (select json_remove(json_unquote(concat('[', group_concat(json_quote(pn)), ']')), '$[0]') as pn from corpus.markush group by text having count(*) > 1) select _s.pn from _t cross join json_table(pn, '$[*]' columns(pn varchar(36) path '$')) as _s) select pn, text from corpus.markush where pn in (select pn from _t) limit 1000		
 
 with _t as (
 	with _t as (
@@ -44,7 +44,7 @@ with _t as (
 select group_concat(training), sum(if (training = 0, 1, 0)), text from markush where text in (select text from _t) group by text;
 
 // url representation:
-// http://192.168.18.132:8000/label/query.php?user=user&sql=with _t as (with _t as (with _t as (select json_remove(json_unquote(concat('[', group_concat(json_quote(pn) order by(training)), ']')), '$[0]') as pn from corpus.markush group by text having count(*) > 1) select _s.pn from _t cross join json_table(pn, '$[*]' columns(pn varchar(36) path '$')) as _s) select distinct text from corpus.markush where training = 0 and pn in (select pn from _t)) select group_concat(training order by(training)), sum(if(training = 0, 1, 0)), text from corpus.markush where text in (select text from _t) group by text limit 1000
+// http://localhost/label/query.php?user=user&sql=with _t as (with _t as (with _t as (select json_remove(json_unquote(concat('[', group_concat(json_quote(pn) order by(training)), ']')), '$[0]') as pn from corpus.markush group by text having count(*) > 1) select _s.pn from _t cross join json_table(pn, '$[*]' columns(pn varchar(36) path '$')) as _s) select distinct text from corpus.markush where training = 0 and pn in (select pn from _t)) select group_concat(training order by(training)), sum(if(training = 0, 1, 0)), text from corpus.markush where text in (select text from _t) group by text limit 1000
 */
  
 console.log('import mysqlSelect.vue');

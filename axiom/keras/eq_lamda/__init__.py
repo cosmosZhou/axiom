@@ -1,2 +1,2 @@
 from . import eq_lamda
-from . import imply
+from . import then

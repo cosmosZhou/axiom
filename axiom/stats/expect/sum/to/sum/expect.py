@@ -44,7 +44,7 @@ def prove(Eq):
     k = Symbol(integer=True)
     Eq << apply(Expectation(Sum[k:n](f(x[k])) | s))
 
-    
+
 
     Eq.induct = Eq[0].subs(n, n + 1)
 
@@ -56,9 +56,9 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n, start=1)
+    Eq << algebra.infer.then.eq.induct.apply(Eq[-1], n, start=1)
 
-    
+
 
 
 if __name__ == '__main__':

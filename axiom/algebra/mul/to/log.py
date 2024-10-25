@@ -17,15 +17,15 @@ def prove(Eq):
     x = Symbol(real=True, positive=True)
     Eq << apply(t * log(x))
 
-    Eq << algebra.eq.given.eq.exp.apply(Eq[0])
+    Eq << algebra.eq.of.eq.exp.apply(Eq[0])
 
     y = Symbol(log(x))
     Eq << y.this.definition
 
-    Eq <<= Eq[-1] * t, algebra.eq.imply.eq.exp.apply(Eq[-1])
+    Eq <<= Eq[-1] * t, algebra.eq.then.eq.exp.apply(Eq[-1])
 
-    Eq <<= algebra.eq.imply.eq.exp.apply(Eq[-2]), algebra.eq.imply.eq.pow.apply(Eq[-1], exp=t)
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-2], Eq[-1])
+    Eq <<= algebra.eq.then.eq.exp.apply(Eq[-2]), algebra.eq.then.eq.pow.apply(Eq[-1], exp=t)
+    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[-2], Eq[-1])
 
 
 if __name__ == '__main__':

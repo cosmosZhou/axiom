@@ -18,13 +18,13 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True)
     Eq << apply(Ceiling(Arg(z) / (2 * S.Pi) / n - S.One / 2))
 
-    Eq << sets.imply.el.arg.apply(z)
+    Eq << sets.then.el.arg.apply(z)
 
-    Eq << sets.el.imply.el.div.interval.apply(Eq[-1], n, simplify=None)
+    Eq << sets.el.then.el.div.interval.apply(Eq[-1], n, simplify=None)
 
-    Eq << sets.el.imply.el.sub.apply(Eq[-1], S.Pi, simplify=None)
+    Eq << sets.el.then.el.sub.apply(Eq[-1], S.Pi, simplify=None)
 
-    Eq << sets.el.imply.el.div.interval.apply(Eq[-1], S.Pi * 2, simplify=None)
+    Eq << sets.el.then.el.div.interval.apply(Eq[-1], S.Pi * 2, simplify=None)
 
     Eq << Eq[-1].this.lhs.apply(algebra.mul.to.add)
 
@@ -40,13 +40,13 @@ def prove(Eq):
 
     Eq << Eq.ge * (2 * n)
 
-    
-    Eq << sets.le.ge.el.imply.el.interval.apply(Eq.le, Eq.ge, Eq.contains)
 
-    Eq << sets.el.imply.ceiling_is_zero.apply(Eq[-1])
+    Eq << sets.le.ge.el.then.el.interval.apply(Eq.le, Eq.ge, Eq.contains)
 
-    
-    
+    Eq << sets.el.then.ceiling_is_zero.apply(Eq[-1])
+
+
+
 
 
 if __name__ == '__main__':

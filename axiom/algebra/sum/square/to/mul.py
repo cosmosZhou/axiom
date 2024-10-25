@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed + k
 
-    Eq << algebra.eq.imply.eq.sum.apply(Eq[-1], (k, 0, n), simplify=None)
+    Eq << algebra.eq.then.eq.sum.apply(Eq[-1], (k, 0, n), simplify=None)
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.add)
 
@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.rhs.args[::3].simplify()
 
-    
+
 
 
 if __name__ == '__main__':

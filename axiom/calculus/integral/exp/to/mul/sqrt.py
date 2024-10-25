@@ -27,11 +27,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.doit()
 
-    Eq << Eq[-1].apply(algebra.eq.imply.eq.sqrt)
+    Eq << Eq[-1].apply(algebra.eq.then.eq.sqrt)
 
     # https://ccjou.wordpress.com/2012/11/26/jacobian-矩陣與行列式/
-    
-    
+
+
 
 
 if __name__ == '__main__':

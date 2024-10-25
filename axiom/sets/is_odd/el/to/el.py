@@ -18,11 +18,11 @@ def prove(Eq):
     a, b, n = Symbol(integer=True)
     Eq << apply(Equal(n % 2, 1), Element(n, Range(a, b + 1)))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.is_odd.el.imply.el)
+    Eq << Eq[-2].this.lhs.apply(sets.is_odd.el.then.el)
 
-    Eq << Eq[-1].this.rhs.apply(sets.el.imply.et.is_odd)
+    Eq << Eq[-1].this.rhs.apply(sets.el.then.et.is_odd)
 
 
 if __name__ == '__main__':

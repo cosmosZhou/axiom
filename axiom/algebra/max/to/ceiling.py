@@ -24,11 +24,11 @@ def prove(Eq):
     x, y = Symbol(real=True)
     Eq << apply(Max(ceiling(x), ceiling(y)))
 
-    Eq << Eq[0].apply(algebra.eq_ceiling.given.et)
+    Eq << Eq[0].apply(algebra.eq_ceiling.of.et)
 
-    Eq <<= algebra.imply.gt.ceiling.apply(x), algebra.imply.gt.ceiling.apply(y)
+    Eq <<= algebra.then.gt.ceiling.apply(x), algebra.then.gt.ceiling.apply(y)
 
-    Eq << algebra.gt.gt.imply.gt.max.apply(Eq[-2], Eq[-1])
+    Eq << algebra.gt.gt.then.gt.max.apply(Eq[-2], Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(algebra.max.to.add)
 

@@ -15,13 +15,13 @@ def prove(Eq):
     x, a = Symbol(integer=True, given=True)
     Eq << apply(abs(x) <= a)
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.abs_le.imply.et)
+    Eq << Eq[-2].this.lhs.apply(algebra.abs_le.then.et)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.abs_le.given.et)
+    Eq << Eq[-1].this.lhs.apply(algebra.abs_le.of.et)
 
-    
+
 
 
 if __name__ == '__main__':

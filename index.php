@@ -189,7 +189,7 @@ if (! std\endsWith($path_info, '/')) {
     $inputs = [];
     $input = [];
 
-    $numOfRequisites = preg_match('/([\w.]+)\.(imply|given)\./', $module, $m)? count(explode(".", $m[1])) - 1 : 0;
+    $numOfRequisites = preg_match('/([\w.]+)\.(imply|given|then|of)\./', $module, $m)? count(explode(".", $m[1])) - 1 : 0;
 
     foreach (yield_from_py($py) as $dict) {
         if (! array_key_exists('statement', $dict))

@@ -20,17 +20,17 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.arg.apply(algebra.pow.to.mul.split.base)
 
-    Eq << algebra.cond.given.et.infer.split.apply(Eq[-1], cond=Unequal(z, 0))
+    Eq << algebra.cond.of.et.infer.split.apply(Eq[-1], cond=Unequal(z, 0))
 
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.ne_zero.imply.gt_zero.abs)
+    Eq << Eq[-2].this.lhs.apply(algebra.ne_zero.then.gt_zero.abs)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.gt_zero.imply.gt_zero.pow, n)
+    Eq << Eq[-1].this.lhs.apply(algebra.gt_zero.then.gt_zero.pow, n)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.gt_zero.imply.eq.arg, Eq[-1].find(Exp))
+    Eq << Eq[-1].this.lhs.apply(algebra.gt_zero.then.eq.arg, Eq[-1].find(Exp))
 
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.lhs.apply(algebra.arg.expi.to.add.ceiling)
 

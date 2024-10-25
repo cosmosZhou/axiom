@@ -17,13 +17,13 @@ def prove(Eq):
     A, B = Symbol(etype=dtype.integer, given=True)
     Eq << apply(Element(e, A - B))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.el_complement.imply.et)
+    Eq << Eq[-2].this.lhs.apply(sets.el_complement.then.et)
 
-    Eq << Eq[-1].this.rhs.apply(sets.el_complement.given.et, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(sets.el_complement.of.et, simplify=None)
 
-    
+
 
 
 if __name__ == '__main__':

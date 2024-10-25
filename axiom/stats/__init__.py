@@ -5,7 +5,7 @@ from . import sum
 
 from . import integral
 
-from . import imply
+from . import then
 
 from . import eq_conditioned
 from . import is_zero

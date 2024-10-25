@@ -16,11 +16,11 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(Infer(p(x) >= 0, q(x) >= 0), var=x)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.infer.imply.infer.any, x)
+    Eq << Eq[-2].this.lhs.apply(algebra.infer.then.infer.any, x)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.infer.given.infer.any, x)
+    Eq << Eq[-1].this.rhs.apply(algebra.infer.of.infer.any, x)
 
 
 if __name__ == '__main__':

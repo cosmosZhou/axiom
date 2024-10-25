@@ -16,7 +16,7 @@ def prove(Eq):
     x = Symbol(shape=(oo, n), real=True)
     Eq << apply(Lamda[i:n](ReducedSum(x[i])))
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
 
 if __name__ == '__main__':

@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=1)
+    Eq << algebra.infer.then.eq.induct.apply(Eq[-1], n=n, start=1)
 
 
 if __name__ == '__main__':

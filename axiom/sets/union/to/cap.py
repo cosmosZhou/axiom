@@ -22,19 +22,19 @@ def prove(Eq):
     f = Function(etype=dtype.integer)
     Eq << apply(Cap[k:n](f(k)) | x)
 
-    Eq << sets.eq.given.et.infer.apply(Eq[-1])
+    Eq << sets.eq.of.et.infer.apply(Eq[-1])
 
-    Eq <<= Eq[-2].this.rhs.apply(sets.el_cap.given.all_el),\
-    Eq[-1].this.lhs.apply(sets.el_cap.imply.all_el)
+    Eq <<= Eq[-2].this.rhs.apply(sets.el_cap.of.all_el),\
+    Eq[-1].this.lhs.apply(sets.el_cap.then.all_el)
 
-    Eq <<= Eq[-2].this.rhs.expr.apply(sets.el_union.given.ou),\
-    Eq[-1].this.lhs.expr.apply(sets.el_union.imply.ou)
+    Eq <<= Eq[-2].this.rhs.expr.apply(sets.el_union.of.ou),\
+    Eq[-1].this.lhs.expr.apply(sets.el_union.then.ou)
 
-    Eq <<= Eq[-2].this.lhs.apply(sets.el_union.imply.ou),\
-    Eq[-1].this.rhs.apply(sets.el_union.given.ou)
+    Eq <<= Eq[-2].this.lhs.apply(sets.el_union.then.ou),\
+    Eq[-1].this.rhs.apply(sets.el_union.of.ou)
 
-    Eq <<= Eq[-2].this.find(Element[Cap]).apply(sets.el_cap.imply.all_el),\
-    Eq[-1].this.find(Element[Cap]).apply(sets.el_cap.given.all_el)
+    Eq <<= Eq[-2].this.find(Element[Cap]).apply(sets.el_cap.then.all_el),\
+    Eq[-1].this.find(Element[Cap]).apply(sets.el_cap.of.all_el)
 
 if __name__ == '__main__':
     run()

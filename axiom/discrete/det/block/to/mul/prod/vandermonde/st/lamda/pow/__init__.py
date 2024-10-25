@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << ShiftMatrix(n + 1, 0, n) @ Eq[-1]
 
-    Eq << discrete.eq.imply.eq.det.apply(Eq[-1])
+    Eq << discrete.eq.then.eq.det.apply(Eq[-1])
 
     Eq << Eq[-1].this.lhs.apply(discrete.det.to.mul)
 

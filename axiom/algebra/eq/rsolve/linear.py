@@ -28,11 +28,11 @@ def prove(Eq):
     h = Function(real=True)
     Eq << apply(Equal(x[n + 1], x[n] * c + h(n)), k)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.rhs.apply(algebra.eq_sum.given.eq.rsolve)
+    Eq << Eq[-2].this.rhs.apply(algebra.eq_sum.of.eq.rsolve)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.eq.given.eq.rsolve, k)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.of.eq.rsolve, k)
 
 
 

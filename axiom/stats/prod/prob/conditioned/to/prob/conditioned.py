@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Equal & Equal).apply(algebra.eq.eq.to.eq.concat)
     Eq << Infer(Eq[0], Eq[1], plausible=True)
-    Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=0)
+    Eq << algebra.infer.then.eq.induct.apply(Eq[-1], n=n, start=0)
 
 
 

@@ -30,13 +30,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(KroneckerDelta).apply(algebra.delta.to.piece)
 
-    Eq << algebra.cond.given.et.infer.split.apply(Eq[-1], cond=Eq[-1].find(Equal))
+    Eq << algebra.cond.of.et.infer.split.apply(Eq[-1], cond=Eq[-1].find(Equal))
 
-    Eq <<= algebra.infer.given.infer.subs.bool.apply(Eq[-2]), algebra.infer.given.infer.subs.bool.apply(Eq[-1], invert=True)
+    Eq <<= algebra.infer.of.infer.subs.bool.apply(Eq[-2]), algebra.infer.of.infer.subs.bool.apply(Eq[-1], invert=True)
 
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-2])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-2])
 
-    Eq << Eq[-1].this.lhs.apply(calculus.ne.imply.eq.zero, f, x)
+    Eq << Eq[-1].this.lhs.apply(calculus.ne.then.eq.zero, f, x)
 
 
 

@@ -20,10 +20,10 @@ def prove(Eq):
     @Function(etype=dtype.real)
     def u(a):
         return Cap[t:i, i:g(i, j) > 0:s(a), j:f(a, j) > 0](x[i, j])
- 
+
     Eq << u(i).this.defun()
 
-    Eq << sets.eq.imply.eq.cap.apply(Eq[-1], (i, {a}))
+    Eq << sets.eq.then.eq.cap.apply(Eq[-1], (i, {a}))
 
     Eq << Eq[-1].this.lhs.defun()
 

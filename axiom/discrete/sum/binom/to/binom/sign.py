@@ -18,14 +18,14 @@ def prove(Eq):
 
     Eq << Eq[0].this.find(Sign).apply(algebra.sign.to.piece)
 
-    Eq << algebra.cond.given.et.infer.split.apply(Eq[-1], cond=t > 0)
+    Eq << algebra.cond.of.et.infer.split.apply(Eq[-1], cond=t > 0)
 
-    Eq <<= algebra.infer.given.infer.subs.bool.apply(Eq[-2]), algebra.infer.given.infer.subs.bool.apply(Eq[-1], invert=True)
+    Eq <<= algebra.infer.of.infer.subs.bool.apply(Eq[-2]), algebra.infer.of.infer.subs.bool.apply(Eq[-1], invert=True)
 
 
     Eq << GreaterEqual(t, 0, plausible=True)
-    Eq << algebra.infer.given.et.infer.invert.apply(Eq[-2], cond=Eq[-1])
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
+    Eq << algebra.infer.of.et.infer.invert.apply(Eq[-2], cond=Eq[-1])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-1])
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.limits.separate)
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.mul.series.arithmetic)
     Eq << Eq[-1].this.find(Binomial).apply(discrete.binom.to.mul.fallingFactorial.doit)
@@ -36,11 +36,11 @@ def prove(Eq):
     Eq << Eq[-1].this.rhs.find(Sum).expr.apply(discrete.binom.to.sub.Pascal)
     Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.sub.telescope)
     Eq << Eq[-1].this.rhs.find(Mul[~Binomial]).apply(discrete.binom.to.div.binom)
-    Eq << algebra.cond.imply.infer.apply(Eq[-1], cond=t > 0)
-    Eq << algebra.infer.imply.all.apply(Eq[-1])
+    Eq << algebra.cond.then.infer.apply(Eq[-1], cond=t > 0)
+    Eq << algebra.infer.then.all.apply(Eq[-1])
     Eq << Eq[-1].this().find(Mul[~Binomial]).simplify()
-    Eq << algebra.all.imply.infer.apply(Eq[-1])
-    Eq << Eq[-1].this.lhs.apply(algebra.ge.given.gt.relax)
+    Eq << algebra.all.then.infer.apply(Eq[-1])
+    Eq << Eq[-1].this.lhs.apply(algebra.ge.of.gt.relax)
     Eq << Eq[-1].subs(Eq[-1].lhs.lhs, t)
 
 

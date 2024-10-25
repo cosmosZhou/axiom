@@ -1,2 +1,2 @@
-from . import given
-from . import imply
+from . import of
+from . import then

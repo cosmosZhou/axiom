@@ -18,7 +18,7 @@ def prove(Eq):
         Lamda[t:T](sigmoid(Q[t]) * Sum[i:T](Indexed(softmax(K.T).T * V, i))))
 
     t = Symbol(domain=Range(T))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], t)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], t)
 
     Eq << Eq[-1].this.lhs.apply(algebra.sum.to.reducedSum)
 

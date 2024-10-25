@@ -19,19 +19,19 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.to.add.split, cond={0})
 
-    Eq << algebra.cond.given.et.infer.split.apply(Eq[-1], cond=n >= 1)
+    Eq << algebra.cond.of.et.infer.split.apply(Eq[-1], cond=n >= 1)
 
-    Eq <<= algebra.infer.given.infer.subs.bool.apply(Eq[-2]), algebra.infer.given.infer.subs.bool.apply(Eq[-1], invert=True)
+    Eq <<= algebra.infer.of.infer.subs.bool.apply(Eq[-2]), algebra.infer.of.infer.subs.bool.apply(Eq[-1], invert=True)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.lt.imply.sum_is_zero, Eq[-1].find(Sum))
+    Eq << Eq[-1].this.lhs.apply(algebra.lt.then.sum_is_zero, Eq[-1].find(Sum))
 
     Eq << Eq[-2].this.find(Element).apply(sets.el_range.to.et)
 
     Eq << Eq[-1].this.find(Less).reversed
 
-    Eq << Eq[-1].this.find(GreaterEqual).apply(algebra.ge.imply.gt.relax, lower=0)
+    Eq << Eq[-1].this.find(GreaterEqual).apply(algebra.ge.then.gt.relax, lower=0)
 
-    Eq << algebra.infer.given.infer.subs.bool.apply(Eq[-1])
+    Eq << algebra.infer.of.infer.subs.bool.apply(Eq[-1])
 
 
 if __name__ == '__main__':

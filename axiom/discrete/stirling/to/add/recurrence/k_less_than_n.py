@@ -37,9 +37,9 @@ def prove(Eq):
     Eq.stirling1 = Eq.stirling1.subs(Eq[-1].reversed)
 
     e = Symbol(etype=dtype.integer.set)
-    Eq << sets.imply.eq.union.apply(s2, conditionset(e, Element({n}, e), s2))
+    Eq << sets.then.eq.union.apply(s2, conditionset(e, Element({n}, e), s2))
 
-    Eq.s2_abs = Eq[-1].apply(sets.eq.imply.eq.card)
+    Eq.s2_abs = Eq[-1].apply(sets.eq.then.eq.card)
 
     Eq.s2_abs_plausible = Eq[0].subs(Eq.stirling2, Eq.stirling0, Eq.stirling1)
 
@@ -63,7 +63,7 @@ def prove(Eq):
 
     Eq << discrete.abs.condset.stirling.mapping.s1_Aj.apply(n, k, s1, A).reversed
 
-    Eq << Eq[-1].apply(algebra.eq.imply.eq.sum, *Eq[-2].lhs.limits)
+    Eq << Eq[-1].apply(algebra.eq.then.eq.sum, *Eq[-2].lhs.limits)
 
 
 if __name__ == '__main__':

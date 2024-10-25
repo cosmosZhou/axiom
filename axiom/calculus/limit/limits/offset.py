@@ -21,13 +21,13 @@ def prove(Eq):
     A = Symbol(Eq[0].rhs, real=True)
     Eq << A.this.definition
 
-    Eq << calculus.eq_limit.imply.any.all.limit_definition.apply(Eq[-1])
+    Eq << calculus.eq_limit.then.any.all.limit_definition.apply(Eq[-1])
 
-    Eq << Eq[-1].this.expr.apply(algebra.all.imply.all.limits.subs.offset, -x0)
+    Eq << Eq[-1].this.expr.apply(algebra.all.then.all.limits.subs.offset, -x0)
 
-    Eq << calculus.any_all.imply.eq.limit_definition.apply(Eq[-1])
+    Eq << calculus.any_all.then.eq.limit_definition.apply(Eq[-1])
 
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-1], Eq[1])
+    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[-1], Eq[1])
 
 
 if __name__ == '__main__':

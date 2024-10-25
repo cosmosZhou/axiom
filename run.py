@@ -479,7 +479,6 @@ def select_count(user, state=None):
 def prove(debug=False, parallel=True):
     def generator(): 
         rootdir = axiom_directory()
-#         rootdir += r'\algebra\imply\le\abs'
         for name in os.listdir(rootdir):
             path = join(rootdir, name)
             
@@ -853,11 +852,11 @@ clearInterval(ret);
 
 
 # slow:
-# python run.py algebra.poly_is_zero.imply.et.infer.quartic
-# python run.py algebra.poly_is_zero.imply.et.infer.quartic.one_leaded
+# python run.py algebra.poly_is_zero.then.et.infer.quartic
+# python run.py algebra.poly_is_zero.then.et.infer.quartic.one_leaded
 # python run.py discrete.det.to.sum.expansion_by_minors
-# python run.py keras.eq.lamda.bool.imply.eq.conv2d
-# python run.py keras.eq.lamda.bool.imply.eq.conv3d
+# python run.py keras.eq.lamda.bool.then.eq.conv2d
+# python run.py keras.eq.lamda.bool.then.eq.conv3d
 
 # python -c "exec(open('./util/function.py').read())"
 # python -c "exec(open('./util/hierarchy.py').read())"

@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Greater(b, 0, plausible=True)
 
-    Eq << algebra.gt_zero.imply.eq.log.apply(Eq[-1], e)
+    Eq << algebra.gt_zero.then.eq.log.apply(Eq[-1], e)
 
 
 if __name__ == '__main__':

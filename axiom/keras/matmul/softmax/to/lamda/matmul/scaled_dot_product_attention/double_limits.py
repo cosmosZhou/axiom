@@ -18,12 +18,12 @@ def prove(Eq):
     Eq << apply(softmax(Q @ K.T / sqrt(d_z)) @ V, i, j)
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     j = Symbol(domain=Range(d_z))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
 
-    
+
 
 
 if __name__ == '__main__':

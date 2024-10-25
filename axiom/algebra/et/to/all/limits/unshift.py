@@ -37,11 +37,11 @@ def prove(Eq):
 
     Eq << apply(And(All[i:a:n](x[i] > 0), x[a - 1] > 0, x[a - 2] > 0))
 
-    Eq << algebra.iff.given.et.apply(Eq[-1])
+    Eq << algebra.iff.of.et.apply(Eq[-1])
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.all.given.et.all, cond={a - 2}), Eq[-1].this.rhs.apply(algebra.all.imply.et.all.split, cond={a - 2})
+    Eq <<= Eq[-2].this.rhs.apply(algebra.all.of.et.all, cond={a - 2}), Eq[-1].this.rhs.apply(algebra.all.then.et.all.split, cond={a - 2})
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.all.given.et.all, cond={a - 1}), Eq[-1].this.rhs.find(All).apply(algebra.all.imply.et.all.split, cond={a - 1})
+    Eq <<= Eq[-2].this.rhs.apply(algebra.all.of.et.all, cond={a - 1}), Eq[-1].this.rhs.find(All).apply(algebra.all.then.et.all.split, cond={a - 1})
 
 
 if __name__ == '__main__':

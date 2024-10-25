@@ -12,7 +12,7 @@ from . import el
 from . import cos_is_zero
 from . import le_zero
 from . import expi
-from . import imply
+from . import then
 from . import lt
 from . import lt_zero
 from . import mul

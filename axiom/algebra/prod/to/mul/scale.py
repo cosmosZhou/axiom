@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq[1], plausible=True)
 
-    Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n, 0)
+    Eq << algebra.infer.then.cond.induct.apply(Eq[-1], n, 0)
 
 
 if __name__ == '__main__':

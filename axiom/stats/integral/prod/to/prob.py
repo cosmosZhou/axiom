@@ -36,7 +36,7 @@ def prove(Eq):
 
 
     Eq << Infer(Eq.hypothesis, Eq.induct, plausible=True)
-    Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=0)
+    Eq << algebra.infer.then.eq.induct.apply(Eq[-1], n=n, start=0)
 
 
 

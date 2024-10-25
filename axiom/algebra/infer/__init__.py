@@ -1,10 +1,10 @@
-from . import imply
+from . import then
 from . import subs
 from . import to
 from . import contraposition
 
 from . import infer
-from . import given
+from . import of
 
 from . import flatten
 

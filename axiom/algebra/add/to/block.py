@@ -9,9 +9,9 @@ def apply(self):
             break
     else:
         return
-    
+
     del args[i]
-    coeff = Add(*args)    
+    coeff = Add(*args)
     rhs = BlockMatrix[block.axis]([arg + coeff for arg in block.args])
     return Equal(self, rhs, evaluate=False)
 
@@ -26,11 +26,11 @@ def prove(Eq):
     Eq << apply(Add(BlockMatrix(A, B), x))
 
     i = Symbol(domain=Range(m * 2))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     Eq << Eq[-1].this.lhs.apply(algebra.add.to.piece)
 
-    
+
 
 
 if __name__ == '__main__':

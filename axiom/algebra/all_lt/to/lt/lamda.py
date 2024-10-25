@@ -18,13 +18,13 @@ def prove(Eq):
     i = Symbol(integer=True)
     Eq << apply(All[i:n](x[i] < y[i]))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.all_lt.imply.lt.lamda)
+    Eq << Eq[-2].this.lhs.apply(algebra.all_lt.then.lt.lamda)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.all_lt.given.lt.lamda)
+    Eq << Eq[-1].this.lhs.apply(algebra.all_lt.of.lt.lamda)
 
-    
+
 
 
 if __name__ == '__main__':

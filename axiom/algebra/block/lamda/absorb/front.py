@@ -28,9 +28,9 @@ def prove(Eq):
     Eq << apply(BlockMatrix([f(0), f(-1), Lamda[i:n](f(i))]))
 
     i = Symbol(domain=Range(n + 2))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
-    Eq << algebra.eq.given.is_zero.apply(Eq[-1])
+    Eq << algebra.eq.of.is_zero.apply(Eq[-1])
 
     Eq << Eq[-1].this.lhs.apply(algebra.add.piece.to.piece)
 

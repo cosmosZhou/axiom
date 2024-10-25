@@ -27,13 +27,13 @@ def prove(Eq):
     p, q, r, s = Symbol(bool=True)
     Eq << apply(And(q | p, r | p, s | p), cond=p)
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.et.imply.ou.collect, cond=p)
+    Eq << Eq[-2].this.lhs.apply(algebra.et.then.ou.collect, cond=p)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.et.given.ou.collect, cond=p)
+    Eq << Eq[-1].this.lhs.apply(algebra.et.of.ou.collect, cond=p)
 
-    
+
 
 
 if __name__ == '__main__':

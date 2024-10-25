@@ -60,25 +60,25 @@ def prove(Eq):
 
     Eq << Eq[0].subs(m, m - k)
 
-    Eq << algebra.ou.imply.infer.apply(Eq[-1], 1)
+    Eq << algebra.ou.then.infer.apply(Eq[-1], 1)
 
-    Eq << Eq[-1].this.lhs.apply(sets.el_range.given.el.range.restrict, upper=m + 1)
+    Eq << Eq[-1].this.lhs.apply(sets.el_range.of.el.range.restrict, upper=m + 1)
 
     Eq << Eq[-1].this.lhs.apply(sets.el.negate)
 
     Eq << Eq[-1].this.lhs.apply(sets.el.add, m)
 
-    Eq << algebra.infer.imply.all.single_variable.apply(Eq[-1])
+    Eq << algebra.infer.then.all.single_variable.apply(Eq[-1])
 
     Eq << Eq[-1].this.expr * (x[n] ** k / (Factorial(m - k) * Factorial(k)))
 
     Eq << Eq[-1].this.expr.rhs.find(Sum).apply(algebra.sum.to.mul, simplify=1)
 
-    Eq << algebra.all_eq.imply.eq.sum.apply(Eq[-1])
+    Eq << algebra.all_eq.then.eq.sum.apply(Eq[-1])
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.eq.infer.imply.eq.induct.apply(Eq[1], Eq[-1], n, 1)
+    Eq << algebra.eq.infer.then.eq.induct.apply(Eq[1], Eq[-1], n, 1)
 
 
 if __name__ == '__main__':

@@ -14,7 +14,7 @@ def apply(given, index=None):
     if index < 0:
         index += lhs.shape[0]
     assert index < lhs.shape[0] and index > 0
-    
+
     lhs = split(lhs, index)
     rhs = split(rhs, index)
 
@@ -33,14 +33,14 @@ def prove(Eq):
     y = Symbol(real=True, shape=(oo,))
     Eq << apply(Equal(x, y[:n + 1]))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[-1])
+    Eq << algebra.iff.of.et.infer.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.eq.imply.et.eq.split)
+    Eq << Eq[-2].this.lhs.apply(algebra.eq.then.et.eq.split)
 
     Eq << Eq[-1].this.lhs.apply(algebra.et.concat, 1, 0)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

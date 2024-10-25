@@ -9,7 +9,7 @@ def doit(self):
     assert diff == int(diff)
 
     arr = [xi._subs(i, a + t) for t in range(diff)]
-    
+
     assert limits, "try to invoke algebra.lamda.to.matrix"
     return Lamda(BlockMatrix(arr), *limits)
 
@@ -30,11 +30,11 @@ def prove(Eq):
     Eq << apply(Lamda[j:n, i:m](x[i, j]))
 
     i = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
     Eq << Eq[-1].this.lhs.apply(algebra.lamda.to.matrix)
 
-    
+
 
 
 if __name__ == '__main__':

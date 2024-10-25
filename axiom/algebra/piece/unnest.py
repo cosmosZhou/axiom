@@ -48,20 +48,20 @@ def prove(Eq):
     p = Symbol(Eq[0].lhs)
     Eq << p.this.definition
 
-    Eq << algebra.cond_piece.imply.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.then.ou.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[0].args[0].apply(algebra.cond_piece.imply.ou)
+    Eq << Eq[-1].this.args[0].args[0].apply(algebra.cond_piece.then.ou)
 
-    Eq << Eq[-1].this.find(And[Or]).apply(algebra.et.imply.ou)
+    Eq << Eq[-1].this.find(And[Or]).apply(algebra.et.then.ou)
 
-    Eq << algebra.ou.imply.eq.piece.apply(Eq[-1], wrt=p)
+    Eq << algebra.ou.then.eq.piece.apply(Eq[-1], wrt=p)
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.ou)
 
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[1], Eq[-1])
+    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[1], Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

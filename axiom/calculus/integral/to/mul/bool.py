@@ -22,11 +22,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul.piece.to.piece)
 
-    Eq << algebra.cond_piece.given.et.infer.apply(Eq[-1])
+    Eq << algebra.cond_piece.of.et.infer.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(sets.gt.imply.is_empty.interval)
+    Eq << Eq[-1].this.lhs.apply(sets.gt.then.is_empty.interval)
 
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-1])
 
 
 if __name__ == '__main__':

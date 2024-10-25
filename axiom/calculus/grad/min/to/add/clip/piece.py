@@ -30,7 +30,7 @@ def prove(Eq):
 
     Eq << Eq[-1].find(Min).this.apply(algebra.min.clip.to.piece)
 
-    Eq << calculus.eq.imply.eq.grad.apply(Eq[-1], [θ])
+    Eq << calculus.eq.then.eq.grad.apply(Eq[-1], [θ])
 
     Eq << Eq[-1].this.find(Derivative[Piecewise]).apply(calculus.grad.to.piece)
 

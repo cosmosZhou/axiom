@@ -1,4 +1,4 @@
-from . import imply, to
+from . import then, to
 from . import assuming
-from . import given
+from . import of
 from . import contraposition

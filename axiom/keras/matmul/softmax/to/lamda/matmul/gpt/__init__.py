@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << ζ.this.definition
 
-    Eq << keras.eq_relu.eq_min.imply.eq.matmul.softmax.band_part_mask.bert.apply(*Eq[-2:], Q, K, V)
+    Eq << keras.eq_relu.eq_min.then.eq.matmul.softmax.band_part_mask.bert.apply(*Eq[-2:], Q, K, V)
 
     Eq << Eq[1].this.rhs().expr.defun()
 

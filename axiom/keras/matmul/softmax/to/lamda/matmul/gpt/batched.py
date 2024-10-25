@@ -20,11 +20,11 @@ def prove(Eq):
     Eq << apply(softmax(Q @ K.T / sqrt(d_z) + (BandPart[n, 0](OneMatrix(n, n)) - 1) * oo) @ V, i)
 
     k = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], k)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], k)
 
     Eq << Eq[-1].this.lhs.apply(keras.matmul.softmax.to.lamda.matmul.gpt, i)
     # https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf
-    
+
 
 
 if __name__ == '__main__':

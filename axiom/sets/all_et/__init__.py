@@ -1,2 +1,2 @@
 from . import all_et
-from . import imply
+from . import then

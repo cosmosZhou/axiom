@@ -1,3 +1,3 @@
-from . import imply
+from . import then
 from . import eq
 from . import eq_log

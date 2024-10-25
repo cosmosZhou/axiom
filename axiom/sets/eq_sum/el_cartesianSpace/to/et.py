@@ -20,13 +20,13 @@ def prove(Eq):
     m, k = Symbol(integer=True, nonnegative=True)
     Eq << apply(Equal(ReducedSum(t[:n]), m - k), Element(t[:n], CartesianSpace(Range(0, m + 1), n)))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << algebra.infer_et.given.infer.delete.apply(Eq[-1], 0)
+    Eq << algebra.infer_et.of.infer.delete.apply(Eq[-1], 0)
 
-    Eq << Eq[-1].this.lhs.apply(sets.el_cartesianSpace.imply.el.cartesianSpace.range.relax, upper=m + 1)
+    Eq << Eq[-1].this.lhs.apply(sets.el_cartesianSpace.then.el.cartesianSpace.range.relax, upper=m + 1)
 
-    Eq << Eq[1].this.lhs.apply(sets.eq_sum.el_cartesianSpace.imply.el.cartesianSpace)
+    Eq << Eq[1].this.lhs.apply(sets.eq_sum.el_cartesianSpace.then.el.cartesianSpace)
 
 
 if __name__ == '__main__':

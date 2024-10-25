@@ -18,11 +18,11 @@ def prove(Eq):
     x1, x2 = Symbol(complex=True)
     Eq << apply(Det(BlockMatrix([Lamda[j:m, i:d](j ** i * x1 ** j), Lamda[j:m, i:m - d](j ** i * x2 ** j)])))
 
-    Eq << algebra.cond.given.et.infer.split.apply(Eq[0], cond=Equal(x2, 0))
+    Eq << algebra.cond.of.et.infer.split.apply(Eq[0], cond=Equal(x2, 0))
 
-    Eq << Eq[-1].this.lhs.apply(discrete.ne_zero.imply.eq.det.block.to.mul.prod.vandermonde.mn, x1, m, d)
+    Eq << Eq[-1].this.lhs.apply(discrete.ne_zero.then.eq.det.block.to.mul.prod.vandermonde.mn, x1, m, d)
 
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-2])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-2])
 
     Eq << Eq[-1].this.find(Lamda[2]).apply(algebra.lamda.to.transpose.block, 1)
 

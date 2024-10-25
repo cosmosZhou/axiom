@@ -16,11 +16,11 @@ def prove(Eq):
     n = Symbol(integer=True)
     Eq << apply(Unequal(n % 2, 1))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.ne_one.imply.is_even)
+    Eq << Eq[-2].this.lhs.apply(algebra.ne_one.then.is_even)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.ne.given.is_zero)
+    Eq << Eq[-1].this.rhs.apply(algebra.ne.of.is_zero)
 
 
 

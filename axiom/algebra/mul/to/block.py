@@ -7,12 +7,12 @@ def rewrite(self, deep=True):
             break
     else:
         return self
-    
+
     args = [*self.args]
     del args[i]
     factor = Mul(*args)
     axis = block.axis
-    if axis == 0 or not factor.shape: 
+    if axis == 0 or not factor.shape:
         if deep:
             return BlockMatrix[axis]([rewrite(b * factor, deep=True) for b in block.args])
         return BlockMatrix[axis]([b * factor for b in block.args])
@@ -27,9 +27,9 @@ def rewrite(self, deep=True):
                     args.append(b * f)
                 else:
                     return BlockMatrix[axis](args)
-                
+
     return self
-    
+
 @apply
 def apply(self, deep=True):
     return Equal(self, rewrite(self, deep=deep))
@@ -46,7 +46,7 @@ def prove(Eq):
     Eq << apply(BlockMatrix(A, B) * x[i])
 
     j = Symbol(domain=Range(m * 2))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], j)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.to.mul)
 

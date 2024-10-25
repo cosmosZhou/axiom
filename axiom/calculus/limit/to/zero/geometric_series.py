@@ -18,11 +18,11 @@ def prove(Eq):
 
     Eq << Less(Abs(x), 1, plausible=True)
 
-    Eq << algebra.abs_lt.given.et.apply(Eq[-1])
+    Eq << algebra.abs_lt.of.et.apply(Eq[-1])
 
-    Eq << calculus.abs_lt.imply.is_zero.limit.geometric_series.apply(Eq[1], n)
+    Eq << calculus.abs_lt.then.is_zero.limit.geometric_series.apply(Eq[1], n)
 
-    
+
 
 
 if __name__ == '__main__':

@@ -65,9 +65,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(discrete.pow.to.matmul.delta)
 
-    Eq << discrete.eq_matmul.imply.eq.vector.independence.st.matmul.apply(Eq[-1])
+    Eq << discrete.eq_matmul.then.eq.vector.independence.st.matmul.apply(Eq[-1])
 
-    Eq << algebra.all.imply.cond.subs.apply(Eq[-1], i_, i)
+    Eq << algebra.all.then.cond.subs.apply(Eq[-1], i_, i)
 
     Eq << Eq[-1].this.find(Multinomial).simplify()
 

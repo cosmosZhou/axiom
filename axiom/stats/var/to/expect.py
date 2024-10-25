@@ -44,10 +44,10 @@ def prove(Eq):
     Eq << Eq[-1].simplify()
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
     j = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
 
 
 

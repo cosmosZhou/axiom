@@ -23,13 +23,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul.to.add, deep=True)
 
-    Eq << algebra.eq.imply.eq.abs.apply(Eq[1])
+    Eq << algebra.eq.then.eq.abs.apply(Eq[1])
 
     Eq << Eq[-1] * Eq[-1]
 
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-3], Eq[-1])
+    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[-3], Eq[-1])
 
-    
+
 
 
 if __name__ == '__main__':

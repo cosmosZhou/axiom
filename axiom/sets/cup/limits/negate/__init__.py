@@ -22,13 +22,13 @@ def prove(Eq):
 
     Eq.induct = Eq[0].subs(n, n + 1)
 
-    Eq << sets.eq.imply.eq.union.apply(Eq[0], f(n + 1))
+    Eq << sets.eq.then.eq.union.apply(Eq[0], f(n + 1))
 
-    Eq << sets.eq.imply.eq.union.apply(Eq[-1], f(-n - 1))
+    Eq << sets.eq.then.eq.union.apply(Eq[-1], f(-n - 1))
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=0)
+    Eq << algebra.infer.then.eq.induct.apply(Eq[-1], n=n, start=0)
 
 
 if __name__ == '__main__':

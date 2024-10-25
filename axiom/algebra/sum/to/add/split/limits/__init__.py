@@ -21,7 +21,7 @@ def prove(Eq):
     n = Symbol(integer=True, nonnegative=True, given=False)
     Eq << apply(Sum[j:n, i:n](x[i, j]))
 
-    
+
 
     Eq << Eq[0].subs(n, n + 1)
 
@@ -45,10 +45,10 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq[1], plausible=True)
 
-    Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n, 0)
+    Eq << algebra.infer.then.cond.induct.apply(Eq[-1], n, 0)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

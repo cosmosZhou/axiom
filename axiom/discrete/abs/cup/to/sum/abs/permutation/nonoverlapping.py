@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(n, Q=None):
     if Q is None:
-        from axiom.discrete.imply.all.et.mapping.Qu2v import predefined_symbols
+        from axiom.discrete.then.all.et.mapping.Qu2v import predefined_symbols
         Q, w, x = predefined_symbols(n)
 
     t = Q.definition.variable
@@ -25,19 +25,19 @@ def prove(Eq):
 
     Eq << ~Eq.nonoverlapping
 
-    Eq << Eq[-1].this.expr.apply(sets.intersect_ne_empty.imply.any_el, wrt=Eq[0].rhs.variable, simplify=None)
+    Eq << Eq[-1].this.expr.apply(sets.intersect_ne_empty.then.any_el, wrt=Eq[0].rhs.variable, simplify=None)
 
     Eq << Eq[-1].this.find(Element).rhs.definition
 
-    Eq << algebra.any_et.imply.any.getitem.apply(Eq[-1], index=1)
+    Eq << algebra.any_et.then.any.getitem.apply(Eq[-1], index=1)
 
-    Eq << sets.imply.all.conditionset.apply(Q[t])
+    Eq << sets.then.all.conditionset.apply(Q[t])
 
-    Eq << algebra.all_et.imply.all.apply(Eq[-1], index=0)
+    Eq << algebra.all_et.then.all.apply(Eq[-1], index=0)
 
-    Eq << algebra.all.any.imply.any.et.apply(Eq[-1], Eq[-3])
+    Eq << algebra.all.any.then.any.et.apply(Eq[-1], Eq[-3])
 
-    Eq << sets.all_is_empty.imply.eq.nonoverlapping.setlimit.apply(Eq.nonoverlapping)
+    Eq << sets.all_is_empty.then.eq.nonoverlapping.setlimit.apply(Eq.nonoverlapping)
 
 
 

@@ -25,19 +25,19 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.simplify()
 
-    Eq << sets.eq.eq.imply.eq.intersect.apply(Eq[-2], Eq[-1])
+    Eq << sets.eq.eq.then.eq.intersect.apply(Eq[-2], Eq[-1])
 
     Eq << Equal(Cap[i:{c}](x[i]), x[c], plausible=True)
 
     Eq << Eq[-1].this.lhs.simplify()
 
-    Eq << sets.eq.eq.imply.eq.intersect.apply(Eq[-2], Eq[-1])
+    Eq << sets.eq.eq.then.eq.intersect.apply(Eq[-2], Eq[-1])
 
     Eq << Equal(Cap[i:{d}](x[i]), x[d], plausible=True)
 
     Eq << Eq[-1].this.lhs.simplify()
 
-    Eq << sets.eq.eq.imply.eq.intersect.apply(Eq[-2], Eq[-1])
+    Eq << sets.eq.eq.then.eq.intersect.apply(Eq[-2], Eq[-1])
 
 
 if __name__ == '__main__':

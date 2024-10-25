@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(self):
     x, *limits = self.of(Lamda[Softmax])
-    
+
     return Equal(self, Softmax(Lamda(x, *limits).simplify()), evaluate=False)
 
 
@@ -19,11 +19,11 @@ def prove(Eq):
     Eq << apply(Lamda[i:m](Softmax(x[i])))
 
     i = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
-    
 
-    
+
+
 
 
 if __name__ == '__main__':

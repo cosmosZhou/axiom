@@ -26,14 +26,14 @@ def prove(Eq):
     f, g = Function(real=True)
     Eq << apply(Or(Unequal(x, y) & (y > 0), Equal(f(x), g(y))))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.ou.imply.et)
+    Eq << Eq[-2].this.lhs.apply(algebra.ou.then.et)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.ou.given.et)
+    Eq << Eq[-1].this.lhs.apply(algebra.ou.of.et)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

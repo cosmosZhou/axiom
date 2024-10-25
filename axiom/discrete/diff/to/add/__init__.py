@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq.induct = Eq[0].subs(d, d + 1)
 
-    Eq << discrete.eq.imply.eq.diff.apply(Eq[0], (x, 1))
+    Eq << discrete.eq.then.eq.diff.apply(Eq[0], (x, 1))
 
     Eq << Eq[-1].this.lhs.simplify()
 
@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.eq.infer.imply.eq.induct.apply(Eq.initial, Eq[-1], n=d, start=1)
+    Eq << algebra.eq.infer.then.eq.induct.apply(Eq.initial, Eq[-1], n=d, start=1)
 
 
 if __name__ == '__main__':

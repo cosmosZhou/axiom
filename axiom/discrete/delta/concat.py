@@ -30,9 +30,9 @@ def prove(Eq):
 
     Eq << Eq[-2] - Eq[-1]
 
-    Eq << algebra.is_zero.imply.eq.apply(Eq[-1])
+    Eq << algebra.is_zero.then.eq.apply(Eq[-1])
 
-    Eq << Eq[-1].apply(algebra.eq.imply.eq.lamda, (i,))
+    Eq << Eq[-1].apply(algebra.eq.then.eq.lamda, (i,))
 
     Eq << Eq[-1].subs(Eq[1]).subs(Eq[2])
 

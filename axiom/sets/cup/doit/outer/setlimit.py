@@ -19,16 +19,16 @@ def prove(Eq):
     @Function(etype=dtype.real)
     def u(a):
         return Cup[i:g(i, j) > 0, j:f(a, j) > 0](x[i, j])
-     
+
     Eq << u(i).this.defun()
 
-    Eq << sets.eq.imply.eq.cup.apply(Eq[-1], (i, {a}))
+    Eq << sets.eq.then.eq.cup.apply(Eq[-1], (i, {a}))
 
     Eq << Eq[-1].this.lhs.defun()
 
     Eq << Eq[-1].reversed
 
-    
+
 
 
 if __name__ == '__main__':

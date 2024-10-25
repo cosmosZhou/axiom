@@ -16,11 +16,11 @@ def prove(Eq):
     a = Symbol(real=True, positive=True)
     Eq << apply(x * a > 0)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.gt_zero.imply.gt_zero.mul, 1 / a)
+    Eq << Eq[-2].this.lhs.apply(algebra.gt_zero.then.gt_zero.mul, 1 / a)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.gt_zero.imply.gt_zero.mul, a)
+    Eq << Eq[-1].this.lhs.apply(algebra.gt_zero.then.gt_zero.mul, a)
 
 
 if __name__ == '__main__':

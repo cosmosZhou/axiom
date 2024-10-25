@@ -33,11 +33,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.simplify()
 
-    Eq << Eq[-1].apply(algebra.eq.imply.eq.lamda, (k,), (h,))
+    Eq << Eq[-1].apply(algebra.eq.then.eq.lamda, (k,), (h,))
 
     Eq << Eq[-1].subs(Eq[1], Eq[2])
 
-    Eq << algebra.cond.imply.all.restrict.apply(Eq[-1], (_i,), (_j,))
+    Eq << algebra.cond.then.all.restrict.apply(Eq[-1], (_i,), (_j,))
 
     Eq << Eq[-1].reversed
 

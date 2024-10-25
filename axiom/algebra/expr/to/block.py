@@ -19,7 +19,7 @@ def trim_leading(shape):
             break
 
     return shape
-        
+
 
 def split(self, *pivot, axis=0):
     rhs = self
@@ -46,7 +46,7 @@ def split(self, *pivot, axis=0):
 
         assert rhs.shape == shape
         axis += 1
-    
+
     return rhs
 
 
@@ -65,16 +65,16 @@ def prove(Eq):
     Eq << apply(A, i, j, axis=2)
 
     t = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], t)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], t)
 
     k = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], k)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], k)
 
     l = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], l)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], l)
 
     p = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], p)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], p)
 
 
 

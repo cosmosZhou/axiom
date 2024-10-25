@@ -61,15 +61,15 @@ def prove(Eq):
     x, a, b = Symbol(integer=True)
     Eq << apply(a < x, x < b)
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.lt.lt.imply.el.interval)
+    Eq << Eq[-2].this.lhs.apply(sets.lt.lt.then.el.interval)
 
-    Eq << Eq[-1].this.rhs.apply(sets.el_interval.imply.et)
+    Eq << Eq[-1].this.rhs.apply(sets.el_interval.then.et)
 
     Eq << Eq[-1].this.find(Greater).reversed
 
-    
+
 
 
 if __name__ == '__main__':

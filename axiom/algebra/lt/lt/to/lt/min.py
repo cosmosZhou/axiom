@@ -15,13 +15,13 @@ def prove(Eq):
     x, y, b = Symbol(real=True, given=True)
     Eq << apply(x < y, x < b)
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.lt.lt.imply.lt.min)
+    Eq << Eq[-2].this.lhs.apply(algebra.lt.lt.then.lt.min)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.lt.lt.given.lt.min)
+    Eq << Eq[-1].this.lhs.apply(algebra.lt.lt.of.lt.min)
 
-    
+
 
 
 if __name__ == '__main__':

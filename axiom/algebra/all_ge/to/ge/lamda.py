@@ -12,17 +12,17 @@ def apply(all_le):
 @prove
 def prove(Eq):
     from axiom import algebra
-    
+
     n = Symbol(integer=True, positive=True)
     x, y = Symbol(shape=(n,), real=True)
     i = Symbol(integer=True)
     Eq << apply(All[i:n](x[i] >= y[i]))
-    
-    Eq << algebra.iff.given.et.apply(Eq[0])
-    
-    Eq << Eq[-2].this.lhs.apply(algebra.all_ge.imply.ge.lamda)
-    
-    Eq << Eq[-1].this.lhs.apply(algebra.all_ge.given.ge.lamda)
+
+    Eq << algebra.iff.of.et.apply(Eq[0])
+
+    Eq << Eq[-2].this.lhs.apply(algebra.all_ge.then.ge.lamda)
+
+    Eq << Eq[-1].this.lhs.apply(algebra.all_ge.of.ge.lamda)
 
 
 if __name__ == '__main__':

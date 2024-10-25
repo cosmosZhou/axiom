@@ -22,13 +22,13 @@ def prove(Eq):
     Eq << apply(Lamda[i:k](Q[i] @ K[i]))
 
     i = Symbol(domain=Range(k))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     Eq << Eq[-1].this.lhs.apply(discrete.matmul.to.reducedSum)
 
-    
 
-    
+
+
 
 
 if __name__ == '__main__':

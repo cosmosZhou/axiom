@@ -18,18 +18,18 @@ def prove(Eq):
     f, g = Function(real=True, shape=())
     Eq << apply(Piecewise((s(x), (f(x) > 0) | (g(x) > 0)), (-oo, True)))
 
-    Eq << algebra.cond.given.et.infer.split.apply(Eq[0], cond=Eq[0].find(Greater))
+    Eq << algebra.cond.of.et.infer.split.apply(Eq[0], cond=Eq[0].find(Greater))
 
-    Eq <<= algebra.infer.given.infer.subs.bool.apply(Eq[-2]), algebra.infer.given.infer.subs.bool.apply(Eq[-1], invert=True)
+    Eq <<= algebra.infer.of.infer.subs.bool.apply(Eq[-2]), algebra.infer.of.infer.subs.bool.apply(Eq[-1], invert=True)
 
-    Eq << algebra.infer.given.cond.apply(Eq[-1])
+    Eq << algebra.infer.of.cond.apply(Eq[-1])
 
-    Eq << algebra.eq_max.given.le.apply(Eq[-1])
+    Eq << algebra.eq_max.of.le.apply(Eq[-1])
 
-    Eq << algebra.cond_piece.given.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.of.ou.apply(Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

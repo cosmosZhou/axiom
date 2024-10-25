@@ -18,7 +18,7 @@ def prove(Eq):
     a = Symbol(real=True)
     Eq << apply(Product[i:n](a ** f(i)))
 
-    
+
 
     Eq.induct = Eq[0].subs(n, n + 1)
 
@@ -32,9 +32,9 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n)
+    Eq << algebra.infer.then.eq.induct.apply(Eq[-1], n)
 
-    
+
 
 
 if __name__ == '__main__':

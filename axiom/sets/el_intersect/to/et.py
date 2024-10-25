@@ -17,9 +17,9 @@ def prove(Eq):
     A, B = Symbol(etype=dtype.integer, given=True)
     Eq << apply(Element(e, A & B))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq <<= Eq[-2].this.lhs.apply(sets.el_intersect.imply.et), Eq[-1].this.rhs.apply(sets.el.el.imply.el.intersect)
+    Eq <<= Eq[-2].this.lhs.apply(sets.el_intersect.then.et), Eq[-1].this.rhs.apply(sets.el.el.then.el.intersect)
 
 
 

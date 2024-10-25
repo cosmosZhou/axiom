@@ -27,12 +27,12 @@ def prove(Eq):
     Eq << discrete.indexed.to.piece.swap1.apply(x, w)
 
     i, j = Eq[-1].rhs.args[0][1].args
-    Eq << Eq[-1].apply(algebra.cond.imply.all.restrict, (i,), (j,))
+    Eq << Eq[-1].apply(algebra.cond.then.all.restrict, (i,), (j,))
 
     _i = i.unbounded
     Eq << Eq[-1].this.find(Lamda).limits_subs(i, _i)
 
-    Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (_i, 0, n), simplify=False)
+    Eq << algebra.eq.then.eq.lamda.apply(Eq[-1], (_i, 0, n), simplify=False)
 
 
 if __name__ == '__main__':

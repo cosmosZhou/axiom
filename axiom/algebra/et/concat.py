@@ -42,11 +42,11 @@ def prove(Eq):
     A = Symbol(etype=dtype.real)
     Eq << apply(Equal(Lamda[k:n](f(k)), Lamda[k:n](g(k))) & Equal(f(n), g(n)) & Element(x, A), i=1, j=0)
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq <<= algebra.infer_et.given.infer.delete.apply(Eq[-2]), Eq[-1].this.rhs.args[0].apply(algebra.eq.imply.et.eq.split, simplify=None)
+    Eq <<= algebra.infer_et.of.infer.delete.apply(Eq[-2]), Eq[-1].this.rhs.args[0].apply(algebra.eq.then.et.eq.split, simplify=None)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.eq.eq.imply.eq.concat, simplify=None)
+    Eq << Eq[-1].this.lhs.apply(algebra.eq.eq.then.eq.concat, simplify=None)
 
 
 

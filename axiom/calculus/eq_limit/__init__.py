@@ -1,4 +1,4 @@
 from . import eq_limit
-from . import imply
-from . import given
+from . import then
+from . import of
 from . import el

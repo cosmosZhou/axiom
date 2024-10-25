@@ -19,7 +19,7 @@ def prove(Eq):
     f = Function(integer=True)
     Eq << apply(Log(Product[i:n, j:n](f(j, i))))
 
-    Eq << algebra.eq.given.eq.exp.apply(Eq[0])
+    Eq << algebra.eq.of.eq.exp.apply(Eq[0])
 
 
 if __name__ == '__main__':

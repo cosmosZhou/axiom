@@ -43,12 +43,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.block.to.identity)
 
-    Eq << discrete.eq_matmul.imply.eq.inverse.apply(Eq[-1], left=True)
+    Eq << discrete.eq_matmul.then.eq.inverse.apply(Eq[-1], left=True)
 
     Eq << Eq[-1].reversed
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

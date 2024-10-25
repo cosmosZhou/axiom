@@ -36,13 +36,13 @@ def prove(Eq):
 
     Eq << q.this.definition
 
-    Eq << algebra.cond_piece.imply.ou.apply(Eq[-1])
+    Eq << algebra.cond_piece.then.ou.apply(Eq[-1])
 
     Eq << Eq[-1].this.find(Complement[Complement]).args[1].apply(sets.complement.to.union.intersect)
 
     Eq << Eq[-1].this.find(Complement[Complement[Union]]).apply(sets.complement.to.union.intersect)
 
-    Eq << algebra.ou.imply.eq.piece.apply(Eq[-1], wrt=q)
+    Eq << algebra.ou.then.eq.piece.apply(Eq[-1], wrt=q)
 
     Eq << Eq[-1].subs(Eq[1].reversed).reversed
 
@@ -52,8 +52,8 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -30,9 +30,9 @@ def prove(Eq):
     Eq << apply(Lamda[j:n](a[j] * b[j]))
 
     _j = Symbol('j', domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], _j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], _j)
 
-    
+
 
 
 if __name__ == '__main__':

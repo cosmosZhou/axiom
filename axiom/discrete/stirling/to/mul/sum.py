@@ -33,7 +33,7 @@ def prove(Eq):
 
     j = Symbol(integer=True)
     # Eq << Eq[-1].this.apply(algebra.eq.rsolve.linear, j)
-    Eq << algebra.eq.imply.eq.rsolve.apply(Eq[-1], j)
+    Eq << algebra.eq.then.eq.rsolve.apply(Eq[-1], j)
 
     Eq << Eq[-1].this.rhs.args[0].args[0].defun()
 
@@ -83,7 +83,7 @@ def prove(Eq):
 
     Eq << Infer(Eq.hypothesis, Eq.induct, plausible=True)
 
-    Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n=k)
+    Eq << algebra.infer.then.cond.induct.apply(Eq[-1], n=k)
 
 
 

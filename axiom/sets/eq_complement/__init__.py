@@ -1,2 +1,2 @@
 from . import subset
-from . import imply
+from . import then

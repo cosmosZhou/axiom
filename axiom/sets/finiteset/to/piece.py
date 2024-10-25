@@ -14,11 +14,11 @@ def prove(Eq):
     a, b = Symbol(integer=True)
     Eq << apply(FiniteSet(Piecewise((a, b > 0), (a + 2, True))))
 
-    Eq << algebra.cond_piece.given.et.infer.apply(Eq[0])
+    Eq << algebra.cond_piece.of.et.infer.apply(Eq[0])
 
-    Eq << algebra.infer.given.infer.subs.bool.apply(Eq[-2])
+    Eq << algebra.infer.of.infer.subs.bool.apply(Eq[-2])
 
-    Eq << algebra.infer.given.infer.subs.bool.apply(Eq[-1], invert=True)
+    Eq << algebra.infer.of.infer.subs.bool.apply(Eq[-1], invert=True)
 
 
 if __name__ == '__main__':

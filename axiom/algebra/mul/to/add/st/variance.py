@@ -34,21 +34,21 @@ def prove(Eq):
     y = Symbol(Lamda[i:n - 1](Piecewise((x[i], i < t),(x[i + 1], True))))
     Eq << y[i].this.definition
 
-    Eq.y_sum = algebra.eq_piece.imply.eq.sum.apply(Eq[1], Sum[i:n-1](y[i]))
+    Eq.y_sum = algebra.eq_piece.then.eq.sum.apply(Eq[1], Sum[i:n-1](y[i]))
 
     Eq << algebra.sum.square.to.div.sum.square.apply(Sum[i:n-1]((y[i] - Sum[i:n - 1](y[i]) / (n - 1)) ** 2))
 
     Eq << Eq[-1].subs(Eq.y_sum).reversed
 
-    Eq << algebra.eq_piece.imply.eq.sum.apply(Eq[1], Eq[-1].rhs)
+    Eq << algebra.eq_piece.then.eq.sum.apply(Eq[1], Eq[-1].rhs)
 
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-2], Eq[-1])
+    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[-2], Eq[-1])
 
     Eq << algebra.sum.square.to.add.st.double_limits.apply(Eq[-1].lhs.args[1])
 
     Eq << Eq[-1].subs(Eq.y_sum)
 
-    Eq << algebra.eq_piece.imply.eq.sum.apply(Eq[1], Sum[i:n - 1](y[i] ** 2))
+    Eq << algebra.eq_piece.then.eq.sum.apply(Eq[1], Sum[i:n - 1](y[i] ** 2))
 
     Eq << Eq[-2].subs(Eq[-1])
 

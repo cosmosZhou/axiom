@@ -27,11 +27,11 @@ def prove(Eq):
 
     Eq << apply(Element(i, Range(a + d, j + d)), Element(j, Range(a + 1, n)))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.el.el.imply.el.range.i_lt_j.i_in_j)
+    Eq << Eq[-2].this.lhs.apply(sets.el.el.then.el.range.i_lt_j.i_in_j)
 
-    Eq << Eq[-1].this.rhs.apply(sets.el.el.imply.el.range.i_lt_j.j_in_i)
+    Eq << Eq[-1].this.rhs.apply(sets.el.el.then.el.range.i_lt_j.j_in_i)
 
 
 if __name__ == '__main__':

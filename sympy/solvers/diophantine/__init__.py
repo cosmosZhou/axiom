@@ -1,0 +1,1 @@
+from .diophantine import diophantine, classify_diop

@@ -24,20 +24,20 @@ def prove(Eq):
     t = Symbol(integer=True)
     Eq << apply(Expectation[r[t]](r[t] | s[t] & a[t] & s[t + 1]))
 
-    Eq << algebra.cond.given.infer.domain_defined.apply(Eq[0])
+    Eq << algebra.cond.of.infer.domain_defined.apply(Eq[0])
 
-    Eq << Eq[-1].this.lhs.apply(stats.ne_zero.imply.ne_zero.conditioned, a[t], s[t])
+    Eq << Eq[-1].this.lhs.apply(stats.ne_zero.then.ne_zero.conditioned, a[t], s[t])
 
-    Eq << Eq[-1].this.lhs.apply(stats.ne_zero.imply.eq.bayes.conditioned, r[t])
+    Eq << Eq[-1].this.lhs.apply(stats.ne_zero.then.eq.bayes.conditioned, r[t])
 
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-1])
 
     Eq << Eq[-1].this.find(Expectation).apply(stats.expect.to.integral)
 
     # the expected rewards for state–action–next-state triples as a three-argument function r
     # http://incompleteideas.net/book/bookdraft2017nov5.pdf (Eq. 3.6)
-    
-    
+
+
 
 
 if __name__ == '__main__':

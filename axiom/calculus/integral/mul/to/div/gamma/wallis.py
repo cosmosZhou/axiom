@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-1] / (m / n)
     Eq << Eq[-1].this.rhs.expand(func=True)
-    Eq << algebra.cond.imply.cond.subs.apply(Eq[0], n, n + 2)
+    Eq << algebra.cond.then.cond.subs.apply(Eq[0], n, n + 2)
     Eq << Eq[-1].this.rhs.expand(func=True)
     Eq << Eq[-1].this.lhs.expand()
     Eq.two = Eq[0].subs(m, 2)
@@ -41,7 +41,7 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.apply(calculus.integral.pow.to.mul)
     Eq << Eq[-1].this.rhs.expand(func=True)
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
-    Eq << algebra.eq.eq.infer.imply.eq.induct.apply(Eq.one, Eq.two, Eq[-1], n=m, start=1)
+    Eq << algebra.eq.eq.infer.then.eq.induct.apply(Eq.one, Eq.two, Eq[-1], n=m, start=1)
 
 
 

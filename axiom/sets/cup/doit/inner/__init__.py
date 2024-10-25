@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << s[i].this.definition
 
-    Eq << sets.eq.imply.eq.cup.apply(Eq[-1], (i, 0, m))
+    Eq << sets.eq.then.eq.cup.apply(Eq[-1], (i, 0, m))
 
     Eq << Eq[-2].this.rhs.apply(sets.cup.to.union.doit)
 

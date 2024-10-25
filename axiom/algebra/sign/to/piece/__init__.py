@@ -24,33 +24,33 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.swap)
 
-    Eq << algebra.cond.given.et.infer.split.apply(Eq[-1], cond=Equal(x, 0))
+    Eq << algebra.cond.of.et.infer.split.apply(Eq[-1], cond=Equal(x, 0))
 
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-2])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-2])
 
-    Eq << algebra.infer.given.infer.subs.bool.apply(Eq[-1], invert=True)
+    Eq << algebra.infer.of.infer.subs.bool.apply(Eq[-1], invert=True)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.ne_zero.imply.ou)
+    Eq << Eq[-1].this.lhs.apply(algebra.ne_zero.then.ou)
 
-    Eq.lt_zero, Eq.gt_zero = algebra.infer_ou.given.et.infer.apply(Eq[-1])
+    Eq.lt_zero, Eq.gt_zero = algebra.infer_ou.of.et.infer.apply(Eq[-1])
 
-    Eq << algebra.infer.given.infer.subs.bool.apply(Eq.gt_zero)
+    Eq << algebra.infer.of.infer.subs.bool.apply(Eq.gt_zero)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.gt_zero.imply.eq.abs)
+    Eq << Eq[-1].this.lhs.apply(algebra.gt_zero.then.eq.abs)
 
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-1])
 
-    Eq << Eq.lt_zero.this.rhs.apply(algebra.cond_piece.given.et.infer)
+    Eq << Eq.lt_zero.this.rhs.apply(algebra.cond_piece.of.et.infer)
 
-    Eq << algebra.infer.given.et.infer.apply(Eq[-1])
+    Eq << algebra.infer.of.et.infer.apply(Eq[-1])
 
     Eq << Eq[-2].this.apply(algebra.infer.flatten)
 
     Eq << Eq[-1].this.apply(algebra.infer.flatten)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.lt_zero.imply.eq.abs)
+    Eq << Eq[-1].this.lhs.apply(algebra.lt_zero.then.eq.abs)
 
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-1])
 
 
 

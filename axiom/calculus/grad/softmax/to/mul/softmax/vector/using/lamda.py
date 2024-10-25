@@ -36,7 +36,7 @@ def prove(Eq):
 
     Eq << Eq[-1] * Eq[-1].find(Softmax)
 
-    Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (i, 0, n))
+    Eq << algebra.eq.then.eq.lamda.apply(Eq[-1], (i, 0, n))
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.add)
 

@@ -39,11 +39,11 @@ def prove(Eq):
     epsilon = Eq[-1].lhs.variable
     Eq << Eq[-1].this.find(Add).apply(calculus.sub.to.integral)
 
-    Eq << calculus.imply.is_continuous.interval.apply(*Eq[-1].find(Integral).args)
+    Eq << calculus.then.is_continuous.interval.apply(*Eq[-1].find(Integral).args)
 
-    Eq << calculus.is_continuous.imply.any.eq.interval01.mean_value_theorem.apply(Eq[-1], 'lamda')
+    Eq << calculus.is_continuous.then.any.eq.interval01.mean_value_theorem.apply(Eq[-1], 'lamda')
 
-    Eq.exists = Eq[-1].this.expr.apply(calculus.eq.imply.eq.limit.div, epsilon)
+    Eq.exists = Eq[-1].this.expr.apply(calculus.eq.then.eq.limit.div, epsilon)
 
     Eq.limit_f = Equal(Limit[epsilon:0](Eq.exists.expr.rhs.find(f)), f(h(x)), plausible=True)
 
@@ -53,7 +53,7 @@ def prove(Eq):
 
     Eq << Eq[0].rhs.find(Derivative).this.apply(calculus.grad.to.limit, epsilon).reversed
 
-    Eq << calculus.eq_limit.eq_limit.imply.eq_limit.mul.apply(Eq[-1], Eq.limit_f)
+    Eq << calculus.eq_limit.eq_limit.then.eq_limit.mul.apply(Eq[-1], Eq.limit_f)
 
     Eq << Eq.exists.this.expr.subs(Eq[-1])
 

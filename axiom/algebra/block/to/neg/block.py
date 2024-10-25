@@ -17,11 +17,11 @@ def prove(Eq):
     Eq << apply(BlockMatrix(-A, -B))
 
     i = Symbol(domain=Range(m * 2))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.to.mul)
 
-    
+
 
 
 if __name__ == '__main__':

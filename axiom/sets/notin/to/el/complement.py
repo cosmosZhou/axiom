@@ -16,13 +16,13 @@ def prove(Eq):
     S = Symbol(etype=dtype.real)
     Eq << apply(NotElement(x, S))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.notin.imply.el.complement)
+    Eq << Eq[-2].this.lhs.apply(sets.notin.then.el.complement)
 
-    Eq << Eq[-1].this.rhs.apply(sets.notin.given.el.complement)
+    Eq << Eq[-1].this.rhs.apply(sets.notin.of.el.complement)
 
-    
+
 
 
 if __name__ == '__main__':

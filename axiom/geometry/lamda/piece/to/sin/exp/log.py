@@ -21,12 +21,12 @@ def prove(Eq):
 
     i = Symbol(domain=Range(n))
     j = Symbol(domain=Range(d))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], (i, j))
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], (i, j))
 
-    
-    Eq << geometry.eq_sin.given.eq.apply(Eq[-1])
+
+    Eq << geometry.eq_sin.of.eq.apply(Eq[-1])
     Eq << Eq[-1].this.find(Mul[Log]).apply(algebra.mul.to.log)
-    
+
 
 
 if __name__ == '__main__':

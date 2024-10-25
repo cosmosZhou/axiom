@@ -18,14 +18,14 @@ def prove(Eq):
     a, b, n = Symbol(integer=True)
     Eq << apply(Equal(n % 2, 0), Element(n, Range(a, b + 1)))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.is_even.el.imply.el)
+    Eq << Eq[-2].this.lhs.apply(sets.is_even.el.then.el)
 
-    Eq << Eq[-1].this.rhs.apply(sets.el.imply.et.is_even)
+    Eq << Eq[-1].this.rhs.apply(sets.el.then.et.is_even)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

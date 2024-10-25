@@ -14,11 +14,11 @@ def prove(Eq):
     x, y = Symbol(real=True, given=True)
     Eq << apply(x >= y)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.ge.imply.ge_zero)
+    Eq << Eq[-2].this.lhs.apply(algebra.ge.then.ge_zero)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.ge.given.ge_zero)
+    Eq << Eq[-1].this.rhs.apply(algebra.ge.of.ge_zero)
 
 
 if __name__ == '__main__':

@@ -1,3 +1,3 @@
-from . import imply
+from . import then
 from . import ne_zero
 from . import eq

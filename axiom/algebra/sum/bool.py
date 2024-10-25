@@ -22,14 +22,14 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.mul)
 
-    Eq << algebra.eq.imply.eq.sum.apply(Eq[-1], (y,))
+    Eq << algebra.eq.then.eq.sum.apply(Eq[-1], (y,))
 
     Eq << Eq[1].this.rhs.subs(Eq[-1])
 
     Eq << Eq[-1].this.rhs.expr.args[0].apply(algebra.bool.to.piece)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

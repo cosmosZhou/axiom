@@ -25,7 +25,7 @@ def prove(Eq):
     Eq << Eq[-1].this.find(Derivative).apply(calculus.grad.to.mul.lamda)
 
     j = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
 
     Eq << Eq[-1].this.find(Mul).apply(algebra.mul.lamda.to.lamda)
 

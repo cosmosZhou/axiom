@@ -24,11 +24,11 @@ def prove(Eq):
     x, a, b = Symbol(real=True)
     Eq << apply(Element(x, Interval(a, b)))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.el_interval.imply.et, simplify=False)
+    Eq << Eq[-2].this.lhs.apply(sets.el_interval.then.et, simplify=False)
 
-    Eq << Eq[-1].this.rhs.apply(sets.le.ge.imply.el.interval)
+    Eq << Eq[-1].this.rhs.apply(sets.le.ge.then.el.interval)
 
 
 if __name__ == '__main__':

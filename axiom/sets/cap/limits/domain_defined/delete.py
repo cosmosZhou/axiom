@@ -23,7 +23,7 @@ def prove(Eq):
     s = Symbol(Cap[j:f(i)](h(x[i], j)))
     Eq << s.this.definition
 
-    Eq << sets.eq.imply.eq.cap.apply(Eq[-1], (i, 0, k))
+    Eq << sets.eq.then.eq.cap.apply(Eq[-1], (i, 0, k))
 
     Eq << Eq[-1].this.lhs.expr.definition
 

@@ -1,0 +1,62 @@
+from util import *
+
+
+@apply
+def apply(given, *vars):
+    S, positive = given.of(Card >= Expr)
+    assert positive > 1
+
+    if vars:
+        x, y = vars
+    else:
+        x = S.element_symbol()
+        y = S.element_symbol({x})
+
+    return Any[x:S, y:S](Unequal(x, y))
+
+
+@prove
+def prove(Eq):
+    from axiom import sets, algebra
+
+    S = Symbol(etype=dtype.integer, given=True)
+    Eq << apply(Card(S) >= 2)
+
+    Eq << sets.ge.then.any_el.apply(Eq[0], simplify=False)
+
+    Eq << sets.any_el.then.any_el.limits_restricted.apply(Eq[-1], simplify=False)
+
+    Eq << Eq[-1].this.expr.apply(sets.el.then.eq.union)
+
+    i = Eq[-1].variable
+    Eq << Eq[-1].this.expr.apply(sets.eq.then.eq.card)
+
+    Eq << Eq[-1].this.find(Card).apply(sets.card.to.add)
+
+
+
+    Eq << Eq[-1].this.expr - 1
+
+    Eq << Eq[0] - 1
+
+    Eq << algebra.any_eq.cond.then.any.subs.apply(Eq[-2].reversed, Eq[-1])
+
+    Eq << Eq[-1].this.expr.apply(sets.ge.then.ne_empty, simplify=False)
+
+    i, j = Eq[1].variables
+    Eq << Any[i:S, j:S](Element(j, Eq[-1].lhs), plausible=True)
+
+    Eq << Eq[-1].simplify()
+
+    Eq << ~Eq[1]
+
+    Eq << algebra.all_eq.any.then.any.subs.apply(Eq[-1], Eq[-2])
+
+
+
+
+if __name__ == '__main__':
+    run()
+
+# created on 2020-07-15
+# updated on 2023-06-01

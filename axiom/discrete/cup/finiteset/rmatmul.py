@@ -37,7 +37,7 @@ def prove(Eq):
     Eq << Eq[-1].this(i).find(Element).simplify()
     Eq << Eq[-1].this(j).find(Element).simplify()
 
-    Eq << Eq[-1].apply(sets.eq.imply.eq.cup.finiteset, (k, 0, n))
+    Eq << Eq[-1].apply(sets.eq.then.eq.cup.finiteset, (k, 0, n))
 
     Eq << Eq[-1].this.find(Complement[Complement]).apply(sets.complement.to.union.intersect)
 

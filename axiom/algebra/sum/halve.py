@@ -19,23 +19,23 @@ def prove(Eq):
     f = Symbol(shape=(oo,), real=True)
     Eq << apply(Sum[i:Range(a, b, 2)](f[i]))
 
-    Eq << algebra.cond.given.et.infer.split.apply(Eq[0], cond=Equal(a % 2, 0))
+    Eq << algebra.cond.of.et.infer.split.apply(Eq[0], cond=Equal(a % 2, 0))
 
-    Eq << Eq[-1].this.lhs.apply(algebra.ne_zero.imply.is_odd)
+    Eq << Eq[-1].this.lhs.apply(algebra.ne_zero.then.is_odd)
 
-    Eq <<= algebra.infer.given.infer.subs.apply(Eq[-3]), algebra.infer.given.infer.subs.apply(Eq[-1])
+    Eq <<= algebra.infer.of.infer.subs.apply(Eq[-3]), algebra.infer.of.infer.subs.apply(Eq[-1])
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.is_even.imply.is_odd, ret=0), Eq[-1].this.lhs.apply(algebra.is_odd.imply.is_even, ret=0)
+    Eq <<= Eq[-2].this.lhs.apply(algebra.is_even.then.is_odd, ret=0), Eq[-1].this.lhs.apply(algebra.is_odd.then.is_even, ret=0)
 
-    Eq <<= algebra.infer_et.given.infer.et.subs.apply(Eq[-2], 1), algebra.infer_et.given.infer.et.subs.apply(Eq[-1], 1)
+    Eq <<= algebra.infer_et.of.infer.et.subs.apply(Eq[-2], 1), algebra.infer_et.of.infer.et.subs.apply(Eq[-1], 1)
 
-    Eq <<= algebra.infer_et.given.infer.delete.apply(Eq[-2]), algebra.infer_et.given.infer.delete.apply(Eq[-1])
+    Eq <<= algebra.infer_et.of.infer.delete.apply(Eq[-2]), algebra.infer_et.of.infer.delete.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.is_even.imply.eq.sum, Eq[0].lhs)
+    Eq << Eq[-2].this.lhs.apply(algebra.is_even.then.eq.sum, Eq[0].lhs)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.is_odd.imply.eq.sum, Eq[0].lhs)
+    Eq << Eq[-1].this.lhs.apply(algebra.is_odd.then.eq.sum, Eq[0].lhs)
 
-    
+
 
 
 if __name__ == '__main__':

@@ -28,7 +28,7 @@ def prove(Eq):
 
     i = Symbol(domain=Range(n))
     j = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], (i, j))
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], (i, j))
 
     Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.piece)
 

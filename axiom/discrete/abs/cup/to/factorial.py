@@ -23,7 +23,7 @@ def prove(Eq):
     Eq << discrete.cup.to.condset.P2Q_union.apply(n)
 
     Q = Eq[-1].lhs.expr.base
-    Eq << Eq[-1].apply(sets.eq.imply.eq.card)
+    Eq << Eq[-1].apply(sets.eq.then.eq.card)
 
     Eq << discrete.abs.cup.to.sum.abs.permutation.nonoverlapping.apply(n, Q=Q)
 
@@ -52,7 +52,7 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
+    Eq << algebra.cond.infer.then.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
 
 if __name__ == '__main__':

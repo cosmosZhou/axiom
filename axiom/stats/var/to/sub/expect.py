@@ -8,7 +8,7 @@ def apply(self):
         expr, given = expr.args
     else:
         given = None
-        
+
     return Equal(self,
                  Expectation(expr.outer_product(), *limits, given=given) - Expectation(expr, *limits, given=given).outer_product())
 
@@ -39,11 +39,11 @@ def prove(Eq):
     Eq << Eq[-1].this.find(Expectation[Conditioned[Mul]]).apply(stats.expect.to.mul)
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
     j = Symbol(domain=Range(n))
-    
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
 
 
 if __name__ == '__main__':

@@ -15,7 +15,7 @@ def prove(Eq):
     n = Symbol(integer=True)
     Eq << apply((-1) ** n)
 
-    Eq << algebra.cond_piece.given.ou.apply(Eq[0])
+    Eq << algebra.cond_piece.of.ou.apply(Eq[0])
 
     Eq << Eq[1].this.find(Equal & ~Equal).apply(algebra.is_even.to.eq)
 
@@ -23,9 +23,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Equal & ~Equal).apply(algebra.is_odd.to.eq)
 
-    Eq << sets.imply.el.pow.apply((-1) ** n)
+    Eq << sets.then.el.pow.apply((-1) ** n)
 
-    Eq << sets.el_finiteset.imply.ou.eq.apply(Eq[-1])
+    Eq << sets.el_finiteset.then.ou.eq.apply(Eq[-1])
 
 
 

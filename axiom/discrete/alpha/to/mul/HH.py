@@ -1,8 +1,7 @@
 from util import *
 
 from axiom.discrete.H.to.add.definition import H
-
-from axiom.discrete.imply.gt_zero.alpha import alpha
+from axiom.discrete.then.gt_zero.alpha import alpha
 
 
 def reverse(x):
@@ -52,13 +51,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul.to.add)
 
-    Eq << discrete.imply.ne_zero.alpha.apply(reverse(x[:n]))
+    Eq << discrete.then.ne_zero.alpha.apply(reverse(x[:n]))
 
-    Eq << algebra.ne_zero.eq.imply.eq.inverse.apply(Eq[-1], Eq[0])
+    Eq << algebra.ne_zero.eq.then.eq.inverse.apply(Eq[-1], Eq[0])
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.eq.infer.imply.eq.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
+    Eq << algebra.eq.infer.then.eq.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
 
 
 if __name__ == '__main__':

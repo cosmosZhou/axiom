@@ -15,7 +15,7 @@ def apply(self):
             rhs = x >= a, x < b
         else:
             rhs = x >= a, x <= b
-            
+
     rhs = And(*rhs)
     return rhs
 
@@ -28,11 +28,11 @@ def prove(Eq):
     a, b = Symbol(integer=True, given=True)
     Eq << apply(Element(x, Interval(a, b, right_open=True)))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.el_interval.imply.et)
+    Eq << Eq[-2].this.lhs.apply(sets.el_interval.then.et)
 
-    Eq << Eq[-1].this.rhs.apply(sets.el_interval.given.et)
+    Eq << Eq[-1].this.rhs.apply(sets.el_interval.of.et)
 
 
 if __name__ == '__main__':

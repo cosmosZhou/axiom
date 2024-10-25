@@ -12,7 +12,7 @@ if (! $dict) {
         'section::',
         'package::'
     ]);
-    $dict['package'] = 'keras.eq_blockMatrix.imply.eq.softmax.bilinear_matrix_attention.biased.st.logsumexp';
+    $dict['package'] = 'keras.eq_blockMatrix.then.eq.softmax.bilinear_matrix_attention.biased.st.logsumexp';
     $dict['section'] = 'tf';
 }
 

@@ -16,10 +16,10 @@ def prove(Eq):
     Eq << apply(Cos(BlockMatrix([[A, B], [C, D]])))
 
     i = Symbol(domain=Range(n * 2))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
     j = Symbol(domain=Range(n * 2))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
 
     Eq << Eq[-1].this.lhs.apply(geometry.cos.to.piece)
 
@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Cos[Piecewise]).apply(geometry.cos.to.piece, simplify=0)
 
-    
+
 
 
 if __name__ == '__main__':

@@ -1,7 +1,6 @@
 from util import *
 
-from axiom.discrete.imply.gt_zero.alpha import alpha
-
+from axiom.discrete.then.gt_zero.alpha import alpha
 
 @apply
 def apply(A):

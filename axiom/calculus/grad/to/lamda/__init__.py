@@ -54,15 +54,15 @@ def prove(Eq):
     Eq << apply(Derivative[x, y ** 2](f(x, y)))
 
     i = Symbol(domain=Range(d))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     j = Symbol(domain=Range(n))
     k = Symbol(domain=Range(n))
     h = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], (j, k, h))
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], (j, k, h))
 
     t = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], t)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], t)
 
 
 

@@ -38,9 +38,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(discrete.fallingFactorial.to.matmul.delta)
 
-    Eq << discrete.eq_matmul.imply.eq.vector.independence.st.matmul.fallingFactorial.apply(Eq[-1])
+    Eq << discrete.eq_matmul.then.eq.vector.independence.st.matmul.fallingFactorial.apply(Eq[-1])
 
-    Eq << algebra.all.imply.cond.subs.apply(Eq[-1], Eq[-1].variable, i)
+    Eq << algebra.all.then.cond.subs.apply(Eq[-1], Eq[-1].variable, i)
 
     Eq << Eq[-1] * (-1) ** (n - i)
 

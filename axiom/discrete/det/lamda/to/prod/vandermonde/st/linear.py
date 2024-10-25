@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << discrete.prod.to.factorial.apply(Product[j:i](i - j))
 
-    Eq << algebra.eq.imply.eq.prod.apply(Eq[-1], (i, 0, n))
+    Eq << algebra.eq.then.eq.prod.apply(Eq[-1], (i, 0, n))
 
     a = Symbol(Lamda[j:n](j + delta))
     Eq << a[j].this.definition

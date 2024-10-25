@@ -32,7 +32,7 @@ def prove(Eq):
 
     i = Symbol(domain=Range(m - d))
     j = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], [i, j])
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], [i, j])
 
     Eq << Eq[-1].this.rhs.args[1].apply(algebra.sum.sum.limits.swap)
 

@@ -62,7 +62,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Add[Mul]).expand()
 
-    Eq << algebra.eq.given.is_zero.apply(Eq[-1])
+    Eq << algebra.eq.of.is_zero.apply(Eq[-1])
 
     Eq << Eq[-1].this.lhs.apply(algebra.add.collect, factor=(x + 1) ** (n - 4))
 

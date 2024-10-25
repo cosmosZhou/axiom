@@ -1,4 +1,4 @@
-from . import imply
+from . import then
 from . import is_positive
 from . import is_negative
 from . import is_real

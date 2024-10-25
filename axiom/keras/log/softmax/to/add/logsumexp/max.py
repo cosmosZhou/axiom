@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << keras.nn.softmax.translation.apply(x, -ReducedMax(x)).reversed
 
-    Eq << Eq[-1].apply(algebra.eq.imply.eq.log)
+    Eq << Eq[-1].apply(algebra.eq.then.eq.log)
 
     Eq << Eq[-1].this.rhs.arg.apply(keras.softmax.to.mul.reducedSum)
 

@@ -32,7 +32,7 @@ def prove(Eq):
     Eq << Eq[-1].this.find(Integral[Probability]).apply(stats.integral.to.one.conditioned)
 
     Eq << Infer(Eq.hypothesis, Eq.induct, plausible=True)
-    Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=0)
+    Eq << algebra.infer.then.eq.induct.apply(Eq[-1], n=n, start=0)
 
 
 

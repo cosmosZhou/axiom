@@ -22,12 +22,12 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(C.this.definition)
 
-    Eq << sets.intersect_is_empty.imply.eq.apply(Eq[-1])
+    Eq << sets.intersect_is_empty.then.eq.apply(Eq[-1])
 
     Eq << Eq[-1].subs(C.this.definition)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(given, *, cond=None, wrt=None):
-    from axiom.algebra.all.imply.et.all.split import split
+    from axiom.algebra.all.then.et.all.split import split
     given = split(Any, given, cond, wrt)
     return given
 
@@ -17,11 +17,11 @@ def prove(Eq):
     d = Symbol(real=True, positive=True, given=True)
     Eq << apply(Any[x:Interval(-d, d, left_open=True, right_open=True)](f(x) > 0), cond=x < 0)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.any.imply.ou.any.split, cond=x < 0)
+    Eq << Eq[-2].this.lhs.apply(algebra.any.then.ou.any.split, cond=x < 0)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.any.given.ou.any.split, cond=x < 0)
+    Eq << Eq[-1].this.rhs.apply(algebra.any.of.ou.any.split, cond=x < 0)
 
 
 if __name__ == '__main__':

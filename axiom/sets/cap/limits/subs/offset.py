@@ -15,15 +15,15 @@ def prove(Eq):
     f = Function(etype=dtype.integer)
     Eq << apply(Cap[n:a:b](f(n)), d)
 
-    Eq << sets.eq.given.et.infer.apply(Eq[0])
+    Eq << sets.eq.of.et.infer.apply(Eq[0])
 
-    Eq <<= Eq[-2].this.lhs.apply(sets.el_cap.imply.all_el), Eq[-1].this.lhs.apply(sets.el_cap.imply.all_el)
+    Eq <<= Eq[-2].this.lhs.apply(sets.el_cap.then.all_el), Eq[-1].this.lhs.apply(sets.el_cap.then.all_el)
 
-    Eq <<= Eq[-2].this.rhs.apply(sets.el_cap.given.all_el), Eq[-1].this.rhs.apply(sets.el_cap.given.all_el)
+    Eq <<= Eq[-2].this.rhs.apply(sets.el_cap.of.all_el), Eq[-1].this.rhs.apply(sets.el_cap.of.all_el)
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.all.imply.all.limits.subs.offset, d)
+    Eq <<= Eq[-2].this.lhs.apply(algebra.all.then.all.limits.subs.offset, d)
 
-    Eq <<= Eq[-1].this.lhs.apply(algebra.all.imply.all.limits.subs.offset, -d)
+    Eq <<= Eq[-1].this.lhs.apply(algebra.all.then.all.limits.subs.offset, -d)
 
 
 if __name__ == '__main__':

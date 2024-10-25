@@ -1,8 +1,7 @@
 from util import *
 
 from axiom.discrete.K.to.add.definition import K
-from axiom.discrete.imply.gt_zero.alpha import alpha
-
+from axiom.discrete.then.gt_zero.alpha import alpha
 
 
 @apply
@@ -17,7 +16,6 @@ def apply(x):
 def prove(Eq):
     from axiom import discrete
     x = Symbol(real=True, positive=True, shape=(oo,))
-#     x = Symbol(real=True, shape=(oo,))
     n = Symbol(integer=True, positive=True)
 
     Eq << apply(x[:n + 1])

@@ -27,11 +27,11 @@ def prove(Eq):
     a, i, j, n, m, d = Symbol(integer=True)
     Eq << apply(Element(i, Range(d + j, n + j)), Element(j, Range(a, m)))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.el_range.el_range.imply.et.el.range.ij_parallel)
+    Eq << Eq[-2].this.lhs.apply(sets.el_range.el_range.then.et.el.range.ij_parallel)
 
-    Eq << Eq[-1].this.lhs.apply(sets.el_range.el_range.given.et.el.range.ij_parallel)
+    Eq << Eq[-1].this.lhs.apply(sets.el_range.el_range.of.et.el.range.ij_parallel)
 
 
 if __name__ == '__main__':

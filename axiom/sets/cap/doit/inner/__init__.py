@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << s[i].this.definition
 
-    Eq << sets.eq.imply.eq.cap.apply(Eq[-1], (i, 0, m))
+    Eq << sets.eq.then.eq.cap.apply(Eq[-1], (i, 0, m))
 
     Eq << Eq[-2].this.rhs.apply(sets.cap.to.intersect.doit)
 

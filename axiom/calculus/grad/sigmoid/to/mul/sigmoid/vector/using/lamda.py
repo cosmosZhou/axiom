@@ -24,11 +24,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.doit()
 
-    
 
-    Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (i, 0, n))
 
-    Eq.final = algebra.eq.imply.eq.lamda.apply(Eq[-1], (j, 0, n))
+    Eq << algebra.eq.then.eq.lamda.apply(Eq[-1], (i, 0, n))
+
+    Eq.final = algebra.eq.then.eq.lamda.apply(Eq[-1], (j, 0, n))
 
     Eq << Eq.final[j, i]
 
@@ -42,7 +42,7 @@ def prove(Eq):
 
     Eq << Eq.final.subs(Eq[-1].reversed)
 
-    
+
 
 
 if __name__ == '__main__':

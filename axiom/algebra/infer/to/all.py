@@ -21,15 +21,15 @@ def prove(Eq):
 
     Eq << apply(Infer(Element(n, A), Equal(f[n], g[n])), wrt=n)
 
-    Eq.suffice, Eq.necessary = algebra.iff.given.et.apply(Eq[0])
+    Eq.suffice, Eq.necessary = algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq.suffice.this.lhs.apply(algebra.infer.imply.ou)
+    Eq << Eq.suffice.this.lhs.apply(algebra.infer.then.ou)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.ou.imply.all, pivot=1, wrt=n)
+    Eq << Eq[-1].this.lhs.apply(algebra.ou.then.all, pivot=1, wrt=n)
 
-    Eq << Eq.necessary.this.lhs.apply(algebra.infer.given.ou)
+    Eq << Eq.necessary.this.lhs.apply(algebra.infer.of.ou)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.all.imply.ou)
+    Eq << Eq[-1].this.rhs.apply(algebra.all.then.ou)
 
 
 if __name__ == '__main__':

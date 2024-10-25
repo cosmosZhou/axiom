@@ -16,7 +16,7 @@ def prove(Eq):
     A, B = Symbol(shape=(n, n), complex=True)
     Eq << apply(((A + B) ^ -1) @ B)
 
-    Eq << algebra.eq.given.eq.transport.apply(Eq[0], rhs=0)
+    Eq << algebra.eq.of.eq.transport.apply(Eq[0], rhs=0)
 
     Eq << Eq[-1].this.lhs.apply(discrete.add.to.matmul)
 

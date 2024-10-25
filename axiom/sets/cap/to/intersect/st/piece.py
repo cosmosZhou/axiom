@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << Cap[y:F(x)](Piecewise((f(x, y), Element(x, A)), (g(x, y), True))).this.apply(sets.cap.to.piece)
 
-    Eq << sets.eq.imply.eq.cap.apply(Eq[-1], (x, B))
+    Eq << sets.eq.then.eq.cap.apply(Eq[-1], (x, B))
 
     Eq << Eq[-1].this.rhs.apply(sets.cap.to.intersect.single_variable)
 

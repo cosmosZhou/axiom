@@ -14,11 +14,11 @@ def prove(Eq):
     x, a, b = Symbol(real=True, given=True)
     Eq << apply(GreaterEqual(x, a) | GreaterEqual(x, b))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.ge_min.imply.ou.ge)
+    Eq << Eq[-1].this.rhs.apply(algebra.ge_min.then.ou.ge)
 
-    Eq << Eq[-2].this.rhs.apply(algebra.ge_min.given.ou.ge)
+    Eq << Eq[-2].this.rhs.apply(algebra.ge_min.of.ou.ge)
 
 
 if __name__ == '__main__':

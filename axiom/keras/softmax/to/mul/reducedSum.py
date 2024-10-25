@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << y[i].this.definition
 
-    Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (i, 0, n))
+    Eq << algebra.eq.then.eq.lamda.apply(Eq[-1], (i, 0, n))
 
     Eq << Eq[-1].this.lhs.definition
 

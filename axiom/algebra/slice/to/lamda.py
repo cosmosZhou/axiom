@@ -5,7 +5,7 @@ def convert(self, i=None):
     base, *indices = self.of(Sliced)
     if i is None:
         i = self.generate_var(integer=True)
-        
+
     if len(indices) == 1:
         start, stop = self.index
         return Lamda[i:stop - start](base[i + start])
@@ -33,9 +33,9 @@ def prove(Eq):
     Eq << apply(a[:n])
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
-    
+
 
 
 if __name__ == '__main__':

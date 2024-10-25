@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(imply):
-    from axiom.algebra.all.imply.ou import rewrite_as_Or
+    from axiom.algebra.all.then.ou import rewrite_as_Or
     return rewrite_as_Or(imply)
 
 
@@ -16,11 +16,11 @@ def prove(Eq):
 
     Eq << apply(All[x:A](f(x) > 0))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.all.imply.ou)
+    Eq << Eq[-2].this.lhs.apply(algebra.all.then.ou)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.all.given.ou)
+    Eq << Eq[-1].this.rhs.apply(algebra.all.of.ou)
 
 
 if __name__ == '__main__':

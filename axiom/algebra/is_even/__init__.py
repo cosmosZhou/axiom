@@ -1,1 +1,1 @@
-from . import imply, given, to
+from . import then, of, to

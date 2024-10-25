@@ -27,10 +27,10 @@ def prove(Eq):
     f, g = Function(real=True)
     Eq << apply(And((a < b) | (c < d), (f(x) < g(y))))
 
-    Eq << algebra.iff.given.et.apply(Eq[-1])
+    Eq << algebra.iff.of.et.apply(Eq[-1])
 
     # Eq << Eq[-2].this.lhs.apply(algebra.et.imply.ou, simplify=False)
-    Eq << Eq[-1].this.rhs.apply(algebra.ou.imply.et.collect, cond=f(x) < g(y), simplify=False)
+    Eq << Eq[-1].this.rhs.apply(algebra.ou.then.et.collect, cond=f(x) < g(y), simplify=False)
 
 
 

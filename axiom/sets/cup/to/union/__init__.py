@@ -18,25 +18,25 @@ def prove(Eq):
     Eq << apply(Cup[x:A, y:B](f(x, y) | g(x, y)))
 
     # Eq << apply(Cup[x:A](f(x) | g(x)))
-    Eq << sets.eq.given.et.infer.apply(Eq[0], wrt=y)
+    Eq << sets.eq.of.et.infer.apply(Eq[0], wrt=y)
 
-    Eq <<= Eq[-2].this.rhs.apply(sets.el_union.given.ou, simplify=False), \
-    Eq[-1].this.lhs.apply(sets.el_union.imply.ou, simplify=False)
+    Eq <<= Eq[-2].this.rhs.apply(sets.el_union.of.ou, simplify=False), \
+    Eq[-1].this.lhs.apply(sets.el_union.then.ou, simplify=False)
 
-    Eq <<= Eq[-2].this.rhs.args[0].apply(sets.el_cup.given.any_el), \
-    Eq[-1].this.lhs.args[0].apply(sets.el_cup.imply.any_el)
+    Eq <<= Eq[-2].this.rhs.args[0].apply(sets.el_cup.of.any_el), \
+    Eq[-1].this.lhs.args[0].apply(sets.el_cup.then.any_el)
 
-    Eq <<= Eq[-2].this.rhs.args[0].apply(sets.el_cup.given.any_el), \
-    Eq[-1].this.lhs.args[0].apply(sets.el_cup.imply.any_el)
+    Eq <<= Eq[-2].this.rhs.args[0].apply(sets.el_cup.of.any_el), \
+    Eq[-1].this.lhs.args[0].apply(sets.el_cup.then.any_el)
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.ou.given.any.ou), \
-    Eq[-1].this.lhs.apply(algebra.ou.imply.any.ou)
+    Eq <<= Eq[-2].this.rhs.apply(algebra.ou.of.any.ou), \
+    Eq[-1].this.lhs.apply(algebra.ou.then.any.ou)
 
-    Eq <<= Eq[-2].this.rhs.expr.apply(sets.ou.given.el), \
-    Eq[-1].this.lhs.expr.apply(sets.ou.imply.el)
+    Eq <<= Eq[-2].this.rhs.expr.apply(sets.ou.of.el), \
+    Eq[-1].this.lhs.expr.apply(sets.ou.then.el)
 
-    Eq <<= Eq[-2].this.lhs.apply(sets.el_cup.imply.any_el), \
-    Eq[-1].this.rhs.apply(sets.el_cup.given.any_el)
+    Eq <<= Eq[-2].this.lhs.apply(sets.el_cup.then.any_el), \
+    Eq[-1].this.rhs.apply(sets.el_cup.of.any_el)
 
 
 if __name__ == '__main__':

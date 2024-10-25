@@ -18,9 +18,9 @@ def prove(Eq):
     Eq << apply(Sum[i:C](Lamda[j:n](f(i, j))))
 
     t = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], t)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], t)
 
-    
+
 
 
 if __name__ == '__main__':

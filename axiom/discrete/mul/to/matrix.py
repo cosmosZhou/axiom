@@ -8,7 +8,7 @@ def apply(self):
             break
     else:
         return
-    
+
     args = [*self.args]
     args[i] = 1
     factor = Mul(*args)
@@ -25,11 +25,11 @@ def prove(Eq):
     Eq << apply(Matrix((a, b, c, d)) * x)
 
     j = Symbol(domain=Range(4))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], j)
 
     Eq << Eq[-1].this.lhs.apply(algebra.mul.to.piece)
 
-    
+
 
 
 if __name__ == '__main__':

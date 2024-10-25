@@ -3,7 +3,7 @@ from util import *
 
 def to_Lamda(self, expr, deep=False):
     variables = self.variables
-    
+
     hit = False
     if expr.shape:
         size = min(len(expr.shape), len(variables))
@@ -21,12 +21,12 @@ def to_Lamda(self, expr, deep=False):
                         hit = True
                 except:
                     ...
-        
+
     if not hit:
         expr += self.expr
-        
+
     return Lamda(expr, *self.limits)
-    
+
 @apply
 def apply(self, deep=False):
     [*args] = self.of(Add)
@@ -46,7 +46,7 @@ def apply(self, deep=False):
                 break
         else:
             return
-        
+
     return Equal(self, rhs, evaluate=False)
 
 
@@ -61,12 +61,12 @@ def prove(Eq):
     Eq << apply(Lamda[i:n, j:n](f(j, i)) + g)
 
     i, j = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

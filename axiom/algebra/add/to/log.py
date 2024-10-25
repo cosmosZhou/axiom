@@ -33,7 +33,7 @@ def prove(Eq):
     a, b = Symbol(real=True)
     Eq << apply(Log(a) - Log(b))
 
-    Eq << algebra.eq.given.eq.exp.apply(Eq[-1])
+    Eq << algebra.eq.of.eq.exp.apply(Eq[-1])
 
 
 if __name__ == '__main__':

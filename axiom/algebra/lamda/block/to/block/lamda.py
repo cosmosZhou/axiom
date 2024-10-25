@@ -6,13 +6,13 @@ def apply(self):
     blocks, *limits = self.of(Lamda[BlockMatrix])
     axis = len(limits)
     vars = self.variables
-    
+
     lamdas = []
     for block in blocks:
         assert not any(s.has(*vars) for s in block.shape)
-        
+
         lamdas.append(Lamda(block, *limits).simplify())
-    
+
     return Equal(self, BlockMatrix[axis](lamdas))
 
 @prove
@@ -26,10 +26,10 @@ def prove(Eq):
     Eq << apply(Lamda[j:m, i:n](BlockMatrix(f(i), g(i))))
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     j = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
 
 
 if __name__ == '__main__':

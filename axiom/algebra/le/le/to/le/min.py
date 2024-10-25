@@ -2,7 +2,7 @@ from util import *
 
 
 @apply
-def apply(le_a, le_b):    
+def apply(le_a, le_b):
     x, a = le_a.of(LessEqual)
     S[x], b = le_b.of(LessEqual)
     return x <= Min(a, b)
@@ -15,13 +15,13 @@ def prove(Eq):
     x, y, b = Symbol(real=True, given=True)
     Eq << apply(x <= y, x <= b)
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.le.le.imply.le.min)
+    Eq << Eq[-2].this.lhs.apply(algebra.le.le.then.le.min)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.le.le.given.le.min)
+    Eq << Eq[-1].this.lhs.apply(algebra.le.le.of.le.min)
 
-    
+
 
 
 if __name__ == '__main__':

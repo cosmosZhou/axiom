@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expr.apply(algebra.add.to.mul)
 
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq[-1], Eq[-4])
+    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[-1], Eq[-4])
 
 
 

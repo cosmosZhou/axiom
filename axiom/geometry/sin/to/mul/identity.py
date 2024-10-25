@@ -16,10 +16,10 @@ def prove(Eq):
     Eq << apply(sin(x * Identity(n)))
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     j = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
 
     Eq << Eq[-1].this.lhs.apply(geometry.sin.to.mul.delta)
 

@@ -14,13 +14,13 @@ def prove(Eq):
     x, a, b = Symbol(real=True, given=True)
     Eq << apply(LessEqual(x, a) | LessEqual(x, b))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.le_max.imply.ou.le)
+    Eq << Eq[-1].this.rhs.apply(algebra.le_max.then.ou.le)
 
-    Eq << Eq[-2].this.rhs.apply(algebra.le_max.given.ou.le)
+    Eq << Eq[-2].this.rhs.apply(algebra.le_max.of.ou.le)
 
-    
+
 
 
 if __name__ == '__main__':

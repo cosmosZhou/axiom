@@ -16,11 +16,11 @@ def prove(Eq):
     f, h = Function(real=True)
     Eq << apply(All[i:n]((f(i) > 0) & (h(i) > 0)))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.all_et.imply.et.all)
+    Eq << Eq[-2].this.lhs.apply(algebra.all_et.then.et.all)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.all_et.given.et.all)
+    Eq << Eq[-1].this.rhs.apply(algebra.all_et.of.et.all)
 
 
 if __name__ == '__main__':

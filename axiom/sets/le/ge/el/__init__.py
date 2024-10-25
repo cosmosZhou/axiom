@@ -1,2 +1,2 @@
 from . import notin
-from . import imply
+from . import then

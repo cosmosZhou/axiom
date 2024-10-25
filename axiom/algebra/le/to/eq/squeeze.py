@@ -16,11 +16,11 @@ def prove(Eq):
 
     Eq << apply(LessEqual(x, 1))
 
-    Eq << algebra.iff.given.et.apply(Eq[-1])
+    Eq << algebra.iff.of.et.apply(Eq[-1])
 
     Eq << Eq[-2].this.apply(algebra.infer.to.ou)
 
-    Eq << Eq[-1].apply(algebra.assuming.given.ou)
+    Eq << Eq[-1].apply(algebra.assuming.of.ou)
 
 
 if __name__ == '__main__':

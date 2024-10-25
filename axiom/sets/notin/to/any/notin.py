@@ -19,11 +19,11 @@ def prove(Eq):
     i = Symbol(integer=True)
     Eq << apply(NotElement(Lamda[i:n](x[i]), CartesianSpace(Range(0, m), n)))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.notin.imply.any.notin)
+    Eq << Eq[-2].this.lhs.apply(sets.notin.then.any.notin)
 
-    Eq << Eq[-1].this.rhs.apply(sets.notin.given.any.notin)
+    Eq << Eq[-1].this.rhs.apply(sets.notin.of.any.notin)
 
 
 if __name__ == '__main__':

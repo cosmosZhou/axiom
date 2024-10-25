@@ -1037,7 +1037,7 @@ def apply(*args, **kwargs):
         axiom, = args
         from sympy.logic.boolalg import inference_type
         _, type = inference_type(split(axiom))
-        if type == 'given':
+        if type in ('given', 'of'):
             return given(axiom, **kwargs)
 
         if type == 'to':
@@ -1427,7 +1427,7 @@ def detect_axiom_given_theorem(theorem, statement):
     if theorem.startswith('.') or theorem.startswith('Eq'):
 #         // consider the case
 #         // consider the case
-#         // Eq[-2].this.args[0].apply(algebra.cond.cond.imply.et, invert=True, swap=True)
+#         // Eq[-2].this.args[0].apply(algebra.cond.cond.then.et, invert=True, swap=True)
 
         yield from detect_axiom(statement)        
     elif 'Eq.' not in theorem:

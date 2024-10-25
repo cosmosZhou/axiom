@@ -1,4 +1,4 @@
-from . import imply
+from . import then
 
 from . import is_continuous
 from . import eq_limit

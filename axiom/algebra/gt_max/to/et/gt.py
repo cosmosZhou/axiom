@@ -21,11 +21,11 @@ def prove(Eq):
     x, y, z = Symbol(real=True, given=True)
     Eq << apply(x > Max(y, z))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.gt_max.imply.et.gt)
+    Eq << Eq[-2].this.lhs.apply(algebra.gt_max.then.et.gt)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.gt.gt.imply.gt.max)
+    Eq << Eq[-1].this.rhs.apply(algebra.gt.gt.then.gt.max)
 
 
 

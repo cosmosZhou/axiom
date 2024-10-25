@@ -1,4 +1,4 @@
-from . import imply, given
+from . import then, of
 from . import cond
 from . import simplify
 

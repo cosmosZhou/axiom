@@ -26,13 +26,13 @@ def prove(Eq):
     a, i, j, n, d = Symbol(integer=True)
     Eq << apply(Element(i, Range(d + j, n)), Element(j, Range(a, n - d)))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.el.el.imply.el.range.i_ge_j.i_in_j)
+    Eq << Eq[-2].this.lhs.apply(sets.el.el.then.el.range.i_ge_j.i_in_j)
 
-    Eq << Eq[-1].this.rhs.apply(sets.el.el.imply.el.range.i_ge_j.j_in_i)
+    Eq << Eq[-1].this.rhs.apply(sets.el.el.then.el.range.i_ge_j.j_in_i)
 
-    
+
 
 
 if __name__ == '__main__':

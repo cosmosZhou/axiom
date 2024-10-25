@@ -18,7 +18,7 @@ def apply(given, wrt=None):
     else:
         x, S = limit.coerce_setlimit()
 
-    domain = expr.domain_defined(x)    
+    domain = expr.domain_defined(x)
     limit = (x, domain & S)
     limits[i] = limit
     return All(expr, *limits)
@@ -33,10 +33,10 @@ def prove(Eq):
     i = Symbol(integer=True)
     Eq << apply(All[i:Range(m)](f[i] > 0))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.all.imply.all.limits.domain_defined)
-    Eq << Eq[-1].this.lhs.apply(algebra.all.given.all.limits.domain_defined)
+    Eq << Eq[-2].this.lhs.apply(algebra.all.then.all.limits.domain_defined)
+    Eq << Eq[-1].this.lhs.apply(algebra.all.of.all.limits.domain_defined)
 
 
 if __name__ == '__main__':

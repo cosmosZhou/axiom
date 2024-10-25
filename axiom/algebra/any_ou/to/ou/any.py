@@ -18,11 +18,11 @@ def prove(Eq):
 
     Eq << apply(Any[x:A]((g(x) > 0) | (f(x) > 0)))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.any_ou.imply.ou.any)
+    Eq << Eq[-2].this.lhs.apply(algebra.any_ou.then.ou.any)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.any_ou.given.ou.any)
+    Eq << Eq[-1].this.lhs.apply(algebra.any_ou.of.ou.any)
 
 
 if __name__ == '__main__':

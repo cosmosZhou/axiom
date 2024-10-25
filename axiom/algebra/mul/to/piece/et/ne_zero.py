@@ -14,14 +14,14 @@ def prove(Eq):
     x, y = Symbol(real=True)
     Eq << apply(x * y)
 
-    Eq << algebra.cond_piece.given.ou.apply(Eq[0])
+    Eq << algebra.cond_piece.of.ou.apply(Eq[0])
 
-    Eq << Eq[-1].this.args[1].apply(algebra.ne_zero.ne_zero.given.ne_zero)
+    Eq << Eq[-1].this.args[1].apply(algebra.ne_zero.ne_zero.of.ne_zero)
 
-    Eq << Eq[-1].this.find(Or).apply(algebra.ou_is_zero.given.mul_is_zero)
+    Eq << Eq[-1].this.find(Or).apply(algebra.ou_is_zero.of.mul_is_zero)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

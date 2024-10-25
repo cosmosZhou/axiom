@@ -6,10 +6,10 @@ def apply(self):
     a = self.of(Exp)
     res = a.of(Expr + Infinity * (Expr - 1)) or a.of(Expr + NegativeInfinity * (1 - Expr))
     a, X = res
-    
+
     indices, limits = X.variables_with_limits()
     assert X[tuple(indices)] in FiniteSet(0, 1)
-    
+
     return Equal(self, X * exp(a))
 
 
@@ -37,18 +37,18 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.add.to.piece)
 
-    Eq << algebra.eq.imply.eq.exp.apply(Eq[-1])
+    Eq << algebra.eq.then.eq.exp.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(algebra.exp.to.piece)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.to.mul.bool)
 
-    Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (j, 0, n), (i, 0, n))
+    Eq << algebra.eq.then.eq.lamda.apply(Eq[-1], (j, 0, n), (i, 0, n))
 
     Eq << Eq[-1].this.lhs.arg.definition
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -128,7 +128,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Mul[Matrix]).apply(discrete.mul.to.matrix)
 
-    Eq << discrete.eq.imply.eq.det.apply(Eq[-1])
+    Eq << discrete.eq.then.eq.det.apply(Eq[-1])
 
     Eq << Eq[-1].this.lhs.apply(discrete.det.to.mul, deep=True)
 

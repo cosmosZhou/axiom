@@ -1,5 +1,5 @@
 from . import le
-from . import imply
+from . import then
 from . import lt_zero
 from . import gt_zero
 from . import ge_zero
@@ -7,7 +7,7 @@ from . import lt
 from . import ge
 from . import gt
 from . import le_zero
-from . import given
+from . import of
 from . import to
 from . import sqrt
 from . import st

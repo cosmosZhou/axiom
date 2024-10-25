@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self, simplify=True):
-    from axiom.sets.el_union.imply.ou import split
+    from axiom.sets.el_union.then.ou import split
     return split(self, simplify=simplify)
 
 
@@ -15,12 +15,12 @@ def prove(Eq):
     A, B = Symbol(etype=dtype.integer, given=True)
     Eq << apply(Element(e, A | B))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(sets.el_union.imply.ou)
-    Eq << Eq[-1].this.rhs.apply(sets.el_union.given.ou)
+    Eq << Eq[-2].this.lhs.apply(sets.el_union.then.ou)
+    Eq << Eq[-1].this.rhs.apply(sets.el_union.of.ou)
 
-    
+
 
 
 if __name__ == '__main__':

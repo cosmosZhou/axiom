@@ -15,9 +15,9 @@ def prove(Eq):
     d = Symbol(integer=True, zero=False, given=True)
     Eq << apply(Ceiling(sign(d) / d))
 
-    Eq << sets.eq_ceiling.given.el.interval.apply(Eq[0])
+    Eq << sets.eq_ceiling.of.el.interval.apply(Eq[0])
 
-    Eq << sets.el_interval.given.et.apply(Eq[-1])
+    Eq << sets.el_interval.of.et.apply(Eq[-1])
 
     Eq << Eq[-2].this.find(Sign).apply(algebra.sign.to.piece.abs)
 
@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq << ~Eq[-1].reversed
 
-    Eq << algebra.lt.imply.le.strengthen.apply(Eq[-1])
+    Eq << algebra.lt.then.le.strengthen.apply(Eq[-1])
 
 
 

@@ -15,17 +15,17 @@ def prove(Eq):
     x, y = Symbol(complex=True, given=True)
     Eq << apply(Arg(x * y))
 
-    Eq << algebra.cond.given.et.infer.split.apply(Eq[0], cond=Eq[0].find(Or))
+    Eq << algebra.cond.of.et.infer.split.apply(Eq[0], cond=Eq[0].find(Or))
 
-    Eq << algebra.infer.given.infer.subs.bool.apply(Eq[-2])
+    Eq << algebra.infer.of.infer.subs.bool.apply(Eq[-2])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.ou.imply.is_zero)
+    Eq << Eq[-1].this.lhs.apply(algebra.ou.then.is_zero)
 
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-1])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-1])
 
-    Eq << algebra.infer.given.infer.subs.bool.apply(Eq[2], invert=True)
+    Eq << algebra.infer.of.infer.subs.bool.apply(Eq[2], invert=True)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.ne_zero.ne_zero.imply.eq.arg.to.add)
+    Eq << Eq[-1].this.lhs.apply(algebra.ne_zero.ne_zero.then.eq.arg.to.add)
 
 
 if __name__ == '__main__':

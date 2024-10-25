@@ -19,7 +19,7 @@ def prove(Eq):
     Eq << apply(ReducedArgMax(BlockMatrix(A, B)))
 
     i = Symbol(domain=Range(a + b))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     Eq << Eq[-1].this.lhs.apply(algebra.reducedArgMax.to.piece.reducedArgMax)
 

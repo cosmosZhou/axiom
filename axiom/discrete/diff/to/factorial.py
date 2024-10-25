@@ -45,13 +45,13 @@ def prove(Eq):
     _k = Symbol('k', domain=Range(n))
     Eq.hypothesis_k = Eq[0].subs(n, _k)
 
-    Eq << discrete.eq.imply.eq.diff.apply(Eq.hypothesis_k, (x, n - _k))
+    Eq << discrete.eq.then.eq.diff.apply(Eq.hypothesis_k, (x, n - _k))
 
     Eq << Eq[-1].this.lhs.apply(discrete.diff.merge)
 
     Eq << Eq[-1] * binomial(n + 1, _k)
 
-    Eq << Eq[-1].apply(algebra.eq.imply.eq.sum, (_k,))
+    Eq << Eq[-1].apply(algebra.eq.then.eq.sum, (_k,))
 
     Eq << Eq[-1].this.lhs.limits_subs(_k, k)
 
@@ -61,11 +61,11 @@ def prove(Eq):
 
     Eq << Infer(Eq[0] & Eq.hypothesis_k, Eq.induct, plausible=True)
 
-    Eq << Eq[-1].this.lhs.args[0].apply(algebra.cond.given.all, _k)
+    Eq << Eq[-1].this.lhs.args[0].apply(algebra.cond.of.all, _k)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.cond.all.given.all.push)
+    Eq << Eq[-1].this.lhs.apply(algebra.cond.all.of.all.push)
 
-    Eq << algebra.cond.infer.imply.cond.induct.second.split.all.apply(Eq.initial, Eq[-1], n=n)
+    Eq << algebra.cond.infer.then.cond.induct.second.split.all.apply(Eq.initial, Eq[-1], n=n)
 
     Eq << Eq[0].subs(n, _k)
 

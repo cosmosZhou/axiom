@@ -45,7 +45,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(MatMul).apply(discrete.matmul.to.block)
 
-    Eq << discrete.eq.imply.eq.det.apply(Eq[-1])
+    Eq << discrete.eq.then.eq.det.apply(Eq[-1])
 
     Eq << Eq[-1].this.lhs.apply(discrete.det.matmul.to.mul.right)
 

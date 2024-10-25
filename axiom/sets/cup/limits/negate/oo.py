@@ -15,15 +15,15 @@ def prove(Eq):
     f = Function(etype=dtype.real)
     Eq << apply(Cup[i](f(i)))
 
-    Eq << sets.eq.given.et.infer.apply(Eq[0])
+    Eq << sets.eq.of.et.infer.apply(Eq[0])
 
-    Eq <<= Eq[-2].this.lhs.apply(sets.el_cup.imply.any_el), Eq[-1].this.rhs.apply(sets.el_cup.given.any_el)
+    Eq <<= Eq[-2].this.lhs.apply(sets.el_cup.then.any_el), Eq[-1].this.rhs.apply(sets.el_cup.of.any_el)
 
-    Eq <<= Eq[-2].this.rhs.apply(sets.el_cup.given.any_el), Eq[-1].this.lhs.apply(sets.el_cup.imply.any_el)
+    Eq <<= Eq[-2].this.rhs.apply(sets.el_cup.of.any_el), Eq[-1].this.lhs.apply(sets.el_cup.then.any_el)
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.any.imply.any.limits.negate.oo)
+    Eq <<= Eq[-2].this.lhs.apply(algebra.any.then.any.limits.negate.oo)
 
-    Eq <<= Eq[-1].this.lhs.apply(algebra.any.imply.any.limits.negate.oo)
+    Eq <<= Eq[-1].this.lhs.apply(algebra.any.then.any.limits.negate.oo)
 
 
 if __name__ == '__main__':

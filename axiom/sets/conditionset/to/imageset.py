@@ -37,31 +37,31 @@ def prove(Eq):
 
     Eq << Eq.suffice.this.rhs.rhs.definition
 
-    Eq << Eq[-1].this.rhs.apply(sets.el.given.any.eq.split.imageset)
+    Eq << Eq[-1].this.rhs.apply(sets.el.of.any.eq.split.imageset)
 
     Eq << Eq[-1].this.lhs.rhs.definition
 
-    Eq << Eq[-1].this.rhs.apply(algebra.any.given.any.et.limits.unleash)
+    Eq << Eq[-1].this.rhs.apply(algebra.any.of.any.et.limits.unleash)
 
-    Eq << Eq[-1].this.lhs.args[1].apply(sets.el.imply.any.eq.split.imageset)
+    Eq << Eq[-1].this.lhs.args[1].apply(sets.el.then.any.eq.split.imageset)
 
-    Eq << Eq[-1].this.rhs.expr.apply(algebra.eq.cond.given.et.subs, reverse=True)
+    Eq << Eq[-1].this.rhs.expr.apply(algebra.eq.cond.of.et.subs, reverse=True)
 
     Eq.necessary = Assuming(Element(y, B), Element(y, B_quote), plausible=True)
 
     Eq << Eq.necessary.this.rhs.rhs.definition
 
-    Eq << Eq[-1].this.rhs.apply(sets.el.imply.any.eq.split.imageset)
+    Eq << Eq[-1].this.rhs.apply(sets.el.then.any.eq.split.imageset)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.any.imply.any.et.limits.single_variable)
+    Eq << Eq[-1].this.rhs.apply(algebra.any.then.any.et.limits.single_variable)
 
-    Eq << Eq[-1].this.rhs.expr.apply(algebra.eq.cond.imply.cond.subs, reverse=True, ret=0)
+    Eq << Eq[-1].this.rhs.expr.apply(algebra.eq.cond.then.cond.subs, reverse=True, ret=0)
 
     Eq << Eq[-1].this.lhs.rhs.definition
 
-    Eq << Eq[-1].this.lhs.args[1].apply(sets.el.given.any.eq.split.imageset)
+    Eq << Eq[-1].this.lhs.args[1].apply(sets.el.of.any.eq.split.imageset)
 
-    Eq << sets.infer.assuming.imply.eq.apply(Eq.suffice, Eq.necessary)
+    Eq << sets.infer.assuming.then.eq.apply(Eq.suffice, Eq.necessary)
 
     Eq << Eq[-1].this.lhs.definition
 

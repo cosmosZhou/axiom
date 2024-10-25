@@ -1,4 +1,3 @@
-from . import imply
 from . import gt_zero
 from . import lt_zero
 from . import lt
@@ -7,10 +6,11 @@ from . import ge_zero
 from . import ge
 from . import gt
 from . import le_zero
-from . import given
+from . import of
 from . import eq
 from . import add_gt_zero
 from . import add_ge_zero
 from . import to
 from . import st
 from . import sqrt
+from . import then

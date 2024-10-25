@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.apply(algebra.eq.transport, rhs=1)
 
-    Eq << algebra.eq.imply.eq.sum.apply(Eq[-1], (i, a, b)).reversed
+    Eq << algebra.eq.then.eq.sum.apply(Eq[-1], (i, a, b)).reversed
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.to.sub.telescope)
 

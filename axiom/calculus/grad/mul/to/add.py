@@ -23,20 +23,20 @@ def prove(Eq):
 
     Eq << Eq.g_is_continuous.this.lhs.doit()
 
-    Eq <<= Eq[-2].reversed * f(x), calculus.eq_limit.eq_limit.imply.eq_limit.mul.apply(Eq[-1], Eq.g_is_continuous)
+    Eq <<= Eq[-2].reversed * f(x), calculus.eq_limit.eq_limit.then.eq_limit.mul.apply(Eq[-1], Eq.g_is_continuous)
 
     Eq << Eq[-2].this.lhs.apply(calculus.mul.to.limit)
 
     Eq <<= Eq[-2].this.lhs.find(Mul).apply(algebra.mul.to.add), Eq[-1].this.lhs.find(Mul).apply(algebra.mul.to.add)
 
-    Eq << calculus.eq_limit.eq_limit.imply.eq_limit.add.apply(Eq[-1], Eq[-2])
+    Eq << calculus.eq_limit.eq_limit.then.eq_limit.add.apply(Eq[-1], Eq[-2])
 
     Eq << Eq[-1].this.lhs.expr.apply(algebra.add.to.mul)
 
     Eq << Eq[-1].this.lhs.apply(calculus.limit.to.grad)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

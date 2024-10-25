@@ -16,10 +16,10 @@ def prove(Eq):
     f = Function(integer=True)
     Eq << apply(Any[n:1:m + 1](f(n) > 0), d)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[-1])
+    Eq << algebra.iff.of.et.infer.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.any.imply.any.limits.subs.offset, d)
-    Eq << Eq[-1].this.lhs.apply(algebra.any.imply.any.limits.subs.offset, -d)
+    Eq << Eq[-2].this.lhs.apply(algebra.any.then.any.limits.subs.offset, d)
+    Eq << Eq[-1].this.lhs.apply(algebra.any.then.any.limits.subs.offset, -d)
 
 
 if __name__ == '__main__':

@@ -31,7 +31,7 @@ def prove(Eq):
     Eq << apply(Derivative[x](f(x[j])))
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     Eq << Eq[-1].this.lhs.apply(calculus.grad.to.mul.grad)
 

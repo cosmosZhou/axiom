@@ -16,11 +16,11 @@ def prove(Eq):
 
     Eq << apply(Equal(n % 2, 1))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.is_odd.imply.eq.pow)
+    Eq << Eq[-2].this.lhs.apply(algebra.is_odd.then.eq.pow)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.is_odd.given.eq)
+    Eq << Eq[-1].this.rhs.apply(algebra.is_odd.of.eq)
 
 
 if __name__ == '__main__':

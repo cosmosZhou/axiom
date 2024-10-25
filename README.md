@@ -19,26 +19,25 @@ https://github.com/codemirror/codemirror5
 ## requirements
 python >= 3.10
 
-pip install sympy.keras
 ## scripts to generate visualized html
-git clone --depth=1 https://github.com/cosmosZhou/axiom.git  
+git clone --depth=1 -b master https://github.com/cosmosZhou/axiom.git  
 cd axiom  
 python run.py  
 
 you'll get the following output:   
 in all 4069 axioms  
 plausible:  
-.\axiom\stats\distributed\imply\et\eq.py  
-./target/stats/distributed/imply/et/eq.html  
+.\axiom\stats\distributed\then\et\eq.py  
+./target/stats/distributed/then/et/eq.html  
 
-.\axiom\discrete\eq\eq_matmul\eq_piece\imply\eq\matmul\PLU.py  
-./target/discrete/eq/eq_matmul/eq_piece/imply/eq/matmul/PLU.html  
+.\axiom\discrete\eq\eq_matmul\eq_piece\then\eq\matmul\PLU.py  
+./target/discrete/eq/eq_matmul/eq_piece/then/eq/matmul/PLU.html  
 
-.\axiom\stats\eq_inverse\imply\et\eq.py  
-./target/stats/eq_inverse/imply/et/eq.html  
+.\axiom\stats\eq_inverse\then\et\eq.py  
+./target/stats/eq_inverse/then/et/eq.html  
 
-.\axiom\keras\eq_conditioned\eq_expect\eq_expect\imply\et\eq\expect\Bellman\optimality.py  
-./target/keras/eq_conditioned/eq_expect/eq_expect/imply/et/eq/expect/Bellman/optimality.html  
+.\axiom\keras\eq_conditioned\eq_expect\eq_expect\then\et\eq\expect\Bellman\optimality.py  
+./target/keras/eq_conditioned/eq_expect/eq_expect/then/et/eq/expect/Bellman/optimality.html  
 
 seconds costed = 91.74423789978027  
 minutes costed = 1.5290706316630045  

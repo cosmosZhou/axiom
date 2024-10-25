@@ -41,13 +41,13 @@ def prove(Eq):
 
     Eq << discrete.binom.to.add.Pascal.apply(Binomial(n + 1, k))
 
-    Eq << algebra.cond.given.et.subs.apply(Eq.induct, *Eq[-1].args)
+    Eq << algebra.cond.of.et.subs.apply(Eq.induct, *Eq[-1].args)
 
     Eq << Eq[-1].this.rhs.apply(algebra.sum.mul.to.add)
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.infer.imply.cond.induct.apply(Eq[-1], n=n)
+    Eq << algebra.infer.then.cond.induct.apply(Eq[-1], n=n)
 
 
 

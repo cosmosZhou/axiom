@@ -18,17 +18,17 @@ def prove(Eq):
     a, b, c = Symbol(integer=True)
     Eq << apply(Interval(Min(b, c), a, right_open=True))
 
-    Eq << sets.eq.given.et.infer.apply(Eq[0])
+    Eq << sets.eq.of.et.infer.apply(Eq[0])
 
-    Eq <<= Eq[-2].this.lhs.apply(sets.el_interval.imply.et), Eq[-1].this.rhs.apply(sets.el_interval.given.et)
+    Eq <<= Eq[-2].this.lhs.apply(sets.el_interval.then.et), Eq[-1].this.rhs.apply(sets.el_interval.of.et)
 
-    Eq <<= Eq[-2].this.find(GreaterEqual).apply(algebra.ge_min.imply.ou.ge), Eq[-1].this.find(GreaterEqual).apply(algebra.ge_min.given.ou.ge)
+    Eq <<= Eq[-2].this.find(GreaterEqual).apply(algebra.ge_min.then.ou.ge), Eq[-1].this.find(GreaterEqual).apply(algebra.ge_min.of.ou.ge)
 
-    Eq <<= Eq[-2].this.find(Element).apply(sets.el_union.given.ou, simplify=None), Eq[-1].this.find(Element).apply(sets.el_union.imply.ou, simplify=None)
+    Eq <<= Eq[-2].this.find(Element).apply(sets.el_union.of.ou, simplify=None), Eq[-1].this.find(Element).apply(sets.el_union.then.ou, simplify=None)
 
-    Eq <<= Eq[-2].this.find(Element).apply(sets.el_interval.given.et), Eq[-1].this.find(Element).apply(sets.el_interval.imply.et)
+    Eq <<= Eq[-2].this.find(Element).apply(sets.el_interval.of.et), Eq[-1].this.find(Element).apply(sets.el_interval.then.et)
 
-    Eq <<= Eq[-2].this.find(Element).apply(sets.el_interval.given.et), Eq[-1].this.find(Element).apply(sets.el_interval.imply.et)
+    Eq <<= Eq[-2].this.find(Element).apply(sets.el_interval.of.et), Eq[-1].this.find(Element).apply(sets.el_interval.then.et)
 
 
 

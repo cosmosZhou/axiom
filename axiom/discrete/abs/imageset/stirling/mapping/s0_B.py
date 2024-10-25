@@ -29,9 +29,9 @@ def prove(Eq):
     Eq.s0_definition = imageset(Eq[0].rhs.variable, Eq[0].rhs.expr.arg, s0_quote).this.subs(Eq[-1]).subs(Eq[0].reversed).reversed
 
     e = Symbol(etype=dtype.integer.set)
-    Eq << sets.imply.all.baseset.apply(s0_quote)
+    Eq << sets.then.all.baseset.apply(s0_quote)
 
-    Eq.x_union_s0, *_ = algebra.all_et.imply.et.all.apply(Eq[-1], slice(1, None, 2))
+    Eq.x_union_s0, *_ = algebra.all_et.then.et.all.apply(Eq[-1], slice(1, None, 2))
 
     i = Symbol(integer=True)
     x = Eq[0].rhs.variable.base
@@ -43,46 +43,46 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    Eq << Eq[-1].this.expr.apply(sets.el_cup.imply.any_el)
+    Eq << Eq[-1].this.expr.apply(sets.el_cup.then.any_el)
 
-    Eq << algebra.all.any.imply.any.et.apply(Eq.x_union_s0, Eq[-1].reversed, simplify=None)
+    Eq << algebra.all.any.then.any.et.apply(Eq.x_union_s0, Eq[-1].reversed, simplify=None)
 
-    Eq << Eq[-1].this.expr.apply(sets.eq.eq.imply.eq.union)
+    Eq << Eq[-1].this.expr.apply(sets.eq.eq.then.eq.union)
 
     Eq << Eq[-1].this().expr.lhs.simplify()
 
-    Eq << algebra.all_eq.any.imply.any.subs.apply(Eq.x_union_s0, Eq[-1])
+    Eq << algebra.all_eq.any.then.any.subs.apply(Eq.x_union_s0, Eq[-1])
 
-    Eq << Eq.plausible_notcontains.this.expr.apply(sets.notin.imply.is_empty.intersect)
+    Eq << Eq.plausible_notcontains.this.expr.apply(sets.notin.then.is_empty.intersect)
 
-    Eq.all_s0_equality = Eq[-1].this.expr.apply(sets.intersect_is_empty.imply.eq.complement)
+    Eq.all_s0_equality = Eq[-1].this.expr.apply(sets.intersect_is_empty.then.eq.complement)
 
     x_hat = Symbol(r"\hat{x}", Lamda[i](Piecewise((x[i] - {n} , Equal(i, j)), (x[i], True))))
     Eq.x_hat_definition = x_hat[i].this.definition
 
-    Eq << algebra.cond_piece.imply.ou.apply(Eq.x_hat_definition)
+    Eq << algebra.cond_piece.then.ou.apply(Eq.x_hat_definition)
 
-    Eq.B_assertion = sets.imply.all.any.eq.split.imageset.apply(B)
+    Eq.B_assertion = sets.then.all.any.eq.split.imageset.apply(B)
 
-    Eq << Eq.B_assertion.this.expr.expr.apply(sets.eq.imply.eq.complement, {n.set})
+    Eq << Eq.B_assertion.this.expr.expr.apply(sets.eq.then.eq.complement, {n.set})
 
-    Eq << algebra.cond.all.imply.all.et.apply(Eq.all_s0_equality, Eq[-1], simplify=None)
+    Eq << algebra.cond.all.then.all.et.apply(Eq.all_s0_equality, Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.expr.apply(algebra.all.any.imply.any.et)
+    Eq << Eq[-1].this.expr.apply(algebra.all.any.then.any.et)
 
-    Eq.all_B_contains = Eq[-1].this.expr.expr.apply(algebra.eq.eq.imply.eq.subs, swap=True).limits_subs(Eq[-1].variable, Eq.all_s0_equality.variable)
+    Eq.all_B_contains = Eq[-1].this.expr.expr.apply(algebra.eq.eq.then.eq.subs, swap=True).limits_subs(Eq[-1].variable, Eq.all_s0_equality.variable)
 
-    Eq.all_s0_contains = sets.imply.all_el.split.imageset.apply(B)
+    Eq.all_s0_contains = sets.then.all_el.split.imageset.apply(B)
 
-    Eq << Eq.B_assertion.this.expr.expr.apply(sets.eq.imply.eq.intersect, {n.set})
+    Eq << Eq.B_assertion.this.expr.expr.apply(sets.eq.then.eq.intersect, {n.set})
 
-    Eq << algebra.et.imply.et.apply(Eq[-1])
+    Eq << algebra.et.then.et.apply(Eq[-1])
 
     Eq << Eq[-1].limits_subs(Eq.B_assertion.variable, Eq.B_assertion.expr.variable)
 
-    Eq.all_B_equality = Eq[-1].this.expr.apply(sets.eq.imply.eq.union, Eq[-1].variable)
+    Eq.all_B_equality = Eq[-1].this.expr.apply(sets.eq.then.eq.union, Eq[-1].variable)
 
-    Eq << sets.all_el.all_el.all_eq.all_eq.imply.eq.apply(Eq.all_s0_contains, Eq.all_B_contains, Eq.all_s0_equality, Eq.all_B_equality)
+    Eq << sets.all_el.all_el.all_eq.all_eq.then.eq.apply(Eq.all_s0_contains, Eq.all_B_contains, Eq.all_s0_equality, Eq.all_B_equality)
 
 
 

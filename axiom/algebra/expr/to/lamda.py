@@ -2,7 +2,7 @@ from util import *
 
 def rewrite(self, *vars):
     assert self.shape
-    
+
     limits = []
     if vars:
         assert len(vars) <= len(self.shape)
@@ -21,13 +21,13 @@ def rewrite(self, *vars):
             limits.append((j, 0, m))
             vars.append(j)
             excludes.add(j)
-    
+
     limits.reverse()
     return Lamda(self[tuple(vars)], *limits)
 
 
 @apply
-def apply(self, *vars):        
+def apply(self, *vars):
     return Equal(self, rewrite(self, *vars), evaluate=False)
 
 
@@ -43,16 +43,16 @@ def prove(Eq):
     k = Symbol(domain=Range(q))
     h = Symbol(domain=Range(m))
     t = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], k)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], k)
 
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], h)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], h)
 
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], t)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], t)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

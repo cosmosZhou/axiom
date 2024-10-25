@@ -25,19 +25,19 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(sets.cap.doit.outer.setlimit)
 
-    Eq << sets.eq.eq.imply.eq.intersect.apply(Eq[-2], Eq[-1])
+    Eq << sets.eq.eq.then.eq.intersect.apply(Eq[-2], Eq[-1])
 
     Eq << Equal(Cap[j:f(i), i:{c}](x[i, j]), Cap[j:f(c)](x[c, j]), plausible=True)
 
     Eq << Eq[-1].this.lhs.apply(sets.cap.doit.outer.setlimit)
 
-    Eq << sets.eq.eq.imply.eq.intersect.apply(Eq[-2], Eq[-1])
+    Eq << sets.eq.eq.then.eq.intersect.apply(Eq[-2], Eq[-1])
 
     Eq << Equal(Cap[j:f(i), i:{d}](x[i, j]), Cap[j:f(d)](x[d, j]), plausible=True)
 
     Eq << Eq[-1].this.lhs.apply(sets.cap.doit.outer.setlimit)
 
-    Eq << sets.eq.eq.imply.eq.intersect.apply(Eq[-2], Eq[-1])
+    Eq << sets.eq.eq.then.eq.intersect.apply(Eq[-2], Eq[-1])
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 from . import eq
 from . import gt
-from . import imply, to, given
+from . import then, to, of
 
 from . import notin
 from . import el

@@ -27,11 +27,11 @@ def prove(Eq):
     f, g = Symbol(shape=(oo,), real=True)
     Eq << apply(Unequal(Lamda[k:n](f[k]), Lamda[k:n](g[k])))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.ne.imply.any.ne)
+    Eq << Eq[-2].this.lhs.apply(algebra.ne.then.any.ne)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.ne.given.any.ne)
+    Eq << Eq[-1].this.rhs.apply(algebra.ne.of.any.ne)
 
 
 if __name__ == '__main__':

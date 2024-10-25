@@ -32,7 +32,7 @@ def prove(Eq):
     s = Symbol(Sum[j:f(i)](h(x[i], j)))
     Eq << s.this.definition
 
-    Eq << algebra.eq.imply.eq.sum.apply(Eq[-1], (i, 0, k))
+    Eq << algebra.eq.then.eq.sum.apply(Eq[-1], (i, 0, k))
 
     Eq << Eq[-1].this.lhs.expr.definition
 

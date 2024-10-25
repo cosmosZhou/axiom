@@ -16,11 +16,11 @@ def prove(Eq):
 
     Eq << apply(Assuming(x > y, f(x) > g(y)))
 
-    Eq << algebra.iff.given.et.apply(Eq[-1])
+    Eq << algebra.iff.of.et.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.assuming.imply.ou)
+    Eq << Eq[-2].this.lhs.apply(algebra.assuming.then.ou)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.assuming.given.ou)
+    Eq << Eq[-1].this.lhs.apply(algebra.assuming.of.ou)
 
 if __name__ == '__main__':
     run()

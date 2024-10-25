@@ -1,13 +1,11 @@
 from util import *
 
-from axiom.discrete.H.to.add.definition import H
-from axiom.discrete.K.to.add.definition import K
-
-from axiom.discrete.imply.gt_zero.alpha import alpha
-
 
 @apply
 def apply(x):
+    from axiom.discrete.H.to.add.definition import H
+    from axiom.discrete.K.to.add.definition import K
+
     n = x.shape[0]
     n -= 1
     assert x.is_positive
@@ -17,6 +15,7 @@ def apply(x):
 
 @prove
 def prove(Eq):
+    from axiom.discrete.then.gt_zero.alpha import alpha
     from axiom import discrete, algebra
     x = Symbol(real=True, positive=True, shape=(oo,))
     n = Symbol(integer=True, positive=True)
@@ -29,7 +28,7 @@ def prove(Eq):
 
     Eq << discrete.alpha.to.mul.HK.st.gt_zero.apply(alpha(x[1:n + 1]))
 
-    Eq << algebra.eq.eq.imply.eq.subs.apply(Eq[-1], Eq[-2])
+    Eq << algebra.eq.eq.then.eq.subs.apply(Eq[-1], Eq[-2])
 
     Eq << Eq[-1] - x[0]
 

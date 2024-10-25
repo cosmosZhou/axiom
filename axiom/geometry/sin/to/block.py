@@ -24,10 +24,10 @@ def prove(Eq):
     Eq << apply(Sin(BlockMatrix([[A, B], [C, D]])))
 
     i = Symbol(domain=Range(n * 2))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
     j = Symbol(domain=Range(n * 2))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
 
     Eq << Eq[-1].this.lhs.apply(geometry.sin.to.piece)
 
@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sin[Piecewise]).apply(geometry.sin.to.piece, simplify=0)
 
-    
+
 
 
 if __name__ == '__main__':

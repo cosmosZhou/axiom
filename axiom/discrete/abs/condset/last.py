@@ -33,33 +33,33 @@ def prove(Eq):
 
     Eq << Eq.x_quote_definition[i]
 
-    Eq << sets.eq.imply.eq.cup.finiteset.apply(Eq[-1], (i, 0, n))
+    Eq << sets.eq.then.eq.cup.finiteset.apply(Eq[-1], (i, 0, n))
 
     Eq.x_quote_n_definition = Eq[-2].subs(i, n)
 
-    Eq << sets.imply.all.conditionset.apply(P)
+    Eq << sets.then.all.conditionset.apply(P)
 
-    Eq << algebra.all_eq.cond.imply.all.subs.apply(Eq[-1], Eq[-2])
+    Eq << algebra.all_eq.cond.then.all.subs.apply(Eq[-1], Eq[-2])
 
     Eq.P2P_quote = All[x[:n]:P](Element(x_quote, P_quote), plausible=True)
 
     Eq << Eq.P2P_quote.this.expr.rhs.definition
 
-    Eq << algebra.et.given.et.apply(Eq[-1])
+    Eq << algebra.et.of.et.apply(Eq[-1])
 
-    Eq << sets.imply.all.conditionset.apply(P_quote)
+    Eq << sets.then.all.conditionset.apply(P_quote)
 
-    Eq << algebra.all_et.imply.et.all.apply(Eq[-1])
+    Eq << algebra.all_et.then.et.all.apply(Eq[-1])
 
-    Eq << algebra.cond.all.imply.all.et.apply(Eq.x_quote_n_definition, Eq[-2], simplify=False)
+    Eq << algebra.cond.all.then.all.et.apply(Eq.x_quote_n_definition, Eq[-2], simplify=False)
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.transit, reverse=True)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.then.eq.trans, reverse=True)
 
     Eq.mapping_quote = All[x[:n + 1]:P_quote](Equal(x_quote, x[:n + 1]), plausible=True)
 
-    Eq << Eq.mapping_quote.this.expr.apply(algebra.eq.given.et.eq.block)
+    Eq << Eq.mapping_quote.this.expr.apply(algebra.eq.of.et.eq.block)
 
-    Eq << algebra.all_et.given.et.all.apply(Eq[-1])
+    Eq << algebra.all_et.of.et.all.apply(Eq[-1])
 
     Eq << Eq[-1].subs(Eq.mapping)
 
@@ -67,7 +67,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.rhs.definition
 
-    Eq << sets.all_el.all_el.all_eq.all_eq.imply.eq.apply(Eq[-1], Eq.P2P_quote, Eq.mapping_quote, Eq.mapping)
+    Eq << sets.all_el.all_el.all_eq.all_eq.then.eq.apply(Eq[-1], Eq.P2P_quote, Eq.mapping_quote, Eq.mapping)
 
     Eq << Eq[-1].reversed
 

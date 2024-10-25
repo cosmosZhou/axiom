@@ -23,11 +23,11 @@ def prove(Eq):
 
     Eq << Eq.induct.this.lhs.apply(sets.cup.to.union.split, cond={n})
 
-    Eq << sets.eq.imply.eq.union.apply(Eq[0], Interval(n, n + 1, left_open=True))
+    Eq << sets.eq.then.eq.union.apply(Eq[0], Interval(n, n + 1, left_open=True))
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=0)
+    Eq << algebra.infer.then.eq.induct.apply(Eq[-1], n=n, start=0)
 
 
 if __name__ == '__main__':

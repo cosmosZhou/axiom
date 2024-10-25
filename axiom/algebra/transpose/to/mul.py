@@ -5,7 +5,7 @@ from util import *
 def apply(self, index=None):
     axis = self.axis
     [*args] = self.of(Transpose[axis][Mul])
-    
+
     if axis == self.default_axis:
         matrices = []
         vector = []
@@ -17,16 +17,16 @@ def apply(self, index=None):
                 vector.append(a)
             else:
                 matrices.append(a)
- 
+
         if not matrices:
             return
-        
+
         if index is not None:
             assert args[index] in matrices
         else:
             index = args.index(matrices[0])
         matrix = args[index]
-        
+
         if len(matrices) == 1:
             args[index] = OneMatrix(*matrix.shape)
         else:
@@ -34,7 +34,7 @@ def apply(self, index=None):
 
         return Equal(self, matrix.T * Mul(*args).T, evaluate=False)
 
-        
+
 
 
 @prove
@@ -47,9 +47,9 @@ def prove(Eq):
     Eq << apply((a * Y * X).T)
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
-    
+
 
 
 if __name__ == '__main__':

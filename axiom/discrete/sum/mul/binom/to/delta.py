@@ -67,7 +67,7 @@ def prove(Eq):
 
     Eq << Infer(Eq.hypothesis, Eq.induct, plausible=True)
 
-    Eq << algebra.eq.infer.imply.eq.induct.apply(Eq.initial, Eq[-1], i, 0)
+    Eq << algebra.eq.infer.then.eq.induct.apply(Eq.initial, Eq[-1], i, 0)
 
     Eq << Eq.hypothesis.subs(m, n - i)
 

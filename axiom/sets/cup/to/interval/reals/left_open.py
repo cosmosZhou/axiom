@@ -17,18 +17,18 @@ def prove(Eq):
     k = Symbol(integer=True)
     Eq << apply(Cup[k](Interval(k, k + 1, left_open=True)))
 
-    Eq << sets.eq.given.et.infer.apply(Eq[0])
+    Eq << sets.eq.of.et.infer.apply(Eq[0])
 
     x = Eq[-1].lhs
-    Eq <<= sets.el_cup.given.any_el.apply(Eq[-1])
+    Eq <<= sets.el_cup.of.any_el.apply(Eq[-1])
 
-    Eq << algebra.any.given.cond.subs.apply(Eq[-1], Eq[-1].variable, Ceiling(x) - 1)
+    Eq << algebra.any.of.cond.subs.apply(Eq[-1], Eq[-1].variable, Ceiling(x) - 1)
 
-    Eq << sets.el_interval.given.et.apply(Eq[-1])
+    Eq << sets.el_interval.of.et.apply(Eq[-1])
 
-    Eq << algebra.imply.gt.ceiling.apply(x)
+    Eq << algebra.then.gt.ceiling.apply(x)
 
-    Eq << algebra.imply.le_ceiling.apply(x)
+    Eq << algebra.then.le_ceiling.apply(x)
 
 
 if __name__ == '__main__':

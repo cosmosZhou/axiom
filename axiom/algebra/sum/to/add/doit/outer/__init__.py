@@ -11,7 +11,7 @@ def doit(Sum, self):
     sgm = Sum.identity(expr)
 
     for t in range(diff):
-        
+
         _limits = []
         for x, *ab in limits:
             if x.is_Sliced:
@@ -21,7 +21,7 @@ def doit(Sum, self):
                     if e.args[0] == 'empty slices':
                         continue
                     raise e
-                
+
             elif x.is_Indexed or x.is_SlicedIndexed:
                 x = x._subs(i, a + t)
 
@@ -49,7 +49,7 @@ def prove(Eq):
     s = Symbol(Lamda[i](Sum[j:f(i)](x[i, j])))
     Eq << s[i].this.definition
 
-    Eq << algebra.eq.imply.eq.sum.apply(Eq[-1], (i, 0, n))
+    Eq << algebra.eq.then.eq.sum.apply(Eq[-1], (i, 0, n))
 
     Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.doit).reversed
 
@@ -63,7 +63,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Indexed).definition
 
-    
+
 
 
 if __name__ == '__main__':

@@ -17,9 +17,9 @@ def prove(Eq):
     Eq << apply(Sign(Lamda[i:n](x[i])))
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
-    
+
 
 
 if __name__ == '__main__':

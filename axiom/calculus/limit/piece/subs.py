@@ -49,30 +49,30 @@ def prove(Eq):
     A = Symbol(Eq[0].rhs, real=True)
     Eq << A.this.definition
 
-    Eq << calculus.eq_limit.imply.any.all.limit_definition.apply(Eq[-1])
+    Eq << calculus.eq_limit.then.any.all.limit_definition.apply(Eq[-1])
 
     Eq << Eq[0].subs(Eq[1].reversed)
 
     Eq << Eq[-1].this.apply(calculus.eq.to.any_all.limit_definition)
 
-    Eq << Eq[-1].this.find(Less).apply(algebra.cond_piece.given.ou)
+    Eq << Eq[-1].this.find(Less).apply(algebra.cond_piece.of.ou)
 
-    Eq << Eq[-1].this.expr.apply(algebra.all_ou.given.all)
+    Eq << Eq[-1].this.expr.apply(algebra.all_ou.of.all)
 
     N = Eq[-1].variable
-    Eq << algebra.any.given.any.subs.apply(Eq[-1], N, Max(N, a))
+    Eq << algebra.any.of.any.subs.apply(Eq[-1], N, Max(N, a))
 
-    Eq << Eq[2].this.expr.apply(algebra.all.imply.all.limits.restrict, Range(Max(N + 1, a + 1), oo))
+    Eq << Eq[2].this.expr.apply(algebra.all.then.all.limits.restrict, Range(Max(N + 1, a + 1), oo))
 
     Eq << Eq[-1].this.find(Max).apply(algebra.max.to.add)
 
-    Eq << Eq[-1].this.expr.apply(algebra.all.imply.all.et)
+    Eq << Eq[-1].this.expr.apply(algebra.all.then.all.et)
 
-    Eq << Eq[-1].this.find(Element).apply(sets.el_range.imply.et)
+    Eq << Eq[-1].this.find(Element).apply(sets.el_range.then.et)
 
-    Eq << Eq[-1].this.find(GreaterEqual).apply(algebra.ge.imply.gt.relax)
+    Eq << Eq[-1].this.find(GreaterEqual).apply(algebra.ge.then.gt.relax)
 
-    Eq << Eq[-1].this.find(Greater).apply(algebra.gt_max.imply.gt, 1)
+    Eq << Eq[-1].this.find(Greater).apply(algebra.gt_max.then.gt, 1)
 
 
 

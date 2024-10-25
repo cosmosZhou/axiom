@@ -16,10 +16,10 @@ def prove(Eq):
 
     Eq << apply(conditionset(x, f(x) > 0, A) - B)
 
-    Eq << sets.eq.given.et.infer.apply(Eq[0])
+    Eq << sets.eq.of.et.infer.apply(Eq[0])
 
-    Eq <<= Eq[-2].this.lhs.apply(sets.el_complement.imply.et, simplify=None), \
-    Eq[-1].this.rhs.apply(sets.el_complement.given.et, simplify=None)
+    Eq <<= Eq[-2].this.lhs.apply(sets.el_complement.then.et, simplify=None), \
+    Eq[-1].this.rhs.apply(sets.el_complement.of.et, simplify=None)
 
     Eq <<= Eq[-2].this.lhs.find(Element).simplify(), Eq[-1].this.rhs.find(Element).simplify()
 

@@ -16,7 +16,7 @@ from . import assuming
 from . import iff
 from . import cond
 from . import et
-from . import imply
+from . import then
 from . import all_lt
 from . import all_le
 from . import all_any

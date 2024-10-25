@@ -17,11 +17,11 @@ def prove(Eq):
 
     Eq << apply(Unequal(n % 2, 0))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.ne_zero.imply.is_odd)
+    Eq << Eq[-2].this.lhs.apply(algebra.ne_zero.then.is_odd)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.ne_zero.given.is_odd)
+    Eq << Eq[-1].this.rhs.apply(algebra.ne_zero.of.is_odd)
 
 if __name__ == '__main__':
     run()

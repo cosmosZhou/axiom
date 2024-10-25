@@ -33,15 +33,15 @@ def prove(Eq):
 
     Eq << apply(Infer(Equal(f(x), x + 1) & Element(x, A), Equal(g(f(x)), y)))
 
-    Eq.suffice, Eq.necessary = algebra.iff.given.et.apply(Eq[-1])
+    Eq.suffice, Eq.necessary = algebra.iff.of.et.apply(Eq[-1])
 
-    Eq << Eq.suffice.this.lhs.apply(algebra.infer_et.imply.infer.et, index=0)
+    Eq << Eq.suffice.this.lhs.apply(algebra.infer_et.then.infer.et, index=0)
 
-    Eq << Eq[-1].this.lhs.rhs.apply(algebra.eq.cond.imply.cond.subs)
+    Eq << Eq[-1].this.lhs.rhs.apply(algebra.eq.cond.then.cond.subs)
 
-    Eq << Eq.necessary.this.rhs.apply(algebra.infer_et.imply.infer.et, index=0)
+    Eq << Eq.necessary.this.rhs.apply(algebra.infer_et.then.infer.et, index=0)
 
-    Eq << Eq[-1].this.rhs.rhs.apply(algebra.eq.cond.imply.cond.subs, reverse=True)
+    Eq << Eq[-1].this.rhs.rhs.apply(algebra.eq.cond.then.cond.subs, reverse=True)
 
 
 if __name__ == '__main__':

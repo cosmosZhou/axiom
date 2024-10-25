@@ -20,7 +20,7 @@ def prove(Eq):
     Eq << apply(ZeroMatrix(4, 5))
 
     i = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
 
 

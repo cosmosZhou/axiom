@@ -25,9 +25,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.piece.swap)
 
-    Eq << (n < 0).this.apply(algebra.lt.imply.sum_is_zero, Eq[-1].find(Sum))
+    Eq << (n < 0).this.apply(algebra.lt.then.sum_is_zero, Eq[-1].find(Sum))
 
-    Eq << algebra.infer.imply.eq.piece.apply(Eq[-1], Eq[-2].lhs)
+    Eq << algebra.infer.then.eq.piece.apply(Eq[-1], Eq[-2].lhs)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.swap)
     Eq << Eq[-1].this.find(GreaterEqual).reversed

@@ -10,22 +10,22 @@ def apply(given, index=-1):
         first = args[:index]
         second = args[index:]
         eqs = x < Min(*first), x < Min(*second)
-        
+
     return And(*eqs)
 
 
 @prove
 def prove(Eq):
     from axiom import algebra
-    
+
     x, y, z = Symbol(real=True, given=True)
     Eq << apply(x < Min(y, z))
-    
-    Eq << algebra.iff.given.et.apply(Eq[0])
-    
-    Eq << Eq[-2].this.lhs.apply(algebra.lt_min.imply.et.lt)
-    
-    Eq << Eq[-1].this.rhs.apply(algebra.lt.lt.imply.lt.min)
+
+    Eq << algebra.iff.of.et.apply(Eq[0])
+
+    Eq << Eq[-2].this.lhs.apply(algebra.lt_min.then.et.lt)
+
+    Eq << Eq[-1].this.rhs.apply(algebra.lt.lt.then.lt.min)
 
 
 if __name__ == '__main__':

@@ -5,18 +5,18 @@ from util import *
 def apply(self, var=None):
     assert self.is_BlockMatrix
     axis = self.axis
-    
+
     indices = []
     limits = []
     for i in range(axis + 1):
         j = self.generate_var({*indices}, integer=True, var=var)
-        
+
         indices.append(j)
         limits.append((j, 0, self.shape[i]))
-        
+
     limits.reverse()
     rhs = Lamda(self[indices], *limits)
-    
+
     return Equal(self, rhs)
 
 
@@ -32,13 +32,13 @@ def prove(Eq):
     Eq << apply(BlockMatrix[1](A, B, C, D))
 
     i = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     j = Symbol(domain=Range(n0 + n1 + n2 + n3))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

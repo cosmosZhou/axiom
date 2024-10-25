@@ -6,12 +6,12 @@ def apply(self):
     expr, *limits, (i, a, b) = self.of(Lamda)
     expr = Lamda[i:a:b](expr).simplify()
     expr = Lamda(expr, *limits).simplify()
-    
+
     if len(limits) > 1:
         axis = [(-axis - 1,) for axis in range(len(limits))]
     else:
         axis = ()
-        
+
     return Equal(self, Transpose(expr, *axis))
 
 
@@ -25,9 +25,9 @@ def prove(Eq):
     Eq << apply(Lamda[j:n, i:n](x[j, i + d, t]))
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
-    
+
 
 
 if __name__ == '__main__':

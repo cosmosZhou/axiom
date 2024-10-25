@@ -1,4 +1,4 @@
-from . import imply
+from . import then
 from . import infer
 from . import ou
-from . import given
+from . import of

@@ -1,0 +1,191 @@
+from util import *
+
+
+@apply
+def apply(is_positive, x=None, w=None, i=None, n=None):
+    fx, (x_, S[2]) = is_positive.of(Derivative > 0)
+
+    domain = x_.domain
+    assert domain.is_open
+    if x is None:
+        x = Symbol(shape=(oo,), domain=domain)
+
+    if w is None:
+        w = Symbol(shape=(oo,), real=True)
+
+    if i is None:
+        i = Symbol(integer=True)
+
+    if n is None:
+        n = Symbol(integer=True, positive=True)
+
+    assert x.domain_assumed == domain
+    return Infer(Equal(Sum[i:n](w[i]), 1) & All[i:n](w[i] >= 0), GreaterEqual(Sum[i:n](w[i] * fx._subs(x_, x[i])), fx._subs(x_, Sum[i:n](w[i] * x[i]))))
+
+
+@prove
+def prove(Eq):
+    from axiom import algebra, sets, calculus
+
+    n = Symbol(integer=True, positive=True, given=False)
+    a, b = Symbol(real=True)
+    domain = Interval(a, b, left_open=True, right_open=True)
+    x = Symbol(domain=domain)
+    w = Symbol(shape=(oo,), real=True)
+    f = Function(real=True)
+    Eq << apply(Derivative(f(x), (x, 2)) > 0, w=w, n=n)
+
+    Eq.initial = Eq[1].subs(n, 1)
+
+    Eq << Eq.initial.this.lhs.apply(algebra.eq.cond.then.cond.subs, ret=0)
+
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-1])
+
+    Eq.induct = Eq[1].subs(n, n + 1)
+
+    Eq << Eq.induct.this.rhs.find(Sum).apply(algebra.sum.to.add.pop)
+
+    Eq << Eq[-1].this.find(f[~Sum]).apply(algebra.sum.to.add.pop)
+
+    Eq.lt, Eq.ge = algebra.cond.of.et.infer.split.apply(Eq[-1], cond=w[n] < 1)
+
+    Eq << Eq.ge.this.apply(algebra.infer.flatten)
+
+    Eq << Eq[-1].this.lhs.apply(algebra.eq_sum.ge.all_ge_zero.then.eq.all_is_zero.squeeze)
+
+    Eq << algebra.infer_et.of.infer.et.subs.apply(Eq[-1])
+
+    Eq << Eq[-1].this.lhs.apply(algebra.et.then.cond, index=1)
+
+    i = Eq[-1].lhs.variable
+    fxi = Eq[-1].rhs.find(Sum, f)
+    Eq << Eq[-1].lhs.this.apply(algebra.all_is_zero.then.sum_is_zero.mul, Lamda[i:n](fxi))
+
+    Eq <<= Eq[-1] & Eq[-2]
+
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.of.et.subs)
+
+    Eq << algebra.infer.of.et.infer.apply(Eq[-1])
+
+    x = fxi.arg.base
+    Eq << Eq[-1].lhs.this.apply(algebra.all_is_zero.then.sum_is_zero.mul, x)
+
+    Eq <<= Eq[-1] & Eq[-2]
+
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.of.et.subs)
+
+    Eq << Eq.lt.this.apply(algebra.infer.flatten)
+
+    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.split, cond={n})
+
+    Eq << Eq[-1].this.find(Equal) - w[n]
+
+    Eq << Eq[-1].this.find(Less) - w[n]
+
+    Eq << Eq[-1].this.apply(algebra.infer.fold, index=2)
+
+    Eq << Eq[-1].this.find(And).apply(algebra.gt_zero.eq.then.eq.div, simplify=None, ret=1)
+
+    Eq << Eq[-1].this.find(Mul[Sum]).apply(algebra.mul.to.sum)
+
+    Eq << Eq[-1].this.lhs.apply(algebra.all.then.et.all.split, cond={n})
+
+    Eq << Eq[-1].this.apply(algebra.infer.fold)
+
+    Eq << Eq[-1].this.rhs.apply(algebra.infer.flatten)
+
+    Eq << Eq[-1].this.rhs.apply(algebra.infer.fold, index=slice(1, None))
+
+    Eq << Eq[-1].this.find(And).apply(algebra.cond.all.then.all.et, simplify=None)
+
+    Eq << Eq[-1].this.find(And).apply(algebra.gt_zero.ge.then.ge.div, ret=0)
+
+    Eq << Eq[-1].this.rhs.apply(algebra.infer.flatten)
+
+    Eq << Eq[-1].this.rhs.apply(algebra.infer.fold, 1)
+
+    Eq << Eq[-1].this.apply(algebra.infer.flatten)
+
+    w_ = Symbol('w', Lamda[i:n](w[i] / (1 - w[n])))
+    Eq << w_[i].this.definition * (1 - w[n])
+
+    Eq << Eq[-1].reversed
+
+    Eq << algebra.cond.of.et.subs.apply(Eq[-3], *Eq[-1].args, simplify=None)
+
+    Eq << Eq[-1].this.find(Equal & ~GreaterEqual).apply(algebra.cond.then.all.domain_defined, wrt=i)
+
+    Eq.induct1 = Eq[-1].this.lhs.apply(sets.lt.ge.then.el.interval)
+
+    Eq << algebra.cond.then.cond.subs.apply(Eq[1], w[:n], w_)
+
+    Eq << Eq[-1].this.find(Sum).simplify()
+
+    Eq << Eq[-1].this.find(~Sum >= f).simplify()
+
+    Eq << Eq[-1].this.find(f[~Sum]).simplify()
+
+    Eq << algebra.cond.then.infer.apply(Eq[-1], cond=Eq.induct1.lhs)
+
+    Eq << Eq[-1].this.apply(algebra.infer_infer.to.infer_infer.et)
+
+    Eq <<  Eq[-1].this.find(And[~Element]).apply(sets.el_interval.then.lt)
+
+    Eq << Eq[-1].this.find(And[Less]).apply(algebra.lt.ge.then.ge.mul)
+
+    Eq.hypothesis = Eq[-1].this.find(GreaterEqual[Mul]) + w[n] * f(x[n])
+
+    Eq << algebra.cond.then.infer.apply(Eq[0], cond=Eq.induct1.lhs)
+
+    Eq << Eq[-1].this.find(Greater).apply(algebra.cond.then.all, Eq[-1].find(Derivative).variable)
+
+    Eq << algebra.infer_et.then.infer.et.apply(Eq[-1])
+
+    Eq << Element(x[n], domain, plausible=True)
+
+    Eq << algebra.cond.then.infer.apply(Eq[-1], cond=Eq[-2].lhs)
+
+    Eq <<= Eq[-3] & Eq[-1]
+
+    Eq.suffices = Eq[-1].this.rhs.apply(algebra.cond.then.infer, cond=Eq.induct1.rhs.lhs)
+
+    Eq << Element(x[i], domain, plausible=True)
+
+    Eq << algebra.cond.then.infer.apply(Eq[-1], cond=Eq.induct1.rhs.lhs)
+
+    Eq << algebra.infer_et.then.infer.et.apply(Eq[-1], index=1)
+
+    Eq << Eq[-1].this.rhs.apply(algebra.cond.all.then.all.et, simplify=None)
+
+    Eq << algebra.infer_et.then.infer.et.apply(Eq[-1], index=0)
+
+    Eq << Eq[-1].this.rhs.find(Sum).apply(algebra.sum.limits.domain_defined)
+
+    Eq << Eq[-1].this.rhs.apply(sets.eq_sum.all.then.el.mean)
+
+    Eq << algebra.cond.then.infer.apply(Eq[-1], cond=Eq.suffices.lhs)
+
+    Eq <<= Eq.suffices & Eq[-1]
+
+    Eq << Eq[-1].this.rhs.rhs.apply(calculus.el.el.el.all_gt_zero.then.ge.Jesson)
+
+    Eq << Eq[-1].this.find(Sum[Mul]).simplify()
+
+    Eq << Eq[-1].this.find(Sum[Mul, Tuple[0]]).simplify()
+
+    Eq <<= Eq.hypothesis & Eq[-1]
+
+    Eq << Eq[-1].this.find(GreaterEqual & GreaterEqual).apply(algebra.ge.ge.then.ge.trans)
+
+    Eq << Infer(Eq[1], Eq.induct, plausible=True)
+
+    Eq << algebra.cond.infer.then.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
+
+
+
+
+
+if __name__ == '__main__':
+    run()
+# created on 2020-06-01
+# updated on 2023-08-26

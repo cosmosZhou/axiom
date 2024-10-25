@@ -14,13 +14,13 @@ def prove(Eq):
     a, b = Symbol(real=True)
     Eq << apply(Unequal(Bool(a > b), 0))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.ne_zero.imply.cond)
+    Eq << Eq[-2].this.lhs.apply(algebra.ne_zero.then.cond)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.ne_zero.given.cond)
+    Eq << Eq[-1].this.rhs.apply(algebra.ne_zero.of.cond)
 
-    
+
 
 
 if __name__ == '__main__':

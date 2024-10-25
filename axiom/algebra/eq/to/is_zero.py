@@ -16,11 +16,11 @@ def prove(Eq):
     b = Symbol(real=True, zero=False)
     Eq << apply(Equal(a, b))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.eq.imply.is_zero)
+    Eq << Eq[-2].this.lhs.apply(algebra.eq.then.is_zero)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.eq.given.is_zero)
+    Eq << Eq[-1].this.lhs.apply(algebra.eq.of.is_zero)
 
 
 if __name__ == '__main__':

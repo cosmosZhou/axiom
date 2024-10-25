@@ -17,13 +17,13 @@ def prove(Eq):
     A, B = Symbol(etype=dtype.real)
     Eq << apply(Element(x, B - A))
 
-    Eq.suffice, Eq.necessary = algebra.iff.given.et.infer.apply(Eq[-1])
+    Eq.suffice, Eq.necessary = algebra.iff.of.et.infer.apply(Eq[-1])
 
-    Eq << algebra.infer.given.et.infer.apply(Eq.suffice)
+    Eq << algebra.infer.of.et.infer.apply(Eq.suffice)
 
-    Eq << Eq[-2].this.lhs.apply(sets.el.imply.el.st.complement)
+    Eq << Eq[-2].this.lhs.apply(sets.el.then.el.st.complement)
 
-    Eq << Eq[-1].this.lhs.apply(sets.el.imply.notin.st.complement)
+    Eq << Eq[-1].this.lhs.apply(sets.el.then.notin.st.complement)
 
     Eq << Eq.necessary.this.lhs.simplify()
 

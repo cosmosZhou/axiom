@@ -14,15 +14,15 @@ def prove(Eq):
     x, a, b = Symbol(real=True)
     Eq << apply(Element(x, Interval(a, b)))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq <<= Eq[-2].apply(algebra.infer.given.ou), Eq[-1].apply(algebra.assuming.given.ou)
+    Eq <<= Eq[-2].apply(algebra.infer.of.ou), Eq[-1].apply(algebra.assuming.of.ou)
 
-    Eq << Eq[-2].this.args[0].apply(sets.el.given.el.neg)
+    Eq << Eq[-2].this.args[0].apply(sets.el.of.el.neg)
 
-    Eq << Eq[-1].this.args[0].apply(sets.el.given.el.neg)
+    Eq << Eq[-1].this.args[0].apply(sets.el.of.el.neg)
 
-    
+
 
 
 if __name__ == '__main__':

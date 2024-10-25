@@ -36,11 +36,11 @@ def prove(Eq):
     i = Symbol(domain=Range(m))
     k = Symbol(domain=Range(q))
     h = Symbol(domain=Range(p))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], h)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], h)
 
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], k)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], k)
 
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
     Eq << Eq[-1].this.lhs.apply(algebra.reducedSum.to.sum)
 

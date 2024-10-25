@@ -43,7 +43,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expand()
 
-    Eq << algebra.et.given.et.transit.apply(Eq.deduct & Eq[-1])
+    Eq << algebra.et.of.et.trans.apply(Eq.deduct & Eq[-1])
 
     Eq.deduction = Eq[-1].reversed
 
@@ -120,17 +120,17 @@ def prove(Eq):
 
     Eq.det_lamda = Eq[-2].subs((Eq[-1] / Eq[-1].rhs.args[0]).reversed)
 
-    Eq << Eq.column_transformation.apply(discrete.eq.imply.eq.det)
+    Eq << Eq.column_transformation.apply(discrete.eq.then.eq.det)
 
     Eq << Eq[-1].this.lhs.apply(discrete.det.to.mul)
 
-    Eq << Eq[-1].subs(Eq.det_lamda).apply(algebra.cond.imply.all, i)
+    Eq << Eq[-1].subs(Eq.det_lamda).apply(algebra.cond.then.all, i)
 
-    Eq << algebra.et.given.et.subs.all_eq.apply(Eq.deduction & Eq[-1])
+    Eq << algebra.et.of.et.subs.all_eq.apply(Eq.deduction & Eq[-1])
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
+    Eq << algebra.cond.infer.then.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
 
 

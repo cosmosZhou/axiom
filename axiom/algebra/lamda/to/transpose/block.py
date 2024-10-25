@@ -22,7 +22,7 @@ def prove(Eq):
     Eq << apply(Lamda[j:n, i:m](f(i, j)), k)
 
     i = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     Eq << Eq[-1].this.lhs.apply(algebra.lamda.to.block.split, k)
 

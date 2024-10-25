@@ -10,15 +10,15 @@ def apply(ge):
 @prove
 def prove(Eq):
     from axiom import algebra
-    
+
     x, a = Symbol(real=True, given=True)
     Eq << apply(abs(x) >= a)
-    
-    Eq << algebra.iff.given.et.apply(Eq[0])
-    
-    Eq << Eq[-2].this.lhs.apply(algebra.abs_ge.imply.ou)
-    
-    Eq << Eq[-1].this.lhs.apply(algebra.abs_ge.given.ou)
+
+    Eq << algebra.iff.of.et.apply(Eq[0])
+
+    Eq << Eq[-2].this.lhs.apply(algebra.abs_ge.then.ou)
+
+    Eq << Eq[-1].this.lhs.apply(algebra.abs_ge.of.ou)
 
 
 if __name__ == '__main__':

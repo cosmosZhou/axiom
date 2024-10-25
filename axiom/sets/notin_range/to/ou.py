@@ -18,11 +18,11 @@ def prove(Eq):
     e, a, b = Symbol(integer=True, given=True)
     Eq << apply(NotElement(e, Range(a, b)))
 
-    Eq << algebra.iff.given.et.apply(Eq[-1])
+    Eq << algebra.iff.of.et.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(sets.notin_range.imply.ou)
+    Eq << Eq[-2].this.lhs.apply(sets.notin_range.then.ou)
 
-    Eq << Eq[-1].this.rhs.apply(sets.ou.imply.notin.range)
+    Eq << Eq[-1].this.rhs.apply(sets.ou.then.notin.range)
 
 
 

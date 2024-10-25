@@ -24,7 +24,7 @@ def prove(Eq):
     _x_bar = Symbol(r"\overline{x'}", Lamda[i:m](Sum[j:n](x[i, j])) / n)
     Eq <<= x_bar.this.definition, _x_bar[i].this.definition
 
-    Eq <<= Eq[-2] * (m * n), Eq[-1] * n, algebra.eq.imply.eq.sum.apply(Eq[-1], (i, 0, m))
+    Eq <<= Eq[-2] * (m * n), Eq[-1] * n, algebra.eq.then.eq.sum.apply(Eq[-1], (i, 0, m))
 
     Eq.eq_sum = Eq[-3].reversed
 

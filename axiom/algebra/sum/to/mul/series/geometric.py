@@ -37,13 +37,13 @@ def prove(Eq):
     λ = Symbol(real=True)
     Eq << apply(Sum[k:n](λ ** k))
 
-    Eq << algebra.cond_piece.given.et.infer.apply(Eq[0])
+    Eq << algebra.cond_piece.of.et.infer.apply(Eq[0])
 
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-2])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-2])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.ne.imply.eq.sum.geometric_series, Eq[0].lhs)
+    Eq << Eq[-1].this.lhs.apply(algebra.ne.then.eq.sum.geometric_series, Eq[0].lhs)
 
-    
+
 
 
 if __name__ == '__main__':

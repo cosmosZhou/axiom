@@ -17,13 +17,13 @@ def prove(Eq):
     x, y, z = Symbol(real=True, random=True)
     Eq << apply(Probability(y | x & z))
 
-    Eq << algebra.cond.given.infer.domain_defined.apply(Eq[0])
+    Eq << algebra.cond.of.infer.domain_defined.apply(Eq[0])
 
-    Eq << algebra.infer_et.given.infer_et.et.apply(Eq[-1], -1)
+    Eq << algebra.infer_et.of.infer_et.et.apply(Eq[-1], -1)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.ne_zero.eq.given.et.mul)
+    Eq << Eq[-1].this.rhs.apply(algebra.ne_zero.eq.of.et.mul)
 
-    Eq << Eq[-1].this.lhs.args[1].apply(stats.ne_zero.imply.eq.prob.conditioned.to.mul.prob.conditioned.bayes, x, y)
+    Eq << Eq[-1].this.lhs.args[1].apply(stats.ne_zero.then.eq.prob.conditioned.to.mul.prob.conditioned.bayes, x, y)
 
     Eq << Eq[-1].this.rhs.reversed
 

@@ -27,7 +27,7 @@ def prove(Eq):
     Eq << apply(Lamda[k:n](f(k)) * Lamda[k:n](g(k)))
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
 
 

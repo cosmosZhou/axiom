@@ -18,12 +18,12 @@ def prove(Eq):
     Eq << apply(OneMatrix(4, 5), pivot=2)
 
     i = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
-    
 
-    
-    
+
+
+
 
 
 if __name__ == '__main__':

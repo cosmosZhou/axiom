@@ -21,11 +21,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.args[0].lhs.definition
 
-    Eq << sets.imply.el.bool.apply(Eq[0].lhs)
+    Eq << sets.then.el.bool.apply(Eq[0].lhs)
 
-    Eq << sets.el.imply.ou.split.finiteset.two.apply(Eq[-1])
+    Eq << sets.el.then.ou.split.finiteset.two.apply(Eq[-1])
 
-    Eq << algebra.ou.imply.is_zero.apply(Eq[1])
+    Eq << algebra.ou.then.is_zero.apply(Eq[1])
 
     Eq << Eq[-1].this.lhs.expand()
 
@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.base.definition
 
-    
+
 
 
 if __name__ == '__main__':

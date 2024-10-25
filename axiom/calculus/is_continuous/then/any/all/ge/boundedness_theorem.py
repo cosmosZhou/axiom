@@ -1,0 +1,36 @@
+from util import *
+
+
+@apply
+def apply(given, m=None):
+    ((f, (z, xi)), S[f._subs(z, xi)]), (S[xi], domain) = given.of(All[Equal[Limit]])
+    assert not xi.infinitesimality
+    a, b = domain.of(Interval)
+    assert domain.is_closed
+    assert b >= a
+    if m is None:
+        m = given.generate_var(real=True, var='m')
+    return Any[m](All[z:domain](f >= m))
+
+
+@prove
+def prove(Eq):
+    from axiom import calculus, algebra
+
+    a = Symbol(real=True)
+    b = Symbol(real=True, domain=Interval.open(a, oo))
+    f = Function(real=True)
+    from axiom.calculus.all_eq.then.all.any.eq.intermediate_value_theorem import is_continuous
+    Eq << apply(is_continuous(f, a, b))
+
+    Eq << calculus.is_continuous.then.any.all.ge.extreme_value_theorem.apply(Eq[0])
+
+    Eq << algebra.any.then.any.limits.relax.apply(Eq[-1], domain=Reals)
+    m = Eq[1].variable
+    Eq << algebra.any.of.any.subs.apply(Eq[1], m, f(Eq[-1].variable))
+
+
+
+if __name__ == '__main__':
+    run()
+# created on 2020-06-13

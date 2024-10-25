@@ -29,23 +29,23 @@ def prove(Eq):
     Eq << apply(a @ W.T, t_p)
 
     k, j = Eq[0].find(Lamda).variables
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
 
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], k)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], k)
 
     i = Symbol(domain=Range(d_o))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
     Eq << Eq[-1].this.lhs.apply(discrete.matmul.to.sum, simplify=None)
 
     Eq << Eq[-1].this.lhs.apply(algebra.sum.to.reducedSum)
 
     Eq << Eq[-1].this.lhs.apply(algebra.reducedSum.reshape, t_p, d / t_p)
-    
+
     Eq << Eq[-1].this.lhs.apply(algebra.reducedSum.axes.separate)
     Eq << Eq[-1].this.lhs.arg.apply(algebra.reducedSum.to.lamda, simplify=None)
     Eq << Eq[-1].this.lhs.find(Sum).apply(discrete.sum.to.matmul)
-    
+
     # https://github.com/huggingface/transformers/blob/main/src/transformers/models/llama/modeling_llama.py#L444
 
 

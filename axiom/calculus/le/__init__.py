@@ -1,4 +1,4 @@
-from . import imply
+from . import then
 from . import is_continuous
 from . import el
 from . import gt_zero

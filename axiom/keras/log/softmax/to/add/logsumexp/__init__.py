@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Eq[0].find(softmax).this.apply(keras.softmax.to.mul.reducedSum)
 
-    Eq << Eq[-1].apply(algebra.eq.imply.eq.log)
+    Eq << Eq[-1].apply(algebra.eq.then.eq.log)
 
     Eq << Eq[-1].this.rhs.apply(algebra.log.to.add)
 

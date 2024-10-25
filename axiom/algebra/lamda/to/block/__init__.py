@@ -63,16 +63,16 @@ def prove(Eq):
 
     Eq << Eq.all_et.this.apply(algebra.all.to.et.doit)
 
-    Eq << algebra.et.given.et.apply(Eq[-1])
+    Eq << algebra.et.of.et.apply(Eq[-1])
 
-    Eq << algebra.et.given.et.apply(Eq[-1])
+    Eq << algebra.et.of.et.apply(Eq[-1])
 
-    Eq << algebra.et.given.et.apply(Eq[-1])
+    Eq << algebra.et.of.et.apply(Eq[-1])
 
     _i = Symbol('i', domain=Range(4))
     Eq << Eq.all_et.limits_subs(i, _i)
 
-    Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (_i, 0, 4))
+    Eq << algebra.eq.then.eq.lamda.apply(Eq[-1], (_i, 0, 4))
 
     Eq << Eq[-1].this.lhs.definition
 

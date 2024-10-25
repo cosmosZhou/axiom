@@ -1,4 +1,4 @@
-from . import imply
+from . import then
 
 from . import eq
 from . import all_gt_zero

@@ -23,7 +23,7 @@ def prove(Eq):
     Eq << apply(Lamda[j:n, i:n](Piecewise((i, j > i), (j, j < i), (0, True))))
 
     i, j = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], (i, j))
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], (i, j))
 
     Eq << Eq[-1].this.find(Min).apply(algebra.min.to.piece)
 

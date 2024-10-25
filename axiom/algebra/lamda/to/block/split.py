@@ -4,27 +4,27 @@ from util import *
 @apply
 def apply(self, k, axis=0, *, simplify=True):
     f, *limits = self.of(Lamda)
-    
+
     if axis < 0:
         axis += len(limits)
-        
+
     index = len(limits) - 1 - axis
-    
+
     i, S[0], m = limits[index]
     limits_before = limits[:index]
     limits_after = limits[index + 1:]
-    
+
     if k <= m:
         ...
-    else: 
+    else:
         assert k.copy(domain=self.domain_defined(k)) <= m
-         
+
     former = Lamda(f, *limits_before, (i, 0, k), *limits_after)
     latter = Lamda(f._subs(i, i + k), *limits_before, (i, 0, m - k), *limits_after)
     if simplify:
         former = former.simplify()
         latter = latter.simplify()
-        
+
     return Equal(self, BlockMatrix[axis]([former, latter]), evaluate=False)
 
 @prove
@@ -38,10 +38,10 @@ def prove(Eq):
     Eq << apply(Lamda[i:m](f(i)), k)
 
     i = Symbol(domain=Range(m))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

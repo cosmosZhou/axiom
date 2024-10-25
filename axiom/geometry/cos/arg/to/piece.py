@@ -19,11 +19,11 @@ def prove(Eq):
 
     Eq << algebra.expr.to.add.complex.apply(z)
 
-    Eq << algebra.eq.imply.eq.arg.apply(Eq[1])
+    Eq << algebra.eq.then.eq.arg.apply(Eq[1])
 
     Eq << Eq[-1].this.rhs.apply(geometry.arg.to.piece.acos)
 
-    Eq << geometry.eq.imply.eq.cos.apply(Eq[-1])
+    Eq << geometry.eq.then.eq.cos.apply(Eq[-1])
 
     Eq << Eq[0].this.find(Equal).apply(algebra.is_zero.to.et.is_zero)
 

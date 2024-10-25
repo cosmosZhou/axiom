@@ -15,11 +15,11 @@ def prove(Eq):
     f, g = Function(integer=True)
     Eq << apply(Infer(f(n) < g(n), f(n + 1) < g(n + 1)))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.infer.imply.assuming.reverse)
+    Eq << Eq[-2].this.lhs.apply(algebra.infer.then.assuming.reverse)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.infer.given.assuming.reverse)
+    Eq << Eq[-1].this.rhs.apply(algebra.infer.of.assuming.reverse)
 
 
 if __name__ == '__main__':

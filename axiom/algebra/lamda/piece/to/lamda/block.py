@@ -44,7 +44,7 @@ def prove(Eq):
     Eq << apply(Lamda[i:n0 + n1 + n2 + n3, k:N](Piecewise((X0[k, i], i < n0), (X1[k, i - n0], i < n0 + n1), (X2[k, i - n0 - n1], i < n0 + n1 + n2), (X3[k, i - n0 - n1 - n2], True))))
 
     k = Symbol(domain=Range(N))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], k)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], k)
 
     Eq << Eq[-1].this.lhs.apply(algebra.lamda.piece.to.block)
 

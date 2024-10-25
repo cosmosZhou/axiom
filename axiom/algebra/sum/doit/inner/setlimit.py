@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << s[i].this.definition
 
-    Eq << algebra.eq.imply.eq.sum.apply(Eq[-1], (i, 0, m))
+    Eq << algebra.eq.then.eq.sum.apply(Eq[-1], (i, 0, m))
 
     Eq << Eq[-2].this.rhs.apply(algebra.sum.to.add.doit.setlimit)
 

@@ -23,13 +23,13 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(x >= BlockMatrix(a, b))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.ge_block.imply.et.ge)
+    Eq << Eq[-2].this.lhs.apply(algebra.ge_block.then.et.ge)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.ge_block.given.et.ge)
+    Eq << Eq[-1].this.lhs.apply(algebra.ge_block.of.et.ge)
 
-    
+
 
 
 if __name__ == '__main__':

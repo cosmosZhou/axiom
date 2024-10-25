@@ -1,5 +1,5 @@
-from . import imply, to
-from . import given
+from . import then, to
+from . import of
 from . import all
 from . import any
 from . import all_any

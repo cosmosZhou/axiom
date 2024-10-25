@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << (BlockMatrix([[A, ZeroMatrix(n, n)], [Identity(n), B]]) @ BlockMatrix([[Identity(n), -B], [ZeroMatrix(n, n), Identity(n)]])).this.apply(discrete.matmul.to.block, deep=True)
 
-    Eq << discrete.eq.imply.eq.det.apply(Eq[-1])
+    Eq << discrete.eq.then.eq.det.apply(Eq[-1])
 
     Eq << Eq[-1].this.lhs.apply(discrete.det.matmul.simplify.col_transformation)
 

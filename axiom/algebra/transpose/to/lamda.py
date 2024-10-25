@@ -7,7 +7,7 @@ def apply(self):
     f, *limits = self.of(Transpose[axis][Lamda])
     variables = {var for var, *ab in limits}
     j = self.generate_var(variables, integer=True)
-    
+
     t, k = axis
     assert k >= len(limits)
     if axis == self.default_axis:
@@ -17,7 +17,7 @@ def apply(self):
     else:
         index = -axis - 1
         raise NotImplementedError
-        
+
     return Equal(self, rhs, evaluate=False)
 
 
@@ -32,9 +32,9 @@ def prove(Eq):
     Eq << apply(Lamda[i:m](h[j, d[i]]).T)
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
-    
+
 
 
 if __name__ == '__main__':

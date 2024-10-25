@@ -40,9 +40,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.simplify()
 
-    Eq << algebra.all.imply.all.limits.invert.apply(Eq[-1])
+    Eq << algebra.all.then.all.limits.invert.apply(Eq[-1])
 
-    Eq << sets.all_el.all_el.imply.eq.apply(Eq.all_contains_in_A, Eq.all_contains_in_B)
+    Eq << sets.all_el.all_el.then.eq.apply(Eq.all_contains_in_A, Eq.all_contains_in_B)
 
     Eq << Eq[-1].this.lhs.definition
 

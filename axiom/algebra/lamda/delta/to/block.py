@@ -34,7 +34,7 @@ def prove(Eq):
     Eq << apply(Lamda[j:n](KroneckerDelta(n - 1, j)))
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     Eq << Eq[-1].this.rhs.apply(algebra.piece.to.delta)
 

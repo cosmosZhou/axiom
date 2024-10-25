@@ -48,13 +48,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs().expr.simplify()
 
-    Eq << algebra.eq.imply.all.eq.apply(Eq[-1])
+    Eq << algebra.eq.then.all.eq.apply(Eq[-1])
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq.imply.all.eq)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.then.all.eq)
 
     Eq << Eq[-1].this.rhs.apply(algebra.add.to.mul)
 
-    Eq.recursion = algebra.all_eq.cond.imply.all.subs.apply(Eq[-1], Eq.recursion)
+    Eq.recursion = algebra.all_eq.cond.then.all.subs.apply(Eq[-1], Eq.recursion)
 
     Eq << Eq.recursion.rhs.find(Det[~Lamda]).this.find(Sum).doit()
 
@@ -66,13 +66,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Pow - Mul).apply(algebra.add.to.mul)
 
-    Eq.recursion = algebra.all_eq.cond.imply.all.subs.apply(Eq[-1], Eq.recursion)
+    Eq.recursion = algebra.all_eq.cond.then.all.subs.apply(Eq[-1], Eq.recursion)
 
     Eq << Eq.recursion.rhs.args[0].this.doit()
 
     Eq.determinant = Eq[-1].this.find(Product).apply(algebra.prod.limits.subs.offset, -1)
 
-    Eq << algebra.cond.imply.cond.subs.apply(Eq[0], a[:n], a[1:n + 1])
+    Eq << algebra.cond.then.cond.subs.apply(Eq[0], a[:n], a[1:n + 1])
 
     k = Eq.determinant.find(Lamda).variable
     Eq << Eq[-1].this.lhs.arg.limits_subs(j, k).this.lhs.arg.limits_subs(i, j).this.rhs.limits_subs(i, i - 1)
@@ -96,11 +96,11 @@ def prove(Eq):
     D = D._subs(i, _i)
     Eq << discrete.det.to.sum.expansion_by_minors.apply(Det(D), j=0)
 
-    Eq << algebra.cond.imply.all.apply(Eq[-1], _i)
+    Eq << algebra.cond.then.all.apply(Eq[-1], _i)
 
-    Eq << algebra.all_eq.cond.imply.all.subs.apply(Eq[-1], Eq.recursion)
+    Eq << algebra.all_eq.cond.then.all.subs.apply(Eq[-1], Eq.recursion)
 
-    Eq << Eq.expand.apply(discrete.eq.imply.eq.det)
+    Eq << Eq.expand.apply(discrete.eq.then.eq.det)
 
     Eq << Eq[-1].subs(Eq[-2])
 
@@ -110,7 +110,7 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
+    Eq << algebra.cond.infer.then.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
 
 
 

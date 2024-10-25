@@ -7,14 +7,14 @@ def apply(self):
 
     if not _j._has(j):
         i, _j = _j, i
-        
+
     dif = _j - j
     assert not i._has(j)
     assert not dif._has(j)
     assert expr._has(j)
-    
+
     expr = expr._subs(j, i - dif)
-        
+
     return Equal(self, expr * Lamda[j:n](KroneckerDelta(i, _j)))
 
 
@@ -28,10 +28,10 @@ def prove(Eq):
     Eq << apply(Lamda[j:n](a[j] * KroneckerDelta(i, j + 1)))
 
     t = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], t)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], t)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

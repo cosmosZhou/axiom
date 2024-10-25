@@ -43,20 +43,20 @@ def prove(Eq):
     plausible0 = Subset(s0_, s2, plausible=True)
     Eq << plausible0
 
-    Eq << sets.subset.given.all_el.apply(Eq[-1])
+    Eq << sets.subset.of.all_el.apply(Eq[-1])
 
     Eq << Eq[-1].this.limits[0][1].subs(s0_definition)
 
     Eq << Eq[-1].subs(Eq.s2_definition)
 
     s0_plausible = Eq[-1]
-    Eq.s2_quote_definition = sets.imply.all.conditionset.apply(s2_quote)
+    Eq.s2_quote_definition = sets.then.all.conditionset.apply(s2_quote)
 
-    Eq << sets.imply.all.conditionset.apply(s0_quote)
+    Eq << sets.then.all.conditionset.apply(s0_quote)
 
-    Eq.x_abs_positive = algebra.all_et.imply.all.apply(Eq[-1])
-    Eq.x_abs_sum = algebra.all_et.imply.all.apply(Eq[-1], 1)
-    Eq.x_union_s0 = algebra.all_et.imply.all.apply(Eq[-1], 2)
+    Eq.x_abs_positive = algebra.all_et.then.all.apply(Eq[-1])
+    Eq.x_abs_sum = algebra.all_et.then.all.apply(Eq[-1], 1)
+    Eq.x_union_s0 = algebra.all_et.then.all.apply(Eq[-1], 2)
 
     i = Eq.x_union_s0.lhs.limits[0][0]
     x = Eq.x_union_s0.variable.base
@@ -88,7 +88,7 @@ def prove(Eq):
     Eq << sets.supset.given.all_contains.apply(Eq[-1])
     Eq << Eq[-1].this.expr.simplify()
     Eq << Eq.subset_B.subs(Eq[2])
-    Eq << sets.subset.given.all_el.apply(Eq[-1])
+    Eq << sets.subset.of.all_el.apply(Eq[-1])
     Eq << Eq[-1].this.expr.apply(sets.element.given.any_eq.split.imageset)
     Eq << algebra.all.given.all_et.conditionset.apply(Eq[-1], simplify=None)
     Eq << Eq[-1].this.expr.apply(algebra.et.given.any_et, simplify=None)
@@ -110,12 +110,12 @@ def prove(Eq):
     Eq.s2_n_definition = s2_n.this.definition
     Eq << sets.imply.all.baseset.apply(s2_n)
     Eq << Eq[-1].subs(Eq.s2_definition)
-    Eq << algebra.all_et.imply.all.apply(Eq[-1])
+    Eq << algebra.all_et.then.all.apply(Eq[-1])
     Eq.s2_n_assertion = Eq[-2].this.expr.apply(sets.element.given.any_eq.split.imageset)
     Eq << Eq[-1].subs(Eq.s2_n_assertion)
     Eq << Eq[-1].apply(sets.element.imply.any_contains.split.cup)
     Eq.x_j_definition = Eq[-1].limits_subs(Eq[-1].variable, j).reversed
-    Eq.x_abs_positive_s2, Eq.x_abs_sum_s2, Eq.x_union_s2 = algebra.all_et.imply.all.apply(Eq.s2_quote_definition, simplify=None)
+    Eq.x_abs_positive_s2, Eq.x_abs_sum_s2, Eq.x_union_s2 = algebra.all_et.then.all.apply(Eq.s2_quote_definition, simplify=None)
     Eq << algebra.all.any.imply.any_et.apply(Eq.x_union_s2, Eq.x_j_definition)
     Eq << Eq[-1].this.expr.apply(sets.eq.eq.imply.eq.complement, swap=True)
     Eq << Eq[-1].this.expr.lhs.args[0].bisect({j})

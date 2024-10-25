@@ -20,22 +20,22 @@ def prove(Eq):
     f, g = Function(integer=True, shape=())
     Eq << apply(Piecewise((s(x), (f(x) > 0) & (g(x) > 0)), (x.emptySet, True)))
 
-    Eq << sets.eq.given.et.infer.apply(Eq[0], wrt=t)
+    Eq << sets.eq.of.et.infer.apply(Eq[0], wrt=t)
 
-    Eq <<= Eq[-2].this.find(Element).apply(algebra.cond_piece.imply.ou), \
-    Eq[-1].this.find(Element).apply(sets.el_intersect.imply.et.el)
+    Eq <<= Eq[-2].this.find(Element).apply(algebra.cond_piece.then.ou), \
+    Eq[-1].this.find(Element).apply(sets.el_intersect.then.et.el)
 
-    Eq <<= Eq[-2].this.rhs.apply(sets.el_intersect.given.et.el, simplify=False), \
-    Eq[-1].this.lhs.find(Element).apply(algebra.cond_piece.imply.ou)
+    Eq <<= Eq[-2].this.rhs.apply(sets.el_intersect.of.et.el, simplify=False), \
+    Eq[-1].this.lhs.find(Element).apply(algebra.cond_piece.then.ou)
 
-    Eq <<= Eq[-2].this.rhs.find(Element).apply(algebra.cond_piece.given.ou), \
-    Eq[-1].this.lhs.find(Element).apply(algebra.cond_piece.imply.ou)
+    Eq <<= Eq[-2].this.rhs.find(Element).apply(algebra.cond_piece.of.ou), \
+    Eq[-1].this.lhs.find(Element).apply(algebra.cond_piece.then.ou)
 
-    Eq << Eq[-2].this.rhs.apply(algebra.cond_piece.given.ou)
+    Eq << Eq[-2].this.rhs.apply(algebra.cond_piece.of.ou)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.cond_piece.given.ou)
+    Eq << Eq[-1].this.rhs.apply(algebra.cond_piece.of.ou)
 
-    
+
 
 
 if __name__ == '__main__':

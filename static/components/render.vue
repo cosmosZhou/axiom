@@ -104,21 +104,25 @@ export default {
         },
 
         numOfRequisites(){
-            var m = this.module.match(/([\w.]+)\.(imply|given)\./);
+            var m = this.module.match(/([\w.]+)\.(imply|given|then|of)\./);
             if (m.length){
                 return m[1].split('.').length - 1;
             }
             return 0;
         },
         
+        is_given(){
+            return this.module.indexOf('.given.') >= 0 || this.module.indexOf('.of.') >= 0;
+        },
+
         imply_hint(){
-            if (this.module.indexOf('.given.') >= 0)
+            if (this.is_given)
                 return 'given';
             return 'imply';
         },
         
         given_hint(){
-            if (this.module.indexOf('.given.') >= 0)
+            if (this.is_given)
                 return 'imply';
             return 'given';
         },

@@ -36,10 +36,10 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[0].args[1].expr.expand()
 
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.expand, Eq[-1])
+    Eq << algebra.eq.eq.then.eq.trans.apply(Eq.expand, Eq[-1])
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

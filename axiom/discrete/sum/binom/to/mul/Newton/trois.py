@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum).apply(discrete.sum.binom.to.mul.Newton.deux)
 
-    Eq << algebra.eq.given.is_zero.apply(Eq[-1])
+    Eq << algebra.eq.of.is_zero.apply(Eq[-1])
 
     Eq << Eq[-1].this.find(Mul + Mul).apply(algebra.add.collect, factor=(x + 1) ** (n - 3))
 

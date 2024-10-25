@@ -18,7 +18,7 @@ def apply(given, wrt=None):
     else:
         x, S = limit.coerce_setlimit()
 
-    domain = expr.domain_defined(x)    
+    domain = expr.domain_defined(x)
     limit = (x, domain & S)
     limits[i] = limit
     return Any(expr, *limits)
@@ -27,16 +27,16 @@ def apply(given, wrt=None):
 @prove
 def prove(Eq):
     from axiom import algebra
-    
+
     m, n = Symbol(integer=True, positive=True)
     f = Symbol(real=True, shape=(n,))
     i = Symbol(integer=True)
     Eq << apply(Any[i:Range(m)](f[i] > 0))
-    
-    Eq << algebra.iff.given.et.apply(Eq[0])
-    
-    Eq << Eq[-2].this.lhs.apply(algebra.any.imply.any.limits.domain_defined)
-    Eq << Eq[-1].this.lhs.apply(algebra.any.given.any.limits.domain_defined)
+
+    Eq << algebra.iff.of.et.apply(Eq[0])
+
+    Eq << Eq[-2].this.lhs.apply(algebra.any.then.any.limits.domain_defined)
+    Eq << Eq[-1].this.lhs.apply(algebra.any.of.any.limits.domain_defined)
 
 
 if __name__ == '__main__':

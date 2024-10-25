@@ -1,3 +1,3 @@
 from . import ge
-from . import given
+from . import of
 from . import all_ge_zero

@@ -48,12 +48,12 @@ def prove(Eq):
     Eq << Eq[-1].this.find(MatMul).apply(discrete.matmul.to.lamda)
 
     i = Symbol(domain=Range(a + b))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], i)
 
     j = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[-1], j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], j)
 
-    
+
 
 
 if __name__ == '__main__':

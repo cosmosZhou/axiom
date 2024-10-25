@@ -31,7 +31,7 @@ def prove(Eq):
     Eq << apply(exp(Lamda[i:n](h[i])))
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
 
 

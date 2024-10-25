@@ -14,10 +14,10 @@ def prove(Eq):
     A, B = Symbol(complex=True, given=True)
     Eq << apply(Arg(A) + Arg(B) > S.Pi)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.gt_arg.imply.eq_ceiling)
-    Eq << Eq[-1].this.lhs.apply(algebra.eq_ceiling.imply.gt_arg)
+    Eq << Eq[-2].this.lhs.apply(algebra.gt_arg.then.eq_ceiling)
+    Eq << Eq[-1].this.lhs.apply(algebra.eq_ceiling.then.gt_arg)
 
 
 if __name__ == '__main__':

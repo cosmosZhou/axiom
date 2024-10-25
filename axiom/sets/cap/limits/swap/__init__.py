@@ -27,7 +27,7 @@ def prove(Eq):
     s = Symbol(Cap[j:n + 1](f[i] | g[i, j]))
     Eq << s.this.definition
 
-    Eq << Eq[-1].apply(sets.eq.imply.eq.cap, (i, 0, m))
+    Eq << Eq[-1].apply(sets.eq.then.eq.cap, (i, 0, m))
 
     Eq << Eq[-2].this.rhs.apply(sets.cap.to.intersect.split, {n})
 
@@ -37,14 +37,14 @@ def prove(Eq):
 
     Eq << Eq.induct_dissected.subs(Eq[-1].reversed)
 
-    Eq << sets.eq.imply.eq.intersect.apply(Eq[0], Eq[-1].find(Cap))
+    Eq << sets.eq.then.eq.intersect.apply(Eq[0], Eq[-1].find(Cap))
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=1)
+    Eq << algebra.infer.then.eq.induct.apply(Eq[-1], n=n, start=1)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

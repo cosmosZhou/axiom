@@ -20,10 +20,10 @@ def prove(Eq):
     @Function(real=True)
     def s(i):
         return Product[k:g(i), j:f(i)](x[i, j])
-        
+
     Eq << s(i).this.defun()
 
-    Eq << algebra.eq.imply.eq.prod.apply(Eq[-1], (i, {a}))
+    Eq << algebra.eq.then.eq.prod.apply(Eq[-1], (i, {a}))
 
     Eq << Eq[-1].this.lhs.defun()
 

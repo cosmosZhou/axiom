@@ -1,5 +1,5 @@
-from . import imply
-from . import given
+from . import then
+from . import of
 from . import any, ou
 from . import to
 from . import doit

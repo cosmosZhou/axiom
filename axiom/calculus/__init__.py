@@ -38,7 +38,7 @@ from . import limit_is_infinite
 from . import expr
 from . import pow
 from . import all_le
-from . import imply
+from . import then
 from . import exp
 from . import ne
 from . import lamda

@@ -1,3 +1,3 @@
-from . import given
+from . import of
 from . import transform
-from . import imply
+from . import then

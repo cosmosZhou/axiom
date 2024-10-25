@@ -2,7 +2,6 @@ from util import *
 
 from axiom.discrete.H.to.add.definition import H
 from axiom.discrete.K.to.add.definition import K
-from axiom.discrete.imply.gt_zero.alpha import alpha
 
 
 @apply
@@ -18,6 +17,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
+    from axiom.discrete.then.gt_zero.alpha import alpha
     from axiom import discrete, algebra
     x = Symbol(real=True, positive=True, shape=(oo,))
     n = Symbol(integer=True)
@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << discrete.alpha.to.mul.HK.induct.apply(alpha(x[:_n + 1]))
 
-    Eq << algebra.cond.imply.all.apply(Eq[-1], _n)
+    Eq << algebra.cond.then.all.apply(Eq[-1], _n)
 
     Eq.n1 = Infer(Equal(n, 1), Eq.hypothesis, plausible=True)
 
@@ -45,7 +45,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.rhs.apart(x=x[1])
 
-    Eq.n1 = algebra.infer.infer.imply.infer.ou.apply(Eq.n1, Eq.n2)
+    Eq.n1 = algebra.infer.infer.then.infer.ou.apply(Eq.n1, Eq.n2)
 
     Eq.n0 = Infer(Equal(n, 0), Eq.hypothesis, plausible=True)
 
@@ -55,7 +55,7 @@ def prove(Eq):
                                H(x[0]).this.defun(),
                                K(x[0]).this.defun())
 
-    Eq << algebra.infer.infer.imply.infer.ou.apply(Eq.n1, Eq.n0)
+    Eq << algebra.infer.infer.then.infer.ou.apply(Eq.n1, Eq.n0)
 
     Eq << Eq[-1].this.apply(algebra.infer.to.all, wrt=n)
 

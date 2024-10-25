@@ -28,7 +28,7 @@ def apply(eq, eq_historic):
     if len(lhs.shape) < len(_lhs.shape):
         (lhs, rhs), (_lhs, _rhs) = (_lhs, _rhs), (lhs, rhs)
         eq, eq_historic = eq_historic, eq
-            
+
     n = lhs.shape[0]
     if lhs.is_Lamda and rhs.is_Lamda and lhs.variable == rhs.variable:
         k = rhs.variable
@@ -41,7 +41,7 @@ def apply(eq, eq_historic):
     if n.is_finite:
         fxn = fx._subs(k, n)
         gyn = gy._subs(k, n)
-    
+
         if fxn == _lhs and gyn == _rhs:
             n += 1
         elif _lhs.shape and fxn == _lhs[0] and gyn == _rhs[0]:
@@ -63,13 +63,13 @@ def prove(Eq):
     f, g = Function(real=True)
     Eq << apply(Equal(f(n), g(n)), Equal(Lamda[k:n](f(k)), Lamda[k:n](g(k))))
 
-    Eq << algebra.iff.given.et.apply(Eq[0])
+    Eq << algebra.iff.of.et.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.eq.eq.imply.eq.concat, simplify=None)
+    Eq << Eq[-2].this.lhs.apply(algebra.eq.eq.then.eq.concat, simplify=None)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.eq.imply.et.eq.split, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.then.et.eq.split, simplify=None)
 
-    
+
 
 
 if __name__ == '__main__':

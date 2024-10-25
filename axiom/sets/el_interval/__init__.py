@@ -1,4 +1,4 @@
-from . import imply
-from . import given
+from . import then
+from . import of
 from . import is_finite
 from . import to

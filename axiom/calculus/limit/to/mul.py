@@ -26,7 +26,7 @@ def prove(Eq):
     Eq << A.this.definition
 
     epsilon, delta = Symbol(positive=True)
-    Eq << calculus.eq_limit.imply.any.all.limit_definition.apply(Eq[1], epsilon=epsilon, delta=delta)
+    Eq << calculus.eq_limit.then.any.all.limit_definition.apply(Eq[1], epsilon=epsilon, delta=delta)
 
     Eq << Eq[-1].this.find(Less) * abs(y)
 
@@ -40,9 +40,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Abs[Mul]).apply(algebra.abs.to.mul)
 
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.lhs, Eq[1] * y)
+    Eq << algebra.eq.eq.then.eq.trans.apply(Eq.lhs, Eq[1] * y)
 
-    
+
 
 
 if __name__ == '__main__':

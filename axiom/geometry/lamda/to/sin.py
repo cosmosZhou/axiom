@@ -10,14 +10,14 @@ def apply(self):
 @prove
 def prove(Eq):
     from axiom import algebra
-    
+
     j = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
     a = Symbol(real=True, shape=(n,))
     Eq << apply(Lamda[j:n](Sin(a[j])))
-    
+
     _j = Symbol('j', domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], _j)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], _j)
 
 
 if __name__ == '__main__':

@@ -27,7 +27,7 @@ def prove(Eq):
     s = Symbol(Cup[j:n + 1](f[i] & g[i, j]))
     Eq << s.this.definition
 
-    Eq << Eq[-1].apply(sets.eq.imply.eq.cup, (i, 0, m))
+    Eq << Eq[-1].apply(sets.eq.then.eq.cup, (i, 0, m))
 
     Eq << Eq[-2].this.rhs.apply(sets.cup.to.union.split, cond={n})
 
@@ -41,14 +41,14 @@ def prove(Eq):
 
     Eq << Eq.induct_dissected.subs(Eq[-1].reversed)
 
-    Eq << sets.eq.imply.eq.union.apply(Eq[0], Eq[-1].find(Cup))
+    Eq << sets.eq.then.eq.union.apply(Eq[0], Eq[-1].find(Cup))
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=1)
+    Eq << algebra.infer.then.eq.induct.apply(Eq[-1], n=n, start=1)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

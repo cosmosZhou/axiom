@@ -16,24 +16,24 @@ def prove(Eq):
     f, g = Function(etype=dtype.real)
     Eq << apply(Cap[x:B](Piecewise((f(x, y), Element(x, A)), (g(x, y), True))))
 
-    Eq << sets.eq.given.et.infer.apply(Eq[0], wrt='y')
+    Eq << sets.eq.of.et.infer.apply(Eq[0], wrt='y')
 
-    Eq <<= Eq[-2].this.lhs.apply(sets.el_cap.imply.all_el), \
-    Eq[-1].this.rhs.apply(sets.el_cap.given.all_el)
+    Eq <<= Eq[-2].this.lhs.apply(sets.el_cap.then.all_el), \
+    Eq[-1].this.rhs.apply(sets.el_cap.of.all_el)
 
-    Eq <<= Eq[-2].this.lhs.expr.apply(algebra.cond_piece.imply.ou), \
-    Eq[-1].this.rhs.expr.apply(algebra.cond_piece.given.ou)
+    Eq <<= Eq[-2].this.lhs.expr.apply(algebra.cond_piece.then.ou), \
+    Eq[-1].this.rhs.expr.apply(algebra.cond_piece.of.ou)
 
-    Eq <<= Eq[-2].this.rhs.apply(sets.el_intersect.given.et.el, simplify=None), \
-    Eq[-1].this.lhs.apply(sets.el_intersect.imply.et.el, simplify=None)
+    Eq <<= Eq[-2].this.rhs.apply(sets.el_intersect.of.et.el, simplify=None), \
+    Eq[-1].this.lhs.apply(sets.el_intersect.then.et.el, simplify=None)
 
-    Eq <<= Eq[-2].this.rhs.find(Element).apply(sets.el_cap.given.all_el), \
-    Eq[-1].this.lhs.find(Element).apply(sets.el_cap.imply.all_el)
+    Eq <<= Eq[-2].this.rhs.find(Element).apply(sets.el_cap.of.all_el), \
+    Eq[-1].this.lhs.find(Element).apply(sets.el_cap.then.all_el)
 
-    Eq <<= Eq[-2].this.rhs.find(Element).apply(sets.el_cap.given.all_el), \
-    Eq[-1].this.lhs.find(Element).apply(sets.el_cap.imply.all_el)
+    Eq <<= Eq[-2].this.rhs.find(Element).apply(sets.el_cap.of.all_el), \
+    Eq[-1].this.lhs.find(Element).apply(sets.el_cap.then.all_el)
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.all.imply.et.all.split, cond=A), Eq[-1].this.rhs.apply(algebra.all.given.et.all.split, cond=A)
+    Eq <<= Eq[-2].this.lhs.apply(algebra.all.then.et.all.split, cond=A), Eq[-1].this.rhs.apply(algebra.all.of.et.all.split, cond=A)
 
     Eq <<= Eq[-2].this.lhs.args[0].apply(algebra.all.to.infer), Eq[-1].this.rhs.args[0].apply(algebra.all.to.infer)
 

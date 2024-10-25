@@ -56,12 +56,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs().find(Element).simplify()
 
-    
+
     Eq << Eq[-1][k]
     Eq << Eq.lhs_assertion.subs(Eq[-1].reversed)
-    Eq << algebra.eq.imply.eq.lamda.apply(Eq[-1], (k, 0, n))
-    
-    
+    Eq << algebra.eq.then.eq.lamda.apply(Eq[-1], (k, 0, n))
+
+
 
 
 if __name__ == '__main__':

@@ -10,15 +10,15 @@ def apply(given):
 @prove
 def prove(Eq):
     from axiom import algebra
-    
+
     x, a, b = Symbol(real=True, given=True)
     Eq << apply(Greater(x, a) | Greater(x, b))
-    
-    Eq << algebra.iff.given.et.apply(Eq[0])
-    
-    Eq << Eq[-1].this.rhs.apply(algebra.gt_min.imply.ou.gt)
-    
-    Eq << Eq[-2].this.rhs.apply(algebra.gt_min.given.ou.gt)
+
+    Eq << algebra.iff.of.et.apply(Eq[0])
+
+    Eq << Eq[-1].this.rhs.apply(algebra.gt_min.then.ou.gt)
+
+    Eq << Eq[-2].this.rhs.apply(algebra.gt_min.of.ou.gt)
 
 
 if __name__ == '__main__':

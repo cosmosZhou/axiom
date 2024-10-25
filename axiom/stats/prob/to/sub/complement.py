@@ -8,7 +8,7 @@ def apply(self):
         cond, given = cond.args
     else :
         given = None
-        
+
     return Equal(self, 1 - Probability(cond.invert(), given=given))
 
 
@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Probability).apply(stats.prob.to.integral)
 
-    Eq << algebra.eq.given.eq.transport.apply(Eq[-1], rhs=1)
+    Eq << algebra.eq.of.eq.transport.apply(Eq[-1], rhs=1)
 
     Eq << Eq[-1].this.lhs.apply(calculus.add.to.integral.concat)
 

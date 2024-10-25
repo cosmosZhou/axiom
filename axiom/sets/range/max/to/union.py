@@ -17,17 +17,17 @@ def prove(Eq):
     a, b, c = Symbol(integer=True)
     Eq << apply(Range(a, Max(b, c)))
 
-    Eq << sets.eq.given.et.infer.apply(Eq[0])
+    Eq << sets.eq.of.et.infer.apply(Eq[0])
 
-    Eq <<= Eq[-2].this.lhs.apply(sets.el_range.imply.et), Eq[-1].this.rhs.apply(sets.el_range.given.et)
+    Eq <<= Eq[-2].this.lhs.apply(sets.el_range.then.et), Eq[-1].this.rhs.apply(sets.el_range.of.et)
 
-    Eq <<= Eq[-2].this.find(Less).apply(algebra.lt_max.imply.ou.lt), Eq[-1].this.find(Less).apply(algebra.lt_max.given.ou.lt)
+    Eq <<= Eq[-2].this.find(Less).apply(algebra.lt_max.then.ou.lt), Eq[-1].this.find(Less).apply(algebra.lt_max.of.ou.lt)
 
-    Eq <<= Eq[-2].this.find(Element).apply(sets.el_union.given.ou, simplify=None), Eq[-1].this.find(Element).apply(sets.el_union.imply.ou, simplify=None)
+    Eq <<= Eq[-2].this.find(Element).apply(sets.el_union.of.ou, simplify=None), Eq[-1].this.find(Element).apply(sets.el_union.then.ou, simplify=None)
 
-    Eq <<= Eq[-2].this.find(Element).apply(sets.el_range.given.et), Eq[-1].this.find(Element).apply(sets.el_range.imply.et)
+    Eq <<= Eq[-2].this.find(Element).apply(sets.el_range.of.et), Eq[-1].this.find(Element).apply(sets.el_range.then.et)
 
-    Eq <<= Eq[-2].this.find(Element).apply(sets.el_range.given.et), Eq[-1].this.find(Element).apply(sets.el_range.imply.et)
+    Eq <<= Eq[-2].this.find(Element).apply(sets.el_range.of.et), Eq[-1].this.find(Element).apply(sets.el_range.then.et)
 
 
 

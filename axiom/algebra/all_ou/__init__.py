@@ -1,1 +1,1 @@
-from . import given, imply
+from . import of, then

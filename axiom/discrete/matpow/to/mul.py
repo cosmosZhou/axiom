@@ -4,12 +4,12 @@ from util import *
 @apply(simplify=False)
 def apply(self, i=None):
     base, e = self.of(MatPow)
-    
+
     from axiom.algebra.add.to.mul import rewrite
-    
+
     base, factor = rewrite(base)
     assert not factor.shape
-    
+
     return Equal(self, factor ** e * MatPow(base, e), evaluate=False)
 
 
@@ -29,12 +29,12 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(algebra.mul.to.add)
 
-    Eq << discrete.eq.imply.eq.inverse.apply(Eq[-1])
+    Eq << discrete.eq.then.eq.inverse.apply(Eq[-1])
 
     Eq << Eq[-1].this.lhs.find(MatPow).base.definition.reversed
 
     Eq << Eq[-1] @ Eq[-1]
-    
+
 
 
 if __name__ == '__main__':

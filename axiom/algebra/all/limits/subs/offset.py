@@ -15,11 +15,11 @@ def prove(Eq):
     f = Function(integer=True)
     Eq << apply(All[n:1:m + 1](f(n) > 0), d)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[-1])
+    Eq << algebra.iff.of.et.infer.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.all.imply.all.limits.subs.offset, d)
+    Eq << Eq[-2].this.lhs.apply(algebra.all.then.all.limits.subs.offset, d)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.all.given.all.limits.subs.offset, d)
+    Eq << Eq[-1].this.rhs.apply(algebra.all.of.all.limits.subs.offset, d)
 
 
 if __name__ == '__main__':

@@ -15,13 +15,13 @@ def prove(Eq):
     x, y = Symbol(real=True, given=True)
     Eq << apply(Unequal(x, y))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.ne.imply.ou)
+    Eq << Eq[-2].this.lhs.apply(algebra.ne.then.ou)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.ne.given.ou)
+    Eq << Eq[-1].this.rhs.apply(algebra.ne.of.ou)
 
-    
+
 
 
 if __name__ == '__main__':

@@ -17,11 +17,11 @@ def prove(Eq):
     i, j = Symbol(integer=True)
     Eq << apply(Det([Lamda[j:n + 1](x1 ** j), Lamda[j:n + 1, i:n](j ** i * x2 ** j)]))
 
-    Eq << algebra.cond.given.et.infer.split.apply(Eq[0], cond=Equal(x2, 0))
+    Eq << algebra.cond.of.et.infer.split.apply(Eq[0], cond=Equal(x2, 0))
 
-    Eq << Eq[-1].this.lhs.apply(discrete.ne_zero.imply.eq.det.block.to.mul.prod.vandermonde.n1, n, x1)
+    Eq << Eq[-1].this.lhs.apply(discrete.ne_zero.then.eq.det.block.to.mul.prod.vandermonde.n1, n, x1)
 
-    Eq << algebra.infer.given.infer.subs.apply(Eq[-2])
+    Eq << algebra.infer.of.infer.subs.apply(Eq[-2])
 
     Eq << Eq[-1].this.find(Lamda).apply(algebra.lamda.to.block.shift)
 

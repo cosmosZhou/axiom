@@ -22,26 +22,26 @@ def prove(Eq):
 
     k, *ab = Eq[-1].lhs.args[0].args[-1].limits[0]
     k = k.copy(domain=Range(*ab))
-    Eq << Eq.is_continuous.apply(algebra.cond.imply.all.restrict, (x0, Interval(k, k + 1)))
+    Eq << Eq.is_continuous.apply(algebra.cond.then.all.restrict, (x0, Interval(k, k + 1)))
 
-    Eq.mean_value_theorem = calculus.is_continuous.imply.any.eq.mean_value_theorem.apply(Eq[-1])
+    Eq.mean_value_theorem = calculus.is_continuous.then.any.eq.mean_value_theorem.apply(Eq[-1])
 
-    Eq << algebra.imply.all.limits_assert.apply(Eq[-1].limits)
+    Eq << algebra.then.all.limits_assert.apply(Eq[-1].limits)
 
-    Eq << Eq[-1].this.expr.apply(sets.el.imply.el.inverse.interval)
+    Eq << Eq[-1].this.expr.apply(sets.el.then.el.inverse.interval)
 
-    Eq << Eq[-1].this.expr.apply(sets.el_interval.imply.et)
+    Eq << Eq[-1].this.expr.apply(sets.el_interval.then.et)
 
-    Eq << algebra.all_et.imply.et.all.apply(Eq[-1])
+    Eq << algebra.all_et.then.et.all.apply(Eq[-1])
 
-    Eq <<= algebra.all.any.imply.any.et.apply(Eq[-2], Eq.mean_value_theorem), algebra.all.any.imply.any.et.apply(Eq[-1], Eq.mean_value_theorem)
+    Eq <<= algebra.all.any.then.any.et.apply(Eq[-2], Eq.mean_value_theorem), algebra.all.any.then.any.et.apply(Eq[-1], Eq.mean_value_theorem)
 
-    Eq <<= Eq[-2].this.expr.apply(algebra.eq.cond.imply.cond.subs, reverse=True), \
-    Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs, reverse=True)
+    Eq <<= Eq[-2].this.expr.apply(algebra.eq.cond.then.cond.subs, reverse=True), \
+    Eq[-1].this.expr.apply(algebra.eq.cond.then.cond.subs, reverse=True)
 
-    Eq <<= Eq[-2].apply(algebra.cond.imply.all.restrict, (k, 1, n)), Eq[-1].apply(algebra.cond.imply.all.restrict, (k, 1, n - 1))
+    Eq <<= Eq[-2].apply(algebra.cond.then.all.restrict, (k, 1, n)), Eq[-1].apply(algebra.cond.then.all.restrict, (k, 1, n - 1))
 
-    Eq <<= algebra.all_le.imply.le.sum.apply(Eq[-2]), algebra.all_ge.imply.ge.sum.apply(Eq[-1])
+    Eq <<= algebra.all_le.then.le.sum.apply(Eq[-2]), algebra.all_ge.then.ge.sum.apply(Eq[-1])
 
     Eq <<= Eq[-2].this.lhs.doit(), Eq[-1].this.lhs.doit().reversed
 
@@ -49,7 +49,7 @@ def prove(Eq):
 
     Eq <<= Eq[-3] / Eq[-3].lhs, Eq[-1] / Eq[-3].lhs
 
-    Eq <<= calculus.le.imply.le.limit.apply(Eq[-2], (n, oo)), calculus.le.imply.le.limit.apply(Eq[-1], (n, oo))
+    Eq <<= calculus.le.then.le.limit.apply(Eq[-2], (n, oo)), calculus.le.then.le.limit.apply(Eq[-1], (n, oo))
 
     Eq << Eq[-1].this.rhs.doit()
 

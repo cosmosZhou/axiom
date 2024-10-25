@@ -25,57 +25,57 @@ def prove(Eq):
     Eq << apply(n, k)
 
     s1_quote = Eq[1].lhs
-    Eq.s1_quote_definition = sets.imply.all.conditionset.apply(s1_quote)
+    Eq.s1_quote_definition = sets.then.all.conditionset.apply(s1_quote)
 
     i = Eq[0].lhs.indices[0]
-    Eq.x_abs_positive_s1 = algebra.all_et.imply.all.apply(Eq.s1_quote_definition)
+    Eq.x_abs_positive_s1 = algebra.all_et.then.all.apply(Eq.s1_quote_definition)
 
-    Eq.x_abs_sum_s1 = algebra.all_et.imply.all.apply(Eq.s1_quote_definition, 1)
+    Eq.x_abs_sum_s1 = algebra.all_et.then.all.apply(Eq.s1_quote_definition, 1)
 
-    Eq.x_union_s1 = algebra.all_et.imply.all.apply(Eq.s1_quote_definition, 2)
+    Eq.x_union_s1 = algebra.all_et.then.all.apply(Eq.s1_quote_definition, 2)
 
     j = Symbol(domain=Range(k + 1))
-    Eq << sets.eq.imply.eq.cup.apply(Eq[0], (i, 0, k + 1))
+    Eq << sets.eq.then.eq.cup.apply(Eq[0], (i, 0, k + 1))
 
-    Eq.x_quote_union = algebra.all_eq.cond.imply.all.subs.apply(Eq.x_union_s1, Eq[-1])
+    Eq.x_quote_union = algebra.all_eq.cond.then.all.subs.apply(Eq.x_union_s1, Eq[-1])
 
-    Eq << Eq[0].apply(sets.eq.imply.eq.card)
+    Eq << Eq[0].apply(sets.eq.then.eq.card)
 
     x_quote_abs = Eq[-1]
-    Eq << Eq[-1].apply(algebra.eq.imply.eq.sum, (i, 0, k + 1))
+    Eq << Eq[-1].apply(algebra.eq.then.eq.sum, (i, 0, k + 1))
 
-    Eq << sets.imply.le.union.apply(*Eq[-1].rhs.args[1].arg.args)
+    Eq << sets.then.le.union.apply(*Eq[-1].rhs.args[1].arg.args)
 
-    Eq << algebra.eq.le.imply.le.subs.apply(Eq[-2], Eq[-1])
+    Eq << algebra.eq.le.then.le.subs.apply(Eq[-2], Eq[-1])
 
-    Eq << algebra.all_eq.cond.imply.all.subs.apply(Eq.x_abs_sum_s1, Eq[-1])
+    Eq << algebra.all_eq.cond.then.all.subs.apply(Eq.x_abs_sum_s1, Eq[-1])
 
-    Eq << Eq.x_quote_union.this.expr.apply(sets.eq.imply.eq.card)
+    Eq << Eq.x_quote_union.this.expr.apply(sets.eq.then.eq.card)
 
     u = Eq[-1].lhs.arg
-    Eq.SqueezeTheorem = sets.imply.le.cup.apply(u.expr, *u.limits)
+    Eq.SqueezeTheorem = sets.then.le.cup.apply(u.expr, *u.limits)
 
-    Eq << algebra.cond_piece.imply.ou.apply(x_quote_abs)
+    Eq << algebra.cond_piece.then.ou.apply(x_quote_abs)
 
     Eq << Eq[-1].subs(i, j)
 
-    Eq << algebra.cond.imply.all.restrict.apply(Eq[-2], (i, Unequal(i, j)))
+    Eq << algebra.cond.then.all.restrict.apply(Eq[-2], (i, Unequal(i, j)))
 
-    Eq << sets.imply.ge.apply(*Eq[-2].rhs.arg.args[::-1])
+    Eq << sets.then.ge.apply(*Eq[-2].rhs.arg.args[::-1])
 
-    Eq << Eq.x_abs_positive_s1.limits_subs(i, j).this.expr.apply(algebra.gt.ge.imply.gt.transit, Eq[-1])
+    Eq << Eq.x_abs_positive_s1.limits_subs(i, j).this.expr.apply(algebra.gt.ge.then.gt.trans, Eq[-1])
 
     Eq <<= Eq[-1] & Eq[-2]
 
     Eq <<= Eq.x_quote_union & Eq.SqueezeTheorem & Eq[-1]
 
-    Eq.x_quote_definition = algebra.eq.imply.eq.lamda.apply(Eq[0], (i, 0, k + 1))
+    Eq.x_quote_definition = algebra.eq.then.eq.lamda.apply(Eq[0], (i, 0, k + 1))
 
-    Eq << Eq.x_union_s1.this.expr.apply(sets.eq.imply.eq.intersect, {n})
+    Eq << Eq.x_union_s1.this.expr.apply(sets.eq.then.eq.intersect, {n})
 
-    Eq.nonoverlapping_s1_quote = Eq[-1].this.expr.apply(sets.is_empty.imply.all_is_empty.intersect)
+    Eq.nonoverlapping_s1_quote = Eq[-1].this.expr.apply(sets.is_empty.then.all_is_empty.intersect)
 
-    Eq.xi_complement_n = Eq.nonoverlapping_s1_quote.this.expr.apply(sets.intersect_is_empty.imply.eq.complement, reverse=True)
+    Eq.xi_complement_n = Eq.nonoverlapping_s1_quote.this.expr.apply(sets.intersect_is_empty.then.eq.complement, reverse=True)
 
     A_quote = Symbol(Lamda[j](Eq[2].rhs.expr))
     Eq.A_quote_definition = A_quote.this.definition
@@ -87,7 +87,7 @@ def prove(Eq):
 
     Eq << ~Eq.nonoverlapping
 
-    Eq << Eq[-1].this.expr.apply(sets.intersect_ne_empty.imply.any_el, simplify=None)
+    Eq << Eq[-1].this.expr.apply(sets.intersect_ne_empty.then.any_el, simplify=None)
 
     Eq << Eq[-1].this.expr.subs(Eq.A_quote_definition[j])
 
@@ -95,28 +95,28 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.rhs.expr.arg.definition
 
-    Eq << Eq[-1].this.expr.apply(sets.eq.imply.supset)
+    Eq << Eq[-1].this.expr.apply(sets.eq.then.supset)
 
-    Eq << Eq[-1].this.expr.apply(sets.supset_cup.imply.all_supset)
+    Eq << Eq[-1].this.expr.apply(sets.supset_cup.then.all_supset)
 
     Eq << Eq[-1].this.expr.subs(Eq[-1].expr.variable, Eq[-1].variable)
 
-    Eq << Eq[-1].this.expr.apply(sets.el_cup.imply.any_el)
+    Eq << Eq[-1].this.expr.apply(sets.el_cup.then.any_el)
 
     Eq << Eq[-1].this.expr.subs(Eq.x_quote_definition)
 
-    Eq << Eq[-1].this.expr.apply(algebra.cond_piece.imply.ou)
+    Eq << Eq[-1].this.expr.apply(algebra.cond_piece.then.ou)
 
     Eq << ~Eq[-1]
 
-    Eq << Eq[-1].this.expr.apply(algebra.all_et.given.et.all)
+    Eq << Eq[-1].this.expr.apply(algebra.all_et.of.et.all)
 
     return
     Eq << algebra.et.given.conds.apply(Eq[-1])
     return
     Eq <<= ~Eq[-1], ~Eq[-2]
     Eq << algebra.any_et.imply.any.limits_delete.apply(Eq[-2])
-    Eq << algebra.any_et.imply.any.split.apply(Eq[-2], simplify=False, index=1).apply(sets.eq.imply.eq.intersect, {n})
+    Eq << algebra.any_et.imply.any.split.apply(Eq[-2], simplify=False, index=1).apply(sets.eq.then.eq.intersect, {n})
     Eq << Eq[-1].subs(Eq.nonoverlapping_s1_quote)
     Eq << Eq[-2].this.expr.apply(sets.eq.imply.eq.complement, {n})
     Eq << Eq[-1].limits_subs(j_quote, i)
@@ -125,7 +125,7 @@ def prove(Eq):
     Eq << Eq[-1].limits_subs(i, _i)
     Eq << Eq.x_union_s1.function.lhs.this.bisect({_i, j})
     Eq << Eq[-1].subs(Eq[-2].reversed)
-    Eq << sets.imply.le.cup.apply(*Eq[-1].rhs.args)
+    Eq << sets.then.le.cup.apply(*Eq[-1].rhs.args)
     Eq << Eq[-2].apply(algebra.eq.imply.eq.abs)
     Eq << Eq[-1].subs(Eq.x_union_s1) + Eq[-2]
     Eq << Eq[-1] + Eq.x_abs_sum_s1
@@ -133,7 +133,7 @@ def prove(Eq):
     Eq << discrete.combinatorics.permutation.is_nonempty.s1.apply(n, k=k + 1)
     Eq << Eq[-1].subs(Eq[1].reversed)
     Eq <<= Eq[-1] & Eq[-3]
-    Eq << Eq.nonoverlapping.apply(sets.eq.imply.eq.cup, Eq.nonoverlapping.limits[1])
+    Eq << Eq.nonoverlapping.apply(sets.eq.then.eq.cup, Eq.nonoverlapping.limits[1])
     Eq << Eq[-1].this.expr.lhs.astype(Intersection)
     Eq << Eq.A_definition_simplified.subs(j, j_quote)
     Eq << Eq[-2].subs(Eq[-1].reversed, Eq.A_definition_simplified.reversed)

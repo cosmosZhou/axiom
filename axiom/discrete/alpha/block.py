@@ -1,7 +1,6 @@
 from util import *
 
-from axiom.discrete.imply.gt_zero.alpha import alpha
-
+from axiom.discrete.then.gt_zero.alpha import alpha
 
 @apply
 def apply(A):
@@ -30,17 +29,17 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.defun()
 
-    Eq << algebra.cond.imply.cond.subs.apply(Eq[0], x[:n], x[1:n + 1])
+    Eq << algebra.cond.then.cond.subs.apply(Eq[0], x[:n], x[1:n + 1])
 
-    Eq << discrete.imply.ne_zero.alpha.apply(Eq[-1].lhs.arg)
+    Eq << discrete.then.ne_zero.alpha.apply(Eq[-1].lhs.arg)
 
-    Eq << algebra.ne_zero.eq.imply.eq.inverse.apply(Eq[-1], Eq[-2])
+    Eq << algebra.ne_zero.eq.then.eq.inverse.apply(Eq[-1], Eq[-2])
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
+    Eq << algebra.cond.infer.then.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
-    
+
 
 
 if __name__ == '__main__':

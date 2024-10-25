@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(sets.cap.simplify.piece)
 
-    Eq << sets.eq.imply.eq.cap.apply(Eq[-1], (y,))
+    Eq << sets.eq.then.eq.cap.apply(Eq[-1], (y,))
 
     Eq << Eq[1].this.rhs.subs(Eq[-1])
 

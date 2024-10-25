@@ -25,7 +25,7 @@ def prove(Eq):
     Eq << apply((λ * γ) ** h[:n], reverse=True)
 
     i = Symbol(domain=Range(n))
-    Eq << algebra.eq.given.eq.getitem.apply(Eq[0], i)
+    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
 
     Eq << Eq[-1].this.find(MatMul).apply(discrete.matmul.to.sum)
 

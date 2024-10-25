@@ -1,5 +1,5 @@
-from . import imply
-from . import given
+from . import then
+from . import of
 from . import all
 from . import subset
 from . import supset

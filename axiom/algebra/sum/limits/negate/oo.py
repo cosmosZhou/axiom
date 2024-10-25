@@ -18,7 +18,7 @@ def prove(Eq):
     n = Symbol(integer=True, nonnegative=True)
     Eq << algebra.sum.limits.negate.apply(Sum[i:-n:n + 1](f(i)))
 
-    Eq << calculus.eq.imply.eq.limit.apply(Eq[-1], (n, oo))
+    Eq << calculus.eq.then.eq.limit.apply(Eq[-1], (n, oo))
 
     Eq << Eq[-1].this.rhs.apply(calculus.limit.to.sum)
 

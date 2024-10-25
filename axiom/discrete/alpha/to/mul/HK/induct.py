@@ -1,5 +1,8 @@
 from util import *
 
+from axiom.discrete.H.to.add.definition import H
+from axiom.discrete.K.to.add.definition import K
+from axiom.discrete.then.gt_zero.alpha import alpha
 
 @apply
 def apply(self):
@@ -9,16 +12,10 @@ def apply(self):
     return Equal(self, H(x[:n]) / K(x[:n]))
 
 
-from axiom.discrete.H.to.add.definition import H
-from axiom.discrete.K.to.add.definition import K
-from axiom.discrete.imply.gt_zero.alpha import alpha
-
-
 @prove
 def prove(Eq):
     from axiom import discrete, algebra
 
-    from axiom.discrete.imply.gt_zero.alpha import alpha
     x = Symbol(real=True, positive=True, shape=(oo,))
     n = Symbol(domain=Range(2, oo), given=False)
     Eq << apply(alpha(x[:n + 1]))
@@ -33,9 +30,9 @@ def prove(Eq):
 
     Eq << Eq.initial.subs(Eq[-3], Eq[-2], Eq[-1])
 
-    Eq << discrete.imply.ne_zero.K.apply(x[:3])
+    Eq << discrete.then.ne_zero.K.apply(x[:3])
 
-    Eq << algebra.et.given.et.apply(Eq[-2])
+    Eq << algebra.et.of.et.apply(Eq[-2])
 
 
     Eq << Eq[-1].this.lhs.args[1].apply(algebra.pow.to.mul.st.reciprocal, x[2])
@@ -51,13 +48,13 @@ def prove(Eq):
     Eq << Eq[-3].this.rhs.subs(Eq[-2], Eq[-1])
     Eq << Eq[-1].this.rhs.args[0].expand()
     Eq << Eq[-1].this.rhs.args[0].base.expand()
-    Eq << algebra.cond.imply.cond.subs.apply(Eq[0], x[:n + 1], BlockMatrix(x[:n], x[n] + 1 / x[n + 1]))
+    Eq << algebra.cond.then.cond.subs.apply(Eq[0], x[:n + 1], BlockMatrix(x[:n], x[n] + 1 / x[n + 1]))
     Eq << Eq[-1].this.lhs.apply(discrete.alpha.block)
     Eq << Eq[-1].this.rhs.args[0].defun()
     Eq << Eq[-1].this.rhs.args[1].base.defun()
     Eq << Eq[-1].this.rhs.apply(algebra.div.cancel, x[n + 1])
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
-    Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
+    Eq << algebra.cond.infer.then.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
 
 
 

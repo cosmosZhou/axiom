@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.split, cond={n + 1})
 
-    Eq.hypothesis = algebra.cond.imply.cond.subs.apply(Eq[0], x, x + 1)
+    Eq.hypothesis = algebra.cond.then.cond.subs.apply(Eq[0], x, x + 1)
 
     Eq << Eq.hypothesis - Eq[0]
 
@@ -59,7 +59,7 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.eq.infer.imply.eq.induct.apply(Eq.initial, Eq[-1], n=n)
+    Eq << algebra.eq.infer.then.eq.induct.apply(Eq.initial, Eq[-1], n=n)
 
 
 

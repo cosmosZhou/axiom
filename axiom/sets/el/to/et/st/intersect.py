@@ -26,9 +26,9 @@ def prove(Eq):
 
     Eq << apply(Element(x, A & B), index=0)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[-1])
+    Eq << algebra.iff.of.et.infer.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(sets.el_intersect.imply.el)
+    Eq << Eq[-1].this.lhs.apply(sets.el_intersect.then.el)
 
 
 if __name__ == '__main__':

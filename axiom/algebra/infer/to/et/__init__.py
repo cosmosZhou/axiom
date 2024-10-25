@@ -17,11 +17,11 @@ def prove(Eq):
     f, g, h = Function(integer=True)
     Eq << apply(Infer(x > y, (f(x) > g(y)) & (h(x) > g(y))))
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.infer.imply.et.infer)
+    Eq << Eq[-2].this.lhs.apply(algebra.infer.then.et.infer)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.infer.given.et.infer)
+    Eq << Eq[-1].this.rhs.apply(algebra.infer.of.et.infer)
 
 
 if __name__ == '__main__':

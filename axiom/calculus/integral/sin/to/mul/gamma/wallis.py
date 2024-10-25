@@ -46,11 +46,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Integral[-Expr]).simplify()
 
-    Eq << algebra.eq.imply.eq.simple_equation.apply(Eq[-1], -Eq[-1].rhs.args[1])
+    Eq << algebra.eq.then.eq.simple_equation.apply(Eq[-1], -Eq[-1].rhs.args[1])
 
     Eq << Eq[-1].this.rhs.find(Integral).expr.powsimp()
 
-    Eq << algebra.eq.eq.imply.eq.subs.apply(Eq[0], Eq[-1])
+    Eq << algebra.eq.eq.then.eq.subs.apply(Eq[0], Eq[-1])
 
     Eq << Eq[-1].this.rhs.ratsimp()
 
@@ -58,10 +58,10 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.eq.eq.infer.imply.eq.induct.apply(Eq[1], Eq[2], Eq[-1], n=n, start=1)
+    Eq << algebra.eq.eq.infer.then.eq.induct.apply(Eq[1], Eq[2], Eq[-1], n=n, start=1)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

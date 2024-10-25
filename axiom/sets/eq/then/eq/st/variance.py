@@ -1,0 +1,44 @@
+from util import *
+
+
+@apply
+def apply(eq):
+    (a, y), (((S[a], x), (S[x], X)), S[X]) = eq.of(Equal[Indexed, Sum[Indexed] / Card])
+
+    X_ = X | {y}
+    return Equal(Sum[x:X_]((a[x] - (Sum[x:X_](a[x])) / (Card(X_))) ** 2),
+                 Sum[x:X]((a[x] - (Sum[x:X](a[x])) / Card(X)) ** 2))
+
+
+@prove
+def prove(Eq):
+    from axiom import algebra, sets
+
+    y = Symbol(integer=True, given=True)
+    x = Symbol(integer=True)
+    a = Symbol(real=True, shape=(oo,), given=True)
+    X = Symbol(etype=dtype.integer, finiteset=True, given=True)
+    Eq << apply(Equal(a[y], Sum[x:X](a[x]) / Card(X)))
+
+    Eq << algebra.cond.of.et.infer.split.apply(Eq[1], cond=Element(y, X))
+
+    Eq << Element(y, X).this.apply(sets.el.then.eq.union)
+
+    Eq <<= Eq[-1] & Eq[-3]
+
+    Eq << Eq[-1].this.rhs.apply(algebra.eq.cond.of.et.subs)
+
+    Eq << algebra.cond.then.infer.apply(Eq[0], cond=Eq[3].lhs)
+
+    Eq << algebra.infer_et.then.infer.et.apply(Eq[-1])
+
+    Eq << Eq[-1].this.rhs.apply(sets.eq.notin.then.eq.st.variance)
+
+
+
+
+
+if __name__ == '__main__':
+    run()
+# created on 2021-04-03
+# updated on 2023-08-26

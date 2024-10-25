@@ -49,13 +49,13 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(i, m).subs(j, d[m])
 
-    Eq << algebra.eq.imply.eq.lamda.apply(Eq.hypothesis, (k, 0, n))
+    Eq << algebra.eq.then.eq.lamda.apply(Eq.hypothesis, (k, 0, n))
 
     Eq << Eq[-1].subs(Eq[1])
 
     Eq << Infer(Eq.hypothesis, Eq.induct, plausible=True)
 
-    Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], n=m, start=1)
+    Eq << algebra.cond.infer.then.cond.induct.apply(Eq.initial, Eq[-1], n=m, start=1)
 
 
 if __name__ == '__main__':

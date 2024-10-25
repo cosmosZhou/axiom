@@ -17,9 +17,9 @@ def prove(Eq):
 
     Eq << Eq[0].this.lhs.apply(geometry.acos.to.add.asin)
 
-    Eq << algebra.cond.given.et.infer.split.apply(Eq[1], cond=x >= 0)
+    Eq << algebra.cond.of.et.infer.split.apply(Eq[1], cond=x >= 0)
 
-    Eq <<= algebra.infer.given.infer.subs.bool.apply(Eq[-2]), algebra.infer.given.infer.subs.bool.apply(Eq[-1], invert=True)
+    Eq <<= algebra.infer.of.infer.subs.bool.apply(Eq[-2]), algebra.infer.of.infer.subs.bool.apply(Eq[-1], invert=True)
 
     Eq <<= Eq[-2].this.rhs.apply(algebra.eq.transport), Eq[-1].this.rhs.apply(algebra.eq.transport)
 
@@ -29,9 +29,9 @@ def prove(Eq):
 
     Eq << -Eq[-1].this.rhs
 
-    Eq << Eq.is_nonnegative.this.lhs.apply(geometry.ge_zero.imply.eq.add.asin)
+    Eq << Eq.is_nonnegative.this.lhs.apply(geometry.ge_zero.then.eq.add.asin)
 
-    Eq << Eq[-1].this.lhs.apply(geometry.lt_zero.imply.eq.add.asin)
+    Eq << Eq[-1].this.lhs.apply(geometry.lt_zero.then.eq.add.asin)
 
     # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 

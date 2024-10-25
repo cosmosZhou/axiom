@@ -28,15 +28,15 @@ def prove(Eq):
     y = Symbol(Eq[0].lhs)
     Eq << y.this.definition.reversed
 
-    Eq << algebra.eq.imply.et.squeeze.apply(Eq[-1])
+    Eq << algebra.eq.then.et.squeeze.apply(Eq[-1])
 
-    Eq <<= algebra.inf_le.imply.all.any.lt.apply(Eq[-2]), algebra.inf_ge.imply.all.ge.apply(Eq[-1])
+    Eq <<= algebra.inf_le.then.all.any.lt.apply(Eq[-2]), algebra.inf_ge.then.all.ge.apply(Eq[-1])
 
     Eq << Eq[0].subs(Eq[1]).reversed
 
-    Eq << algebra.eq.given.et.squeeze.apply(Eq[-1])
+    Eq << algebra.eq.of.et.squeeze.apply(Eq[-1])
 
-    Eq <<= algebra.inf_le.given.all_any_lt.apply(Eq[-2]), algebra.inf_ge.given.all.ge.apply(Eq[-1])
+    Eq <<= algebra.inf_le.of.all_any_lt.apply(Eq[-2]), algebra.inf_ge.of.all.ge.apply(Eq[-1])
     Eq <<= Eq[-2].this.expr.apply(algebra.any.limits.negate), Eq[-1].this.apply(algebra.all.limits.negate)
 
 

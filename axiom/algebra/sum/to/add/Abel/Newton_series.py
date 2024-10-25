@@ -53,7 +53,7 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.cond.infer.imply.cond.induct.apply(Eq.initial, Eq[-1], d, 1)
+    Eq << algebra.cond.infer.then.cond.induct.apply(Eq.initial, Eq[-1], d, 1)
 
     # https://en.wikipedia.org/wiki/Summation_by_parts
 

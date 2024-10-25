@@ -4,7 +4,7 @@ from . import supset
 from . import eq
 from . import ne
 from . import notin
-from . import imply
+from . import then
 from . import ge
 from . import all
 from . import all_el

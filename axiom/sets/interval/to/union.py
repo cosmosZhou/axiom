@@ -18,7 +18,7 @@ def prove(Eq):
     c = Symbol(domain=Interval(a, b, left_open=True, right_open=True))
     Eq << apply(Interval(a, b), c)
 
-    Eq << sets.eq.given.et.infer.apply(Eq[0])
+    Eq << sets.eq.of.et.infer.apply(Eq[0])
 
     Eq <<= Eq[-2].this.find(Element[Interval]).apply(sets.el_interval.to.et), Eq[-1].this.find(Element[Interval]).apply(sets.el_interval.to.et)
 
@@ -28,15 +28,15 @@ def prove(Eq):
 
     Eq <<= Eq[-2].this.find(Element).apply(sets.el_interval.to.et), Eq[-1].this.find(Element).apply(sets.el_interval.to.et)
 
-    Eq << algebra.infer_ou.given.et.infer.apply(Eq[-1])
+    Eq << algebra.infer_ou.of.et.infer.apply(Eq[-1])
 
-    Eq <<= algebra.infer_et.given.infer.delete.apply(Eq[-2]), algebra.infer_et.given.infer.delete.apply(Eq[-1], 0)
+    Eq <<= algebra.infer_et.of.infer.delete.apply(Eq[-2]), algebra.infer_et.of.infer.delete.apply(Eq[-1], 0)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.ge.imply.ge.relax, a)
+    Eq << Eq[-1].this.lhs.apply(algebra.ge.then.ge.relax, a)
 
-    Eq << Eq[-2].this.lhs.apply(algebra.lt.imply.lt.relax, b)
+    Eq << Eq[-2].this.lhs.apply(algebra.lt.then.lt.relax, b)
 
-    Eq << algebra.infer.given.ou.apply(Eq[-1])
+    Eq << algebra.infer.of.ou.apply(Eq[-1])
 
 
 if __name__ == '__main__':

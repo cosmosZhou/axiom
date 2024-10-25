@@ -14,11 +14,11 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(x >= 0)
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[0])
+    Eq << algebra.iff.of.et.infer.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.ge_zero.imply.ge_zero.sqrt)
+    Eq << Eq[-2].this.lhs.apply(algebra.ge_zero.then.ge_zero.sqrt)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.ge_zero.given.ge_zero.sqrt)
+    Eq << Eq[-1].this.rhs.apply(algebra.ge_zero.of.ge_zero.sqrt)
 
 
 if __name__ == '__main__':

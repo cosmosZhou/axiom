@@ -27,7 +27,7 @@ def prove(Eq):
     s = Symbol(Product[j:n + 1](f[i] + g[i, j]))
     Eq << s.this.definition
 
-    Eq << Eq[-1].apply(algebra.eq.imply.eq.prod, (i, 0, m))
+    Eq << Eq[-1].apply(algebra.eq.then.eq.prod, (i, 0, m))
 
     Eq << Eq[-2].this.rhs.apply(algebra.prod.to.mul.split, cond={n})
 
@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << Infer(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.infer.imply.eq.induct.apply(Eq[-1], n=n, start=1)
+    Eq << algebra.infer.then.eq.induct.apply(Eq[-1], n=n, start=1)
 
 
 

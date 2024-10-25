@@ -47,7 +47,7 @@ def get_args_for_writing(module, latexStr):
     input = []
     counterOfLengths = 0
     lengths = []
-    m = re.search('([\w.]+)\.(imply|given)\.', module)
+    m = re.search('([\w.]+)\.(imply|given|then|of)\.', module)
     numOfRequisites = len(m[1].split(".")) - 1 if m else 0
     createdTime = updatedTime = None
 

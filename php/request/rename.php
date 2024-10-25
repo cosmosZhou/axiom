@@ -15,8 +15,8 @@ if (! $dict) {
         'new::'
     ]);
     
-    $dict['old'] = "keras.eq_cup.imply.eq.matmul.softmax.batch_gather";
-    $dict['new'] = "keras.eq_card.subset_cup.imply.eq.matmul.softmax.batch_gather";
+    $dict['old'] = "keras.eq_cup.then.eq.matmul.softmax.batch_gather";
+    $dict['new'] = "keras.eq_card.subset_cup.then.eq.matmul.softmax.batch_gather";
 }
 
 $old = $dict['old'];

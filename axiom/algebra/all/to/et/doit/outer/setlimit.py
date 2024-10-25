@@ -40,19 +40,19 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(algebra.all.doit.outer.setlimit)
 
-    Eq << algebra.iff.iff.imply.iff.et.apply(Eq[-2], Eq[-1])
+    Eq << algebra.iff.iff.then.iff.et.apply(Eq[-2], Eq[-1])
 
     Eq << Equivalent(All[j:f(i), i:{c}](x[i, j] > 0), All[j:f(c)](x[c, j] > 0), plausible=True)
 
     Eq << Eq[-1].this.lhs.apply(algebra.all.doit.outer.setlimit)
 
-    Eq << algebra.iff.iff.imply.iff.et.apply(Eq[-2], Eq[-1])
+    Eq << algebra.iff.iff.then.iff.et.apply(Eq[-2], Eq[-1])
 
     Eq << Equivalent(All[j:f(i), i:{d}](x[i, j] > 0), All[j:f(d)](x[d, j] > 0), plausible=True)
 
     Eq << Eq[-1].this.lhs.apply(algebra.all.doit.outer.setlimit)
 
-    Eq << algebra.iff.iff.imply.iff.et.apply(Eq[-2], Eq[-1])
+    Eq << algebra.iff.iff.then.iff.et.apply(Eq[-2], Eq[-1])
 
 
 if __name__ == '__main__':

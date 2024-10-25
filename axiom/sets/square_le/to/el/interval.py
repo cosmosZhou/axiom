@@ -20,11 +20,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(GreaterEqual).reversed
 
-    Eq << algebra.iff.given.et.infer.apply(Eq[-1])
+    Eq << algebra.iff.of.et.infer.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.square_le.imply.et.le)
+    Eq << Eq[-2].this.lhs.apply(algebra.square_le.then.et.le)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.square_le.given.et.le)
+    Eq << Eq[-1].this.rhs.apply(algebra.square_le.of.et.le)
 
 
 

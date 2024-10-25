@@ -1,5 +1,5 @@
-from . import imply
+from . import then
 
 from . import el
-from . import given
+from . import of
 from . import is_complex
