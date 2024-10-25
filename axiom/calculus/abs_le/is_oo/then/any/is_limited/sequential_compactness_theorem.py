@@ -68,9 +68,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.apply(algebra.all.then.ou.subs, n, a[i], simplify=None)
     return
-    Eq << Eq[-1].this.expr.apply(algebra.cond.imply.all, i)
+    Eq << Eq[-1].this.expr.apply(algebra.cond.then.all, i)
     Eq << Eq[-1].this.expr.apply(algebra.all.limits.domain_defined)
-    #Eq << Eq[-1].this.find(Less[2]).apply(algebra.cond.imply.cond.domain_defined, ret=0)
+    #Eq << Eq[-1].this.find(Less[2]).apply(algebra.cond.then.cond.domain_defined, ret=0)
     Eq << Eq[-1].this.expr.expr.apply(algebra.ou.then.all, wrt=a[i], simplify=None)
     Eq << Eq[-1].this.expr.expr.apply(algebra.all.limits.domain_defined, wrt=a[i], simplify=None)
 

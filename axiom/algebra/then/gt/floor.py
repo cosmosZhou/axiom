@@ -27,18 +27,18 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    Eq << algebra.cond.all.imply.all_et.apply(Eq[-1], Eq[-3])
+    Eq << algebra.cond.all.then.all_et.apply(Eq[-1], Eq[-3])
 
-    Eq << Eq[-1].this.expr.apply(algebra.le.ge.imply.le.transit)
+    Eq << Eq[-1].this.expr.apply(algebra.le.ge.then.le.transit)
 
     Eq << ~Eq[-1]
 
-    Eq << algebra.any.given.any_et.limits.unleash.apply(Eq[-1])
+    Eq << algebra.any.of.any_et.limits.unleash.apply(Eq[-1])
 
-    Eq << Eq[-1].this.expr.apply(sets.gt.le.given.el)
+    Eq << Eq[-1].this.expr.apply(sets.gt.le.of.el)
 
     n = Eq[-1].variable
-    Eq << sets.imply.any_el.integer.apply(x, n)
+    Eq << sets.then.any_el.integer.apply(x, n)
 
 
 if __name__ == '__main__':

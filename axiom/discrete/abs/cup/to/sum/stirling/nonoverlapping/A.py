@@ -112,13 +112,13 @@ def prove(Eq):
     Eq << Eq[-1].this.expr.apply(algebra.all_et.of.et.all)
 
     return
-    Eq << algebra.et.given.conds.apply(Eq[-1])
+    Eq << algebra.et.of.conds.apply(Eq[-1])
     return
     Eq <<= ~Eq[-1], ~Eq[-2]
     Eq << algebra.any_et.imply.any.limits_delete.apply(Eq[-2])
     Eq << algebra.any_et.imply.any.split.apply(Eq[-2], simplify=False, index=1).apply(sets.eq.then.eq.intersect, {n})
     Eq << Eq[-1].subs(Eq.nonoverlapping_s1_quote)
-    Eq << Eq[-2].this.expr.apply(sets.eq.imply.eq.complement, {n})
+    Eq << Eq[-2].this.expr.apply(sets.eq.then.eq.complement, {n})
     Eq << Eq[-1].limits_subs(j_quote, i)
     Eq << Eq[-1].subs(Eq.xi_complement_n.subs(i, j)).subs(Eq.xi_complement_n)
     _i = i.copy(domain=Range(k + 1) - {j})
@@ -126,7 +126,7 @@ def prove(Eq):
     Eq << Eq.x_union_s1.function.lhs.this.bisect({_i, j})
     Eq << Eq[-1].subs(Eq[-2].reversed)
     Eq << sets.then.le.cup.apply(*Eq[-1].rhs.args)
-    Eq << Eq[-2].apply(algebra.eq.imply.eq.abs)
+    Eq << Eq[-2].apply(algebra.eq.then.eq.abs)
     Eq << Eq[-1].subs(Eq.x_union_s1) + Eq[-2]
     Eq << Eq[-1] + Eq.x_abs_sum_s1
     Eq <<= Eq[-1] & Eq.x_abs_positive_s1.subs(i, j)

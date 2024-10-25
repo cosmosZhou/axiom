@@ -161,14 +161,14 @@ def prove(Eq):
     return
     Eq << Eq[-1].this(var=Eq[-1].variables[0]).find(Sum).simplify()
     Eq << Eq[-1].this(var=Eq[-1].variables[0]).expr.rhs.find(Cup).simplify()
-    Eq << algebra.all.any.imply.any_et.apply(x_quote_union_abs, Eq[-1])
-    Eq << Eq[-1].this.expr.apply(algebra.eq.cond.imply.cond.subs)
-    Eq << algebra.all.any.imply.any_et.apply(Eq.SqueezeTheorem, Eq[-1])
+    Eq << algebra.all.any.then.any_et.apply(x_quote_union_abs, Eq[-1])
+    Eq << Eq[-1].this.expr.apply(algebra.eq.cond.then.cond.subs)
+    Eq << algebra.all.any.then.any_et.apply(Eq.SqueezeTheorem, Eq[-1])
     Eq << Eq.subset_A.subs(Eq[3])
     Eq << sets.subset.of.all_el.apply(Eq[-1])
     s2_hat_n = Symbol("\hat{s}_{2, n}", conditionset(*Eq[-1].limits[0]))
-    Eq << sets.all.given.all.conditionset.split.baseset.apply(Eq[-1], simplify=False, s=s2_hat_n)
-    Eq.s2_hat_n_assertion = Eq[-1].this.expr.apply(sets.element.given.any_contains.split.cup)
+    Eq << sets.all.of.all.conditionset.split.baseset.apply(Eq[-1], simplify=False, s=s2_hat_n)
+    Eq.s2_hat_n_assertion = Eq[-1].this.expr.apply(sets.element.of.any_contains.split.cup)
     Eq << s2_hat_n.this.definition
     Eq << Eq[-1].this.rhs.apply(sets.conditionset.to.imageset)
     s2_quote_n = Symbol("s'_{2, n}", conditionset(Eq[-1].rhs.variable, Eq[-1].rhs.limits[0][1]))
@@ -178,11 +178,11 @@ def prove(Eq):
     Eq << imageset(Eq[-2].rhs.variable, Eq[-2].rhs.expr.arg, s2_quote_n).this.subs(Eq[-1]).subs(Eq[-2].reversed).reversed
     Eq.s2_hat_n_hypothesis = Eq.s2_hat_n_assertion.this.limits[0].subs(Eq[-1])
     Eq << sets.then.all.conditionset.apply(s2_quote_n)
-    Eq << Eq[-1].this.expr.apply(sets.eq.eq.all_is_positive.notcontains.imply.eq.stirling2, s1=s1_quote)
+    Eq << Eq[-1].this.expr.apply(sets.eq.eq.all_is_positive.notcontains.then.eq.stirling2, s1=s1_quote)
     Eq << algebra.all_any.imply.all_any.limits_swap.apply(Eq[-1])
-    Eq << Eq.s2_hat_n_hypothesis.this.expr.expr.apply(sets.eq.given.eq.cup_finiteset)
+    Eq << Eq.s2_hat_n_hypothesis.this.expr.expr.apply(sets.eq.of.eq.cup_finiteset)
     Eq << Eq[-1].subs(Eq.x_quote_definition)
-    Eq.supset_A = sets.supset.imply.supset.cup.lhs.apply(Eq.supset_A, (j,), simplify=False)
+    Eq.supset_A = sets.supset.then.supset.cup.lhs.apply(Eq.supset_A, (j,), simplify=False)
     Eq <<= Eq.supset_A & Eq.subset_A
 
 

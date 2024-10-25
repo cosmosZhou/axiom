@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << algebra.iff.of.et.apply(Eq[-1])
 
-    # Eq << Eq[-2].this.lhs.apply(algebra.et.imply.ou, simplify=False)
+    # Eq << Eq[-2].this.lhs.apply(algebra.et.then.ou, simplify=False)
     Eq << Eq[-1].this.rhs.apply(algebra.ou.then.et.collect, cond=f(x) < g(y), simplify=False)
 
 

@@ -81,10 +81,10 @@ def prove(Eq):
     Eq << Eq.initial_doit.subs(Eq[-1])
     p0 = Eq[-1].variable
     Eq << Eq[-1].subs(b[:2], Matrix((0, KroneckerDelta(p0, a[0]))))
-    Eq << algebra.imply.all.limits_assert.apply(Eq[-1].limits)
-    Eq << Eq[-1].this.expr.apply(sets.eq.imply.eq.split.finiteset.indexed)
+    Eq << algebra.then.all.limits_assert.apply(Eq[-1].limits)
+    Eq << Eq[-1].this.expr.apply(sets.eq.then.eq.split.finiteset.indexed)
     Eq.induct = Eq.hypothesis.subs(n, n + 1)
-    Eq.induct_swap = Eq.induct.apply(sets.eq.given.eq.swap, n, b[n])
+    Eq.induct_swap = Eq.induct.apply(sets.eq.of.eq.swap, n, b[n])
     Eq << discrete.combinatorics.permutation.any.apply(a[:n + 1])
     Eq << Eq[-1].this.limits[0][1].definition
     Eq << Eq[-1].this.expr.limits_subs(Eq[-1].expr.variable, b[n])
@@ -106,10 +106,10 @@ def prove(Eq):
     d_quote = Symbol(Eq.deduction.lhs)
     Eq.d_quote_definition = d_quote.this.definition
     Eq << Eq.d_swap.this.rhs.args[1].definition - Eq.d_quote_definition + Eq.d_quote_definition.lhs
-    Eq << algebra.eq.imply.eq.getitem.apply(Eq[-1], a, i=Eq[-1].lhs.variable, simplify=None)
+    Eq << algebra.eq.then.eq.getitem.apply(Eq[-1], a, i=Eq[-1].lhs.variable, simplify=None)
     return
-    Eq << algebra.eq.eq.imply.eq.transit.apply(Eq.a_swap, Eq[-1])
-    Eq << Eq.induct_swap.apply(algebra.eq.eq.given.eq.transit, Eq[-1])
+    Eq << algebra.eq.eq.then.eq.transit.apply(Eq.a_swap, Eq[-1])
+    Eq << Eq.induct_swap.apply(algebra.eq.eq.of.eq.transit, Eq[-1])
     Eq.deduction = Eq.deduction.subs(Eq.d_quote_definition.reversed)
     Eq << Eq.d_quote_definition.lhs[n].this.definition
     Eq << Eq[-1].this.rhs.args[1].expr.astype(KroneckerDelta)
@@ -130,7 +130,7 @@ def prove(Eq):
     Eq << Eq[-1].subs(Eq[-2])
     Eq << Eq[-1].subs(Eq.any_n_plausible)
     Eq << Infer(Eq[2], Eq.induct, plausible=True)
-    Eq << algebra.cond.suffice.imply.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
+    Eq << algebra.cond.suffice.then.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
     Eq << Eq[1].subs(Eq[2])
 
 

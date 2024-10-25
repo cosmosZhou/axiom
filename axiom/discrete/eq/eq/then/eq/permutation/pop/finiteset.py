@@ -38,19 +38,19 @@ def prove(Eq):
     Eq << Eq[2].subs(Eq[-1].reversed).reversed
     Eq.plausible = NotElement(n, Eq[-1].rhs, plausible=True)
     Eq << ~Eq.plausible
-    Eq << Eq[-1].apply(sets.element.imply.any_contains.split.cup)
+    Eq << Eq[-1].apply(sets.element.then.any_contains.split.cup)
     i = Eq[-1].variable
     _i = i.copy(domain=Range(n))
     Eq << Eq[-1].limits_subs(i, _i)
     Eq << Eq[0].lhs.this.split({_i, n})
     Eq.paradox = Eq[-1].subs(Eq[-2].reversed).subs(Eq[1])
-    Eq << sets.imply.le.union.apply(*Eq.paradox.expr.rhs.args)
-    Eq << sets.imply.le.cup.apply(*Eq.paradox.expr.rhs.args[1].args)
+    Eq << sets.then.le.union.apply(*Eq.paradox.expr.rhs.args)
+    Eq << sets.then.le.cup.apply(*Eq.paradox.expr.rhs.args[1].args)
     Eq << Eq[-2] + Eq[-1]
-    Eq << Eq.paradox.apply(algebra.eq.imply.eq.abs)
+    Eq << Eq.paradox.apply(algebra.eq.then.eq.abs)
     Eq << Eq[-1].subs(Eq[0])
     Eq << Eq[-3].subs(Eq[-1].reversed)
-    Eq << sets.notcontains.imply.eq.complement.apply(Eq.plausible)
+    Eq << sets.notcontains.then.eq.complement.apply(Eq.plausible)
 
 
 if __name__ == '__main__':

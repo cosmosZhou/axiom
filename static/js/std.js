@@ -2429,7 +2429,7 @@ class Union extends SymbolicSet {
 	}
 	
 	try_union(){
-		//http://localhost/sympy/axiom.php?module=sets.eq_card.subset.imply.eq
+		//http://localhost/sympy/axiom.php?module=sets.eq_card.subset.then.eq
 		var bbox = this.bbox;
 		return this.card == bbox.card ? bbox: this;
 	}

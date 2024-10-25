@@ -42,9 +42,9 @@ def prove(Eq):
     Eq << apply(All[x:c(x)](Element(f(x), s)), x, a[i])
 
     return
-    Eq << algebra.all.imply.ou.limits_delete.apply(Eq[0], 1)
-    Eq << Eq[-1].this.find(All).apply(algebra.all.imply.cond.subs, x, n(i))
-    Eq << algebra.ou.imply.all.apply(Eq[-1], 1)
+    Eq << algebra.all.then.ou.limits_delete.apply(Eq[0], 1)
+    Eq << Eq[-1].this.find(All).apply(algebra.all.then.cond.subs, x, n(i))
+    Eq << algebra.ou.then.all.apply(Eq[-1], 1)
     
 
 

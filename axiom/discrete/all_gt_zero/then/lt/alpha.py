@@ -16,9 +16,9 @@ def prove(Eq):
 
     Eq << apply(All[i:1:oo](x[i] > 0), n)
     return
-    Eq << discrete.imply.suffice.is_positive.K.apply(x[:n])
+    Eq << discrete.then.suffice.is_positive.K.apply(x[:n])
 
-    Eq << algebra.cond.suffice.imply.cond.transit.apply(Eq[0], Eq[-1])
+    Eq << algebra.cond.suffice.then.cond.transit.apply(Eq[0], Eq[-1])
 
 
 if __name__ == '__main__':

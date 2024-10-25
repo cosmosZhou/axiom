@@ -39,7 +39,7 @@ def prove(Eq):
                 All[i:k + 1](Card(x[i]) > 0),
                 NotElement({n}, x[:k + 1].cup_finiteset()))
     return
-    Eq << sets.eq.eq.imply.is_empty.stirling2.apply(Eq[0], Eq[1])
+    Eq << sets.eq.eq.then.is_empty.stirling2.apply(Eq[0], Eq[1])
 
     Eq << sets.is_empty.imply.eq.complement.apply(Eq[-1], reverse=True)
 

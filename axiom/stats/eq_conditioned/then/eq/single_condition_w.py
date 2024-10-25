@@ -31,23 +31,23 @@ def prove(Eq):
 
     return
     Eq << stats.eq_conditioned.imply.is_nonzero.apply(Eq[0])
-    Eq.xyz_nonzero, Eq.w_nonzero = algebra.et.imply.conds.apply(Eq[-1])
+    Eq.xyz_nonzero, Eq.w_nonzero = algebra.et.then.conds.apply(Eq[-1])
     Eq << stats.is_nonzero.imply.et.apply(Eq.xyz_nonzero)
-    Eq.y_nonzero, Eq.z_nonzero = algebra.et.imply.cond.apply(Eq[-1], index=slice(1, 3))
+    Eq.y_nonzero, Eq.z_nonzero = algebra.et.then.cond.apply(Eq[-1], index=slice(1, 3))
     Eq.xy_probability = stats.bayes.corollary.apply(Eq.y_nonzero, var=x | w)
     Eq << stats.is_nonzero.imply.is_nonzero.conditioned.apply(Eq.xyz_nonzero, wrt=w)
     Eq << stats.is_nonzero.imply.eq.bayes.apply(Probability(x | w, y, z), y, z)
-    Eq << algebra.all.imply.ou.apply(Eq[-1])
+    Eq << algebra.all.then.ou.apply(Eq[-1])
     Eq <<= Eq[-1] & Eq[-3]
-    Eq << algebra.et.imply.conds.apply(Eq[-1])
+    Eq << algebra.et.then.conds.apply(Eq[-1])
     Eq << Eq[-1].subs(Eq[0])
     Eq <<= stats.total_probability_theorem.apply(Eq[-1].lhs, z), \
         stats.total_probability_theorem.apply(Eq[-1].rhs.args[0], z), \
-        calculus.eq.imply.eq.integral.apply(Eq[-1], (pspace(z).symbol,))
+        calculus.eq.then.eq.integral.apply(Eq[-1], (pspace(z).symbol,))
     Eq << Eq[-3].subs(Eq.xy_probability)
     Eq << Eq[-1].subs(Eq[-2])
     Eq << Eq[-1].subs(Eq[-4])
-    Eq << algebra.ne_zero.eq.imply.eq.scalar.apply(Eq[-1], Eq.y_nonzero)
+    Eq << algebra.ne_zero.eq.then.eq.scalar.apply(Eq[-1], Eq.y_nonzero)
     Eq << Eq[-1].reversed
 
 

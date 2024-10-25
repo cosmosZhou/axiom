@@ -72,7 +72,7 @@ def prove(Eq):
     Eq << Eq.expand.subs(Eq.x_di_eqaulity)
 
     return
-    Eq.union_equality, Eq.piecewise_equality = sets.subset.imply.eq.union.apply(Eq[-2]), Eq.definition.subs(Eq[-1])
+    Eq.union_equality, Eq.piecewise_equality = sets.subset.then.eq.union.apply(Eq[-2]), Eq.definition.subs(Eq[-1])
     Eq.piecewise_equality = Eq.piecewise_equality.this.lhs.expand()
     Eq << Eq.piecewise_equality.lhs.args[-1].this.split({di, dj})
     Eq << Eq[-1].subs(Eq.x_dj_eqaulity).subs(Eq.x_di_eqaulity)
@@ -80,9 +80,9 @@ def prove(Eq):
     Eq << Eq.di_definition.this.rhs.defun().this.rhs.expand()
     Eq << Eq[-2].subs(Eq[-1].reversed)
     Eq.piecewise_equality = Eq.piecewise_equality.subs(Eq[-1])
-    Eq << sets.element.imply.eq.piecewise.expr_swap.apply(Eq.dj_domain, Eq.piecewise_equality.lhs.args[2])
-    Eq << sets.element.imply.eq.piecewise.expr_swap.apply(Eq.di_domain, Eq.piecewise_equality.lhs.args[-1])
-    Eq << sets.element.imply.eq.intersection.apply(Eq.dj_domain)
+    Eq << sets.element.then.eq.piecewise.expr_swap.apply(Eq.dj_domain, Eq.piecewise_equality.lhs.args[2])
+    Eq << sets.element.then.eq.piecewise.expr_swap.apply(Eq.di_domain, Eq.piecewise_equality.lhs.args[-1])
+    Eq << sets.element.then.eq.intersection.apply(Eq.dj_domain)
     Eq << Eq[-2].subs(Eq[-1])
     Eq << Eq[-4] + Eq[-1]
     Eq << Eq.piecewise_equality.subs(Eq[-1])

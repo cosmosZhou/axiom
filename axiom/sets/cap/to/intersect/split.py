@@ -17,17 +17,17 @@ def prove(Eq):
     Eq << apply(Cap[x:A](f(x)), B)
 
     return # the following will result recursive proving
-    Eq << sets.eq.given.suffice.apply(Eq[0], wrt='y')
-    Eq <<= Eq[-2].this.rhs.apply(sets.element.given.contains.split.intersection, simplify=False), \
-    Eq[-1].this.lhs.apply(sets.element.imply.contains.split.intersection)
-    Eq <<= Eq[-2].this.lhs.apply(sets.element.imply.all_contains.st.cap), \
-    Eq[-1].this.rhs.apply(sets.element.given.all_contains.st.cap)
-    Eq <<= Eq[-2].this.rhs.args[0].apply(sets.element.given.all_contains.st.cap), \
-    Eq[-1].this.lhs.args[0].apply(sets.element.imply.all_contains.st.cap)
-    Eq <<= Eq[-2].this.rhs.args[0].apply(sets.element.given.all_contains.st.cap), \
-    Eq[-1].this.lhs.args[0].apply(sets.element.imply.all_contains.st.cap)
-    Eq <<= Eq[-2].this.rhs.apply(algebra.all.all.given.all.limits_union), \
-    Eq[-1].this.lhs.apply(algebra.all.all.imply.all.limits_union)
+    Eq << sets.eq.of.suffice.apply(Eq[0], wrt='y')
+    Eq <<= Eq[-2].this.rhs.apply(sets.element.of.contains.split.intersection, simplify=False), \
+    Eq[-1].this.lhs.apply(sets.element.then.contains.split.intersection)
+    Eq <<= Eq[-2].this.lhs.apply(sets.element.then.all_contains.st.cap), \
+    Eq[-1].this.rhs.apply(sets.element.of.all_contains.st.cap)
+    Eq <<= Eq[-2].this.rhs.args[0].apply(sets.element.of.all_contains.st.cap), \
+    Eq[-1].this.lhs.args[0].apply(sets.element.then.all_contains.st.cap)
+    Eq <<= Eq[-2].this.rhs.args[0].apply(sets.element.of.all_contains.st.cap), \
+    Eq[-1].this.lhs.args[0].apply(sets.element.then.all_contains.st.cap)
+    Eq <<= Eq[-2].this.rhs.apply(algebra.all.all.of.all.limits_union), \
+    Eq[-1].this.lhs.apply(algebra.all.all.then.all.limits_union)
 
 
 if __name__ == '__main__':

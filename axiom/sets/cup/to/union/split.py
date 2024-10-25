@@ -17,17 +17,17 @@ def prove(Eq):
     Eq << apply(Cup[x:A](f(x)), cond=B)
 
     return # the following will result in recursive proving!
-    Eq << sets.eq.given.suffice.apply(Eq[0], wrt='y')
-    Eq <<= Eq[-2].this.rhs.apply(sets.element.given.ou.split.union), \
-    Eq[-1].this.lhs.apply(sets.element.imply.ou.split.union)
-    Eq <<= Eq[-2].this.find(Element[Cup]).apply(sets.element.imply.any_contains.st.cup), \
-    Eq[-1].this.find(Element[Cup]).apply(sets.element.given.any_contains.st.cup)
-    Eq <<= Eq[-2].this.find(Element[Cup]).apply(sets.element.given.any_contains.st.cup), \
-    Eq[-1].this.find(Element[Cup]).apply(sets.element.imply.any_contains.st.cup)
-    Eq <<= Eq[-2].this.find(Element[Cup]).apply(sets.element.given.any_contains.st.cup), \
-    Eq[-1].this.find(Element[Cup]).apply(sets.element.imply.any_contains.st.cup)
-    Eq <<= Eq[-2].this.rhs.apply(algebra.ou.given.any), \
-    Eq[-1].this.lhs.apply(algebra.ou.imply.any)
+    Eq << sets.eq.of.suffice.apply(Eq[0], wrt='y')
+    Eq <<= Eq[-2].this.rhs.apply(sets.element.of.ou.split.union), \
+    Eq[-1].this.lhs.apply(sets.element.then.ou.split.union)
+    Eq <<= Eq[-2].this.find(Element[Cup]).apply(sets.element.then.any_contains.st.cup), \
+    Eq[-1].this.find(Element[Cup]).apply(sets.element.of.any_contains.st.cup)
+    Eq <<= Eq[-2].this.find(Element[Cup]).apply(sets.element.of.any_contains.st.cup), \
+    Eq[-1].this.find(Element[Cup]).apply(sets.element.then.any_contains.st.cup)
+    Eq <<= Eq[-2].this.find(Element[Cup]).apply(sets.element.of.any_contains.st.cup), \
+    Eq[-1].this.find(Element[Cup]).apply(sets.element.then.any_contains.st.cup)
+    Eq <<= Eq[-2].this.rhs.apply(algebra.ou.of.any), \
+    Eq[-1].this.lhs.apply(algebra.ou.then.any)
 
 
 if __name__ == '__main__':

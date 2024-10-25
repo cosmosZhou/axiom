@@ -11,9 +11,9 @@ def BandPart(x, *limits):
     '''
     >>> n = 20
     >>> BandPart[5, 3](OneMatrix(n, n)).this.defun()
-    >>> algebra.eq.imply.eq.bool.apply(Eq[-1].this.rhs.doit())     
+    >>> algebra.eq.then.eq.bool.apply(Eq[-1].this.rhs.doit())     
     >>> BandPart[5, 3, 2](OneMatrix(n, n)).this.defun() #dilated version
-    >>> algebra.eq.imply.eq.bool.apply(Eq[-1].this.rhs.doit())
+    >>> algebra.eq.then.eq.bool.apply(Eq[-1].this.rhs.doit())
     '''
     
     if len(limits) == 3:

@@ -24,7 +24,7 @@ def prove(Eq):
     Eq << Eq[-1].subs(Eq[0].reversed)
 
     # the following codes will issue an error because of illegal domain definition
-#     Eq << algebra.eq.imply.eq.invoke.apply(Eq[0], log)
+#     Eq << algebra.eq.then.eq.invoke.apply(Eq[0], log)
 
 
 if __name__ == '__main__':

@@ -87,21 +87,21 @@ def prove(Eq):
     Eq.indexu_eq_indexv = Eq.x_slice_domain.this.expr.apply(discrete.combinatorics.permutation.index.swap, u, v, w=w)
     Eq << Eq.x_slice_domain.this.expr.apply(discrete.eq.then.et.index, u)
     Eq.indexu_contains, Eq.x_indexu_equality = algebra.all_et.imply.all.apply(Eq[-1], simplify=None)
-    Eq.equality_of_indexu_and_n = (Eq.x_indexu_equality & Eq.x_slice_last).this.expr.apply(algebra.eq.eq.imply.eq.transit)
+    Eq.equality_of_indexu_and_n = (Eq.x_indexu_equality & Eq.x_slice_last).this.expr.apply(algebra.eq.eq.then.eq.transit)
     i, j, m = Symbol(domain=Range(n + 1))
     Eq << Eq.x_slice_domain.this.expr.apply(discrete.combinatorics.permutation.index.kronecker_delta.indexOf, i, j)
     x = Eq[-1].variable.base
     Eq.ou = Eq[-1].subs(i, x[n])
     Eq << Any(Eq.ou.function.args[0], *Eq.ou.limits, plausible=True)
-    Eq << algebra.all.any.imply.any_et.apply(Eq.x_slice_last, Eq[-1])
+    Eq << algebra.all.any.then.any_et.apply(Eq.x_slice_last, Eq[-1])
     Eq <<= Eq.ou & ~Eq[-1]
     Eq << algebra.all_et.imply.all.apply(Eq[-1], index=1)
     Eq.indexOf_indexed = Eq.x_slice_domain.this.expr.apply(discrete.combinatorics.permutation.index.indexOf_indexed, j=m)
     Eq << Eq.indexOf_indexed.subs(m, n)
-    Eq << (Eq[-2] & Eq[-1]).this.expr.apply(algebra.eq.eq.imply.eq.subs)
+    Eq << (Eq[-2] & Eq[-1]).this.expr.apply(algebra.eq.eq.then.eq.subs)
     Eq.ou = Eq[-1].subs(j, Eq.equality_of_indexu_and_n.function.lhs)
     Eq << Any(Eq.ou.function.args[0], *Eq.ou.limits, plausible=True)
-    Eq << algebra.all.any.imply.any_et.apply(Eq.x_indexu_equality, Eq[-1])
+    Eq << algebra.all.any.then.any_et.apply(Eq.x_indexu_equality, Eq[-1])
     Eq <<= Eq.ou & ~Eq[-1]
     Eq << algebra.all_et.imply.all.apply(Eq[-1], index=1)
     Eq.ou = Eq.indexOf_indexed.subs(m, Eq.equality_of_indexu_and_n.function.lhs.indices[0])
@@ -110,14 +110,14 @@ def prove(Eq):
     Eq.index_equality = algebra.all_et.imply.all.apply(Eq.ou & ~Eq[-1], index=1)
     Eq << discrete.combinatorics.permutation.is_nonempty.Qu.apply(n, u)
     Eq <<= Eq[-3] & Eq.index_equality
-    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.subs)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.then.eq.subs)
     Eq <<= Eq[-1] & Eq.equality_of_indexu_and_n
-    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.subs)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.then.eq.subs)
     Eq <<= Eq.indexu_eq_indexv & Eq[-1]
-    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.imply.eq.subs, swap=True, reverse=True)
+    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.then.eq.subs, swap=True, reverse=True)
     Eq << algebra.all_eq.cond.then.all.subs.apply(Eq[-1], Eq.indexu_eq_indexu)
     Eq <<= Eq.x_eq_swap_Xv & Eq[-1]
-    Eq << Eq[-1].this.expr.apply(algebra.et.given.et.subs.eq, index=0)
+    Eq << Eq[-1].this.expr.apply(algebra.et.of.et.subs.eq, index=0)
     Eq << algebra.all_et.given.all.apply(Eq[-1])
     Eq << Eq[-1].subs(Eq.Xv_definition)
     Eq << discrete.matrix.elementary.swap.multiply.left.apply(x[:n + 1], i=n, j=Eq.h_domain.lhs, w=w)
