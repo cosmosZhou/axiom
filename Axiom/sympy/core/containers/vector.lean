@@ -1,15 +1,13 @@
-import Mathlib.Tactic
 import Axiom.sympy.core.containers.list
--- import Axiom.sympy.core.containers.list
 
-namespace Vector
+namespace Mathlib.Vector
 
 -- Implement the instance for Vector
-instance [DecidableEq α] {n : Nat} : IsUniform α (Vector α n) where
-  is_uniform := fun v => v.val is uniform
+instance : IsConstant (Vector α n) where
+  is_constant v := v.val is constant
 
 
-def dot [Add α] [Mul α] [Zero α] {n : ℕ} (v1 v2 : Vector α n) : α :=
+def dot [Add α] [Zero α] [Mul α] (v1 v2 : Vector α n) : α :=
   match n, v1, v2 with
   | 0, ⟨[], _⟩, ⟨[], _⟩ => 0
   | n + 1, ⟨x :: xs, h1⟩, ⟨y :: ys, h2⟩ =>
@@ -23,4 +21,15 @@ def dot [Add α] [Mul α] [Zero α] {n : ℕ} (v1 v2 : Vector α n) : α :=
 
 infix:70 "⬝" => dot
 
-end Vector
+/--
+def sum [Add α] [Zero α] (v : Vector α n) : α :=
+  v.val.sum
+-/
+
+def sum [Add α] [Zero α] : Vector α n → α
+  | ⟨v, _⟩ => v.sum
+
+def headD : Vector α n → α → α
+  | ⟨v, _⟩, d => v.headD d
+
+end Mathlib.Vector

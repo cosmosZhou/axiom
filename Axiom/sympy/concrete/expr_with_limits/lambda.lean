@@ -1,6 +1,5 @@
-import Mathlib.Tactic
-set_option linter.unusedVariables false
-
+import Axiom.Basic
+open Mathlib
 
 def Lambda (n : ℕ) (f : ℕ → α) : Vector α n :=
   match n with
@@ -17,15 +16,14 @@ def append {n : ℕ} (v : Vector α n) (x : α) : Vector α (n + 1) :=
 lemma append_to_cons
   {n : ℕ}
   {x y : α}
-  (v : Vector α n):
+  (v : Vector α n) :
 -- imply
-  append (Vector.cons x v) y = Vector.cons x (append v y) :=
+  append (Vector.cons x v) y = Vector.cons x (append v y) := by
 -- proof
-by
   induction n with
   | zero =>
     rfl
-  | succ n ih =>
+  | succ n _ =>
     rfl
 
 
@@ -34,9 +32,8 @@ lemma simp_Lambda_head
   {n : ℕ}
   {f : ℕ → α} :
 -- imply
-  (Lambda (n + 1) f).head = f 0 :=
+  (Lambda (n + 1) f).head = f 0 := by
 -- proof
-by
   rw [Lambda]
   rfl
 
@@ -46,9 +43,8 @@ lemma simp_Lambda_tail
   {n : ℕ}
   {f : ℕ → α} :
 -- imply
-  (Lambda (n + 1) f).tail = Lambda n (λ i => f (i + 1)) :=
+  (Lambda (n + 1) f).tail = Lambda n (λ i => f (i + 1)) := by
 -- proof
-by
   rw [Lambda]
   rfl
 
@@ -58,8 +54,7 @@ lemma append_lambda_to_cons
   (f : ℕ → α) :
 -- proof
   append (Lambda (n + 1) f) (f (n + 1)) =
-  f 0 ::ᵥ (append (Lambda n (λ i => f (i + 1))) (f (n + 1))) :=
-by
+  f 0 ::ᵥ (append (Lambda n (λ i => f (i + 1))) (f (n + 1))) := by
   --unfold the left hand side
   calc
     append (Lambda (n + 1) f) (f (n + 1)) = (Lambda (n + 1) f).head ::ᵥ (append (Lambda (n + 1) f).tail (f (n + 1))) := by rw [append]
@@ -72,9 +67,8 @@ lemma substitution_step
 -- given
   (h1: ∀ f : ℕ → α, Lambda (n + 1) f = append (Lambda n f) (f n)) :
 -- imply
-  ∀ f : ℕ → α, Lambda (n + 1) (λ i => f (i + 1)) = append (Lambda n (λ i => f (i + 1))) (f (n + 1)) :=
+  ∀ f : ℕ → α, Lambda (n + 1) (λ i => f (i + 1)) = append (Lambda n (λ i => f (i + 1))) (f (n + 1)) := by
 -- proof
-by
   intro f
   specialize h1 (λ i => f (i + 1))
   rw [h1]
@@ -83,9 +77,8 @@ by
 lemma lambda_to_append_inductive
   {n : ℕ} :
 -- imply
-  ∀ (f : ℕ → α), Lambda (n + 1) f = append (Lambda n f) (f n) :=
+  ∀ (f : ℕ → α), Lambda (n + 1) f = append (Lambda n f) (f n) := by
 -- proof
-by
   induction n with
   | zero =>
     intro f

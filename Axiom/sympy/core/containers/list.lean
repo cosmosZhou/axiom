@@ -1,18 +1,17 @@
-import Mathlib.Tactic
+import Axiom.Basic
 
-class IsUniform (α : Type u) [DecidableEq α] (T : Type v) where
-  is_uniform : T → Prop
+class IsConstant (T : Type v) where
+  is_constant : T → Prop
 
 -- Define the postfix operator using the type class
 
-postfix:min "is uniform" =>
-  fun x => IsUniform.is_uniform x
+postfix:min "is constant" =>
+  fun x => IsConstant.is_constant x
 
-instance [DecidableEq α] : IsUniform α (List α) where
-  is_uniform := fun xs =>
-    match xs with
+instance : IsConstant (List α) where
+  is_constant : List α → Prop
     | [] => True
-    | (x :: xs) => ∀ y ∈ xs, y = x
+    | (x0 :: X) => ∀ x ∈ X, x = x0
 
 namespace List
 
