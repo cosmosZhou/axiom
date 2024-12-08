@@ -112,7 +112,7 @@ G = lambda l: U('GREEK CAPITAL LETTER %s' % l.upper())
 
 greek_letters = list(greeks)  # make a copy
 # deal with Unicode's funny spelling of lambda
-greek_letters[greek_letters.index('lambda')] = 'lamda'
+# greek_letters[greek_letters.index('lambda')] = 'lamda'
 
 # {}  greek letter -> (g,G)
 greek_unicode = {l: (g(l), G(l)) for l in greek_letters}
@@ -137,7 +137,7 @@ GB = lambda l: U('MATHEMATICAL BOLD CAPITAL  %s' % l.upper())
 
 greek_bold_letters = list(greeks)  # make a copy, not strictly required here
 # deal with Unicode's funny spelling of lambda
-greek_bold_letters[greek_bold_letters.index('lambda')] = 'lamda'
+# greek_bold_letters[greek_bold_letters.index('lambda')] = 'lamda'
 
 # {}  greek letter -> (g,G)
 greek_bold_unicode = {l: (g(l), G(l)) for l in greek_bold_letters}

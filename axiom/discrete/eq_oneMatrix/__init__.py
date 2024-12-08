@@ -1,1 +1,1 @@
-from . import eq_oneMatrix
+from . import Eq_OneMatrix

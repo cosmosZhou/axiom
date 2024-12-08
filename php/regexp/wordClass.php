@@ -1,13 +1,88 @@
 <?php
+require_once __DIR__.'/../std.php';
 require_once __DIR__.'/Lexeme.php';
 require_once __DIR__.'/balancedMatch.php';
 
 //select distinct regexp_substr(text, "\\b[a-z]+omo\\b") from markush where text regexp "\\b[a-z]+omo\\b";
+$proper_noun = [
+    "bely",
+    "Helly",
+    "Lily",
+    "willy",
+    "[A-Z]ly",
+    "[DST]aly"
+];
+
+$nouns = [
+    "assembly", "anomaly", "ally", 
+    "b?uly",
+    "do[li]ly",
+    "family",
+    "homily", "hillbilly",
+    "jelly", 
+    "lily",
+    "monopoly",
+    "panoply", "(pot|under)?belly", 
+    "[ch]olly",
+    "\w+fly"
+];
+
+$verbs = [
+    "apply",
+    "rally",
+    "reply",
+    "[sbg]ully",
+    "[tsd]ally",
+    "(under|over)?supply"
+];
+
+$adjs = [
+    "annually",
+    "bodily", "bally", "bubbly", "beastly", "bastardly", "burly", 
+    "costly", "chilly", "cowardly", "crumbly", "childly", "comradely", "cleanly", "chapely", "curly", 
+    "daily", "deadly", "deathly", 
+    "early", "(un)?earthly", "easterly", "elderly",
+    "(un)?friendly",
+    "goodly", "(un)?gainly", "grisly", "ghastly", "godly", "ghostly", "guly",
+    "hourly", "(un)?holy", "heavenly",
+    "kindly", "kingly",
+    "lovely", "lonely", "lively", "lordly", "likely", "lowly", "leisurely",
+    "(bi)?monthly", "melancholy", "(un)?manly", "manly", "miserly", "mannerly", "masterly", 
+    "nightly", "niggardly", "namely",
+    "orderly", "oily", "only",
+    "princely", "poorly", "prickly", "portly", "poly",
+    "queenly", "quarterly",
+    "(un)?ruly", "rascally", 
+    "silly", "sickly", "(un)?scholarly", "(un)?sightly", "scholarly", "shingly", "silly", "sisterly", "stately", "seemly", "southwesterly", 
+    "(un)?timely",
+    "ugly",
+    "wifely", "womanly", "(bi)?weekly", "wily", "worldly", "wooly",
+    "(bi)?yearly",
+    "[ch]omely",
+    "(mo|fa|bro)therly"
+];
+
+$nonAdv = [...$proper_noun, ...$nouns, ...$verbs, ...$adjs];
+$nonAdv = array_map(fn($word) => std\substring($word, 0, -2), $nonAdv);
+$nonAdv = join("|", $nonAdv);
+
+$sufix = [
+    '[^p]o', //[^p]oly
+    'x',     //xly
+    'alk',   //alkly
+];
+$sufix = join("|", $sufix);
+// negative looking behind in javaScript
+// $adv = "[a-z]+(?<!\b($nonAdv)|$sufix)ly";
+
+// negative looking behind in PHP
+$adv = "(?=\b[a-z]+)(?:(?!(?:\b(?:$nonAdv)|$sufix)ly)\w)*ly";
+// $adv = "(?=^[a-z]+)(?:(?!(?:\b(?:$nonAdv)|$sufix)ly).)*ly"; // alternatively
 
 $wordClass = [
     "number" => "zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|fourty|fifty|sixty|seventy|eighty|ninety|hundrens?|thousands?|millions?",
     "preposition" => "of|from|for|to|into|among|at|by|in|below|as|with(in|out)?|behind|ahead|onto|on|about|under|above|over|after|before|through(out)?|until|inside|outside|since",
-    'adv' => '[a-z]+(?<!\b(fami|name|assemb|(under|over)?supp|app|anoma|po|[A-Z])|[^p]o|x|alk)ly|further',
+    'adv' => "$adv|further",
     'adj' => '(non|un)?[a-z]+(able|tive|[tlnrm]ic|[sl]ent|ical|[a-z]ing|rous|bile|ible)|linear|lower|higher|low|straight|(un)?necessary|honorary|imaginary|elementary|stationary|temporary|sedentary|mercenary|(in)?appropriate',
 
     'arithmetic' => '[=≠<>≤≥≦≧]|>=|<=|!=',
@@ -35,7 +110,7 @@ $wordClass = [
     'chemEntity' => "[:chemGroup:]|[:chemType:]|[:chemAtom:]|[:chemFormula:]|★",
 
     'chemHolderText' => '[:chemSymbol:](<(sup|sub)>\w+\s*</(sup|sub)>|\d*)[\'"′″*]*',
-    'chemHolders' => '[:chemHolderText:]|[:chemSymbol:]<(sup|sub)>\d+\s*</(sup|sub)> *([—–-] *|to +)[:chemSymbol:]<(sup|sub)>\d+\s*</(sup|sub)>|[:chemSymbol:]\d+( *[—–-] *| +to +)[:chemSymbol:]\d+',
+    'chemHolders' => '[:chemHolderText:]|[:chemSymbol:]<(sup|sub)>\d+\s*</(sup|sub)> *([—–-] *|to +)[:chemSymbol:]<(sup|sub)>\d+\s*</(sup|sub)>|[:chemSymbol:]\d+( *[—–-] *| +to +)[:chemSymbol:]\d+'
 ];
 
 foreach ($wordClass as &$expr) {
@@ -52,4 +127,17 @@ function functional_substitution($s){
     return $s;
 }
 
+function main() {
+    global $adv;
+    $match = ['fully', 'certainly', 'tremendously', 'generally', 'likely'];
+    $u_match = ['namely', 'family', 'supply'];
+    
+    foreach ([...$match, ...$u_match] as $item){
+        if (preg_match("/".$adv."/", $item, $matches)) {
+            echo "succeed: $item<br>";
+        } else {
+            echo "failed: $item<br>";
+        }
+    }    
+}
 ?>

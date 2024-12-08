@@ -3,7 +3,7 @@
 // ^ *error_log
 namespace std;
 
-use Iterator, JsonSerializable, IteratorAggregate, RuntimeException, Exception;
+use Iterator, JsonSerializable, IteratorAggregate, RuntimeException, Exception, Traversable;
 use curl_init, curl_setopt, curl_exec, curl_errno, curl_close;
 use mb_detect_encoding, mb_convert_encoding;
 use SplMinHeap;
@@ -24,32 +24,32 @@ class QueueIterator implements Iterator
     }
 
     // Rewind the Iterator to the first element
-    public function rewind()
+    public function rewind(): void
     {
         $this->_index = 0;
     }
 
     // Return the current element
-    public function current()
+    public function current(): mixed
     {
         return $this->_queue->get($this->_index);
     }
 
     // Return the key of the current element
-    public function key()
+    public function key(): mixed
     {
         return $this->_index;
     }
 
     // Move forward to next element
-    public function next()
+    public function next(): void
     {
         ++ $this->_index;
-        return $this;
+        // return $this;
     }
 
     // Checks if current position is valid
-    public function valid()
+    public function valid(): bool
     {
         return $this->_index < $this->_queue->size();
     }
@@ -64,28 +64,28 @@ class Queue implements JsonSerializable, IteratorAggregate
     /**
      *
      * @var int pointer to the front
-     *     
+     *
      */
     private $_start;
 
     /**
      *
      * @var int pointer to the rear
-     *     
+     *
      */
     private $_stop;
 
     /**
      *
      * @var array data
-     *     
+     *
      */
     private $_array;
 
     /**
      *
      * @var int the actual capacity of queue;
-     *     
+     *
      */
     private $_capacity;
 
@@ -118,7 +118,7 @@ class Queue implements JsonSerializable, IteratorAggregate
     /**
      *
      * @method enqueue
-     *        
+     *
      * @param mixed $elem
      *
      * @return bool
@@ -151,7 +151,7 @@ class Queue implements JsonSerializable, IteratorAggregate
     /**
      *
      * @method dequeue
-     *        
+     *
      * @return mixed|null
      *
      */
@@ -175,7 +175,7 @@ class Queue implements JsonSerializable, IteratorAggregate
     /**
      *
      * @method check whether the queue is empty
-     *        
+     *
      * @return bool
      *
      */
@@ -209,7 +209,7 @@ class Queue implements JsonSerializable, IteratorAggregate
     }
 
     // Required definition of interface IteratorAggregate
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new QueueIterator($this);
     }
@@ -217,7 +217,7 @@ class Queue implements JsonSerializable, IteratorAggregate
     /**
      *
      * @method clear the whole queue.
-     *        
+     *
      */
     public function clear()
     {
@@ -226,7 +226,7 @@ class Queue implements JsonSerializable, IteratorAggregate
         $this->_stop = 0;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $array = [];
         foreach ($this as $value) {
@@ -252,7 +252,7 @@ class SetIterator implements Iterator
     }
 
     // Rewind the Iterator to the first element
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->_array);
         $this->_index = 0;
@@ -260,27 +260,27 @@ class SetIterator implements Iterator
     }
 
     // Return the current element
-    public function current()
+    public function current(): mixed
     {
         return key($this->_array);
     }
 
     // Return the key of the current element
-    public function key()
+    public function key(): mixed
     {
         return $this->_index;
     }
 
     // Move forward to next element
-    public function next()
+    public function next(): void
     {
         $this->_valid = next($this->_array) === false ? false : true;
         ++ $this->_index;
-        return $this;
+        // return $this;
     }
 
     // Checks if current position is valid
-    public function valid()
+    public function valid(): bool
     {
         return $this->_valid;
     }
@@ -356,12 +356,12 @@ class Set implements JsonSerializable, IteratorAggregate
     }
 
     // Required definition of interface IteratorAggregate
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new SetIterator($this->set);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $array = [];
         foreach ($this as $value) {
@@ -493,12 +493,12 @@ class Graph implements JsonSerializable, IteratorAggregate
     }
 
     // Required definition of interface IteratorAggregate
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new GraphIterator($this->graph);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->graph;
     }
@@ -522,14 +522,14 @@ class GraphIterator implements Iterator
     }
 
     // Rewind the Iterator to the first element
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->_array);
         $this->set_iterator = current($this->_array)->getIterator();
     }
 
     // Return the current element
-    public function current()
+    public function current(): mixed
     {
         return [
             key($this->_array),
@@ -538,13 +538,13 @@ class GraphIterator implements Iterator
     }
 
     // Return the key of the current element
-    public function key()
+    public function key(): mixed
     {
         return $this->_key;
     }
 
     // Move forward to next element
-    public function next()
+    public function next(): void
     {
         $this->set_iterator->next();
         if ($this->set_iterator->valid()) {
@@ -556,11 +556,11 @@ class GraphIterator implements Iterator
             }
         }
         ++ $this->_key;
-        return $this;
+        // return $this;
     }
 
     // Checks if current position is valid
-    public function valid()
+    public function valid(): bool
     {
         return $this->_valid;
     }
@@ -703,7 +703,7 @@ class Text implements IteratorAggregate
     }
 
     // Required definition of interface IteratorAggregate
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         // error_log("public function getIterator()");
         return new TextIterator($this->file);
@@ -964,7 +964,7 @@ class TextIterator implements Iterator
     }
 
     // Rewind the Iterator to the first element
-    public function rewind()
+    public function rewind(): void
     {
         // error_log("public function TextIterator::rewind()");
         \rewind($this->file);
@@ -972,7 +972,7 @@ class TextIterator implements Iterator
     }
 
     // Return the current element
-    public function current()
+    public function current(): mixed
     {
         // error_log("public function current()");
         $line = fgets($this->file);
@@ -981,22 +981,22 @@ class TextIterator implements Iterator
     }
 
     // Return the key of the current element
-    public function key()
+    public function key(): mixed
     {
         // error_log("public function key()");
         return $this->line;
     }
 
     // Move forward to next element
-    public function next()
+    public function next(): void
     {
         // error_log("public function next()");
         ++ $this->line;
-        return $this;
+        // return $this;
     }
 
     // Checks if current position is valid
-    public function valid()
+    public function valid(): bool
     {
         // error_log("public function valid()");
         // if (is_bool($this->file)) {
@@ -1018,26 +1018,6 @@ function get_extension($file)
 function equals($lhs, $rhs)
 {
     return ! strcmp($lhs, $rhs);
-}
-
-function startsWith($haystack, $needle, $offset=0)
-{
-    if ($offset) {
-        return slice($haystack, $offset, $offset + len($needle)) === $needle;
-    }
-    else {
-        return substr($haystack, 0, strlen($needle)) === $needle;
-    }
-}
-
-function endsWith($haystack, $needle)
-{
-    $length = strlen($needle);
-    if ($length == 0) {
-        return true;
-    }
-
-    return substr($haystack, - $length) === $needle;
 }
 
 function quote($param)
@@ -1205,18 +1185,20 @@ function establish_hierarchy($node, $select_hierarchy)
     return $graph;
 }
 
+// for multi-bytes string slicing
 function slice(&$s, $start, $stop = null, $step = 1)
 {
     if (is_string($s)) {
         if ($step == 1) {
             if ($stop === null)
                 return (new CString($s))->slice($start, $stop);
-                //return mb_substr($s, $start, $stop, "utf8");
+                // return mb_substr($s, $start, $stop, "utf8");
 
             if ($stop < 0)
                 $stop += len($s);
 
-            return mb_substr($s, $start, $stop - $start, "utf8");
+            return (new CString($s))->slice($start, $stop);
+            // return mb_substr($s, $start, $stop - $start, "utf8");
         }
         else {
             if ($stop === null)
@@ -1224,7 +1206,7 @@ function slice(&$s, $start, $stop = null, $step = 1)
             elseif ($stop < 0)
                 $stop += len($s);
                     
-            return implode('', array_map(fn($i) => get($s, $i), ranged($start, $stop, $step)));
+            return implode('', array_map(fn($i) => slice($s, $i, $i + 1), ranged($start, $stop, $step)));
         }
     } else {
         if ($step == 1) {
@@ -1307,7 +1289,7 @@ function form_post($url, $data = null, $decode = True)
     return $decode ? decode($result) : $result;
 }
 
-function json_post($url, $data = NULL, $decode = NULL)
+function json_post($url, $data = NULL, $decode = NULL, $stream_id = null)
 {
     $curl = curl_init();
 
@@ -1324,20 +1306,72 @@ function json_post($url, $data = NULL, $decode = NULL)
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     curl_setopt($curl, CURLOPT_HEADER, 0);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-        'Content-Type: application/json; charset=utf-8',
-        'Content-Length:' . strlen($data),
-        'Cache-Control: no-cache',
-        'Pragma: no-cache'
-    ));
+
+    if (is_array($decode)) {
+        $header = $decode;
+        $decode = null;
+    }
+    else {
+        $header = [];
+    }
+    
+    $header[] = 'Content-Type: application/json; charset=utf-8';
+    $header[] = 'Content-Length:' . strlen($data);
+    $header[] = 'Cache-Control: no-cache';
+    $header[] = 'Pragma: no-cache';
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    if ($stream_id !== null) {
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache'); //Prevent Caching
+        header('Connection: keep-alive');
+        header('X-Accel-Buffering: no');
+
+        curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        // https://github.com/qiayue/php-openai-gpt-stream-chat-api-webui
+        // ob_start();
+        $buffer = '';
+        curl_setopt($curl, CURLOPT_WRITEFUNCTION, function($curl, $data) use ($stream_id, &$buffer){
+            $size = strlen($data);
+            // error_log('$data = '. $data);
+
+            if ($buffer) {
+                $data = $buffer.$data;
+                $buffer = '';
+            }
+
+            $i = strrpos($data, "\n\n");
+            if ($i === False) {
+                $buffer = $data;
+                return $size;
+            }
+
+            $i += 2;
+            $buffer = substring($data, $i);
+            if ($buffer)
+                $data = substring($data, 0, $i);
+
+            $lines = explode("\n\n", $data);
+            array_pop($lines);
+            foreach ($lines as $line) {
+                echo "id:$stream_id\n$line\n\n";
+                // ob_flush();
+                flush();
+            }
+            return $size;
+        });
+    }
+
     $res = curl_exec($curl);
     $errorno = curl_errno($curl);
     if ($errorno) {
         return $errorno;
     }
     curl_close($curl);
-
+    // if ($stream_id !== null) {
+        // ob_end_clean();
+    // }
     return $decode ? decode($res) : $res;
 }
 
@@ -1701,20 +1735,32 @@ class HttpClient
     }
 }
 
-function zip(&$arr0, &$arr1)
+function zip(&$arr0, &$arr1, &$arr2=null)
 {
-    $size = min(count($arr0), count($arr1));
-    for ($i = 0; $i < $size; ++ $i) {
-        yield [
-            $arr0[$i],
-            $arr1[$i]
-        ];
+    if ($arr2 !== null) {
+        $size = min(count($arr0), count($arr1), count($arr2));
+        for ($i = 0; $i < $size; ++ $i) {
+            yield [
+                $arr0[$i],
+                $arr1[$i],
+                $arr2[$i]
+            ];
+        }
+    }
+    else {
+        $size = min(count($arr0), count($arr1));
+        for ($i = 0; $i < $size; ++ $i) {
+            yield [
+                $arr0[$i],
+                $arr1[$i]
+            ];
+        }
     }
 }
 
-function zipped(&$arr0, &$arr1)
+function zipped($arr0, $arr1, $arr2=null)
 {
-    return iterator_to_array(zip($arr0, $arr1));
+    return iterator_to_array(zip($arr0, $arr1, $arr2));
 }
 
 function pop(&$arr, $key, $value = null)
@@ -1845,7 +1891,7 @@ abstract class SymbolicSet implements JsonSerializable
         }
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [];
     }
@@ -1884,7 +1930,7 @@ class EmptySet extends SymbolicSet
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [];
     }
@@ -2128,7 +2174,7 @@ class Union extends SymbolicSet
         return implode('\t', array_map(fn ($domain) => $domain->sliced($obj), $this->args));
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $array = [];
         foreach ($this->args as $value) {
@@ -2142,7 +2188,7 @@ class Union extends SymbolicSet
 
     public function try_union()
     {
-        // http://localhost/sympy/axiom.php?module=sets.eq_card.subset.then.eq
+        // http://localhost/axiom/?module=Sets.Eq_Card.Subset.to.Eq
         $bbox = $this->bbox();
         return $this->card() == $bbox->card() ? $bbox : $this;
     }
@@ -2327,7 +2373,7 @@ class Range extends SymbolicSet
         return slice($obj, $this->start, $this->stop);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             "start" => $this->start,
@@ -2374,7 +2420,7 @@ class Rectangle extends SymbolicSet
         $this->height = $height;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             "x" => $this->x,
@@ -2728,7 +2774,7 @@ function array_any($fn, $array)
 
 function hump($str)
 {
-    return preg_replace_callback("/_[a-z]/", fn ($s) => strtoupper(slice($s[0], 1)), $str);
+    return preg_replace_callback("/_[a-z]/", fn ($s) => strtoupper(substring($s[0], 1)), $str);
 }
 
 function contains($str, $char)
@@ -2770,7 +2816,7 @@ class CString implements IteratorAggregate
     }
 
     // Required definition of interface IteratorAggregate
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new CStringIterator($this->string);
     }
@@ -2831,20 +2877,20 @@ class CString implements IteratorAggregate
         return null;
     }
 
-    public static function get_utf8_char_len($byte)
+    public static function utf8ByteSize($byte)
     {
         // for error: return 0
         // for valid results: return 1-6
         // never return other value
 
         // UTF8 encoding format：
-        // 0 1 2 3 4 5
-        // U-00000000 - U-0000007F: 0xxxxxxx
-        // U-00000080 - U-000007FF: 110xxxxx 10xxxxxx
-        // U-00000800 - U-0000FFFF: 1110xxxx 10xxxxxx 10xxxxxx
-        // U-00010000 - U-001FFFFF: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-        // U-00200000 - U-03FFFFFF: 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
-        // U-04000000 - U-7FFFFFFF: 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+        // closed integer interval   0        1        2        3        4        5
+        // [U-00000000, U-0000007F]: 0xxxxxxx
+        // [U-00000080, U-000007FF]: 110xxxxx 10xxxxxx
+        // [U-00000800, U-0000FFFF]: 1110xxxx 10xxxxxx 10xxxxxx
+        // [U-00010000, U-001FFFFF]: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+        // [U-00200000, U-03FFFFFF]: 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+        // [U-04000000, U-7FFFFFFF]: 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
         $byte = ord($byte);
 
         $len = 0;
@@ -2947,42 +2993,42 @@ class CStringIterator implements Iterator
     }
 
     // Rewind the Iterator to the first element
-    public function rewind()
+    public function rewind(): void
     {
         $this->offset = 0;
     }
 
     // Return the current element
-    public function current()
+    public function current(): string
     {
         $offset = $this->offset;
         // error_log("this->string = ".$this->string);
         // error_log("this->string[$offset] = ".$this->string[$offset]);
         // error_log("ord(this->string[$offset]) = ".ord($this->string[$offset]));
-        return substr($this->string, $offset, CString::get_utf8_char_len($this->string[$offset]));
+        return substr($this->string, $offset, CString::utf8ByteSize($this->string[$offset]));
     }
 
     // Return the key of the current element
-    public function key()
+    public function key(): mixed
     {
         return $this->offset;
     }
 
     // Move forward to next element
-    public function next()
+    public function next(): void
     {
-        $this->offset += CString::get_utf8_char_len($this->string[$this->offset]);
-        return $this;
+        $this->offset += CString::utf8ByteSize($this->string[$this->offset]);
+        // return $this;
     }
 
     // Checks if current position is valid
-    public function valid()
+    public function valid(): bool
     {
         return $this->offset < $this->strlen;
     }
 }
 
-function getitem(&$data, $index, ...$indices)
+function &getitem(&$data, $index, ...$indices)
 {
     if (count($indices) == 0) {
         if ($data == null)
@@ -3000,18 +3046,17 @@ function getitem(&$data, $index, ...$indices)
 function delitem(&$data, $index, ...$indices)
 {
     if (count($indices) == 0) {
-        if ($data == null)
-            return;
-            
-        if (array_key_exists($index, $data)) {
-            unset($data[$index]);
-            return;
+        if ($data != null) {
+            if (array_key_exists($index, $data)) {
+                if (is_int($index) && is_list($data))
+                    array_delete($data, $index);
+                else
+                    unset($data[$index]);
+            }
         }
-            
-        return;
     }
-    
-    delitem($data[$index], ...$indices);
+    else
+        delitem($data[$index], ...$indices);
 }
 
 function setitem(&$data, $index, ...$indices)
@@ -3042,10 +3087,10 @@ function fullmatch($regexp, $str)
     $slash = $regexp[0];
     $i = strrpos($regexp, $slash);
 
-    $flags = substring($regexp, $i + 1);
-    $regexp = substring($regexp, 1, $i);
+    $flags = substr($regexp, $i + 1);
+    $regexp = substr($regexp, 1, $i - 1);
 
-    $regexp = "$slash^(?:${regexp})\$${slash}$flags";
+    $regexp = "$slash^(?:$regexp)\$$slash$flags";
 
     if (preg_match($regexp, $str, $m))
         return $m;
@@ -3086,7 +3131,7 @@ function &matchAllExtended($regex, $str, $captureIndex=0)
             $matches[] = $m;
             $start += $index + strlen($mText);
         }
-        else 
+        else
             break;
     }
     while ($i < $strlen);
@@ -3147,7 +3192,7 @@ function replaceAll($regex, $fn, $str, $join = true)
 
     $end = $utf8? len($str): strlen($str);
     if ($start < $end) {
-        $rest = $utf8? slice($str, $start):substring($str, $start);
+        $rest = $utf8? slice($str, $start): substring($str, $start);
         if ($join)
             $newText[] = $rest;
         else
@@ -3171,7 +3216,17 @@ function indexOf($array, $element)
             return $index;
     }
 
-    return - 1;
+    return -1;
+}
+
+function index($array, $element)
+{
+    foreach ($array as $key => &$value) {
+        if ($value === $element)
+            return $key;
+    }
+
+    return -1;
 }
 
 function deleteIndices(&$arr, $fn, $postprocess = null)
@@ -3194,7 +3249,7 @@ function deleteIndices(&$arr, $fn, $postprocess = null)
     return True;
 }
 
-function remove_duplicate(&$list)
+function delete_duplicate(&$list)
 {
     $set = new Set();
     deleteIndices($list, function (&$list, $i) use ($set) {
@@ -3207,12 +3262,13 @@ function remove_duplicate(&$list)
     });
 }
 
-function len(&$s)
+function len($s)
 {
     if (is_array($s))
         return count($s);
 
-    return mb_strlen($s, 'utf8');
+    return (new CString($s))->length;
+    // return mb_strlen($s, 'utf8');
 }
 
 function add(&$array, $val)
@@ -3249,7 +3305,7 @@ function not(&$str) {
 
 function json_extract(&$obj, $path) {
     $paths = [];
-    foreach (matchAll(slice($path, 1), '/\[(\d+)\]|\.([^.\[\]]+)/') as $m) {
+    foreach (matchAll(substring($path, 1), '/\[(\d+)\]|\.([^.\[\]]+)/') as $m) {
         $paths[] = ($m[2] || (int)$m[1]);
     }
     
@@ -3258,11 +3314,11 @@ function json_extract(&$obj, $path) {
 
 function json_remove(&$obj, $path) {
     $paths = [];
-    foreach (matchAll('/\[(\d+)\]|\.([^.\[\]]+)/', slice($path, 1)) as [$m, $index]) {
+    foreach (matchAll('/\[(\d+)\]|\.([^.\[\]]+)/', substring($path, 1)) as [$m, $index]) {
         $paths[] = $m[2]? $m[2]: (int)$m[1];
     }
     
-    return delitem($obj, ...$paths);
+    delitem($obj, ...$paths);
 }
 
 function boolval($bool) {

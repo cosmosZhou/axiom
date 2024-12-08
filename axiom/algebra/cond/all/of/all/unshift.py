@@ -13,14 +13,14 @@ def apply(cond, all):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     k, a = Symbol(integer=True)
     b = Symbol(domain=Range(a + 1, oo))
     g = Function(integer=True)
     Eq << apply(g(a - 1) > 0, All[k:a:b](g(k) > 0))
 
-    Eq << algebra.all.then.et.all.split.apply(Eq[-1], cond={a - 1})
+    Eq << Algebra.All.to.And.All.split.apply(Eq[-1], cond={a - 1})
 
 
 

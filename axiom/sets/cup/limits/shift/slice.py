@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self, index=0):
-    from axiom.algebra.sum.limits.shift.slice import rewrite
+    from Axiom.Algebra.Sum.limits.shift.Slice import rewrite
     return Equal(self, rewrite(Cup, self, index))
 
 
@@ -17,7 +17,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.rhs.simplify()
 
-    
+
 
 
 if __name__ == '__main__':

@@ -1,1 +1,1 @@
-from . import eq
+from . import Eq

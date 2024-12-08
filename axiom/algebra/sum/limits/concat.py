@@ -58,7 +58,7 @@ def apply(self, index=0):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, positive=True)
     i = Symbol(domain=Range(n - 1))
@@ -66,7 +66,7 @@ def prove(Eq):
     f = Function(real=True, shape=())
     Eq << apply(Sum[x[i], x[i + 1:n + 1]](f(x[i:n])))
 
-    Eq << Eq[0].this.rhs.apply(algebra.sum.limits.shift.slice)
+    Eq << Eq[0].this.rhs.apply(Algebra.Sum.limits.shift.Slice)
 
 
 if __name__ == '__main__':

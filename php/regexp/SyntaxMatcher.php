@@ -45,7 +45,7 @@ function split2array($x, $y, $endlingSpaces)
         $x = preg_replace("\\((?!\\?)", "(?:", $x);
         $y = preg_replace("\\((?!\\?)", "(?:", $y);
 
-        if (std\endsWith($x, " +") || std\endsWith($x, "\\s")) {
+        if (str_ends_with($x, " +") || str_ends_with($x, "\\s")) {
             $x .= "\\S?";
             $y .= "\\S?";
         }
@@ -464,13 +464,13 @@ class SyntaxFilterExpression
             if ($i < 0) {
                 foreach (std\range(count($substituentList)) as $i) {
                     if (is_string($substituentList[$i])) {
-                        if (std\startsWith($substituentList[$i], $infixList[$j])) {
+                        if (str_starts_with($substituentList[$i], $infixList[$j])) {
                             $substituentList[$i] = std\substring($substituentList[$i], strlen($infixList[$j]));
                             std\array_insert($substituentList, $i, $infixList[$j]);
                             break;
-                        } 
+                        }
                         
-                        if (std\startsWith($infixList[$j], $substituentList[$i])) {
+                        if (str_starts_with($infixList[$j], $substituentList[$i])) {
                             $this->halve($infixIndices, $substituentList, $infixList, $i, $j);
                             break;
                         }
@@ -479,7 +479,7 @@ class SyntaxFilterExpression
                             break;
                         }
                         
-                        if (std\startsWith($infixList[$j], '('.$substituentList[$i].')')) {
+                        if (str_starts_with($infixList[$j], '('.$substituentList[$i].')')) {
                             $substituentList[$i] = '('.$substituentList[$i].')';
                             $this->halve($infixIndices, $substituentList, $infixList, $i, $j);
                             break;
@@ -496,7 +496,7 @@ class SyntaxFilterExpression
             elseif ($i > 0 && count($infixList) > count($substituentList)) {
                 foreach (std\range(0, $i) as $i_) {
                     if (is_string($substituentList[$i_])) {
-                        if (std\startsWith($substituentList[$i_], $infixList[$j])) {
+                        if (str_starts_with($substituentList[$i_], $infixList[$j])) {
                             $substituentList[$i_] = std\substring($substituentList[$i_], strlen($infixList[$j]));
                             std\array_insert($substituentList, $i_, $infixList[$j]);
                             $i = $i_;
@@ -650,8 +650,8 @@ class SyntaxMatcher
 
 function transform_infix($old, $new = null, $scan=false, $projective=true)
 {
-    // error_log("function transform_infix");
-    $binary = preg_match("/(?!=[\\\\])[\\\\]\\d+/", $old) ? true : false;
+    // $binary = preg_match("/(?!=[\\\\])[\\\\]\\d+/", $old) ? true : false;
+    $binary = preg_match("/(?![\\\\])[\\\\]\\d+/", $old) ? true : false;
     if ($new === null) {
         if ($scan) {
             [$infix, $indices] = SyntaxMatcher::transform($old, $scan);

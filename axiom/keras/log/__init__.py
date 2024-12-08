@@ -1,2 +1,2 @@
-from . import softmax
-from . import reducedSum
+from . import Softmax
+from . import ReducedSum

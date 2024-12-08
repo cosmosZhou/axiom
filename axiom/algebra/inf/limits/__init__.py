@@ -1,2 +1,2 @@
 from . import subs
-from . import negate
+from . import Neg

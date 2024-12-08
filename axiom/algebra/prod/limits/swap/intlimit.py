@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.sum.limits.swap.intlimit import limits_swap
+    from Axiom.Algebra.Sum.limits.swap.intlimit import limits_swap
     return Equal(self, limits_swap(Product, self))
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra, sets
+    from Axiom import Algebra, Sets
 
     i, j, d, a = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
@@ -17,13 +17,13 @@ def prove(Eq):
     g = Symbol(shape=(oo, oo), real=True)
     Eq << apply(Product[i:a + d:j + d, j:a:n](f[i] + g[i, j]))
 
-    Eq << Eq[0].this.lhs.apply(algebra.prod.bool)
+    Eq << Eq[0].this.lhs.apply(Algebra.Prod.Bool)
 
-    Eq << Eq[-1].this.find(And).apply(sets.el.el.transform.i_lt_j.left_close)
+    Eq << Eq[-1].this.find(And).apply(Sets.In.In.transform.i_Lt_j.left_close)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.prod.bool)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Prod.Bool)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.prod.limits.swap)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Prod.limits.swap)
 
 
 

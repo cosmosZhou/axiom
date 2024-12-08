@@ -2,6 +2,8 @@ from util.utility import user
 from util.search import py_to_module, read_directory, read_all_files, \
     axiom_directory, is_py_theorem, yield_function_from_py
 from os.path import basename
+import os
+os.environ['MYSQL_DATABASE'] = 'axiom'
 from std import MySQL
 
 
@@ -37,7 +39,7 @@ def insert_into_function():
         
     MySQL.instance.execute('delete from `function`')
     
-    MySQL.instance.load_data('`function`', data)
+    MySQL.instance.load_data('function', data)
 
     
 def topological_sort():

@@ -11,18 +11,18 @@ def apply(self):
 
 @prove(proved=False)
 def prove(Eq):
-    from axiom import calculus
+    from Axiom import Calculus
 
     x, a = Symbol(real=True)
     f = Function(real=True)
     Eq << apply(Integral[x](f(x) * Bool(x <= a)))
 
-    Eq << Eq[0].lhs.this.apply(calculus.integral.to.add.split, a)
+    Eq << Eq[0].lhs.this.apply(Calculus.Integral.eq.Add.split, a)
 
     Eq << Eq[-1].this.rhs.args[0]().find(LessEqual).simplify()
 
     ε = Symbol(positive=True)
-    Eq << Eq[-1].rhs.args[0].this.apply(calculus.integral.to.add.split, a + ε)
+    Eq << Eq[-1].rhs.args[0].this.apply(Calculus.Integral.eq.Add.split, a + ε)
 
     Eq << Eq[-1].this.rhs.args[1]().find(LessEqual).simplify()
 

@@ -22,7 +22,7 @@ def apply(piecewise, i=0):
 
 @prove
 def prove(Eq):
-    from axiom import algebra, sets
+    from Axiom import Algebra, Sets
 
     k = Symbol(integer=True, positive=True)
     x = Symbol(real=True, shape=(k,))
@@ -36,13 +36,13 @@ def prove(Eq):
 
     Eq << q.this.definition
 
-    Eq << algebra.cond_piece.then.ou.apply(Eq[-1])
+    Eq << Algebra.Cond_Piece.to.Or.apply(Eq[-1])
 
-    Eq << Eq[-1].this.find(Complement[Complement]).args[1].apply(sets.complement.to.union.intersect)
+    Eq << Eq[-1].this.find(Complement[Complement]).args[1].apply(Sets.Complement.eq.Union.Intersect)
 
-    Eq << Eq[-1].this.find(Complement[Complement[Union]]).apply(sets.complement.to.union.intersect)
+    Eq << Eq[-1].this.find(Complement[Complement[Union]]).apply(Sets.Complement.eq.Union.Intersect)
 
-    Eq << algebra.ou.then.eq.piece.apply(Eq[-1], wrt=q)
+    Eq << Algebra.Or.to.Eq.Piece.apply(Eq[-1], wrt=q)
 
     Eq << Eq[-1].subs(Eq[1].reversed).reversed
 

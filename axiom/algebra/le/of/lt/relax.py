@@ -10,11 +10,11 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     x, y = Symbol(integer=True, given=True)
     Eq << apply(x <= y)
 
-    Eq << algebra.lt.then.le.strengthen.apply(Eq[1])
+    Eq << Algebra.Lt.to.Le.strengthen.apply(Eq[1])
 
 
 if __name__ == '__main__':

@@ -11,12 +11,12 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y = Symbol(integer=True)
     Eq << apply(Equal(x, Max(x, y)))
 
-    Eq << algebra.eq_max.of.ge.apply(Eq[0])
+    Eq << Algebra.Eq_Max.of.Ge.apply(Eq[0])
     Eq << Eq[-1].reversed
 
 

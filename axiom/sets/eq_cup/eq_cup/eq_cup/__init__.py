@@ -1,1 +1,1 @@
-from . import eq_cup
+from . import Eq_Cup

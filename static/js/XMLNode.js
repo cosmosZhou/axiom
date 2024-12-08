@@ -7,7 +7,7 @@ class XMLNode {
 		var self = this;
     	while (self.parent)
         	self = self.parent;
-        return self; 
+        return self;
 	}
 	
     append_left_tag(tag) {
@@ -54,7 +54,7 @@ class XMLNode {
 	            parent.replace(this, array);
 	        return array;
 		}
-	}	
+	}
 	
     get zeros() {
 		return [];
@@ -93,11 +93,11 @@ class XMLNode {
 				zeros.push(text.length);
 
 			return ranged(1, zeros.length).map(i => {
-				return {offsetStart: zeros[i - 1], offsetStop: zeros[i], className};	
+				return {offsetStart: zeros[i - 1], offsetStop: zeros[i], className};
 			});
 		}
 		else
-			return [];	
+			return [];
 	}
 	
 	getLogicalIndices(segments) {
@@ -134,7 +134,7 @@ class XMLNode {
 					console.log(segments);
 					console.log(this.text);
 					segments.delete(index, segments.length - index);
-					break;	
+					break;
 				}
 					
 			}
@@ -151,11 +151,11 @@ class XMLNode {
 
 export class XMLNodeCaret extends XMLNode {
     get is_XMLNodeCaret(){
-		return true;	
-	}	
+		return true;
+	}
 
 	constructor(parent){
-		super(parent);	
+		super(parent);
 	}
 	
     append_left_tag(tag) {
@@ -207,8 +207,8 @@ export class XMLNodeCaret extends XMLNode {
 
 class XMLNodeText extends XMLNode {
     get is_XMLNodeText(){
-		return true;	
-	}	
+		return true;
+	}
 
     constructor(text, parent) {
 		super(parent);
@@ -272,8 +272,8 @@ class XMLNodeText extends XMLNode {
 
 export class XMLNodeBinaryTag extends XMLNode {
     get is_XMLNodeBinaryTag(){
-		return true;	
-	}	
+		return true;
+	}
 
 	constructor(tagBegin, arg, tagEnd, parent) {
 		super(parent);
@@ -294,7 +294,7 @@ export class XMLNodeBinaryTag extends XMLNode {
 			if (this.arg.is_XMLNodeCaret)
                 return this.tagBegin.stop;
 			return this.arg.stop;
-		} 
+		}
 
 		return this.tagEnd.stop;
 	}
@@ -314,7 +314,7 @@ export class XMLNodeBinaryTag extends XMLNode {
 		switch (this.tag) {
 		case 'script':
 		case 'style':
-			return '';	
+			return '';
 		}
 		var {plainText} = this.arg;
 		switch (this.tag.toLowerCase()) {
@@ -355,7 +355,7 @@ export class XMLNodeBinaryTag extends XMLNode {
 					case "munder":
 						if (args.length == 2)
 							args[1].modify_style('sub');
-						break;				
+						break;
 					case "msup":
 					case "mover":
 						if (args.length == 2)
@@ -387,7 +387,7 @@ export class XMLNodeBinaryTag extends XMLNode {
 	}
 	
 	get is_unbalanced() {
-		return !this.tagEnd || this.tagEnd.is_XMLNodeUnbalancedTag; 
+		return !this.tagEnd || this.tagEnd.is_XMLNodeUnbalancedTag;
 	}
 	
     logical2physical(pos) {
@@ -451,7 +451,7 @@ export class XMLNodeBinaryTag extends XMLNode {
 				
 				if (args[0].is_XMLNodeText)
 					args[0].start = tagBegin.start;
-				else 
+				else
 					args.unshift(new XMLNodeText(tagBegin.reduceToNodeText(), parent));
 					
 				if (index && parent.args[index - 1].is_XMLNodeText) {
@@ -511,7 +511,7 @@ export class XMLNodeBinaryTag extends XMLNode {
 				var args = arg.args;
 				if (args[0].is_XMLNodeText)
 					args[0].start = tagBegin.start;
-				else 
+				else
 					args.unshift(new XMLNodeText(tagBegin.reduceToNodeText(), arg));
 			}
 			else if (arg.is_XMLNodeText)
@@ -554,13 +554,13 @@ export class XMLNodeBinaryTag extends XMLNode {
 			if (arg.is_XMLNodeCaret) {
 				if (tagBegin.stop != tagEnd.start)
 					return "tagBegin.stop != tagEnd.start";
-			} 
+			}
 			else {
 				if (tagBegin.stop != arg.start)
 					return "tagBegin.stop != arg.start";
 					
 				if (arg.stop != tagEnd.start)
-					return "arg.stop != tagEnd.start";	
+					return "arg.stop != tagEnd.start";
 			}
 		}
 		
@@ -570,7 +570,7 @@ export class XMLNodeBinaryTag extends XMLNode {
 
 class XMLNodeSingleTag extends XMLNode {
 	get is_XMLNodeSingleTag(){
-		return true;	
+		return true;
 	}
 	
     constructor(arg, parent) {
@@ -621,7 +621,7 @@ class XMLNodeSingleTag extends XMLNode {
 	}
 	
     logical2physical(pos) {
-		return this.arg.length - 2; 
+		return this.arg.length - 2;
 	}
 
     physical2logical(pos) {
@@ -636,7 +636,7 @@ class XMLNodeSingleTag extends XMLNode {
 
 class XMLNodeArray extends XMLNode {
 	get is_XMLNodeArray(){
-		return true;	
+		return true;
 	}
 	
     constructor(args, parent) {
@@ -663,7 +663,7 @@ class XMLNodeArray extends XMLNode {
 		var node = new XMLNodeSingleTag(tag, this);
         this.args.push(node);
         return node;
-	}	
+	}
 
     append_tag(node) {
 		node.parent = this;
@@ -847,12 +847,12 @@ class XMLNodeArray extends XMLNode {
         var _index = logicalOffset.binary_search(stop - 1, this.cmp);
         
         if (index == _index) {
-			var prev_start = logicalOffset[index][0];	
+			var prev_start = logicalOffset[index][0];
 	        return this.args[index].getPhysicalIndices(start - prev_start, stop - prev_start).add(prev_start + offsets[index]);
 		}
 		else {
 			var [prev_start, prev_stop] = logicalOffset[index];
-        	var _prev_start = logicalOffset[_index][0];	
+        	var _prev_start = logicalOffset[_index][0];
 	        start = this.args[index].getPhysicalIndices(start - prev_start, prev_stop - prev_start).add(prev_start + offsets[index])[0];
 	        stop = this.args[_index].getPhysicalIndices(0, stop - _prev_start).add(_prev_start + offsets[_index])[1];
 	        return [start, stop];
@@ -866,7 +866,7 @@ class XMLNodeArray extends XMLNode {
 				 	return "this.args[i].is_XMLNodeText && this.args[i - 1].is_XMLNodeText";
 				
 				if (this.args[i].start != this.args[i - 1].stop)
-					return "this.args[i].start != this.args[i - 1].stop";	
+					return "this.args[i].start != this.args[i - 1].stop";
 			}
 			
 			if (this.args[i].is_XMLNodeCaret)
@@ -881,8 +881,8 @@ class XMLNodeArray extends XMLNode {
 
 export class XMLNodeUnbalancedTag extends XMLNode {
     get is_XMLNodeUnbalancedTag(){
-		return true;	
-	}	
+		return true;
+	}
 
 	constructor(tagEnd, binaryTag, parent) {
 		super(parent);

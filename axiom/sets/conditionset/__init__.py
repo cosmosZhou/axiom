@@ -1,1 +1,2 @@
-from . import to, rewrite
+from . import rewrite
+from . import eq

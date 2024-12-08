@@ -32,7 +32,7 @@ def apply(self, *indices):
 
 @prove
 def prove(Eq):
-    from axiom import algebra, stats, calculus
+    from Axiom import Algebra, Stats, Calculus
 
     # this is the proof of the law of iterated expectations
     # https://en.wikipedia.org/wiki/Law_of_total_expectation
@@ -42,25 +42,25 @@ def prove(Eq):
     f = Function(real=True, shape=())
     Eq << apply(Expectation(f(x[:n])), slice(0, i))
 
-    Eq << Eq[-1].this.rhs.find(f[~Sliced]).apply(algebra.expr.to.block, i)
+    Eq << Eq[-1].this.rhs.find(f[~Sliced]).apply(Algebra.Expr.eq.Block, i)
 
-    Eq << Eq[-1].this.rhs.find(Expectation).apply(stats.expect.to.integral)
+    Eq << Eq[-1].this.rhs.find(Expectation).apply(Stats.Expect.eq.Integral)
 
 
 
-    Eq << Eq[-1].this.rhs.apply(stats.expect.to.integral)
+    Eq << Eq[-1].this.rhs.apply(Stats.Expect.eq.Integral)
 
-    Eq << Eq[-1].this.find(Mul[Integral]).apply(calculus.mul.to.integral)
+    Eq << Eq[-1].this.find(Mul[Integral]).apply(Calculus.Mul.eq.Integral)
 
-    Eq << Eq[-1].this.find(Probability[Conditioned]).apply(stats.prob.to.div.prob.bayes)
+    Eq << Eq[-1].this.find(Probability[Conditioned]).apply(Stats.Prob.eq.Div.Prob.bayes)
 
-    Eq << Eq[-1].this.find(And).apply(algebra.eq.eq.to.eq.concat)
+    Eq << Eq[-1].this.find(And).apply(Algebra.Eq.Eq.equ.Eq.concat)
 
-    Eq << Eq[-1].this.rhs.apply(calculus.integral.limits.concat)
+    Eq << Eq[-1].this.rhs.apply(Calculus.Integral.limits.concat)
 
-    Eq << Eq[-1].this.lhs.apply(stats.expect.to.integral)
+    Eq << Eq[-1].this.lhs.apply(Stats.Expect.eq.Integral)
 
-    Eq << Eq[-1].this.find(f[~Sliced]).apply(algebra.expr.to.block, i)
+    Eq << Eq[-1].this.find(f[~Sliced]).apply(Algebra.Expr.eq.Block, i)
 
     # https://spinningup.openai.com/en/latest/spinningup/extra_pg_proof2.html
 

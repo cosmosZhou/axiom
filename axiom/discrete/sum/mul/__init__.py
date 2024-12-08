@@ -1,2 +1,2 @@
-from . import binom
-from . import stirling
+from . import Stirling
+from . import Binom

@@ -19,14 +19,14 @@ def apply(self, i=None):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, positive=True, given=True)
     a, b = Symbol(shape=(n,), etype=dtype.integer)
     i = Symbol(domain=Range(n))
     Eq << apply(Equal(a, b), i=i)
 
-    Eq << algebra.eq.then.eq.lamda.apply(Eq[1], (i,))
+    Eq << Algebra.Eq.to.Eq.Lamda.apply(Eq[1], (i,))
 
 
 

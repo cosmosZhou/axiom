@@ -1,5 +1,6 @@
-from . import lt, gt
-from . import ne
-from . import ou
-from . import any
-from . import is_zero
+from . import Ne
+from . import Or
+from . import Lt
+from . import Gt
+from . import Any
+from . import Eq_0

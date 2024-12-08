@@ -3,21 +3,21 @@ from util import *
 
 @apply
 def apply(self, index=0):
-    from axiom.algebra.sum.limits.concat import rewrite
+    from Axiom.Algebra.Sum.limits.concat import rewrite
     return rewrite(All, self, index)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
-    
+    from Axiom import Algebra
+
     n = Symbol(integer=True, positive=True)
     i = Symbol(domain=Range(n - 1))
     x = Symbol(real=True, shape=(oo,))
     f = Function(bool=True, shape=())
     Eq << apply(All[x[i], x[i + 1:n + 1]](f(x[i:n])))
-    
-    Eq << Eq[0].this.rhs.apply(algebra.all.limits.shift.slice)
+
+    Eq << Eq[0].this.rhs.apply(Algebra.All.limits.shift.Slice)
 
 
 if __name__ == '__main__':

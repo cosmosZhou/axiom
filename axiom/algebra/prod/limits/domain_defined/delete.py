@@ -1,17 +1,16 @@
 from util import *
 
-from axiom.algebra.sum.limits.domain_defined.delete import limits_delete
-
 
 @apply
 def apply(self):
+    from Axiom.Algebra.Sum.limits.domain_defined.delete import limits_delete
     assert self.is_Product
     return Equal(self, limits_delete(self))
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     i, j = Symbol(integer=True)
     k = Symbol(integer=True, positive=True)
     x = Symbol(shape=(k,), integer=True)
@@ -24,7 +23,7 @@ def prove(Eq):
     s = Symbol(Product[j:f(i)](h(x[i], j)))
     Eq << s.this.definition
 
-    Eq << algebra.eq.then.eq.prod.apply(Eq[-1], (i, 0, k), simplify=False)
+    Eq << Algebra.Eq.to.Eq.Prod.apply(Eq[-1], (i, 0, k), simplify=False)
 
     Eq << Eq[-1].this.lhs.expr.definition
 

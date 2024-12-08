@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.sum.limits.swap.subs import rewrite 
+    from Axiom.Algebra.Sum.limits.swap.subs import rewrite
     return Equal(self, rewrite(Cup, self))
 
 
@@ -19,8 +19,8 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.limits_subs(i, k)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

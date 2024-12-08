@@ -19,14 +19,14 @@ def apply(self, index=-1):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, positive=True)
     x = Symbol(integer=True)
     Eq << apply(BlockMatrix([x, 0, ZeroMatrix(n)]))
 
     i = Symbol(domain=Range(n + 2))
-    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
 
 
 

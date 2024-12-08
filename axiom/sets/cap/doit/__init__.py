@@ -23,7 +23,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x = Symbol(real=True, shape=(oo,))
     i = Symbol(integer=True)
@@ -31,21 +31,21 @@ def prove(Eq):
     Eq << apply(Sum[i:n](x[i]))
 
     n -= 1
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.split, cond={n})
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.eq.Add.split, cond={n})
 
     n -= 1
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.split, cond={n})
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.eq.Add.split, cond={n})
 
     n -= 1
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.split, cond={n})
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.eq.Add.split, cond={n})
 
     n -= 1
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add.split, cond={n})
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.eq.Add.split, cond={n})
 
 
 if __name__ == '__main__':
     run()
 
+# created on 2021-01-21
 from . import inner
 from . import outer
-# created on 2021-01-21

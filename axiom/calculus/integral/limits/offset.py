@@ -15,7 +15,7 @@ def apply(self, offset):
 
 @prove
 def prove(Eq):
-    from axiom import algebra, calculus
+    from Axiom import Algebra, Calculus
 
     x, a, b, d = Symbol(real=True)
     f = Function(real=True, integrable=True)
@@ -25,13 +25,13 @@ def prove(Eq):
     fn = Function("f^-", real=True, eval=lambda x: (abs(f(x)) - f(x)) / 2)
     Eq << fp(x).this.defun()
 
-    Eq << algebra.then.add_ge_zero.abs.apply(f(x)) / 2
+    Eq << Algebra.Add_Abs.ge.Zero.apply(f(x)) / 2
 
     Eq.fp_is_nonnegative = Eq[-1].subs(Eq[-2].reversed)
 
     Eq << fn(x).this.defun()
 
-    Eq << algebra.then.add_ge_zero.abs.minus.apply(f(x)) / 2
+    Eq << Algebra.SubAbs.ge.Zero.apply(f(x)) / 2
 
     Eq.fn_is_nonnegative =  Eq[-1].subs(Eq[-2].reversed)
 
@@ -43,19 +43,19 @@ def prove(Eq):
 
     Eq << Eq[0].subs(Eq[-1], Eq[-2])
 
-    Eq << Eq[-1].this.lhs.apply(calculus.integral.to.add)
+    Eq << Eq[-1].this.lhs.apply(Calculus.Integral.eq.Add)
 
-    Eq << Eq[-1].this.rhs.apply(calculus.integral.to.add)
+    Eq << Eq[-1].this.rhs.apply(Calculus.Integral.eq.Add)
 
-    Eq << calculus.ge_zero.then.eq.integral.limits.offset.apply(Eq.fp_is_nonnegative, Eq[-1].lhs.args[1], d)
+    Eq << Calculus.Ge_0.to.Eq.Integral.limits.offset.apply(Eq.fp_is_nonnegative, Eq[-1].lhs.args[1], d)
 
     Eq << Eq[-2].subs(Eq[-1]).simplify()
 
-    Eq << Eq[-1].this.lhs.apply(calculus.integral.to.mul)
+    Eq << Eq[-1].this.lhs.apply(Calculus.Integral.eq.Mul)
 
-    Eq << Eq[-1].this.rhs.apply(calculus.integral.to.mul)
+    Eq << Eq[-1].this.rhs.apply(Calculus.Integral.eq.Mul)
 
-    Eq << calculus.ge_zero.then.eq.integral.limits.offset.apply(Eq.fn_is_nonnegative, Eq[-1].lhs, d)
+    Eq << Calculus.Ge_0.to.Eq.Integral.limits.offset.apply(Eq.fn_is_nonnegative, Eq[-1].lhs, d)
 
 
 

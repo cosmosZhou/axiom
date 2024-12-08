@@ -19,7 +19,7 @@ def apply(self, k=None):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, nonnegative=True)
     k = Symbol(integer=True)
@@ -28,11 +28,11 @@ def prove(Eq):
     h = Function(real=True)
     Eq << apply(Equal(x[n + 1], x[n] * c + h(n)), k)
 
-    Eq << algebra.iff.of.et.infer.apply(Eq[0])
+    Eq << Algebra.Iff.of.And.Imply.apply(Eq[0])
 
-    Eq << Eq[-2].this.rhs.apply(algebra.eq_sum.of.eq.rsolve)
+    Eq << Eq[-2].this.rhs.apply(Algebra.Eq_Sum.of.Eq.rsolve)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.eq.of.eq.rsolve, k)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Eq.of.Eq.rsolve, k)
 
 
 

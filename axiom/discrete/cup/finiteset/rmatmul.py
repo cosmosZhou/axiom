@@ -20,7 +20,7 @@ def apply(x, w=None, right=None, var=None):
 
 @prove
 def prove(Eq):
-    from axiom import discrete, sets
+    from Axiom import Discrete, Sets
 
     n = Symbol(domain=Range(2, oo))
     x = Symbol(shape=(n,), integer=True)
@@ -32,14 +32,14 @@ def prove(Eq):
 
     Eq << (Eq[0].lhs[k] @ x).this.args[0].definition
 
-    Eq << Eq[-1].this.rhs.apply(discrete.matmul.to.sum)
+    Eq << Eq[-1].this.rhs.apply(Discrete.Dot.eq.Sum)
 
     Eq << Eq[-1].this(i).find(Element).simplify()
     Eq << Eq[-1].this(j).find(Element).simplify()
 
-    Eq << Eq[-1].apply(sets.eq.then.eq.cup.finiteset, (k, 0, n))
+    Eq << Eq[-1].apply(Sets.Eq.to.Eq.Cup.FiniteSet, (k, 0, n))
 
-    Eq << Eq[-1].this.find(Complement[Complement]).apply(sets.complement.to.union.intersect)
+    Eq << Eq[-1].this.find(Complement[Complement]).apply(Sets.Complement.eq.Union.Intersect)
 
     Eq << Eq[-1].this(i, j).find(Unequal, Intersection).simplify()
 
@@ -51,11 +51,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[1]().expr.find(Intersection).simplify()
 
-    Eq << Eq[-1].this.lhs.apply(sets.cup.limits.domain_defined)
+    Eq << Eq[-1].this.lhs.apply(Sets.Cup.limits.domain_defined)
 
     Eq << Eq[-1].this.rhs.limits_subs(Eq[-1].rhs.variable, i)
 
-    Eq << Eq[-1].this.rhs.apply(sets.cup.limits.domain_defined)
+    Eq << Eq[-1].this.rhs.apply(Sets.Cup.limits.domain_defined)
 
 
 

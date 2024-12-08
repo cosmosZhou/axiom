@@ -1,3 +1,3 @@
-from . import to
-from . import lamda
-from . import block
+from . import Block
+from . import Lamda
+from . import eq

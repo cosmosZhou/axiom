@@ -17,7 +17,7 @@ def apply(n, k, s0=None, B=None):
 
 @prove
 def prove(Eq):
-    from axiom import sets, algebra
+    from Axiom import Sets, Algebra
 
     n, k = Symbol(integer=True, positive=True, given=True)
     Eq << apply(n, k)
@@ -29,9 +29,9 @@ def prove(Eq):
     Eq.s0_definition = imageset(Eq[0].rhs.variable, Eq[0].rhs.expr.arg, s0_quote).this.subs(Eq[-1]).subs(Eq[0].reversed).reversed
 
     e = Symbol(etype=dtype.integer.set)
-    Eq << sets.then.all.baseset.apply(s0_quote)
+    Eq << Sets.All_And.baseset.apply(s0_quote)
 
-    Eq.x_union_s0, *_ = algebra.all_et.then.et.all.apply(Eq[-1], slice(1, None, 2))
+    Eq.x_union_s0, *_ = Algebra.All_And.to.And.All.apply(Eq[-1], slice(1, None, 2))
 
     i = Symbol(integer=True)
     x = Eq[0].rhs.variable.base
@@ -43,46 +43,46 @@ def prove(Eq):
 
     Eq << ~Eq[-1]
 
-    Eq << Eq[-1].this.expr.apply(sets.el_cup.then.any_el)
+    Eq << Eq[-1].this.expr.apply(Sets.In_Cup.to.Any_In)
 
-    Eq << algebra.all.any.then.any.et.apply(Eq.x_union_s0, Eq[-1].reversed, simplify=None)
+    Eq << Algebra.All.Any.to.Any.And.apply(Eq.x_union_s0, Eq[-1].reversed, simplify=None)
 
-    Eq << Eq[-1].this.expr.apply(sets.eq.eq.then.eq.union)
+    Eq << Eq[-1].this.expr.apply(Sets.Eq.Eq.to.Eq.Union)
 
     Eq << Eq[-1].this().expr.lhs.simplify()
 
-    Eq << algebra.all_eq.any.then.any.subs.apply(Eq.x_union_s0, Eq[-1])
+    Eq << Algebra.All_Eq.Any.to.Any.subs.apply(Eq.x_union_s0, Eq[-1])
 
-    Eq << Eq.plausible_notcontains.this.expr.apply(sets.notin.then.is_empty.intersect)
+    Eq << Eq.plausible_notcontains.this.expr.apply(Sets.NotIn.to.Eq_EmptySet.Intersect)
 
-    Eq.all_s0_equality = Eq[-1].this.expr.apply(sets.intersect_is_empty.then.eq.complement)
+    Eq.all_s0_equality = Eq[-1].this.expr.apply(Sets.Intersect_Eq_EmptySet.to.Eq.Complement)
 
     x_hat = Symbol(r"\hat{x}", Lamda[i](Piecewise((x[i] - {n} , Equal(i, j)), (x[i], True))))
     Eq.x_hat_definition = x_hat[i].this.definition
 
-    Eq << algebra.cond_piece.then.ou.apply(Eq.x_hat_definition)
+    Eq << Algebra.Cond_Piece.to.Or.apply(Eq.x_hat_definition)
 
-    Eq.B_assertion = sets.then.all.any.eq.split.imageset.apply(B)
+    Eq.B_assertion = Sets.All_Any_Eq.split.Imageset.apply(B)
 
-    Eq << Eq.B_assertion.this.expr.expr.apply(sets.eq.then.eq.complement, {n.set})
+    Eq << Eq.B_assertion.this.expr.expr.apply(Sets.Eq.to.Eq.Complement, {n.set})
 
-    Eq << algebra.cond.all.then.all.et.apply(Eq.all_s0_equality, Eq[-1], simplify=None)
+    Eq << Algebra.Cond.All.to.All.And.apply(Eq.all_s0_equality, Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.expr.apply(algebra.all.any.then.any.et)
+    Eq << Eq[-1].this.expr.apply(Algebra.All.Any.to.Any.And)
 
-    Eq.all_B_contains = Eq[-1].this.expr.expr.apply(algebra.eq.eq.then.eq.subs, swap=True).limits_subs(Eq[-1].variable, Eq.all_s0_equality.variable)
+    Eq.all_B_contains = Eq[-1].this.expr.expr.apply(Algebra.Eq.Eq.to.Eq.subs, swap=True).limits_subs(Eq[-1].variable, Eq.all_s0_equality.variable)
 
-    Eq.all_s0_contains = sets.then.all_el.split.imageset.apply(B)
+    Eq.all_s0_contains = Sets.All_In.split.Imageset.apply(B)
 
-    Eq << Eq.B_assertion.this.expr.expr.apply(sets.eq.then.eq.intersect, {n.set})
+    Eq << Eq.B_assertion.this.expr.expr.apply(Sets.Eq.to.Eq.Intersect, {n.set})
 
-    Eq << algebra.et.then.et.apply(Eq[-1])
+    Eq << Algebra.And.to.And.apply(Eq[-1])
 
     Eq << Eq[-1].limits_subs(Eq.B_assertion.variable, Eq.B_assertion.expr.variable)
 
-    Eq.all_B_equality = Eq[-1].this.expr.apply(sets.eq.then.eq.union, Eq[-1].variable)
+    Eq.all_B_equality = Eq[-1].this.expr.apply(Sets.Eq.to.Eq.Union, Eq[-1].variable)
 
-    Eq << sets.all_el.all_el.all_eq.all_eq.then.eq.apply(Eq.all_s0_contains, Eq.all_B_contains, Eq.all_s0_equality, Eq.all_B_equality)
+    Eq << Sets.All_In.All_In.All_Eq.All_Eq.to.Eq.apply(Eq.all_s0_contains, Eq.all_B_contains, Eq.all_s0_equality, Eq.all_B_equality)
 
 
 

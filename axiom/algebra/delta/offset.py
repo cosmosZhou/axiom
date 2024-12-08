@@ -9,14 +9,14 @@ def apply(self, offset):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y, t, a = Symbol(integer=True)
     Eq << apply(KroneckerDelta(x - t, y), t)
 
-    Eq << Eq[0].this.lhs.apply(algebra.delta.substract)
+    Eq << Eq[0].this.lhs.apply(Algebra.Delta.Sub)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.delta.substract, reverse=True)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Delta.Sub, reverse=True)
 
 
 

@@ -8,7 +8,7 @@ if (preg_match('/(\w+)\/.+\.md/', $PATH_INFO, $m)) {
     require_once '../php/std.php';
     
     $path = dirname(__file__) . "/md$PATH_INFO";
-    $prefix = std\startsWith($PATH_INFO, '/')? substr($PATH_INFO, 1): $PATH_INFO;
+    $prefix = str_starts_with($PATH_INFO, '/')? substr($PATH_INFO, 1): $PATH_INFO;
     
     error_log("prefix = $prefix");
     
@@ -20,7 +20,7 @@ if (preg_match('/(\w+)\/.+\.md/', $PATH_INFO, $m)) {
         }
         else {
             $prefix = $_SERVER["REQUEST_URI"];
-            if (std\endsWith($prefix, '/'))
+            if (str_ends_with($prefix, '/'))
                 $prefix = std\slice($prefix, 0, -1);
         }
     }

@@ -18,7 +18,7 @@ def apply(self, index=0):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, nonnegative=True)
     i = Symbol(domain=Range(n))
@@ -26,7 +26,7 @@ def prove(Eq):
     f = Function(real=True, shape=())
     Eq << apply(Sum[x[i:n + 1]](f(x[i:n + 1])))
 
-    Eq << Eq[0].this.rhs.apply(algebra.sum.limits.concat)
+    Eq << Eq[0].this.rhs.apply(Algebra.Sum.limits.concat)
 
 
 

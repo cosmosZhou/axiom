@@ -9,7 +9,7 @@ from sympy.core.logic import fuzzy_or, fuzzy_and
 from sympy.core.rules import Transform
 from sympy.core.sympify import _sympify
 from sympy.functions.elementary.complexes import Abs
-from sympy.logic.boolalg import (Equivalent, Infer, And, Or, BooleanFunction, Not)
+from sympy.logic.boolalg import (Equivalent, Imply, And, Or, BooleanFunction, Not)
 from sympy.matrices.expressions import MatMul
 
 # APIs here may be subject to change
@@ -294,17 +294,17 @@ def register_fact(klass, fact, registry=fact_registry):
 
 for klass, fact in [
     (Mul, Equivalent(Q.zero, AnyArgs(Q.zero))),
-    (MatMul, Infer(AllArgs(Q.square), Equivalent(Q.invertible, AllArgs(Q.invertible)))),
-    (Add, Infer(AllArgs(Q.positive), Q.positive)),
-    (Add, Infer(AllArgs(Q.negative), Q.negative)),
-    (Mul, Infer(AllArgs(Q.positive), Q.positive)),
-    (Mul, Infer(AllArgs(Q.commutative), Q.commutative)),
-    (Mul, Infer(AllArgs(Q.real), Q.commutative)),
+    (MatMul, Imply(AllArgs(Q.square), Equivalent(Q.invertible, AllArgs(Q.invertible)))),
+    (Add, Imply(AllArgs(Q.positive), Q.positive)),
+    (Add, Imply(AllArgs(Q.negative), Q.negative)),
+    (Mul, Imply(AllArgs(Q.positive), Q.positive)),
+    (Mul, Imply(AllArgs(Q.commutative), Q.commutative)),
+    (Mul, Imply(AllArgs(Q.real), Q.commutative)),
 
-    (Pow, CustomLambda(lambda power: Infer(Q.real(power.base) &
+    (Pow, CustomLambda(lambda power: Imply(Q.real(power.base) &
     Q.even(power.exp) & Q.nonnegative(power.exp), Q.nonnegative(power)))),
-    (Pow, CustomLambda(lambda power: Infer(Q.nonnegative(power.base) & Q.odd(power.exp) & Q.nonnegative(power.exp), Q.nonnegative(power)))),
-    (Pow, CustomLambda(lambda power: Infer(Q.nonpositive(power.base) & Q.odd(power.exp) & Q.nonnegative(power.exp), Q.nonpositive(power)))),
+    (Pow, CustomLambda(lambda power: Imply(Q.nonnegative(power.base) & Q.odd(power.exp) & Q.nonnegative(power.exp), Q.nonnegative(power)))),
+    (Pow, CustomLambda(lambda power: Imply(Q.nonpositive(power.base) & Q.odd(power.exp) & Q.nonnegative(power.exp), Q.nonpositive(power)))),
 
     # This one can still be made easier to read. I think we need basic pattern
     # matching, so that we can just write Equivalent(Q.zero(x**y), Q.zero(x) & Q.positive(y))
@@ -312,19 +312,19 @@ for klass, fact in [
     (Integer, CheckIsPrime(Q.prime)),
     # Implicitly assumes Mul has more than one arg
     # Would be AllArgs(Q.prime | Q.composite) except 1 is composite
-    (Mul, Infer(AllArgs(Q.prime), ~Q.prime)),
+    (Mul, Imply(AllArgs(Q.prime), ~Q.prime)),
     # More advanced prime assumptions will require inequalities, as 1 provides
     # a corner case.
-    (Mul, Infer(AllArgs(Q.imaginary | Q.real), Infer(ExactlyOneArg(Q.imaginary), Q.imaginary))),
-    (Mul, Infer(AllArgs(Q.real), Q.real)),
-    (Add, Infer(AllArgs(Q.real), Q.real)),
+    (Mul, Imply(AllArgs(Q.imaginary | Q.real), Imply(ExactlyOneArg(Q.imaginary), Q.imaginary))),
+    (Mul, Imply(AllArgs(Q.real), Q.real)),
+    (Add, Imply(AllArgs(Q.real), Q.real)),
     # General Case: Odd number of imaginary args implies mul is imaginary(To be implemented)
-    (Mul, Infer(AllArgs(Q.real), Infer(ExactlyOneArg(Q.irrational),
+    (Mul, Imply(AllArgs(Q.real), Imply(ExactlyOneArg(Q.irrational),
         Q.irrational))),
-    (Add, Infer(AllArgs(Q.real), Infer(ExactlyOneArg(Q.irrational),
+    (Add, Imply(AllArgs(Q.real), Imply(ExactlyOneArg(Q.irrational),
         Q.irrational))),
-    (Mul, Infer(AllArgs(Q.rational), Q.rational)),
-    (Add, Infer(AllArgs(Q.rational), Q.rational)),
+    (Mul, Imply(AllArgs(Q.rational), Q.rational)),
+    (Add, Imply(AllArgs(Q.rational), Q.rational)),
 
     (Abs, Q.nonnegative),
     (Abs, Equivalent(AllArgs(~Q.zero), ~Q.zero)),
@@ -332,16 +332,16 @@ for klass, fact in [
     # Including the integer qualification means we don't need to add any facts
     # for odd, since the assumptions already know that every integer is
     # exactly one of even or odd.
-    (Mul, Infer(AllArgs(Q.integer), Equivalent(AnyArgs(Q.even), Q.even))),
+    (Mul, Imply(AllArgs(Q.integer), Equivalent(AnyArgs(Q.even), Q.even))),
 
-    (Abs, Infer(AllArgs(Q.even), Q.even)),
-    (Abs, Infer(AllArgs(Q.odd), Q.odd)),
+    (Abs, Imply(AllArgs(Q.even), Q.even)),
+    (Abs, Imply(AllArgs(Q.odd), Q.odd)),
 
-    (Add, Infer(AllArgs(Q.integer), Q.integer)),
-    (Add, Infer(ExactlyOneArg(~Q.integer), ~Q.integer)),
-    (Mul, Infer(AllArgs(Q.integer), Q.integer)),
-    (Mul, Infer(ExactlyOneArg(~Q.rational), ~Q.integer)),
-    (Abs, Infer(AllArgs(Q.integer), Q.integer)),
+    (Add, Imply(AllArgs(Q.integer), Q.integer)),
+    (Add, Imply(ExactlyOneArg(~Q.integer), ~Q.integer)),
+    (Mul, Imply(AllArgs(Q.integer), Q.integer)),
+    (Mul, Imply(ExactlyOneArg(~Q.rational), ~Q.integer)),
+    (Abs, Imply(AllArgs(Q.integer), Q.integer)),
 
     (Number, CheckOldAssump(Q.negative)),
     (Number, CheckOldAssump(Q.zero)),

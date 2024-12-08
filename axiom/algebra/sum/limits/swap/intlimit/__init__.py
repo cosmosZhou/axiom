@@ -63,7 +63,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra, sets
+    from Axiom import Algebra, Sets
 
     i, j, d, a = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
@@ -71,20 +71,20 @@ def prove(Eq):
     g = Symbol(shape=(oo, oo), real=True)
     Eq << apply(Sum[i:j + d:n, j:a:n - d](f[i] * g[i, j]))
 
-    Eq << Eq[0].this.lhs.apply(algebra.sum.bool)
+    Eq << Eq[0].this.lhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.lhs.expr.args[-1].arg.apply(sets.el.el.transform.i_ge_j)
+    Eq << Eq[-1].this.lhs.expr.args[-1].arg.apply(Sets.In.In.transform.i_Ge_j)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.bool)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.swap)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Sum.limits.swap)
 
-    
+
 
 
 if __name__ == '__main__':
     run()
 
-from . import parallel
 # created on 2019-11-06
 # updated on 2023-05-21
+from . import parallel

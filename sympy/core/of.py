@@ -150,16 +150,16 @@ class Basic:
         return self.func.is_And
     
     @property
-    def is_Infer(self):
-        return self.func.is_Infer
+    def is_Imply(self):
+        return self.func.is_Imply
     
     @property
     def is_Equivalent(self):
         return self.func.is_Equivalent
     
     @property
-    def is_Assuming(self):
-        return self.func.is_Assuming
+    def is_Given(self):
+        return self.func.is_Given
     
     @property
     def is_ForAll(self):
@@ -244,7 +244,7 @@ class Basic:
             args = []
             for arg in self.args:
                 s = repr(arg)
-                if arg.is_Infer or arg.is_Assuming or arg.is_Equivalent:
+                if arg.is_Imply or arg.is_Given or arg.is_Equivalent:
                     s = "(%s)" % s
                 args.append(s)
                 

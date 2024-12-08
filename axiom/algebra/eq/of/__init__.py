@@ -1,5 +1,5 @@
-from . import eq, is_zero
-from . import et
-
-from . import ge
-from . import all
+from . import Eq
+from . import And
+from . import Ge
+from . import All
+from . import Eq_0

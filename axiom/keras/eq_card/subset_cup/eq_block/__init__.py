@@ -1,1 +1,1 @@
-from . import eq_block
+from . import Eq_Block

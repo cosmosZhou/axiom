@@ -3,22 +3,22 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.abs.neg import rewrite
+    from Axiom.Algebra.Abs.Neg import rewrite
     return Equal(self, rewrite(cosh, self), evaluate=False)
 
 
 @prove
 def prove(Eq):
-    from axiom import geometry
+    from Axiom import Geometry
 
     x, y = Symbol(complex=True)
     Eq << apply(cosh(x - y))
 
-    Eq << Eq[0].this.lhs.apply(geometry.cosh.to.add)
+    Eq << Eq[0].this.lhs.apply(Geometry.Cosh.eq.Add)
 
-    Eq << Eq[-1].this.rhs.apply(geometry.cosh.to.add)
+    Eq << Eq[-1].this.rhs.apply(Geometry.Cosh.eq.Add)
 
-    
+
 
 
 if __name__ == '__main__':

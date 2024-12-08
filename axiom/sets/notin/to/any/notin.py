@@ -12,18 +12,21 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import algebra, sets
+    from Axiom import Sets
 
-    n, m = Symbol(positive=True, integer=True)
-    x = Symbol(integer=True, shape=(n,))
+    n, m = Symbol(positive=True, integer=True, given=True)
+    x = Symbol(integer=True, shape=(n,), given=True)
     i = Symbol(integer=True)
     Eq << apply(NotElement(Lamda[i:n](x[i]), CartesianSpace(Range(0, m), n)))
 
-    Eq << algebra.iff.of.et.infer.apply(Eq[0])
+    Eq << ~Eq[1]
 
-    Eq << Eq[-2].this.lhs.apply(sets.notin.then.any.notin)
+    Eq << Sets.All_In.to.In.CartesianSpace.apply(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.apply(sets.notin.of.any.notin)
+    Eq << ~Eq[-1]
+    Eq << Eq[0].this.lhs.simplify()
+
+
 
 
 if __name__ == '__main__':

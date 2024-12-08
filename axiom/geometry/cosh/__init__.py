@@ -1,2 +1,2 @@
-from . import to
-from . import neg
+from . import Neg
+from . import eq

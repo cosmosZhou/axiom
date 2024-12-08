@@ -22,7 +22,7 @@ export default {
 	computed: {
 		x0: {
 			get(){
-				return this.canvas.x0;	
+				return this.canvas.x0;
 			},
 				
 			set(x0){
@@ -33,7 +33,7 @@ export default {
 		
 		y0: {
 			get(){
-				return this.canvas.y0;	
+				return this.canvas.y0;
 			},
 				
 			set(y0){
@@ -44,7 +44,7 @@ export default {
 		
 		x1: {
 			get(){
-				return this.canvas.x1;	
+				return this.canvas.x1;
 			},
 				
 			set(x1){
@@ -55,7 +55,7 @@ export default {
 		
 		y1: {
 			get(){
-				return this.canvas.y1;	
+				return this.canvas.y1;
 			},
 				
 			set(y1){
@@ -66,7 +66,7 @@ export default {
 		
 		color: {
 			get(){
-				return this.canvas.color;	
+				return this.canvas.color;
 			},
 				
 			set(color){
@@ -76,7 +76,7 @@ export default {
 		
 		ctx(){
 			return this.$el.getContext("2d");
-		},		
+		},
 	},
 	
 	methods: {

@@ -20,7 +20,7 @@
 
 <script>
 console.log('import mysqlAlter.vue');
-import {piece_together, is_number, is_enum, is_string, is_json} from "../js/mysql.js"
+import {piece_together} from "../js/mysql.js"
 import mysqlExpr from "./mysqlExpr.vue"
 import mysqlLeaf from "./mysqlLeaf.vue"
 import mysqlDot from "./mysqlDot.vue"
@@ -51,7 +51,7 @@ export default {
 	computed: {
 		operand: {
 			get() {
-				return this.value[this.operator];	
+				return this.value[this.operator];
 			},
 			
 			set(operand) {
@@ -105,7 +105,7 @@ export default {
 
 		is_leaf() {
 			return this.$parent.is_leaf;
-		},		
+		},
 		
 		numericFields() {
 			return this.$parent.numericFields;
@@ -192,10 +192,10 @@ export default {
 			var url = [];
 			url.push(`user=${user}`);
 			if (host && host != 'localhost')
-				url.push(`host=${host}`);			
+				url.push(`host=${host}`);
 			url.push(...piece_together(this.kwargs));
 			return 'query.php?' + url.join('&');
-		},		
+		},
 	},
 	
 	methods: {
@@ -209,7 +209,7 @@ export default {
 				}
 					
 				break;
-			}	
+			}
 		},
 
 		blur_input(event, print) {
@@ -230,7 +230,7 @@ export default {
 		    	var element = el.querySelector('select[name]') || el.querySelector('input[name]');
 		    	element.focus();
 		    },
-		},		
+		},
 	},
 }
 </script>

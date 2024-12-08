@@ -4,27 +4,26 @@ from util import *
 @apply
 def apply(gt_a, gt_b):
     x, a = gt_a.of(Greater)
-    S[x], b = gt_b.of(Greater)
-    return x > Max(a, b)
+    y, b = gt_b.of(Greater)
+    return Max(x, y) > Max(a, b)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
-    x, y, b = Symbol(real=True, given=True)
-    Eq << apply(x > y, x > b)
+    x, y, a, b = Symbol(real=True, given=True)
+    Eq << apply(x > a, y > b)
 
-    Eq << algebra.iff.of.et.apply(Eq[0])
+    Eq << Algebra.Lt.Lt.to.Lt.Max.apply(Eq[0].reversed, Eq[1].reversed)
 
-    Eq << Eq[-2].this.lhs.apply(algebra.gt.gt.then.gt.max)
-
-    Eq << Eq[-1].this.lhs.apply(algebra.gt.gt.of.gt.max)
+    Eq << Eq[-1].reversed
 
 
 
 
 if __name__ == '__main__':
     run()
-# created on 2022-01-03
-# updated on 2023-05-21
+# created on 2019-03-09
+# updated on 2023-04-23
+

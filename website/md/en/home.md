@@ -29,32 +29,29 @@ In the open-source community, other automatic thoerem libraries include: [leanpr
 As of this writing, <label id=count>____</label> theorems have been recored in the theorem repertoire, which can be applied in semi-mechanized axiomatized system of mathematical theorem proving.  
 It is mainly comprising of :  	
 	
-* [algebra](../?module=algebra) refers to elementary algebra, which mainly delves into equations transformation、symbol substitution techniques, finite series [∑ telescoping](../?module=algebra.sum.to.add.telescope)、∏ product telescoping, the property of transitivity for inequalities, solving [simple equations](../?module=algebra.poly_is_zero.then.et.infer.simple_equation), [quadratic equations](../?module=algebra.poly_is_zero.then.et.infer.quadratic), [cubic equations](../?module=algebra.poly_is_zero.then.et.infer.cubic) and [quartic equations](../?module=algebra.poly_is_zero.then.et.infer.quartic), common properties of some elementary functions, as well as the proof of [mathematical induction method](../?module=algebra.ne_zero.infer.then.ne_zero.induct);   
-* [sets](../?module=sets) refers to sets theory, which is the core foundation of the theories of whole mathematical proving and analysis. It involves lots of propositions using the terminologies like 
+* [Algebra](../?module=Algebra) refers to elementary Algebra, which mainly delves into equations transformation、symbol substitution techniques, finite series [∑ telescoping](../?module=Algebra.Sum.eq.Add.telescope.step)、∏ product telescoping, the property of transitivity for inequalities, solving [simple equations](../?module=Algebra.Add.eq.Zero.to.AndImplyS_Eq.simple), [quadratic equations](../?module=Algebra.Add.eq.Zero.to.And_Imply_Or_EqS_Div.quadratic), [cubic equations](../?module=Algebra.Add.eq.Zero.to.And_Imply_Or_EqS.cubic) and [quartic equations](../?module=Algebra.Add.eq.Zero.to.And_Imply_Or_EqS.quartic), [summation by parts](../?module=Algebra.Sum.eq.Add.by_parts), as well as the proof of [mathematical induction method](../?module=Algebra.Ne_0.Imply.to.Ne_0.induct);   
+* [Sets](../?module=Sets) refers to Sets theory, which is the core foundation of the theories of whole mathematical proving and analysis. It involves lots of propositions using the terminologies like 
 ForAll, Exists, Element, Subset, for example: 
-the proof of [inclusion-exclusion principle](../?module=sets/eq/principle/inclusion_exclusion/basic). It can be so said that: set theory is the fundamental grammar of automatic theorem proving.  
-* [geometry](../?module=geometry) is comprised of junior-middle school 
-[plane geometry](../?module=geometry/plane), trigonometry and senior-middle school
-[solid geometry](../?module=geometry/solid), some trigonometric identities, for instance:  
-[addition principle of cosine](../?module=geometry.cos.to.add.principle.add), [product principle of trigonometry](../?module=geometry.mul.to.add.sin), and so on.   
-* [calculus](../?module=calculus) comprises :   
-[the definition of limit](../?module=calculus/eq/to/any_all/limit_definition) and its fundamental theories which is the theoretical basis of calculus.  
-operational properties of [infinite series](../?module=calculus.eq.then.eq.series.infinite.coefficient); 
-proof of [integration by parts](../?module=calculus.integral.to.add.by_parts);  
+the proof of [inclusion-exclusion principle](../?module=Sets.CardUnion.eq.Sub_.AddCards.CardIntersect.principle.inclusion_exclusion). It can be so said that: set theory is the fundamental grammar of automatic theorem proving.  
+* [Geometry](../?module=Geometry) is comprised of identities of trigonometry: 
+[addition principle of cosine](../?module=Geometry.Cos.eq.Add), [product principle of trigonometry](../?module=Geometry.Mul.eq.Add.Sin), and so on.   
+* [Calculus](../?module=Calculus) comprises :   
+[the definition of limit](../?module=Calculus.Eq_Limit.to.Any.All.limit_definition) and its fundamental theories which is the theoretical basis of Calculus.  
+proof of [integration by parts](../?module=Calculus.Integral.eq.Add.by_parts);  
 determination of some integral for certain transcendental functions;  
-* [discrete](../?module=discrete) section is comprised of number theory, discrete mathematics, combinatorics, linear algebra, some basic counting techniques involving permutations(such as 
-[permutations](../?module=discrete.abs_cup.to.factorial), combinatoric induction for [second Stirling Number](../?module=discrete.stirling2.to.add.recurrence),  
-derivation for [Catalan Number](../?module=discrete.eq.eq.then.eq.catalan.recurrence)， 
-basics of [continued fraction](../?module=discrete.add.to.pow.HK.recurrence); as well as propositons of determinant of matrix.  
-* [stats](../?module=stats) refers to statistics and probability theory, comprising: the derivation of the probability density formula of some common distribution (such as, binomial distribution, Gaussian distribution, poisson distribution, die distribution, Χ<sup>2</sup>distribution)，as well as propositions related to [Bayes theorem](../?module=stats/probability/to/mul);  
-* [keras](../?module=keras) section is related to the mathematical theories behind the contemporary deep learning / machine learning techniques, including the mathematical modeling used in natural language processing / understanding, formulae deduction or proof of
-[LSTM](../?module=keras.eq.eq.then.eq.long_short_term_memory),
-[GRU](../?module=keras.eq.gated_recurrent_unit),
-[CNN](../?module=keras.eq_lamda_bool.then.eq.conv1d),
-[BERT](../?module=keras.matmul_softmax.to.lamda.div.scaled_dot_product_attention),
-[GPT](../?module=keras.matmul_softmax.to.lamda.matmul.gpt),
-Conditional Random Field [CRF](../?module=keras.ne_zero.eq.eq.eq.then.et.crf),
-KMeans [clustering convergence](../?module=sets.el.notin.le.then.le.st.variance), [General Rotary Position Embedding](../?module=keras.eq_mul.eq_mul.eq_block.then.eq.matmul.softmax.to.lamda.sum.plane) for Vision Transformer, [Policy Gradient Theorem](../?module=keras.eq_conditioned.eq_expect.is_finite.is_finite.then.eq.matmul.grad.expect.unbiased_advantage_estimate) from Reinforcement Learning. 
+* [Discrete](../?module=Discrete) section is comprised of number theory, Discrete mathematics, combinatorics, linear Algebra, some basic counting techniques involving permutations, such as 
+combinatoric induction for [second Stirling Number](../?module=Discrete.Stirling.eq.Add.recurrence),  
+derivation for [Catalan Number](../?module=Discrete.Eq.Eq.to.Eq.catalan.recurrence)， 
+basics of [continued fraction](../?module=Discrete.Add.eq.Pow.HK.recurrence); as well as the existence of [Cholesky decomposition](../?module=Discrete.Eq_Adjoint.Imply_Gt_0.to.Any.Eq.Cholesky).  
+* [Stats](../?module=Stats) refers to statistics and probability theory, comprising: the derivation of the probability density formula of some common distribution (such as, binomial distribution, Gaussian distribution, poisson distribution, die distribution, Χ<sup>2</sup>distribution)，as well as propositions related to [Bayes theorem](../?module=Stats.Prob.eq.Div.Prob.bayes), and the [law of large numbers](../?module=Stats.Eq_Conditioned.Eq_Expect.Eq_Var.to.Eq.Limit.Prob.law_of_large_numbers);  
+* [Keras](../?module=Keras) section is related to the mathematical theories behind the contemporary deep learning / machine learning techniques, including the mathematical modeling used in natural language processing / understanding, formulae deduction or proof of
+[LSTM](../?module=Keras.Eq.Eq.to.Eq.long_short_term_memory),
+[GRU](../?module=Keras.Eq_AddMulS.gated_recurrent_unit),
+[CNN](../?module=Keras.Eq_Lamda_Bool_In.to.Eq.conv1d),
+[BERT](../?module=Keras.DotSoftmax.eq.Lamda_Div.scaled_dot_product_attention),
+[GPT](../?module=Keras.DotSoftmax.eq.Lamda_Dot.gpt),
+Conditional Random Field [CRF](../?module=Keras.Ne_0.Eq.Eq.Eq.to.And.crf.y_given_x),
+KMeans [clustering convergence](../?module=Sets.In.NotIn.LeAbsSSub_Sum.to.LeAddSSumSSquareSub_Sum), [General Rotary Position Embedding](../?module=Keras.Eq_Mul.Eq_Mul.Eq_Block.to.DotSoftmax.eq.Lamda_Sum.plane) for Vision Transformer, [Policy Gradient Theorem](../?module=Keras.Eq_Conditioned.Eq_Expect.is_finite.is_finite.to.EqDot_GradExpect.unbiased_advantage_estimate) from Reinforcement Learning. 
 Probability theory provides the fundamental theoretical basis for machine learning so that this contemporary technique can be  explainable.  
 
 <br><br>
@@ -63,5 +60,5 @@ This newly emerged semi-mechanized axiomatized theorem-proving system can simpli
 <br><br>
 
 <script type=module>
-	$('#count').innerHTML = await get("/axiom/php/request/count.php");
+	$('#count').innerHTML = await get("../php/request/count.php");
 </script>

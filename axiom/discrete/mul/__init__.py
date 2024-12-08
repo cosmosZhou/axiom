@@ -1,3 +1,3 @@
-from . import to
-from . import matmul
-from . import fallingFactorial
+from . import Dot
+from . import FallingFactorial
+from . import eq

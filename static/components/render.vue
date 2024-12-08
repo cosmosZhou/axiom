@@ -34,7 +34,7 @@
             <hr>
             <h3 title='caller hierarchy'>
                 <a style='font-size: inherit' :href="`/${user}/?caller=${module}`">
-                    <font color=blue>prove:</font>
+                    <font color=blue>proof:</font>
                 </a>
             </h3>
 
@@ -104,7 +104,7 @@ export default {
         },
 
         numOfRequisites(){
-            var m = this.module.match(/([\w.]+)\.(imply|given|then|of)\./);
+            var m = this.module.match(/([\w.]+)\.(to|of)\./);
             if (m.length){
                 return m[1].split('.').length - 1;
             }
@@ -180,7 +180,7 @@ export default {
             	break;
         	case 'apply':
                 console.log(error);
-                var module = error.file.match(/axiom\.([\w.]+)/)[1];
+                var module = error.file.match(/Axiom\.([\w.]+)/)[1];
                 if (module == this.module) {
                 	this.open_apply(error.line);
                 }

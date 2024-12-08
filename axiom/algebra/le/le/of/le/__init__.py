@@ -1,1 +1,1 @@
-from . import min
+from . import Min

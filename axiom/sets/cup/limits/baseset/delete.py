@@ -23,7 +23,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
     i, j, k = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
 
@@ -37,7 +37,7 @@ def prove(Eq):
     s = Symbol(Cup[j:f(k)](h(x[k], j)))
     Eq << s.this.definition
 
-    Eq << sets.eq.then.eq.cup.apply(Eq[-1], (k, x[k] > a[i], Range(n)))
+    Eq << Sets.Eq.to.Eq.Cup.apply(Eq[-1], (k, x[k] > a[i], Range(n)))
 
     Eq << Eq[-1].this.lhs.expr.definition
 

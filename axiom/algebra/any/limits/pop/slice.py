@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self, index=0):
-    from axiom.algebra.sum.limits.pop.slice import rewrite
+    from Axiom.Algebra.Sum.limits.pop.Slice import rewrite
     return rewrite(Any, self, index)
 
 
@@ -14,7 +14,7 @@ def prove(Eq):
     x = Symbol(integer=True, shape=(oo,))
     f = Function(real=True, bool=True)
     Eq << apply(Any[x[i:n + 1]](f(x[i:n + 1])))
-    
+
     Eq << Eq[0].this.rhs.simplify()
 
 

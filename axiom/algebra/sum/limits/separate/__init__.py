@@ -13,7 +13,7 @@ def apply(sgm, *, simplify=False):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     i, j = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
@@ -21,10 +21,10 @@ def prove(Eq):
     g = Symbol(shape=(oo, oo), real=True)
     Eq << apply(Sum[i:n, j:n](f[j] * g[i, j]))
 
-    Eq << Eq[-1].this.rhs.expr.apply(algebra.mul.to.sum)
+    Eq << Eq[-1].this.rhs.expr.apply(Algebra.Mul.eq.Sum)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':
@@ -32,4 +32,4 @@ if __name__ == '__main__':
 
 # created on 2019-11-11
 # updated on 2023-06-02
-from . import piece
+from . import Piece

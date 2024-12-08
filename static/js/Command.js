@@ -2,12 +2,12 @@ export class Command {
 	
 	constructor(func, ...args) {
 		this.func = func;
-		this.args = args;		
+		this.args = args;
 	}
 
 	run(){
-		this.func(...this.args);	
-	}	
+		this.func(...this.args);
+	}
 }
 
 export function modify_training(training, refresh_all){
@@ -38,11 +38,11 @@ export function command(self, refresh_all){
 		while (cmds.length)
 			cmds.pop().run();
 			
-		if (self.async_render) 
+		if (self.async_render)
 			self.async_render();
 		
 		self.$nextTick(()=>{
-			self.focus();	
+			self.focus();
 		})
 	}, self));
 	

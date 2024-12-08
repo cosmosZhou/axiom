@@ -10,18 +10,18 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     S = Symbol(etype=dtype.integer)
     x = Symbol(integer=True)
     f = Function(real=True)
     Eq << apply(Product[x:S](f(x)))
 
-    Eq << Eq[0].this.find(Bool).apply(algebra.bool.to.piece)
+    Eq << Eq[0].this.find(Bool).apply(Algebra.Bool.eq.Piece)
 
-    Eq << Eq[-1].this.rhs.expr.apply(algebra.pow.to.piece.exponent)
+    Eq << Eq[-1].this.rhs.expr.apply(Algebra.Pow.eq.Piece.exponent)
 
-    
+
 
 
 if __name__ == '__main__':

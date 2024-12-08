@@ -15,7 +15,7 @@ def apply(n, P_quote=None):
 
 @prove
 def prove(Eq):
-    from axiom import sets, algebra
+    from Axiom import Sets, Algebra
 
     n = Symbol(integer=True, positive=True)
     Eq << apply(n)
@@ -33,33 +33,33 @@ def prove(Eq):
 
     Eq << Eq.x_quote_definition[i]
 
-    Eq << sets.eq.then.eq.cup.finiteset.apply(Eq[-1], (i, 0, n))
+    Eq << Sets.Eq.to.Eq.Cup.FiniteSet.apply(Eq[-1], (i, 0, n))
 
     Eq.x_quote_n_definition = Eq[-2].subs(i, n)
 
-    Eq << sets.then.all.conditionset.apply(P)
+    Eq << Sets.All_Eq_.CupFiniteSet.Range.apply(P)
 
-    Eq << algebra.all_eq.cond.then.all.subs.apply(Eq[-1], Eq[-2])
+    Eq << Algebra.All_Eq.Cond.to.All.subs.apply(Eq[-1], Eq[-2])
 
     Eq.P2P_quote = All[x[:n]:P](Element(x_quote, P_quote), plausible=True)
 
     Eq << Eq.P2P_quote.this.expr.rhs.definition
 
-    Eq << algebra.et.of.et.apply(Eq[-1])
+    Eq << Algebra.And.of.And.apply(Eq[-1])
 
-    Eq << sets.then.all.conditionset.apply(P_quote)
+    Eq << Sets.All_Eq_.CupFiniteSet.Range.apply(P_quote)
 
-    Eq << algebra.all_et.then.et.all.apply(Eq[-1])
+    Eq << Algebra.All_And.to.And.All.apply(Eq[-1])
 
-    Eq << algebra.cond.all.then.all.et.apply(Eq.x_quote_n_definition, Eq[-2], simplify=False)
+    Eq << Algebra.Cond.All.to.All.And.apply(Eq.x_quote_n_definition, Eq[-2], simplify=False)
 
-    Eq << Eq[-1].this.expr.apply(algebra.eq.eq.then.eq.trans, reverse=True)
+    Eq << Eq[-1].this.expr.apply(Algebra.Eq.Eq.to.Eq.trans, reverse=True)
 
     Eq.mapping_quote = All[x[:n + 1]:P_quote](Equal(x_quote, x[:n + 1]), plausible=True)
 
-    Eq << Eq.mapping_quote.this.expr.apply(algebra.eq.of.et.eq.block)
+    Eq << Eq.mapping_quote.this.expr.apply(Algebra.Eq.of.And.Eq.Block)
 
-    Eq << algebra.all_et.of.et.all.apply(Eq[-1])
+    Eq << Algebra.All_And.of.And.All.apply(Eq[-1])
 
     Eq << Eq[-1].subs(Eq.mapping)
 
@@ -67,7 +67,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.expr.rhs.definition
 
-    Eq << sets.all_el.all_el.all_eq.all_eq.then.eq.apply(Eq[-1], Eq.P2P_quote, Eq.mapping_quote, Eq.mapping)
+    Eq << Sets.All_In.All_In.All_Eq.All_Eq.to.Eq.apply(Eq[-1], Eq.P2P_quote, Eq.mapping_quote, Eq.mapping)
 
     Eq << Eq[-1].reversed
 

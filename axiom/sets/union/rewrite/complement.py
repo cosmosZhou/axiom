@@ -12,7 +12,7 @@ def apply(self, index=0):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
 
     A, B = Symbol(etype=dtype.integer)
     Eq << apply(A | B)
@@ -20,7 +20,7 @@ def prove(Eq):
     C = Symbol(B - A)
     Eq << C.this.definition.reversed
 
-    Eq << sets.eq.then.eq.union.apply(Eq[-1], A)
+    Eq << Sets.Eq.to.Eq.Union.apply(Eq[-1], A)
     Eq << Eq[0].subs(Eq[1])
 
 

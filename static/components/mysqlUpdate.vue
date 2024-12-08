@@ -1,13 +1,43 @@
 <template>
 	<span class=update>
+		<template v-if=with_func>
+			<font color=blue>{{with_func}} </font>
+			<mysqlExpr v-if=with_value.isArray v-for="value, i of with_value" :name="`${with_func}[${i}]`" :value=value></mysqlExpr>
+			<mysqlExpr :name="'with'" :value=with_value></mysqlExpr><br>
+		</template>
 		<select class=cmd v-model=$parent.cmd>
 			<option v-for="value of cmds" :value=value>{{value}}</option>
 		</select>{{' '}} 
-		<mysqlDot :name="'update'" :value=value.update></mysqlDot>
+		<template v-if=join_type>
+			<template v-if=join_table[0].join>
+				<mysqlLeaf :name="'update[join][0]'" :value=join_table[0].join[0]></mysqlLeaf>
+				<font color=blue> join </font>
+				<mysqlLeaf :name="'update[join][1]'" :value=join_table[0].join[1]></mysqlLeaf>
+				<template v-if=join_table[0].using>
+					<font color=blue> using </font>
+					(<mysqlLeaf :name="'update[using]'" :value=join_table[0].using :option=option_join></mysqlLeaf>)
+				</template>
+				<mysqlExpr v-else-if=join_table[0].on :name="'update[on]'" :value="join_table[0].on"></mysqlExpr>
+			</template>
+			<mysqlDot v-else :name="'update'" :value=join_table[0]></mysqlDot>
+		
+			<select class=join_type v-model=join_type>
+				<option v-for="value of ['inner', 'cross', 'left', 'right', 'full']" :value=value>{{value}}</option>
+			</select><font color=blue> join </font>
+			<mysqlLeaf v-if="is_leaf(join_table[1])" :name="`update[${join_func}]`" :value=join_table[1] :option=option_join></mysqlLeaf>
+			<mysqlExpr v-else :name="`update[${join_func}]`" :value=join_table[1]></mysqlExpr>
+		</template>
+		<mysqlDot v-else :name="'update'" :value=value.update></mysqlDot>
 		<font color=blue> set </font>
-		<mysqlExpr :name="'set'" :value=value.set></mysqlExpr>
-		<font color=blue> where </font>
-		<mysqlExpr :name="'where'" :value=value.where></mysqlExpr>
+		<template v-if="value.set.isArray" v-for="value, index of value.set">
+			<template v-if=index>, </template>
+			<mysqlExpr :name="`set[${index}]`" :value=value :noSpace=true></mysqlExpr>
+		</template>
+		<mysqlExpr v-else :name="'set'" :value=value.set></mysqlExpr>
+		<template v-if="value.where && Object.keys(value.where).length">
+			<font color=blue> where </font>
+			<mysqlExpr :name="'where'" :value=value.where></mysqlExpr>
+		</template>
 
 		<template v-if="'order' in value">
 			{{' '}}
@@ -48,7 +78,7 @@
 
 <script>
 console.log('import mysqlUpdate.vue');
-import {piece_together, is_number, is_enum, is_string, is_json} from "../js/mysql.js"
+import {piece_together} from "../js/mysql.js"
 import mysqlLeaf from "./mysqlLeaf.vue"
 import mysqlExpr from "./mysqlExpr.vue"
 import mysqlDot from "./mysqlDot.vue"
@@ -67,22 +97,73 @@ export default {
 	},
 
 	created(){
-		this.$data.execute = getParameter('execute', true);
-		this.$data.repeat = getParameter('repeat', true);
+		this.$data.execute = getParameterByName('execute');
+		this.$data.repeat = getParameterByName('repeat');
 		var {value} = this;
 		var {set} = value;
-		if (!set.eq[0]) {
+		if (set.eq && !set.eq[0]) {
 			var {functor, setter} = this;
 			this.fieldForLabelling = setter;
 			console.log({setter, functor});
 		}
 		
-		if (!value.where) {
+		if (!value.where)
 			value.where = {};
-		}
 	},
 	
 	computed: {
+		option() {
+			return this.$parent.option;
+		},
+
+		with_func(){
+			var {value} = this;
+			if (value.with)
+				return 'with';
+			if (value.with_recursive)
+				return 'with recursive';
+		},
+
+		with_value(){
+			var {value} = this;
+			if (value.with)
+				return value.with;
+			if (value.with_recursive)
+				return value.with_recursive;
+		},
+
+		join_type() {
+			var {value: {update}} = this;
+			if (update.inner_join || update.join)
+				return 'inner';
+			
+			if (update.left_join)
+				return 'left';
+			
+			if (update.right_join)
+				return 'right';
+			
+			if (update.cross_join)
+				return 'cross';
+			
+			if (update.full_join)
+				return 'full';
+		},
+
+		join_table() {
+			var {join_func, value: {update}} = this;
+			if (join_func == 'inner')
+				return update.join || update.inner_join;
+			return update[join_func];
+		},
+
+		join_func() {
+			var {join_type} = this;
+			if (join_type == 'inner')
+				return `join`;
+			return `${join_type}_join`;
+		},
+
 		change_table(){
 			return this.$parent.change_table;
 		},
@@ -109,7 +190,7 @@ export default {
 
 		is_leaf() {
 			return this.$parent.is_leaf;
-		},		
+		},
 		
 		numericFields() {
 			return this.$parent.numericFields;
@@ -129,7 +210,7 @@ export default {
 
 		textual_function_regexp() {
 			return this.$parent.textual_function_regexp;
-		},		
+		},
 
 		is_numeric_function() {
 			return this.$parent.is_numeric_function;
@@ -161,7 +242,7 @@ export default {
 		
 		order: {
 			get() {
-				return this.$parent.order;	
+				return this.$parent.order;
 			},
 			
 			set(order) {
@@ -171,7 +252,7 @@ export default {
 		
 		group: {
 			get() {
-				return this.$parent.group;	
+				return this.$parent.group;
 			},
 			
 			set(order) {
@@ -358,7 +439,7 @@ export default {
 				if (functor) {
 					switch (functor) {
 					case 'regexp_replace':
-						return rhs[functor][1];	
+						return rhs[functor][1];
 					}
 				}
 			},
@@ -374,7 +455,7 @@ export default {
 				if (functor) {
 					switch (functor) {
 					case 'regexp_replace':
-						return rhs[functor][2];	
+						return rhs[functor][2];
 					}
 				}
 			},
@@ -409,13 +490,26 @@ export default {
 					}
 				}
 				else {
-					this.kwargs.set = {eq: [setter, '']};	
+					this.kwargs.set = {eq: [setter, '']};
 				}
 			},
 		},
 	},
 	
 	methods: {
+		delete(child) {
+			var {set} = this.value;
+			if (set.isArray) {
+				var index = set.indexOf(child);
+				if (index >= 0) {
+					set.delete(index);
+					if (set.length == 1) {
+						[this.value.set] = set;
+					}
+				}
+			}
+		},
+
 		get_setter() {
 			var {kwargs, transform} = this;
 			var where_dict = this.where_dict(this.kwargs.where?? {}, true);
@@ -432,7 +526,7 @@ export default {
 				return fieldsToSet[0];
 			
 			if (fieldsToSet.length == 0) {
-				return 'text';	
+				return 'text';
 			}
 			
 			for (var field of fieldsToSet) {
@@ -459,12 +553,12 @@ export default {
 			if (this.primary_key)
 				return `operator[regexp_replace]${this.primary_key}[${Field}]`;
 			return `operator[regexp_replace][${Field}]`;
-		},		
+		},
 		
 		change_setter(event){
 			var setter = event.target.value;
 			if (this.style[setter]) {
-				this.functor = '';	
+				this.functor = '';
 			}
 			else if (!this.functor){
 				this.functor = 'regexp_replace';
@@ -525,10 +619,10 @@ export default {
 			autoLabellingType = autoLabellingType[setter];
 			switch (autoLabellingType) {
 			case 'syntax':
-				var url = `?vue=${autoLabellingType}Labelling&table=${table}&setter=${setter}&repetition=6`;
+				var url = `index.php?vue=${autoLabellingType}Labelling&table=${table}&setter=${setter}&repetition=6`;
 				break;
 			case 'entity':
-				var url = `?vue=${autoLabellingType}Labelling&table=${table}&setter=${setter}&textField=text`;
+				var url = `index.php?vue=${autoLabellingType}Labelling&table=${table}&setter=${setter}&textField=text`;
 				break;
 			}
 			

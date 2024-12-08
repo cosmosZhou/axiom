@@ -19,7 +19,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, a, b = Symbol(real=True)
     f = Function(real=True)
@@ -28,17 +28,17 @@ def prove(Eq):
     y = Symbol(Eq[0].lhs)
     Eq << y.this.definition.reversed
 
-    Eq << algebra.eq.then.et.squeeze.apply(Eq[-1])
+    Eq << Algebra.Eq.to.And.squeeze.apply(Eq[-1])
 
-    Eq <<= algebra.sup_le.then.all.le.apply(Eq[-2]), algebra.sup_ge.then.all.any.gt.apply(Eq[-1])
+    Eq <<= Algebra.LeSup.to.All.Le.apply(Eq[-2]), Algebra.GeSup.to.All.Any.Gt.apply(Eq[-1])
 
     Eq << Eq[0].subs(Eq[1]).reversed
 
-    Eq << algebra.eq.of.et.squeeze.apply(Eq[-1])
+    Eq << Algebra.Eq.of.And.squeeze.apply(Eq[-1])
 
-    Eq <<= algebra.sup_le.of.all.le.apply(Eq[-2]), algebra.sup_ge.of.all_any_gt.apply(Eq[-1])
+    Eq <<= Algebra.LeSup.of.All.Le.apply(Eq[-2]), Algebra.GeSup.of.All_Any_Gt.apply(Eq[-1])
 
-    Eq <<= Eq[-2].this.apply(algebra.all.limits.negate), Eq[-1].this.expr.apply(algebra.any.limits.negate)
+    Eq <<= Eq[-2].this.apply(Algebra.All.limits.Neg), Eq[-1].this.expr.apply(Algebra.Any.limits.Neg)
 
 
 if __name__ == '__main__':

@@ -1,9 +1,10 @@
 from util import *
 
-from axiom.discrete.then.gt_zero.alpha import alpha
 
 @apply
 def apply(A):
+    from Axiom.Discrete.Alpha.gt.Zero import alpha
+
     mat = A.of(alpha)
 
     return Equal(A, alpha(*mat.of(Matrix)))
@@ -11,6 +12,7 @@ def apply(A):
 
 @prove
 def prove(Eq):
+    from Axiom.Discrete.Alpha.gt.Zero import alpha
     x = Symbol(real=True, positive=True, shape=(oo,))
     Eq << apply(alpha(Matrix((x[0], x[1], x[2]))))
 

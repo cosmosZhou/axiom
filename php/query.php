@@ -37,7 +37,7 @@ if ($statement = $_POST['sql']) {
 	}
 	
     $data = &$statement['data'];
-    [$database, $table] = get_db_table($statement);    
+    [$database, $table] = get_db_table($statement);
     $ignore = std\boolval($statement['ignore']);
     $replace = std\boolval($statement['replace']);
     $step = isset($statement['step']) ? (int)$statement['step'] : 1000;
@@ -58,7 +58,7 @@ if ($sql) {
 
 $props = [];
 foreach ($kwargs as $key => &$value) {
-    if (std\fullmatch('/select|update|delete|set|alter|show|rename|revoke|grant|drop|from|into|where|with|having|order|group|on|using|limit|offset|kwargs/', $key))
+    if (std\fullmatch('/select|update|delete|set|alter|show|rename|revoke|grant|drop|from|into|where|with(_recursive)?|having|order|group|on|using|limit|offset|kwargs|union(_all)?/', $key))
         continue;
     
     $props[$key] = $value;
@@ -71,7 +71,7 @@ foreach ($props as $key => &$value) {
 require_once 'mysql.php';
 include_once 'utility.php';
 
-[$database, $table] = get_db_table($kwargs);
+[$database, $table, $is_union] = get_db_table($kwargs);
 if ($update = $kwargs['update']) {
     $cmd = 'update';
 } elseif ($into = $kwargs['into']) {
@@ -85,12 +85,11 @@ if ($update = $kwargs['update']) {
     $cmd = 'show';
 } else {
     $cmd = 'select';
-    if (! array_key_exists('from', $kwargs)) {
-        $kwargs['from'] = ['corpus' => 'rlhf'];
-    }
-
-    if (! array_key_exists('select', $kwargs)) {
-        $kwargs['select'] = '*';
+    if (!$is_union) {
+        if (! array_key_exists('from', $kwargs))
+            $kwargs['from'] = ['corpus' => 'reward'];
+        if (! array_key_exists('select', $kwargs))
+            $kwargs['select'] = '*';
     }
 }
 

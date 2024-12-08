@@ -6,7 +6,7 @@ class Regex
     public $parent;
 
     public function remove_negation() {
-        return false;    
+        return false;
     }
 
     public function delete() {
@@ -390,7 +390,7 @@ class RegexSimple extends Regex
         $parent = $this->parent;
         $last = array_pop($chars);
         return [
-            new RegexSimple(implode("", 
+            new RegexSimple(implode("",
                 array_map(fn(&$m) => $m[0][0], $chars)), $parent),
             new RegexSimple($last[0][0], $parent)];
     }
@@ -461,7 +461,7 @@ class RegexSimple extends Regex
             $this->arg .= $new->arg;
             return $this;
         }
-        else 
+        else
             return parent::append($new);
     }
     
@@ -479,7 +479,7 @@ class RegexSimple extends Regex
                     case 'M':
                         break;
                     default:
-                        ++$match_length; 
+                        ++$match_length;
                         break;
                 }
             } else {
@@ -823,7 +823,7 @@ class RegexComplex extends RegexMultiple
         }
         //for example:
         //[a-z]+(?<!(?:\bpo|fami))ly
-        //(?=[a-z]+)(?:(?!(?:\\bpo|fami)ly)[^{}])*ly
+        //(?=\\b[a-z]+)(?:(?!(?:\\bpo|fami)ly)[^{}])*ly
     }
     
     public function match_length() {
@@ -1196,7 +1196,7 @@ class RegexGroupUncaptured extends RegexGroup
     
     public function remove_negation() {
         return $this->arg->remove_negation();
-    }    
+    }
 }
 
 // www.regular-expressions.info/lookaround.html

@@ -10,7 +10,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, positive=True)
     A = Symbol(etype=dtype.integer[n])
@@ -18,13 +18,13 @@ def prove(Eq):
     f, g = Function(real=True, shape=())
     Eq << apply(Sum[x[:n]:g(x[:n]) > 0:A](f(x[:n])))
 
-    Eq << Eq[0].this.lhs.apply(algebra.sum.bool)
+    Eq << Eq[0].this.lhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.bool)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Sum.Bool)
 
-    
 
-    
+
+
 
 
 if __name__ == '__main__':

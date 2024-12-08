@@ -1,3 +1,3 @@
-from . import to
-from . import sin
-from . import cos
+from . import Sin
+from . import Cos
+from . import eq

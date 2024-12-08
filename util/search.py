@@ -3,7 +3,7 @@ from std.file import Text
 from _collections import defaultdict
 
 def axiom_directory():
-    return os.path.dirname(os.path.dirname(__file__)) + '/axiom'
+    return os.path.dirname(os.path.dirname(__file__)) + '/Axiom'
 
 
 def read_directory(root):
@@ -119,7 +119,7 @@ def module_to_py(theorem):
 
 def module_to_path(theorem):
     theorem = theorem.replace(".", "/")
-    return os.path.dirname(os.path.dirname(__file__)) + f"/axiom/{theorem}"
+    return os.path.dirname(os.path.dirname(__file__)) + f"/Axiom/{theorem}"
 
     
 def py_to_module(py, delimiter='.'):
@@ -128,7 +128,7 @@ def py_to_module(py, delimiter='.'):
     while True:
         dirname = os.path.dirname(pythonFile)
         basename = os.path.basename(pythonFile)
-        if basename == 'axiom':
+        if basename == 'Axiom':
             break
         
         module.append(basename)
@@ -192,6 +192,8 @@ def search(keyword, caseSensitive=True, wholeWord=False, regularExpression=False
     
 def is_py_theorem(py):
     for line in Text(py):
+        if not line:
+            continue
         if re.match('from util import \*', line):
             return True
         assert re.match('from \. import \w+', line), py
@@ -212,7 +214,7 @@ def yield_callee_from_py(py):
             if re.match('^ *#', line):
                 continue
             
-            for m in re.finditer(r'\b(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+', line):
+            for m in re.finditer(r'\b(?:Algebra|Sets|Calculus|Discrete|Geometry|Keras|Stats)(?:\.\w+)+', line):
                 module = m[0]        
                 m = re.match('(.+)\.apply$', module)
                 if m:
@@ -240,7 +242,7 @@ def analyze_apply(py, i):
     return i, provability
 
 def match_section(statement):
-    return re.findall(r'\b(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+', statement)
+    return re.findall(r'\b(?:Algebra|Sets|Calculus|Discrete|Geometry|Keras|Stats)(?:\.\w+)+', statement)
 
 def yield_from_py(module):
     python_file = module_to_py(module)
@@ -298,7 +300,7 @@ def yield_from_py(module):
 
     if i < count:
         statement = py[i]
-        if matches := re.match('    from axiom import (.+)', statement):
+        if matches := re.match('    from Axiom import (.+)', statement):
             section = matches[1].split(", ")
             yield {
                 'line' : i,
@@ -414,18 +416,8 @@ def yield_function_from_py(py):
     # prove = False
     for line in Text(py):
 #         print("line =", line)
-        # if re.match('^def prove\(', line):
-            # prove = True
-            # continue
-
-        # if prove:
-            # if re.match(r'^    return\b', line):
-                # break
             
-            # if re.match('^ *#', line):
-                # continue
-            
-        if m := re.match('(?:    )+from axiom((?:\.\w+)+) import (\w+)', line):
+        if m := re.match('(?:    )+from Axiom((?:\.\w+)+) import (\w+)', line):
             callee, func = m.groups()
             callee = callee[1:]
             print(callee, func)        

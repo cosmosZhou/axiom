@@ -41,8 +41,8 @@ export default {
 	},
 
 	created(){
-		this.$data.execute = getParameter('execute', true);
-		this.$data.repeat = getParameter('repeat', true);
+		this.$data.execute = getParameterByName('execute');
+		this.$data.repeat = getParameterByName('repeat');
 	},
 	
 	computed: {
@@ -56,7 +56,7 @@ export default {
 		
 		is_leaf() {
 			return this.$parent.is_leaf;
-		},		
+		},
 
 		numeric_functions() {
 			return this.$parent.numeric_functions;
@@ -92,7 +92,7 @@ export default {
 
 		textual_relations() {
 			return this.$parent.textual_relations;
-		},		
+		},
 		
 		numeric_function_regexp() {
 			return this.$parent.numeric_function_regexp;
@@ -136,7 +136,7 @@ export default {
 		},
 		
 		PRI() {
-			return this.$parent.PRI;	
+			return this.$parent.PRI;
 		},
 
 		cmds() {
@@ -157,7 +157,7 @@ export default {
 		
 		style_select() {
 			return this.$parent.style_select;
-		},		
+		},
 		
 		value() {
 			return this.kwargs;
@@ -181,7 +181,7 @@ export default {
 		
 		input_kwargs() {
 			return this.$parent.input_kwargs;
-		},		
+		},
 		
 		databases() {
 			return this.$parent.databases;

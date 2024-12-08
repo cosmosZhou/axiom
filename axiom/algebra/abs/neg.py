@@ -11,7 +11,7 @@ def rewrite(cls, self):
                 break
         else:
             args.append(S.NegativeOne)
-        
+
         x = Mul(*args)
     else:
         x = -x
@@ -24,19 +24,19 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y = Symbol(real=True)
     Eq << apply(abs(x - y))
 
-    Eq << Eq[0].this.lhs.apply(algebra.abs.to.piece)
+    Eq << Eq[0].this.lhs.apply(Algebra.Abs.eq.Piece)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.abs.to.piece.le_zero)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Abs.eq.Piece.Le_0)
 
     Eq << -Eq[-1].this.find(LessEqual)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

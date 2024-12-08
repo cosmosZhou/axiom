@@ -1,3 +1,5 @@
+from . import limits
+from . import simp
 from . import doit
-from . import piece
-from . import limits, to, simplify
+from . import Piece
+from . import eq

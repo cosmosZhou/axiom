@@ -1,4 +1,4 @@
-from . import to
+from . import Min
+from . import Max
 from . import reversed
-from . import max
-from . import min
+from . import eq

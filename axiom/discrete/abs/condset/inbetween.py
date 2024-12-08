@@ -4,7 +4,7 @@ from util import *
 @apply
 def apply(n, Q=None):
     if Q is None:
-        from axiom.discrete.then.all.et.mapping.Qu2v import predefined_symbols
+        from Axiom.Discrete.All_And.mapping.Qu2v import predefined_symbols
         Q, w, x = predefined_symbols(n)
     else:
         x = Q.definition.expr.variable
@@ -16,20 +16,20 @@ def apply(n, Q=None):
 
 @prove
 def prove(Eq):
-    from axiom import discrete, sets
+    from Axiom import Discrete, Sets
     n = Symbol(integer=True, positive=True)
     Eq << apply(n)
 
-    Eq << discrete.condset.PQ_equality.apply(n)
+    Eq << Discrete.Condset.PQ_Equality.apply(n)
 
     Eq << Eq[2].subs(Eq[-1].reversed)
 
     u = Eq[-1].lhs.arg.indices[0]
-    Eq << discrete.then.all.et.mapping.Qu2v.apply(n, n, u)
+    Eq << Discrete.All_And.mapping.Qu2v.apply(n, n, u)
 
-    Eq << discrete.then.all.et.mapping.Qu2v.apply(n, u, n)
+    Eq << Discrete.All_And.mapping.Qu2v.apply(n, u, n)
 
-    Eq << sets.all_et.all_et.then.eq.apply(Eq[-1], Eq[-2])
+    Eq << Sets.All_And.All_And.to.Eq.apply(Eq[-1], Eq[-2])
 
 
 if __name__ == '__main__':

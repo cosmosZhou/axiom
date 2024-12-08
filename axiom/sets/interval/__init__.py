@@ -1,3 +1,4 @@
-from . import to
-from . import min
-from . import max
+from . import Max
+from . import Min
+from . import eq
+from . import subset

@@ -3,27 +3,27 @@ from util import *
 
 @apply
 def apply(self, index=0, offset=None):
-    from axiom.algebra.sum.limits.subs.offset import limits_subs
+    from Axiom.Algebra.Sum.limits.subs.offset import limits_subs
     return Equal(self, limits_subs(Cup, self, index, offset), evaluate=False)
 
 
 @prove
 def prove(Eq):
-    from axiom import sets, algebra
+    from Axiom import Sets, Algebra
 
     a, b, n, d = Symbol(integer=True)
     f = Function(etype=dtype.integer)
     Eq << apply(Cup[n:a:b](f(n)), d)
 
-    Eq << sets.eq.of.et.infer.apply(Eq[0])
+    Eq << Sets.Eq.of.And.Imply.apply(Eq[0])
 
-    Eq <<= Eq[-2].this.lhs.apply(sets.el_cup.then.any_el), Eq[-1].this.lhs.apply(sets.el_cup.then.any_el)
+    Eq <<= Eq[-2].this.lhs.apply(Sets.In_Cup.to.Any_In), Eq[-1].this.lhs.apply(Sets.In_Cup.to.Any_In)
 
-    Eq <<= Eq[-2].this.rhs.apply(sets.el_cup.of.any_el), Eq[-1].this.rhs.apply(sets.el_cup.of.any_el)
+    Eq <<= Eq[-2].this.rhs.apply(Sets.In_Cup.of.Any_In), Eq[-1].this.rhs.apply(Sets.In_Cup.of.Any_In)
 
-    Eq <<= Eq[-2].this.lhs.apply(algebra.any.then.any.limits.subs.offset, d)
+    Eq <<= Eq[-2].this.lhs.apply(Algebra.Any.to.Any.limits.subs.offset, d)
 
-    Eq <<= Eq[-1].this.lhs.apply(algebra.any.then.any.limits.subs.offset, -d)
+    Eq <<= Eq[-1].this.lhs.apply(Algebra.Any.to.Any.limits.subs.offset, -d)
 
 
 if __name__ == '__main__':

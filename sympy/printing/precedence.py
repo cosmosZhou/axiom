@@ -24,7 +24,7 @@ PRECEDENCE = {
 PRECEDENCE_VALUES = {
     "Equivalent": PRECEDENCE["Xor"],
     "Xor": PRECEDENCE["Xor"],
-    "Infer": PRECEDENCE["Xor"],
+    "Imply": PRECEDENCE["Xor"],
     "Or": PRECEDENCE["Or"],
     "And": PRECEDENCE["And"],
     "Add": PRECEDENCE["Add"],

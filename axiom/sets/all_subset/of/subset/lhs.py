@@ -10,7 +10,7 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
     n, m = Symbol(integer=True, positive=True)
     i = Symbol(integer=True)
     x = Symbol(shape=(oo,), etype=dtype.complex[n])
@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << apply(All[i:m](Subset(x[i], A)))
 
-    Eq << sets.subset_cup.then.all_subset.apply(Eq[1])
+    Eq << Sets.Subset_Cup.to.All_Subset.apply(Eq[1])
 
 
 if __name__ == '__main__':

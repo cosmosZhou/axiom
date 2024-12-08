@@ -1,7 +1,7 @@
 """
 Boolean algebra module for SymPy
 """
-
+import re
 from collections import defaultdict
 from itertools import combinations, product
 from sympy.core.add import Add
@@ -185,11 +185,11 @@ class Boolean(Basic):
 
     def __rshift__(self, other):
         """Overloading for >>"""
-        return Infer(self, other)
+        return Imply(self, other)
 
     def __lshift__(self, other):
         """Overloading for <<"""
-        return Assuming(self, other)
+        return Given(self, other)
 
     __rrshift__ = __lshift__
     __rlshift__ = __rshift__
@@ -1158,7 +1158,7 @@ class And(LatticeOp, BooleanFunction):
         token = axiom.__name__.split(sep='.')
         i, type = inference_type(token)
         
-        if token[2][:3] == 'et' or type in ('imply', 'given', 'then', 'of') and i == 3:
+        if token[2].startswith('And') or type in ('to', 'of') and i == 3:
             split = False
             
         if split: 
@@ -1197,7 +1197,7 @@ class And(LatticeOp, BooleanFunction):
                 cond = And(*cond, **{clue: self})
 
             else:
-                if cond.is_Equivalent and type == 'to':
+                if cond.is_Equivalent and type == 'equ':
                     if cond.clue is None:
                         return cond.rhs
                 
@@ -1894,7 +1894,7 @@ class Not(BooleanFunction):
         if func == Or:
             return And._to_nnf(*[~arg for arg in args], simplify=simplify)
 
-        if func == Infer:
+        if func == Imply:
             a, b = args
             return And._to_nnf(a, ~b, simplify=simplify)
 
@@ -1927,7 +1927,7 @@ class Not(BooleanFunction):
         cond = self.arg
         if isinstance(cond, Equivalent):
             return p._print_Equivalent(cond, r"\not\Leftrightarrow")
-        if isinstance(cond, Infer):
+        if isinstance(cond, Imply):
             return p._print_Imply(cond, r"\not\Rightarrow")
         
         return r"\neg %s" % p._print(cond)
@@ -2146,11 +2146,11 @@ class Xnor(BooleanFunction):
         return Not(Xor(*args))
 
        
-class Infer(BooleanAssumption):
+class Imply(BooleanAssumption):
     """
     Logical implication.
 
-    A is Infer for B is equivalent to !A v B
+    A is Imply for B is equivalent to !A v B
 
     Accepts two Boolean arguments; A and B.
     Returns False if A is True and B is False
@@ -2159,29 +2159,29 @@ class Infer(BooleanAssumption):
     Examples
     ========
 
-    >>> from sympy.logic.boolalg import Infer
+    >>> from sympy.logic.boolalg import Imply
     >>> from sympy import symbols
     >>> x, y = symbols('x y')
 
-    >>> Infer(True, False)
+    >>> Imply(True, False)
     False
-    >>> Infer(False, False)
+    >>> Imply(False, False)
     True
-    >>> Infer(True, True)
+    >>> Imply(True, True)
     True
-    >>> Infer(False, True)
+    >>> Imply(False, True)
     True
     >>> x >> y
-    Infer(x, y)
+    Imply(x, y)
     >>> y << x
-    Infer(x, y)
+    Imply(x, y)
 
     Notes
     =====
 
     The ``>>`` and ``<<`` operators are provided as a convenience, but note
     that their use here is different from their normal use in Python, which is
-    bit shifts. Hence, ``Infer(a, b)`` and ``a >> b`` will return different
+    bit shifts. Hence, ``Imply(a, b)`` and ``a >> b`` will return different
     things if ``a`` and ``b`` are integers.  In particular, since Python
     considers ``True`` and ``False`` to be integers, ``True >> True`` will be
     the same as ``1 >> 1``, i.e., 0, which has a truth value of False.  To
@@ -2215,7 +2215,7 @@ class Infer(BooleanAssumption):
             A, B = newargs
         except ValueError:
             raise ValueError(
-                "%d operand(s) used for an Infer "
+                "%d operand(s) used for an Imply "
                 "(pairs are required): %s" % (len(args), str(args)))
             
         if B.is_BooleanFalse:
@@ -2285,16 +2285,16 @@ class Infer(BooleanAssumption):
 
     def __and__(self, other):
         """Overloading for & operator"""
-        if other.is_Infer:
+        if other.is_Imply:
             if self.lhs == other.lhs:
                 return self.func(self.lhs, self.rhs & other.rhs)
             if self.lhs == other.rhs:
                 if self.rhs == other.lhs:
                     return Equivalent(self.lhs, self.rhs)
             if self.rhs == other.rhs:
-                return Infer(self.lhs | other.lhs, self.rhs)
+                return Imply(self.lhs | other.lhs, self.rhs)
                 
-        elif other.is_Assuming:
+        elif other.is_Given:
             if self.lhs == other.lhs:
                 if self.rhs == other.rhs:
                     return Equivalent(self.lhs, self.rhs)
@@ -2335,7 +2335,7 @@ class Infer(BooleanAssumption):
                      
                 eqs.append(eq)
                 
-            return Infer(p, And(*eqs))
+            return Imply(p, And(*eqs))
         elif q.is_Or:
             p, p_set = self.premise_set()
             
@@ -2350,19 +2350,20 @@ class Infer(BooleanAssumption):
                         else:
                             continue
                 eqs.append(eq)
-            return Infer(p, Or(*eqs))
+            return Imply(p, Or(*eqs))
             
         return self
 
     def inference_status(self, child):
         return child == 0
 
+Imply = Imply
 
-class Assuming(BooleanAssumption):
+class Given(BooleanAssumption):
     """
     Logical implication.
 
-    A is Assuming for B is equivalent to A v !B
+    A is Given for B is equivalent to A v !B
 
     Accepts two Boolean arguments; A and B.
     Returns False if A is True and B is False
@@ -2375,7 +2376,7 @@ class Assuming(BooleanAssumption):
 
     @classmethod
     def eval(cls, *args):
-        return Infer.eval(*args[::-1])
+        return Imply.eval(*args[::-1])
 
     def to_nnf(self, simplify=True):
         b, a = self.args
@@ -2401,17 +2402,17 @@ class Assuming(BooleanAssumption):
             return p._print_Function(self)
     
     def _latex(self, p, rotate=False):
-        return Infer._latex(self, p, '\Leftarrow', rotate=rotate)
+        return Imply._latex(self, p, '\Leftarrow', rotate=rotate)
 
     def __and__(self, other):
         """Overloading for & operator"""
-        if other.is_Infer:
+        if other.is_Imply:
             if self.lhs == other.lhs:
                 if self.rhs == other.rhs:
                     return Equivalent(self.lhs, self.rhs)
-        elif other.is_Assuming:
+        elif other.is_Given:
             if self.lhs == other.lhs: 
-                return Assuming(self.lhs, self.rhs | other.rhs)
+                return Given(self.lhs, self.rhs | other.rhs)
 
         return BinaryCondition.__and__(self, other)
 
@@ -2496,7 +2497,7 @@ class Equivalent(BooleanAssumption):
         return "Equivalent(%s, %s)" % (p._print(self.lhs), p._print(self.rhs))
 
     def _latex(self, p, rotate=False):
-        return Infer._latex(self, p, '\Leftrightarrow', rotate=rotate)
+        return Imply._latex(self, p, '\Leftrightarrow', rotate=rotate)
 
     def _pretty(self, p, altchar=None):
         if p._use_unicode:
@@ -2507,8 +2508,10 @@ class Equivalent(BooleanAssumption):
     def inference_status(self, child):
         raise Exception("boolean conditions within Equivalent are not applicable for inequivalent inference!")       
 
-       
-class NotInfer(BooleanAssumption):
+Iff = Equivalent       
+
+
+class NotImply(BooleanAssumption):
 
     def __new__(cls, *args, **assumptions):
         return BinaryCondition.eval(cls, *args, **assumptions)
@@ -2519,7 +2522,7 @@ class NotInfer(BooleanAssumption):
         
     def _sympystr(self, p):
         # \N{RIGHTWARDS DOUBLE ARROW WITH STROKE} 
-        return "NotInfer(%s, %s)" % (p._print(self.lhs), p._print(self.rhs))
+        return "NotImply(%s, %s)" % (p._print(self.lhs), p._print(self.rhs))
     
     def _latex(self, p, rotate=False):
         A = p.conditions_wrapper(self.lhs)
@@ -2532,8 +2535,9 @@ class NotInfer(BooleanAssumption):
     def inference_status(self, child):
         return child == 1
 
+NotImply = NotImply
 
-class Unnecessary(BooleanAssumption):
+class NotGiven(BooleanAssumption):
     
     @classmethod
     def eval(cls, *args):
@@ -2541,43 +2545,43 @@ class Unnecessary(BooleanAssumption):
 
     def _sympystr(self, p):
         # \N{LEFTWARDS DOUBLE ARROW WITH STROKE} 
-        return "Unnecessary(%s, %s)" % (p._print(self.lhs), p._print(self.rhs))
+        return "NotGiven(%s, %s)" % (p._print(self.lhs), p._print(self.rhs))
 
     def _latex(self, p, altchar='\nLeftarrow', rotate=False):
-        return Infer._latex(self, p, altchar, rotate=rotate)
+        return Imply._latex(self, p, altchar, rotate=rotate)
 
     def inference_status(self, child):
         return child == 0
 
 
-class Inequivalent(BooleanAssumption):
+class NotIff(BooleanAssumption):
 
     def _sympystr(self, p):
         # \N{LEFT RIGHT DOUBLE ARROW WITH STROKE} 
-        return "Inequivalent(%s, %s)" % (p._print(self.lhs), p._print(self.rhs))
+        return "NotIff(%s, %s)" % (p._print(self.lhs), p._print(self.rhs))
 
     def _latex(self, p, altchar='\nLeftrightarrow', rotate=False):
-        return Infer._latex(self, p, altchar, rotate=rotate)
+        return Imply._latex(self, p, altchar, rotate=rotate)
 
     def inference_status(self, child):
-        raise Exception("boolean conditions within Inequivalent are not applicable for inequivalent inference!")       
+        raise Exception("boolean conditions within NotIff are not applicable for inequivalent inference!")       
 
 
-Infer.reversed_type = Assuming
-Assuming.reversed_type = Infer
+Imply.reversed_type = Given
+Given.reversed_type = Imply
 Equivalent.reversed_type = Equivalent
 
-NotInfer.reversed_type = Unnecessary
-Unnecessary.reversed_type = NotInfer
-Inequivalent.reversed_type = Inequivalent
+NotImply.reversed_type = NotGiven
+NotGiven.reversed_type = NotImply
+NotIff.reversed_type = NotIff
 
-Infer.invert_type = NotInfer
-Assuming.invert_type = Unnecessary
-Equivalent.invert_type = Inequivalent
+Imply.invert_type = NotImply
+Given.invert_type = NotGiven
+Equivalent.invert_type = NotIff
 
-NotInfer.invert_type = Infer
-Unnecessary.invert_type = Assuming
-Inequivalent.invert_type = Equivalent
+NotImply.invert_type = Imply
+NotGiven.invert_type = Given
+NotIff.invert_type = Equivalent
 
 
 class ITE(BooleanFunction):
@@ -3022,10 +3026,10 @@ def eliminate_implications(expr):
     Examples
     ========
 
-    >>> from sympy.logic.boolalg import Infer, Equivalent, \
+    >>> from sympy.logic.boolalg import Imply, Equivalent, \
          eliminate_implications
     >>> from sympy.abc import A, B, C
-    >>> eliminate_implications(Infer(A, B))
+    >>> eliminate_implications(Imply(A, B))
     B | ~A
     >>> eliminate_implications(Equivalent(A, B))
     (A | ~B) & (B | ~A)
@@ -3855,9 +3859,16 @@ def simplify_patterns_xor():
                      )
     return _matchers_xor
 
+binary_operators = 'equ', 'eq', 'ne', 'gt', 'ge', 'lt', 'le', 'el', 'subset', 'supset', 'et', 'ou', 'distributed'
 def inference_type(tokens):
-    for i, token in enumerate(tokens):
-        if token in ('imply', 'given', 'to', 'then', 'of'):
-            return i, token
-        
-    return -1, 'to'
+
+    for token in ('to', 'of', *binary_operators):
+        try:
+            return tokens.index(token), token
+        except ValueError:
+            ...
+
+    if m := re.match('[A-Z][a-z]*', tokens[0]):
+        if m[0] in ('Eq', 'Ne', 'Gt', 'Ge', 'Lt', 'Le', 'And', 'Or', 'In', 'Any', 'All', 'Not', 'Subset', 'Supset', 'Imply', 'Iff', 'Cond', 'Given', 'Distributed', 'Contain'):
+            return -1, 'equ'
+    return -1, 'equ'

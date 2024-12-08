@@ -1,1 +1,1 @@
-from . import eq_clip
+from . import Eq_Clip

@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(imply, i=None, j=None):
-    from axiom.sets.then.eq.swap import swap
+    from Axiom.Sets.EqSwapSwap import swap
     x, y = imply.of(Equal)
     n, = x.shape
 
@@ -19,7 +19,7 @@ def apply(imply, i=None, j=None):
 
 @prove
 def prove(Eq):
-    from axiom import sets, algebra
+    from Axiom import Sets, Algebra
     n = Symbol(positive=True, integer=True)
 
     x, y = Symbol(shape=(n,), etype=dtype.integer)
@@ -27,15 +27,15 @@ def prove(Eq):
     Eq << apply(Equal(x, y))
 
     (i,), (j,) = Eq[1].lhs.limits
-    Eq << sets.eq.then.eq.swap.apply(Eq[1], i, j)
+    Eq << Sets.Eq.to.Eq.swap.apply(Eq[1], i, j)
 
-    Eq << sets.then.eq.swap.apply(x, i, j)
+    Eq << Sets.EqSwapSwap.apply(x, i, j)
 
-    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[-2], Eq[-1])
+    Eq << Algebra.Eq.Eq.to.Eq.trans.apply(Eq[-2], Eq[-1])
 
-    Eq << sets.then.eq.swap.apply(y, i, j)
+    Eq << Sets.EqSwapSwap.apply(y, i, j)
 
-    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[-2], Eq[-1])
+    Eq << Algebra.Eq.Eq.to.Eq.trans.apply(Eq[-2], Eq[-1])
 
 
 if __name__ == '__main__':

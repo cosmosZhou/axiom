@@ -24,7 +24,7 @@ $module = "$package.$theorem";
 $py = module_to_py($module);
 error_log("py = $py");
 
-if (std\endsWith($py, "/__init__.py")) {
+if (str_ends_with($py, "/__init__.py")) {
     $init = new Text($py);
     $lines = $init->preg_match('^from . import \w+');
     $init->writelines($lines);

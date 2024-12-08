@@ -17,7 +17,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra, sets
+    from Axiom import Algebra, Sets
 
     a, b = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
@@ -26,21 +26,21 @@ def prove(Eq):
     f = Function(real=True, shape=())
     Eq << apply(Sum[x[i:n]:CartesianSpace(Range(a, b + 1), n - i)](f(x[i:n])))
 
-    Eq << Eq[0].this.lhs.apply(algebra.sum.bool)
+    Eq << Eq[0].this.lhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.bool)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.rhs.find(Element[2]).apply(sets.el_cartesianSpace.to.all.el)
+    Eq << Eq[-1].this.rhs.find(Element[2]).apply(Sets.In_CartesianSpace.equ.All.In)
 
-    Eq << Eq[-1].this.rhs.find(All).apply(algebra.all.limits.subs.offset, -i)
+    Eq << Eq[-1].this.rhs.find(All).apply(Algebra.All.limits.subs.offset, -i)
 
-    Eq << Eq[-1].this.rhs.find(And).apply(algebra.et.to.all.limits.push)
+    Eq << Eq[-1].this.rhs.find(And).apply(Algebra.And.equ.All.limits.push)
 
-    Eq << Eq[-1].this.lhs.find(Element).apply(sets.el_cartesianSpace.to.all.el)
+    Eq << Eq[-1].this.lhs.find(Element).apply(Sets.In_CartesianSpace.equ.All.In)
 
-    Eq << Eq[-1].this.lhs.find(All).apply(algebra.all.limits.subs.offset, -i)
+    Eq << Eq[-1].this.lhs.find(All).apply(Algebra.All.limits.subs.offset, -i)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.shift.slice)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.limits.shift.Slice)
 
 
 
@@ -49,5 +49,4 @@ if __name__ == '__main__':
     run()
 # created on 2023-08-20
 
-
-from . import cond
+from . import Cond

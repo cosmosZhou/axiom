@@ -1,3 +1,2 @@
-from . import to
-
-from . import prod
+from . import Prod
+from . import eq

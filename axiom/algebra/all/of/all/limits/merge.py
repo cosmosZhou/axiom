@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(given):
-    from axiom.algebra.all.then.all.limits.merge import merge
+    from Axiom.Algebra.All.to.All.limits.merge import merge
     return merge(given)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     n = Symbol(integer=True, positive=True)
     a, b = Symbol(real=True)
 
@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << apply(All[x[:n]:CartesianSpace(Interval(a, b), n), x[n]:Interval(a, b)](f(x[:n + 1]) > 0))
 
-    Eq << algebra.all.then.all.limits.split.apply(Eq[1], index=n)
+    Eq << Algebra.All.to.All.limits.split.apply(Eq[1], index=n)
 
 
 if __name__ == '__main__':

@@ -1,3 +1,3 @@
-from . import to
-from . import telescope
 from . import limits
+from . import telescope
+from . import eq

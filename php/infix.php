@@ -18,7 +18,7 @@ abstract class TreeNode
             print($caret);
             $caret = $caret->parent;
         }
-        print('\n');
+        print("\n");
     }
 
     abstract function append_lexeme($lexeme);

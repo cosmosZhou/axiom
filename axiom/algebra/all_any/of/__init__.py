@@ -1,2 +1,2 @@
-from . import all_any_et
-from . import all
+from . import All
+from . import All_Any_And

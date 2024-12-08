@@ -3,18 +3,18 @@ from util import *
 
 @apply
 def apply(lt, var=None):
-    from axiom.algebra.le.of.all.le import all_getitem
+    from Axiom.Algebra.Le.of.All.Le import all_getitem
     return all_getitem(lt, Less, var=var)
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, positive=True)
     x, y = Symbol(shape=(n,), real=True)
     Eq << apply(x < y)
 
-    Eq << Eq[0].this.apply(algebra.lt.to.all.lt)
+    Eq << Eq[0].this.apply(Algebra.Lt.equ.All.Lt)
 
 
 

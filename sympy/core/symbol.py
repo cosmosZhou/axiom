@@ -10,7 +10,7 @@ from sympy.utilities.iterables import cartes
 from sympy.core.containers import Tuple
 
 import string, random, re
-from sympy.logic.boolalg import BooleanAtom, Infer, Assuming
+from sympy.logic.boolalg import BooleanAtom, Imply, Given
 
 
 class Str(Atom):
@@ -1403,11 +1403,11 @@ class Symbol(AtomicExpr, NotIterable):
     
     def __rshift__(self, other):
         """Overloading for >>"""
-        return Infer(self, other)
+        return Imply(self, other)
     
     def __lshift__(self, other):
         """Overloading for <<"""
-        return Assuming(self, other)
+        return Given(self, other)
     
     def find_path(self, cls, path, **kwargs):
         for attr in kwargs:

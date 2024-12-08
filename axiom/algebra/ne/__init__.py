@@ -1,12 +1,12 @@
-from . import then, of
-from . import cond
-from . import simplify
-
-from . import eq
-from . import reverse
+from . import of
 from . import transport
-from . import lt
-from . import le
-from . import ge
-from . import gt
+from . import Eq
+from . import reverse
+from . import Ge
+from . import simp
+from . import Le
+from . import Lt
+from . import Gt
+from . import Cond
 from . import to
+from . import equ

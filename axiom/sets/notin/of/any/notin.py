@@ -12,7 +12,7 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
 
     n, m = Symbol(positive=True, integer=True, given=True)
     x = Symbol(integer=True, shape=(n,), given=True)
@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << ~Eq[0]
 
-    Eq << sets.el_cartesianSpace.then.all.el.apply(Eq[-1], simplify=None)
+    Eq << Sets.In_CartesianSpace.to.All.In.apply(Eq[-1], simplify=None)
 
     Eq << ~Eq[-1]
 

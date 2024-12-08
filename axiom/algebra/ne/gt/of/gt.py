@@ -11,14 +11,14 @@ def apply(ne, gt):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     a, x = Symbol(real=True)
     Eq << apply(Unequal(x, a), x > a - 1)
 
-    Eq << algebra.gt.then.ne.apply(Eq[2])
+    Eq << Algebra.Gt.to.Ne.apply(Eq[2])
 
-    Eq << algebra.gt.then.gt.relax.apply(Eq[2], a - 1)
+    Eq << Algebra.Gt.to.Gt.relax.apply(Eq[2], a - 1)
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ if (! $dict) {
         'section::',
         'package::'
     ]);
-    $dict['package'] = 'keras.eq_blockMatrix.then.eq.softmax.bilinear_matrix_attention.biased.st.logsumexp';
+    $dict['package'] = 'Keras.Eq_Block.to.Eq.Softmax.bilinear_matrix_attention.biased.st.LogSumExp';
     $dict['section'] = 'tf';
 }
 
@@ -69,7 +69,7 @@ else{
     error_log("files = ".std\encode($files));
     if (count($files) == 1){
         [$__init__] = $files;
-        if (std\endsWith($__init__, "/__init__.py") || std\endsWith($__init__, "\\__init__.py")){
+        if (str_ends_with($__init__, "/__init__.py") || str_ends_with($__init__, "\\__init__.py")){
             $substrPyInit = substr($__init__, 0, -12) . ".py";
             if (!rename($__init__, $substrPyInit)){
                 error_log("failed in renaming $__init__ to $substrPyInit");

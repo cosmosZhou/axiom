@@ -1,1 +1,1 @@
-from . import eq_argmax
+from . import Eq_ArgMax

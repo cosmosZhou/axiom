@@ -1,2 +1,2 @@
-from . import eq_block
-from . import eq_mul
+from . import Eq_Mul
+from . import Eq_Block

@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.sum.limits.swap.subs import rewrite 
+    from Axiom.Algebra.Sum.limits.swap.subs import rewrite
     return rewrite(All, self)
 
 
@@ -16,11 +16,11 @@ def prove(Eq):
     g = Symbol(shape=(oo, oo), bool=True)
     h = Symbol(shape=(oo,), bool=True)
     Eq << apply(All[i:f(j), j:A](h[i] & g[i, j]))
-    
+
     Eq << Eq[-1].this.rhs.limits_subs(i, k)
-    
+
     Eq << Eq[-1].this.lhs.limits_subs(j, k)
-    
+
     Eq << Eq[-1].this.lhs.limits_subs(i, j)
 
 

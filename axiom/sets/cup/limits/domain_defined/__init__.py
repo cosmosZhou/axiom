@@ -3,14 +3,14 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.sum.limits.domain_defined import limits_insert
+    from Axiom.Algebra.Sum.limits.domain_defined import limits_insert
     assert self.is_Cup
     return Equal(self, limits_insert(self))
 
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
     i, j = Symbol(integer=True)
     k = Symbol(integer=True, positive=True)
     x = Symbol(shape=(k,), integer=True)
@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq << apply(Cup[j:f(i), i](h(x[i], j)))
 
-    Eq << Eq[-1].this.rhs.apply(sets.cup.limits.domain_defined.delete)
+    Eq << Eq[-1].this.rhs.apply(Sets.Cup.limits.domain_defined.delete)
 
 
 if __name__ == '__main__':

@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self, index=0):
-    from axiom.algebra.sum.limits.pop.slice import rewrite
+    from Axiom.Algebra.Sum.limits.pop.Slice import rewrite
     return Equal(self, rewrite(Integral, self, index))
 
 
 @prove
 def prove(Eq):
-    from axiom import calculus
+    from Axiom import Calculus
 
     n = Symbol(integer=True, nonnegative=True)
     i = Symbol(domain=Range(n))
@@ -17,7 +17,7 @@ def prove(Eq):
     f = Function(real=True, shape=())
     Eq << apply(Integral[x[i:n + 1]](f(x[i:n + 1])))
 
-    Eq << Eq[0].this.rhs.apply(calculus.integral.limits.concat)
+    Eq << Eq[0].this.rhs.apply(Calculus.Integral.limits.concat)
 
 
 if __name__ == '__main__':

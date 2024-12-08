@@ -18,7 +18,7 @@ def apply(self, k):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     m, n0, n1 = Symbol(integer=True, positive=True)
     A = Symbol(real=True, shape=(m, n0))
@@ -27,7 +27,7 @@ def prove(Eq):
     Eq << apply(BlockMatrix[1]([A, B]), k)
 
     i = Symbol(domain=Range(m))
-    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
 
 
 

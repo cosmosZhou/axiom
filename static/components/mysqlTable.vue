@@ -26,12 +26,12 @@
 									<tr>
 										<td :rowspan=value.length>{{Field}}</td>
 										<td>
-											<mysqlObject :name="`${Field}[][0]`" :value=value[0]></mysqlObject>
+											<mysqlObject :name="`${Field}[${index}][0]`" :value=value[0]></mysqlObject>
 										</td>
 									</tr>
 									<tr v-for="i of value.length - 1">
 										<td>
-											<mysqlObject :name="`${Field}[][i]`" :value=value[i]></mysqlObject>
+											<mysqlObject :name="`${Field}[${index}][${i}]`" :value=value[i]></mysqlObject>
 										</td>
 									</tr>
 								</template>
@@ -62,7 +62,7 @@
 		</form>
 		
 		<div v-if=report.sum v-focus tabindex=4>
-			<div style=float:right>
+			<div style="float:right">
 				number of testing cases: {{data.length}}<br>
 				there {{report.err <= 1? 'is' : 'are'}} {{report.err}} {{report.err <= 1? 'error' : 'errors'}} in all, <button class=transparent @click=click_simplify>{{report.simplify? 'show all tables': 'show errors only'}}</button>
 				{{report.simplify? 'to inspect in detail.': 'to simplify the report.'}}<br>
@@ -70,7 +70,7 @@
 				remaining list:<br>
 				<template v-if="data.length - report.sum < 10" v-for="id of remainingList">id = {{id}}<br></template>
 			</div>
-			<table class=report border=1>
+			<table class="report" border=1>
 				<tr>
 					<th colspan=2>testing synopsis</th>
 				</tr>
@@ -79,24 +79,24 @@
 				</tr>
 				<tr>
 					<td align=middle><font color=green>{{api_output}}</font></td>					
-					<fraction :numerator="report.sum - report.err" :denominator=report.sum :operator="'='"></fraction>
+					<fraction :numerator="report.sum - report.err" :denominator="report.sum" :operator="'='"></fraction>
 				</tr>
 				<template v-for="type of dtype[api_output]">
-					<tr v-if=report.sums[type]>
+					<tr v-if="report.sums[type]">
 						<td>{{type}}</td>
-						<fraction :numerator="report.sums[type] - report.errs[type]" :denominator=report.sums[type] :operator="'='"></fraction>
+						<fraction :numerator="report.sums[type] - report.errs[type]" :denominator="report.sums[type]" :operator="'='"></fraction>
 					</tr>
 				</template>
 			</table>
 		</div>
-		<timer v-if=trigger :cond="!data.length || data.length - report.sum" :trigger=trigger style=float:right></timer>
+		<timer v-if=trigger :cond="!data.length || data.length - report.sum" :trigger=trigger style="float:right"></timer>
 	</div>
 </template>
 
 <script>
 console.log('import mysqlTable.vue');
 import {props, piece_together} from "../js/mysql.js"
-import {is_head_char, is_last_char, head_line_offset, last_line_offset, textarea_textContent} from "../js/textarea.js"
+import {head_line_offset, last_line_offset} from "../js/textarea.js"
 
 import {modify_training} from "../js/Command.js"
 import fraction from "./fraction.vue"
@@ -134,7 +134,7 @@ export default {
     
     computed: {
     	trigger() {
-    		return this.is_torch? this.trigger_simplify: this.repeat? this.trigger_save: null;	
+    		return this.is_torch? this.trigger_simplify: this.repeat? this.trigger_save: null;
     	},
     	
     	repeat() {
@@ -162,9 +162,9 @@ export default {
     		if (kwargs.where) {
     			kwargs = {...kwargs};
     			kwargs.select = '*';
-    			if (kwargs.update) {
-        			kwargs.from = kwargs.update;
-        			delete kwargs.update;
+    			if (kwargs.into) {
+        			kwargs.from = kwargs.into;
+        			delete kwargs.into;
         			delete kwargs.set;
     			}
     			url.push(...piece_together(kwargs).slice(1));
@@ -181,18 +181,18 @@ export default {
     			else {
     				var comment = Comment[Field];
    					if (comment && comment.PRI)
-       					is_primary_key[Field] = true;	
-    			} 
+       					is_primary_key[Field] = true;
+    			}
     		}
     		return is_primary_key;
     	},
     	
     	database() {
-    		return this.mysql.database;	
+    		return this.mysql.database;
     	},
     	
     	PRI() {
-    		return this.mysql.PRI;	
+    		return this.mysql.PRI;
     	},
     	
     	mysql() {
@@ -250,11 +250,11 @@ export default {
     	},
     	
 		is_torch(){
-			return getParameter('torch') || this.kwargs.kwargs && this.kwargs.kwargs.torch;
+			return getParameterByName('torch') || this.kwargs.kwargs && this.kwargs.kwargs.torch;
 		},
 		
 		is_mysql(){
-			return getParameter('mysql') || getParameter('cmd') == 'select' || this.cmd == 'update';
+			return getParameterByName('mysql') || getParameterByName('cmd') == 'select' || this.cmd == 'update';
 		},
 
 		compare(){
@@ -268,9 +268,7 @@ export default {
     		if (json.training == null){
     			json.training = 0;
     		}
-    	}
-    	
-    	this.report.simplify = this.getSimplify();    	
+    	}    	
     },
     
     methods: {
@@ -314,16 +312,13 @@ export default {
     	primary_key_url(primary_key) {
     		var {host, user, database, table, PRI} = this;
     		var kwargs = {user, from: fromEntries(database, table)};
-    		kwargs[PRI] = primary_key.encodeURI();
+			if (primary_key)
+    			kwargs[PRI] = primary_key.encodeURI();
     		if (host && host != 'localhost')
-				kwargs.host = host;    		
-    		return 'query.php' + get_url(kwargs);    		
+				kwargs.host = host;
+    		return 'query.php?' + get_url(kwargs);
     	},
     	
-    	getSimplify(){
-    		return getParameter('simplify', true);
-    	},
-
     	column_size(name){
     		var column_size = this._column_size[name];
     		if (column_size == null) {
@@ -392,7 +387,7 @@ export default {
 			
 				break;
 				
-			case 'Z':				
+			case 'Z':
 			case 'z':
 				if (!event.ctrlKey)
 					break;
@@ -488,12 +483,9 @@ export default {
 		forward_next() {
 			var {kwargs, user, host, database, table} = this;
 			console.log(kwargs);
-			var model = [];
-
-			var model = getParameter('kwargs[model]');
 
 			kwargs.select = '*';
-			var limit = getParameter('limit');
+			var limit = getParameterByName('limit');
 			if (limit == null)
 				limit = 1;
 
@@ -507,13 +499,14 @@ export default {
 
 			url.push(...piece_together(kwargs));
 
+			var {repeat, model} = kwargs.kwargs?? {};
 			kwargs = {};
-			kwargs.model = model;
+			if (model)
+				kwargs.model = model;
+			if (repeat)
+				kwargs.repeat = repeat;
 			
-    		if (this.repeat)
-    			url.push('kwargs[repeat]=true');
-			
-			location.search = get_url({kwargs}) + '&' + url.join('&');
+			location.search = '?' + get_url({kwargs}) + '&' + url.join('&');
 		},
     	
         async process(name, data) {
@@ -564,7 +557,7 @@ export default {
 		                					data[key] = ~1;
 		                				}
 		                				else {
-		                					data[key] = 0;	
+		                					data[key] = 0;
 		                				}
 		                				break;
 		                			default:
@@ -579,7 +572,7 @@ export default {
 		                		}
 		                	}
 		                	array.push(data);
-		                } 
+		                }
 		            }
 		        }
 				break;
@@ -591,7 +584,7 @@ export default {
     	async insert(data) {
         	var database = this.database;
         	var table = this.table;
-			var training = getParameter("training");
+			var training = getParameterByName("training");
 			if (training)
 				training = ~training;
 			else
@@ -677,13 +670,15 @@ export default {
 				}
 				this.report.simplify = true;
 			}
-		},		
+		},
     },
     
     async mounted(){
     	++this.mounted.mysql;
 		if (this.repeat && this.mysql.cmd == 'insert')
 			this.forward_next();
+
+		this.report.simplify = this.$refs.mysql.simplify;
     },
     
     unmounted(){
@@ -745,7 +740,7 @@ export default {
 	    			self.sum_predicted[index] = 1;
 	    			self.sum_labelling[index] = 1;
 	    			++self.report.sum;
-	    			if (old_label in self.report.sums) 
+	    			if (old_label in self.report.sums)
 	    				++self.report.sums[old_label];
 	    			else {
 	    				self.report.sums[old_label] = 1;
@@ -761,7 +756,7 @@ export default {
 	   				self.true_positive[index] = 0;
 
 	   				++self.report.err;
-	    			if (old_label in self.report.errs) 
+	    			if (old_label in self.report.errs)
 	    				++self.report.errs[old_label];
 	    			else
 	    				self.report.errs[old_label] = 1;
@@ -773,7 +768,7 @@ export default {
 	    			}
 
 	    			label_prompted = label_prompted[data.lang];
-	    			var model = getParameter('kwargs[model]');
+	    			var model = getParameterByName('kwargs[model]');
 	    			if (!model)
 	    				return;
 
@@ -793,7 +788,7 @@ export default {
 
 					var label = label_prompted[new_label];
 	    			if (label) {
-	   					var {bool, prompt, reply} = await self.prompting(model, text, lang, label);	
+	   					var {bool, prompt, reply} = await self.prompting(model, text, lang, label);
 	    				feedback.push(reply);
 	    				prompts.push(prompt.length > 1000? "..." + prompt.slice(-1000): prompt);
 
@@ -804,7 +799,7 @@ export default {
 	    					if (!label)
 	    						return;
 
-	   						var {bool, prompt, reply} = await self.prompting(model, text, lang, label);	
+	   						var {bool, prompt, reply} = await self.prompting(model, text, lang, label);
 	    					feedback.push(reply);
 	    					prompts.push(prompt.length > 1000? "..." + prompt.slice(-1000): prompt);
 	    					if (bool || bool == null)
@@ -821,7 +816,7 @@ export default {
 	    					if (!label)
 	    						return;
 
-	   						var {bool, prompt, reply} = await self.prompting(model, text, lang, label);	
+	   						var {bool, prompt, reply} = await self.prompting(model, text, lang, label);
 	    					feedback.push(reply);
 	    					prompts.push(prompt.length > 1000? "..." + prompt.slice(-1000): prompt);
 
@@ -865,14 +860,14 @@ export default {
 	   					if (!label)
 	   						return;
 
-						var {bool, prompt, reply} = await self.prompting(model, text, lang, label);	
+						var {bool, prompt, reply} = await self.prompting(model, text, lang, label);
 	   					feedback.push(reply);
 	   					prompts.push(prompt.length > 1000? "..." + prompt.slice(-1000): prompt);
 	   					if (bool == false) {
 	   						data.training = ~data.training;
 	   						feedback[0] += `it is <font color=red>not</font> related to ${old_label}; `;
 	   					}
-	   					else if (bool) 
+	   					else if (bool)
 	    					feedback[0] += `it is related to <font color=blue>${old_label}</font>; `;
 	    			}
 		    	}
@@ -882,7 +877,7 @@ export default {
 	    				return;
 
 	    			label_prompted = label_prompted[data.lang];
-	    			var model = getParameter('kwargs[model]');
+	    			var model = getParameterByName('kwargs[model]');
 	    			if (!model)
 	    				return;
 
@@ -903,7 +898,7 @@ export default {
 					var old_label = data[self.api_output];
 					var label = label_prompted[old_label];
 	    			if (label) {
-	   					var {bool, prompt, reply, error_code} = await self.prompting(model, text, lang, label);	
+	   					var {bool, prompt, reply, error_code} = await self.prompting(model, text, lang, label);
 	    				feedback.push(reply);
 	    				prompts.push(prompt.length > 1000? "..." + prompt.slice(-1000): prompt);
 
@@ -922,7 +917,7 @@ export default {
 	    				}
 	    			}
 	    			else {
-	   					var {label, prompt, reply, error_code} = await self.prompting(model, text, lang, label_prompted);	
+	   					var {label, prompt, reply, error_code} = await self.prompting(model, text, lang, label_prompted);
 	    				feedback.push(reply);
 	    				prompts.push(prompt.length > 1000? "..." + prompt.slice(-1000): prompt);
 
@@ -951,7 +946,7 @@ export default {
     				await sleep(3);
     				if (!bool) {
     					++self.report.err;
-    	    			if (old_label in self.report.errs) 
+    	    			if (old_label in self.report.errs)
     	    				++self.report.errs[old_label];
     	    			else
     	    				self.report.errs[old_label] = 1;

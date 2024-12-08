@@ -47,10 +47,10 @@ def get_args_for_writing(module, latexStr):
     input = []
     counterOfLengths = 0
     lengths = []
-    m = re.search('([\w.]+)\.(imply|given|then|of)\.', module)
+    m = re.search('([\w.]+)\.(to|of)\.', module)
     numOfRequisites = len(m[1].split(".")) - 1 if m else 0
     createdTime = updatedTime = None
-
+    indexOfYield = -1
     for dict in yield_from_py(module):
         if 'statement' not in dict:
             continue
@@ -145,7 +145,10 @@ def get_args_for_writing(module, latexStr):
     if input:
         inputs.append(piece_together(input))
     
-    numOfReturnsFromApply = lengths[indexOfYield]
+    if indexOfYield == -1:
+        numOfReturnsFromApply = 1
+    else:
+        numOfReturnsFromApply = lengths[indexOfYield]
     
     i = 0
     latex = []
@@ -291,7 +294,7 @@ class LocalJsWriter:
         return targetFiles
 
     def load_data(self, table, data, **kwargs):
-        from _collections import defaultdict
+        from collections import defaultdict
         state_count_pairs = defaultdict(int)
         repertoire = defaultdict(dict)
         total = 0

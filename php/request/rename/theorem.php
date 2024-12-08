@@ -26,7 +26,7 @@ error_log("old = $old");
 error_log("new = $new");
 $folder = axiom_directory() . str_replace('.', '/', $package);
 
-if (!std\endsWith($folder, "/")){
+if (!str_ends_with($folder, "/")){
     $folder .= '/';
 }
 

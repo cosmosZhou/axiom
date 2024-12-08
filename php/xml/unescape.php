@@ -2231,7 +2231,7 @@ $_html5 = [
     "Zscr;"=>0x0001d4b5,
     "zscr;"=>0x0001d4cf,
     "zwj;"=>0x200d,
-    "zwnj;"=>0x200c,
+    "zwnj;"=>0x200c
 ];
 
 $_invalid_charrefs = [

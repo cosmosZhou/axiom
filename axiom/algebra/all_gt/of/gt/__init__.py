@@ -1,1 +1,1 @@
-from . import lamda
+from . import Lamda

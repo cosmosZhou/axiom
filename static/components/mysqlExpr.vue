@@ -1,11 +1,10 @@
 <template>
 	<span v-if=value.from>
-		<template v-if=value.with>
-			<span v-html=indent_with></span><font color=blue>with </font>
-			<mysqlExpr v-if=value.with.isArray v-for="value, i of value.with" :name="node_name('with', i)" :value=value></mysqlExpr>
-			<mysqlExpr :name="node_name('with')" :value=value.with></mysqlExpr><br>
+		<template v-if=with_func>
+			<span v-html=indent></span><font color=blue>{{with_func}}&nbsp;</font>
+			<mysqlExpr v-if=with_value.isArray v-for="value, i of with_value" :name="node_name(with_func, i)" :value=value></mysqlExpr>
+			<mysqlExpr :name="node_name('with')" :value=with_value></mysqlExpr><br>
 		</template>
-
 		<span v-html=indent_select></span>
 		<select class=cmd v-model=cmd @keydown=keydown_cmd>
 			<option v-for="value of cmds" :value=value>{{value}}</option>
@@ -22,7 +21,17 @@
 
 		<font color=blue> from </font>
 		<template v-if=join_type>
-			<mysqlDot :name="node_name('from')" :value=join_table[0]></mysqlDot>
+			<template v-if=join_table[0].join>
+				<mysqlLeaf :name="node_name('from', 'join', 0)" :value=join_table[0].join[0]></mysqlLeaf>
+				<font color=blue> join </font>
+				<mysqlLeaf :name="node_name('from', 'join', 1)" :value=join_table[0].join[1]></mysqlLeaf>
+				<template v-if=join_table[0].using>
+					<font color=blue> using </font>
+					(<mysqlLeaf :name="node_name('from', 'using')" :value=join_table[0].using :option=option_join></mysqlLeaf>)
+				</template>
+				<mysqlExpr v-else-if=join_table[0].on :name="node_name('from', 'on')" :value="join_table[0].on"></mysqlExpr>
+			</template>
+			<mysqlDot v-else :name="node_name('from')" :value=join_table[0]></mysqlDot>
 		
 			<select class=join_type v-model=join_type>
 				<option v-for="value of ['inner', 'cross', 'left', 'right', 'full']" :value=value>{{value}}</option>
@@ -30,14 +39,13 @@
 			<mysqlLeaf v-if="is_leaf(join_table[1])" :name=join_name :value=join_table[1] :option=option_join></mysqlLeaf>
 			<mysqlExpr v-else :name=join_name :value=join_table[1]></mysqlExpr>
 		</template>
-		<template v-else>
-			<template v-if=value.from.from>
-				(<mysqlExpr :name="node_name('from')" :value=value.from :noSpace=true></mysqlExpr>)
-			</template>
-			<mysqlDot v-else :name="node_name('from')" :value=value.from></mysqlDot>
+		<template v-else-if=value.from.from>
+			(<br><span v-html=indent></span><mysqlExpr :name="node_name('from')" :value=value.from :noSpace=true></mysqlExpr><br><span v-html=indent_parenthesis></span>)
 		</template>
+		<mysqlExpr v-else-if=value.from.as :name="node_name('from')" :value=value.from></mysqlExpr>
+		<mysqlDot v-else :name="node_name('from')" :value=value.from></mysqlDot>
 		
-		<template v-if=value.where>
+		<template v-if="value.where && Object.keys(value.where).length">
 			<font color=blue>where </font>
 			<mysqlExpr :name="node_name('where')" :value=value.where :noSpace=true></mysqlExpr>
 		</template>
@@ -65,15 +73,16 @@
 		<template v-if=!noSpace>
 			{{' '}}
 		</template>		
-	</span>	
-	
+	</span>
+
 	<span v-else-if=is_logic v-for="value, i of args">
-		<select v-if=i :value=func :style="`${style_select(func, 'blue')}`" @input=input_func>
-			<option v-for="value of ['and', 'or']">{{value}}</option>
-		</select> <mysqlExpr :name="`${node_name(func, i)}`" :value=value></mysqlExpr>
+		<template v-if=i><select :value=func :style="`${style_select(func, 'blue')}`" @input=input_func>
+				<option v-for="value of ['and', 'or']">{{value}}</option>
+			</select>&nbsp;</template><template v-if="value.or && func == 'and'">(<mysqlExpr :name="`${node_name(func, i)}`" :value=value></mysqlExpr>)
+		</template><mysqlExpr v-else :name="`${node_name(func, i)}`" :value=value></mysqlExpr>
 	</span>
 	
-	<span v-else-if="func == 'in'">
+	<span v-else-if="func == 'in' || func == 'not_in'">
 		<mysqlLeaf v-if=dtype[args[0]] :name="`${node_name(func, 0)}`" :value=args[0] :option=fieldsOpted></mysqlLeaf>
 		<mysqlLeaf v-else-if=is_leaf(args[0]) :name="`${node_name(func, 0)}`" :value=args[0]></mysqlLeaf>
 		<mysqlExpr v-else :name="`${node_name(func, 0)}`" :value=args[0]></mysqlExpr>
@@ -81,25 +90,31 @@
 			<option v-for="value of relationsOpted" :value=logic2physic(value)>{{value}}</option>
 		</select> 
 		<mysqlLeaf v-if=args[1].isString :name="`${node_name(func, 1)}`" :value=args[1] :noSpace=noSpace></mysqlLeaf>
+		<template v-else-if="args[1].isArray">
+			({{ args[1].join(",")}})
+		</template>
 		<template v-else>
-			(<mysqlExpr v-else :name="`${node_name(func, 1)}`" :value=args[1] :noSpace=true></mysqlExpr>)
+			(<mysqlExpr :name="`${node_name(func, 1)}`" :value=args[1] :noSpace=true></mysqlExpr>)
 		</template>
 	</span>
 
 	<span v-else-if=is_relation v-for="value, i of args">
 		<template v-if=i>
-			<select :value=func :style="`${style_select(operator, 'red')}`" @input=input_relation @keydown=keydown_func>
+			<select :value=func :style="`${style_select(operator, 'red')}`" @input=input_relation @keydown=keydown_select>
 				<option v-for="value of relationsOpted" :value=logic2physic(value)>{{value}}</option>
 			</select>
 			{{' '}}
 		</template>
 		<mysqlLeaf v-if=dtype[value] :name="`${node_name(func, i)}`" :value=value :option=fieldsOpted :noSpace="i && noSpace"></mysqlLeaf>
 		<mysqlLeaf v-else-if=is_leaf(value) :name="`${node_name(func, i)}`" :value=value :option=enum_selections(i) :noSpace="i && noSpace"></mysqlLeaf>
+		<template v-else-if=value.select>
+			(<br><span v-html=indent></span><mysqlExpr :name="`${node_name(func, i)}`" :value=value :noSpace="i && noSpace"></mysqlExpr><br><span v-html=indent_parenthesis></span>)
+		</template>
 		<mysqlExpr v-else :name="`${node_name(func, i)}`" :value=value :noSpace="i && noSpace"></mysqlExpr>
 	</span>
 	
 	<span v-else-if=is_operator v-for="value, i of args">
-		<select v-if=i :value=func :style="`${style_select(operator, 'red')}`" @input=input_func @keydown=keydown_func>
+		<select v-if=i :value=func :style="`${style_select(operator, 'red')}`" @input=input_func @keydown=keydown_select>
 			<option v-for="value of operatorsOpted" :value=logic2physic(value)>{{value}}</option>
 		</select>
 		<mysqlLeaf v-if=dtype[value] :name="`${node_name(func, i)}`" :value=value :option=fieldsOpted :noSpace="i ? noSpace: true"></mysqlLeaf>
@@ -108,7 +123,7 @@
 	</span>
 
 	<span v-else-if=is_function>
-		<select :class=name :value=func :style="`${style_select(func, 'darkCyan')}`" @input=input_func @keydown=keydown_func>
+		<select :class=name :value=func :style="`${style_select(func, 'darkCyan')}`" @input=input_func @keydown=keydown_select>
 			<option v-for="value of functionsOpted">{{value}}</option>
 		</select>(<template v-for="value, i of args">
 			<template v-if=i>, </template>
@@ -130,16 +145,20 @@
 	
 	<span v-else-if=value.as v-for="value, i of args">
 		<font v-if=i color=blue> as </font>
-		<mysqlLeaf v-if=dtype[value] :name="`${node_name(func, i)}`" :value=value :option=fieldsOpted :noSpace=true></mysqlLeaf>
+		<mysqlLeaf v-if=value.isString :name="`${node_name(func, i)}`" :value=value></mysqlLeaf>
+		<template v-else-if="value.union_all || value.union">
+			(<br><mysqlExpr :name="`${node_name(func, i)}`" :value=value></mysqlExpr><br><span v-html=indent_parenthesis></span>)
+		</template>
+		<mysqlLeaf v-else-if=dtype[value] :name="`${node_name(func, i)}`" :value=value :option=fieldsOpted :noSpace=true></mysqlLeaf>
 		<mysqlLeaf v-else-if=is_leaf(value) :name="`${node_name(func, i)}`" :value=value :noSpace=true></mysqlLeaf>
 		<template v-else-if=value.select>
-			<br><span v-html=indent_parenthesis></span>(<br><mysqlExpr v-else :name="`${node_name(func, i)}`" :value=value :noSpace=true></mysqlExpr><br><span v-html=indent_parenthesis></span>)
+			(<br><span v-html=indent></span><mysqlExpr :name="`${node_name(func, i)}`" :value=value :noSpace=true></mysqlExpr><br><span v-html=indent_parenthesis></span>)
 		</template>
 		<mysqlExpr v-else :name="`${node_name(func, i)}`" :value=value :noSpace="i? false: true"></mysqlExpr>
 	</span>
 	
 	<span v-else-if=is_prefix>
-		<select :value=func :style="`${style_select(func, 'darkCyan')}`" @input=input_func @keydown=keydown_func>
+		<select :value=func :style="`${style_select(func, 'darkCyan')}`" @input=input_func @keydown=keydown_select>
 			<option v-for="value of functionsOpted">{{value}}</option>
 		</select> <mysqlLeaf v-if=dtype[arg] :name=node_name(func) :value=arg :option=fieldsOpted :noSpace=noSpace></mysqlLeaf>
 		<mysqlLeaf v-else-if=is_leaf(arg) :name=node_name(func) :value=arg :noSpace=noSpace></mysqlLeaf>
@@ -147,8 +166,23 @@
 		<mysqlExpr v-else :name="`${node_name(func)}`" :value=arg :noSpace=noSpace></mysqlExpr>
 	</span>
 
+	<span v-else-if=union_func v-for="value, i of args">
+		<template v-if=i>
+			<br><span v-html=indent></span>
+			<font color=blue>{{union_func}}</font>
+			<br>
+		</template>
+		<template v-if="value.with || value.with_recursive">
+			(<br><span v-html=indent></span><mysqlExpr :name="`${node_name(func, i)}`" :value=value :noSpace="i && noSpace"></mysqlExpr><br><span v-html=indent_parenthesis></span>)
+		</template>
+		<mysqlExpr v-else :name="`${node_name(func, i)}`" :value=value :noSpace="i && noSpace"></mysqlExpr>
+	</span>
+
 	<span v-else>
-		{{value}}
+		<mysqlDot v-if=is_database_table_dict :name=node_name() :value=value :noSpace=noSpace></mysqlDot>
+		<template v-else>
+			{{value}}
+		</template>
 	</span>
 </template>
 
@@ -160,9 +194,9 @@ import mysqlArgs from "./mysqlArgs.vue"
 import mysqlDot from "./mysqlDot.vue"
 import mysqlGroup from "./mysqlGroup.vue"
 import mysqlOrder from "./mysqlOrder.vue"
-import {simplify_expression, show_tables, show_full_columns, logic2physic, physic2logic, get_cmd, set_cmd, is_number, is_enum, is_string, is_json} from "../js/mysql.js"
+import {simplify_expression, show_tables, show_full_columns, logic2physic, physic2logic, get_cmd, set_cmd, is_numeric, is_enum, is_string, is_json, is_numeric_operator} from "../js/mysql.js"
 export default {
-	components: {mysqlLeaf, mysqlDot, mysqlGroup, mysqlOrder, mysqlArgs},//
+	components: {mysqlLeaf, mysqlDot, mysqlGroup, mysqlOrder, mysqlArgs},
 	
 	props : ['value', 'name', 'noSpace'],
 	
@@ -230,42 +264,25 @@ export default {
 
 		indent() {
 			var indent = this.$parent.indent?? '';
-			if (this.$parent.value.as) {
+			var {value} = this.$parent;
+			if (value.as || (value.union || value.union_all) && (this.value.with || this.value.with_recursive))
 				indent += '&nbsp;'.repeat(4);
-			}
-			return indent;
-		},
-		
-		indent_with() {
-			//console.log(this.value, this.$parent.value);
-			var indent = this.$parent.indent?? '';
-			if (this.$parent.value.as) {
-				indent += '&nbsp;'.repeat(4);
-			}
 			return indent;
 		},
 		
 		indent_select() {
-			//console.log(this.value, this.$parent.value);
-			if (this.$parent.value.in)
+			var {value} = this.$parent;
+			if (value.in)
 				return '';
-
-			var indent = this.$parent.indent?? '';
-			if (this.$parent.value.as) {
-				indent += '&nbsp;'.repeat(4);
-			}
-			
-			return indent;
+			return this.indent;
 		},
 		
 		indent_parenthesis() {
-			//console.log(this.value, this.$parent.value);
-			var indent = this.$parent.indent?? '';			
-			return indent;
+			return this.$parent.indent?? '';
 		},
 		
 		option_join() {
-			return ['json_table', ...this.tables];	
+			return ['json_table', ...this.tables];
 		},
 		
 		join_name() {
@@ -281,7 +298,7 @@ export default {
 		
 		join_table() {
 			var {join_func, value: {from}} = this;
-			if (join_func == 'inner')
+			if (join_func == 'join')
 				return from.join || from.inner_join;
 			return from[join_func];
 		},
@@ -328,7 +345,7 @@ export default {
 		
 		specialChars() {
 			var chars = ",:;.\\`~!@#$%^&*-=_+|?/][><'\"";
-			return [...chars];	
+			return [...chars];
 		},
 		
 		option() {
@@ -337,7 +354,7 @@ export default {
 		
 		is_leaf() {
 			return this.$parent.is_leaf;
-		},		
+		},
 		
 		numericFields() {
 			return this.$parent.numericFields;
@@ -350,11 +367,11 @@ export default {
 		tables() {
 			if (this.$data.tables)
 				return this.$data.tables;
-			return this.$parent.tables;	
+			return this.$parent.tables;
 		},
 		
 		databases() {
-			return this.$parent.databases;	
+			return this.$parent.databases;
 		},
 		
 		numeric_operators() {
@@ -375,7 +392,7 @@ export default {
 
 		textual_relations() {
 			return this.$parent.textual_relations;
-		},		
+		},
 
 		numeric_functions() {
 			return this.$parent.numeric_functions;
@@ -436,7 +453,7 @@ export default {
 			if (this.func == 'distinct' || this.func == 'not' || this.func == 'json_valid')
 				return [...Object.keys(this.dtype), ...this.textual_functions];
 
-			if (this.func == 'as' || this.is_aggregate_function(this.func) || this.function_is_textual) {
+			if (this.func == 'as' || this.is_aggregate_function(this.func) || this.function_is_textual || this.func == 'json_set') {
 				return [...Object.keys(this.dtype), ...this.textual_functions, ...this.jsonobj_functions, 'if'];
 			}
 			
@@ -448,7 +465,8 @@ export default {
 		},
 		
 		is_numeric_relation(){
-			if (this.value.eq || this.value.ne) {
+			var {value} = this;
+			if (value.eq || value.ne) {
 				var [lhs, rhs] = this.args;
 				lhs = this.is_numeric_type(lhs);
 				rhs = this.is_numeric_type(rhs);
@@ -460,11 +478,16 @@ export default {
 				return null;
 			}
 			
-			return this.value.gt || this.value.lt || this.value.ge || this.value.le; 
+			return value.gt || value.lt || value.ge || value.le;
 		},
 		
 		is_jsonobj_relation(){
-			return this.value.json_contains || this.value.json_contains_path; 
+			var {value} = this;
+			if (value.eq || value.ne) {
+				var [lhs, rhs] = this.args;
+				return this.is_json_extract(lhs) || this.is_json_extract(rhs);
+			}
+			return value.is || value.is_not;
 		},
 
 		is_operator(){
@@ -476,12 +499,37 @@ export default {
 			return value.distinct || value.separator || value.path || value.create || value.table || value.global || value.comment || value.after || value.not;
 		},
 		
+		union_func(){
+			var {value} = this;
+			if (value.union)
+				return 'union';
+			if (value.union_all)
+				return 'union all';
+		},
+
+		with_func(){
+			var {value} = this;
+			if (value.with)
+				return 'with';
+			if (value.with_recursive)
+				return 'with recursive';
+		},
+
+		with_value(){
+			var {value} = this;
+			if (value.with)
+				return value.with;
+			if (value.with_recursive)
+				return value.with_recursive;
+		},
+
 		is_numeric_operator(){
-			return this.value.add || this.value.sub || this.value.mul || this.value.div || this.value.mod || this.value.AND || this.value.XOR || this.value.right_shift || this.value.left_shift;
+			return is_numeric_operator(this.value);
 		},
 		
 		is_jsonobj_operator(){
-			return this.value.json_extract || this.value.json_extract_unquote;
+			var {value} = this;
+			return value.json_extract || value.json_extract_unquote;
 		},
 		
 		is_relation() {
@@ -489,19 +537,20 @@ export default {
 		},
 
 		is_textual_relation(){
-			if (this.value.eq || this.value.ne) {
+			var {value} = this;
+			if (value.eq || value.ne) {
 				var [lhs, rhs] = this.args;
 				return this.is_textual_type(lhs) || this.is_textual_type(rhs);
 			}
-			return this.value.regexp || this.value.like || this.value.regexp_binary || this.value.like_binary || this.value.not_regexp || this.value.not_like || this.value.not_regexp_binary || this.value.not_like_binary || this.value.in;
+			return value.regexp || value.like || value.regexp_binary || value.like_binary || value.not_regexp || value.not_like || value.not_regexp_binary || value.not_like_binary || value.in || value.not_in;
 		},
 		
 		operatorsOpted() {
-			return this.is_numeric_opeator ? this.numeric_operators: this.jsonobj_operators;
+			return this.is_numeric_operator ? this.numeric_operators: this.jsonobj_operators;
 		},
 		
 		relationsOpted() {
-			return this.is_numeric_relation ? this.numeric_relations: [...this.textual_relations, 'regexp_like', 'not regexp_like', ...this.jsonobj_relations];
+			return this.is_numeric_relation ? this.numeric_relations: [...this.textual_relations, 'regexp_like', 'not regexp_like', 'find_in_set', ...this.jsonobj_relations];
 		},
 		
 		functionsOpted() {
@@ -509,11 +558,12 @@ export default {
 				return ['*', 'distinct', ...this.numeric_functions, 'count'];
 
 			var option = [...this.textual_functions, ...this.jsonobj_functions];
-			if (this.$parent.value.select == this.value || this.func == 'distinct' || this.func == 'count') 
+			if (this.$parent.value.select == this.value || this.func == 'distinct' || this.func == 'count')
 				return ['*', 'distinct', ...option, 'max', 'min'];
 			
 			if (this.is_aggregate_function(this.func) || this.$parent.value.group) {
-				option = [...this.aggregate_functions, ...option];
+				if (this.$parent.value.order != this.value)
+					option = [...this.aggregate_functions, ...option];
 			}
 			
 			if (this.func == 'create') {
@@ -532,7 +582,7 @@ export default {
 		},
 		
 		is_function() {
-			return this.function_is_numeric || this.function_is_textual || this.function_is_jsonobj || this.func.fullmatch(/json_table|columns|varchar|if|json_valid|rand/);
+			return this.function_is_numeric || this.function_is_textual || this.function_is_jsonobj || this.func.fullmatch(/json_table|columns|varchar|if|json_valid|rand/) || this.func.fullmatch(/json_contains|json_contains_path|not json_contains|not json_contains_path/);
 		},
 		
 		function_is_numeric() {
@@ -548,7 +598,7 @@ export default {
 		},
 		
 		is_logic(){
-			return this.value.and || this.value.or; 
+			return this.value.and || this.value.or;
 		},
 		
 		func(){
@@ -559,7 +609,7 @@ export default {
 		},
 		
 		arg() {
-			return this.args[0];			
+			return this.args[0];
 		},
 
 		args(){
@@ -586,12 +636,12 @@ export default {
 		
 		desc() {
 			if (this.$data.desc)
-				return this.$data.desc;			
+				return this.$data.desc;
 			return this.$parent.desc;
 		},
 		
 		PRI() {
-			return this.$parent.PRI;	
+			return this.$parent.PRI;
 		},
 		
 		database() {
@@ -612,18 +662,29 @@ export default {
 		
 		style_select() {
 			return this.$parent.style_select;
-		},		
+		},
+
+		is_database_table_dict() {
+			var {value} = this;
+			var entries = Object.entries(value);
+			if (entries.length == 1) {
+				var [[database, table]] = entries;
+				if (database && database.fullmatch && table && table.fullmatch)
+					return database.fullmatch(/[a-z_][a-z0-9_]*/i) && table.fullmatch(/[a-z_][a-z0-9_]*/i);
+			}
+		},
 	},
 	
 	methods: {
 		enum_selections(index) {
 			if (index == 1) {
+				var {value} = this;
 				var field = null;
-				if (this.value.eq) {
-					field = this.value.eq[0];
+				if (value.eq) {
+					field = value.eq[0];
 				}
-				else if (this.value.ne) {
-					field = this.value.ne[0];
+				else if (value.ne) {
+					field = value.ne[0];
 				}
 				else
 					return;
@@ -646,14 +707,32 @@ export default {
 					args.delete(index);
 				}
 				break;
-			case 'select':				
+			case 'as':
+				var args = this.value[this.func];
+				var index = args.indexOf(child);
+				if (index >= 0) {
+					args.delete(index);
+					console.assert(args.length == 1, "args.length == 1");
+					if (this.$parent.value.select == this.value) {
+						this.$parent.value.select = args[0];
+					}
+					else if (this.$parent.value.from == this.value) {
+						this.$parent.value.from = args[0];
+					}
+					else {
+						console.log("unresolved cases!!");
+
+					}
+				}
+				break;
+			case 'select':
 				var args = this.value[this.func];
 				var index = args.indexOf(child);
 				if (index >= 0 && args.length > 1) {
 					args.delete(index);
 				}
 				break;
-			}	
+			}
 		},
 		
 		initialize_where() {
@@ -668,14 +747,14 @@ export default {
 				
 				var and = [];
 				for (var {Field, Type, Key} of this.desc) {
-					if (Key || is_number(Type) || is_enum(Type)) {
+					if (Key || is_numeric(Type) || is_enum(Type)) {
 						and.push({eq: [Field, '']});
 					}
 					else if (is_string(Type)){
 						and.push({regexp: [Field, '']});
 					}
 					else if (is_json(Type)){
-						and.push({regexp: [Field, '']});	
+						and.push({regexp: [Field, '']});
 					}
 				}
 				
@@ -712,7 +791,7 @@ export default {
 			Object.assign(this.$data, await show_full_columns(this.$data.database, table, this.host, this.user, this.token));
 		},
 		
-		keydown_func(event) {
+		keydown_select(event) {
 			var select = event.target;
 			switch (event.key) {
 			case "ArrowLeft":
@@ -722,7 +801,8 @@ export default {
 				if (event.ctrlKey) {
 					var {parentElement} = select;
 					var index;
-					if (this.$parent.value.order && this.$parent.value.order[0] == this.value) {
+					var {value} = this;
+					if (this.$parent.value.order && this.$parent.value.order[0] == value) {
 						if (!this.$parent.value.order[1]) {
 							this.$parent.value.order[1] = 'desc';
 						}
@@ -735,16 +815,24 @@ export default {
 							parentElement.querySelector(`select[name="${name}"]`).focus();
 						});
 					}
-					else if (this.$parent.value.select == this.value) {
-						this.$parent.value.select = [this.value, deepCopy(this.value)];
+					else if (this.$parent.value.select == value) {
+						this.$parent.value.select = [value, deepCopy(value)];
 						var name = this.name + '[1]';
 						this.$parent.$nextTick(()=>{
 							parentElement.querySelector(`select[class="${name}"]`).focus();
 						});
 					}
-					else if (this.$parent.value.select.isArray && (index = this.$parent.value.select.indexOf(this.value)) >= 0) {
-						var {select} = this.$parent.value;						 
-						this.$parent.value.select = [...select.slice(0, index), this.value, deepCopy(this.value), ...select.slice(index + 1)];
+					else if (this.$parent.value.set == value) {
+						this.$parent.value.set = [value, deepCopy(value)];
+						var name = this.name + '[1]';
+						parentElement = parentElement.parentElement;
+						this.$parent.$nextTick(()=>{
+							parentElement.querySelector(`select[name="set[1][eq][0]"]`).focus();
+						});
+					}
+					else if (this.$parent.value.select.isArray && (index = this.$parent.value.select.indexOf(value)) >= 0) {
+						var {select} = this.$parent.value;
+						this.$parent.value.select = [...select.slice(0, index), value, deepCopy(value), ...select.slice(index + 1)];
 						var name = this.name.replace(/\[\d+\]$/, `[${index + 1}]`);
 						this.$parent.$nextTick(()=>{
 							parentElement.querySelector(`select[class="${name}"]`).focus();
@@ -753,7 +841,7 @@ export default {
 					else {
 						var func = Object.keys(this.$parent.value)[0];
 						if (func.fullmatch(this.textual_function_regexp) || func.fullmatch(this.jsonobj_function_regexp)) {
-							if (this.$parent.value[func] == this.value) {
+							if (this.$parent.value[func] == value) {
 								if (func == 'group_concat') {
 									this.$parent.value[func] = [[this.$parent.value[func], {order: this.PRI}]];
 									var name = this.name
@@ -775,9 +863,9 @@ export default {
 								}
 							}
 							else {
-								var index = this.$parent.value[func].indexOf(this.value);
+								var index = this.$parent.value[func].indexOf(value);
 								if (index >= 0) {
-									var name = this.name.replace(eval(`/\\[${index}\\]$/`), `[${index + 1}]`);
+									var name = this.name.replace(new RegExp(`\\[${index}\\]$`), `[${index + 1}]`);
 									if (this.$parent.value[func][index + 1]) {
 										if (this.$parent.value[func][index + 1].isString) {
 											this.$parent.$nextTick(()=>{
@@ -899,7 +987,6 @@ export default {
 					break;
 				}
 				
-				var {parentElement} = select;
 				var hit = false;
 				if (this.$parent.value == this.value) {
 					var table = '_t';
@@ -928,10 +1015,10 @@ export default {
 					this.value.offset = '';
 					this.value.order = '';
 
-					delete this.value.inner_join;				
-					delete this.value.left_join;				
-					delete this.value.right_join;				
-					delete this.value.cross_join;				
+					delete this.value.inner_join;
+					delete this.value.left_join;
+					delete this.value.right_join;
+					delete this.value.cross_join;
 					delete this.value.full_join;
 
 					hit = true;
@@ -1042,19 +1129,18 @@ export default {
 				break;
 
 			case 'json_remove':
+			case 'json_extract':
 				var args = this.value[value];
 				if (!args.isArray) {
 					args = [args, ''];
 					this.value[value] = args;
 				}
 
-				if (!args[1]) {
+				if (!args[1])
 					args[1] = '';
-				}
 
-				if (args.length > 2) {
+				if (args.length > 2)
 					args.resize(2);
-				}
 				break;
 
 			case 'sum':
@@ -1094,13 +1180,14 @@ export default {
 			
 			switch (value) {
 			case 'in':
+			case 'not_in':
 				var args = this.value[value];
 				args[1] = {from: '_t', select: args[0]};
 				break;
 				
 			case '*':
 				if (this.$parent.value.select == this.value) {
-					this.$parent.value.select = value;					
+					this.$parent.value.select = value;
 				}
 				break;
 
@@ -1109,6 +1196,13 @@ export default {
 				args.delete(1);
 				break;
 
+			case 'json_contains_path':
+			case 'not json_contains_path':
+				var args = this.value[value];
+				args.insert(1, 'one');
+				if (!args[2])
+					args[2] = '$.';
+				break;
 			default:
 				break;
 			}
@@ -1163,16 +1257,17 @@ export default {
 			case 'mul':
 			case 'div':
 			case 'mod':
-			case 'AND':
-			case 'XOR':
-			case 'right_shift':
-			case 'left_shift':				
+			case 'bit_and':
+			case 'bit_xor':
+			case 'shr':
+			case 'shl':
 				return true;
 				
 			case 'substring':
 			case 'substring_index':
 			case 'regexp_substr':
 			case 'regexp_replace':
+			case 'json_type':
 				return false;
 				
 			case 'length':
@@ -1190,6 +1285,10 @@ export default {
 			}
 		},
 
+		is_json_extract(value) {
+			return Object.keys(value).any(key => ['json_extract', 'json_unquote_extract'].contains(key));
+		},
+
 		node_name(name, i) {
 			if (this.name) {
 				if (i == null)
@@ -1200,7 +1299,7 @@ export default {
 				}
 				
 				return `${this.name}[${name}][${i}]`;
-			}	
+			}
 
 			if (i == null)
 				return name;
@@ -1208,8 +1307,13 @@ export default {
 			if (i == 0 && this.args.length == 1 && (!this.args[0] || !this.args[0].isArray)) {
 				return name;
 			}
-			
-			return `${name}[${i}]`;;
+			if (arguments.length > 2) {
+				var args = [...arguments].slice(1);
+				args = args.map(arg => `[${arg}]`).join('');
+				return `${name}${args}`;
+			}
+				
+			return `${name}[${i}]`;
 		},
 		
 		getitem(attr, index) {

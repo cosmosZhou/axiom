@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.all.doit.inner.setlimit import doit
+    from Axiom.Algebra.All.doit.inner.setlimit import doit
     return Equal(self, doit(Cup, self))
 
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
 
     x = Symbol(etype=dtype.real, shape=(oo, oo))
     i, j, a, b, c, d = Symbol(integer=True)
@@ -22,9 +22,9 @@ def prove(Eq):
 
     Eq << s(i).this.defun()
 
-    Eq << sets.eq.then.eq.cup.apply(Eq[-1], (i, 0, m))
+    Eq << Sets.Eq.to.Eq.Cup.apply(Eq[-1], (i, 0, m))
 
-    Eq << Eq[-2].this.rhs.apply(sets.cup.to.union.doit.setlimit)
+    Eq << Eq[-2].this.rhs.apply(Sets.Cup.eq.Union.doit.setlimit)
 
     Eq << Eq[-2].subs(Eq[-1])
 

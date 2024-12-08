@@ -9,18 +9,18 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y = Symbol(complex=True)
     Eq << apply(Abs(x + ~y))
 
-    Eq << Eq[0].this.lhs.apply(algebra.abs.to.sqrt)
+    Eq << Eq[0].this.lhs.apply(Algebra.Abs.eq.Sqrt)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.abs.to.sqrt)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Abs.eq.Sqrt)
 
-    Eq << Eq[-1].this.rhs.find((Expr - Expr) ** 2).apply(algebra.square.negate)
+    Eq << Eq[-1].this.rhs.find((Expr - Expr) ** 2).apply(Algebra.Square.Neg)
 
-    
+
 
 
 if __name__ == '__main__':

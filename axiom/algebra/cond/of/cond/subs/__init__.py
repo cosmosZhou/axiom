@@ -1,2 +1,2 @@
-from . import cond
-from . import bool
+from . import Cond
+from . import Bool

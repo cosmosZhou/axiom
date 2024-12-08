@@ -15,14 +15,14 @@ def apply(self, var=None):
 
 @prove
 def prove(Eq):
-    from axiom import stats
-    
+    from Axiom import Stats
+
     x = Symbol(real=True, random=True)
     μ = Symbol(real=True)
     σ = Symbol(positive=True)
     Eq << apply(Distributed(x, NormalDistribution(μ, σ)))
-    
-    Eq << Eq[0].this.apply(stats.distributed.to.eq.prob)
+
+    Eq << Eq[0].this.apply(Stats.Distributed.equ.Eq.Prob)
 
 
 if __name__ == '__main__':

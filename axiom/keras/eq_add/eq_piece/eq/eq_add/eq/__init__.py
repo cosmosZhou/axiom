@@ -1,1 +1,1 @@
-from . import eq_softmax
+from . import Eq_Softmax

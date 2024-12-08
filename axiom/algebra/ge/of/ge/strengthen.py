@@ -12,14 +12,14 @@ def apply(given, bound):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y = Symbol(real=True, given=True)
     Eq << apply(GreaterEqual(x, y), y + 1)
 
 
 
-    Eq << algebra.ge.then.ge.relax.apply(Eq[1], lower=y)
+    Eq << Algebra.Ge.to.Ge.relax.apply(Eq[1], lower=y)
 
 
 

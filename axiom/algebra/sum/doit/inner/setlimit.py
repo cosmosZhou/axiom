@@ -24,7 +24,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     x = Symbol(real=True, shape=(oo, oo))
     i, j = Symbol(integer=True)
     m = Symbol(integer=True, positive=True)
@@ -35,9 +35,9 @@ def prove(Eq):
 
     Eq << s[i].this.definition
 
-    Eq << algebra.eq.then.eq.sum.apply(Eq[-1], (i, 0, m))
+    Eq << Algebra.Eq.to.Eq.Sum.apply(Eq[-1], (i, 0, m))
 
-    Eq << Eq[-2].this.rhs.apply(algebra.sum.to.add.doit.setlimit)
+    Eq << Eq[-2].this.rhs.apply(Algebra.Sum.eq.Add.doit.setlimit)
 
     Eq << Eq[-2].subs(Eq[-1]).reversed
 

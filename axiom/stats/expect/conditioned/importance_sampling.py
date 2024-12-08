@@ -8,7 +8,7 @@ def apply(self, *new_weights):
     new_weights = [*new_weights]
     limits_weighted = []
     new_limits_weighted = []
-    
+
     conds = []
     for i, (x, *weights) in enumerate(limits):
         if weights:
@@ -24,7 +24,7 @@ def apply(self, *new_weights):
         vars = [v for v in random_symbols if x.index_contains(v)]
         if len(vars) == 1:
             x, = vars
-            
+
         conds.append(Equal(x, x.surrogate))
 
     conds = And(*conds)
@@ -33,7 +33,7 @@ def apply(self, *new_weights):
 
 @prove
 def prove(Eq):
-    from axiom import stats
+    from Axiom import Stats
 
     b, D = Symbol(integer=True, positive=True)
     # D denotes the size of the trainable weights
@@ -43,11 +43,11 @@ def prove(Eq):
     f = Function(real=True, shape=())
     Eq << apply(Expectation[x:θ](f(x) | s), θ_quote)
 
-    Eq << Eq[-1].this.lhs.apply(stats.expect.to.sum)
+    Eq << Eq[-1].this.lhs.apply(Stats.Expect.eq.Sum)
 
-    Eq << Eq[-1].this.rhs.apply(stats.expect.to.sum)
+    Eq << Eq[-1].this.rhs.apply(Stats.Expect.eq.Sum)
 
-    
+
 
 
 if __name__ == '__main__':

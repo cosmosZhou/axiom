@@ -10,14 +10,14 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     a = Symbol(integer=True)
     b = Symbol(integer=True, given=True)
     x = Symbol(domain=Range(a, b + 1), given=True)
     Eq << apply(Equal(x, b))
 
-    Eq << algebra.ge.then.eq.squeeze.apply(Eq[1])
+    Eq << Algebra.Ge.to.Eq.squeeze.apply(Eq[1])
 
 
 

@@ -81,19 +81,19 @@ export function is_head_char(textarea){
 	return !lineStart && !offsetStart;
 }
 
-export function set_focus(textarea, row, selectionStart){
+export function set_focus(textarea, row, selectionStart, focus){
 	var text = textarea_textContent(textarea);
-	if (row < 0) {
+	if (row < 0)
 		row += text.length;
-	}
-	
-	for (var i of range(row)) {
-		selectionStart += text[i].length + 1;	
+
+	for (var i of range(Math.min(row, text.length))) {
+		selectionStart += text[i].length + 1;
 	}
 	
 	textarea.selectionStart = selectionStart;
 	textarea.selectionEnd = selectionStart;
-	textarea.focus();
+	if (focus == null || focus)
+		textarea.focus();
 }
 
 console.log('import textarea.js');

@@ -1,3 +1,2 @@
-from . import softmax
-
-from . import relu
+from . import Softmax
+from . import Relu

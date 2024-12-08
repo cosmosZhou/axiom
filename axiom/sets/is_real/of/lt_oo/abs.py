@@ -11,12 +11,12 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import sets
-    
+    from Axiom import Sets
+
     x = Symbol(extended_real=True)
     Eq << apply(Element(x, Interval(-oo, oo)))
-    
-    Eq << Eq[1].this.apply(sets.abs_lt_oo.to.is_real)
+
+    Eq << Eq[1].this.apply(Sets.Abs_Lt_oo.equ.is_real)
 
 
 if __name__ == '__main__':

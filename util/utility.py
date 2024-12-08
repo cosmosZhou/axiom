@@ -664,10 +664,10 @@ def from_axiom_import(py, section, eqs):
             break
     
     firstStatement, *restLines = file
-    if re.match(' +from +axiom +import +', firstStatement):
+    if re.match(' +from +Axiom +import +', firstStatement):
         firstStatement += ", " + section
     else: 
-        codes.append('    from axiom import ' + section)
+        codes.append('    from Axiom import ' + section)
     codes.append(firstStatement)
     codes += restLines
     file.writelines(codes)
@@ -682,8 +682,9 @@ def from_axiom_import(py, section, eqs):
         traceback.print_exc()
         return RetCode.failed, eqs.postprocess()       
     
+localhost='192.168.18.133:8000'
 def website(py):
-    return f"http://localhost/{basename(dirname(dirname(__file__)))}/?module={py_to_module(py, '.')}"
+    return f"http://{localhost}/{basename(dirname(dirname(__file__)))}/?module={py_to_module(py, '.')}"
 
 def _prove(func, debug=True, **kwargs):
     py = func.__code__.co_filename
@@ -725,7 +726,7 @@ def _prove(func, debug=True, **kwargs):
                 attribute = m[2]
                 statement = messages[1].strip()
                 from run import tackle_type_error
-                if m := re.search('(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+', statement):
+                if m := re.search('(?:Algebra|Sets|Calculus|Discrete|Geometry|Keras|Stats)(?:\.\w+)+', statement):
                     package = m[0]
                     paths = package.split('.')
                     if attribute == 'apply':
@@ -745,7 +746,7 @@ def _prove(func, debug=True, **kwargs):
                 elif attribute == 'apply' and statement == '__kwdefaults__ = axiom.apply.__closure__[0].cell_contents.__kwdefaults__':
                     messages = source_error(index=-4)
                     statement = messages[1].strip()
-                    if m := re.search('(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+', statement):
+                    if m := re.search('(?:Algebra|Sets|Calculus|Discrete|Geometry|Keras|Stats)(?:\.\w+)+', statement):
                         lines = tackle_type_error(m[0], False)
                         args = analyze_results_from_run(lines)
                         if len(args) != 2:
@@ -846,7 +847,7 @@ def detect_error_in_prove(py, messages):
                         
                         start = i
                         skips = 0
-                        if re.match("    from axiom import \w+", lines[i]):
+                        if re.match("    from Axiom import \w+", lines[i]):
                             i += 1
                             skips += 1
                             
@@ -890,7 +891,7 @@ def detect_error_in_apply(py, messages, index=-3):
             kwargs['code'] = code
             
             if pyFile != py:
-                m = re.search(fr"\b{user}[/\\](axiom[/\\].+)\.py", pyFile)
+                m = re.search(fr"\b{user}[/\\](Axiom[/\\].+)\.py", pyFile)
                 if m:
                     file = m[1].replace(os.path.sep, '.')
                     file = file.replace(".__init__", '')
@@ -933,7 +934,7 @@ def detect_error_in_sympy(py, _messages, index=-3):
 
 def detect_error_in_axiom(py, _messages, index=-3):
     for line in _messages:
-        m = re.fullmatch(r'File "([^"]+[\\/]axiom[\\/]([^"]+)\.py)", line (\d+), in (\w+)', line)
+        m = re.fullmatch(r'File "([^"]+[\\/]Axiom[\\/]([^"]+)\.py)", line (\d+), in (\w+)', line)
         if m:
             messages = source_error(index)
             kwargs = detect_error_in_apply(py, messages) or detect_error_in_prove(py, messages) or detect_error_in_invoke(py, messages, index=index - 1)
@@ -1035,12 +1036,12 @@ def split(axiom):
 def apply(*args, **kwargs):
     if args:
         axiom, = args
-        from sympy.logic.boolalg import inference_type
+        from sympy.logic.boolalg import inference_type, binary_operators
         _, type = inference_type(split(axiom))
-        if type in ('given', 'of'):
+        if type == 'of':
             return given(axiom, **kwargs)
 
-        if type == 'to':
+        if type in binary_operators:
             kwargs['given'] = None
         return imply(axiom, **kwargs)
     
@@ -1134,11 +1135,11 @@ def imply(apply, **kwargs):
             if args and isinstance(args[0], (Boolean, Inference)):
                 tokens = split(apply)
                 from sympy.logic.boolalg import inference_type
-                if inference_type(tokens)[1] == 'to':
-                    from sympy import And, Equivalent
+                if inference_type(tokens)[1] == 'equ':
+                    from sympy import And, Iff
                     if isinstance(statement, tuple):
                         statement = And(*statement)
-                    statement = Equivalent(And(*(eq for eq in args if isinstance(eq, (Boolean, Inference)))), statement, evaluate=False)
+                    statement = Iff(And(*(eq for eq in args if isinstance(eq, (Boolean, Inference)))), statement, evaluate=False)
 
         if apply.__code__.co_filename != traceback.extract_stack()[-2][0]:
             
@@ -1415,7 +1416,7 @@ balancedParanthesis = balancedParentheses(7)
 
 
 def detect_axiom(statement):
-#     // Eq << Eq.x_j_subset.apply(discrete.sets.subset.nonempty, Eq.x_j_inequality, evaluate=False)
+#     // Eq << Eq.x_j_subset.apply(Discrete.Sets.subset.nonempty, Eq.x_j_inequality, evaluate=False)
     matches = re.compile('\.apply\((.+)\)').search(statement)
     if matches:
         theorem = matches[1].split(',')[0].strip()
@@ -1427,7 +1428,7 @@ def detect_axiom_given_theorem(theorem, statement):
     if theorem.startswith('.') or theorem.startswith('Eq'):
 #         // consider the case
 #         // consider the case
-#         // Eq[-2].this.args[0].apply(algebra.cond.cond.then.et, invert=True, swap=True)
+#         // Eq[-2].this.args[0].apply(Algebra.Cond.Cond.to.And, invert=True, swap=True)
 
         yield from detect_axiom(statement)        
     elif 'Eq.' not in theorem:
@@ -1437,8 +1438,8 @@ def detect_axiom_given_theorem(theorem, statement):
 
 
 def dependency_analysis(theorem):
-    import axiom
-    prove = eval('axiom.' + theorem).prove
+    import Axiom
+    prove = eval('Axiom.' + theorem).prove
     import inspect
     prove = prove.__closure__[0].cell_contents
     if isinstance(prove, tuple):
@@ -1458,7 +1459,7 @@ def dependency_analysis(theorem):
             continue
         
 #         print(statement, file=sys.stderr)
-#    // Eq <<= geometry.plane.trigonometry.sine.principle.add.apply(*Eq[-2].rhs.arg.args), geometry.plane.trigonometry.cosine.principle.add.apply(*Eq[-1].rhs.arg.args)
+#    // Eq <<= Geometry.plane.trigonometry.sine.principle.add.apply(*Eq[-2].rhs.arg.args), Geometry.plane.trigonometry.cosine.principle.add.apply(*Eq[-1].rhs.arg.args)
         matches = re.compile("((?:Eq *<<= *|Eq\.\w+, *Eq\.\w+ *= *)([\w.]+|Eq[-\w.\[\]]*\[-?\d+\][\w.]*)\.apply%s\s*[,&]\s*)(.+)" % balancedParanthesis).match(statement) 
         if matches:
 #             // error_log('theorem detected: ' . $theorem);
@@ -1493,7 +1494,7 @@ def dependency_analysis(theorem):
 
 def filename2module(filename):
     words = filename.replace(os.path.sep, '.').split('.')
-    index = words.index('axiom')
+    index = words.index('Axiom')
     words = words[index + 1:-1]
     if words[-1] == '__init__':
         *words, _ = words
@@ -1533,7 +1534,7 @@ def recursive_parsing(theorem):
         
 def chmod():
     if os.sep == '/':  # is Linux system
-        cmd = 'chmod -R 777 axiom'
+        cmd = 'chmod -R 777 Axiom'
     #         os.system(cmd)
         for s in os.popen(cmd).readlines():
             print(s)

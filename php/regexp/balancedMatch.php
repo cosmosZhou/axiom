@@ -248,7 +248,7 @@ function remove_capture_unnamed($s, $namedCapture = false)
             elseif (preg_match("/^\(\?(<?[!=])/", $m[0], $lookAroundType)) {
                 $tokens[] = [
                     'lookAround' => $m[0],
-                    'type' => $lookAroundType[1],
+                    'type' => $lookAroundType[1]
                 ];
                 ++ $groupCount;
             }
@@ -301,7 +301,7 @@ function remove_capture_unnamed($s, $namedCapture = false)
             } elseif (array_key_exists('brace', $s)) {
                 $s = $s['brace'];
                 $groups[] = $s;
-                $totalLength += strlen($s);                
+                $totalLength += strlen($s);
             } else {
                 $group = $s['lookAround'];
                 $group = preg_replace_callback("/[{}]/", fn(&$m) => '\\x'. dechex(ord($m[0])), $group);

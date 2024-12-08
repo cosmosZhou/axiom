@@ -1,8 +1,7 @@
-from . import then
+from . import Any
 from . import of
-from . import all
-from . import subset
-from . import supset
-
+from . import Subset
+from . import All
+from . import Supset
 from . import to
-from . import any
+from . import equ

@@ -1,3 +1,3 @@
-from . import inbetween
 from . import last
-from . import stirling
+from . import Stirling
+from . import inbetween

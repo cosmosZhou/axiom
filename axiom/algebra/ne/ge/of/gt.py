@@ -11,15 +11,15 @@ def apply(ne, ge):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     a, x = Symbol(real=True)
     Eq << apply(Unequal(x, a), x >= a - 1)
 
 
-    Eq << algebra.gt.then.ne.apply(Eq[2])
-    Eq << algebra.gt.then.ge.relax.apply(Eq[2])
-    Eq << algebra.ge.then.ge.relax.apply(Eq[-1], a - 1)
+    Eq << Algebra.Gt.to.Ne.apply(Eq[2])
+    Eq << Algebra.Gt.to.Ge.relax.apply(Eq[2])
+    Eq << Algebra.Ge.to.Ge.relax.apply(Eq[-1], a - 1)
 
 
 

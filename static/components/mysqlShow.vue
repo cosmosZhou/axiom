@@ -11,7 +11,7 @@
 
 <script>
 console.log('import mysqlShow.vue');
-import {piece_together, is_number, is_enum, is_string, is_json} from "../js/mysql.js"
+import {piece_together} from "../js/mysql.js"
 import mysqlExpr from "./mysqlExpr.vue"
 import mysqlLeaf from "./mysqlLeaf.vue"
 
@@ -21,9 +21,9 @@ show tables in corpus;
 show create table corpus.markush;
 show grants for test;
 show global variables like '%regexp%';
-show global status like '%schema%'; 
+show global status like '%schema%';
 show variables like '%regexp%';
-show status like '%schema%'; 
+show status like '%schema%';
  */
  
 export default {
@@ -53,7 +53,7 @@ export default {
 		func() {
 			var {show} = this.value;
 			if (show.isString)
-				return;			
+				return;
 			return Object.keys(show)[0];
 		},
 		
@@ -74,7 +74,7 @@ export default {
 					if (aspect.isString)
 						return aspect;
 					return Object.keys(aspect)[0];
-				} 
+				}
 					
 				return Object.keys(show)[0];
 			},
@@ -152,7 +152,7 @@ export default {
 
 		is_leaf() {
 			return this.$parent.is_leaf;
-		},		
+		},
 		
 		numericFields() {
 			return this.$parent.numericFields;
@@ -243,7 +243,7 @@ export default {
 
 			url.push(...piece_together(this.kwargs));
 			return 'query.php?' + url.join('&');
-		},		
+		},
 	},
 	
 	methods: {
@@ -257,7 +257,7 @@ export default {
 				}
 					
 				break;
-			}	
+			}
 		},
 
 		blur_input(event, print) {
@@ -278,7 +278,7 @@ export default {
 		    	var element = el.querySelector('select[name]') || el.querySelector('input[name]');
 		    	element.focus();
 		    },
-		},		
+		},
 	},
 }
 </script>

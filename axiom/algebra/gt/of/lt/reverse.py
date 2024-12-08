@@ -9,12 +9,12 @@ def apply(gt):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, a = Symbol(real=True, given=True)
     Eq << apply(x > a)
 
-    Eq << algebra.lt.then.gt.reverse.apply(Eq[1])
+    Eq << Algebra.Lt.to.Gt.reverse.apply(Eq[1])
 
 
 

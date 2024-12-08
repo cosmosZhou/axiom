@@ -14,7 +14,7 @@
 						<mysqlObject :name="node_name(key, 0)" :value=value[key][0]></mysqlObject>
 					</td>
 				</tr>
-				<tr v-else v-for="i of rows - 1">
+				<tr v-for="i of rows - 1">
 					<td v-for="key of list_key">
 						<mysqlObject :name="node_name(key, i)" :value=value[key][i]></mysqlObject>
 					</td>
@@ -26,7 +26,7 @@
 				</td>
 			</tr>
 		</template>
-		<template v-else v-for="value, key of value">
+		<template v-else v-for="[key, value] of values">
 			<template v-if="value && value.isArray">
 				<template v-if=value.length>
 					<tr>
@@ -54,19 +54,29 @@
 			</tr>
 		</template>
 	</table>
-	<textarea v-else-if=value.isString :name=name :value=value :rows=value.rows() :cols=value.cols() @change=change></textarea>
+	<textarea v-else-if=value.isString :name=name :value=value :rows=value.rows() :cols=value.cols() @change=change @keydown="keydown_textarea"></textarea>
+	<table v-else-if=value.isArray border=1 class=object>
+		<tr v-for="value, i of value">
+			<td v-if="value == null"></td>
+			<td v-else-if=value.isArray v-for="value, j of value">
+				<mysqlObject :name="node_name(null, [i, j])" :value=value></mysqlObject>
+			</td>
+			<td v-else>
+				<mysqlObject :name="node_name(null, i)" :value=value></mysqlObject>
+			</td>
+		</tr>
+	</table>
 	<input v-else :name=name :value=value @change=change />
 </template>
 
 <script>
 console.log('import mysqlObject.vue');
-import {is_head_char, is_last_char, head_line_offset, last_line_offset, textarea_textContent} from "../js/textarea.js"
-import {modify_training} from "../js/Command.js"
+import {head_line_offset, last_line_offset} from "../js/textarea.js"
 
 export default {
     components: {},
 
-	props: ['value', 'name'],
+	props: ['value', 'name', 'order'],
 	
     data() {
         return {
@@ -79,6 +89,19 @@ export default {
     		return [...this.dict_key, ...this.list_key];
     	},
     	
+		values() {
+			var values = Object.entries(this.value);
+			switch (this.order) {
+			case 'asc':
+				values.sort((a, b) => a[0].localeCompare(b[0]));
+				break;
+			case 'desc':
+				values.sort((a, b) => b[0].localeCompare(a[0]));
+				break;
+			}
+			return values;
+		},
+
     	rows() {
     		return this.list_dict_split.rows;
     	},
@@ -97,7 +120,7 @@ export default {
     		var list_key = [];
     		for (var [key, item] of Object.entries(value))	{
     			var item = value[key];
-    			if (item && item.isArray) {
+    			if (item && item.isArray && item.length > 1) {
     				list_key.push(key);
     			}
     			else {
@@ -112,11 +135,11 @@ export default {
     	},
 
     	database() {
-    		return this.mysql.database;	
+    		return this.mysql.database;
     	},
     	
     	PRI() {
-    		return this.mysql.PRI;	
+    		return this.mysql.PRI;
     	},
     	
     	mysql() {
@@ -167,11 +190,11 @@ export default {
     	},
     	
 		is_torch(){
-			return getParameter('torch') || this.kwargs.kwargs && this.kwargs.kwargs.torch;
+			return getParameterByName('torch') || this.kwargs.kwargs && this.kwargs.kwargs.torch;
 		},
 		
 		is_mysql(){
-			return getParameter('mysql') || getParameter('cmd') == 'select' || this.cmd == 'update';
+			return getParameterByName('mysql') || getParameterByName('cmd') == 'select' || this.cmd == 'update';
 		},
 
 		compare(){
@@ -185,39 +208,44 @@ export default {
     
     methods: {
 		node_name(name, i) {
-			var values = Object.values(this.value);
-			if (this.name) {
-				if (i == null)
-					return `${this.name}[${name}]`;
+			if (name) {
+				var values = Object.values(this.value);
+				if (this.name) {
+					if (i == null)
+						return `${this.name}[${name}]`;
+						
+					if (i == 0 && values.length == 1 && (!values[0] || !values[0].isArray)) {
+						return `${this.name}[${name}]`;
+					}
 					
+					return `${this.name}[${name}][${i}]`;
+				}
+
+				if (i == null)
+					return name;
+				
 				if (i == 0 && values.length == 1 && (!values[0] || !values[0].isArray)) {
-					return `${this.name}[${name}]`;
+					return name;
 				}
 				
-				return `${this.name}[${name}][${i}]`;
-			}	
-
-			if (i == null)
-				return name;
-			
-			if (i == 0 && values.length == 1 && (!values[0] || !values[0].isArray)) {
-				return name;
+				return `${name}[${i}]`;
 			}
-			
-			return `${name}[${i}]`;;
+			else {
+				if (i.isArray) {
+					var [i, j] = i;
+					return `${this.name}[${i}][${j}]`;
+				}
+				else
+					return `${this.name}[${i}]`;
+			}
 		},
     	
-    	getSimplify(){
-    		var simplify = getParameter('simplify');
-    		return simplify && simplify.toLowerCase() == 'true';
-    	},
-
     	get_string(value) {
-    		return value.toString().replace('\n', '\\n');	
+    		return value.toString().replace('\n', '\\n');
     	},
     	
     	get_size(value) {
-    		return this.get_string(value).strlen();	
+    		return this.get_string(value).strlen();
     	},
 
     	coordinate(self){
@@ -259,12 +287,12 @@ export default {
 				event.preventDefault();
 				
 				this.$nextTick(()=>{
-					form.submit();	
+					form.submit();
 				});
 			
 				break;
 				
-			case 'Z':				
+			case 'Z':
 			case 'z':
 				if (!event.ctrlKey)
 					break;
@@ -350,9 +378,51 @@ export default {
 				}
 				
 				break;
-			}    		
+			}
     	},
-    	
+
+    	keydown_textarea(event){
+			var self = event.target;
+			var key = event.key;
+			switch (key){
+			case 'Enter':
+				if (!event.ctrlKey)
+					break;
+				
+				var input = event.target;
+				var value = input.value;
+				var {selectionStart} = input;
+				
+				var former = value.slice(0, selectionStart).trim();
+				var latter = value.slice(selectionStart).trim();
+
+				var {name} = input;
+				var m = name.match(/^(\w+)\[(\d+)\]/);
+				if (m) {
+					var attr = m[1];
+					var index = parseInt(m[2]);
+					var indices = name.slice(m[0].length);
+					var paths = [];
+					for (var m of indices.matchAll(/\[(\d+)\]|\[([^\[\]]+)\]/g)) {
+						paths.push(m[2] || parseInt(m[1]));
+					}
+
+					var self = this;
+					for (var _ of range(paths.length)) {
+						self = self.$parent;
+					}
+
+					var i = paths.pop();
+					console.assert(i.isInteger, "i.isInteger");
+					var array = getitem(self.data[index][attr], ...paths);
+					array[i] = former;
+					array.insert(i + 1, latter);
+					this.set_training();
+				}
+				break;
+			}
+		},
+		
         async process(name, data) {
     		var [name, ext] = split_filename(name);
     		var array = [];
@@ -401,7 +471,7 @@ export default {
 		                					data[key] = ~1;
 		                				}
 		                				else {
-		                					data[key] = 0;	
+		                					data[key] = 0;
 		                				}
 		                				break;
 		                			default:
@@ -416,7 +486,7 @@ export default {
 		                		}
 		                	}
 		                	array.push(data);
-		                } 
+		                }
 		            }
 		        }
 				break;
@@ -428,7 +498,7 @@ export default {
     	async insert(data) {
         	var database = this.database;
         	var table = this.table;
-			var training = getParameter("training");
+			var training = getParameterByName("training");
 			if (training)
 				training = ~training;
 			else
@@ -462,6 +532,26 @@ export default {
     	},
 
         change(event){
+			var {name} = this;
+			var m = name.match(/^(\w+)\[(\d+)\]/);
+			if (m) {
+				var attr = m[1];
+				var index = parseInt(m[2]);
+				var indices = name.slice(m[0].length);
+				var paths = [];
+				for (var m of indices.matchAll(/\[(\d+)\]|\[([^\[\]]+)\]/g)) {
+					paths.push(m[2] || parseInt(m[1]));
+				}
+
+				var self = this;
+				for (var _ of range(paths.length)) {
+					self = self.$parent;
+				}
+				
+				if (self[attr] === undefined)
+					self = self.data[index];
+				setitem(self[attr], ...paths, event.target.value);
+			}
     		this.set_training();
         },
         
@@ -528,6 +618,8 @@ textarea {
 	resize: none;
 	overflow: hidden;
 	border: none;
+	height: auto;
+	font-family: Consolas;
 }
 
 textarea:focus {

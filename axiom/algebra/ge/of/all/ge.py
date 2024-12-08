@@ -3,19 +3,19 @@ from util import *
 
 @apply
 def apply(ge, var=None):
-    from axiom.algebra.le.of.all.le import all_getitem
+    from Axiom.Algebra.Le.of.All.Le import all_getitem
     return all_getitem(ge, GreaterEqual, var=var)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, positive=True)
     x, y = Symbol(shape=(n,), real=True)
     Eq << apply(x >= y)
 
-    Eq << Eq[0].this.apply(algebra.ge.to.all.ge)
+    Eq << Eq[0].this.apply(Algebra.Ge.equ.All.Ge)
 
 
 

@@ -10,7 +10,7 @@ def apply(imply):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
     n = Symbol(integer=True, positive=True)
     i = Symbol(integer=True)
     x = Symbol(shape=(oo,), etype=dtype.complex[n])
@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq << Eq[1].reversed
 
-    Eq << sets.all_subset.then.subset.cup.lhs.apply(Eq[-1])
+    Eq << Sets.All_Subset.to.Subset.Cup.lhs.apply(Eq[-1])
 
     Eq << Eq[-1].reversed
 

@@ -1,1 +1,1 @@
-from . import subset_cup
+from . import Subset_Cup

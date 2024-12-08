@@ -9,14 +9,14 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
 
     x, y = Symbol(integer=True, given=True)
     Eq << apply(Unequal(x, y))
 
     Eq << ~Eq[0]
 
-    Eq << sets.eq.then.el.finiteset.apply(Eq[-1])
+    Eq << Sets.Eq.to.In.FiniteSet.apply(Eq[-1])
 
     Eq << ~Eq[-1]
 

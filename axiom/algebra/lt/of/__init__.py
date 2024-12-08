@@ -1,7 +1,7 @@
-from . import et
-from . import lt, le
-from . import gt
-from . import gt_zero
-from . import lt_zero
-from . import all
-from . import lt
+from . import And
+from . import Lt
+from . import Le
+from . import Gt
+from . import All
+from . import Gt_0
+from . import Lt_0

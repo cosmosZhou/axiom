@@ -38,7 +38,7 @@ def apply(self, old, new):
         return self.func(And(*eqs), *limits)
 
     if old.is_Sliced:
-        from axiom.algebra.slice.to.matrix import convert
+        from Axiom.Algebra.Slice.eq.Matrix import convert
         old = convert(old)
         if old.is_DenseMatrix:
             old = Tuple(*old._args)

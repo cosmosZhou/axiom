@@ -26,15 +26,15 @@ if __name__ == '__main__':
             
             data.append([
                 user,
-                "axiom." + prefix,
+                "Axiom." + prefix,
                 phrases[i + 1],
                 1
             ])
 
-    for sec in ['algebra', 'sets', 'calculus', 'discrete', 'geometry', 'keras', 'stats']:
+    for sec in ['Algebra', 'Sets', 'Calculus', 'Discrete', 'Geometry', 'Keras', 'Stats']:
         data.append([
             user,
-            'axiom.',
+            'Axiom.',
             sec,
             1
         ])

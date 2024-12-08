@@ -3,16 +3,16 @@ import {Command} from "./Command.js"
 class Listener {
 	
 	constructor(context, obj) {
-		this.obj = obj;		
+		this.obj = obj;
 		this.context = context;
 	}
 
 	get listen(){
-		return this.context.listen;	
+		return this.context.listen;
 	}
 	
 	set(dict){
-		for (let [prop, value] of Object.entries(dict)){			
+		for (let [prop, value] of Object.entries(dict)){
 			this.command((obj, prop, value)=>{
 				if (value == null)
 					delete obj[prop];
@@ -20,7 +20,7 @@ class Listener {
 					obj[prop] = value;
 			})(this.obj, prop, this.obj[prop])
 			
-			this.obj[prop] = value;	
+			this.obj[prop] = value;
 		}
 	}
 	
@@ -113,7 +113,7 @@ class Listener {
 	
 	set src(src){
 		this.set({src});
-	}	
+	}
 	
 	set seq(seq){
 		this.set({seq});
@@ -200,7 +200,7 @@ class Listener {
 	}
 	get lineStop(){
 		return new Property(this, 'lineStop');
-	}	
+	}
 	
 	get offsetStart(){
 		return new Property(this, 'offsetStart');
@@ -242,7 +242,7 @@ class Listener {
 	insert(i, el){
 		this.command((obj, i)=>{
 			obj.delete(i);
-		})(this.obj, i);	
+		})(this.obj, i);
 		
 		return this.obj.insert(i, el);
 	}
@@ -266,7 +266,7 @@ class Listener {
 		})(this.obj, i, this.obj[i]);
 		
 		if (Array.isArray(this.obj)){
-			this.obj.delete(i);	
+			this.obj.delete(i);
 		}
 		else{
 			delete this.obj[i];
@@ -294,7 +294,7 @@ class Listener {
 					obj.splice(original_length, obj.length - original_length);
 				}
 				else{
-					obj[i] = el;	
+					obj[i] = el;
 				}
 			}
 		})(this.obj, i, this.obj[i], this.obj.length);
@@ -304,7 +304,7 @@ class Listener {
 
 	back(value){
 		this.command((obj, back)=>{
-			obj.back(back);	
+			obj.back(back);
 		})(this.obj, this.obj.back());
 		this.obj.back(value);
 	}

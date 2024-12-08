@@ -11,22 +11,22 @@ def apply(x, delta):
 
 @prove
 def prove(Eq):
-    from axiom import keras, algebra
+    from Axiom import Keras, Algebra
 
     n = Symbol(integer=True, positive=True)
     x = Symbol(real=True, shape=(n,))
     delta = Symbol(real=True)
     Eq << apply(x, delta)
 
-    Eq << Eq[-1].this.lhs.apply(keras.softmax.to.mul.reducedSum)
+    Eq << Eq[-1].this.lhs.apply(Keras.Softmax.eq.Mul.ReducedSum)
 
-    Eq << Eq[-1].this.find(ReducedSum[~Exp]).apply(algebra.exp.to.mul)
+    Eq << Eq[-1].this.find(ReducedSum[~Exp]).apply(Algebra.Exp.eq.Mul)
 
     Eq << Eq[-1].this.lhs.powsimp()
 
-    Eq << Eq[-1].this.rhs.apply(keras.softmax.to.mul.reducedSum)
+    Eq << Eq[-1].this.rhs.apply(Keras.Softmax.eq.Mul.ReducedSum)
 
-    
+
 
 
 if __name__ == '__main__':

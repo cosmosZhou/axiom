@@ -1,37 +1,31 @@
 from util import *
 
 
-def rewrite(self, i):
-    lhs, rhs = self.of(Unequal)
-    if i is None:
-        if lhs.is_Lamda:
-            i = lhs.variables[-1]
-        elif rhs.is_Lamda:
-            i = rhs.variable[-1]
-        else:
-            i = self.generate_var(integer=True)
-
-    return Any[i:lhs.shape[0]](Unequal(lhs[i], rhs[i]))
-
 @apply
 def apply(self, i=None):
+    from Axiom.Algebra.Ne.equ.Any.Ne import rewrite
     return rewrite(self, i)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     k = Symbol(integer=True)
-    n = Symbol(integer=True, positive=True)
-    f, g = Symbol(shape=(oo,), real=True)
+    n = Symbol(integer=True, positive=True, given=True)
+    f, g = Symbol(shape=(oo,), real=True, given=True)
     Eq << apply(Unequal(Lamda[k:n](f[k]), Lamda[k:n](g[k])))
 
-    Eq << algebra.iff.of.et.infer.apply(Eq[0])
+    Eq << ~Eq[1]
 
-    Eq << Eq[-2].this.lhs.apply(algebra.ne.then.any.ne)
+    Eq << Algebra.All_Eq.to.Eq.Lamda.apply(Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.ne.of.any.ne)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Expr.eq.Lamda, k)
+
+    Eq << Eq[-1].this.rhs.apply(Algebra.Expr.eq.Lamda, k, simplify=None)
+
+    Eq << ~Eq[-1]
+
 
 
 if __name__ == '__main__':

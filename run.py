@@ -33,37 +33,42 @@ import re
 from std import batch_map, rindex
 
 from std.file import Text
-from os.path import dirname, basename, realpath, isdir, join, sep, exists
+from os.path import dirname, basename, realpath, isdir, isfile, join, sep, exists
 
 try:
-    import axiom
+    import Axiom
 except ImportError as e:
     from util.utility import source_error
-    error_message, line = source_error()
+    args = source_error()
+    if len(args) == 2:
+        error_message, line = args
 
-    m = re.fullmatch(r'File "([^"]+(?:\\|/)(?:\w+)\.py)", line (\d+), in <module>', error_message)
-    assert m, error_message
-    file, line_number = m.groups()
+        m = re.fullmatch(r'File "([^"]+(?:\\|/)(?:\w+)\.py)", line (\d+), in <module>', error_message)
+        assert m, error_message
+        file, line_number = m.groups()
 
-    line_number = int(line_number) - 1
-    print('file =', file)
-    print('line_number =', line_number)
-    assert 'site-packages' not in file
+        line_number = int(line_number) - 1
+        print('file =', file)
+        print('line_number =', line_number)
+        assert 'site-packages' not in file
 
-    file = Text(file)
+        file = Text(file)
 
-    lines = file.readlines()
-    del lines[line_number]
+        lines = file.readlines()
+        # other processes may have modified the file, causing the line number to be invalid
+        if line_number < len(lines):
+            del lines[line_number]
 
-    file.writelines(lines)
+            file.writelines(lines)
 
-    command = 'python ' + ' '.join(sys.argv)
-    print(command)
+            command = 'python ' + ' '.join(sys.argv)
+            print(command)
 
-    os.system(command + ' parallel=0')
-    exit_code = os.system(command)
-    print('exit_code =', exit_code)
-    exit(exit_code)
+            os.system(command + ' parallel=0')
+            exit_code = os.system(command)
+            print('exit_code =', exit_code)
+            exit(exit_code)
+    exit(1)
 
 
 import time
@@ -77,8 +82,8 @@ from util.utility import RetCode
 def axiom_directory():
     directory = dirname(__file__)
     if not directory:
-        return './axiom'
-    return directory + '/axiom'
+        return './Axiom'
+    return directory + '/Axiom'
 
 
 class Globals:
@@ -92,38 +97,67 @@ class Globals:
 
     failed = []
 
+    nonexistent = []
+
     data = []
-    
+
+def remove_empty_file(path):
+    for line in Text(path).readlines():
+        if line:
+            return
+
+    removeFile(path)
+
+
+def delete_unused_imports_from_init(path):
+    parent = dirname(path)
+    indices = []
+    file = Text(path)
+    lines = file.readlines()
+    for i, line in enumerate(lines):
+        if (m := re.match('from *\. *import +(\w+)', line)) or (m := re.match('del (\w+)', line)):
+            module = parent + '/' + m[1]
+            if not isdir(module) and not isfile(module + '.py'):
+                print(f'deleting "{line}" at line {i + 1} from {path}')
+                indices.append(i)
+    if indices:
+        for i in reversed(indices):
+            del lines[i]
+
+        try:
+            file.writelines(lines)
+        except UnboundLocalError:
+            removeFile(path)
+            raise RuntimeError(f"removeFile({path})")
+        
 
 def readFolder(rootdir, sufix='.py'):
     names = os.listdir(rootdir)
+    random.shuffle(names)
     unused = 0
     for name in names:
         path = join(rootdir, name)
 
         if path.endswith(sufix):
             name = name[:-len(sufix)]
+            delete_unused_imports_from_init(path)
+            remove_empty_file(path)
+
             if name == '__init__':
                 line = Text(path).readline()
                 if not line:
-                    
                     lines = Text(path).readlines()
                     for i, line in enumerate(lines):
                         if line:
                             break
                     else:
                         i = len(lines)
-
-                    if not i:
-                        removeFile(path)
-                        raise RuntimeError(f"removeFile({path})")
- 
                     try:
                         lines = lines[i:]
                         Text(path).writelines(lines)
-                    except UnboundLocalError:                        
+                    except UnboundLocalError:
                         removeFile(path)
-                        raise RuntimeError(f"removeFile({path})")                        
+                        raise RuntimeError(f"removeFile({path})")
                     
                 if re.match('from *\. *import +\w+', line):
                     continue
@@ -137,17 +171,12 @@ def readFolder(rootdir, sufix='.py'):
                         raise RuntimeError(f"removeFile({__init__})")
                     except PermissionError as e:
                         print(e)
-            else: 
-                from os.path import getsize
-                if not getsize(path):
-                    removeFile(path)
-                    raise RuntimeError(f"removeFile({path})")
-
+            else:
                 path = path[:-len(sufix)]
 
             paths = re.split(r'[\\/]+', path)
 #             print(path)
-            index = rindex(paths, 'axiom')
+            index = rindex(paths, 'Axiom')
 
             package = '.'.join(paths[index + 1:])
 
@@ -181,25 +210,30 @@ def create_module(package, module):
     print('package =', package)
     print('module =', module)
     
-    __init__ = project_directory() + sep + package.replace('.', sep) + sep + '__init__.py'
-    file = Text(__init__)
-    
-    for line in file:
-        m = re.match('from \. import (\w+(?:, *\w+)*)', line)
-        if m and module in m[1].split(', *'):
-            print('module', module, 'is already added in', package)
-            return True
-    
-    print('editing', __init__)
-    addition = 'from . import '
-    addition += module
-    
-    if file.size and not file.endswith('\n'):
-        addition = '\n' + addition
-    file.append(addition)
+    parent = project_directory() + sep + package.replace('.', sep) + sep
+    if isdir(moduleFile := parent + module) or isfile(moduleFile + '.py'):
+        __init__ = parent + '__init__.py'
+        file = Text(__init__)
+        
+        for line in file:
+            m = re.match('from \. import (\w+(?:, *\w+)*)', line)
+            if m and module in m[1].split(', *'):
+                print('module', module, 'is already added in', package)
+                return True
+        
+        print('editing', __init__)
+        addition = 'from . import '
+        addition += module
+        
+        if file.size and not file.endswith('\n'):
+            addition = '\n' + addition
+        file.append(addition)
+        return False
 
 
 def run(package, debug=True):
+    if '=' in package:
+        return
     args = (project_directory() + sep + 'run.py', package)
     if debug:
         return os.system('python %s %s debug=True' % args)
@@ -213,7 +247,7 @@ def run(package, debug=True):
     
 def import_module(package):
     try:
-        module = axiom
+        module = Axiom
         for attr in package.split('.'):
             module = getattr(module, attr)
         return module
@@ -221,8 +255,8 @@ def import_module(package):
     except AttributeError as e: 
         print(e)
         if m := re.fullmatch("module '([\w\.]+)' has no attribute '(\w+)'", str(e)):
-            create_module(*m.groups())
-            print(package, 'is created newly')
+            if create_module(*m.groups()) is not None:
+                print(package, 'is created newly')
             return -1
         
         if m := re.fullmatch("'function' object has no attribute '(\w+)'", str(e)):
@@ -231,6 +265,33 @@ def import_module(package):
             paths = paths[:index]
             return tackle_type_error('.'.join(paths))
 
+        if m := re.fullmatch("type object '(\w+)' has no attribute '(\w+)'", str(e)):
+            paths = package.split('.')
+            match Ty := m[1]:
+                case 'Equal':
+                    Ty = 'Eq'
+                case 'Unequal':
+                    Ty = 'Ne'
+                case 'LessThan':
+                    Ty = 'Lt'
+                case 'GreaterThan':
+                    Ty = 'Gt'
+                case 'LessEqual':
+                    Ty = 'Le'
+                case 'Element':
+                    Ty = 'In'
+                case 'NotElement':
+                    Ty = 'NotIn'
+                case 'Equivalent':
+                    Ty = 'Iff'
+                case 'Exists':
+                    Ty = 'Any'
+                case 'ForAll':
+                    Ty = 'All'
+
+            index = -paths[::-1].index(Ty)
+            paths = paths[:index]
+            return tackle_type_error('.'.join(paths))
 
 def prove_with_timing(module, **kwargs):
     lapse = time.time()
@@ -242,11 +303,14 @@ def prove_with_timing(module, **kwargs):
 def tackle_type_error(package, debug=True):
     module = import_module(package)
     from types import ModuleType, FunctionType
-    if not isinstance(module, (ModuleType, FunctionType)) and not module.is_FunctionClass and not module.is_Basic:
+    if module and not isinstance(module, (ModuleType, FunctionType)) and not module.is_FunctionClass and not module.is_Basic:
         return
     
     print("package =", package)
-    index = package.rindex('.')
+    try:
+        index = package.rindex('.')
+    except ValueError:
+        return
     __init__ = package[:index]
     func = package[index + 1:]
     __init__ = import_module(__init__)
@@ -260,15 +324,17 @@ def tackle_type_error(package, debug=True):
     with open(lock, 'w+') as _:
         file = Text(__init__)
         index = file.find('from . import ' + func, False)
-        if index >= 0:
-            print("editing on line", index, __init__, ":", 'del ' + func)
-            lines = file.readlines()
-            if any('del ' + func == line for line in lines):
-                ret = -1 if debug else []
-            else:
-                lines.insert(index, 'del ' + func)
-                file.writelines(lines)
-                ret = run(package, debug=debug)
+        lines = file.readlines()
+        if index < 0:
+            index = len(lines)
+        print("editing on line", index, __init__, ":", 'del ' + func)
+
+        if any('del ' + func == line for line in lines):
+            ret = -1 if debug else []
+        else:
+            lines.insert(index, 'del ' + func)
+            file.writelines(lines)
+            ret = run(package, debug=debug)
 
     os.remove(lock)
     return ret
@@ -297,7 +363,7 @@ def process(package, debug=False):
                 print('importing errors found in', package)
     
                 _package, module = re.match('(.*)\.(\w+)', package).groups()
-                _package = 'axiom.' + _package
+                _package = 'Axiom.' + _package
                 if create_module(_package, module):
                     print("file =", file, type(file))
                     if m[2] == 'prove' and basename(file) == '__init__.py':
@@ -457,7 +523,8 @@ PARTITIONS 8'''
         return {}
 
     MySQL.instance.select_axiom_lapse_from_axiom = lambda : select_axiom_lapse_from_axiom(MySQL.instance)
-    MySQL.instance.url_address = lambda package: f"http://localhost/{user}/?module={package}"
+    from util.utility import localhost
+    MySQL.instance.url_address = lambda package: f"http://{localhost}/{user}/?module={package}"
     
 except Exception as e:
     from util import javaScript as MySQL
@@ -527,7 +594,7 @@ def prove(debug=False, parallel=True):
     tasks = [*tasks.items()]
     tasks.sort(key=lambda pair: pair[1], reverse=True)
 #     tasks.sort(key=lambda pair: pair[0])
-#     tasks = tasks[0:500]
+    # tasks = tasks[:500]
     
     pq = PriorityQueue()
     for i, t in enumerate(timings):
@@ -556,11 +623,18 @@ def prove(debug=False, parallel=True):
 
     rowcount = MySQL.instance.load_data('axiom', data, replace=True, truncate=True)
     print('rowcount =', rowcount)
-    print('in all %d axioms' % Globals.count)
     print_summary()
 
     
 def print_summary():
+    if Globals.nonexistent:
+        print('nonexistent:')
+        for package, href in Globals.nonexistent:
+            print(package)
+            print(href)
+            run(package, debug=True)
+            print()
+
     if Globals.plausible:
         print('plausible:')
         for p in Globals.plausible:
@@ -576,8 +650,8 @@ def print_summary():
             print()
 
     timing = time.time() - start
-    print('seconds costed =', timing)
-    print('minutes costed =', timing / 60)    
+    print('seconds cost    =', timing)
+    print('total theorems  =', Globals.count)
     print('total plausible =', len(Globals.plausible))
     print('total failed    =', len(Globals.failed))
 
@@ -596,7 +670,10 @@ def post_process(result):
         if state is RetCode.plausible:
             Globals.plausible.append((file, MySQL.instance.url_address(package)))
         elif state is RetCode.failed:
-            Globals.failed.append((file, MySQL.instance.url_address(package)))
+            if os.path.exists(file):
+                Globals.failed.append((file, MySQL.instance.url_address(package)))
+            else:
+                Globals.nonexistent.append((package, MySQL.instance.url_address(package)))
         else:
             continue
         
@@ -657,7 +734,7 @@ def retry(package):
     
 def post_process_returns(returns):
     for line in returns:
-        m = re.match(r"seconds costed = (\d+\.\d+)", line)
+        m = re.match(r"seconds cost = (\d+\.\d+)", line)
         if m:
             lapse = float(m[1])
             continue
@@ -852,13 +929,12 @@ clearInterval(ret);
 
 
 # slow:
-# python run.py algebra.poly_is_zero.then.et.infer.quartic
-# python run.py algebra.poly_is_zero.then.et.infer.quartic.one_leaded
-# python run.py discrete.det.to.sum.expansion_by_minors
-# python run.py keras.eq.lamda.bool.then.eq.conv2d
-# python run.py keras.eq.lamda.bool.then.eq.conv3d
+# python run.py Algebra.EqX.Add.Zero.to.And.Imply.quartic
+# python run.py Algebra.EqX.Add.Zero.to.And.Imply.quartic.one_leaded
+# python run.py Discrete.Det.to.Sum.expansion_by_minors
+# python run.py Keras.Eq.Lamda.Bool.to.Eq.conv2d
+# python run.py Keras.Eq.Lamda.Lool.to.Eq.conv3d
 
-# python -c "exec(open('./util/function.py').read())"
-# python -c "exec(open('./util/hierarchy.py').read())"
+# python -c "exec(open('./util/hierarchy.py').read()); exec(open('./util/function.py').read())"
 # python -c "exec(open('./util/hint.py').read())"
 # python -c "exec(open('./util/suggest.py').read())"

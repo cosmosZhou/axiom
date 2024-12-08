@@ -1,2 +1,2 @@
-from . import softmax
-from . import exp
+from . import Softmax
+from . import Exp

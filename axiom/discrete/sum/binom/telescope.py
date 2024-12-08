@@ -11,7 +11,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import discrete, algebra
+    from Axiom import Discrete, Algebra
 
     f = Function(real=True)
     x = Symbol(real=True)
@@ -19,23 +19,23 @@ def prove(Eq):
     k = Symbol(integer=True)
     Eq << apply(Sum[k:n + 1]((-1) ** (n - k) * Binomial(n, k) * (f(x + k + 1) - f(x + k))))
 
-    Eq.diff = discrete.diff.to.sum.binom.apply(Difference(f(x), (x, n)), k)
+    Eq.diff = Discrete.Diff.eq.Sum.Binom.apply(Difference(f(x), (x, n)), k)
 
     Eq.diff_1 = Eq.diff.subs(x, x + 1)
 
     Eq <<= Eq.diff.subs(n, n + 1)
 
-    Eq << Eq[-1].this.lhs.apply(discrete.diff.split, n)
+    Eq << Eq[-1].this.lhs.apply(Discrete.Diff.split, n)
 
     Eq << Eq[-1].this.lhs.doit()
 
     Eq << Eq.diff_1 - Eq.diff
 
-    Eq << Eq[-1].this.rhs.apply(algebra.add.to.sum)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Add.eq.Sum)
 
-    Eq << Eq[-1].this.rhs.expr.apply(algebra.add.to.mul)
+    Eq << Eq[-1].this.rhs.expr.apply(Algebra.Add.eq.Mul)
 
-    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[-1], Eq[-4])
+    Eq << Algebra.Eq.Eq.to.Eq.trans.apply(Eq[-1], Eq[-4])
 
 
 

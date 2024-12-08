@@ -20,7 +20,7 @@
 console.log('import mysqlHaving.vue');
 //import mysqlLookAround from "./mysqlLookAround.vue"
 //https://dev.mysql.com/doc/refman/8.0/en/aggregate-functions.html
-import {is_number, is_enum, is_string, is_json} from "../js/mysql.js"
+import {is_numeric, is_string, is_json} from "../js/mysql.js"
 
 export default {
 	components: {},
@@ -73,7 +73,7 @@ export default {
 		},
 		
 		PRI() {
-			return this.$parent.PRI;	
+			return this.$parent.PRI;
 		},
 		
 		operator_value() {
@@ -104,34 +104,34 @@ export default {
 		},
 		
 		style() {
-			return this.$parent.style;	
+			return this.$parent.style;
 		},
 		
 		desc() {
-			return this.$parent.desc;	
+			return this.$parent.desc;
 		},
 		
 		json_extract() {
-			return this.$parent.json_extract;	
+			return this.$parent.json_extract;
 		},
 		
 		kwargs() {
-			return this.$parent.kwargs.having;	
+			return this.$parent.kwargs.having;
 		},
 		
 		dtype() {
-			return this.$parent.dtype;	
+			return this.$parent.dtype;
 		},
 		
 		table() {
-			return this.$parent.table;	
+			return this.$parent.table;
 		},
 		
 		limit: {
 			get() {
 				if (this.primary_key)
 					return this.extra_kwargs.limit;
-				return this.$parent.limit;	
+				return this.$parent.limit;
 			},
 			
 			set(limit) {
@@ -146,7 +146,7 @@ export default {
 			get() {
 				if (this.primary_key)
 					return this.extra_kwargs.offset;
-				return this.$parent.offset;	
+				return this.$parent.offset;
 			},
 			
 			set(offset) {
@@ -217,7 +217,7 @@ export default {
 
 		change_select(event) {
 			var {name, value} = event.target;
-			name = name.split(/[\[\]]+/g).slice(1, -1);			
+			name = name.split(/[\[\]]+/g).slice(1, -1);
 			if (value.match(/regexp_like/)) {
 				if (!this.operator.regexp_like)
 					this.operator.regexp_like = {};
@@ -248,11 +248,11 @@ export default {
 		},
 		
 		operators(Type){
-			if (is_number(Type))
+			if (is_numeric(Type))
 				return ["=", "!=", ">", "<", ">=", "<="];
 			
 			var operators = [
-				"regexp", "like", "regexp binary", "like binary", "=", "regexp_like", 
+				"regexp", "like", "regexp binary", "like binary", "=", "regexp_like", "find_in_set",
 				"not regexp", "not like", "not regexp binary", "not like binary", "!=", "not regexp_like"
 			];
 
@@ -280,7 +280,7 @@ export default {
 
 			if (is_json(Type)) {
 				if (this.style[Field])
-					return '='; 
+					return '=';
 				return 'regexp';
 			}
 
@@ -315,7 +315,7 @@ export default {
 		click(event){
 			var Field = event.target.textContent;
 			if (this.json_extract[Field]){
-				delete this.json_extract[Field]; 
+				delete this.json_extract[Field];
 			}
 			else{
 				this.json_extract[Field] = ".";
@@ -343,7 +343,7 @@ export default {
 
 button[type=button]{
 	font-style: normal;
-	font-size: 1em;	
+	font-size: 1em;
 	font-weight: normal;
 	font-family: Consolas;
 	background-color: inherit;

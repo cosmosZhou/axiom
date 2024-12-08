@@ -1,2 +1,2 @@
-from . import simplify
 from . import retain
+from . import simp

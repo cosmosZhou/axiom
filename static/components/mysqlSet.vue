@@ -35,7 +35,6 @@
 <script>
 console.log('import mysqlSet.vue');
 //set password = '123456';
-import {is_number, is_enum, is_string, is_json} from "../js/mysql.js"
 
 export default {
 	components: {},
@@ -61,7 +60,7 @@ export default {
 	computed: {
 		password: {
 			get() {
-				return this.value.set.eq[1]?? '';	
+				return this.value.set.eq[1]?? '';
 			},
 			
 			set(password) {
@@ -99,7 +98,7 @@ export default {
 
 		is_leaf() {
 			return this.$parent.is_leaf;
-		},		
+		},
 		
 		numericFields() {
 			return this.$parent.numericFields;
@@ -192,7 +191,7 @@ export default {
 				}
 					
 				break;
-			}	
+			}
 		},
 
 		blur_input(event, print) {
@@ -212,7 +211,7 @@ export default {
 		    mounted(el, binding) {
 		    	el.focus();
 		    },
-		},		
+		},
 	},
 }
 </script>

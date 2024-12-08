@@ -1,2 +1,2 @@
-from . import to
-from . import reducedSum
+from . import ReducedSum
+from . import eq

@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self, index=0, offset=None):
-    from axiom.algebra.sum.limits.subs.offset import limits_subs
+    from Axiom.Algebra.Sum.limits.subs.offset import limits_subs
     return Equal(self, limits_subs(Sup, self, index, offset), evaluate=False)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, a, b, t = Symbol(real=True)
     f = Function(real=True)
@@ -20,14 +20,14 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed
 
-    Eq <<= algebra.eq.then.et.squeeze.apply(Eq[-1]), Eq[0].reversed.subs(Eq[-1])
+    Eq <<= Algebra.Eq.to.And.squeeze.apply(Eq[-1]), Eq[0].reversed.subs(Eq[-1])
 
-    Eq <<= algebra.sup_le.then.all.le.apply(Eq[-3]), algebra.sup_ge.then.all.any.gt.apply(Eq[-2]), algebra.eq.of.et.squeeze.apply(Eq[-1])
+    Eq <<= Algebra.LeSup.to.All.Le.apply(Eq[-3]), Algebra.GeSup.to.All.Any.Gt.apply(Eq[-2]), Algebra.Eq.of.And.squeeze.apply(Eq[-1])
 
-    Eq <<= algebra.sup_le.of.all.le.apply(Eq[-2]), algebra.sup_ge.of.all_any_gt.apply(Eq[-1])
+    Eq <<= Algebra.LeSup.of.All.Le.apply(Eq[-2]), Algebra.GeSup.of.All_Any_Gt.apply(Eq[-1])
 
-    Eq << algebra.all.of.all.limits.subs.offset.apply(Eq[-2], -t)
-    Eq << Eq[-1].this.expr.apply(algebra.any.of.any.limits.subs.offset, -t)
+    Eq << Algebra.All.of.All.limits.subs.offset.apply(Eq[-2], -t)
+    Eq << Eq[-1].this.expr.apply(Algebra.Any.of.Any.limits.subs.offset, -t)
 
 
 

@@ -27,7 +27,7 @@ def apply(self, *new_weights):
 
 @prove
 def prove(Eq):
-    from axiom import stats
+    from Axiom import Stats
 
     D = Symbol(integer=True, positive=True)
     # D denotes the size of the trainable weights
@@ -36,11 +36,11 @@ def prove(Eq):
     f = Function(real=True, shape=())
     Eq << apply(Expectation[x:θ](f(x)), θ_quote)
 
-    Eq << Eq[-1].this.lhs.apply(stats.expect.to.integral)
+    Eq << Eq[-1].this.lhs.apply(Stats.Expect.eq.Integral)
 
-    Eq << Eq[-1].this.rhs.apply(stats.expect.to.integral)
+    Eq << Eq[-1].this.rhs.apply(Stats.Expect.eq.Integral)
 
-    
+
 
 
 if __name__ == '__main__':

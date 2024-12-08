@@ -85,13 +85,13 @@ function find_and_jump(event) {
 	}
 	else {
 		switch (module) {
-			case 'algebra':
-			case 'calculus':
-			case 'discrete':
-			case 'geometry':
-			case 'keras':
-			case 'sets':
-			case 'stats':
+			case 'Algebra':
+			case 'Calculus':
+			case 'Discrete':
+			case 'Geometry':
+			case 'Keras':
+			case 'Sets':
+			case 'Stats':
 				href = `/${user}/?module=${module}`;
 				break;
 			default:

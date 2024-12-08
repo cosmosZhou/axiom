@@ -1,1 +1,2 @@
-from . import eq_min
+from . import Eq_Min
+from . import Eq_Min

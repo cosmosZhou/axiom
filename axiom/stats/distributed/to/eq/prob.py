@@ -13,16 +13,20 @@ def apply(self, var=None):
     return Equal(Probability(Equal(expr, var)), dist(var), evaluate=False)
 
 
-@prove(provable=False)
+@prove
 def prove(Eq):
+    from Axiom import Stats
+
     x = Symbol(real=True, random=True)
     μ = Symbol(real=True)
     σ = Symbol(positive=True)
     Eq << apply(Distributed(x, NormalDistribution(μ, σ)))
 
-    
+    Eq << Eq[0].this.apply(Stats.Distributed.equ.Eq.Prob)
+
+
 
 
 if __name__ == '__main__':
     run()
-# created on 2023-04-10
+# created on 2023-04-30

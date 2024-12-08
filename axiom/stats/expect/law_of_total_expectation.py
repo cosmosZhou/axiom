@@ -9,7 +9,7 @@ def rewrite(self):
             cond_outer = {given_outer}
         else:
             cond_outer = given_outer.of(And)
-        
+
         vars_given_dict = {}
         for eq in cond_outer:
             x, x_var = eq.of(Equal)
@@ -19,7 +19,7 @@ def rewrite(self):
     else:
         given_outer = None
         vars_given_dict = {}
-        
+
     ((expr, given), *limits_inner) = expr.of(Expectation[Conditioned])
     vars_inner = {v for v, *_ in limits_inner if v.is_random}
     vars_outer = {v for v, *_ in limits_outer}
@@ -39,7 +39,7 @@ def rewrite(self):
             assert x_var == x.surrogate
             assert x in vars_outer
         else:
-            assert x_var == vars_given_dict[x] 
+            assert x_var == vars_given_dict[x]
 
     vars_weighted = set()
     assert vars_given & vars_outer == vars_given
@@ -86,11 +86,11 @@ def rewrite(self):
     vars = {v for v, *_ in limits}
     if (ret := std.deleteIndices(limits_weights, lambda limit: limit[0] in vars)) is not None:
         limits_weights = ret
-        
+
     rhs = Expectation(expr, *limits, *limits_weights, given=given_outer)
     assert rhs.random_symbols == self.random_symbols
     return rhs
-    
+
 @apply
 def apply(self):
     return Equal(self, rewrite(self))
@@ -98,24 +98,24 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import stats, calculus
+    from Axiom import Stats, Calculus
 
     x, y = Symbol(real=True, random=True)
     f = Function(real=True)
     Eq << apply(Expectation(Expectation(f(x, y) | y.surrogate)))
 
-    Eq << Eq[-1].this.lhs.apply(stats.expect.to.integral)
+    Eq << Eq[-1].this.lhs.apply(Stats.Expect.eq.Integral)
 
-    Eq << Eq[-1].this.lhs.find(Expectation).apply(stats.expect.to.integral)
+    Eq << Eq[-1].this.lhs.find(Expectation).apply(Stats.Expect.eq.Integral)
 
-    Eq << Eq[-1].this.find(Mul[Integral]).apply(calculus.mul.to.integral)
+    Eq << Eq[-1].this.find(Mul[Integral]).apply(Calculus.Mul.eq.Integral)
 
-    Eq << Eq[-1].this.find(Probability[Conditioned]).apply(stats.prob.to.div.prob.bayes)
+    Eq << Eq[-1].this.find(Probability[Conditioned]).apply(Stats.Prob.eq.Div.Prob.bayes)
 
-    Eq << Eq[-1].this.lhs.apply(stats.integral.to.expect)
+    Eq << Eq[-1].this.lhs.apply(Stats.Integral.eq.Expect)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

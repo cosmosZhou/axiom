@@ -10,12 +10,12 @@ def apply(le_a, le_b):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y, b = Symbol(real=True, given=True)
     Eq << apply(x <= y, x <= b)
 
-    Eq << algebra.le_min.then.et.le.apply(Eq[2])
+    Eq << Algebra.Le_Min.to.And.Le.apply(Eq[2])
 
 
 if __name__ == '__main__':

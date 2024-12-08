@@ -419,7 +419,7 @@ class NotElement(BinaryCondition):
         return 5, 2, cls.__name__
 
 
-class Contains(BinaryCondition):
+class Contain(BinaryCondition):
     """
     Asserts that x is an element of the set S
 
@@ -428,13 +428,13 @@ class Contains(BinaryCondition):
 
     >>> from sympy import Symbol, Integer, S
     >>> from sympy.sets.contains import Element
-    >>> Contains(S.Integers, Integer(2))
+    >>> Contain(S.Integers, Integer(2))
     True
-    >>> Contains(S.Naturals, Integer(-2))
+    >>> Contain(S.Naturals, Integer(-2))
     False
     >>> i = Symbol('i', integer=True)
-    >>> Contains(S.Naturals, i)
-    Contains(Naturals, i)
+    >>> Contain(S.Naturals, i)
+    Contain(Naturals, i)
 
     References
     ==========
@@ -455,7 +455,7 @@ class Contains(BinaryCondition):
     def _sympystr(self, p):
         # unicodedata.lookup('CONTAINS AS MEMBER'), '\N{CONTAINS AS MEMBER}'
 #         return "%s \N{CONTAINS AS MEMBER} %s" % tuple(p._print(a) for a in self.args)
-        return "Contains(%s, %s)" % tuple(p._print(a) for a in self.args)
+        return "Contain(%s, %s)" % tuple(p._print(a) for a in self.args)
 
     def _pretty(self, p):
         from sympy.printing.pretty.stringpict import prettyForm, stringPict
@@ -513,7 +513,7 @@ class Contains(BinaryCondition):
         return BinaryCondition.domain_conditioned(self, x)
 
 
-class NotContains(BinaryCondition):
+class NotContain(BinaryCondition):
     """
     Asserts that x is not an element of the set S
 
@@ -535,7 +535,7 @@ class NotContains(BinaryCondition):
 
     .. [1] https://en.wikipedia.org/wiki/Element_%28mathematics%29
     """
-    invert_type = Contains
+    invert_type = Contain
 
     def __new__(cls, *args, **assumptions):
         if len(args) == 1 and isinstance(args[0], frozenset):
@@ -549,7 +549,7 @@ class NotContains(BinaryCondition):
 
     def _sympystr(self, p):
 #         return "%s \N{DOES NOT CONTAIN AS MEMBER} %s" % tuple(p._print(a) for a in self.args)
-        return "NotContains(%s, %s)" % tuple(p._print(a) for a in self.args)
+        return "NotContain(%s, %s)" % tuple(p._print(a) for a in self.args)
 
     def _pretty(self, p):
         from sympy.printing.pretty.stringpict import prettyForm, stringPict
@@ -596,10 +596,10 @@ class NotContains(BinaryCondition):
         return BinaryCondition.domain_conditioned(self, x)
         
         
-Contains.invert_type = NotContains
+Contain.invert_type = NotContain
 Element.invert_type = NotElement
 
-Element.reversed_type = Contains
-NotElement.reversed_type = NotContains
-Contains.reversed_type = Element
-NotContains.reversed_type = NotElement
+Element.reversed_type = Contain
+NotElement.reversed_type = NotContain
+Contain.reversed_type = Element
+NotContain.reversed_type = NotElement

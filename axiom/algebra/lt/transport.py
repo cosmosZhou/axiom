@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(given, lhs=-1, rhs=None):
-    from axiom.algebra.eq.transport import transport
+    from Axiom.Algebra.Eq.transport import transport
     return transport(Less, given, lhs=lhs, rhs=rhs)
 
 

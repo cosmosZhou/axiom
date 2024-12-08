@@ -1,2 +1,2 @@
-from . import cartesianSpace
-from . import slice
+from . import Slice
+from . import CartesianSpace

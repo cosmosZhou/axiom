@@ -1,3 +1,3 @@
-from . import eq
-from . import all_le
-from . import all_ge
+from . import Eq
+from . import All_Ge
+from . import All_Le

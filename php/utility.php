@@ -18,7 +18,7 @@ function py_to_module($py)
     for (;;) {
         $dirname = dirname($pythonFile);
         $basename = basename($pythonFile);
-        if (std\equals($basename, 'axiom')) {
+        if (std\equals($basename, 'Axiom')) {
             break;
         }
 
@@ -65,7 +65,7 @@ function module_to_path($theorem)
 {
     $theorem = str_replace(".", "/", $theorem);
 
-    return dirname(dirname(__file__)) . "/axiom/$theorem";
+    return dirname(dirname(__file__)) . "/Axiom/$theorem";
 }
 
 function reference(&$value)
@@ -165,7 +165,7 @@ function analyze_apply($py, &$i)
 
 function detect_axiom(&$statement)
 {
-    // Eq << Eq.x_j_subset.apply(discrete.sets.subset.nonempty, Eq.x_j_inequality, evaluate=False)
+    // Eq << Eq.x_j_subset.apply(Discrete.Sets.subset.nonempty, Eq.x_j_inequality, evaluate=False)
     if (preg_match('/\.apply\((.+)\)/', $statement, $matches)) {
         $theorem = preg_split("/\s*,\s*/", $matches[1], - 1, PREG_SPLIT_NO_EMPTY)[0];
         // error_log('create_a_tag: ' . __LINE__);
@@ -181,7 +181,7 @@ function detect_axiom_given_theorem(&$theorem, &$statement)
 {
     if (startsWith($theorem, '.') || startsWith($theorem, 'Eq')) {
         // consider the case
-        // Eq[-2].this.args[0].apply(algebra.cond.cond.then.et, invert=True, swap=True)
+        // Eq[-2].this.args[0].apply(Algebra.Cond.Cond.to.And, invert=True, swap=True)
         return detect_axiom($statement);
     }
 
@@ -258,7 +258,7 @@ function yield_from_py($python_file)
     if ($i < $count) {
         $statement = $py[$i];
 
-        if (preg_match('/^    from axiom import (.+)/', $statement, $matches)) {
+        if (preg_match('/^    from Axiom import (.+)/', $statement, $matches)) {
             $section = explode(", ", $matches[1]);
             yield [
                 'line' => $i,
@@ -353,7 +353,7 @@ function yield_from_py($python_file)
                 $dict = [];
                 foreach ($matches as $module) {
                     $module = $module[0];
-                    if (std\endsWith($module, '.apply')) {
+                    if (str_ends_with($module, '.apply')) {
                         $module = substr($module, 0, - 6);
                     }
                     assert(is_string($module), "module is not a string: $module, statement = $statement");
@@ -387,7 +387,7 @@ function yield_from_py($python_file)
 
 function match_section($statement, &$matches)
 {
-    return preg_match_all('/\b(?:algebra|sets|calculus|discrete|geometry|keras|stats)(?:\.\w+)+/', $statement, $matches, PREG_SET_ORDER);
+    return preg_match_all('/\b(?:Algebra|Sets|Calculus|Discrete|Geometry|Keras|Stats)(?:\.\w+)+/', $statement, $matches, PREG_SET_ORDER);
 }
 
 function has_unterminated_parantheses($statement) {
@@ -428,7 +428,7 @@ function determine_section($proveCodes)
     $section = new std\Set($section);
     $section = $section->jsonSerialize();
     $section = implode(", ", $section);
-    $section = "from axiom import $section";
+    $section = "from Axiom import $section";
     return $section;
 }
 
@@ -562,7 +562,7 @@ function delete_from_init($package, $theorem = null)
         error_log("folder = $folder");
         $subFolder = "$folder/$theorem";
         foreach (std\list_all_files($folder, 'py') as [$pyFile, $php]) {
-//             if (std\startsWith($subFolder)){
+//             if (str_starts_with($subFolder)){
 //                 error_log("detect py file $pyFile within the deleted $subFolder, so continue the process!");
 //                 continue;
 //             }
@@ -861,7 +861,7 @@ function fetch_codes($module, $fetch_prove = false)
     if ($fetch_prove) {
         $prove = [];
         $line = $py[$i];
-        if (preg_match('/^    from axiom import \w+/', $line, $matches)) {
+        if (preg_match('/^    from Axiom import \w+/', $line, $matches)) {
             ++ $i;
         }
 
@@ -871,7 +871,7 @@ function fetch_codes($module, $fetch_prove = false)
                 break;
             }
 
-            if (std\startsWith($line, '    ')) {
+            if (str_starts_with($line, '    ')) {
                 $line = substr($line, 4);
             }
 
@@ -891,12 +891,12 @@ function fetch_codes($module, $fetch_prove = false)
 
 function axiom_directory()
 {
-    return dirname(dirname(__file__)) . "/axiom/";
+    return dirname(dirname(__file__)) . "/Axiom/";
 }
 
-function select_axiom_by_state($user, $state)
+function select_axiom_by_state($user, $state, $limit=100)
 {
-    $result = get_rows("select axiom from axiom where user = '$user' and state = '$state' order by axiom", MYSQLI_NUM);
+    $result = get_rows("select axiom from axiom where user = '$user' and state = '$state' order by axiom limit $limit", MYSQLI_NUM);
     $array = [];
     foreach ($result as &$value) {
         $array[] = $value[0];
@@ -904,7 +904,7 @@ function select_axiom_by_state($user, $state)
     return $array;
 }
 
-function select_axiom_by_regex($user, $regex, $binary = false)
+function select_axiom_by_regex($user, $regex, $binary = false, $limit=100)
 {
     if ($binary) {
         $binary = " binary ";
@@ -912,8 +912,8 @@ function select_axiom_by_regex($user, $regex, $binary = false)
         $binary = " ";
     }
 
-    $sql = "select axiom from axiom where user = '$user' and axiom regexp$binary'$regex'";
-    // echo $sql . "<br>";
+    $sql = "select axiom from axiom where user = '$user' and axiom regexp$binary'$regex' limit $limit";
+    error_log('sql = '.$sql);
 
     $result = get_rows($sql, MYSQLI_NUM);
     $array = [];
@@ -923,7 +923,7 @@ function select_axiom_by_regex($user, $regex, $binary = false)
     return $array;
 }
 
-function select_axiom_by_like($user, $keyword, $binary = false)
+function select_axiom_by_like($user, $keyword, $binary = false, $limit=100)
 {
     if ($binary) {
         $binary = " binary ";
@@ -932,7 +932,7 @@ function select_axiom_by_like($user, $keyword, $binary = false)
     }
 
     $keyword = str_replace('_', '\_', $keyword);
-    $sql = "select axiom from axiom where user = '$user' and axiom like$binary'%$keyword%'";
+    $sql = "select axiom from axiom where user = '$user' and axiom like$binary'%$keyword%' limit $limit";
     // echo $sql . "<br>";
 
     $result = get_rows($sql, MYSQLI_NUM);
@@ -1070,7 +1070,7 @@ function suggest($user, $prefix, $phrase)
         $dict = [];
 
         foreach ($phrases as &$word) {
-            $dict[$word] = std\startsWith($word, $phrase);
+            $dict[$word] = str_starts_with($word, $phrase);
         }
 
         arsort($dict);
@@ -1238,9 +1238,9 @@ function replace_with_callee($user, $old, $new)
         $pyFile->preg_replace($old_regex_hierarchy, $new);
     }
 
-    $old_regex = "(?<=from axiom\.)$old_regex(?= import \w+)";
+    $old_regex = "(?<=from Axiom\.)$old_regex(?= import \w+)";
     // php doesn't support variable-lenth looking-behind assertion
-    // $old_regex = "(?<=^ *from axiom\.)$old_regex(?= import \w+)";
+    // $old_regex = "(?<=^ *from Axiom\.)$old_regex(?= import \w+)";
     foreach (get_rows("select caller from `function` where user = '$user' and callee = '$old'", MYSQLI_NUM) as [$caller]) {
         $pyFile = module_to_py($caller);
         $pyFile = new Text($pyFile);

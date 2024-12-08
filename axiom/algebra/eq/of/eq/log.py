@@ -11,13 +11,13 @@ def apply(imply):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     x = Symbol(real=True)
     f, g = Function(shape=(), real=True, positive=True)
 
     Eq << apply(Equal(f(x), g(x)))
 
-    Eq << Eq[1].apply(algebra.eq.then.eq.exp)
+    Eq << Eq[1].apply(Algebra.Eq.to.Eq.Exp)
 
 if __name__ == '__main__':
     run()

@@ -40,6 +40,10 @@
 				<th>Table</th>
 				<td><input name=auth[table] v-model=table autocapitalize=off /></td>
 			</tr>
+			<tr>
+				<th>Authorization</th>
+				<td><input name=auth[Authorization] v-model=Authorization autocapitalize=off placeholder="Authorization for ChatGPT"/></td>
+			</tr>
 			<p>
 				<input type=submit value=Login />
 				<label>
@@ -50,11 +54,11 @@
 		<h3>privileges allocated:</h3>
 		<hr>
 		<ul>
-			<li>A user named <font color=blue>test</font> has <font color=red>select</font> privileges of dataset created by users of other users</li>
-			<li>A user named <font color=blue>user</font> has <font color=red>select</font> privileges of dataset created by users of other users</li>
-			<li>A user named <font color=blue>prod</font> has <font color=red>select/insert/delete/update</font> privileges of dataset created by users of other users</li>
-			<li>A user named <font color=blue>boss</font> has <font color=red>select/insert/delete/update</font> privileges of dataset created by users of other users</li>
-			<li>A user named <font color=blue>root</font> has <font color=red>select/insert/delete/update/create/alter/drop</font> privileges of dataset created by users of other users</li>
+			<li>A user named <font color=blue>test</font> has <font color=red>select</font> privileges of dataset created by other users</li>
+			<li>A user named <font color=blue>user</font> has <font color=red>select</font> privileges of dataset created by other users</li>
+			<li>A user named <font color=blue>prod</font> has <font color=red>select/insert/delete/update</font> privileges of dataset created by other users</li>
+			<li>A user named <font color=blue>boss</font> has <font color=red>select/insert/delete/update</font> privileges of dataset created by other users</li>
+			<li>A user named <font color=blue>root</font> has <font color=red>select/insert/delete/update/create/alter/drop</font> privileges of dataset created by other users</li>
 		</ul>		
 	</form>
 </template>
@@ -128,6 +132,16 @@ export default {
     		},
     	},
 
+    	Authorization: {
+    		get() {
+    			return this.auth.Authorization;
+    		},
+    		
+    		set(Authorization) {
+    			Object.assign(this.auth, {Authorization});
+    		},
+    	},
+
     	permanent: {
     		get() {
     			return this.auth.permanent;
@@ -136,7 +150,7 @@ export default {
     		set(permanent) {
     			Object.assign(this.auth, {permanent});
     		},
-    	},    	
+    	},
     },
 
     created() {
@@ -146,7 +160,7 @@ export default {
     	}
     	
     	if (!this.table)
-    		this.table = 'rlhf';
+    		this.table = 'reward';
     },
     
 	directives: {
@@ -155,8 +169,8 @@ export default {
 		    mounted(el, binding) {
 		    	el.focus();
 		    },
-		},		
-	},		
+		},
+	},
     
 }
 </script>

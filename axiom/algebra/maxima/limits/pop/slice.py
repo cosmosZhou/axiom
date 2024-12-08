@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self, index=0):
-    from axiom.algebra.sum.limits.pop.slice import rewrite
+    from Axiom.Algebra.Sum.limits.pop.Slice import rewrite
     return Equal(self, rewrite(Maxima, self, index))
 
 

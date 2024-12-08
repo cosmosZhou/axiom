@@ -3,21 +3,21 @@ from util import *
 
 @apply
 def apply(self, index=0):
-    from axiom.algebra.sum.limits.concat import rewrite
+    from Axiom.Algebra.Sum.limits.concat import rewrite
     return Equal(self, rewrite(Maxima, self, index))
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
-    
+    from Axiom import Algebra
+
     n = Symbol(integer=True, positive=True)
     i = Symbol(domain=Range(n - 1))
     x = Symbol(integer=True, shape=(oo,))
     f = Function(real=True, shape=())
     Eq << apply(Maxima[x[i], x[i + 1:n + 1]](f(x[i:n])))
-    
-    Eq << Eq[0].this.rhs.apply(algebra.maxima.limits.shift.slice)
+
+    Eq << Eq[0].this.rhs.apply(Algebra.Maxima.limits.shift.Slice)
 
 
 if __name__ == '__main__':

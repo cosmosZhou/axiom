@@ -18,7 +18,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import sets, algebra
+    from Axiom import Sets, Algebra
     n, m = Symbol(integer=True, positive=True)
 
     x = Symbol(complex=True, shape=(n,))
@@ -28,9 +28,9 @@ def prove(Eq):
 
     Eq << apply(imageset(x, f(x), Equal(f(x), g(x)) & (h(x) > 0)))
 
-    Eq << Eq[0].this.lhs.apply(sets.cup.piece)
+    Eq << Eq[0].this.lhs.apply(Sets.Cup.Piece)
 
-    Eq << Eq[-1].this.lhs.expr.apply(algebra.piece.subs)
+    Eq << Eq[-1].this.lhs.expr.apply(Algebra.Piece.subs)
 
 
 if __name__ == '__main__':

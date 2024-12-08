@@ -31,7 +31,7 @@ Every value in mathematical proving is in strict sense mathematical value, there
 * Theorem denotes a theorem that is provable or an axiom that is unprovable ;      
 The inputs of theorems must be expression(s) or condition(s), its outputs are necessarily condition(s). It is stored in a mysql database as a theorem knowledge bank. Its main usage is as follows: Theorem.apply(...); for instance:    
 a, b, c = Symbol(complex=True)  
-[algebra.poly_is_zero.then.et.infer.cubic.apply](../?module=algebra.poly_is_zero.then.et.infer.cubic)(Equal(x ** 3 + a * x ** 2 + b * x + c, 0), x=x), denotes the determination process of a cubic equation within the domain of Complexes.     
+[Algebra.Add_Eq_0.to.And.Imply.cubic.apply](../?module=Algebra.Add_Eq_0.to.And.Imply.cubic)(Equal(x ** 3 + a * x ** 2 + b * x + c, 0), x=x), denotes the determination process of a cubic equation within the domain of Complexes.     
 
 The number system set is defined as  
 [prime](https://en.wikipedia.org/wiki/Prime_number) ⊂ [natural](https://en.wikipedia.org/wiki/Natural_number) ⊂ [integer](https://en.wikipedia.org/wiki/Integer) ⊂ extended_integer  

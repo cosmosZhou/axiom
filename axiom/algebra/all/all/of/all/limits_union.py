@@ -12,13 +12,13 @@ def apply(all_a, all_b):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     e = Symbol(real=True)
     f, g = Function(integer=True)
     Eq << apply(All[e:g(e) > 0](f(e) > 0), All[e:g(e) < 0](f(e) > 0))
 
-    Eq << algebra.all.then.et.all.split.apply(Eq[-1], cond=g(e) < 0)
+    Eq << Algebra.All.to.And.All.split.apply(Eq[-1], cond=g(e) < 0)
 
 
 

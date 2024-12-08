@@ -212,7 +212,7 @@ class Inference:
     
     def apply(self, axiom, *args, split=True, **kwargs):
         if self.is_And:
-            if axiom.__name__.split(sep='.', maxsplit=3)[2] == 'et':
+            if axiom.__name__.split(sep='.', maxsplit=3)[2] == 'And':
                 split = False
                 
             if split: 
@@ -264,8 +264,10 @@ class Inference:
                 if kwargs.get('simplify', True):
                     function = function.simplify()
                 return function
-            
+        
         eqs = axiom.apply(self, *args, **kwargs)
+        if eqs is None:
+            return
         if isinstance(eqs, (list, tuple)):
             eqs = And(*eqs, equivalent=eqs)
         elif eqs.is_Equivalent:
@@ -972,11 +974,11 @@ def process_given(given, value):
                 case 1:
                     given[0].plausible = False
                 case 2:
-                    from sympy import Infer
-                    if Infer(given[0], given[1], plausible=True).plausible is None:
+                    from sympy import Imply
+                    if Imply(given[0], given[1], plausible=True).plausible is None:
                         given[1].plausible = False
                     
-                    if Infer(given[1], given[0], plausible=True).plausible is None:
+                    if Imply(given[1], given[0], plausible=True).plausible is None:
                         given[0].plausible = False
         else:
             given.plausible = False

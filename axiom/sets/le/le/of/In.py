@@ -1,0 +1,28 @@
+from util import *
+
+
+@apply
+def apply(le0, le1):
+    x, a = le0.of(LessEqual)
+    b, _x = le1.of(LessEqual)
+    if x != _x:
+        a, x, S[x], b = _x, b, a, x
+
+    return Element(x, Interval(b, a, left_open=False, right_open=False))
+
+
+@prove
+def prove(Eq):
+    from Axiom import Sets
+
+    a, b, x = Symbol(real=True)
+    Eq << apply(a <= x, x <= b)
+
+    Eq << Sets.In_Interval.to.And.apply(Eq[-1])
+
+    Eq << Eq[-1].reversed
+
+
+if __name__ == '__main__':
+    run()
+# created on 2021-05-22

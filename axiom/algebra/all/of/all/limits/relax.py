@@ -35,7 +35,7 @@ def apply(given, limit):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     A, B = Symbol(etype=dtype.real)
     e = Symbol(real=True)
     f = Function(shape=(), integer=True)
@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << ~Eq[0]
 
-    Eq << algebra.all.any.then.any.et.apply(Eq[1], Eq[-1])
+    Eq << Algebra.All.Any.to.Any.And.apply(Eq[1], Eq[-1])
 
 
 if __name__ == '__main__':

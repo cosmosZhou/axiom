@@ -16,13 +16,14 @@ def prove(Eq):
 
     Eq <<= Eq[-1] & Eq[1]
 
-    
+
 
 
 if __name__ == '__main__':
     run()
 
-from . import one
 # created on 2021-08-18
 # updated on 2023-06-02
 from . import relax
+del One
+from . import One

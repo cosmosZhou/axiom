@@ -9,15 +9,15 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, positive=True)
     x = Symbol(complex=True, shape=(n,))
     Eq << apply(Norm(x))
 
-    Eq << Eq[0].this.lhs.apply(algebra.norm.to.sqrt)
+    Eq << Eq[0].this.lhs.apply(Algebra.Norm.eq.Sqrt)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.norm.to.sqrt)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Norm.eq.Sqrt)
 
 
 if __name__ == '__main__':

@@ -9,24 +9,24 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
     A, B = Symbol(etype=dtype.integer)
     x, y = Symbol(integer=True)
     f = Function(etype=dtype.real)
 
     Eq << apply(Cap[x:A, y:B](f(x, y)))
 
-    Eq << Eq[0].this.rhs.expr.apply(sets.piece.to.union)
+    Eq << Eq[0].this.rhs.expr.apply(Sets.Piece.eq.Union)
 
     Eq << Equal(Cap[x](Eq[-1].rhs.expr), Cap[x:A](f(x, y) | Eq[-1].rhs.expr.args[1]), plausible=True)
 
-    Eq << Eq[-1].this.lhs.apply(sets.cap.simplify.piece)
+    Eq << Eq[-1].this.lhs.apply(Sets.Cap.simp.Piece)
 
-    Eq << sets.eq.then.eq.cap.apply(Eq[-1], (y,))
+    Eq << Sets.Eq.to.Eq.Cap.apply(Eq[-1], (y,))
 
     Eq << Eq[1].this.rhs.subs(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.apply(sets.cap.to.intersect.st.piece)
+    Eq << Eq[-1].this.rhs.apply(Sets.Cap.eq.Intersect.st.Piece)
 
 
 if __name__ == '__main__':

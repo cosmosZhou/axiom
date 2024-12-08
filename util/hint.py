@@ -77,12 +77,12 @@ keywords += ['axiom',
              'uncountable', 
              'zero']
 
-sections = ['algebra', 'calculus', 'discrete', 'geometry', 'keras', 'sets', 'stats']
+sections = ['Algebra', 'Calculus', 'Discrete', 'Geometry', 'Keras', 'Sets', 'Stats']
 
 from sympy import *
 import sympy
 import re
-from axiom import *
+from Axiom import *
 
 def local_eval(python, __globals__):    
     try:

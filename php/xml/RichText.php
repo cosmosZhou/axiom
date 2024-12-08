@@ -80,7 +80,7 @@ require_once __DIR__ . '/unescape.php';
 // count(\1)
 
 // ((?:[^() ]|\([^()]*(?:\([^()]*(?:\([^()]*(?:\([^()]*(?:\([^()]*(?:\([^()]*(?:\([^()]*(?:\([^()]*\)[^()]*)*\)[^()]*)*\)[^()]*)*\)[^()]*)*\)[^()]*)*\)[^()]*)*\)[^()]*)*\))+)->slice\(((?:[^()]|\([^()]*(?:\([^()]*(?:\([^()]*(?:\([^()]*(?:\([^()]*(?:\([^()]*(?:\([^()]*(?:\([^()]*\)[^()]*)*\)[^()]*)*\)[^()]*)*\)[^()]*)*\)[^()]*)*\)[^()]*)*\)[^()]*)*\))+)\)
-// std\\slice(\1, \2)
+// std\\substring(\1, \2)
 class XMLNode
 {
 
@@ -251,7 +251,7 @@ class XMLNode
             while (std\isspace(std\get($logicalText, $start)))
                 ++ $start;
 
-            if (! std\startsWith($logicalText, $seg, $start)) {
+            if (! str_starts_with(std\slice($logicalText, $start), $seg)) {
                 $sCumulated = '';
                 $hit = false;
                 for ($i = $start; $i < $totalLength; ++ $i) {
@@ -1303,7 +1303,7 @@ class TagSingle extends XMLText
                 $text = ' ';
                 break;
             case 'br':
-                $text = '\n';
+                $text = "\n";
                 break;
             default:
                 $text = '?';

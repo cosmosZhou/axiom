@@ -1,3 +1,3 @@
-from . import et
-from . import el
-from . import eq
+from . import Eq
+from . import In
+from . import And

@@ -10,13 +10,13 @@ def apply(imply):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
     e = Symbol(integer=True, given=True)
     B, A = Symbol(etype=dtype.integer, given=True)
 
     Eq << apply(NotElement(e, B | A))
 
-    Eq << sets.notin.notin.then.notin.union.apply(Eq[1], Eq[2])
+    Eq << Sets.NotIn.NotIn.to.NotIn.Union.apply(Eq[1], Eq[2])
 
 
 if __name__ == '__main__':

@@ -608,8 +608,10 @@ function scan_text_with_entity($text, &$entity, $regexp, $indexCaptured, $op, $t
     return $hit;
 }
 
-function scan_data($sql, &$Field2Type, &$scanCriteria, $kwargs, $primary_key, $update = false)
+function scan_data($sql, &$Field2Type, $kwargs, $update = false)
 {
+    $scanCriteria = $Field2Type['__scan_criteria__'];
+    $primary_key = $Field2Type['__primary_key__'];
     global $data;
     if (preg_match("/(.+)( limit \d+)( offset \d+)?/", $sql, $m)) {
         $sql = $m[1];
@@ -656,12 +658,12 @@ function scan_data($sql, &$Field2Type, &$scanCriteria, $kwargs, $primary_key, $u
 
     global $database, $table;
     if (! $primary_keys) {
-        $sql = "select * from $database.${table} limit 0";
+        $sql = "select * from $database.$table limit 0";
     } elseif (count($primary_keys) == 1) {
-        $sql = "select * from $database.${table} where $primary_key = '$primary_keys[0]'";
+        $sql = "select * from $database.$table where $primary_key = '$primary_keys[0]'";
     } else {
         $primary_keys_str = implode(", ", array_map(fn ($key) => "'$key'", $primary_keys));
-        $sql = "select * from $database.${table} where $primary_key in ($primary_keys_str)";
+        $sql = "select * from $database.$table where $primary_key in ($primary_keys_str)";
     }
 
     return $sql;
@@ -674,15 +676,13 @@ function sample()
     if ($sample) {
         $length = count($data);
         $sample = (float)$sample;
-        if ($sample < 1) {
+        if ($sample < 1)
             $count = floor($sample * $length);
-        } else {
+        else
             $count = (int)$sample;
-        }
 
-        if ($count) {
+        if ($count)
             $data = $order == 'rand()' ? std\sample($data, $count) : std\slice($data, 0, $length, (int)($length / $count));
-        }
     }
 }
 
@@ -779,16 +779,17 @@ function get_where_dict(&$kwargs)
     return $where_dict;
 }
 
-function search_for_entity_field(&$where_dict, &$Field2Type, &$transform)
+function search_for_entity_field(&$where_dict, &$Field2Type)
 {
     foreach ($where_dict as $Field => [$operator, $operand]) {
-        if ($operand && ($operator == '=' || $operator == '!=') && mysql\is_json($Field2Type[$Field]) && $transform[$Field] == 'entity')
+        if ($operand && ($operator == '=' || $operator == '!=') && mysql\is_json($Field2Type[$Field]) && $Field2Type['__transform__'][$Field] == 'entity')
             return $Field;
     }
 }
 
-function search_for_text_field(&$where_dict, &$Field2Type, $primary_key, &$transform)
+function search_for_text_field(&$where_dict, &$Field2Type)
 {
+    $primary_key = $Field2Type['__primary_key__'];
     foreach ($where_dict as $Field => [$operator, $operand]) {
         if ($operand && preg_match("/regexp/", $operator)) {
 
@@ -796,18 +797,18 @@ function search_for_text_field(&$where_dict, &$Field2Type, $primary_key, &$trans
                 continue;
             }
 
-            if (mysql\is_varchar($Field2Type[$Field]) && ! $transform[$Field])
+            if (mysql\is_varchar($Field2Type[$Field]) && ! $Field2Type['__transform__'][$Field])
                 return $Field;
         }
     }
 }
 
-function search_for_syntax_field(&$set, &$where_dict, &$Field2Type, &$transform)
+function search_for_syntax_field(&$set, &$where_dict, &$transform)
 {
     if (! $transform)
         return;
 
-    if ($set) {
+    if ($set && array_key_exists('eq', $set)) {
         [$setter, $rhs] = $set['eq'];
         [$functor] = array_keys($rhs);
     }
@@ -821,22 +822,20 @@ function search_for_syntax_field(&$set, &$where_dict, &$Field2Type, &$transform)
     }
 }
 
-function search_for_scan_criteria(&$kwargs, &$Field2Type, $primary_key, &$transform)
+function search_for_scan_criteria(&$kwargs, &$Field2Type)
 {
     $where_dict = get_where_dict($kwargs);
-    $entityField = search_for_entity_field($where_dict, $Field2Type, $transform);
-    $textField = search_for_text_field($where_dict, $Field2Type, $primary_key, $transform);
-    $set = $kwargs['set'];
-    if ($set) {
+    $entityField = search_for_entity_field($where_dict, $Field2Type);
+    $textField = search_for_text_field($where_dict, $Field2Type);
+    if (($set = $kwargs['set']) && array_key_exists('eq', $set)) {
         [$setter, $rhs] = $set['eq'];
         [$functor] = array_keys($rhs);
         [$setter, $old, $new] = $rhs[$functor];
     }
 
-    $syntaxField = search_for_syntax_field($set, $where_dict, $Field2Type, $transform);
+    $transform = $Field2Type['__transform__'];
     $scanCriteria = [];
-
-    if ($syntaxField) {
+    if ($syntaxField = search_for_syntax_field($set, $where_dict, $Field2Type)) {
         if ($entityField || $textField) {
             if (preg_match("/^varchar\(\\d+\)$/", $Field2Type[$syntaxField], $m)) {
                 if ($where_dict[$syntaxField]) {
@@ -902,7 +901,7 @@ function search_for_scan_criteria(&$kwargs, &$Field2Type, $primary_key, &$transf
                             $i = preg_match('/binary/', $op) ? '' : 'i';
                         }
 
-                        [$value, $indexCaptured, $binary] = piece_together($textField);
+                        [$value, $indexCaptured, $binary] = piece_together($textField, $kwargs, $transform);
                         $scanCriteria[] = [$textField, [$value, $new, $indexCaptured, $binary], $i];
                     }
                 }
@@ -914,28 +913,119 @@ function search_for_scan_criteria(&$kwargs, &$Field2Type, $primary_key, &$transf
         }
     }
 
-    return $scanCriteria;
+    return $Field2Type['__scan_criteria__'] = $scanCriteria;
 }
 
-$physic2logic = ['eq' => '=', 'ne' => '!=', 'gt' => '>', 'lt' => '<', 'ge' => '>=', 'le' => '<=', 'invert' => '~', 'add' => '+', 'sub' => '-', 'mul' => '*', 'div' => '/', 'mod' => '%', 'AND' => '&', 'XOR' => '^', 'right_shift' => '>>', 'left_shift' => '<<', 'json_extract' => '->', 'json_extract_unquote' => '->>', 'regexp_binary' => 'regexp binary', 'like_binary' => 'like binary', 'not_regexp' => 'not regexp', 'not_like' => 'not like', 'not_regexp_binary' => 'not regexp binary', 'not_like_binary' => 'not like binary', 'not_regexp_like' => 'not regexp_like'];
+$physic2logic = [
+    'eq' => '=',
+    'ne' => '!=',
+    'gt' => '>',
+    'lt' => '<',
+    'ge' => '>=',
+    'le' => '<=',
+    'invert' => '~',
+    'add' => '+',
+    'sub' => '-',
+    'mul' => '*',
+    'div' => '/',
+    'mod' => '%',
+    'dot' => '.',
+    'bit_and' => '&',
+    'bit_xor' => '^',
+    'shr' => '>>',
+    'shl' => '<<',
+    'json_extract' => '->',
+    'json_extract_unquote' => '->>',
+    'regexp_binary' => 'regexp binary',
+    'like_binary' => 'like binary',
+    'not_in' => 'not in',
+    'not_regexp' => 'not regexp',
+    'not_like' => 'not like',
+    'not_regexp_binary' => 'not regexp binary',
+    'not_like_binary' => 'not like binary',
+    'not_regexp_like' => 'not regexp_like',
+    'is_not' => 'is not',
+    'union_all' => 'union all'
+];
 
-function &parse_statement(&$kwargs, &$Field2Type = null, &$transform = null)
+
+function parse_with(&$with, &$Field2Type, $recursive = false)
 {
-    $sql = '';
-    $with = $kwargs['with'];
+    $sql = 'with ';
+    if ($recursive)
+        $sql .= 'recursive ';
+
+    if (std\is_list($with))
+        $with = implode(", ", array_map(fn($with) => parse_expression($with, $Field2Type), $with));
+    else 
+        $with = parse_expression($with, $Field2Type);
+    return $sql.$with." ";
+}
+
+function &parse_statement(&$kwargs, &$Field2Type = null, &$return=null)
+{
+    $with = $with_recursive = $kwargs['with_recursive'];
+    if (!$with)
+        $with = $kwargs['with'];
     if ($with) {
-        $sql = 'with ';
-        $with = parse_expression($with, $Field2Type, $transform);
-        $sql .= "$with ";
+        if (std\is_list($with)) {
+            $with = parse_with($with, $Field2Type, $with_recursive);
+            if ($return)
+                $return[$with_recursive? 'with_recursive': 'with'] = $with;
+        }
+        else {
+            [$cte_name, $cte] = $with['as'];
+            $Field2Type['__cte__'] = $cte_name;
+            if ($with_recursive)
+                [$cte, $cte_recursive] = $cte['union']?? $cte['union_all'];
+
+            foreach ($cte['select'] as $field) {
+                if (is_array($field)) {
+                    if ($as = $field['as']) {
+                        [$value, $filed] = $as;
+                        $Field2Type[$filed] = mysql\dtype($value);
+                    }
+                    elseif (is_array($from = $cte['from'])) {
+                        if ($cross_join = $from['cross_join']) {
+                            if ($as = $cross_join[1]['as']) {
+                                [$json_table, $table_name] = $as;
+                                if ($json_table = $json_table['json_table']) {
+                                    if ($field_name = $field[$table_name]) {
+                                        foreach ($json_table[1][1]['columns'] as [$Field, $Type]) {
+                                            if ($Field == $field_name) {
+                                                if (is_array($Type) && strtolower($Type[0]) == 'for')
+                                                    $Type = 'int';
+                                                $Field2Type[$Field] = strtolower($Type);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+    
+            $with = parse_with($with, $Field2Type, $with_recursive);
+            if ($return)
+                $return[$with_recursive? 'with_recursive': 'with'] = $with;
+        }
+        $sql = $with;    
     }
+    else
+        $sql = '';
 
     $from = $kwargs['from'];
-    if (is_array($from)) {
-        [$database, $table] = get_db_table($kwargs);
-        if (! $Field2Type) {
-            [$Field2Type, $primary_key] = mysql\field_to_type($database, $table);
-        }
-    }
+    $context = $Field2Type;
+    if ($return)
+        $context['__desc__'] = $return['__desc__'];
+    
+    $NewField2Type = mysql\field_to_type($from, $context);
+    if ($props = $Field2Type['__props__'])
+        preprocess_kwargs($kwargs, $props, $NewField2Type);
+    else
+        $NewField2Type += $Field2Type;
 
     if ($kwargs['delete']) {
         $sql .= 'delete';
@@ -943,128 +1033,242 @@ function &parse_statement(&$kwargs, &$Field2Type = null, &$transform = null)
     }
     else{
         $select = $kwargs['select'];
-        $sql .= 'select ';
-        if (std\is_list($select)) {
-            $select = implode(", ", array_map(fn ($cond) => parse_expression($cond, $Field2Type, $transform), $select));
-        } else {
-            $select = parse_expression($select, $Field2Type, $transform);
+        if ($select === null) {
+            [[$union_func, $union]] = std\entries($kwargs);
+            $statement = array_map(
+                function ($kwargs) use ($Field2Type){
+                    [$sql] = parse_statement($kwargs, $Field2Type);
+                    if ($kwargs['with'] || $kwargs['with_recursive'] || $kwargs['limit'])
+                        $sql = "($sql)";
+                    return $sql;
+                }, 
+                $union
+            );
+            $union_func = str_replace('_', ' ', $union_func);
+            return [implode(" $union_func ", $statement), null];
+        }
+        else {
+            $sql .= 'select ';
+            $select = std\is_list($select)?
+                implode(", ",
+                    array_map(
+                        fn ($cond) => parse_expression(
+                            $cond,
+                            $NewField2Type
+                        ),
+                        $select
+                    )
+                ):
+                parse_expression(
+                    $select,
+                    $NewField2Type
+                );
+            if ($return)
+                $return['select'] = $select;
         }
     }
     
     $sql .= "$select ";
 
-    if (is_string($from)) {
-        $sql .= "from ${from}";
-    } elseif ($from['from']) {
-        [$statement, $t] = parse_statement($kwargs['from'], $Field2Type, $transform);
-        $sql .= "from ($statement) as _$t";
-    } elseif ($database && $table) {
-        $sql .= "from ${database}.${table}";
+    if (is_string($from))
+        $table = $from;
+    elseif ($from['from']) {
+        [$statement] = parse_statement($kwargs['from'], $Field2Type);
+        $t = get_db_table($kwargs['from'], $Field2Type)[1];
+        $table = "($statement) as _$t";
     }
-    else {
-        [[$join_type, [$table, $join_table]]] = std\entries($from);
-        $sql .= "from $table ".str_replace('_', ' ', $join_type)." ".parse_expression($join_table, $Field2Type, $transform);
+    else
+        $table = parse_table($from, $Field2Type);
+    if ($return)
+        $return['from'] = $table;
+    $sql .= "from $table";
+    if ($where = parse_expression($kwargs['where'], $NewField2Type)) {
+        $sql .= " where $where";
+        if ($return)
+            $return['where'] = $where;
     }
 
-    $condition = parse_expression($kwargs['where'], $Field2Type, $transform);
-
-    if ($condition) {
-        $sql .= " where $condition";
-    }
-
-    $group = $kwargs['group'];
-    if ($group) {
+    if ($group = $kwargs['group']) {
+        $group = parse_expression($group, $NewField2Type);
         $sql .= " group by $group";
-        $having = std\get($kwargs, 'having', []);
-        if ($having) {
-            $having_condition = parse_expression($having, $Field2Type, $transform);
-            if ($having_condition) {
-                $sql .= " having $having_condition";
+        if ($return)
+            $return['group'] = $group;
+
+        if ($having = std\get($kwargs, 'having', []))
+            if ($having = parse_expression($having, $NewField2Type)) {
+                $sql .= " having $having";
+                if ($return)
+                    $return['having'] = $having;
             }
-        }
     }
 
-    $order = $kwargs['order'];
-    if ($order) {
-        if (is_string($order)) {
-            $sql .= " order by $order";
-        }
+    if ($order = $kwargs['order']) {
+        if (is_string($order));
         elseif (std\is_list($order)) {
             [$order, $sort] = $order;
             if ($order) {
-                $order = parse_expression($order, $Field2Type, $transform);
-                $sql .= " order by $order";
-                if ($sort) {
-                    $sql .= " $sort";
-                }
+                $order = parse_expression($order, $NewField2Type);
+                if ($sort)
+                    $order .= " $sort";
             }
-        } else {
-            $order = parse_expression($order, $Field2Type, $transform);
+        } else
+            $order = parse_expression($order, $NewField2Type);
+        if ($order) {
             $sql .= " order by $order";
+            if ($return)
+                $return['order'] = $order;    
         }
     }
 
     $limit = std\get($kwargs, 'limit', '');
-    if ($limit !== '' && $limit !== null) // '0' is not false!
+    if ($limit !== '' && $limit !== null) {// '0' is not false!
         $sql .= " limit $limit";
+        if ($return)
+            $return['limit'] = $limit;
+    }
 
-    $offset = std\get($kwargs, 'offset', '');
-    if ($offset)
+    if ($offset = std\get($kwargs, 'offset', '')) {
         $sql .= " offset $offset";
+        if ($return)
+            $return['offset'] = $offset;
+    }
 
-    return [$sql, $table];
+    return [$sql, $NewField2Type];
 }
 
-function &parse_expression(&$cond, &$Field2Type = null, &$transform = null, &$scanCriteria = null)
+function parse_table(&$from, $Field2Type) {
+    if (count($from) > 1) {
+        assert (array_key_exists('join', $from) || array_key_exists('inner_join', $from));
+        $using = $from['using'];
+        $on = $from['on'];
+        $join_type = 'join';
+        [$table, $join_table] = $from['join']?? $from['inner_join'];
+    }
+    else if (isset($from['as']))
+        return parse_expression($from, $Field2Type);
+    else {
+        [[$database, $table]] = std\entries($from);
+        if (is_string($table)) {
+            if (preg_match('/\W/', $table))
+                $table = "`$table`";
+            return "$database.$table";
+        }
+
+        $join_type = $database;
+        [$table, $join_table] = $table;
+        $using = $on = null;
+    }
+
+    if (is_array($table))
+        $table = parse_table($table, $Field2Type);
+    $table = "$table ".str_replace('_', ' ', $join_type)." ".parse_expression($join_table, $Field2Type);
+
+    if ($using) {
+        if (is_array($using))
+            $using = implode(", ", $using);
+        $table .= " using ($using)";
+    }
+    elseif ($on)
+        $table .= " on ".parse_expression($on, $Field2Type);
+    return $table;
+}
+
+function &parse_expression(&$cond, &$Field2Type = null, $sep=' ', $parent=null)
 {
     global $physic2logic;
-    if (is_string($cond) || is_numeric($cond))
+    if (is_string($cond)) {
+        if ($parent && array_key_exists("in", $parent))
+            if ($cond != $parent['in'][0] || !isset($Field2Type[$cond]))
+                return mysql\mysqlStr($cond);
+        return $cond;
+    }
+
+    if (is_numeric($cond))
         return $cond;
 
     if (! $cond)
         return '';
 
-    if ($cond['from']) {
-        return parse_statement($cond, $Field2Type, $transform)[0];
+    if (isset($cond['from'])) {
+        [$sql] = parse_statement($cond, $Field2Type);
+        if ($sep || $parent && (isset($parent['union_all']) || isset($parent['union'])) && isset($cond['limit']))
+            $sql = "($sql)";
+        return $sql;
     }
 
-    if (count($cond) > 1) {
-        return implode(' ', array_map(fn (&$cond) => parse_expression($cond, $Field2Type, $transform), $cond));
-    }
+    if (count($cond) > 1)
+        return implode(
+            $sep,
+            array_map(
+                fn (&$cond) => parse_expression(
+                    $cond, 
+                    $Field2Type, 
+                    $sep, 
+                    $parent
+                ),
+                $cond
+            )
+        );
 
     [$func] = array_keys($cond);
 
     if (std\is_list($cond[$func])) {
-        if ($func == 'json_table') {
+        if ($func == 'json_table')
             $cond[$func][1][0] = mysql\mysqlStr($cond[$func][1][0]);
+
+        switch ($func) {
+        case 'in':
+        case 'not_in':
+            $sep = ',';
+            break;
+        case 'union':
+        case 'union_all':
+            $sep = null;
+            break;
+        default:
+            $sep = ' ';
         }
-        $args = array_map(fn ($cond) => parse_expression($cond, $Field2Type, $transform, $scanCriteria), $cond[$func]);
+        $args = array_map(
+            fn ($arg) => parse_expression(
+                $arg, 
+                $Field2Type, 
+                $sep, 
+                $cond
+            ), 
+            $cond[$func]
+        );
     } else
-        $args = [parse_expression($cond[$func], $Field2Type, $transform, $scanCriteria)];
+        $args = [parse_expression(
+            $cond[$func], 
+            $Field2Type, 
+        )];
 
     $funcPhysical = $func;
     $funcLogical = $physic2logic[$func] ?? $func;
 
+    $transform = $Field2Type['__transform__'];
     switch ($funcLogical) {
     case 'and':
         // https://www.php.net/manual/en/function.usort.php
+        foreach (std\enumerate($cond['and']) as [$i, $expr]) {
+            if ($expr['or'])
+                $args[$i] = "(".$args[$i].")";
+        }
+
         usort($args, function ($lhs, $rhs) {
             $cmp = strlen($lhs) - strlen($rhs);
-            if ($cmp) {
+            if ($cmp)
                 return $cmp;
-            }
 
             if (preg_match('/^regexp_like|^\w+ (binary )?regexp/', $lhs) && preg_match('/^regexp_like|^\w+ (binary )?regexp/', $lhs)) {
                 // chech if looking behind exists?
                 if (preg_match('/\(\?<=/', $lhs)) {
-                    if (preg_match('/\(\?<=/', $rhs)) {
+                    if (preg_match('/\(\?<=/', $rhs))
                         return 0;
-                    }
                     return 1;
                 } else {
-                    if (preg_match('/\(\?<=/', $rhs)) {
+                    if (preg_match('/\(\?<=/', $rhs))
                         return - 1;
-                    }
                     return 0;
                 }
             }
@@ -1076,34 +1280,33 @@ function &parse_expression(&$cond, &$Field2Type = null, &$transform = null, &$sc
         return implode(" $funcLogical ", array_filter($args, fn (&$cond) => $cond));
 
     case 'as':
-        if (is_array($cond[$funcPhysical][1]) && $cond[$funcPhysical][1]['from']) {
+        $rhs = $cond[$funcPhysical][1];
+        if (is_array($rhs) && ($rhs['from'] || $rhs['union'] || $rhs['union_all']))
             $args[1] = "($args[1])";
-        }
 
-        if (std\array_any(fn (&$cond) => ! $cond, $args))
+        if (std\array_any(fn (&$cond) => $cond == '' || $cond == null, $args))
             return '';
 
         $conds = $cond[$funcPhysical];
-        if (is_string($conds[0]) && is_string($conds[1])) {
-            if (! $Field2Type || ! $Field2Type[$args[0]]) {
-                $args[0] = mysql\mysqlStr($args[0]);
-            }
-        }
+        if (is_string($conds[0]) && is_string($conds[1]) && !is_numeric($args[0]) && $args[0] != $Field2Type['__cte__'])
+            if (! $Field2Type || ! $Field2Type[$args[0]])
+                if ($Field2Type[$args[1]] != 'json' || $args[0] != 'NULL')
+                        $args[0] = mysql\mysqlStr($args[0]);
 
         return implode(" $funcLogical ", $args);
 
     case 'in':
-        if (is_array($cond[$funcPhysical][1]) && $cond[$funcPhysical][1]['from']) {
+    case 'not in':
+        if (is_array($cond[$funcPhysical][1])) //$cond[$funcPhysical][1]['from']
             $args[1] = "($args[1])";
-        }
 
-        if (std\array_any(fn (&$cond) => ! $cond, $args))
+        if (std\array_any(fn (&$cond) => $cond == '' || $cond == null, $args))
             return '';
 
         return implode(" $funcLogical ", $args);
 
     case 'for':
-        if (std\array_any(fn (&$cond) => ! $cond, $args))
+        if (std\array_any(fn (&$cond) => $cond == '' || $cond == null, $args))
             return '';
 
         return implode(" $funcLogical ", $args);
@@ -1128,26 +1331,29 @@ function &parse_expression(&$cond, &$Field2Type = null, &$transform = null, &$sc
 
     case '=':
     case '!=':
-        if (std\array_any(fn (&$cond) => $cond == '' || $cond == null, $args)) {
+        if (std\array_any(fn (&$cond) => $cond == '' || $cond == null, $args))
             return '';
-        }
 
         [$lhs, &$rhs] = $args;
-        if (is_string($rhs)) {
-            if (! $Field2Type || ! $Field2Type[$lhs] || ! mysql\is_number($Field2Type[$lhs])) {
-                $rhs = mysql\mysqlStr($rhs, 'regexp');
+        if (is_string($rhs) && !is_array($cond[$func][1]) && !is_numeric($rhs) && !isset($Field2Type[$rhs])) {
+            if (! $Field2Type || ! $Field2Type[$lhs] || ! mysql\is_numeric($Field2Type[$lhs])) {
+                if (!mysql\is_json($Field2Type[$lhs]) || $rhs != 'NULL' || !$parent || $parent['set'] !== $cond)
+                    $rhs = mysql\mysqlStr($rhs, 'regexp');
             }
         }
 
+        return implode(" $funcLogical ", $args);
+
+    case 'is':
+    case 'is not':
         return implode(" $funcLogical ", $args);
 
     case 'regexp':
     case 'regexp binary':
     case 'not regexp':
     case 'not regexp binary':
-        if (std\array_any(fn (&$cond) => $cond == '' || $cond == null, $args)) {
+        if (std\array_any(fn (&$cond) => $cond == '' || $cond == null, $args))
             return '';
-        }
 
         if (count($args) >= 2) {
             [$lhs, &$rhs] = $args;
@@ -1178,10 +1384,8 @@ function &parse_expression(&$cond, &$Field2Type = null, &$transform = null, &$sc
     case 'like binary':
     case 'not like':
     case 'not like binary':
-
-        if (std\array_any(fn (&$cond) => $cond == '' || $cond == null, $args)) {
+        if (std\array_any(fn (&$cond) => $cond == '' || $cond == null, $args))
             return '';
-        }
 
         if (count($args) >= 2) {
             [$lhs, &$rhs] = $args;
@@ -1203,22 +1407,33 @@ function &parse_expression(&$cond, &$Field2Type = null, &$transform = null, &$sc
         return implode(" $funcLogical ", $args);
     case '->':
     case '->>':
-        if (std\array_any(fn (&$cond) => ! $cond, $args))
+        if (std\array_any(fn (&$cond) => $cond == '' || $cond == null, $args))
             return '';
 
-        [$lhs, &$rhs] = $args;
-        $rhs = mysql\mysqlStr($rhs);
-        return implode($funcLogical, $args);
+        if (is_string($cond[$func][1])) {
+            [$lhs, &$rhs] = $args;
+            $rhs = mysql\mysqlStr($rhs);
+            if (is_string($cond[$func][0]))
+                return implode($funcLogical, $args);
+            else {
+                $args = implode(', ', $args);
+                return "$func($args)";    
+            }
+        }
+        else {
+            $args = implode(', ', $args);
+            return "$func($args)";
+        }
 
     case '~':
         return "~$args[0]";
 
     case 'path':
+    case 'separator':
         $args[0] = mysql\mysqlStr($args[0]);
     case 'create':
     case 'global':
     case 'distinct':
-    case 'separator':
         return "$funcLogical $args[0]";
 
     case 'table':
@@ -1230,15 +1445,21 @@ function &parse_expression(&$cond, &$Field2Type = null, &$transform = null, &$sc
         return "$funcLogical $table";
 
     case 'order':
-        if (count($args) == 2) {
+        if (count($args) == 2)
             return "order by $args[0] $args[1]";
-        }
 
         return "order by $args[0]";
 
     case 'group_concat':
     case 'count':
+    case 'json_valid':
+    case 'json_type':
+    case 'json_arrayagg':
+    case 'json_objectagg':
         return "$funcLogical($args[0])";
+
+    case 'find_in_set':
+        return "$funcLogical($args[0], $args[1])";
 
     case 'regexp_like':
     case 'not regexp_like':
@@ -1259,9 +1480,19 @@ function &parse_expression(&$cond, &$Field2Type = null, &$transform = null, &$sc
             }
         }
 
+    case 'if':
+        [$expr, $first, $second] = $cond[$func];
+        if (is_string($first))
+            $args[1] = mysql\mysqlStr($first);
+            
+        if (is_string($second))
+            $args[2] = mysql\mysqlStr($second);
+
     case 'json_table':
     case 'varchar':
-    case 'if':
+    case 'json_length':
+    case 'char_length':
+    case 'length':
         $args = implode(', ', $args);
         return "$funcLogical($args)";
 
@@ -1272,20 +1503,34 @@ function &parse_expression(&$cond, &$Field2Type = null, &$transform = null, &$sc
         $args = implode(', ', $args);
         return "$funcLogical($args)";
 
-    default:
-        $conds = is_array($cond[$funcPhysical]) ? $cond[$funcPhysical] : [$cond[$funcPhysical]];
+    case 'union':
+    case 'union all':
+        return implode(" $funcLogical ", array_filter($args, fn (&$cond) => $cond));
 
-        foreach (std\enumerate(std\zipped($args, $conds)) as [$i, [$arg, $condition]]) {
-            if (is_string($condition)) {
-                if (! $Field2Type || ! $Field2Type[$arg]) {
-                    $args[$i] = mysql\mysqlStr($arg);
+    default:
+        if (is_array($cond[$funcPhysical])) {
+            $conds = $cond[$funcPhysical];
+            foreach (std\enumerate(std\zipped($args, $conds)) as [$i, [$arg, $condition]]) {
+                if (is_string($condition) && !is_numeric($arg)) {
+                    if (! $Field2Type || ! $Field2Type[$arg])
+                        $args[$i] = mysql\mysqlStr($arg);
                 }
             }
+            $args = $conds? array_map(
+                fn (&$cond) => $cond ? $cond : ($cond == 0 ? $cond : "''"),
+                $args
+            ): [];
+            $args = implode(', ', $args);
+            return "$funcLogical($args)";
         }
-
-        $args = array_map(fn (&$cond) => $cond ? $cond : ($cond == 0 ? $cond : "''"), $args);
-        $args = implode(', ', $args);
-        return "$funcLogical($args)";
+        elseif (is_string($cond[$funcPhysical])) {
+            $table = $cond[$funcPhysical];
+            if (preg_match('/\W/', $table))
+                $table = "`$table`";
+            return "$funcPhysical.$table";
+        }
+        else
+            return '';
     }
     /*
      * $conditions = [];
@@ -1389,7 +1634,7 @@ function &parse_expression(&$cond, &$Field2Type = null, &$transform = null, &$sc
      */
 }
 
-function preprocess_kwargs(&$kwargs, &$props, &$Field2Type, &$indexKey)
+function preprocess_kwargs(&$kwargs, &$props, &$Field2Type)
 {
     $criteria = [];
     foreach ($props as $key => $value) {
@@ -1403,17 +1648,14 @@ function preprocess_kwargs(&$kwargs, &$props, &$Field2Type, &$indexKey)
 
     $extraKeys = [];
     foreach ($criteria as $key => $value) {
-        if ($Field2Type[$key]) {
+        if ($dtype = $Field2Type[$key]) {
             unset($props[$key]);
-
-            if (mysql\is_varchar($Field2Type[$key]) && ! $indexKey[$key]) {
+            if ((mysql\is_varchar($dtype) || mysql\is_json($dtype)) && ! $Field2Type['__index__'][$key])
                 $cond[] = ['regexp' => [$key, $value]];
-            } else {
+            else
                 $cond[] = ['eq' => [$key, $value]];
-            }
-        } else {
+        } else
             $extraKeys[] = $key;
-        }
     }
 
     if ($cond) {
@@ -1432,6 +1674,7 @@ function preprocess_kwargs(&$kwargs, &$props, &$Field2Type, &$indexKey)
         }
     }
 
-    return $extraKeys;
+    if ($extraKeys)
+        $kwargs['limit'] = 0;
 }
 ?>

@@ -9,17 +9,17 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import discrete
+    from Axiom import Discrete
 
     n, k = Symbol(integer=True)
     Eq << apply(Binomial(n, k))
 
-    Eq << Eq[-1].this.lhs.apply(discrete.binom.to.mul)
+    Eq << Eq[-1].this.lhs.apply(Discrete.Binom.eq.Mul)
 
-    Eq << Eq[-1].this.rhs.apply(discrete.binom.to.mul)
+    Eq << Eq[-1].this.rhs.apply(Discrete.Binom.eq.Mul)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

@@ -1,2 +1,2 @@
-from . import subs
 from . import swap
+from . import subs

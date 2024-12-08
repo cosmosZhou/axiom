@@ -1,4 +1,4 @@
-from . import then
 from . import of
+from . import Subset_Cup
 from . import to
-from . import subset_cup
+from . import equ

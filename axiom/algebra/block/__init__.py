@@ -1,4 +1,4 @@
-from . import lamda
-from . import zeroMatrix
-from . import to
 from . import split
+from . import Lamda
+from . import ZeroMatrix
+from . import eq

@@ -1,7 +1,7 @@
 from flask import render_template
 
 from util import * 
-from axiom import *
+from Axiom import *
 import json, re
 from flask.blueprints import Blueprint
 from os.path import dirname

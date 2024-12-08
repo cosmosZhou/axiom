@@ -1,6 +1,6 @@
 <template>
 	<a v-if="mode == 'a'" v-focus tabindex=2 :href=href @contextmenu.prevent=contextmenu @keydown=keydown_a>
-       	{{module}}
+        {{module.isArray? module[1]: module}}
        	<searchContextmenu v-if='showContextmenu' :left=left :top=top></searchContextmenu>
     </a>
 	<span v-else-if="mode == 'span'">
@@ -35,7 +35,10 @@ export default {
 		},
 		
 		href(){
-			return `/${this.user}/?module=${this.module}`;
+			var {module} = this;
+			if (module.isArray)
+				module = module[0];
+			return `/${this.user}/?module=${module}`;
 		},			
 	},
 	
@@ -48,7 +51,7 @@ export default {
 				for (var m of m){
 					var folder = m[1];
 					var names = folder.split(/[\/\\]/);
-					var index = names.indexOf('axiom');
+					var index = names.indexOf('Axiom');
 					names = names.slice(index + 1);
 					var section = names.pop();
 					var parentFolder = names.join('.');
@@ -129,12 +132,42 @@ export default {
 		},
 		
 		keydown_a(event){
-			switch(event.key){
+			switch(event.key) {
 			case 'F2':
 				this.mode = 'input';
 				focusedAlready = false;
 				break;
+			case 'Delete':
+				var self = this.$parent;
+				var {list} = self;
+				if (list) {
+					var index = list.indexOf(this.module);
+					list.delete(index);
+					if (list.length)
+						self.$nextTick(()=>{
+							self.searchLink[index % list.length].focus();
+						});
+				}
+				break;
 			}				
+		},
+
+		async replace() {
+			var [old, $new] = this.module;
+			var undeletables = '';
+			if (old != $new){
+				console.log('oldText = ' + old);
+				console.log('newText = ' + $new);			
+				
+				undeletables = await form_post(`php/request/rename.php`, { old, new: $new});
+				console.log('undeletables = ' + undeletables);
+				this.delete_folder(undeletables);
+				await sleep(0.5);
+			}
+		},
+
+		focus() {
+			this.$el.focus();
 		},
 	},
 	

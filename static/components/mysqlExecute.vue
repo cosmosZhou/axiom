@@ -1,5 +1,5 @@
 <template>
-	<div tabindex=2 @keydown=keydown>
+	<div tabindex=2 @keydown.stop=keydown>
 		
 		<div v-if=edit>
 			<textarea v-focus :rows=rows :cols=cols @input=input_textarea>{{sql}}</textarea>
@@ -8,7 +8,7 @@
 			<span class=hover>
 				{{hint}}
 			</span>
-			<p v-click :class=cmd @dblclick=dblclick data-clipboard-action=copy :style=style_p :data-clipboard-target=`p.${cmd}` @mouseover=mouseover_p @mouseout=mouseout_p>
+			<p v-click :class=cmd @dblclick=dblclick data-clipboard-action=copy :style=style_p :data-clipboard-target="`p.${cmd}`" @mouseover=mouseover_p @mouseout=mouseout_p>
 				{{sql.isArray? sql.join(';\n'): sql}}
 			</p>
 		</div>
@@ -86,11 +86,11 @@ export default {
     	},
     	
     	execute() {
-    		return this.$parent.execute;	
+    		return this.$parent.execute;
     	},
     	
     	repeat() {
-    		return this.$parent.repeat;	
+    		return this.$parent.repeat;
     	},
     	
     	rowsOfSQL() {
@@ -112,7 +112,7 @@ export default {
         		css.push(`height: ${height}px`);
     		}
     		
-    		if (this.wait) 
+    		if (this.wait)
     			css.push(`cursor: wait`);
     		
     		return css.join("; ");
@@ -127,7 +127,7 @@ export default {
     },
 
 	mounted(){
-		create_ClipboardJS('p.' + this.cmd);	
+		create_ClipboardJS('p.' + this.cmd);
 	},
     
 	methods: {
@@ -135,12 +135,27 @@ export default {
 			var self = event.target;
 			var {sql} = this;
 			
-			console.log(sql + ';');
+			if (sql.isArray) {
+				sql.forEach(sql => {
+					console.log(sql + ';');
+				});
+			}
+			else {
+				console.log(sql + ';');
+			}
+			
 			if (Array.isArray(sql)){
 				this.hint = 'click to copy the text';
 				this.wait = true;
 				var rowcount = await this.query(sql);
 				console.log("rowcount = ", rowcount);
+				for (var [i, count] of enumerate(rowcount)) {
+					if (count.isString) {
+						alert(count);
+						rowcount[i] = 0;
+					}
+				}
+
 				this.rowcount.push(...rowcount);
 				this.wait = false;
 				rowcount = rowcount.sum();
@@ -163,7 +178,6 @@ export default {
 					var result = await this.query(sql.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">"));
 					this.wait = false;
 
-					var hover = self.parentElement.querySelector('.hover');
 					var match = /^select \* from (\w+(\.\w+)?)/.exec(sql);
 					if (match) {
 						var tableName = match[1];
@@ -226,13 +240,19 @@ export default {
 				else{
 					sql = sql.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 					var {database, table} = this.$parent;
-					var sqls = sql.split(eval(`/;\\n(?=update ${database}.${table} set \\w+ = .*)/`));
+					if (table.match(/\W/)) {
+						table = '`' + table + '`';
+						if (table.match(/\//))
+							table = table.replace(/\//g, '\\/');
+					}
+						
+					var sqls = sql.split(new RegExp(`;\\n(?=update ${database}.${table} set \\w+ = .*)`));
 					if (sqls.length > 1)
 						sql = sqls;
 
 					this.wait = true;
 					try {
-						var yields = await this.query(sql);	
+						var yields = await this.query(sql);
 					}
 					catch (err) {
 						var yields = err;
@@ -242,13 +262,13 @@ export default {
 						var rowcount = yields.sum();
 					}
 					else {
-						var rowcount = parseInt(yields);	
+						var rowcount = parseInt(yields);
 					}
 
 					if (rowcount.isNaN) {
 						++this.errors;
 						
-						var sleepPeriod = this.errors < 6? `${this.errors * 10} seconds`: `${this.errors / 6} minutes`; 
+						var sleepPeriod = this.errors < 6? `${this.errors * 10} seconds`: `${this.errors / 6} minutes`;
 						this.hint = `execution of sql has failed, sleeping for ${sleepPeriod}`;
 						if (this.rowcount.length) {
 							this.hint += `, previous rowcount = ${this.rowcount.back()}`;
@@ -287,7 +307,7 @@ export default {
 							return;
 						}
 						else {
-							setAttribute(this, 'sql', `rowcount = ${rowcount}`);	
+							setAttribute(this, 'sql', `rowcount = ${rowcount}`);
 						}
 					}
 					
@@ -307,7 +327,7 @@ export default {
 			var hover = self.parentElement.querySelector('.hover');
 			hover.style.display = "block";
 			hover.style.left = event.pageX || event.clientX + document.body.scroolLeft;
-			hover.style.top = event.pageY || event.clientY + document.body.scrollTop;				
+			hover.style.top = event.pageY || event.clientY + document.body.scrollTop;
 		},
 		
 		async keydown(event){
@@ -321,7 +341,7 @@ export default {
 					
 					var sql = event.target.value;
 					var rowcount = await this.query(sql.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">"));
-					this.hint = 'click to copy the text or press Insert to edit the content';					
+					this.hint = 'click to copy the text or press Insert to edit the content';
 					this.edit = false;
 					setAttribute(this, 'sql', sql);
 					console.log(`rowcount of ${sql} = ${rowcount}`);
@@ -337,7 +357,7 @@ export default {
 					this.rows = 10;
 					this.cols = 128;
 					break;
-				}				
+				}
 			}
 		},
 		
@@ -345,10 +365,10 @@ export default {
 			var sql = event.target.value;
 			//console.log(sql);
 			var text = JSON.parse(eval("[" + sql.match(/replace into (?:\._\w+)+ *\(\w+(?:, \w+)*\) *values *\((.*)\);$/)[1] + "]")[1]);
-			this.$parent.data[0].text = text;	
+			this.$parent.data[0].text = text;
 		},
 		
-	},    
+	},
 	
 	directives: {
 		focus: {
@@ -364,10 +384,10 @@ export default {
 		    mounted(target, binding) {
 		    	var self = binding.instance;
 		    	if (self.execute)
-		    		self.dblclick({target});		    		
+		    		self.dblclick({target});
 		    },
 		},
-	},		
+	},
 	
 }
 

@@ -64,11 +64,11 @@ export default {
 		},
 		
 		look_behind(){
-			return this.$parent.look_behind;	
+			return this.$parent.look_behind;
 		},
 		
 		look_ahead(){
-			return this.$parent.look_ahead;	
+			return this.$parent.look_ahead;
 		},
 		
 		look_behind_operator_name() {

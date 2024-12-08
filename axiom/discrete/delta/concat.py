@@ -10,7 +10,7 @@ def apply(n):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(domain=Range(2, oo))
     Eq << apply(n)
@@ -26,13 +26,13 @@ def prove(Eq):
 
     Eq << U[i].this.definition
 
-    Eq << Eq[-2].this.rhs.apply(algebra.piece.to.delta)
+    Eq << Eq[-2].this.rhs.apply(Algebra.Piece.eq.Delta)
 
     Eq << Eq[-2] - Eq[-1]
 
-    Eq << algebra.is_zero.then.eq.apply(Eq[-1])
+    Eq << Algebra.Eq_0.to.Eq.apply(Eq[-1])
 
-    Eq << Eq[-1].apply(algebra.eq.then.eq.lamda, (i,))
+    Eq << Eq[-1].apply(Algebra.Eq.to.Eq.Lamda, (i,))
 
     Eq << Eq[-1].subs(Eq[1]).subs(Eq[2])
 

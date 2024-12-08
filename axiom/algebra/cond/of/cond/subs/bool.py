@@ -13,14 +13,14 @@ def apply(f_eq, *, cond=None, simplify=True, invert=False, assumptions={}):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     a, b = Symbol(real=True)
     A = Symbol(etype=dtype.real)
     f = Function(integer=True)
     Eq << apply(Equal(Piecewise((f(a), Element(a, A)), (f(b), True)), 0), cond=Element(a, A))
 
-    Eq << algebra.cond.cond.of.et.subs.apply(Eq[0], Eq[2])
+    Eq << Algebra.Cond.Cond.of.And.subs.apply(Eq[0], Eq[2])
 
 
 if __name__ == '__main__':

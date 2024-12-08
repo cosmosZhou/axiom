@@ -10,7 +10,7 @@
 <script>
 console.log('import mysqlDot.vue');
 import mysqlLeaf from "./mysqlLeaf.vue"
-import {get_db_table, show_tables, is_number, is_enum, is_string, is_json} from "../js/mysql.js"
+import {get_db_table, show_tables} from "../js/mysql.js"
 
 export default {
 	components: {mysqlLeaf},
@@ -41,7 +41,7 @@ export default {
 		},
 		
 		is_textual_function() {
-			return this.$parent.is_textual_function;	
+			return this.$parent.is_textual_function;
 		},
 		
 		is_numeric_function() {
@@ -76,7 +76,7 @@ export default {
 			get() {
 				if (this._tables)
 					return this._tables;
-				return this.$parent.tables;	
+				return this.$parent.tables;
 			},
 			
 			set(tables) {
@@ -117,8 +117,7 @@ export default {
 		async input_select(event) {
 			if (this.name.match(/(from|\[from\])$/)) {
 				var {value} = event.target;
-				var regex = this.databases.join('|');
-				if (value.fullmatch(eval(`/(${regex})/`))) {
+				if (value.fullmatch(new RegExp(this.databases.join('|')))) {
 					if (this.$parent.$parent.change_database){
 						this.$parent.$parent.change_database(event);
 					}
@@ -130,9 +129,6 @@ export default {
 				else {
 					if (this.$parent.$parent.change_table){
 						this.$parent.$parent.change_table(event);
-					}
-					else {
-						//msyql_desc(this.table);
 					}
 				}
 			}

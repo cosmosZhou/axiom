@@ -20,7 +20,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
     i, j, k = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
 
@@ -31,7 +31,7 @@ def prove(Eq):
 
     Eq << apply(Cup[j:f(k), k: x[k] > a[i]](h(x[k], j)))
 
-    Eq << Eq[-1].this.rhs.apply(sets.cup.limits.baseset.delete)
+    Eq << Eq[-1].this.rhs.apply(Sets.Cup.limits.baseset.delete)
 
 if __name__ == '__main__':
     run()

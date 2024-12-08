@@ -50,7 +50,7 @@ def apply(self, index=None, reverse=False):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     k = Symbol(integer=True, positive=True)
     x, y = Symbol(real=True, shape=(k,))
@@ -61,15 +61,15 @@ def prove(Eq):
     p = Symbol(Eq[0].lhs)
     Eq << p.this.definition
 
-    Eq << algebra.cond_piece.then.ou.apply(Eq[-1])
+    Eq << Algebra.Cond_Piece.to.Or.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[0].args[:2].apply(algebra.eq.cond.then.cond.subs, ret=0)
+    Eq << Eq[-1].this.args[0].args[:2].apply(Algebra.Eq.Cond.to.Cond.subs, ret=0)
 
-    Eq << algebra.ou.then.eq.piece.apply(Eq[-1], wrt=p)
+    Eq << Algebra.Or.to.Eq.Piece.apply(Eq[-1], wrt=p)
 
-    Eq << Eq[0].this.rhs.apply(algebra.piece.et.invert)
+    Eq << Eq[0].this.rhs.apply(Algebra.Piece.And.invert)
 
-    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[1], Eq[-2])
+    Eq << Algebra.Eq.Eq.to.Eq.trans.apply(Eq[1], Eq[-2])
 
 
 

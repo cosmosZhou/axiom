@@ -56,7 +56,7 @@ export default {
 				if (value) {
 					if (!option.contains(value)) {
 						return [value, ...option];
-					}					
+					}
 				}
 				return option;
 			}
@@ -76,11 +76,11 @@ export default {
 		},
 		
 		kwargs() {
-			return this.$parent.kwargs;	
+			return this.$parent.kwargs;
 		},
 		
 		PRI() {
-			return this.$parent.PRI;	
+			return this.$parent.PRI;
 		},
 		
 		input_kwargs() {
@@ -143,7 +143,7 @@ export default {
 						case 'json_object':
 							if (this.value.isString) {
 								if (this.value == '*') {
-									value = [this.PRI, this.PRI];	
+									value = [this.PRI, this.PRI];
 								}
 								else {
 									value = [this.value, this.value];
@@ -161,7 +161,7 @@ export default {
 						case 'regexp_replace':
 							if (this.value.isString) {
 								if (this.value == '*') {
-									value = [this.PRI, '', ''];	
+									value = [this.PRI, '', ''];
 								}
 								else {
 									value = [this.value, '', ''];
@@ -182,7 +182,7 @@ export default {
 						case 'right':
 							if (this.value.isString) {
 								if (this.value == '*') {
-									value = [this.PRI, ''];	
+									value = [this.PRI, ''];
 								}
 								else {
 									value = [this.value, ''];
@@ -241,7 +241,7 @@ export default {
 					
 					this.$parent.$nextTick(()=>{
 						parentElement.querySelector(`select[name="${name}"]`).focus();
-					});			
+					});
 				}
 				else {
 					switch (value) {
@@ -289,7 +289,7 @@ export default {
 						break;
 						
 					default:
-						this.input_kwargs(event);	
+						this.input_kwargs(event);
 					}
 				}
 				if (this.$parent.input_select) {
@@ -359,7 +359,7 @@ export default {
 				event.preventDefault();
 				if (event.ctrlKey) {
 					var regexp = [...this.numeric_functions, ...this.textual_functions, ...this.jsonobj_functions].join('|');
-					regexp = eval(`/\\[(${regexp})\\](?:\\[(\\d)\\])?$/`);
+					regexp = new RegExp(`\\[(${regexp})\\](?:\\[(\\d)\\])?$`);
 					var m = select.name.match(regexp);
 					var {parentElement} = select;
 					if (m) {
@@ -386,7 +386,7 @@ export default {
 								}
 							}
 							else {
-								func_args[index + 1] = this.PRI;	
+								func_args[index + 1] = this.PRI;
 								this.$parent.$nextTick(()=>{
 									this.nextElementSibling(select).focus();
 								});
@@ -419,7 +419,7 @@ export default {
 					var m = select.name.match(/(\[order\]|order)(\[0\])?$/);
 					if (m) {
 						if (this.$parent.value.order.isArray) {
-							this.$parent.value.order = [...this.$parent.value.order, 'desc'];	
+							this.$parent.value.order = [...this.$parent.value.order, 'desc'];
 						}
 						else {
 							this.$parent.value.order = [this.$parent.value.order, 'desc'];
@@ -444,6 +444,7 @@ export default {
 						this.$parent.$nextTick(()=>{
 							parentElement.querySelector(`select[name="${name}"]`).focus();
 						});
+						break;
 					}
 				}
 				else if (event.shiftKey) {
@@ -482,7 +483,7 @@ export default {
 						this.$parent.value.select[index] = {as: [this.value, this.PRI]};
 						hit = true;
 					}
-				}				
+				}
 
 				if (hit) {
 					var {parentElement, name} = target;
@@ -518,7 +519,7 @@ export default {
 						this.$parent.value.select[index] = {as: [this.value, this.PRI]};
 						hit = true;
 					}
-				}				
+				}
 
 				if (hit) {
 					var {parentElement, name} = target;
@@ -533,7 +534,7 @@ export default {
 				if (event.ctrlKey) {
 					event.preventDefault();
 					var regexp = [...this.numeric_functions, ...this.textual_functions, ...this.jsonobj_functions].join('|');
-					regexp = eval(`/\\[(${regexp})\\](?:\\[(\\d)\\])?$/`);
+					regexp = new RegExp(`\\[(${regexp})\\](?:\\[(\\d)\\])?$`);
 					var m = target.name.match(regexp);
 					if (m) {
 						var func = m[1];
@@ -559,13 +560,13 @@ export default {
 								break;
 							case 'regexp_replace':
 								func_args.push(1, 0, 'c');
-								var name = target.name.replace(eval(`/\\[${index}\\]$/`), '[5]');
+								var name = target.name.replace(new RegExp(`\\[${index}\\]$`), '[5]');
 								this.$parent.$nextTick(()=>{
 									parentElement.querySelector(`select[name="${name}"]`).focus();
 								});
 								break;
 							default:
-								func_args[index + 1] = this.PRI;	
+								func_args[index + 1] = this.PRI;
 								this.$parent.$nextTick(()=>{
 									this.nextElementSibling(target).focus();
 								});

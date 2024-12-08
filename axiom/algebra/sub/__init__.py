@@ -1,2 +1,2 @@
-from . import transpose
-from . import square
+from . import Square
+from . import Transpose

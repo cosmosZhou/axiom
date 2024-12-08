@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self, index=0):
-    from axiom.algebra.sum.limits.shift.slice import rewrite
+    from Axiom.Algebra.Sum.limits.shift.Slice import rewrite
     return Equal(self, rewrite(Product, self, index))
 
 
@@ -15,9 +15,9 @@ def prove(Eq):
     f = Function(real=True, shape=())
     Eq << apply(Product[x[i:n + 1]](f(x[i:n + 1])))
 
-    
 
-    
+
+
 
 
 if __name__ == '__main__':

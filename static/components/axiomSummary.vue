@@ -1,6 +1,6 @@
 <template>
 	<div tabindex=1 @keydown=keydown>
-		the whole math theory is composed of the following sections:
+		the whole math repertoire is composed of the following sections:
  
 		<searchForm v-if="issearch" :keyword=keyword :caseSensitive=caseSensitive :wholeWord=wholeWord :regularExpression=regularExpression :latex=latex></searchForm>		
 		<ul>

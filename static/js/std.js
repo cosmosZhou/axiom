@@ -13,7 +13,7 @@ function argmin(args){
 	for (var index of range(args.length)){
 		if (args[index] < min){
 			min = args[index];
-			argmin = index;	
+			argmin = index;
 		}
 	}
 	
@@ -33,7 +33,7 @@ function argmax(args){
 	for (var index of range(args.length)){
 		if (args[index] > max){
 			max = args[index];
-			argmax = index;	
+			argmax = index;
 		}
 	}
 	
@@ -62,21 +62,46 @@ function form_post(url, data) {
 	});
 }
 
-function json_post(url, data, header) {
+function json_post(url, data, header, stream) {
+	var method = 'post';
 	if (url.match(/^https?:\/\//)) {
 		data = {url, data};
 		url = 'php/request/post.php';
 		data.header = header;
+		if (stream) {
+			var {id, signal, onmessage, onclose, onerror} = stream;
+			data.id = id;
+			return fetchEventSource(url, {
+				method,
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
+				signal,
+				onmessage,
+				onclose,
+				onerror,
+				onopen(response) {
+					if (response.ok && response.headers.get("content-type").includes("text/event-stream")) {
+						return; // everything's good
+					} else if (response.status >= 400 && response.status < 500 &&response.status !== 429) {
+						// client-side errors are usually non-retriable:
+						throw new FatalError();
+					} else {
+						throw new FatalError();
+					}
+				},
+				openWhenHidden: true
+			});
+		}
 	}
 
 	var header = {'Content-Type': 'application/json'};
-	var method = 'post';
 	return axios({url, method, data, header}).then(result => {
 		var {data} = result;
-		if (data.isString && data.back() == '\n') {
+		if (data.isString && data.back() == '\n')
 			data = data.slice(0, -1);
-		}
-		return data;	
+		return data;
 	});
 }
 
@@ -97,11 +122,11 @@ function octet_stream_post(url, data, successCallback, errorCallback) {
 				var jqXHR = event.target;
 				if (successCallback) {
 					successCallback(JSON.parse(jqXHR.responseText));
-				}	
+				}
 			}else{
 				if (errorCallback) {
 					errorCallback(jqXHR.responseText);
-				}	
+				}
 			}
 		}
 	}
@@ -135,6 +160,10 @@ function strlen(s) {
 	return length;
 }
 
+function getParameterByName(name, defaultValue) {
+	return new URLSearchParams(window.location.search).get(name) || defaultValue;
+}
+
 function getParameter(name, evaluate) {
 	var attrs = [];
 	for (var m of name.matchAll(/\[([^\[\]]+)\]/g)) {
@@ -151,9 +180,8 @@ function getParameter(name, evaluate) {
 			var attr = m[1];
 			var expr = unescape(m[2]);
 			if (evaluate) {
-				if (expr && expr.isString) {
+				if (expr && expr.isString)
 					expr = eval(expr);
-				}
 			}
 			if (attr) {
 				var arglist = [];
@@ -217,7 +245,7 @@ function equals(obj, _obj){
 	
 	if (_obj == null){
 		return false;
-	}	
+	}
 	
 	if (Array.isArray(obj)){
 		if (Array.isArray(_obj)){
@@ -241,7 +269,7 @@ function equals(obj, _obj){
 		return false;
 	}
 	
-	return obj == _obj;	
+	return obj == _obj;
 }
 
 function dict_equals(dict, _dict){
@@ -386,7 +414,7 @@ Number.prototype.__defineGetter__("isInteger", function() {
 });
 
 Number.prototype.sign = function(){
-	return Math.sign(this);	
+	return Math.sign(this);
 };
 	
 Number.prototype.round = function(){
@@ -434,7 +462,7 @@ Number.prototype.relu = function() {
 Number.prototype.toRational = function() {
 	if (this.isInteger)
 		return this;
-	return Rational.new((this * (1 << 20)).round(), 1 << 20); 
+	return Rational.new((this * (1 << 20)).round(), 1 << 20);
 };
 
 Number.prototype.encodeURI = function(){
@@ -527,7 +555,7 @@ BigInt.prototype.gt = function(rhs){
 			return true;
 			
 		rhs = BigInt(rhs)
-	}		
+	}
 		
 	return this > rhs;
 };
@@ -544,7 +572,7 @@ BigInt.prototype.lt = function(rhs){
 			return false;
 			
 		rhs = BigInt(rhs)
-	}		
+	}
 		
 	return this < rhs;
 };
@@ -561,7 +589,7 @@ BigInt.prototype.ge = function(rhs){
 			return true;
 			
 		rhs = BigInt(rhs)
-	}		
+	}
 		
 	return this >= rhs;
 };
@@ -578,7 +606,7 @@ BigInt.prototype.le = function(rhs){
 			return false;
 			
 		rhs = BigInt(rhs)
-	}		
+	}
 		
 	return this <= rhs;
 };
@@ -614,7 +642,7 @@ BigInt.prototype.sign = function(){
 		return 1;
 	if (this < 0n)
 		return -1;
-	return 0;	
+	return 0;
 };
 	
 BigInt.prototype.round = function(){
@@ -630,7 +658,7 @@ BigInt.prototype.ceil = function(){
 };
 
 BigInt.prototype.abs = function(){
-	if (this.sign() < 0) 
+	if (this.sign() < 0)
 		return -this;
 	return this;
 };
@@ -673,6 +701,10 @@ BigInt.prototype.toRational = function() {
 
 String.prototype.__defineGetter__("isInteger", function() {
 	return this.isdigit();
+});
+
+String.prototype.__defineGetter__("isNumber", function() {
+	return /^-?\d+(\.\d+)?$/.test(this);
 });
 
 String.prototype.lang = function(){
@@ -767,9 +799,9 @@ String.prototype.toggleCase = function(){
 	var array = [];
 	for (var i = 0; i < this.length; ++i) {
 		var ch = this[i];
-		if (ch.islower()) 
+		if (ch.islower())
 			ch = ch.toUpperCase();
-		else if (ch.isupper()) 
+		else if (ch.isupper())
 			ch = ch.toLowerCase();
 		array.push(ch);
 	}
@@ -835,14 +867,21 @@ String.prototype.ispunct = function(){
 };
 
 String.prototype.fullmatch = function(regex){
-	var source = `/^(?:${regex.source})$/`;
-	if (regex.ignoreCase)
-		source += 'i';
-	return this.match(eval(source));
+	var {source} = regex;
+	return this.match(
+		new RegExp(
+			`^(?:${source})$`,
+			regex.ignoreCase? 'i': ''
+		)
+	);
 };
 
 String.prototype.isspace = function(){
 	return /^\s+$/.test(this);
+};
+
+String.prototype.strlen = function(){
+	return strlen(this);
 };
 
 String.prototype.strlen = function(){
@@ -985,7 +1024,7 @@ HTMLCollection.prototype.back = function() {
 	return this[this.length - 1];
 };
 
-Array.prototype.equals = function(rhs){ 
+Array.prototype.equals = function(rhs){
 	if (!Array.isArray(rhs))
 		return false;
 		
@@ -1002,8 +1041,14 @@ Array.prototype.equals = function(rhs){
 	return true;
 };
 
-Array.prototype.sum = function(){ 
+Array.prototype.sum = function(){
 	return sum(this);
+};
+
+Array.prototype.remove = function(item) {
+	var index = this.indexOf(item);
+	if (index >= 0)
+		this.delete(index);
 };
 
 Array.prototype.delete = function(index, size) {
@@ -1051,21 +1096,25 @@ Array.prototype.contains = function(val) {
 };
 
 Array.prototype.all = function(func) {
+	if (!func)
+		func = obj => obj;
 	return this.every(func);
 };
 
 Array.prototype.any = function(func) {
+	if (!func)
+		func = obj => obj;
 	return this.some(func);
 };
 
 Array.prototype.enumerate = function*(func) {
 	for (var i of range(this.length)){
 		yield func(i, this[i]);
-	} 
+	}
 };
 
 Array.prototype.enumerated = function(func) {
-	return [...this.enumerate(func)]; 
+	return [...this.enumerate(func)];
 };
 
 Array.prototype.repeat = function(count) {
@@ -1076,7 +1125,7 @@ Array.prototype.repeat = function(count) {
 			if (Array.isArray(el)){
 				el = [...el];
 			}
-			array.push(el);	
+			array.push(el);
 		}
 	}
 	return array;
@@ -1105,7 +1154,7 @@ Array.prototype.sub = function(rhs){
 
 Array.prototype.add = function(rhs){
 	var ret = [];
-	if (rhs.isArray) { 
+	if (rhs.isArray) {
 		for (let i = 0; i < rhs.length; ++i) {
 			ret[i] = this[i].add(rhs[i]);
 		}
@@ -1120,7 +1169,7 @@ Array.prototype.add = function(rhs){
 };
 
 Array.prototype.is_constant = function() {
-	return this.all(b => b.equals(this[0])); 
+	return this.all(b => b.equals(this[0]));
 };
 
 Array.prototype.isArray = true;
@@ -1130,7 +1179,7 @@ Array.prototype.compareTo = function(that) {
 		if (i < that.length) {
 			var cmp = this[i].isArray? this[i].compareTo(that[i]): this[i].sub(that[i]).sign();
 			if (cmp)
-				return cmp;	
+				return cmp;
 		}
 		else
 			return 1;
@@ -1214,11 +1263,11 @@ Array.prototype.matmul = function(that){
 	return mat;
 };
 
-Array.prototype.toRational = function(){ 
+Array.prototype.toRational = function(){
 	return this.map(x => x.toRational());
 };
 
-Array.prototype.round = function(){ 
+Array.prototype.round = function(){
 	return this.map(x => x.round());
 };
 
@@ -1273,10 +1322,20 @@ Array.prototype.equal_range = function(value, compareTo) {
     return [begin, end];
 }
 
+// Fisher-Yates (Knuth) Shuffle algorithm
+Array.prototype.shuffle = function() {
+    for (let i = this.length - 1; i > 0; --i) {
+        // Generate a random index between 0 and i (inclusive)
+        const j = randrange(i + 1);
+        // Swap elements at indices i and j
+        [this[i], this[j]] = [this[j], this[i]];
+    }
+	return this;
+}
+
 function compareTo(lhs, rhs) {
-	if (lhs.isString) {
+	if (lhs.isString)
 		return compareTo(lhs.map(ch => ord(ch)), rhs.map(ch => ord(ch)));
-	}
 	
 	if (lhs.isArray) {
 		for (var [lhs, rhs] of zip(lhs, rhs)) {
@@ -1344,6 +1403,15 @@ Set.prototype.array_diff = function (other) {
 
 Set.prototype.array_merge = function (other) {
 	return new Set([...this, ...other]);
+}
+
+Set.prototype.array_intersect = function (other) {
+	var set = new Set();
+	for (let x of this) {
+		if (other.has(x))
+			set.add(x);
+	}
+	return set;
 }
 
 /**
@@ -1447,7 +1515,7 @@ class PriorityQueue {
 			this.init(true);
 			var arr = inputs;
 			this.make_heap(arr, arr.length);
-			return;	
+			return;
 		}
 		
 		this.init(inputs);
@@ -1468,7 +1536,7 @@ class PriorityQueue {
 				if (o1 < o2)
 					return -1;
 				if (o1 > o2)
-					return 1;						
+					return 1;
                 return 0;
             };
 		}
@@ -1477,7 +1545,7 @@ class PriorityQueue {
 				if (o1 < o2)
 					return 1;
 				if (o1 > o2)
-					return -1;						
+					return -1;
                 return 0;
             };
 		}
@@ -1486,7 +1554,7 @@ class PriorityQueue {
 	}
 	
 	push(el){
-		this._list.push(el);	
+		this._list.push(el);
 	}
 	
     make_heap(ptr, size) {
@@ -1512,7 +1580,7 @@ class PriorityQueue {
     }
 
 	get length(){
-		return this._list.length;	
+		return this._list.length;
 	}
     // look for the right kinder _Idx * 2 + 2; remember the left kinder is
     // _Idx * 2 + 1, the right kinder might have exceed the array bound and
@@ -1586,7 +1654,7 @@ class PriorityQueue {
     }
 
 	shift(){
-		this._list.shift();	
+		this._list.shift();
 	}
 	
     // dequeue operator
@@ -1836,7 +1904,7 @@ HTMLElement.prototype.getOffsetTop = function() {
 	var offsetTop = 0;
 
 	var current = this;
-	while (current !== null) {		
+	while (current !== null) {
 		offsetTop += current.offsetTop;
 		current = current.offsetParent;
 	}
@@ -1900,7 +1968,7 @@ HTMLElement.prototype.hiddenStatus = function() {
     var hidden = {};
     if (offsetTop < 0)
     	hidden.y = offsetTop;
-    else if (offsetTop + offsetHeight > clientHeight) 
+    else if (offsetTop + offsetHeight > clientHeight)
     	hidden.y = offsetTop + offsetHeight - clientHeight;
     	
     if (offsetLeft < 0)
@@ -1917,7 +1985,7 @@ function intersects(rectA, rect) {
 		return Math.max(a0, a1) < Math.min(b0, b1);
 	}
 	
-	return intersects([rect.x, rect.x + rect.width], [rectA.x, rectA.x + rectA.width]) && intersects([rect.y, rect.y + rect.height], [rectA.y, rectA.y + rectA.height]); 
+	return intersects([rect.x, rect.x + rect.width], [rectA.x, rectA.x + rectA.width]) && intersects([rect.y, rect.y + rect.height], [rectA.y, rectA.y + rectA.height]);
 }
 
 function merge_sort(arr1, arr2, compareTo, ret) {
@@ -1964,7 +2032,7 @@ function toUnicodeDigit(digits){
 function array_push(){
 	var [arr, ...keys] = arguments;
 	var value = keys.pop();
-	for (let key of keys){		
+	for (let key of keys){
 		if (arr[key] == null){
 			arr[key] = [];
 		}
@@ -2066,7 +2134,7 @@ function mean(p0, p1, rate) {
 	if (rate == null)
 		rate = new Rational(1n, 2n);
 		
-	return p0.mul(rate.neg().add(1n)).add(p1.mul(rate));	
+	return p0.mul(rate.neg().add(1n)).add(p1.mul(rate));
 }
 
 function sum(array) {
@@ -2075,7 +2143,7 @@ function sum(array) {
 
 function max(arr){
 	var arr = arguments.length == 1? arguments[0]: [...arguments];
-	return arr.reduce((a, b) => b.gt(a) ? b: a, -Infinity); 
+	return arr.reduce((a, b) => b.gt(a) ? b: a, -Infinity);
 }
 
 function min(){
@@ -2103,7 +2171,7 @@ function *range(start, stop, step){
 			yield* Array(start).keys();
 		}
 		for (var i = start; i < stop; ++i){
-			yield i;	
+			yield i;
 		}
 	}
 	else{
@@ -2122,7 +2190,7 @@ function *range(start, stop, step){
 
 class SymbolicSet {
 	sanctity_check() {
-	}	
+	}
 	
 	symmetric_difference(that){
 		return this.union(that).complement(this.intersects(that));
@@ -2269,7 +2337,7 @@ class Union extends SymbolicSet {
 					continue;
 					
 				if (arg.is_Union)
-					args.push(...arg.args);	
+					args.push(...arg.args);
 				else
 					args.push(arg);
 			}
@@ -2296,7 +2364,7 @@ class Union extends SymbolicSet {
 				continue;
 				
 			if (arg.is_Union){
-				args.push(...arg.args);	
+				args.push(...arg.args);
 			}
 			else{
 				args.push(arg);
@@ -2313,7 +2381,7 @@ class Union extends SymbolicSet {
 	union(that){
 		if (that.is_EmptySet){
 			return this;
-		} 
+		}
 		
 		if (that.is_Range){
 			for (var i = 0; i < this.args.length; ++i){
@@ -2412,7 +2480,7 @@ class Union extends SymbolicSet {
             for (var arg of that.args) {
                 self = self.union_without_merging(arg);
             }
-            return self;	
+            return self;
 		}
 	}
 	
@@ -2429,7 +2497,7 @@ class Union extends SymbolicSet {
 	}
 	
 	try_union(){
-		//http://localhost/sympy/axiom.php?module=sets.eq_card.subset.then.eq
+		//http://localhost/axiom/?module=Sets.eq_card.subset.then.eq
 		var bbox = this.bbox;
 		return this.card == bbox.card ? bbox: this;
 	}
@@ -2478,7 +2546,7 @@ class Intersection extends SymbolicSet {
 			arg = arg.union(that);
 				
 			if (arg.is_Intersection){
-				args.push(...arg.args);	
+				args.push(...arg.args);
 			}
 			else{
 				args.push(arg);
@@ -2512,7 +2580,7 @@ class Intersection extends SymbolicSet {
 				continue;
 				
 			if (arg.is_Intersection){
-				args.push(...arg.args);	
+				args.push(...arg.args);
 			}
 			else{
 				args.push(arg);
@@ -2535,7 +2603,7 @@ class Intersection extends SymbolicSet {
 	intersects(that){
 		if (that.is_EmptySet){
 			return that;
-		} 
+		}
 		
 		for (var arg of this.args){
 			that = that.intersects(arg);
@@ -2618,7 +2686,7 @@ class Range extends SymbolicSet {
 		if (start >= this.stop || stop <= this.start)
 			return new EmptySet;
 			
-		return new Range(Math.max(this.start, start), Math.min(this.stop, stop)); 	
+		return new Range(Math.max(this.start, start), Math.min(this.stop, stop));
 	}
 
 	equals(that){
@@ -2636,7 +2704,7 @@ class Range extends SymbolicSet {
 			if (stop < this.start)
 				return new Union(that, this);
 				
-			return new Range(Math.min(this.start, start), Math.max(this.stop, stop)); 	
+			return new Range(Math.min(this.start, start), Math.max(this.stop, stop));
 		}
 		
 		if (that.is_EmptySet)
@@ -2720,7 +2788,7 @@ class Range extends SymbolicSet {
 	}
 	
 	[Symbol.iterator]() {
-		var {start, stop} = this; 
+		var {start, stop} = this;
 		
 		return {
 			next() {
@@ -2751,7 +2819,7 @@ class Polygon extends SymbolicSet {
 		ctx.moveTo(...p[0]);
 		
 		for (var i of range(1, this.p.length)) {
-			ctx.lineTo(...p[i]);	
+			ctx.lineTo(...p[i]);
 		}
 		
 		ctx.lineTo(...p[0]);
@@ -2771,7 +2839,7 @@ class Polygon extends SymbolicSet {
 	}
 	
 	distance(x0, y0) {
-		return distance(this.anchorPoint(x0, y0), [x0, y0]); 
+		return distance(this.anchorPoint(x0, y0), [x0, y0]);
 	}
 	
 	complement(that) {
@@ -2805,7 +2873,7 @@ class Tetragon extends Polygon {
 	static new() {
 		if (arguments.length >= 4)
 			return new Rectangle(...arguments);
-		return Trapezoid.new(...arguments); 
+		return Trapezoid.new(...arguments);
 	}
 	
 	is_nonoverlapping(that) {
@@ -2830,7 +2898,7 @@ class Tetragon extends Polygon {
 			return that;
 
 		if (that.is_Parallelogram || that.is_Rectangle) {
-			if (this.bbox.intersects(that).is_EmptySet) 
+			if (this.bbox.intersects(that).is_EmptySet)
 				return new EmptySet;
 			
 			if (this.is_nonoverlapping(that))
@@ -2845,12 +2913,12 @@ class Tetragon extends Polygon {
 				return that.intersects(this);
 				
 			if (this.y[1] <= that.y[0])
-				return new EmptySet; 
+				return new EmptySet;
 			
 			if (that.p.any(pt => this.contains(pt)) || this.p.any(pt => that.contains(pt)))
 				return Intersection.new(this, that);
 							
-			return new EmptySet;							
+			return new EmptySet;
 		}
 		
 		return new Intersection(that, this);
@@ -2927,7 +2995,7 @@ class Rectangle extends Tetragon {
 	
 	intersects(that){
 		if (that.is_Union || that.is_Parallelogram || that.is_Trapezoid)
-			return that.intersects(this);		
+			return that.intersects(this);
 		
 		var {x, y, x_stop, y_stop} = that;
 		if (x.ge(this.x_stop) || x_stop.le(this.x) || y.ge(this.y_stop) || y_stop.le(this.y))
@@ -2941,7 +3009,7 @@ class Rectangle extends Tetragon {
 		
 		var width = x_stop.sub(x);
 		var height = y_stop.sub(y);
-		return new Rectangle(x, y, width, height); 	
+		return new Rectangle(x, y, width, height);
 	}
 
 	equals(that){
@@ -2989,7 +3057,7 @@ class Rectangle extends Tetragon {
 						if (that.y_stop < this.y_stop)
 							//that.y <= this.y && that.y_stop < this.y_stop
 							return new Union(
-								new Rectangle(this.x, that.y_stop, this.width, this.y_stop - that.y_stop), 
+								new Rectangle(this.x, that.y_stop, this.width, this.y_stop - that.y_stop),
 								new Rectangle(that.x_stop, this.y, this.x_stop - that.x_stop, that.y_stop - this.y));
 						else
 							//that.y <= this.y && that.y_stop >= this.y_stop
@@ -2999,14 +3067,14 @@ class Rectangle extends Tetragon {
 						if (that.y_stop < this.y_stop)
 							//that.y > this.y && that.y_stop < this.y_stop
 							return new Union(
-								new Rectangle(this.x, this.y, this.width, that.y - this.y), 
+								new Rectangle(this.x, this.y, this.width, that.y - this.y),
 								new Rectangle(this.x, that.y_stop, this.width, this.y_stop - that.y_stop),
-								new Rectangle(that.x_stop, that.y, this.x_stop - that.x_stop, that.height));							
+								new Rectangle(that.x_stop, that.y, this.x_stop - that.x_stop, that.height));
 						else
 							//that.y > this.y && that.y_stop >= this.y_stop
 							return new Union(
 								new Rectangle(this.x, this.y, this.width, that.y - this.y),
-								new Rectangle(that.x_stop, that.y, this.x_stop - that.x_stop, this.y_stop - that.y));							
+								new Rectangle(that.x_stop, that.y, this.x_stop - that.x_stop, this.y_stop - that.y));
 					}
 				}
 				else {
@@ -3023,7 +3091,7 @@ class Rectangle extends Tetragon {
 						if (that.y_stop < this.y_stop)
 							//that.y > this.y && that.y_stop < this.y_stop
 							return new Union(
-								new Rectangle(this.x, this.y, this.width, that.y - this.y), 
+								new Rectangle(this.x, this.y, this.width, that.y - this.y),
 								new Rectangle(this.x, that.y_stop, this.width, this.y_stop - that.y_stop));
 						else
 							//that.y > this.y && that.y_stop >= this.y_stop
@@ -3038,27 +3106,27 @@ class Rectangle extends Tetragon {
 						if (that.y_stop < this.y_stop)
 							//that.y <= this.y && that.y_stop < this.y_stop
 							return new Union(
-								new Rectangle(this.x, this.y, that.x - this.x, this.height), 
+								new Rectangle(this.x, this.y, that.x - this.x, this.height),
 								new Rectangle(that.x, that.y_stop, this.x_stop - that.x, this.y_stop - that.y_stop),
 								new Rectangle(that.x_stop, this.y, this.x_stop - that.x_stop, that.y_stop - this.y));
 						else
 							//that.y <= this.y && that.y_stop >= this.y_stop
 							return new Union(
-								new Rectangle(this.x, this.y, that.x - this.x, this.height), 
+								new Rectangle(this.x, this.y, that.x - this.x, this.height),
 								new Rectangle(that.x_stop, this.y, this.x_stop - that.x_stop, that.height));
 					}
 					else {
 						if (that.y_stop < this.y_stop)
 							//that.y > this.y && that.y_stop < this.y_stop
 							return new Union(
-								new Rectangle(this.x, this.y, this.width, that.y - this.y), 
+								new Rectangle(this.x, this.y, this.width, that.y - this.y),
 								new Rectangle(this.x, that.y, that.x - this.x, this.y_stop - that.y),
 								new Rectangle(that.x, that.y_stop, this.x_stop - this.x, this.y_stop - that.y_stop),
 								new Rectangle(that.x_stop, that.y, this.x_stop - that.x_stop, that.height));
 						else
 							//that.y > this.y && that.y_stop >= this.y_stop
 							return new Union(
-								new Rectangle(this.x, this.y, this.width, that.y - this.y), 
+								new Rectangle(this.x, this.y, this.width, that.y - this.y),
 								new Rectangle(this.x, that.y, that.x - this.x, this.y_stop - that.y),
 								new Rectangle(that.x_stop, that.y, this.x_stop - that.x_stop, this.y_stop - that.y));
 					}
@@ -3069,26 +3137,26 @@ class Rectangle extends Tetragon {
 						if (that.y_stop < this.y_stop)
 							//that.y <= this.y && that.y_stop < this.y_stop
 							return new Union(
-								new Rectangle(this.x, this.y, that.x - this.x, this.height), 
+								new Rectangle(this.x, this.y, that.x - this.x, this.height),
 								new Rectangle(that.x, that.y_stop, this.x_stop - that.x, this.y_stop - that.y_stop));
 						else
 							//that.y <= this.y && that.y_stop >= this.y_stop
-							return new Rectangle(this.x, this.y, that.x - this.x, this.height); 
+							return new Rectangle(this.x, this.y, that.x - this.x, this.height);
 					}
 					else {
 						if (that.y_stop < this.y_stop)
 							//that.y > this.y && that.y_stop < this.y_stop
 							return new Union(
-								new Rectangle(this.x, this.y, this.width, that.y - this.y), 
+								new Rectangle(this.x, this.y, this.width, that.y - this.y),
 								new Rectangle(this.x, that.y, that.x - this.x, this.y_stop - that.y),
 								new Rectangle(that.x, that.y_stop, this.x_stop - this.x, this.y_stop - that.y_stop));
 						else
 							//that.y > this.y && that.y_stop >= this.y_stop
 							return new Union(
-								new Rectangle(this.x, this.y, this.width, that.y - this.y), 
+								new Rectangle(this.x, this.y, this.width, that.y - this.y),
 								new Rectangle(this.x, that.y, that.x - this.x, this.y_stop - that.y));
 					}
-				}	
+				}
 			}
 		}
 		
@@ -3129,7 +3197,7 @@ class Rectangle extends Tetragon {
 					else if (this.y_stop.gt(that.y[2]))
 						args.push(new Triangle([solve_x(this.y_stop, that.p[2], that.p[3]), this.y_stop], [this.x_stop, that.y[2]], [this.x_stop, this.y_stop]));
 					
-					return Union.new(...args); 
+					return Union.new(...args);
 				}
 			}
 			else if (this.x_stop.equals(that.x[1])) {
@@ -3162,7 +3230,7 @@ class Rectangle extends Tetragon {
 					else if (this.x_stop.gt(that.x[2]))
 						args.push(new Triangle([that.x[2], this.y_stop], [this.x_stop, solve_y(this.x_stop, that.p[1], that.p[2])], [this.x_stop, this.y_stop]));
 					
-					return Union.new(...args); 
+					return Union.new(...args);
 				}
 			}
 			else if (this.y_stop.equals(that.y[1])) {
@@ -3221,7 +3289,7 @@ class Rectangle extends Tetragon {
 		}
 	}
 	
-	// the anchor point is defined to be the point that is closest to the target point; 
+	// the anchor point is defined to be the point that is closest to the target point;
 	anchorPoint(x0, y0) {
 		if (x0.lt(this.x)) {
 			if (y0.lt(this.y))
@@ -3258,7 +3326,7 @@ class Rectangle extends Tetragon {
 		
 		var args = [
 			rotatePoint([x0, y0], anchor, rotation),
-			rotatePoint([x1, y0], anchor, rotation), 
+			rotatePoint([x1, y0], anchor, rotation),
 			rotatePoint([x1, y1], anchor, rotation),
 			rotatePoint([x0, y1], anchor, rotation),
 		];
@@ -3293,7 +3361,7 @@ class Rectangle extends Tetragon {
 			if (this.height.gt(rhs.height))
 				return 1;
 	
-			return 0;		
+			return 0;
 		}
 		
 		return -1;
@@ -3329,7 +3397,7 @@ function rotateLeft(point, anchor) {
 	
 	var vector = [x1.sub(x0), y1.sub(y0)];
 	var theta = [[0, 1], [-1, 0]];
-	return theta.matmul(vector).add(anchor);	
+	return theta.matmul(vector).add(anchor);
 }
 
 function rotateRight(point, anchor) {
@@ -3338,7 +3406,7 @@ function rotateRight(point, anchor) {
 	
 	var vector = [x1.sub(x0), y1.sub(y0)];
 	var theta = [[0, -1], [1, 0]];
-	return theta.matmul(vector).add(anchor);	
+	return theta.matmul(vector).add(anchor);
 }
 
 class Triangle extends Polygon {
@@ -3389,7 +3457,7 @@ class Triangle extends Polygon {
 		var [x0, y0] = this.p[0];
 		var [x1, y1] = this.p[1];
 		var [x, y] = this.p[2];
-		return x1.sub(x0).mul(y.sub(y0)).sub(y1.sub(y0).mul(x.sub(x0)));	
+		return x1.sub(x0).mul(y.sub(y0)).sub(y1.sub(y0).mul(x.sub(x0)));
 	}
 	
 	_eval_p() {
@@ -3447,7 +3515,7 @@ class Parallelogram extends Tetragon {
 	}
 	
 	static new(p0, p1, p2) {
-		return new Parallelogram(p0.toRational(), p1.toRational(), p2.toRational()); 	
+		return new Parallelogram(p0.toRational(), p1.toRational(), p2.toRational());
 	}
 	
 	//preconditio: p0 is the leftmost point;
@@ -3549,7 +3617,7 @@ class TrapezoidH extends Trapezoid {
 	simplify() {
 		if (this.x[0] == this.x[3] && this.x[2] == this.x[1])
 			return new Rectangle(this.x[0], this.y[0], this.width[0], this.height)
-		return this; 
+		return this;
 	}
 	
 	constructor(x, y){
@@ -3563,7 +3631,7 @@ class TrapezoidH extends Trapezoid {
 	}
 	
 	get height() {
-		return this.y[1].sub(this.y[0]);	
+		return this.y[1].sub(this.y[0]);
 	}
 	
 	get width() {
@@ -3607,9 +3675,9 @@ class TrapezoidH extends Trapezoid {
 				
 			if (this.y[1].equals(that.y[0])) {
 				if (that.x[0].equals(this.x[3]) && that.x[1].equals(this.x[2])) {
-					if (new Triangle(this.p[0], that.p[0], that.p[3]).is_straight_line() && 
+					if (new Triangle(this.p[0], that.p[0], that.p[3]).is_straight_line() &&
 						new Triangle(this.p[1], that.p[1], that.p[2]).is_straight_line()) {
-						return new TrapezoidH([this.x[0], this.x[1], that.x[2], that.x[3]], [this.y[0], that.y[1]]).simplify();	
+						return new TrapezoidH([this.x[0], this.x[1], that.x[2], that.x[3]], [this.y[0], that.y[1]]).simplify();
 					}
 				}
 			}
@@ -3627,7 +3695,7 @@ class TrapezoidH extends Trapezoid {
 	intersects(that) {
 		if (that.is_Rectangle) {
 			if (this.y.equals([that.y, that.y_stop])) {
-				if (that.x_stop.le(min(this.x[0], this.x[3]))) 
+				if (that.x_stop.le(min(this.x[0], this.x[3])))
 					return new EmptySet;
 					
 				if (that.x_stop.le(this.x[0]))
@@ -3640,9 +3708,9 @@ class TrapezoidH extends Trapezoid {
 				if (that.x_stop.le(min(this.x[1], this.x[2]))) {
 					if (that.x.le(min(this.x[0], this.x[3])))
 						return new TrapezoidH(this.p[0], [that.x_stop, this.y[0]], [that.x_stop, this.y[1]], this.p[3]);
-					//unfinished work!					
+					//unfinished work!
 				}
-			} 
+			}
 		}
 		
 		return Trapezoid.prototype.intersects.apply(this, arguments);
@@ -3670,7 +3738,7 @@ class TrapezoidH extends Trapezoid {
 						}
 						else {
 							throw new Error("this.x[3].equals(that.x[3])");
-						}	
+						}
 					}
 					else if (this.x[0].gt(that.x[0])) {
 						if (this.x[3].lt(that.x[3])) {
@@ -3686,12 +3754,12 @@ class TrapezoidH extends Trapezoid {
 								}
 							}
 							else {
-								throw new Error("this.x[0].lt(that.x[1])");	
+								throw new Error("this.x[0].lt(that.x[1])");
 							}
 						}
 						else {
 							throw new Error("this.x[3].eq(that.x[3])");
-						}	
+						}
 					}
 					else {
 						if (this.x[3].lt(that.x[3])) {
@@ -3702,7 +3770,7 @@ class TrapezoidH extends Trapezoid {
 						}
 						else {
 							//emptyset;
-						}	
+						}
 					}
 					
 					if (this.x[1].gt(that.x[1])) {
@@ -3712,9 +3780,9 @@ class TrapezoidH extends Trapezoid {
 									// emptyset;
 								}
 								else {
-									throw new Error("this.x[2].gt(that.x[2]) && this.x[3].lt(that.x[2])");		
+									throw new Error("this.x[2].gt(that.x[2]) && this.x[3].lt(that.x[2])");
 								}
-							} 
+							}
 							else {
 								throw new Error("this.x[2].gt(that.x[2])");
 							}
@@ -3739,7 +3807,7 @@ class TrapezoidH extends Trapezoid {
 					}
 					else {
 						if (this.x[2].gt(that.x[2])) {
-							throw new Error("this.x[2].gt(that.x[2])");		
+							throw new Error("this.x[2].gt(that.x[2])");
 						}
 						else if (this.x[2].lt(that.x[2])) {
 							throw new Error("this.x[2].lt(that.x[2])");
@@ -3749,7 +3817,7 @@ class TrapezoidH extends Trapezoid {
 						}
 					}
 					
-					return Union.new(...args); 
+					return Union.new(...args);
 				}
 			}
 			else if (this.y[1].equals(that.y[1])) {
@@ -3779,7 +3847,7 @@ class TrapezoidH extends Trapezoid {
 		return new Rectangle(x_min, y[0], x_max.sub(x_min), this.height);
 	}
 	
-	// the anchor point is defined to be the point that is closest to the target point; 
+	// the anchor point is defined to be the point that is closest to the target point;
 	anchorPoint(x0, y0){
 		if (y0.lt(this.y[0])) {
 			if (x0.ge(this.x[0]) && x0.le(this.x[1]))
@@ -3884,7 +3952,7 @@ class TrapezoidH extends Trapezoid {
 					return mean([xLeft, y0], this.p[0], x0.sub(xLeft).div(_x.sub(xLeft)));
 				}
 				else
-					return [xLeft, y0];	
+					return [xLeft, y0];
 			}
 
 			var xRight = solve_x(y0, this.p[1], this.p[2]);
@@ -3907,7 +3975,7 @@ class TrapezoidH extends Trapezoid {
 					return mean([xRight, y0], this.px, x0.sub(xRight).div(_x.sub(xRight)));
 				}
 				else
-					return [xRight, y0];	
+					return [xRight, y0];
 			}
 
 			return [x0, y0];
@@ -3940,7 +4008,7 @@ class TrapezoidV extends Trapezoid {
 	simplify() {
 		if (this.y[0] == this.y[1] && this.y[2] == this.y[3])
 			return new Rectangle(this.x[0], this.y[0], this.width, this.height[0])
-		return this; 
+		return this;
 	}
 	
 	constructor(x, y){
@@ -3974,11 +4042,11 @@ class TrapezoidV extends Trapezoid {
 	}
 		
 	get width() {
-		return this.x[1] - this.x[0];	
+		return this.x[1] - this.x[0];
 	}
 	
 	get height() {
-		return [this.y[3].sub(this.y[0]), this.y[2].sub(this.y[1])];	
+		return [this.y[3].sub(this.y[0]), this.y[2].sub(this.y[1])];
 	}
 	
 	get card() {
@@ -4016,7 +4084,7 @@ class TrapezoidV extends Trapezoid {
 				return that.union(this);
 				
 			if (this.x[1].equals(that.x[0])) {
-				if (new Triangle(this.p[0], that.p[0], that.p[1]).is_straight_line() && 
+				if (new Triangle(this.p[0], that.p[0], that.p[1]).is_straight_line() &&
 					new Triangle(this.p[3], this.p[2], that.p[2]).is_straight_line())
 					return new TrapezoidV([this.x[0], that.x[1]], [this.y[0], that.y[1], that.y[2], this.y[3]]).simplify();
 			}
@@ -4034,8 +4102,8 @@ class TrapezoidV extends Trapezoid {
 	intersects(that) {
 		if (that.is_Rectangle) {
 			if (this.y.equals([that.y, that.y_stop])) {
-				//unfinished work!					
-			} 
+				//unfinished work!
+			}
 		}
 		
 		return Trapezoid.prototype.intersects.apply(this, arguments);
@@ -4048,7 +4116,7 @@ class TrapezoidV extends Trapezoid {
 					if (this.y[0].equals(that.y[0])){
 						if (this.y[3].equals(that.y[3])){
 							return new EmptySet;
-						}	
+						}
 					}
 				}
 			}
@@ -4061,10 +4129,10 @@ class TrapezoidV extends Trapezoid {
 		var {x, y} = this;
 		var y_min = min(y[0], y[1]);
 		var y_max = max(y[2], y[3]);
-		return new Rectangle(x[0], y_min, this.width, y_max.sub(y_min));		
+		return new Rectangle(x[0], y_min, this.width, y_max.sub(y_min));
 	}
 	
-	// the anchor point is defined to be the point that is closest to the target point; 
+	// the anchor point is defined to be the point that is closest to the target point;
 	anchorPoint(x0, y0){
 		if (x0.lt(this.x[0])) {
 			if (y0.ge(this.y[0]) && y0.le(this.y[3]))
@@ -4170,7 +4238,7 @@ class TrapezoidV extends Trapezoid {
 					return mean([x0, yUp], this.p[1], y0.sub(yUp).div(_y.sub(yUp)));
 				}
 				else
-					return [x0, yUp];	
+					return [x0, yUp];
 			}
 
 			var yDown = solve_y(x0, this.p[2], this.p[3]);
@@ -4193,7 +4261,7 @@ class TrapezoidV extends Trapezoid {
 					return mean([x0, yDown], this.p[3], y0.sub(yDown).div(_y.sub(yDown)));
 				}
 				else
-					return [x0, yDown];	
+					return [x0, yDown];
 			}
 
 			return [x0, y0];
@@ -4206,8 +4274,8 @@ class TrapezoidV extends Trapezoid {
 			if (cmp)
 				return cmp;
 			return this.y.compareTo(that.y);
-		}	
-		else 
+		}
+		else
 			return 1;
 	}
 	
@@ -4249,253 +4317,11 @@ function arraycopy(src, srcPos, dest, destPos, length){
 	return dest;
 }
 
-function levenshteinCost(s, t) {
-	if (s == t)
-		return 0;
-		
-	if (s.toLowerCase() == t.toLowerCase())
-		return 0.5;
-
-	return 1;
-}
-
-function levenshteinForwardCost(s, t){
-	var cost = 0;
-	for (var i of range(Math.min(s.length, t.length))) {
-		cost += levenshteinCost(s[i], t[i]);
-	}
-	
-	cost += (s.length - t.length).abs();
-	return cost;	
-}
-
-function levenshteinBackwardCost(s, t){
-	var cost = 0;
-	for (var i of range(Math.min(s.length, t.length))) {
-		cost += levenshteinCost(s[s.length - i - 1], t[t.length - i - 1]);
-	}
-	
-	cost += (s.length - t.length).abs();
-	return cost;
-}
-
-function levenshteinDistance(s, t, limit){
-    if (s.length > t.length){
-		[s, t] = [t, s];
-    }
-
-    var n = s.length;
-    var m = t.length;
-
-    if (m == 0)
-        return n;
-
-    if (n == 0)
-        return m;
-
-	if (limit && m * n > limit) {
-		//console.log(`sequences too long to compare: s.length = ${n}, t.length = ${m}`);
-		var cost = levenshteinForwardCost(s, t);
-		if (n != m) {
-			cost += levenshteinBackwardCost(s, t);
-			return cost / 2;
-		}
-		
-		return cost;
-	}
-
-    var v0 = [];
-    for (var i = 0; i <= m; ++i)
-        v0[i] = i;
-    
-    var v1 = Array(m + 1);
-    for (var i = 1; i <= n; ++i){
-        if (i > 1)
-            v0 = v1.slice(0);
-        
-        v1[0] = i;
-        for (var j = 1; j <= m; ++j) {
-            v1[j] = Math.min(v1[j - 1] + 1, v0[j] + 1, v0[j - 1] + levenshteinCost(s[i - 1], t[j - 1]));
-        }
-    }
-
-    return v1.pop();
-}
-
-// t is the target string (corrected), s is the source string (with typo errors)
-// the levenshtein Process is a process of transforming the source string into the target string with minimum editing cost;
-// comparison: Smith-Waterman algorithm
-function levenshteinProcess(s, t, limit) {
-	//console.log(s);
-	//console.log(t);
-	
-    var n = s.length;
-    var m = t.length;
-
-	if (limit && m * n > limit) {
-		//console.log(`sequences too long to compare: s.length = ${n}, t.length = ${m}`);
-		var operations = [];
-		if (n != m && levenshteinBackwardCost(s, t) < levenshteinForwardCost(s, t)) {
-			if (m < n) {
-				for (var i of range(n - m)) {
-					operations.push({delete: s[i]});
-				}
-				
-				for (var i of range(n - m, n)) {
-					operations.push({update: [s[i], t[i + (m - n)]]});
-				}
-			}
-			else {
-				//assert(m > n); 
-				for (var i of range(n)) {
-					operations.push({update: [s[i], t[i + (m - n)]]});
-				}
-				
-				var target = operations[0].update[1];
-				target = t.slice(0, m - n) + target;
-				operations[0].update[1] = target;
-			}
-		}
-		else {
-			for (var i of range(Math.min(m, n))) {
-				operations.push({update: [s[i], t[i]]});
-			}
-			
-			if (m < n) {
-				for (var i of range(m, n)) {
-					operations.push({delete: s[i]});
-				}
-			}
-			else if (m > n) {
-				var target = operations.back().update[1];
-				target += t.slice(n);
-				operations.back().update[1] = target;
-			}			
-		}
-		
-		return operations;
-	}
-
-    var v0 = [];
-    for (var j = 0; j <= m; ++j)
-        v0[j] = j;
-    
-    var v1 = Array(m + 1);
-    
-	var operation_table = Array(n + 1);
-	operation_table[0] = ranged(0, m + 1).map(j => {return {insert: t[j - 1]}});
-	operation_table[0][0] = {update: ['', '']};
-	
-	for (var i = 1; i <= n; ++i){
-		operation_table[i] = Array(m + 1);
-	}
-	
-    for (var i = 1; i <= n; ++i){
-        if (i > 1)
-            v0 = v1.slice(0);
-        
-        v1[0] = i;
-		operation_table[i][0] = {delete: s[i - 1]};
-		
-        for (var j = 1; j <= m; ++j){
-			var args = [v0[j] + 1, v1[j - 1] + 1, v0[j - 1] + levenshteinCost(s[i - 1], t[j - 1])];
-			var index = argmin(args);
-            v1[j] = args[index];
-			
-			var operation;
-			switch (index){
-			case 0:
-				operation = {delete: s[i - 1]};
-				break;
-			case 1:
-				operation = {insert: t[j - 1]};
-				break;
-			case 2:
-				operation = {update: [s[i - 1], t[j - 1]]};
-				break;
-			}
-			 
-			operation_table[i][j] = operation;
-        }
-    }
-	
-	var j = m;
-	var i = n
-	var operations = [];
-	while (i >= 0 && j >= 0){
-		var operation = operation_table[i][j];		
-		var [operator] = Object.keys(operation);
-		switch (operator){
-		case 'update':
-			--j;
-			--i;
-			operations.push(operation);
-			break;	
-		case 'delete':
-			--i;
-			operations.push(operation);
-			break;	
-		case 'insert':
-			--j;
-			var back = operations.back();
-			if (back && back.insert){
-				back.insert = operation.insert + back.insert;
-			}
-			else{
-				operations.push(operation);	
-			}
-			break;	
-		}
-	}
-	
-	operations.pop();
-	
-	operations = operations.reverse();
-	
-	if (operations.length > n){
-		var i = operations.length - 1;
-		while (i >= 0){
-			var op = operations[i];
-			if (op.insert){
-				if (i + 1 < operations.length){
-					if (operations[i + 1].update){
-						operations[i + 1].update[1] = op.insert + operations[i + 1].update[1];
-						operations.delete(i);
-						--i;
-					}
-				}
-				else if (i - 1 >= 0){
-					if (operations[i - 1].insert){
-						operations[i - 1].insert += op.insert;
-						operations.delete(i);
-						--i;
-					}
-					else if (operations[i - 1].update){
-						operations[i - 1].update[1] += op.insert;
-						operations.delete(i);
-						--i;	
-					}
-				}
-				else{
-					
-				}
-			}
-			else{
-				--i;
-			}
-		}
-	}
-	
-	console.assert(operations.length == n, "operations.length == n");
-		
-    return operations;
-}
-
 function *enumerate(array){
 	var i = 0;
 	for (var e of array){
 		yield [i++, e];
-	} 
+	}
 }
 
 function enumerated(array){
@@ -4534,7 +4360,7 @@ function partitionText(text, d){
 	var lengths = [n / d].repeat(d);
 	if (n % d){
 		for (var i of range(n % d)){
-			lengths[i] += 1;	
+			lengths[i] += 1;
 		}
 	}
 	
@@ -4602,7 +4428,7 @@ function split_filename(filename){
 function gcd(x, y) {
 	if (!y)
 		return x;
-	return gcd(y, x % y);	
+	return gcd(y, x % y);
 }
 
 class Real {
@@ -4642,7 +4468,7 @@ class Rational extends Real {
 	
 	constructor(p, q) {
 		super();
-		this.p = p;		
+		this.p = p;
 		this.q = q;
 	}
 	
@@ -4676,7 +4502,7 @@ class Rational extends Real {
 		else{
 			var q = 1n;
 			if (that.isBigInt) {
-				var p = that;	
+				var p = that;
 			}
 			else if (that == Infinity || that == -Infinity){
 				return -that;
@@ -4699,7 +4525,7 @@ class Rational extends Real {
 		else{
 			var q = 1n;
 			if (that.isBigInt) {
-				var p = that;	
+				var p = that;
 			}
 			else if (that == Infinity || that == -Infinity){
 				return that * this.sign();
@@ -4709,7 +4535,7 @@ class Rational extends Real {
 			}
 			else {
 				var {p, q} = that.toRational();
-			}			
+			}
 		}
 		
 		return Rational.new(this.p * p, q * this.q);
@@ -4722,7 +4548,7 @@ class Rational extends Real {
 		else {
 			var q = 1n;
 			if (that.isBigInt) {
-				var p = that;	
+				var p = that;
 			}
 			else if (that == Infinity || that == -Infinity){
 				return 0n;
@@ -4732,7 +4558,7 @@ class Rational extends Real {
 			}
 			else {
 				var {p, q} = that.toRational();
-			}			
+			}
 		}
 		
 		return Rational.new(this.p * q, p * this.q);
@@ -4760,7 +4586,7 @@ class Rational extends Real {
 	}
 	
 	sign() {
-		return this.p.sign();	
+		return this.p.sign();
 	}
 	
 	gt(that) {
@@ -4805,7 +4631,7 @@ class Rational extends Real {
 	
 	floor(){
 		if (this.is_negative)
-			return -((-this.p) / this.q) - 1n;	
+			return -((-this.p) / this.q) - 1n;
 		return this.p / this.q;
 	}
 	
@@ -4867,7 +4693,7 @@ function convertWithAlignment() {
     var res = [''].repeat(arr.length);
     
     var size = len(arr[0]);
-    for (var j of range(size)) { 
+    for (var j of range(size)) {
         var l = [0].repeat(len(arr))
 
         for (var i of range(len(arr))) {
@@ -4885,7 +4711,7 @@ function convertWithAlignment() {
 }
 
 function *reversed(list) {
-	if (!list.isArray) 
+	if (!list.isArray)
 		list = [...list];
 		
 	for (var i of range(list.length - 1, -1, -1)) {
@@ -4930,25 +4756,27 @@ function setitem() {
     var parentData = null;
     for (var [i, key] of enumerate(indices)) {
 		if (i + 1 < indices.length) {
-	        if (data[key]) {
-				if (data[key].isString || data[key].isNumber) {
-					data[key] = indices[i + 1].isInteger? []: {};
-				}
-			}
-			else {
+			if (data[key]? (data[key].isString || data[key].isNumber) : true)
 				data[key] = indices[i + 1].isInteger? []: {};
-			}
-				
+
 			parentData = data;
 			data = data[key];
 		}
 		else {
-			if (parentData != null && i && !key.isInteger) {
-				data = {};
-				parentData[indices[i - 1]] = data;
+			if (key.isInteger) {
+				if (data == null) {
+					if (parentData != null && i) {
+						data = [];
+						parentData[indices[i - 1]] = data;
+					}
+				}
 			}
-			else {
-				if (data.isArray && !key.isInteger) {
+			else if (data.isArray) {
+				if (parentData != null && i) {
+					data = {};
+					parentData[indices[i - 1]] = data;
+				}
+				else {
 					for (var i of reversed(range(data.length))) {
 						data.delete(i);
 					}
@@ -4981,7 +4809,7 @@ function randrange(start, stop, step) {
 		var size = stop - start;
 	}
 	else {
-		var size = ((stop - start) / step).ceil();	
+		var size = ((stop - start) / step).ceil();
 	}
 	
 	return (Math.random() * size).floor() * step + start;
@@ -5092,8 +4920,7 @@ function json_extract(obj, path) {
 }
 
 function not_any_of(regex) {
-	regex = regex.source;
-	return eval(`/(?!(?:${regex}))\\S+/`);
+	return new RegExp(`(?!(?:${regex.source}))\\S+`);
 }
 
 
@@ -5116,11 +4943,10 @@ function parseCSV(data) {
 }
 
 function get_url(kwargs) {
-	var url = get_url_array(kwargs);
-	return '?' + url.map(args => {
+	return get_url_array(kwargs).map(args => {
 		var [key, value] = args;
 		for (var i of range(1, key.length)) {
-			key[i] = `[${key[i]}]`;	
+			key[i] = `[${key[i]}]`;
 		}
 		key = key.join('');
 		return `${key}=${value}`;
@@ -5142,12 +4968,12 @@ function get_url_array(kwargs) {
 			}
 
 			for (var args of get_url_array(obj)) {
-				url.push([[key, ...args[0]], args[1]]); 
+				url.push([[key, ...args[0]], args[1]]);
 			}
 		}
 		else if (value.constructor == Object) {
 			for (var args of get_url_array(value)) {
-				url.push([[key, ...args[0]], args[1]]); 
+				url.push([[key, ...args[0]], args[1]]);
 			}
 		}
 		else {
@@ -5231,7 +5057,7 @@ async function createApp(component, data, id) {
                     return {
 						getContentData(){
 							return text;
-						}, 
+						},
 						type: ".mjs"
 					};
 				case 'vue':
@@ -5246,12 +5072,12 @@ async function createApp(component, data, id) {
 				return res.text().then(text => {
                     return {
 						getContentData(){
-							return text;	
-						}, 
+							return text;
+						},
 						type: ".mjs"
 					};
                 });
-            }	
+            }
 			
 			return res.text();
 		},
@@ -5279,7 +5105,7 @@ async function createApp(component, data, id) {
 	
 	var args = [];
 	for (let key in data){
-		args.push(`:${key}=${key}`);	
+		args.push(`:${key}=${key}`);
 	}
 	
 	var App = {
@@ -5334,8 +5160,216 @@ async function query(host, user, token, sql) {
 	data.token = token;
 	var kwargs = {user};
 	if (host && host != 'localhost')
-		kwargs.host = host;	
-	return await form_post(`query.php` + get_url(kwargs), data);
+		kwargs.host = host;
+	return await form_post('query.php?' + get_url(kwargs), data);
 }
+
+function fetchEventSource(input, _a) {
+	function getMessages(onId, onRetry, onMessage) {
+		let message = newMessage();
+		const decoder = new TextDecoder();
+		return function onLine(line, fieldLength) {
+			if (line.length === 0) {
+				onMessage === null || onMessage === void 0 ? void 0 : onMessage(message);
+				message = newMessage();
+			}
+			else if (fieldLength > 0) {
+				const field = decoder.decode(line.subarray(0, fieldLength));
+				const valueOffset = fieldLength + (line[fieldLength + 1] === 32 ? 2 : 1);
+				const value = decoder.decode(line.subarray(valueOffset));
+				switch (field) {
+					case 'data':
+						message.data = message.data
+							? message.data + '\n' + value
+							: value;
+						break;
+					case 'event':
+						message.event = value;
+						break;
+					case 'id':
+						onId(message.id = value);
+						break;
+					case 'retry':
+						const retry = parseInt(value, 10);
+						if (!isNaN(retry)) {
+							onRetry(message.retry = retry);
+						}
+						break;
+				}
+			}
+		};
+	}
+	
+	function concat(a, b) {
+		const res = new Uint8Array(a.length + b.length);
+		res.set(a);
+		res.set(b, a.length);
+		return res;
+	}
+	
+	function newMessage() {
+		return {
+			data: '',
+			event: '',
+			id: '',
+			retry: undefined,
+		};
+	}
+	
+	function __rest(s, e) {
+		var t = {};
+		for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+			t[p] = s[p];
+		if (s != null && typeof Object.getOwnPropertySymbols === "function")
+			for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+				if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+					t[p[i]] = s[p[i]];
+			}
+		return t;
+	};
+	
+	async function getBytes(stream, onChunk) {
+		const reader = stream.getReader();
+		let result;
+		while (!(result = await reader.read()).done) {
+			onChunk(result.value);
+		}
+	}
+	
+	function getLines(onLine) {
+		let buffer;
+		let position;
+		let fieldLength;
+		let discardTrailingNewline = false;
+		return function onChunk(arr) {
+			if (buffer === undefined) {
+				buffer = arr;
+				position = 0;
+				fieldLength = -1;
+			}
+			else {
+				buffer = concat(buffer, arr);
+			}
+			const bufLength = buffer.length;
+			let lineStart = 0;
+			while (position < bufLength) {
+				if (discardTrailingNewline) {
+					if (buffer[position] === 10) {
+						lineStart = ++position;
+					}
+					discardTrailingNewline = false;
+				}
+				let lineEnd = -1;
+				for (; position < bufLength && lineEnd === -1; ++position) {
+					switch (buffer[position]) {
+						case 58:
+							if (fieldLength === -1) {
+								fieldLength = position - lineStart;
+							}
+							break;
+						case 13:
+							discardTrailingNewline = true;
+						case 10:
+							lineEnd = position;
+							break;
+					}
+				}
+				if (lineEnd === -1) {
+					break;
+				}
+				onLine(buffer.subarray(lineStart, lineEnd), fieldLength);
+				lineStart = position;
+				fieldLength = -1;
+			}
+			if (lineStart === bufLength) {
+				buffer = undefined;
+			}
+			else if (lineStart !== 0) {
+				buffer = buffer.subarray(lineStart);
+				position -= lineStart;
+			}
+		};
+	}
+	
+	function defaultOnOpen(response) {
+		const contentType = response.headers.get('content-type');
+		if (!(contentType === null || contentType === void 0 ? void 0 : contentType.startsWith(EventStreamContentType))) {
+			throw new Error(`Expected content-type to be ${EventStreamContentType}, Actual: ${contentType}`);
+		}
+	}
+	
+	const EventStreamContentType = 'text/event-stream';
+	const DefaultRetryInterval = 1000;
+	const LastEventId = 'last-event-id';
+	
+    var { signal: inputSignal, headers: inputHeaders, onopen: inputOnOpen, onmessage, onclose, onerror, openWhenHidden, fetch: inputFetch } = _a, rest = __rest(_a, ["signal", "headers", "onopen", "onmessage", "onclose", "onerror", "openWhenHidden", "fetch"]);
+    return new Promise((resolve, reject) => {
+        const headers = Object.assign({}, inputHeaders);
+        if (!headers.accept) {
+            headers.accept = EventStreamContentType;
+        }
+        let curRequestController;
+        function onVisibilityChange() {
+            curRequestController.abort();
+            if (!document.hidden) {
+                create();
+            }
+        }
+        if (!openWhenHidden) {
+            document.addEventListener('visibilitychange', onVisibilityChange);
+        }
+        let retryInterval = DefaultRetryInterval;
+        let retryTimer = 0;
+        function dispose() {
+            document.removeEventListener('visibilitychange', onVisibilityChange);
+            window.clearTimeout(retryTimer);
+            curRequestController.abort();
+        }
+        inputSignal === null || inputSignal === void 0 ? void 0 : inputSignal.addEventListener('abort', () => {
+            dispose();
+            resolve();
+        });
+        const fetch = inputFetch !== null && inputFetch !== void 0 ? inputFetch : window.fetch;
+        const onopen = inputOnOpen !== null && inputOnOpen !== void 0 ? inputOnOpen : defaultOnOpen;
+        async function create() {
+            var _a;
+            curRequestController = new AbortController();
+            try {
+                const response = await fetch(input, Object.assign(Object.assign({}, rest), { headers, signal: curRequestController.signal }));
+                await onopen(response);
+                await getBytes(response.body, getLines(getMessages(id => {
+                    if (id) {
+                        headers[LastEventId] = id;
+                    }
+                    else {
+                        delete headers[LastEventId];
+                    }
+                }, retry => {
+                    retryInterval = retry;
+                }, onmessage)));
+                onclose === null || onclose === void 0 ? void 0 : onclose();
+                dispose();
+                resolve();
+            }
+            catch (err) {
+                if (!curRequestController.signal.aborted) {
+                    try {
+                        const interval = (_a = onerror === null || onerror === void 0 ? void 0 : onerror(err)) !== null && _a !== void 0 ? _a : retryInterval;
+                        window.clearTimeout(retryTimer);
+                        retryTimer = window.setTimeout(create, interval);
+                    }
+                    catch (innerErr) {
+                        dispose();
+                        reject(innerErr);
+                    }
+                }
+            }
+        }
+        create();
+    });
+}
+
+class FatalError extends Error {
+};
 
 console.log("import std.js");

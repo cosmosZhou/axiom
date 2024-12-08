@@ -10,16 +10,12 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import sets, algebra
+    from Axiom import Sets
 
     x = Symbol(extended_real=True)
     Eq << apply(Abs(x) < oo)
 
-    Eq << Eq[0].this.rhs.apply(sets.el_interval.to.et)
-
-    
-    Eq << Eq[-1].this.lhs.apply(algebra.abs_lt.to.et)
-    
+    Eq << Eq[0].this.apply(Sets.Abs_Lt_oo.equ.is_real)
 
 
 if __name__ == '__main__':

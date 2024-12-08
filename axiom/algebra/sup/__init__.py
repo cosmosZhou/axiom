@@ -1,3 +1,4 @@
 from . import limits
-from . import to
-from . import piece
+from . import Piece
+from . import eq
+from . import ge

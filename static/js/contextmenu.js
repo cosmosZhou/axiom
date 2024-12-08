@@ -1,14 +1,14 @@
 console.log('import contextmenu.js');
 
 export function length(inst){
-	return inst.color.length;	
+	return inst.color.length;
 }
 
 export function coordinates(inst){
 	var self = inst.$parent;
 	var table = self.$refs.table;
 	return [inst.left - table.getScrollLeft(), inst.top - table.getScrollTop()];
-}		
+}
 
 export function style_font(inst, j){
 	if (inst.focusedIndex == j)
@@ -62,15 +62,15 @@ export function click(inst, event){
 	var self = event.target;
 	inst.$parent.codonContextmenu = '';
 	eval(`this.${self.textContent.replace(/ /g, '_')}`)();
-}		
+}
 		
-export function mouseover(inst, event){                            
-    var li = event.target;  
+export function mouseover(inst, event){
+    var li = event.target;
     var focusedIndex = inst.$el.children.indexOf(li);
     if (focusedIndex != inst.focusedIndex && focusedIndex >= 0){
     	inst.focusedIndex = focusedIndex;
     }
-}        
+}
 	
 export const directives = {
 	focus: {

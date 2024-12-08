@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.sum.doit.outer.setlimit import doit
+    from Axiom.Algebra.Sum.doit.outer.setlimit import doit
     return Equal(self, doit(Product, self))
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     x = Symbol(real=True, shape=(oo, oo))
     i, j, k, a = Symbol(integer=True)
     f, g = Function(etype=dtype.integer)
@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << s(i).this.defun()
 
-    Eq << algebra.eq.then.eq.prod.apply(Eq[-1], (i, {a}))
+    Eq << Algebra.Eq.to.Eq.Prod.apply(Eq[-1], (i, {a}))
 
     Eq << Eq[-1].this.lhs.defun()
 

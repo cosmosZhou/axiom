@@ -8,13 +8,13 @@ def apply(imply):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x = Symbol(real=True)
     f, g = Function(shape=(), real=True)
     Eq << apply(Equal(f(x), g(x)))
 
-    Eq << Eq[1].apply(algebra.eq.then.eq.log)
+    Eq << Eq[1].apply(Algebra.Eq.to.Eq.Log)
 
 
 if __name__ == '__main__':

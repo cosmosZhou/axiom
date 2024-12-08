@@ -17,13 +17,13 @@ def apply(imply):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
     i, j = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
 
     Eq << apply(All[i:n](Unequal(i, j)))
 
-    Eq << sets.notin.then.all.ne.apply(Eq[1], reverse=True)
+    Eq << Sets.NotIn.to.All.Ne.apply(Eq[1], reverse=True)
 
 
 if __name__ == '__main__':

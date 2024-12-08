@@ -8,42 +8,42 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import stats, algebra
+    from Axiom import Stats, Algebra
 
     n = Symbol(integer=True, positive=True)
     x = Symbol(real=True, random=True, shape=(n,))
     Eq << apply(Variance[x](x - Expectation(x)))
 
-    Eq << Eq[0].lhs.this.apply(stats.var.to.expect)
+    Eq << Eq[0].lhs.this.apply(Stats.Var.eq.Expect)
 
-    Eq << Eq[-1].this.rhs.find(Expectation[Add]).apply(stats.expect.to.add)
+    Eq << Eq[-1].this.rhs.find(Expectation[Add]).apply(Stats.Expect.eq.Add)
 
-    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(algebra.mul.to.add)
+    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
 
-    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(algebra.mul.to.add)
+    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
 
-    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(algebra.mul.to.add)
+    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
 
-    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(algebra.mul.to.add)
+    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
 
-    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(algebra.mul.to.add)
+    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
 
-    Eq << Eq[-1].this.rhs.find(Expectation[Add]).apply(stats.expect.to.add)
+    Eq << Eq[-1].this.rhs.find(Expectation[Add]).apply(Stats.Expect.eq.Add)
 
-    Eq << Eq[-1].this.rhs.find(Expectation[Add]).apply(stats.expect.to.add)
+    Eq << Eq[-1].this.rhs.find(Expectation[Add]).apply(Stats.Expect.eq.Add)
 
-    Eq << Eq[0].this.rhs.apply(stats.var.to.expect)
+    Eq << Eq[0].this.rhs.apply(Stats.Var.eq.Expect)
 
-    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(algebra.mul.to.add)
+    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
 
-    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(algebra.mul.to.add)
+    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
 
-    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(algebra.mul.to.add)
+    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
 
-    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(algebra.mul.to.add)
+    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
 
-    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(algebra.mul.to.add)
-    
+    Eq << Eq[-1].this.rhs.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
+
 
 
 if __name__ == '__main__':

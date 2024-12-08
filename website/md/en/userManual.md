@@ -26,15 +26,15 @@
 <p>
 	click the hyperlink pointed by the red arrow, we can view the whole
 	proof process of <a
-		href='../axiom/discrete/combinatorics/binomial/theorem.php'>binomial
+		href='../axiom/Discrete/combinatorics/binomial/theorem.php'>binomial
 		theorem</a>, we can also directly visit the get api: <a
 		href='../axiom/search.php?keyword=binomial'>www.axiom.top/sympy/axiom.php?keyword=binomial</a>
 	to acquire the search results. Both the graphical user interface and
 	get api support<a
 		href='http://www.regular-expressions.info/tutorial.html'>regular
 		expression</a>, and whole word matching, e.g., <a
-		href='../axiom/search.php?keyword=discrete.*binomial&regularExpression=true'>www.axiom.top/sympy/axiom.php?keyword=discrete.*binomial&amp;regularExpression=true</a>
-	which indicates searching theorems that include both 'discrete' and
+		href='../axiom/search.php?keyword=Discrete.*binomial&regularExpression=true'>www.axiom.top/sympy/axiom.php?keyword=Discrete.*binomial&amp;regularExpression=true</a>
+	which indicates searching theorems that include both 'Discrete' and
 	'binomial'.
 </p>
 <hr />
@@ -43,7 +43,7 @@
 <br>
 <h4>Dependency Graph of Callee Theorems</h4>
 Take
-<a href='../axiom.php?module=discrete.combinatorics.binomial.theorem'>Newton's
+<a href='../axiom.php?module=Discrete.combinatorics.binomial.theorem'>Newton's
 	Binomial Theorem</a>
 as an example :
 <br>
@@ -54,7 +54,7 @@ see the hint "callee hierarchy", as follows:
 <br>
 click the hyperlink, we enter the
 <a
-	href='../axiom.php?callee=axiom.discrete.combinatorics.binomial.theorem'>Dependency
+	href='../axiom.php?callee=axiom.Discrete.combinatorics.binomial.theorem'>Dependency
 	Graph of Callee Theorems</a>
 , as follows:
 
@@ -63,8 +63,8 @@ click the hyperlink, we enter the
 the graph aboved shows the following theorems that employed 'binomial
 theorem' in their process of proof:
 <ul>
-	<li><a href='../axiom.php?module=discrete.difference.factorial'>axiom.discrete.difference.factorial</a></li>
-	<li><a href='../axiom.php?module=discrete.matrix.vandermonde.concatenate'>axiom.discrete.matrix.vandermonde.concatenate</a></li>
+	<li><a href='../axiom.php?module=Discrete.difference.factorial'>axiom.Discrete.difference.factorial</a></li>
+	<li><a href='../axiom.php?module=Discrete.matrix.vandermonde.concatenate'>axiom.Discrete.matrix.vandermonde.concatenate</a></li>
 </ul>
 in "Dependency Graph of Callee Theorems", click >>>>(expansion button),
 we can further view the theorems that are callees of the callee of
@@ -73,7 +73,7 @@ content that we expanded before.
 <br>
 in "Dependency Graph of Callee Theorems", click the hyperlink
 <a
-	href='../axiom.php?callee=axiom.discrete.combinatorics.binomial.theorem#deep'>callee</a>
+	href='../axiom.php?callee=axiom.Discrete.combinatorics.binomial.theorem#deep'>callee</a>
 , we can expand all the callee hiearchies, as follows:
 <img class=zoom src="png/hierarchy/deep/callee.png" />
 <hr />
@@ -84,17 +84,17 @@ in "Dependency Graph of Callee Theorems", click the hyperlink
 <br>
 in "Dependency Graph of Callee Theorems", click the hyperlink
 <a
-	href='../axiom.php?caller=axiom.discrete.combinatorics.binomial.theorem'>caller</a>
+	href='../axiom.php?caller=axiom.Discrete.combinatorics.binomial.theorem'>caller</a>
 , we can view the Dependency Graph of Caller Theorems, as follows:
 <img class=zoom src="png/hierarchy/caller.png" />
 <hr />
 the results above shows that during the process of proving 'binomial
 theorem', we employed the following sub-theorems:
 <ul>
-	<li><a href='../axiom.php?module=discrete.combinatorics.binomial.Pascal'>axiom.discrete.combinatorics.binomial.Pascal</a>:
+	<li><a href='../axiom.php?module=Discrete.combinatorics.binomial.Pascal'>axiom.Discrete.combinatorics.binomial.Pascal</a>:
 		<a href='https://en.wikipedia.org/wiki/Pascal%27s_rule'>Pascal's Rule</a>
 		in Combinatorics, named after the French methematician Pascal.</li>
-	<li><a href='../axiom.php?module=algebra.infer.then.cond.induction'>axiom.algebra.infer.then.cond.induction</a>:
+	<li><a href='../axiom.php?module=Algebra.infer.to.cond.induction'>axiom.Algebra.infer.to.cond.induction</a>:
 		the first <a
 		href='https://en.wikipedia.org/wiki/Mathematical_induction'>mathematical
 			induction</a>, a method of recursively prooving mathematical theorems
@@ -104,7 +104,7 @@ theorem', we employed the following sub-theorems:
 
 in "Dependency Graph of Callee Theorems", click the hyperlink
 <a
-	href='../axiom.php?caller=axiom.discrete.combinatorics.binomial.theorem#deep'>caller</a>
+	href='../axiom.php?caller=axiom.Discrete.combinatorics.binomial.theorem#deep'>caller</a>
 , we can expand the all callee hierarchies, as follows:
 <img class=zoom src="png/hierarchy/deep/caller.png" />
 <hr />
@@ -151,8 +151,8 @@ Take windows system as an example:
 	the whole program, as well as the automatic prooving results of the
 	whole theorem library, for example:<br> in all 868 axioms<br> unproved:<br>
 	(the detail is omitted)....... <br> websites:<br> (the detail is
-	omitted)....... <br> seconds costed = 45.13455533981323<br> minutes
-	costed = 0.7522425889968872<br> total unproved = 22 <br> total failures
+	omitted)....... <br> seconds cost = 45.13455533981323<br> minutes
+	cost = 0.7522425889968872<br> total unproved = 22 <br> total failures
 	= 0
 
 </li>

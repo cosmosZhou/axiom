@@ -1,4 +1,4 @@
-from . import subs
-from . import concat
-from . import shift
 from . import pop
+from . import subs
+from . import shift
+from . import concat

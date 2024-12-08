@@ -89,8 +89,8 @@ _latin = list(string.ascii_letters)
 # OSINEQ should not be imported as they clash; gamma, pi and zeta clash, too
 _greek = list(greeks) # make a copy, so we can mutate it
 # Note: We import lamda since lambda is a reserved keyword in Python
-_greek.remove("lambda")
-_greek.append("lamda")
+# _greek.remove("lambda")
+# _greek.append("lamda")
 
 ns = {}  # type: Dict[str, Any]
 exec_('from sympy import *', ns)

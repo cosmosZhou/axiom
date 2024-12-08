@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self, index=0):
-    from axiom.algebra.sum.limits.concat import rewrite
+    from Axiom.Algebra.Sum.limits.concat import rewrite
     return Equal(self, rewrite(MatProduct, self, index))
 
 
 @prove
 def prove(Eq):
-    from axiom import discrete
+    from Axiom import Discrete
 
     n, m = Symbol(integer=True, positive=True)
     i = Symbol(domain=Range(n - 1))
@@ -17,9 +17,9 @@ def prove(Eq):
     f = Function(real=True, shape=(m, m))
     Eq << apply(MatProduct[x[i], x[i + 1:n + 1]](f(x[i:n])))
 
-    Eq << Eq[0].this.rhs.apply(discrete.matProd.limits.shift.slice)
+    Eq << Eq[0].this.rhs.apply(Discrete.MatProd.limits.shift.Slice)
 
-    
+
 
 
 if __name__ == '__main__':

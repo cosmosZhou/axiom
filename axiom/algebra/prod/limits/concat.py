@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self, index=0):
-    from axiom.algebra.sum.limits.concat import rewrite
+    from Axiom.Algebra.Sum.limits.concat import rewrite
     return Equal(self, rewrite(Product, self, index))
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, positive=True)
     i = Symbol(domain=Range(n - 1))
@@ -17,9 +17,9 @@ def prove(Eq):
     f = Function(real=True, shape=())
     Eq << apply(Product[x[i], x[i + 1:n + 1]](f(x[i:n])))
 
-    Eq << Eq[0].this.rhs.apply(algebra.prod.limits.shift.slice)
+    Eq << Eq[0].this.rhs.apply(Algebra.Prod.limits.shift.Slice)
 
-    
+
 
 
 if __name__ == '__main__':

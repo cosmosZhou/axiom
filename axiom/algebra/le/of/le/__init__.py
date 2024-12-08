@@ -1,4 +1,4 @@
 from . import relax
-from . import exp
 from . import transport
-from . import log
+from . import Exp
+from . import Log

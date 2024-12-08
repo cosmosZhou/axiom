@@ -1,3 +1,3 @@
-from . import to
+from . import Piece
 from . import limits
-from . import piece
+from . import eq

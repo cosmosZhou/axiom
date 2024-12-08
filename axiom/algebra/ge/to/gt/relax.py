@@ -2,26 +2,38 @@ from util import *
 
 
 @apply
-def apply(given):
+def apply(given, lower=None, upper=None, step=-1):
     lhs, rhs = given.of(GreaterEqual)
-    assert lhs.is_integer
-    return Greater(lhs, rhs - 1)
+    if upper is not None:
+        assert upper - lhs > 0
+        lhs = upper
+    elif lower is not None:
+        assert rhs - lower > 0
+        rhs = lower
+    elif step > 0:
+        lhs += step
+    elif step < 0:
+        rhs += step
+
+    return Greater(lhs, rhs)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
-    x, y = Symbol(integer=True)
-    Eq << apply(x >= y)
+    x, y = Symbol(real=True, given=True)
+    Eq << apply(x >= y, y - 1)
 
-    Eq << algebra.iff.of.et.infer.apply(Eq[0])
+    Eq << Greater(y, y - 1, plausible=True)
 
-    Eq << Eq[-2].this.lhs.apply(algebra.ge.then.gt.relax)
+    Eq << Algebra.Ge.Gt.to.Gt.trans.apply(Eq[0], Eq[-1])
 
-    Eq << Eq[-1].this.rhs.apply(algebra.ge.of.gt.relax)
+
+
 
 
 if __name__ == '__main__':
     run()
-# created on 2023-11-05
+# created on 2018-05-29
+# updated on 2023-11-05

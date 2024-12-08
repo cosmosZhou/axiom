@@ -1,3 +1,3 @@
-from . import eq
-from . import then
-from . import lamda
+from . import Eq
+from . import Lamda
+from . import to

@@ -1,1 +1,1 @@
-from . import notin
+from . import NotIn

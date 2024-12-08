@@ -13,13 +13,13 @@ def apply(given, old, new):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     n, m = Symbol(integer=True)
     f = Function(integer=True)
 
     Eq << apply(All[n:m + 1](f(n) > 0), n, m - n)
 
-    Eq << algebra.all.then.all.limits.subs.reverse.apply(Eq[1], n, m - n)
+    Eq << Algebra.All.to.All.limits.subs.reverse.apply(Eq[1], n, m - n)
 
 
 if __name__ == '__main__':

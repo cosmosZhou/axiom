@@ -1,3 +1,3 @@
-from . import to
-from . import PQ_equality
-from . import stirling
+from . import Stirling
+from . import PQ_Equality
+from . import eq

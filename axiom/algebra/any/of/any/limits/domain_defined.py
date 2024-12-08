@@ -26,7 +26,7 @@ def apply(given, wrt=None):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     m, n = Symbol(integer=True, positive=True, given=True)
     f = Symbol(real=True, shape=(n,), given=True)
@@ -35,7 +35,7 @@ def prove(Eq):
 
     Eq << ~Eq[0]
 
-    Eq << algebra.all.then.all.limits.domain_defined.apply(Eq[-1])
+    Eq << Algebra.All.to.All.limits.domain_defined.apply(Eq[-1])
 
     Eq << ~Eq[-1]
 

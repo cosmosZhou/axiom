@@ -44,7 +44,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra, sets
+    from Axiom import Algebra, Sets
 
     i, j, d, a = Symbol(integer=True)
     n, m = Symbol(integer=True, positive=True)
@@ -52,13 +52,13 @@ def prove(Eq):
     g = Symbol(shape=(oo, oo), real=True)
     Eq << apply(Sum[i:j + d:j + n, j:a:m](f[i] * g[i, j]))
 
-    Eq << Eq[0].this.lhs.apply(algebra.sum.bool)
+    Eq << Eq[0].this.lhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.lhs.expr.args[-1].arg.apply(sets.el_range.el_range.transform.ij_parallel)
+    Eq << Eq[-1].this.lhs.expr.args[-1].arg.apply(Sets.In_Range.In_Range.transform.ij_parallel)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.bool)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.swap)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Sum.limits.swap)
 
 
 if __name__ == '__main__':

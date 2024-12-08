@@ -10,16 +10,16 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     S = Symbol(etype=dtype.real)
     e = Symbol(real=True)
     f = Function(shape=(), integer=True)
     Eq << apply(All[e:S](f(e) > 0))
 
-    Eq << algebra.all.of.ou.apply(Eq[0])
+    Eq << Algebra.All.of.Or.apply(Eq[0])
 
-    Eq << algebra.ou.of.cond.apply(Eq[-1], index=0)
+    Eq << Algebra.Or.of.Cond.apply(Eq[-1], index=0)
 
 
 
@@ -27,6 +27,6 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-from . import subs
 # created on 2018-12-13
 # updated on 2023-05-20
+from . import subs

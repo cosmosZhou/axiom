@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.sum.doit.inner import doit
+    from Axiom.Algebra.Sum.doit.inner import doit
     return Equal(self, doit(Product, self))
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     x = Symbol(real=True, shape=(oo, oo))
     i, j = Symbol(integer=True)
     m = Symbol(integer=True, positive=True)
@@ -21,9 +21,9 @@ def prove(Eq):
 
     Eq << s[i].this.definition
 
-    Eq << algebra.eq.then.eq.prod.apply(Eq[-1], (i, 0, m))
+    Eq << Algebra.Eq.to.Eq.Prod.apply(Eq[-1], (i, 0, m))
 
-    Eq << Eq[-2].this.rhs.apply(algebra.prod.to.mul.doit)
+    Eq << Eq[-2].this.rhs.apply(Algebra.Prod.eq.Mul.doit)
 
     Eq << Eq[-2].subs(Eq[-1]).reversed
 
@@ -31,5 +31,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-from . import setlimit
 # created on 2020-03-05
+from . import setlimit

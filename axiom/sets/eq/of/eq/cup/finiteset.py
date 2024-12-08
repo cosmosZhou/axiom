@@ -17,7 +17,7 @@ def apply(imply):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
     n = Symbol(integer=True, positive=True)
     a, b = Symbol(integer=True, shape=(n,))
 
@@ -25,7 +25,7 @@ def prove(Eq):
 
     i = Eq[0].lhs.variable
 
-    Eq << sets.eq.then.eq.cup.finiteset.apply(Eq[-1], (i, 0, n), simplify=None)
+    Eq << Sets.Eq.to.Eq.Cup.FiniteSet.apply(Eq[-1], (i, 0, n), simplify=None)
 
 
 if __name__ == '__main__':

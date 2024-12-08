@@ -2941,7 +2941,13 @@ class Basic(Printable, metaclass=ManagedProperties):
         ...
 
     def apply(self, axiom, *args, **kwargs):
-        eq = axiom.apply(self, *args, **kwargs)
+        try:
+            eq = axiom.apply(self, *args, **kwargs)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            print(e)
+            return
         assert eq.is_Equal
         assert eq.lhs is self
         return eq.rhs

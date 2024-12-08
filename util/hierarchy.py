@@ -72,7 +72,7 @@ def topological_sort():
 
 
 def update_timestamp_for_axiom(module, create_time):
-    import axiom
+    import Axiom
     module = eval('axiom.' + module)
 #     print(module, 'is created on', create_time)
     file = module.__file__

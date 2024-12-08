@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self, i=0, j=1):
-    from axiom.algebra.sum.limits.swap import rewrite
+    from Axiom.Algebra.Sum.limits.swap import rewrite
     return Equal(self, rewrite(Integral, self, i, j))
 
 
@@ -14,7 +14,7 @@ def prove(Eq):
     f, g = Function(real=True)
     Eq << apply(Integral[x:a:b, y:c:d](f(x) * g(x, y)))
 
-    
+
 
 
 if __name__ == '__main__':

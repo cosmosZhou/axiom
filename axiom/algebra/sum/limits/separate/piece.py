@@ -30,7 +30,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     i, j = Symbol(integer=True)
     A, B, C, D = Symbol(etype=dtype.integer)
 
@@ -38,21 +38,21 @@ def prove(Eq):
 
     Eq << apply(Sum[j:D, i:C](Piecewise((f(i, j), Element(i, A)), (g(i, j), Element(i, B)), (h(i, j), True))))
 
-    Eq << Eq[0].this.lhs.apply(algebra.sum.bool)
+    Eq << Eq[0].this.lhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.rhs.expr.args[0].expr.apply(algebra.sum.bool)
-    Eq << Eq[-1].this.rhs.expr.args[1].expr.apply(algebra.sum.bool)
-    Eq << Eq[-1].this.rhs.expr.args[2].expr.apply(algebra.sum.bool)
+    Eq << Eq[-1].this.rhs.expr.args[0].expr.apply(Algebra.Sum.Bool)
+    Eq << Eq[-1].this.rhs.expr.args[1].expr.apply(Algebra.Sum.Bool)
+    Eq << Eq[-1].this.rhs.expr.args[2].expr.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.bool)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.find(Bool[And]).apply(algebra.bool.to.mul)
-    
-    Eq << Eq[-1].this.find(Bool[And]).apply(algebra.bool.to.mul)
-    
-    Eq << Eq[-1].this.find(Bool[And]).apply(algebra.bool.to.mul)
+    Eq << Eq[-1].this.find(Bool[And]).apply(Algebra.Bool.eq.Mul)
 
-    Eq << Sum(Eq[-1].lhs.expr, Eq[-1].lhs.limits[0]).this.apply(algebra.sum.to.piece)
+    Eq << Eq[-1].this.find(Bool[And]).apply(Algebra.Bool.eq.Mul)
+
+    Eq << Eq[-1].this.find(Bool[And]).apply(Algebra.Bool.eq.Mul)
+
+    Eq << Sum(Eq[-1].lhs.expr, Eq[-1].lhs.limits[0]).this.apply(Algebra.Sum.eq.Piece)
 
     Eq << Eq[-2].this.rhs.expr.subs(Eq[-1].reversed)
 

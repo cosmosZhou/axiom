@@ -12,7 +12,7 @@ from sympy.concrete.expr_with_limits import ExprWithLimits
 from sympy.core.cache import cacheit
 from sympy.core.expr import AtomicExpr
 from sympy.core.containers import Tuple
-from _collections import defaultdict
+from collections import defaultdict
 import std
 from sympy.core.logic import fuzzy_et
 

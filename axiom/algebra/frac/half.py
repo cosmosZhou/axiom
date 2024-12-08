@@ -12,24 +12,24 @@ def apply(fraction):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True)
     Eq << apply(frac(-n / 2))
 
-    Eq << algebra.cond.of.et.infer.split.apply(Eq[0], cond=Equal(n % 2, 0))
+    Eq << Algebra.Cond.of.And.Imply.split.apply(Eq[0], cond=Equal(n % 2, 0))
 
-    Eq <<= algebra.infer.of.infer.et.apply(Eq[-2]), algebra.infer.of.infer.et.apply(Eq[-1])
+    Eq <<= Algebra.Imply.of.Imply.And.apply(Eq[-2]), Algebra.Imply.of.Imply.And.apply(Eq[-1])
 
-    Eq <<= Eq[-2].this.rhs.find(Equal[0]).apply(algebra.is_even.of.any), Eq[-1].this.rhs.find(Unequal[0]).apply(algebra.mod_ne_zero.of.any)
+    Eq <<= Eq[-2].this.rhs.find(Equal[0]).apply(Algebra.Eq_even.of.Any), Eq[-1].this.rhs.find(Unequal[0]).apply(Algebra.Ne_.Mod.Zero.of.Any)
 
-    Eq <<= Eq[-2].this.rhs.apply(algebra.cond.any.of.any.et, simplify=None), Eq[-1].this.rhs.apply(algebra.cond.any.of.any.et, simplify=None)
+    Eq <<= Eq[-2].this.rhs.apply(Algebra.Cond.Any.of.Any.And, simplify=None), Eq[-1].this.rhs.apply(Algebra.Cond.Any.of.Any.And, simplify=None)
 
-    Eq <<= Eq[-2].this.find(And).apply(algebra.eq.cond.of.et.subs), Eq[-1].this.find(And).apply(algebra.eq.cond.of.et.subs)
+    Eq <<= Eq[-2].this.find(And).apply(Algebra.Eq.Cond.of.And.subs), Eq[-1].this.find(And).apply(Algebra.Eq.Cond.of.And.subs)
 
-    Eq << Eq[-2].this.lhs.apply(algebra.is_even.then.any)
+    Eq << Eq[-2].this.lhs.apply(Algebra.Eq_even.to.Any)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.mod_ne_zero.then.any)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Ne_.Mod.Zero.to.Any)
 
 
 

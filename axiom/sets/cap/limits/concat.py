@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self, index=0):
-    from axiom.algebra.sum.limits.concat import rewrite
+    from Axiom.Algebra.Sum.limits.concat import rewrite
     return Equal(self, rewrite(Cap, self, index))
 
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
 
     n = Symbol(integer=True, positive=True)
     i = Symbol(domain=Range(n - 1))
@@ -17,9 +17,9 @@ def prove(Eq):
     f = Function(etype=dtype.real, shape=())
     Eq << apply(Cap[x[i], x[i + 1:n + 1]](f(x[i:n])))
 
-    Eq << Eq[0].this.rhs.apply(sets.cap.limits.shift.slice)
+    Eq << Eq[0].this.rhs.apply(Sets.Cap.limits.shift.Slice)
 
-    
+
 
 
 if __name__ == '__main__':

@@ -1,2 +1,2 @@
 from . import swap
-from . import cup
+from . import Cup

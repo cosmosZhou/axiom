@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self, index=0, offset=None):
-    from axiom.algebra.sum.limits.subs.offset import limits_subs
+    from Axiom.Algebra.Sum.limits.subs.offset import limits_subs
     return Equal(self, limits_subs(Minima, self, index, offset), evaluate=False)
 
 

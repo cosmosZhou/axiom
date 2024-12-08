@@ -1,3 +1,3 @@
-from . import then
-from . import ge
-from . import le
+from . import Ge
+from . import Le
+from . import to

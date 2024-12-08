@@ -1,3 +1,3 @@
-from . import to
-from . import sum
-from . import lamda
+from . import Sum
+from . import Lamda
+from . import eq

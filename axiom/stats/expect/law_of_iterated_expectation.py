@@ -5,20 +5,20 @@ def rewrite(self, *vars):
     given = S.true
     for v in vars:
         given &= v.surrogate
-        
+
     expr, *limits_inner = self.of(Expectation)
     if expr.is_Conditioned:
         expr, given_outer = expr.args
         given &= given_outer
     else:
         given_outer = None
-    
+
     vars_given = set()
     for x in expr.random_symbols:
         for v in vars:
             if v.index_contains(x):
                 vars_given.add(x)
-    
+
     from std import deleteIndices
     limits_weighted = []
     def process(limit):
@@ -29,7 +29,7 @@ def rewrite(self, *vars):
             return True
 
     deleteIndices(limits_inner, process)
-    
+
     if limits_weighted:
         limits_outer = []
         for v in vars:
@@ -41,18 +41,18 @@ def rewrite(self, *vars):
                 limit = (v,)
 
             limits_outer.append(limit)
-            
+
         for x, *cond in limits_weighted:
             if x.is_Indexed:
                 x = x.base
             limits_inner.append((x, *cond))
     else:
         limits_outer = []
-        
+
     rhs = Expectation(Expectation(expr | given, *limits_inner), *limits_outer, given=given_outer)
     assert rhs.random_symbols == self.random_symbols
     return rhs
-    
+
 @apply
 def apply(self, *vars):
     return Equal(self, rewrite(self, *vars))
@@ -60,7 +60,7 @@ def apply(self, *vars):
 
 @prove
 def prove(Eq):
-    from axiom import stats
+    from Axiom import Stats
 
     # this is the proof of the law of iterated expectations
     # https://en.wikipedia.org/wiki/Law_of_total_expectation
@@ -68,10 +68,10 @@ def prove(Eq):
     f = Function(real=True, shape=())
     Eq << apply(Expectation(f(x)), y, z)
 
-    Eq << Eq[-1].this.rhs.apply(stats.expect.law_of_total_expectation)
+    Eq << Eq[-1].this.rhs.apply(Stats.Expect.law_of_total_expectation)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

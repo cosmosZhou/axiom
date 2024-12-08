@@ -2,9 +2,9 @@ from util import *
 
 
 @apply
-def apply(ne, notin):
+def apply(ne, NotIn):
     _x, y = ne.of(Unequal)
-    x, s = notin.of(NotElement)
+    x, s = NotIn.of(NotElement)
 
     if x != _x:
         S[x], y = y, _x
@@ -14,13 +14,13 @@ def apply(ne, notin):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
 
     x, y = Symbol(integer=True, given=True)
     s = Symbol(etype=dtype.integer, given=True)
     Eq << apply(Unequal(x, y), NotElement(x, s))
 
-    Eq << sets.ne.of.notin.apply(Eq[0], simplify=False)
+    Eq << Sets.Ne.of.NotIn.apply(Eq[0], simplify=False)
 
     Eq <<= Eq[-1] & Eq[1]
 

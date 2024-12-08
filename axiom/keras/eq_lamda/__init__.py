@@ -1,2 +1,2 @@
-from . import eq_lamda
-from . import then
+from . import Eq_Lamda
+from . import to

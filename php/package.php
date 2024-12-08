@@ -15,7 +15,7 @@ function package_is_theorem($file)
 }
 
 // error_log("path_info = $path_info");
-if (! std\endsWith($path_info, '/')) {
+if (! str_ends_with($path_info, '/')) {
     $path_info .= "/";
 }
 
@@ -34,7 +34,7 @@ foreach (scandir($path_info) as $file) {
         default:
 //             error_log("file = $file");
 
-            if (std\endsWith($file, '.py')) {
+            if (str_ends_with($file, '.py')) {
                 $theorems[] = substr($file, 0, - 3);
             } else {
                 if (package_is_theorem($file)) {
@@ -46,7 +46,7 @@ foreach (scandir($path_info) as $file) {
     }
 }
 
-if (std\endsWith($title, '/')) {
+if (str_ends_with($title, '/')) {
     $title = substr($title, 0, - 1);
 }
 ?>

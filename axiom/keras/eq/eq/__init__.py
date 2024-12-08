@@ -1,2 +1,2 @@
-from . import then
-from . import eq
+from . import Eq
+from . import to

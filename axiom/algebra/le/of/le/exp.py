@@ -10,12 +10,12 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y = Symbol(real=True)
     Eq << apply(LessEqual(x, y))
 
-    Eq << algebra.le.then.le.log.apply(Eq[1])
+    Eq << Algebra.Le.to.Le.Log.apply(Eq[1])
 
 
 if __name__ == '__main__':

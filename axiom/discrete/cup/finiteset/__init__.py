@@ -1,2 +1,2 @@
-from . import matmul
 from . import rmatmul
+from . import Dot

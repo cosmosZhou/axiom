@@ -24,32 +24,12 @@ git clone --depth=1 -b master https://github.com/cosmosZhou/axiom.git
 cd axiom  
 python run.py  
 
-you'll get the following output:   
-in all 4069 axioms  
-plausible:  
-.\axiom\stats\distributed\then\et\eq.py  
-./target/stats/distributed/then/et/eq.html  
-
-.\axiom\discrete\eq\eq_matmul\eq_piece\then\eq\matmul\PLU.py  
-./target/discrete/eq/eq_matmul/eq_piece/then/eq/matmul/PLU.html  
-
-.\axiom\stats\eq_inverse\then\et\eq.py  
-./target/stats/eq_inverse/then/et/eq.html  
-
-.\axiom\keras\eq_conditioned\eq_expect\eq_expect\then\et\eq\expect\Bellman\optimality.py  
-./target/keras/eq_conditioned/eq_expect/eq_expect/then/et/eq/expect/Bellman/optimality.html  
-
-seconds costed = 91.74423789978027  
-minutes costed = 1.5290706316630045  
-total plausible = 4  
-total failed    = 0  
-
 
 open the folder target, and then you can browse the visualized structure of python and latex of axioms and theorems.  
 to debug one single file, execute the following command:  
-python run.py discrete.binom.to.add.Pascal  
+python run.py Discrete.Binom.eq.Add.Pascal  
 or try to open and execute the python file directly:   
-.\axiom\discrete/binom/to/add/Pascal.py  
+.\Axiom\Discrete/Binom/eq/Add/Pascal.py  
 
 
 # IDE for online-debugging

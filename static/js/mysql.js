@@ -2,13 +2,13 @@ console.log('import mysql.js');
 
 export function	is_string(Type){
 	return Type.match(/varchar\(\d+\)|text/);
-}	
+}
 
 export function	is_json(Type){
 	return Type.match(/json/);
 }
 
-export function	is_number(Type){
+export function	is_numeric(Type){
 	return Type.match(/int|double/);
 }
 
@@ -24,7 +24,7 @@ export function	is_enum(Type){
 	var m = Type.match(/enum\((\S+)\)/);
 	if (!m)
 		return;
-	var option = m[1].split(",");	
+	var option = m[1].split(",");
 	return option.map(el => el.slice(1, -1));
 }
 
@@ -35,8 +35,11 @@ export async function show_tables(database, host, user, token) {
 }
 
 export async function show_full_columns(database, table, host, user, token){
-	if (database)
+	if (database) {
+		if (table.match(/\W/))
+			table = '`' + table + '`';
 		table =	`${database}.${table}`;
+	}
 
 	var desc = await query(host, user, token, `show full columns from ${table}`);
 	var dtype = {};
@@ -81,28 +84,68 @@ export async function show_full_columns(database, table, host, user, token){
 		}
 	}
 	
-	return {desc, dtype, transform, style_entity, api, Comment: comments};
+	dtype.__transform__ = transform;
+	return {desc, dtype, style_entity, api, Comment: comments};
+}
+
+function parse_table(name, kwargs){
+	var entries = Object.entries(kwargs);
+	if (entries.length > 1) {
+		if (kwargs.join || kwargs.inner_join) {
+			var using = kwargs.using;
+			var on = kwargs.on;
+			var join_type = 'inner_join';
+			var [table, join_table] = kwargs.join || kwargs.inner_join;
+		}
+		else
+			return parse_expression(name, kwargs);
+	}
+	else {
+		var [[join_type, table]] = entries;
+		if (join_type.fullmatch(/join|inner_join|left_join|right_join|cross_join|full_join/)) {
+			using = on = null;
+			var [table, join_table] = table;
+		}
+		else
+			return parse_expression(name, kwargs);
+	}
+	// for cases of table joined
+	var sql = [];
+	if (table.isString)
+		sql.push({name: [...name, join_type, 0], value: table});
+	else
+		sql.push(...parse_table([...name, join_type, 0], table));
+
+	sql.push(...parse_expression([...name, join_type, 1], join_table));
+
+	if (using) {
+		if (using.isString)
+			using = [using];
+		sql.push(...parse_expression([...name, 'using'], using));
+	}
+	else if (on)
+		sql.push(...parse_expression([...name, 'on'], on));
+	return sql;
 }
 
 export function parse_statement(name, kwargs){
 	var sql = [];
-	if (kwargs.with) {
-		sql.push(...parse_expression([...name, 'with'], kwargs.with));	
-	}
+	if (kwargs.with)
+		sql.push(...parse_expression([...name, 'with'], kwargs.with));
+	else if (kwargs.with_recursive)
+		sql.push(...parse_expression([...name, 'with_recursive'], kwargs.with_recursive));
 	
-	var {select} = kwargs;
-	if (kwargs.set) {
-		var {set, update} = kwargs;
+	var {select, set, from, where, group, order, limit, offset} = kwargs;
+	if (set) {
 		if (set.isArray) {
 			for (var [i, set] of enumerate(set)) {
-				sql.push(...parse_expression([...name, 'set', i], set));	
+				sql.push(...parse_expression([...name, 'set', i], set));
 			}
 		}
-		else {
+		else
 			sql.push(...parse_expression([...name, 'set'], set));
-		}
 		
-		sql.push(...parse_expression([...name, 'update'], update));
+		sql.push(...parse_expression([...name, 'update'], kwargs.update));
 	}
 	else {
 		if (select) {
@@ -110,57 +153,43 @@ export function parse_statement(name, kwargs){
 				for (var [i, select] of enumerate(select)) {
 					sql.push(...parse_expression([...name, 'select', i], select));
 				}
-			} 
-			else {
-				sql.push(...parse_expression([...name, 'select'], select));
 			}
+			else
+				sql.push(...parse_expression([...name, 'select'], select));
 		}
 	    
-	    var {from} = kwargs;
-	    if (from.from) {
+		if (!from) {
+			if (kwargs.union)
+				sql.push(...parse_expression([...name, 'union'], kwargs.union));
+			else if (kwargs.union_all)
+				sql.push(...parse_expression([...name, 'union_all'], kwargs.union_all));
+			return sql;
+		}
+	    if (from.from)
 	        sql.push(...parse_statement([...name, 'from'], from));
-	    }
-	    else {
+		else if (from.isString)
 			sql.push(...parse_expression([...name, 'from'], from));
-		}
-
-		if (kwargs.inner_join) {
-			sql.push(...parse_expression([...name, 'inner_join'], kwargs.inner_join));
-		}
-		else if (kwargs.left_join) {
-			sql.push(...parse_expression([...name, 'left_join'], kwargs.left_join));
-		}
-		else if (kwargs.right_join) {
-			sql.push(...parse_expression([...name, 'right_join'], kwargs.right_join));
-		}
-		else if (kwargs.cross_join) {
-			sql.push(...parse_expression([...name, 'cross_join'], kwargs.cross_join));
-		}
-		else if (kwargs.full_join) {
-			sql.push(...parse_expression([...name, 'full_join'], kwargs.full_join));
-		}
+		else
+			sql.push(...parse_table([...name, 'from'], from));
 	}
-	    
 
-	var {where} = kwargs;
 	if (where)
     	sql.push(...parse_expression([...name, 'where'], where));
     
-    var {group, order} = kwargs;
     if (group) {
 		sql.push(...parse_expression([...name, 'group'], group));
 		
 		var {having} = kwargs;
-		if (having) {
+		if (having)
 			sql.push(...parse_expression([...name, 'having'], having));
-		}
-    } 
-    
-    if (order) {
-		sql.push(...parse_expression([...name, 'order'], order));
     }
     
-    var {limit, offset} = kwargs;
+    if (order) {
+		if (order.rand && order.rand.isArray && !order.rand.length)
+			order.rand[0] = 0;
+		sql.push(...parse_expression([...name, 'order'], order));
+	}
+    
     if (limit)
     	sql.push(...parse_expression([...name, 'limit'], limit));
     
@@ -206,7 +235,7 @@ function wrap_args_skip(args, name, func) {
 	else if (args.length == 1){
 		var [arg] = args;
 		for (var arg of arg) {
-			arg.name.unshift(...name);	
+			arg.name.unshift(...name);
 		}
 	}
 	
@@ -231,9 +260,8 @@ export function parse_expression(name, cond){
 		return [];
 	}
 
-	if (cond.from) {
+	if (cond.from)
 		return parse_statement(name, cond);
-	}
 	
 	if (cond.isArray) {
 		var sql = [];
@@ -249,9 +277,8 @@ export function parse_expression(name, cond){
 	if (!func)
 		return [];
 		
-    if (cond[func].isArray) {
+    if (cond[func].isArray)
 		var args = cond[func].map(cond => parse_expression([], cond));
-	}
     else
         var args = [parse_expression([], cond[func])];
 
@@ -272,15 +299,17 @@ export function parse_expression(name, cond){
     case 'mul':
     case 'div':
     case 'mod':
-    case 'AND':
-    case 'XOR':
-    case 'right_shift':
-    case 'left_shift':
+    case 'bit_and':
+    case 'bit_xor':
+	case 'bit_or':
+    case 'shr':
+    case 'shl':
 
     case 'regexp_binary':
     case 'like_binary':
     case 'not_regexp':
     case 'not_like':
+	case 'not_in':
     case 'not_regexp_binary':
     case 'not_like_binary':
     case 'regexp':
@@ -289,9 +318,8 @@ export function parse_expression(name, cond){
 
     case 'json_extract':
     case 'json_extract_unquote':
-        if (args.any(arr => !arr.length)) {
+        if (args.any(arr => !arr.length))
 			return [];
-		}
 		return wrap_args(args, name, func);
 		
     case 'invert':
@@ -301,11 +329,17 @@ export function parse_expression(name, cond){
 		}
     	return wrap_arg(args[0], name, func);
         
+	case 'find_in_set':
     case 'regexp_like':
     case 'not_regexp_like':
         if (!args[1] || !args[1].length)
         	return [];
-        	
+    
+	case 'regexp_replace':
+		if (args[2] && args[2].isArray && !args[2].length) {
+			var name = args[1] && args[1].isArray && args[1].length? [...args[1][0].name]: [];
+			args[2].push({name, value: ''});
+		}
     default:
         if (!args[0] || !args[0].length)
         	return [];
@@ -313,43 +347,45 @@ export function parse_expression(name, cond){
         while (!args.back().length)
         	args.pop();
 
-		if (args.length == 1 && !cond[func].isArray) {
+		if (args.length == 1 && !cond[func].isArray)
 			return wrap_arg(args[0], name, func);
-		}
     	return wrap_args(args, name, func);
     }
 }
 
 export var physic2logic = {
-	eq: '=', 
-	ne: '!=', 
-	gt: '>', 
-	lt: '<', 
-	ge: '>=', 
-	le: '<=', 
+	eq: '=',
+	ne: '!=',
+	gt: '>',
+	lt: '<',
+	ge: '>=',
+	le: '<=',
+
+	invert: '~',
 			
-	invert: '~', 
+	add: '+',
+	sub: '-',
+	mul: '*',
+	div: '/',
+	mod: '%',
+	bit_and: '&',
+	bit_xor: '^',
+	shr: '>>', // shift logical right
+	shl: '<<', // shift logical left
 			
-	add: '+', 
-	sub: '-', 
-	mul: '*', 
-	div: '/', 
-	mod: '%', 
-	AND: '&', 
-	XOR: '^', 
-	right_shift: '>>', 
-	left_shift: '<<', 
+	json_extract: '->',
+	json_extract_unquote: '->>',
 			
-	json_extract: '->', 
-	json_extract_unquote: '->>', 
-			
-	regexp_binary: 'regexp binary', 
-	like_binary: 'like binary', 
-	not_regexp: 'not regexp', 
-	not_like: 'not like', 
-	not_regexp_binary: 'not regexp binary', 
-	not_like_binary: 'not like binary', 
-	not_regexp_like: 'not regexp_like', 
+	regexp_binary: 'regexp binary',
+	like_binary: 'like binary',
+	not_regexp: 'not regexp',
+	not_like: 'not like',
+	not_in: 'not in',
+	not_regexp_binary: 'not regexp binary',
+	not_like_binary: 'not like binary',
+	not_regexp_like: 'not regexp_like',
+
+	is_not: 'is not',
 };
 
 export var logic2physic = {};
@@ -359,7 +395,7 @@ for (var key in physic2logic) {
 }
 
 export function piece_together(kwargs) {
-	return parse_statement([], kwargs).map(obj => {
+	kwargs = parse_statement([], kwargs).map(obj => {
 		var {name, value} = obj;
 		var [name, ...rest] = name;
 		name += rest.map(arg => `[${arg}]`).join('');
@@ -367,6 +403,10 @@ export function piece_together(kwargs) {
 		value = value.encodeURI();
 		return `${name}=${value}`;
 	});
+	var index = kwargs.indexOf('select=*');
+	if (index >= 0)
+		kwargs.delete(index);
+	return kwargs;
 }
 
 export function get_cmd(kwargs) {
@@ -378,6 +418,10 @@ export function get_cmd(kwargs) {
 			return cmd;
 	}
 	
+	for (var cmd of ['union', 'union_all']) {
+		if (kwargs[cmd])
+			return 'union';
+	}
 	return 'select';
 }
 
@@ -390,10 +434,9 @@ export function simplify_expression(kwargs) {
 		
 	if (kwargs.where) {
 		simplify_expression(kwargs.where);
-		if (!len(kwargs.where)) {
+		if (!len(kwargs.where))
 			delete kwargs.where;
-		}
-		return;	
+		return;
 	}
 	
 	var entries = Object.entries(kwargs);
@@ -410,9 +453,8 @@ export function simplify_expression(kwargs) {
 			return !len(expr);
 		});
 		
-		if (!args.length) {
+		if (!args.length)
 			hit = true;
-		}
 		else if (args.length == 1){
 			hit = true;
 			Object.assign(kwargs, args[0]);
@@ -448,18 +490,21 @@ export function simplify_expression(kwargs) {
 		break;
 	}
 	
-	if (hit) {
+	if (hit)
 		delete kwargs[func];
-	}
 }
 
-export function get_db_table(value) {
-	if (value.isString || value.into || value.from || value.update)
-		return {database: '', table: value};
+export function get_db_table(kwargs) {
+	if (kwargs.isString || kwargs.into || kwargs.from || kwargs.update)
+		return {database: '', table: kwargs};
 
-	var entries = Object.entries(value);
+	var entries = Object.entries(kwargs);
 	if (entries.length > 1) {
-		return {database: '', table: value};
+		if (kwargs.join || kwargs.inner_join) {
+			var [table, join_table] = kwargs.join || kwargs.inner_join;
+			return get_db_table(table);
+		}
+		return {database: '', table: kwargs};
 	}
 	
 	var [database, table] = entries[0];
@@ -532,7 +577,7 @@ export function set_cmd(value, old_cmd, new_cmd) {
 		switch (old_cmd) {
 		case 'select':
 			var into = value.from;
-			delete value.from;					
+			delete value.from;
 			break;
 			
 		case 'update':
@@ -544,7 +589,7 @@ export function set_cmd(value, old_cmd, new_cmd) {
 		case 'delete':
 			var into = value.from;
 			delete value.delete;
-			delete value.from;					
+			delete value.from;
 			break;
 			
 		case 'set':
@@ -647,7 +692,7 @@ export function set_cmd(value, old_cmd, new_cmd) {
 			
 		case 'set':
 			delete value.set;
-			value.alter = {corpus: 'rlhf'};
+			value.alter = {corpus: 'reward'};
 			value.add = [['newField', 'text', '', '']];
 			
 			break;
@@ -664,21 +709,19 @@ export function normalize_desc(desc) {
 		desc.Type = 'int';
 	}
 	delete desc.index;
+	return desc;
 }
 
 export function modify_from_desc(database, table, desc) {
-	var {Field, Type, Null, Comment, Extra} = desc;
-	if (Null == 'NO') {
-		Null = 'not null';
-	}
-	else {
-		Null = '';
-	}
+	var {Field, Type, Null, Comment, Extra, Collation} = desc;
+
+	Null = Null == 'NO'? 'not null': '';
 	
-	if (Comment) {
-		Comment = `comment ${Comment.mysqlStr()}`;
-	}
-	return `alter table ${database}.${table} modify \`${Field}\` ${Type} ${Null} ${Extra} ${Comment}`;
+	Comment = Comment? `comment ${Comment.mysqlStr()}`: '';
+
+	Collation = Collation? `COLLATE ${Collation}`: '';
+	
+	return `alter table ${database}.${table} modify \`${Field}\` ${Type} ${Null} ${Extra} ${Collation} ${Comment}`;
 }
 
 export function add_column_from_desc(database, table, desc, after) {
@@ -698,17 +741,20 @@ export function add_column_from_desc(database, table, desc, after) {
 
 export function change_from_desc(database, table, OldField, desc) {
 	var {Field, Type, Null, Comment, Extra} = desc;
-	if (Null == 'NO') {
+	if (Null == 'NO')
 		Null = 'not null';
-	}
-	else {
+	else
 		Null = '';
-	}
 	
-	if (Comment) {
+	if (Comment)
 		Comment = `comment ${Comment.mysqlStr()}`;
-	}
 	return `alter table ${database}.${table} change \`${OldField}\` \`${Field}\` ${Type} ${Null} ${Extra} ${Comment}`;
 }
+
+
+export function is_numeric_operator(value) {
+	return value.add || value.sub || value.mul || value.div || value.bit_and || value.bit_xor || value.bit_or || value.shr || value.shl || value.mod;
+}
+
 
 export var props = ['host', 'user', 'token', 'sql', 'data', 'kwargs', 'table'];

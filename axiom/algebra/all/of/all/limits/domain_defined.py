@@ -26,22 +26,22 @@ def apply(given, wrt=None):
 
 @prove
 def prove(Eq):
-    from axiom import algebra, sets
+    from Axiom import Algebra, Sets
 
     m, n = Symbol(integer=True, positive=True, given=True)
     f = Symbol(real=True, shape=(n,), given=True)
     i = Symbol(integer=True)
     Eq << apply(All[i:Range(m)](f[i] > 0))
 
-    Eq << algebra.all.then.ou.apply(Eq[1])
+    Eq << Algebra.All.to.Or.apply(Eq[1])
 
     Eq << ~Eq[0]
 
-    Eq << algebra.cond.any.then.any.et.apply(Eq[-2], Eq[-1])
+    Eq << Algebra.Cond.Any.to.Any.And.apply(Eq[-2], Eq[-1])
 
-    Eq << algebra.any.then.any.et.limits.unleash.apply(Eq[-1], simplify=None)
+    Eq << Algebra.Any.to.Any.And.limits.unleash.apply(Eq[-1], simplify=None)
 
-    Eq << Eq[-1].this.find(Range).apply(sets.range.min.to.union, simplify=None)
+    Eq << Eq[-1].this.find(Range).apply(Sets.Range.Min.eq.union, simplify=None)
 
     Eq << Eq[-1].this(i).find(Element).simplify()
 

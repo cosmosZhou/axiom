@@ -52,7 +52,7 @@ export default {
     		var {keys} = this.$props;
     		if (keys)
     			return keys;
-    		return Object.keys(this.value);	
+    		return Object.keys(this.value);
     	},
     	
     	table_rows() {
@@ -73,11 +73,11 @@ export default {
     	},
 
     	database() {
-    		return this.mysql.database;	
+    		return this.mysql.database;
     	},
     	
     	PRI() {
-    		return this.mysql.PRI;	
+    		return this.mysql.PRI;
     	},
     	
     	mysql() {
@@ -128,11 +128,11 @@ export default {
     	},
     	
 		is_torch(){
-			return getParameter('torch') || this.kwargs.kwargs && this.kwargs.kwargs.torch;
+			return getParameterByName('torch') || this.kwargs.kwargs && this.kwargs.kwargs.torch;
 		},
 		
 		is_mysql(){
-			return getParameter('mysql') || getParameter('cmd') == 'select' || this.cmd == 'update';
+			return getParameterByName('mysql') || getParameterByName('cmd') == 'select' || this.cmd == 'update';
 		},
 
 		compare(){
@@ -161,7 +161,7 @@ export default {
 				}
 				
 				return `${this.name}[${name}][${i}]`;
-			}	
+			}
 
 			if (i == null)
 				return name;
@@ -173,17 +173,12 @@ export default {
 			return `${name}[${i}]`;;
 		},
     	
-    	getSimplify(){
-    		var simplify = getParameter('simplify');
-    		return simplify && simplify.toLowerCase() == 'true';
-    	},
-
     	get_string(value) {
-    		return value.toString().replace('\n', '\\n');	
+    		return value.toString().replace('\n', '\\n');
     	},
     	
     	get_size(value) {
-    		return this.get_string(value).strlen();	
+    		return this.get_string(value).strlen();
     	},
 
     	coordinate(self){
@@ -225,12 +220,12 @@ export default {
 				event.preventDefault();
 				
 				this.$nextTick(()=>{
-					form.submit();	
+					form.submit();
 				});
 			
 				break;
 				
-			case 'Z':				
+			case 'Z':
 			case 'z':
 				if (!event.ctrlKey)
 					break;
@@ -316,7 +311,7 @@ export default {
 				}
 				
 				break;
-			}    		
+			}
     	},
     	
         async process(name, data) {
@@ -367,7 +362,7 @@ export default {
 		                					data[key] = ~1;
 		                				}
 		                				else {
-		                					data[key] = 0;	
+		                					data[key] = 0;
 		                				}
 		                				break;
 		                			default:
@@ -382,7 +377,7 @@ export default {
 		                		}
 		                	}
 		                	array.push(data);
-		                } 
+		                }
 		            }
 		        }
 				break;
@@ -394,7 +389,7 @@ export default {
     	async insert(data) {
         	var database = this.database;
         	var table = this.table;
-			var training = getParameter("training");
+			var training = getParameterByName("training");
 			if (training)
 				training = ~training;
 			else

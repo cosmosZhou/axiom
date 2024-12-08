@@ -32,9 +32,9 @@ def apply(self, index=1):
                     index = 0
                 else:
                     return
-                    
+
             array = [args[index], args[i]]
-            del args[i] 
+            del args[i]
             del args[index]
             coeff = Mul(*args)
             return Equal(self, coeff * Sum(self.func(*array).powsimp(), *sgm.limits), evaluate=False)
@@ -42,7 +42,7 @@ def apply(self, index=1):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, k = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
@@ -50,9 +50,9 @@ def prove(Eq):
     Eq << apply(-Sum[k:n](f(k)) * x, 1)
 
     Eq << Eq[-1].this.rhs.simplify()
-    Eq << Eq[-1].this.lhs.apply(algebra.mul.to.sum)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Sum)
 
-    
+
 
 
 if __name__ == '__main__':

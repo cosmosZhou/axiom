@@ -1,1 +1,1 @@
-from . import eq_var
+from . import Eq_Var

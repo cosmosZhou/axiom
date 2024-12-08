@@ -5,7 +5,6 @@ namespace mysql;
 
 include_once 'std.php';
 use mysqli, Exception, std;
-use std\Text, std\Set, std\Queue, std\Graph;
 
 function desc_table($table)
 {
@@ -93,7 +92,7 @@ function load_data_from_list($table, &$array, $replace = true, $ignore = false, 
 
     $char_length = array_fill(0, count($desc), 256);
     $dtype = array_fill(0, count($desc), null);
-    foreach (std\range(0, count($desc)) as $i) {        
+    foreach (std\range(0, count($desc)) as $i) {
         $Field = $desc[$i]['Field'];
         $Type = $desc[$i]['Type'];
         $dtype[$i] = $Type;
@@ -120,7 +119,7 @@ function load_data_from_list($table, &$array, $replace = true, $ignore = false, 
     foreach (std\range(0, count($array), $step) as $i) {
         $csv = $folder . "/$table-$i.csv";
 
-        $file = new Text($csv);
+        $file = new std\Text($csv);
         foreach (array_slice($array, $i, $step) as $args) {
             if (!std\is_list($args))
                 $args = array_map(fn(&$desc) => std\get($args, $desc['Field'], ''), $desc);
@@ -209,6 +208,7 @@ function load_data_from_csv($table, $csv, $replace = false, $ignore = true, $del
 // local-infile=1
 // [mysqld]
 // local-infile=1
+// secure_file_priv=/tmp
 
     $local_infile = True;
     foreach (get_rows("show global variables like 'local_infile'") as $obj) {
@@ -239,7 +239,7 @@ function load_data_from_csv($table, $csv, $replace = false, $ignore = true, $del
 //         $result_file = $csv.'.txt';
 //         $cmd = "mysql --local_infile=1 -h$host --port=$port -u$user -p$password -e\"$sql; select row_count();\" > $result_file";
 //         //error_log('$cmd = '.$cmd);
-//         $ret = shell_exec($cmd);        
+//         $ret = shell_exec($cmd);
 //         $content = file_get_contents($result_file);
 //         //error_log('sql $content = '.$content);
 //         [$title, $rowcount] = explode("\n", $content);
@@ -614,17 +614,17 @@ class ConnectMysqli
 
 function is_int($Type)
 {
-    return preg_match('/int\(\d+\)/', $Type);
+    return preg_match('/int\b/', $Type);
 }
 
 function is_float($Type)
 {
-    return preg_match('/double/', $Type);
+    return preg_match('/double|float/', $Type);
 }
 
-function is_number($Type)
+function is_numeric($Type)
 {
-    return preg_match('/int|double/', $Type);
+    return preg_match('/int\b|double|float/', $Type);
 }
 
 function is_varchar($Type)
@@ -645,12 +645,20 @@ function is_enum($Type)
 
 function mysqlStr($value, $Type = '', $quote=true)
 {
-    if (! is_number($Type)) {
+    if (! is_numeric($Type)) {
         $value = str_replace("'", "''", $value);
         if ($Type != 'regexp') {
-            $value = preg_replace("/((?<![\\\\])[\\\\](?![ntvr\"\\\\])|[\\\\]{2,})/", '$1$1', $value);
-            if ($Type == 'json')
-                $value = preg_replace('/[\\\\]([n"])/', '\\\\\\\\$1', $value);
+            // if (str_starts_with($Type, "varchar(")) {
+            if (str_starts_with($Type, "varchar(")) {
+                // issues with: \left(2x\right)
+                $value = preg_replace("/((?<![\\\\])[\\\\](?![ntv\"\\\\])|[\\\\]{2,})/", '$1$1', $value);
+            }
+            else {
+                $value = preg_replace("/((?<![\\\\])[\\\\](?![ntvr\"\\\\])|[\\\\]{2,})/", '$1$1', $value);
+                if ($Type == 'json') {
+                    $value = preg_replace('/(?<![\\\\])[\\\\]([nt"])/', '\\\\\\\\$1', $value);
+                }
+            }
         }
         else {
             $value = preg_replace("/((?<![\\\\])[\\\\](?![ntv\"\\\\]))/", '$1$1', $value);
@@ -666,7 +674,7 @@ function mysqlStr($value, $Type = '', $quote=true)
 function is_admin()
 {
     $remote_addr = $_SERVER['REMOTE_ADDR'];
-    if (in_array($remote_addr, ['::1', '127.0.0.1', '192.168.5.21']))
+    if (in_array($remote_addr, ['::1', '127.0.0.1']))
         return true;
 
     error_log("$remote_addr is not among the hosts allowable");
@@ -710,16 +718,74 @@ function is_collation_case_insensitive($database, $table)
     return preg_match("/_ci$/", show_collation($database, $table), $m);
 }
 
-function field_to_type($database, $table)
+function field_to_type(&$from, &$context=null)
 {
-    $Field2Type = [];
-    if ($database) {
-        $table = "${database}.${table}";
+    if (is_array($from)) {
+        if (count($from) > 1) {
+            [$database, $table] = parse_joined_table($from);
+            $table = [$database => $table];
+            return extract_field_to_type($table, $context);
+        }
+
+        [[$database, $table]] = std\entries($from);
+        switch ($database) {
+            case 'join':
+            case 'cross_join':
+            case 'inner_join':
+            case 'left_join':
+            case 'right_join':
+            case 'full_join':
+                return array_merge(...array_map(fn($table) => extract_field_to_type($table, $context), $table));
+        }
+    }
+    return extract_field_to_type($from, $context);
+}
+
+function extract_field_to_type(&$from, &$context=null) {
+    if (is_array($from)) {
+        [[$database, $table]] = std\entries($from);
+        switch ($database) {
+            case 'as':
+                $table = $table[0];
+                if (is_array($table) && ($json_table = $table['json_table'])) {
+                    [$path, $def] = $json_table[1];
+                    $Field2Type = [];
+                    foreach ($def['columns'] as [$Field, $Type]) {
+                        if (is_array($Type)) {
+                            if (strtolower($Type[0]) == 'for' && strtolower($Type[1]) == 'ordinality')
+                                $Type = 'int';
+                            else
+                                $Type = parse_expression($Type);
+                        }
+                        $Field2Type[$Field] = strtolower($Type);
+                    }
+                    return $Field2Type;
+                }
+
+                if (is_string($table))
+                    return $context;
+        }
+    }
+    else {
+        $table = $from;
+        $database = $table == $context['__cte__']? null: 'corpus';
     }
 
+    if ($database) {
+        $__desc__ = $context['__desc__'] ?? [];
+        if (isset($__desc__[$database])) {
+            if ($Field2Type = $__desc__[$database][$table])
+                return $Field2Type;
+        }
+        if (preg_match('/\W/', $table))
+            $table = "`$table`";
+        $table = "$database.$table";
+    }
+
+    $Field2Type = [];
     $indexKey = [];
     $transform = [];
-    foreach (get_rows("show full columns from $table", true) as $desc) {
+    foreach (get_rows("show full columns from $table") as $desc) {
         $Field = $desc['Field'];
         $Key = $desc['Key'];
         if ($Key) {
@@ -742,9 +808,11 @@ function field_to_type($database, $table)
         }
     }
 
-    return [$Field2Type, $primary_key, $indexKey, $transform];
+    $Field2Type['__primary_key__'] = $primary_key;
+    $Field2Type['__index__'] = $indexKey;
+    $Field2Type['__transform__'] = $transform;
+    return $Field2Type;
 }
-
 function json_decode_by_field_to_type($Field2Type, &$data)
 {
     foreach ($Field2Type as $Field => $Type) {
@@ -759,36 +827,122 @@ function json_decode_by_field_to_type($Field2Type, &$data)
     }
 }
 
-function aggregate_type($type)
+// determine the data type of the value
+function dtype($value)
 {
-    switch ($value) {
-    case "count":
-    case 'bit_and':
-    case 'bit_or':
-    case 'bit_xor':
+    if (\is_int($value))
         return 'int';
 
-    case 'sum':
-    case 'agv':
-    case 'min':
-    case 'max':
-    case 'std':
-    case 'stddev_samp':
-    case 'variance':
-    case 'var_samp':
-    case 'var_pop':
+    if (\is_float($value))
         return 'float';
 
-    case 'group_concat':
+    if (is_string($value)) {
+        if (\is_numeric($value)) {
+            if ((int)$value == $value)
+                return 'int';
+            else
+                return 'float';
+        }
         return 'text';
+    }        
 
-    case 'json_arrayagg':
-    case 'json_objectagg':
-    case 'json_remove':
-        return 'json';
+    if (is_array($value)) {
+        foreach ($value as $key => $v) {
+            switch ($key) {
+            case "count":
+            case 'bit_and':
+            case 'bit_or':
+            case 'bit_xor':
+            case 'length':
+            case 'char_length':
+            case 'json_length':
+            case 'json_array_length':
+            case 'json_depth':
+            case 'find_in_set':
+            case 'regexp_instr':
+                return 'int';
 
-    default:
-        break;
+            case 'is':
+            case 'is_not':
+            case 'regexp_like':
+            case 'regexp_binary':
+            case 'not_regexp_like':
+            case 'not_regexp_binary':
+            case 'like':
+            case 'like_binary':
+            case 'not like binary':
+            case 'not_like':
+            case 'in':
+            case 'not_in':
+            case 'not':
+            case 'eq':
+            case 'ne':
+            case 'gt':
+            case 'lt':
+            case 'ge':
+            case 'le':
+            case 'json_contains':
+            case 'json_contains_path':
+            case 'json_valid':
+                return 'bool';
+                
+            case 'sum':
+            case 'agv':
+            case 'min':
+            case 'max':
+            case 'ceiling':
+            case 'floor':
+            case 'round':
+            case 'std':
+            case 'stddev_samp':
+            case 'variance':
+            case 'var_samp':
+            case 'var_pop':
+            case 'cast': // might not be a number
+                return 'float';
+        
+            case 'group_concat':
+            case 'substring':
+            case 'substring_index':
+            case 'regexp_substr':
+            case 'regexp_replace':
+            case 'replace':
+            case 'concat':
+            case 'json_unquote': // json unquoted string is a text string
+            case 'lower':
+            case 'upper':
+            case 'left':
+            case 'right':
+            case 'reverse':
+            case 'json_value':  // json value is a text string
+            case 'json_type':
+                return 'text';
+        
+            case 'json_arrayagg':
+            case 'json_objectagg':
+            case 'json_remove':
+            case 'json_set':
+            case 'json_quote': // json quoted string is a json string
+            case 'json_array':
+            case 'json_object':
+            case 'json_extract': 
+            case 'json_keys':
+            case 'json_search': // json search results in a json array
+            case 'json_array_append':
+            case 'json_array_insert':
+            case 'json_array_replace':
+            case 'json_merge':
+            case 'json_merge_patch':
+            case 'json_merge_preserve':
+            case 'json_insert':
+            case 'json_replace':
+                return 'json';
+        
+            default:
+                break;
+            }            
+        }
     }
 }
+
 ?>

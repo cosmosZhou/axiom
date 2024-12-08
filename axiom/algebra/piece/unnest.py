@@ -37,7 +37,7 @@ def apply(piecewise, index=None):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     k = Symbol(integer=True, positive=True)
     x = Symbol(real=True, shape=(k,))
@@ -48,17 +48,17 @@ def prove(Eq):
     p = Symbol(Eq[0].lhs)
     Eq << p.this.definition
 
-    Eq << algebra.cond_piece.then.ou.apply(Eq[-1])
+    Eq << Algebra.Cond_Piece.to.Or.apply(Eq[-1])
 
-    Eq << Eq[-1].this.args[0].args[0].apply(algebra.cond_piece.then.ou)
+    Eq << Eq[-1].this.args[0].args[0].apply(Algebra.Cond_Piece.to.Or)
 
-    Eq << Eq[-1].this.find(And[Or]).apply(algebra.et.then.ou)
+    Eq << Eq[-1].this.find(And[Or]).apply(Algebra.And.to.Or)
 
-    Eq << algebra.ou.then.eq.piece.apply(Eq[-1], wrt=p)
+    Eq << Algebra.Or.to.Eq.Piece.apply(Eq[-1], wrt=p)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.piece.ou)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Piece.Or)
 
-    Eq << algebra.eq.eq.then.eq.trans.apply(Eq[1], Eq[-1])
+    Eq << Algebra.Eq.Eq.to.Eq.trans.apply(Eq[1], Eq[-1])
 
 
 

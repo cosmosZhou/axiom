@@ -1,3 +1,3 @@
-from . import cond
-from . import any
-from . import ou
+from . import Any
+from . import Or
+from . import Cond

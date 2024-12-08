@@ -61,13 +61,13 @@ def rewrite(Sum, self):
         for v in G:
             eqs = dic[v]
             domain = None
-            
+
             for el in eqs:
                 if el.is_Element and el.lhs == v:
                     domain = el.rhs
                     eqs.remove(el)
                     break
-                    
+
             if eqs:
                 cond = And(*eqs)
                 if domain is None:
@@ -87,11 +87,11 @@ def rewrite(Sum, self):
                     domain = v.range(*ab)
                 else:
                     domain = v.universalSet
-                    
+
                 if cond.is_Element and cond.lhs == v:
                     cond = cond.rhs
                     cond &= domain
-                    
+
                 limits[i] = (v, cond)
                 break
 
@@ -104,7 +104,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     A, C = Symbol(etype=dtype.integer)
     B = Function(etype=dtype.integer)
@@ -112,22 +112,22 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Sum[x, y, z:C](f(x, y) * Bool(Element(x, A) & Element(y, B(x)))))
 
-    Eq << Eq[0].this.rhs.apply(algebra.sum.bool)
+    Eq << Eq[0].this.rhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.bool)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.rhs.find(Bool).apply(algebra.bool.to.mul)
+    Eq << Eq[-1].this.rhs.find(Bool).apply(Algebra.Bool.eq.Mul)
 
-    Eq << Eq[-1].this.lhs.find(Bool[And]).apply(algebra.bool.to.mul)
+    Eq << Eq[-1].this.lhs.find(Bool[And]).apply(Algebra.Bool.eq.Mul)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.swap)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.limits.swap)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.swap, 1, 2)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.limits.swap, 1, 2)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.swap)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.limits.swap)
 
-    
-    
+
+
 
 
 if __name__ == '__main__':

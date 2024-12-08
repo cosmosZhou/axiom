@@ -1,5 +1,21 @@
 <?php
 require_once dirname(__file__).'/../std.php';
+ini_set('xdebug.max_nesting_level', 1024);
+
+$token2classname = [
+    '+' => 'SQLAdd',
+    '-' => 'SQLSub',
+    '*' => 'SQLMul',
+    '/' => 'SQLDiv',
+    '%' => 'SQLMod',
+    '&' => 'SQLBitAnd',
+    '|' => 'SQLBitOr',
+    '^' => 'SQLBitXor',
+    '<<' => 'SQLSHL',
+    '>>' => 'SQLSHR',
+    '||' => 'SQLOr',
+    '&&' => 'SQLAnd'
+];
 
 abstract class SQL implements JsonSerializable
 {
@@ -7,7 +23,7 @@ abstract class SQL implements JsonSerializable
     public $parent;
 
     public function remove_negation() {
-        return false;    
+        return false;
     }
 
     public function delete() {
@@ -19,11 +35,21 @@ abstract class SQL implements JsonSerializable
         return $this->parent->append_from();
     }
     
+    public function append_set()
+    {
+        return $this->parent->append_set();
+    }
+
     public function append_where()
     {
         return $this->parent->append_where();
     }
-    
+
+    public function append_on()
+    {
+        return $this->parent->append_on();
+    }
+
     public function append_order()
     {
         return $this->parent->append_order();
@@ -49,9 +75,10 @@ abstract class SQL implements JsonSerializable
         return $this->parent->append_offset();
     }
     
-    public function append_space()
+    public function append_space($token)
     {
-        return $this;
+        $parent = $this->parent;
+        return $parent instanceof SQLPairedReference? $this->append_token($token): $this;
     }
     
     public function append($new)
@@ -72,11 +99,17 @@ abstract class SQL implements JsonSerializable
             $parent->replace($this, new $type($this, $new));
             return $new;
         }
-        else {
+        else
             return $this->parent->append_binary($type);
-        }
     }
     
+    public function append_arithmetic($token)
+    {
+        if ($this->parent instanceof SQLPairedReference)
+            return $this->append_token($token);
+        global $token2classname;
+        return $this->append_binary($token2classname[$token]);
+    }
     public function append_or()
     {
         $parent = $this->parent;
@@ -89,9 +122,8 @@ abstract class SQL implements JsonSerializable
         if ($parent instanceof $Type) {
             $parent->args[] = $caret;
             $caret->parent = $parent;
-        } else {
+        } else
             $parent->replace($this, new $Type([$this,$caret], $parent));
-        }
 
         return $caret;
     }
@@ -101,15 +133,20 @@ abstract class SQL implements JsonSerializable
         return $this->append(new SQLToken($word));
     }
 
-    public function append_comma()
+    public function append_comma($caret)
     {
-        return $this->parent->append_comma();
+        return $this->parent->append_comma($caret);
     }
     
-    public function append_unary($Type)
+    public function append_semicolon()
+    {
+        return $this->parent->append_semicolon();
+    }
+
+    public function append_unary_operator($func)
     {
         $caret = new SQLCaret();
-        $this->append(new $Type($caret));
+        $this->append(new SQLOperator($func, $caret));
         return $caret;
     }
 
@@ -145,23 +182,45 @@ abstract class SQL implements JsonSerializable
         return $this->parent->append_right_parenthesis();
     }
 
+    public function append_dot() {
+        throw new Exception("public function append_dot() unexpected!");
+    }
+
+    public function append_minus() {
+        throw new Exception("public function append_dot() unexpected!");
+    }
+    
+    public function append_operator($func)
+    {
+        return $this->parent->append_operator($func);
+    }
+    public function append_using()
+    {
+        return $this->parent->append_using();
+    }
+
     static public function compile($sql, $transform_fn=true)
     {
         $caret = new SQLCaret();
-        $root = new SQLSentence($caret);
-        $matches = std\matchAll('/\w+|\W/u', $sql);
+        $root = new SQLSentence([$caret]);
+        $matches = std\matchAll('/\w+|\W/', $sql);
         $i = 0;
         $count = count($matches);
         while ($i < $count) {
             [[$token]] = $matches[$i];
-            switch ($token) {
+            switch (strtolower($token)) {
                 case 'select':
-                    $caret = $caret->append('SQLSelect');
+                case 'update':
+                case 'delete':
+                    $Type = std\capitalize($token);
+                    $caret = $caret->append("SQL$Type");
                     break;
                     
                 case ' ':
-                case '\t':
-                    $caret = $caret->append_space();
+                case "\t":
+                case "\r":
+                case "\n":
+                    $caret = $caret->append_space($token);
                     break;
                     
                 case '.':
@@ -171,19 +230,16 @@ abstract class SQL implements JsonSerializable
                 case 'group':
                 case 'order':
                     $j = 1;
-                    while ($i + $j < $count && $matches[$i + $j][0][0] == ' ') {
+                    while ($i + $j < $count && std\isspace($matches[$i + $j][0][0]))
                         ++$j;
-                    }
                     
-                    if ($i + $j < $count && $matches[$i + $j][0][0] == 'by') {
+                    if ($i + $j < $count && strtolower($matches[$i + $j][0][0]) == 'by') {
                         $func = "append_$token";
                         $caret = $caret->parent->$func();
-                        
                         $i += $j;
-                        break;
                     }
-                    
-                    $caret = $caret->append_token($token);
+                    else
+                        $caret = $caret->append_token($token);
                     break;
                     
                 case 'from':
@@ -191,25 +247,31 @@ abstract class SQL implements JsonSerializable
                 case 'limit':
                 case 'offset':
                 case 'having':
+                case 'using':
+                case 'on':
+                case 'set':
                     $func = "append_$token";
                     $caret = $caret->parent->$func();
                     break;
 
-                case '-':
-                    if ($i + 1 < $count && $matches[$i + 1][0][0] == '>') {
-                        $caret = $caret->append_binary('SQLArrow');
-                        ++$i;
-                        break;
-                    }
-
-                    $caret = $caret->append_minus();
-                    break;
-                    
                 case "'":
-                    $caret = $caret->append('SQLQuote');
+                    $caret = $caret->parent instanceof SQLDQuote || $caret->parent instanceof SQLGraveAccent?
+                        $caret->append_token($token):
+                        $caret->append('SQLQuote');
+                    break;
+                case '"':
+                    $caret = $caret->parent instanceof SQLQuote || $caret->parent instanceof SQLGraveAccent?
+                        $caret->append_token($token):
+                        $caret->append('SQLDQuote');
+                    break;
+                case '`':
+                    $caret = $caret->parent instanceof SQLQuote || $caret->parent instanceof SQLDQuote?
+                        $caret->append_token($token):
+                        $caret->append('SQLGraveAccent');
                     break;
                     
                 case 'regexp':
+                case 'like':
                 case 'and':
                 case 'or':
                 case 'as':
@@ -219,6 +281,17 @@ abstract class SQL implements JsonSerializable
                     $caret = $caret->append_binary("SQL$Type");
                     break;
                     
+                case 'is':
+                    $Type = std\capitalize($token);
+                    $Type = "SQL$Type";
+                    $not = $i + 2 < $count && std\isspace($matches[$i + 1][0][0]) && strtolower($matches[$i + 2][0][0]) == 'not';
+                    if ($not) {
+                        $Type .= 'Not';
+                        $i += 2;
+                    }
+                    
+                    $caret = $caret->append_binary($Type);
+                    break;
                 case '(':
                     $caret = $caret->append_left_parenthesis();
                     break;
@@ -228,29 +301,46 @@ abstract class SQL implements JsonSerializable
                     break;
 
                 case '\\':
-                    $word = "\\" . $matches[$i + 1];
+                    $word = "\\" . $matches[$i + 1][0][0];
                     $caret = $caret->append_token($word);
                     ++ $i;
                     break;
 
                 case '<':
-                    if ($i + 1 < $count && $matches[$i + 1][0][0] == '=') {
-                        $caret = $caret->append_binary('SQLLe');
-                        ++$i;
-                        break;
+                    if ($caret->parent instanceof SQLPairedReference)
+                        $caret = $caret->append_token($token);
+                    else {
+                        $hit = false;
+                        if ($i + 1 < $count) {
+                            switch ($matches[$i + 1][0][0]) {
+                                case '=':
+                                    $caret = $caret->append_binary('SQLLe');
+                                    $hit = true;
+                                    break;
+                                case '>':
+                                    $caret = $caret->append_binary('SQLNe');
+                                    $hit = true;
+                                    break;
+                            }
+                        }
+                        if ($hit)
+                            ++$i;
+                        else
+                            $caret = $caret->append_binary('SQLLt');
                     }
-                    
-                    $caret = $caret->append_binary('SQLLt');
                     break;
                     
                 case '>':
-                    if ($i + 1 < $count && $matches[$i + 1][0][0] == '=') {
-                        $caret = $caret->append_binary('SQLGe');
-                        ++$i;
-                        break;
+                    if ($caret->parent instanceof SQLPairedReference)
+                        $caret = $caret->append_token($token);                    
+                    else {
+                        if ($i + 1 < $count && $matches[$i + 1][0][0] == '=') {
+                            $caret = $caret->append_binary('SQLGe');
+                            ++$i;
+                        }
+                        else
+                            $caret = $caret->append_binary('SQLGt');    
                     }
-                    
-                    $caret = $caret->append_binary('SQLGt');
                     break;
                     
                 case '=':
@@ -261,17 +351,20 @@ abstract class SQL implements JsonSerializable
                     if ($i + 1 < $count && $matches[$i + 1][0][0] == '=') {
                         $caret = $caret->append_binary('SQLNe');
                         ++$i;
-                        break;
                     }
-                    $caret = $caret->append_token($token);
+                    else
+                        $caret = $caret->append_unary_operator('not');
                     break;
                     
                 case 'with':
-                    $caret = $caret->append_with();
+                    $recursive = $i + 2 < $count && std\isspace($matches[$i + 1][0][0]) && strtolower($matches[$i + 2][0][0]) == 'recursive';
+                    $caret = $caret->append_with($recursive);
+                    if ($recursive)
+                        $i += 2;
                     break;
 
                 case ',':
-                    $caret = $caret->parent->append_comma();
+                    $caret = $caret->parent->append_comma($caret);
                     break;
 
                 case 'inner':
@@ -280,17 +373,16 @@ abstract class SQL implements JsonSerializable
                 case 'right':
                 case 'full':
                     $j = 1;
-                    while ($i + $j < $count && $matches[$i + $j][0][0] == ' ') {
+                    while ($i + $j < $count && std\isspace($matches[$i + $j][0][0]))
                         ++$j;
-                    }
                     
-                    if ($i + $j < $count && $matches[$i + $j][0][0] == 'join') {
+                    if ($i + $j < $count && strtolower($matches[$i + $j][0][0]) == 'join') {
                         $Type = std\capitalize($token);
-                        $caret = $caret->append_binary("SQL${Type}Join");
+                        $caret = $caret->append_binary("SQL{$Type}Join");
                         $i += $j;
-                        break;
                     }
-                    $caret = $caret->append_token($token);
+                    else
+                        $caret = $caret->append_token($token);
                     break;
                     
                 case 'path':
@@ -299,10 +391,75 @@ abstract class SQL implements JsonSerializable
                     $caret = $caret->parent->append_operator($token);
                     break;
                     
-                case 'delete':
-                    $caret = $caret->append('SQLDelete');
+                case 'not':
+                    $j = 1;
+                    while ($i + $j < $count && std\isspace($matches[$i + $j][0][0]))
+                        ++$j;
+                    
+                    if ($i + $j < $count) {
+                        $next_token = $matches[$i + $j][0][0];
+                        $hit = std\fullmatch('/in|like|regexp/i', $next_token);
+                    }
+                    else 
+                        $hit = false;
+                    
+                    if ($hit) {
+                        $Type = std\capitalize($token);
+                        $next_token = std\capitalize($next_token);
+                        $caret = $caret->append_binary("SQL{$Type}$next_token");
+                        $i += $j;
+                    }
+                    else
+                        $caret = $caret->append_unary_operator('not');
                     break;
                     
+                case ';':
+                    $caret = $caret->parent->append_semicolon();
+                    break;
+
+                case 'union':
+                    $Type = std\capitalize($token);
+                    $Type = "SQL$Type";
+                    $all = $i + 2 < $count && std\isspace($matches[$i + 1][0][0]) && strtolower($matches[$i + 2][0][0]) == 'all';
+                    if ($all) {
+                        $Type .= 'All';
+                        $i += 2;
+                    }
+                    
+                    $caret = $caret->append_binary($Type);
+                    break;
+    
+                case '-':
+                    if ($i + 1 < $count && $matches[$i + 1][0][0] == '>') {
+                        $json_unquote = $i + 2 < $count && $matches[$i + 2][0][0] == '>';
+                        $caret = $caret->append_binary($json_unquote? 'SQLJsonExtractUnquote': 'SQLJsonExtract');
+                        if ($json_unquote)
+                            $i += 2;
+                        else
+                            ++$i;
+                        break;
+                    }
+                    $caret = $caret->append_arithmetic($token);
+                    break;
+                case '*':
+                    if ($caret instanceof SQLCaret)
+                        $caret = $caret->append_token($token);
+                    else
+                        $caret = $caret->append_arithmetic($token);
+                    break;
+                case '+':
+                case '/':
+                case '%':
+                case '&':
+                case '|':
+                case '^':
+                case '<<':
+                case '>>':
+                case '||':
+                case '&&':
+                    $caret = $caret->append_arithmetic($token);
+                    break;
+
                 default:
                     $caret = $caret->append_token($token);
             }
@@ -310,6 +467,33 @@ abstract class SQL implements JsonSerializable
         }
 
         return $root;
+    }
+
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "root":
+                return $this->parent->root;
+        }
+    }
+
+    public function replace_args(&$select, $old, $new) {
+        if (std\is_list($select)) {
+            $i = std\indexOf($select, $old);
+            if ($i >= 0) {
+                $select[$i] = $new;
+                if (!$new->parent)
+                    $new->parent = $this;
+                return true;
+            }
+        }
+        elseif ($select === $old) {
+            $select = $new;
+            if (!$new->parent)
+                $new->parent = $this;
+            
+            return true;
+        }
     }
 }
 
@@ -333,13 +517,13 @@ class SQLCaret extends SQL
         }
     }
     
-    public function append_with()
+    public function append_with($recursive)
     {
-        $this->parent->replace($this, new SQLWith($this, null));
+        $this->parent->replace($this, new SQLWith($this, null, null, $recursive));
         return $this;
     }
     
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return "";
     }
@@ -371,7 +555,7 @@ class SQLToken extends SQL
     {
         if (std\fullmatch("/\w+/", $this->arg) && std\fullmatch("/\w+/", $word)) {
             $new = new SQLToken($word);
-            $this->parent->replace($this, new SQLParallelArgs([$this, $new]));
+            $this->parent->replace($this, new SQLArgsSpaceSeparated([$this, $new]));
             return $new;
         }
         
@@ -391,17 +575,22 @@ class SQLToken extends SQL
         switch ($vname) {
             case "length":
                 return count($this->chars());
+            default:
+                return parent::__get($vname);
         }
     }
 
     public function append_dot()
     {
         $parent = $this->parent;
-        if ($parent instanceof SQLStatement && $this === $parent->from) {
+        if ($parent instanceof SQLStatement && $this === $parent->from ||
+        ($parent instanceof SQLSelect || $parent instanceof SQLFunction || $parent instanceof SQLAbstractJoin || $parent instanceof SQLRelational || $parent instanceof SQLLogical) &&
+        $this->is_variable()) {
             $caret = new SQLCaret();
             $parent->replace($this, new SQLDot($this, $caret));
             return $caret;
-        } else {
+        }
+        else {
             $this->arg .= '.';
             return $this;
         }
@@ -412,9 +601,26 @@ class SQLToken extends SQL
         return $this->parent->append($new);
     }
     
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->arg;
+    }
+
+    public function is_variable() {
+        return std\fullmatch('/[a-zA-Z_][a-zA-Z_0-9]*/', $this->arg);
+    }
+
+    public function append_space($token)
+    {
+        if ($this->parent instanceof SQLPairedReference) {
+            $this->arg .= $token;
+            return $this;
+        }
+        return parent::append_space($token);
+    }
+    public function lower() {
+        $this->arg = strtolower($this->arg);
+        return $this;
     }
 }
 
@@ -426,6 +632,8 @@ class SQLUnary extends SQL
         switch ($vname) {
             case "stack_precedence":
                 return 2;
+            default:
+                return parent::__get($vname);
         }
     }
     
@@ -440,6 +648,7 @@ class SQLUnary extends SQL
 
     public function replace($old, $new)
     {
+        assert ($this->arg === $old, new Exception("assert failed: public function replace(\$old, \$new)"));
         $this->arg = $new;
         if (!$new->parent)
             $new->parent = $this;
@@ -452,36 +661,64 @@ class SQLUnary extends SQL
         $this->arg->parent = $this;
     }
     
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->arg->jsonSerialize();
     }
 }
 
-class SQLQuote extends SQLUnary
+class SQLPairedReference extends SQLUnary
 {
-    public function __construct($arg, $parent = null)
-    {
-        parent::__construct($arg, $parent);
-    }
-
-    public function __toString()
-    {
-        return "'$this->arg'";
-    }
-    
     public function append($new)
     {
-        if ($new == 'SQLQuote')
+        // if ($new == $this::class)
+        if ($new == get_class($this))
             return $this;
         
         if ($new instanceof SQLToken) {
-            $this->parent->replace($this, new SQLParallelArgs([$this, $new]));
+            $this->parent->replace($this, new SQLArgsSpaceSeparated([$this, $new]));
             return $new;
         }
         
         throw new Exception('public function append($new)');
     }
+
+    public function append_comma($caret) {
+        if ($caret instanceof SQLToken && is_string($caret->arg)) {
+            $caret->arg .= ',';
+            return $caret;
+        }
+        if ($caret instanceof SQLCaret) {
+            $new = new SQLToken(',');
+            $this->replace($caret, $new);
+            return $new;
+        }
+        return parent::append_comma($caret);
+    }
+}
+
+class SQLQuote extends SQLPairedReference
+{
+    public function __toString()
+    {
+        return "'$this->arg'";
+    }
+}
+
+class SQLDQuote extends SQLPairedReference
+{
+    public function __toString()
+    {
+        return "\"$this->arg\"";
+    }
+}
+
+class SQLGraveAccent extends SQLPairedReference
+{
+    public function __toString()
+    {
+        return "`$this->arg`";
+    }    
 }
 
 class SQLOperator extends SQLUnary
@@ -490,7 +727,8 @@ class SQLOperator extends SQLUnary
     public function __construct($func, $arg, $parent = null)
     {
         parent::__construct($arg, $parent);
-        $this->func = $func;
+        assert (is_string($func), new Exception("assert failed: public function __construct(\$func, \$arg, \$parent = null)"));
+        $this->func = strtolower($func);
     }
     
     public function __toString()
@@ -498,7 +736,7 @@ class SQLOperator extends SQLUnary
         return "$this->func $this->arg";
     }
     
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $func = $this->func;
         switch ($this->func) {
@@ -525,6 +763,23 @@ class SQLGroup extends SQLUnary
     {
         return $this;
     }
+
+    public function append_comma($caret)
+    {
+        $new = new SQLCaret($this);
+        $this->replace($this->arg, new SQLArgsCommaSeparated([$this->arg, $new]));
+        return $new;
+    }
+
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "stack_precedence":
+                return -0.5;
+            default:
+                return parent::__get($vname);
+        }
+    }
 }
 
 abstract class SQLArgs extends SQL
@@ -535,6 +790,8 @@ abstract class SQLArgs extends SQL
         switch ($vname) {
             case "stack_precedence":
                 return 2;
+            default:
+                return parent::__get($vname);
         }
     }
     
@@ -584,7 +841,7 @@ abstract class SQLArgs extends SQL
         }
     }
     
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_map(fn ($arg) => $arg->jsonSerialize(), $this->args);
     }
@@ -608,6 +865,8 @@ class SQLBinary extends SQLArgs
                 return $this->args[1];
             case "stack_precedence":
                 return 2;
+            default:
+                return parent::__get($vname);
         }
     }
     
@@ -623,7 +882,7 @@ class SQLBinary extends SQLArgs
         }
     }
     
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [$this->func => [$this->lhs->jsonSerialize(), $this->rhs->jsonSerialize()]];
     }
@@ -641,9 +900,19 @@ class SQLDot extends SQLBinary
         return implode(".", array_map(fn ($arg) => "$arg", $this->args));
     }
  
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [$this->lhs->jsonSerialize() => $this->rhs->jsonSerialize()];
+    }
+
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "stack_precedence":
+                return 6;
+            default:
+                return parent::__get($vname);
+        }
     }
 }
 
@@ -671,9 +940,79 @@ class SQLRegexp extends SQLBinary
     }
 }
 
-class SQLGt extends SQLBinary
+
+class SQLNotRegexp extends SQLBinary
 {
     public static $input_precedence = 3.5;
+    public function __construct($lhs, $rhs, $parent = null)
+    {
+        parent::__construct($lhs, $rhs, $parent);
+    }
+    
+    public function __toString()
+    {
+        return implode(" not regexp ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'not_regexp';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+class SQLLike extends SQLBinary
+{
+    public static $input_precedence = 3.5;
+    public function __toString()
+    {
+        return implode(" like ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'like';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+
+class SQLNotLike extends SQLBinary
+{
+    public static $input_precedence = 3.5;
+    public function __toString()
+    {
+        return implode(" not like ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'not_like';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+class SQLRelational extends SQLBinary{
+    public static $input_precedence = 3.7;
+
+}
+
+
+class SQLGt extends SQLRelational
+{
+    
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -695,9 +1034,9 @@ class SQLGt extends SQLBinary
     }
 }
 
-class SQLGe extends SQLBinary
+class SQLGe extends SQLRelational
 {
-    public static $input_precedence = 3.5;
+
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -719,9 +1058,9 @@ class SQLGe extends SQLBinary
     }
 }
 
-class SQLLt extends SQLBinary
+class SQLLt extends SQLRelational
 {
-    public static $input_precedence = 3.5;
+
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -743,9 +1082,9 @@ class SQLLt extends SQLBinary
     }
 }
 
-class SQLLe extends SQLBinary
+class SQLLe extends SQLRelational
 {
-    public static $input_precedence = 3.5;
+
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -767,9 +1106,9 @@ class SQLLe extends SQLBinary
     }
 }
 
-class SQLEq extends SQLBinary
+class SQLEq extends SQLRelational
 {
-    public static $input_precedence = 3.5;
+
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -791,9 +1130,9 @@ class SQLEq extends SQLBinary
     }
 }
 
-class SQLNe extends SQLBinary
+class SQLNe extends SQLRelational
 {
-    public static $input_precedence = 3.5;
+
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -815,9 +1154,215 @@ class SQLNe extends SQLBinary
     }
 }
 
+class SQLArithmetic extends SQLBinary
+{
+    public static $input_precedence = 4.0;
+
+}
+
+
+class SQLAdd extends SQLArithmetic
+{
+    public static $input_precedence = 4.2;
+    public function __construct($lhs, $rhs, $parent = null)
+    {
+        parent::__construct($lhs, $rhs, $parent);
+    }
+    
+    public function __toString()
+    {
+        return implode(" + ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'add';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+class SQLSub extends SQLArithmetic
+{
+    public static $input_precedence = 4.2;
+    public function __toString()
+    {
+        return implode(" - ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'sub';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+
+class SQLMul extends SQLArithmetic
+{
+    public static $input_precedence = 4.5;
+    public function __toString()
+    {
+        return implode(" * ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'mul';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+
+class SQLDiv extends SQLArithmetic
+{
+    public static $input_precedence = 4.5;
+    public function __toString()
+    {
+        return implode(" / ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'div';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+
+class SQLBitAnd extends SQLArithmetic
+{
+    public static $input_precedence = 4.1;
+    public function __toString()
+    {
+        return implode(" & ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'bit_and';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+
+class SQLBitOr extends SQLArithmetic
+{
+    public function __toString()
+    {
+        return implode(" | ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'bit_or';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+
+class SQLBitXor extends SQLArithmetic
+{
+    public function __toString()
+    {
+        return implode(" ^ ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'bit_xor';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+
+class SQLSHL extends SQLArithmetic
+{
+    public function __toString()
+    {
+        return implode(" << ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'shl';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+
+class SQLSHR extends SQLArithmetic
+{
+    public function __toString()
+    {
+        return implode(" >> ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'shr';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+
+class SQLMod extends SQLArithmetic
+{
+    public function __toString()
+    {
+        return implode(" % ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'mod';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+
 class SQLAs extends SQLBinary
 {
-    public static $input_precedence = 3.5;
+    public static $input_precedence = 3.6;
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -836,6 +1381,37 @@ class SQLAs extends SQLBinary
             default:
                 return parent::__get($vname);
         }
+    }
+
+    public function append_comma($caret)
+    {
+        $self = $this->parent;
+        if ($self instanceof SQLSelect) {
+            $new = new SQLCaret($self);
+            if (std\is_list($self->select)) {
+                assert(end($self->select) === $this);
+                $self->select[] = $new;
+            }
+            else {
+                assert($self->select === $this);
+                $self->select = [$self->select, $new];
+            }
+            return $new;    
+        }
+        elseif ($self instanceof SQLWith) {
+            $new = new SQLCaret($self);
+            if (std\is_list($self->with)) {
+                assert(end($self->with) === $this);
+                $self->with[] = $new;
+            }
+            else {
+                assert($self->with === $this);
+                $self->with = [$self->with, $new];
+            }
+            return $new;    
+        }
+        else
+            throw new Exception("append_comma(\$caret)");
     }
 }
 
@@ -863,7 +1439,7 @@ class SQLIn extends SQLBinary
     }
 }
 
-class SQLInnerJoin extends SQLBinary
+class SQLNotIn extends SQLBinary
 {
     public static $input_precedence = 3.5;
     public function __construct($lhs, $rhs, $parent = null)
@@ -873,7 +1449,132 @@ class SQLInnerJoin extends SQLBinary
     
     public function __toString()
     {
-        return implode(" join ", array_map(fn ($arg) => "$arg", $this->args));
+        return implode(" not in ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'not_in';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+class SQLIs extends SQLBinary
+{
+    public static $input_precedence = 3.5;
+    public function __construct($lhs, $rhs, $parent = null)
+    {
+        parent::__construct($lhs, $rhs, $parent);
+    }
+    
+    public function __toString()
+    {
+        return implode(" is ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'is';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+class SQLIsNot extends SQLBinary
+{
+    public static $input_precedence = 3.5;
+    
+    public function __toString()
+    {
+        return implode(" is not ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'is_not';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+class SQLUnion extends SQLBinary
+{
+    public static $input_precedence = 0;
+    public function __construct($lhs, $rhs, $parent = null)
+    {
+        parent::__construct($lhs, $rhs, $parent);
+    }
+    
+    public function __toString()
+    {
+        return implode(" union ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'union';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+class SQLUnionAll extends SQLBinary
+{
+    public static $input_precedence = 0;
+    public function __toString()
+    {
+        return implode(" union all ", array_map(fn ($arg) => "$arg", $this->args));
+    }
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'union_all';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+class SQLAbstractJoin extends SQLBinary {
+    public static $input_precedence = 2;
+}
+class SQLInnerJoin extends SQLAbstractJoin
+{
+    public $using;
+    public $on;
+    public function __construct($lhs, $rhs, $parent = null)
+    {
+        parent::__construct($lhs, $rhs, $parent);
+        $this->using = null;
+        $this->on = null;
+    }
+    
+    public function __toString()
+    {
+        $tables = implode(" join ", array_map(fn ($arg) => "$arg", $this->args));
+        if ($this->using) {
+            return "$tables using $this->using";
+        }
+        elseif ($this->on) {
+            return "$tables on $this->on";
+        }
+        else
+            return $tables;
     }
     
     public function __get($vname)
@@ -881,17 +1582,60 @@ class SQLInnerJoin extends SQLBinary
         switch ($vname) {
             case "func":
                 return 'join';
+            case "stack_precedence":
+                return 0.99;
             default:
                 return parent::__get($vname);
         }
     }
+
+    public function append_using()
+    {
+        $using = new SQLCaret();
+        $this->using = $using;
+        $using->parent = $this;
+        return $using;
+    }
+    public function append_on()
+    {
+        $on = new SQLCaret();
+        $this->on = $on;
+        $on->parent = $this;
+        return $on;
+    }
+
+    public function replace($old, $new)
+    {
+        if ($this->using === $old)
+            $this->using = $new;
+        elseif ($this->on === $old)
+            $this->on = $new;
+        else {
+            parent::replace($old, $new);
+            return;
+        }
+        if (!$new->parent)
+            $new->parent = $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        $dict = parent::jsonSerialize();
+        if ($this->using) {
+            $dict['using'] = $this->using->jsonSerialize();
+        }
+        elseif ($this->on) {
+            $dict['on'] = $this->on->jsonSerialize();
+        }
+        return $dict;
+    }
 }
 
-define("SQLInnerJoin", "SQLJoin");
+// typdef SQLInnerJoin SQLJoin;
+class_alias("SQLInnerJoin", "SQLJoin");
 
-class SQLCrossJoin extends SQLBinary
+class SQLCrossJoin extends SQLAbstractJoin
 {
-    public static $input_precedence = 3.5;
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -913,9 +1657,10 @@ class SQLCrossJoin extends SQLBinary
     }
 }
 
-class SQLLeftJoin extends SQLBinary
+
+class SQLLeftJoin extends SQLAbstractJoin
 {
-    public static $input_precedence = 3.5;
+
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -937,9 +1682,9 @@ class SQLLeftJoin extends SQLBinary
     }
 }
 
-class SQLRightJoin extends SQLBinary
+
+class SQLRightJoin extends SQLAbstractJoin
 {
-    public static $input_precedence = 3.5;
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -961,9 +1706,9 @@ class SQLRightJoin extends SQLBinary
     }
 }
 
-class SQLFullJoin extends SQLBinary
+
+class SQLFullJoin extends SQLAbstractJoin
 {
-    public static $input_precedence = 3.5;
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -985,7 +1730,7 @@ class SQLFullJoin extends SQLBinary
     }
 }
 
-class SQLArrow extends SQLBinary
+class SQLJsonExtract extends SQLBinary
 {
     public static $input_precedence = 5;
     public function __construct($lhs, $rhs, $parent = null)
@@ -995,7 +1740,7 @@ class SQLArrow extends SQLBinary
     
     public function __toString()
     {
-        return implode("->", array_map(fn ($arg) => "$arg", $this->args));
+        return implode('->', array_map(fn ($arg) => "$arg", $this->args));
     }
     
     public function __get($vname)
@@ -1011,9 +1756,32 @@ class SQLArrow extends SQLBinary
     }
 }
 
-class SQLAnd extends SQLBinary
+
+class SQLJsonExtractUnquote extends SQLJsonExtract{
+    public function __toString()
+    {
+        return implode('->>', array_map(fn ($arg) => "$arg", $this->args));
+    }
+
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "func":
+                return 'json_extract_unquote';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+class SQLLogical extends SQLBinary {
+
+}
+
+
+class SQLAnd extends SQLLogical
 {
-    public static $input_precedence = 2;
+    public static $input_precedence = 1;
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -1034,7 +1802,7 @@ class SQLAnd extends SQLBinary
         }
     }
     
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $lhs = $this->lhs->jsonSerialize();
         $rhs = $this->rhs->jsonSerialize();
@@ -1046,9 +1814,10 @@ class SQLAnd extends SQLBinary
     }
 }
 
-class SQLOr extends SQLBinary
+
+class SQLOr extends SQLLogical
 {
-    public static $input_precedence = 2;
+    public static $input_precedence = 1;
     public function __construct($lhs, $rhs, $parent = null)
     {
         parent::__construct($lhs, $rhs, $parent);
@@ -1063,13 +1832,13 @@ class SQLOr extends SQLBinary
     {
         switch ($vname) {
             case "stack_precedence":
-                return 4;
+                return 0.9;
             default:
                 return parent::__get($vname);
         }
     }
     
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $lhs = $this->lhs->jsonSerialize();
         $rhs = $this->rhs->jsonSerialize();
@@ -1085,7 +1854,7 @@ class SQLFunction extends SQLArgs
 {
     public function __construct($func, ...$args)
     {
-        parent::__construct([$func, ...$args]);
+        parent::__construct([$func->lower(), ...$args]);
     }
     
     public function __get($vname)
@@ -1097,6 +1866,8 @@ class SQLFunction extends SQLArgs
                 return $this->args[0];
             case "parameters":
                 return array_slice($this->args, 1);
+            default:
+                return parent::__get($vname);
         }
     }
 
@@ -1106,7 +1877,7 @@ class SQLFunction extends SQLArgs
         return "$this->func($args)";
     }
     
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $parameters = $this->parameters;
         if (count($parameters) == 1 && $parameters[0] instanceof SQLCaret) {
@@ -1115,7 +1886,7 @@ class SQLFunction extends SQLArgs
         return ["$this->func" => array_map(fn ($arg) => $arg->jsonSerialize(), $parameters)];
     }
     
-    public function append_comma()
+    public function append_comma($caret)
     {
         $new = new SQLCaret($this);
         $this->args[] = $new;
@@ -1129,14 +1900,19 @@ class SQLFunction extends SQLArgs
     
     public function append_order()
     {
+        return $this->append_operator('order by');
+    }
+
+    public function append_operator($func)
+    {
         $new = new SQLCaret();
         $index = count($this->args) - 1;
-        $this->args[$index] = new SQLParallelArgs([$this->args[$index], new SQLOperator('order by', $new)], $this);
+        $this->args[$index] = new SQLArgsSpaceSeparated([$this->args[$index], new SQLOperator($func, $new)], $this);
         return $new;
     }
 }
 
-class SQLParallelArgs extends SQLArgs
+class SQLArgsSpaceSeparated extends SQLArgs
 {
     public static $input_precedence = 2;
     
@@ -1145,6 +1921,8 @@ class SQLParallelArgs extends SQLArgs
         switch ($vname) {
             case "stack_precedence":
                 return 2;
+            default:
+                return parent::__get($vname);
         }
     }
     
@@ -1169,36 +1947,84 @@ class SQLParallelArgs extends SQLArgs
         $new = new SQLCaret();
         $this->args[] = new SQLOperator($func, $new, $this);
         return $new;
-    }    
+    }
 }
 
-class SQLSentence extends SQLUnary
+class SQLArgsCommaSeparated extends SQLArgs
+{
+    public static $input_precedence = 2;
+    
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "stack_precedence":
+                return 2;
+            default:
+                return parent::__get($vname);
+        }
+    }
+    
+    public function append($new)
+    {
+        if ($new instanceof SQLToken) {
+            $this->args[] = $new;
+            $new->parent = $this;
+            return $new;
+        }
+        
+        throw new Exception('public function append($type)');
+    }
+    
+    public function __toString()
+    {
+        return implode(",", array_map(fn ($arg) => "$arg", $this->args));
+    }
+
+    public function append_operator($func)
+    {
+        $new = new SQLCaret();
+        $this->args[] = new SQLOperator($func, $new, $this);
+        return $new;
+    }
+}
+
+class SQLSentence extends SQLArgs
 {
 
     public function __get($vname)
     {
         switch ($vname) {
             case "stack_precedence":
-                return 0;
+                return -1;
+            case "root":
+                return $this;
+            default:
+                return parent::__get($vname);
         }
     }
 
     public function __toString()
     {
-        return "$this->arg";
+        return implode(";\n", array_map(fn ($arg) => "$arg", $this->args));
     }
 
-    public function is_possibly_empty()
-    {
-        return $this->arg->is_possibly_empty();
+    public function append_semicolon() {
+        $caret = new SQLCaret($this);
+        $this->args[] = $caret;
+        return $caret;
     }
-    
-    public function is_or_structure()
+
+    public function jsonSerialize(): mixed
     {
-        return $this->arg->is_or_structure();
+        $args = parent::jsonSerialize();
+        if (end($this->args) instanceof SQLCaret)
+            array_pop($args);
+        if (count($args) == 1)
+            [$args] = $args;
+        return $args;
     }
-    
 }
+
 
 class SQLStatement extends SQL
 {
@@ -1221,8 +2047,10 @@ class SQLStatement extends SQL
         $this->limit = $limit;
         $this->offset = $offset;
         
-        $from->parent = $this;
-        $where->parent = $this;
+        if ($from)
+            $from->parent = $this;
+        if ($where)
+            $where->parent = $this;
 
         if ($group)
             $group->parent = $this;
@@ -1239,36 +2067,28 @@ class SQLStatement extends SQL
     
     public function replace($old, $new)
     {
-        if ($this->from === $old) {
+        if ($this->from === $old)
             $this->from = $new;
-        }
-        elseif ($this->where === $old) {
+        elseif ($this->where === $old)
             $this->where = $new;
-        }
-        elseif ($this->order === $old) {
+        elseif ($this->order === $old)
             $this->order = $new;
-        }
-        elseif ($this->limit === $old) {
+        elseif ($this->limit === $old)
             $this->limit = $new;
-        }
-        elseif ($this->offset === $old) {
+        elseif ($this->offset === $old)
             $this->offset = $new;
-        }
-        elseif ($this->group === $old){
+        elseif ($this->group === $old)
             $this->group = $new;
-        }
-        elseif ($this->having === $old){
+        elseif ($this->having === $old)
             $this->having = $new;
-        }
-        else {
+        else
             throw new Exception('public function replace($old, $new)');
-        }
 
         if (!$new->parent)
             $new->parent = $this;
     }
-    
-    public function jsonSerialize()
+
+    public function jsonSerialize(): mixed
     {
         return [
             'where' => $this->where? $this->where->jsonSerialize(): null,
@@ -1277,8 +2097,101 @@ class SQLStatement extends SQL
             'having' => $this->having? $this->having->jsonSerialize(): null,
             'order' => $this->order? $this->order->jsonSerialize(): null,
             'limit' => $this->limit? $this->limit->jsonSerialize(): null,
-            'offset' => $this->offset? $this->offset->jsonSerialize(): null,
+            'offset' => $this->offset? $this->offset->jsonSerialize(): null
         ];
+    }
+
+    public function append_where()
+    {
+        if (!$this->where) {
+            $this->where = new SQLCaret($this);
+            return $this->where;
+        }
+        
+        throw new Exception('public function append_where()');
+    }
+
+    public function append_group()
+    {
+        if (!$this->group) {
+            $this->group = new SQLCaret($this);
+            return $this->group;
+        }
+        
+        throw new Exception('public function append_group()');
+    }
+
+    public function append_having()
+    {
+        if (!$this->having) {
+            $this->having = new SQLCaret($this);
+            return $this->having;
+        }
+        
+        throw new Exception('public function append_having()');
+    }    
+
+    public function append_order()
+    {
+        if (!$this->order) {
+            $this->order = new SQLCaret($this);
+            return $this->order;
+        }
+        
+        throw new Exception('public function append_order()');
+    }    
+
+    public function append_limit()
+    {
+        if (!$this->limit) {
+            $this->limit = new SQLCaret($this);
+            return $this->limit;
+        }
+        
+        throw new Exception('public function append_limit()');
+    }
+
+    public function append_offset()
+    {
+        if (!$this->offset) {
+            $this->offset = new SQLCaret($this);
+            return $this->offset;
+        }
+        
+        throw new Exception('public function append_offset()');
+    }
+    public function toString($sql)
+    {
+        if ($where = $this->where)
+            $sql .= " where $where";
+        
+        if ($group = $this->group) {
+            $sql .= " group by $group";
+            if ($having = $this->having)
+                $sql .= " having $having";
+        }
+        
+        if ($order = $this->order)
+            $sql .= " order by $order";
+        
+        if ($limit = $this->limit) {
+            $sql .= " limit $limit";
+            
+            if ($offset = $this->offset)
+                $sql .= " offset $offset";
+        }
+        
+        return $sql;
+    }
+
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case "stack_precedence":
+                return 0;
+            default:
+                return parent::__get($vname);
+        }
     }
 }
 
@@ -1292,14 +2205,31 @@ class SQLSelect extends SQLStatement
         $select->parent = $this;
     }
     
-    public function __get($vname)
+    public function __toString()
     {
-        switch ($vname) {
-            case "stack_precedence":
-                return 0;
-        }
+        $select = $this->select;
+        if (std\is_list($select))
+            $select = implode(', ', array_map(fn ($arg) => "$arg", $select));
+
+        return $this->toString("select $select from $this->from");
     }
     
+    public function replace($old, $new)
+    {
+        if (!$this->replace_args($this->select, $old, $new))
+            parent::replace($old, $new);
+    }
+    
+    public function jsonSerialize(): mixed
+    {
+        $dict = parent::jsonSerialize();
+        $select = $this->select;
+        $dict['select'] = std\is_list($select)?
+            array_map(fn ($arg) => $arg->jsonSerialize(), $select):
+            $select->jsonSerialize();
+        return $dict;
+    }
+
     public function append_from()
     {
         if (!$this->from) {
@@ -1308,155 +2238,16 @@ class SQLSelect extends SQLStatement
         }
         
         throw new Exception('public function append_from()');
-    }
-    
-    public function append_where()
-    {
-        if (!$this->where) {
-            $this->where = new SQLCaret($this);
-            return $this->where;
-        }
-        
-        throw new Exception('public function append_where()');
-    }
+    }        
 
-    public function append_group()
-    {
-        if (!$this->group) {
-            $this->group = new SQLCaret($this);
-            return $this->group;
-        }
-        
-        throw new Exception('public function append_group()');
-    }
-    
-    public function append_having()
-    {
-        if (!$this->having) {
-            $this->having = new SQLCaret($this);
-            return $this->having;
-        }
-        
-        throw new Exception('public function append_having()');
-    }
-    
-    public function append_order()
-    {
-        if (!$this->order) {
-            $this->order = new SQLCaret($this);
-            return $this->order;
-        }
-        
-        throw new Exception('public function append_order()');
-    }
-    
-    public function append_limit()
-    {
-        if (!$this->limit) {
-            $this->limit = new SQLCaret($this);
-            return $this->limit;
-        }
-        
-        throw new Exception('public function append_limit()');
-    }
-    
-    public function append_offset()
-    {
-        if (!$this->offset) {
-            $this->offset = new SQLCaret($this);
-            return $this->offset;
-        }
-        
-        throw new Exception('public function append_offset()');
-    }
-    
-    public function __toString()
-    {
-        if (std\is_list($this->select)) {
-            $select = implode(', ', array_map(fn ($arg) => "$arg", $this->select));
-        }
-        else {
-            $select = $this->select;
-        }
-
-        $sql = "select $select from $this->from";
-        $where = $this->where;
-        if ($where) {
-            $sql .= " where $where";
-        }
-        
-        $group = $this->group;
-        if ($group) {
-            $sql .= " group by $group";
-            $having = $this->having;
-            if ($having) {
-                $sql .= " having $having";
-            }
-        }
-        
-        $order = $this->order;
-        if ($order) {
-            $sql .= " order by $order";
-        }
-        
-        $limit = $this->limit;
-        if ($limit) {
-            $sql .= " limit $limit";
-            
-            $offset = $this->offset;
-            if ($offset) {
-                $sql .= " offset $offset";
-            }
-        }
-        
-        return $sql;
-    }
-    
-    public function replace($old, $new)
-    {
-        if (std\is_list($this->select)) {
-            $i = std\indexOf($this->select, $old);
-            if ($i >= 0) {
-                $this->select[$i] = $new;
-                if (!$new->parent)
-                    $new->parent = $this;
-                    return;
-            }
-        }
-        elseif ($this->select === $old) {
-            $this->select = $new;
-            if (!$new->parent)
-                $new->parent = $this;
-            
-            return;
-        }
-
-        parent::replace($old, $new);
-    }
-    
-    public function jsonSerialize()
-    {
-        $dict = parent::jsonSerialize();
-        if (std\is_list($this->select)) {
-            $dict['select'] = array_map(fn ($arg) => $arg->jsonSerialize(), $this->select);
-        }
-        else {
-            $dict['select'] = $this->select->jsonSerialize();
-        }
-        
-        return $dict;
-    }
-    
-    public function append_comma()
+    public function append_comma($caret)
     {
         if (!$this->from) {
             $new = new SQLCaret($this);
-            if (std\is_list($this->select)) {
+            if (std\is_list($this->select))
                 $this->select[] = $new;
-            }
-            else {
+            else
                 $this->select = [$this->select, $new];
-            }
             return $new;
         }
     }
@@ -1469,20 +2260,12 @@ class SQLSelect extends SQLStatement
             $this->select = new SQLOperator($func, $new, $this);
             return $new;
         }
-        throw new Exception('public function append_comma()');
+        throw new Exception('public function append_operator()');
     }
 }
 
 class SQLDelete extends SQLStatement
 {
-    public function __get($vname)
-    {
-        switch ($vname) {
-            case "stack_precedence":
-                return 0;
-        }
-    }
-    
     public function append_from()
     {
         if (!$this->from)
@@ -1492,104 +2275,14 @@ class SQLDelete extends SQLStatement
             return $this->from;
 
         throw new Exception('public function append_from()');
-    }
-    
-    public function append_where()
-    {
-        if (!$this->where) {
-            $this->where = new SQLCaret($this);
-            return $this->where;
-        }
-        
-        throw new Exception('public function append_where()');
-    }
-    
-    public function append_group()
-    {
-        if (!$this->group) {
-            $this->group = new SQLCaret($this);
-            return $this->group;
-        }
-        
-        throw new Exception('public function append_group()');
-    }
-    
-    public function append_having()
-    {
-        if (!$this->having) {
-            $this->having = new SQLCaret($this);
-            return $this->having;
-        }
-        
-        throw new Exception('public function append_having()');
-    }
-    
-    public function append_order()
-    {
-        if (!$this->order) {
-            $this->order = new SQLCaret($this);
-            return $this->order;
-        }
-        
-        throw new Exception('public function append_order()');
-    }
-    
-    public function append_limit()
-    {
-        if (!$this->limit) {
-            $this->limit = new SQLCaret($this);
-            return $this->limit;
-        }
-        
-        throw new Exception('public function append_limit()');
-    }
-    
-    public function append_offset()
-    {
-        if (!$this->offset) {
-            $this->offset = new SQLCaret($this);
-            return $this->offset;
-        }
-        
-        throw new Exception('public function append_offset()');
-    }
+    }    
     
     public function __toString()
     {
-        $sql = "delete from $this->from";
-        $where = $this->where;
-        if ($where) {
-            $sql .= " where $where";
-        }
-        
-        $group = $this->group;
-        if ($group) {
-            $sql .= " group by $group";
-            $having = $this->having;
-            if ($having) {
-                $sql .= " having $having";
-            }
-        }
-        
-        $order = $this->order;
-        if ($order) {
-            $sql .= " order by $order";
-        }
-        
-        $limit = $this->limit;
-        if ($limit) {
-            $sql .= " limit $limit";
-            
-            $offset = $this->offset;
-            if ($offset) {
-                $sql .= " offset $offset";
-            }
-        }
-        
-        return $sql;
+        return $this->toString("delete from $this->from");
     }
     
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $dict = parent::jsonSerialize();
         $dict['delete'] = true;
@@ -1597,17 +2290,80 @@ class SQLDelete extends SQLStatement
     }
 }
 
+class SQLUpdate extends SQLStatement
+{
+    public $set;
+    public function __construct($from = null, $set = null, $where = null, $group = null, $having = null, $order = null, $limit = null, $offset = null, $parent = null)
+    {
+        parent::__construct($from, $where, $group, $having, $order, $limit, $offset, $parent);
+        $this->set = $set;
+        // $set->parent = $this;
+    }
+
+    public function __toString()
+    {
+        $set = $this->set;
+        if (std\is_list($set))
+            $set = implode(', ', array_map(fn ($arg) => "$arg", $set));
+
+        return $this->toString("update $this->from set $set");
+    }
+    
+    public function replace($old, $new)
+    {
+        if (!$this->replace_args($this->set, $old, $new))
+            parent::replace($old, $new);
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        $dict = parent::jsonSerialize();
+        $dict['update'] = $dict['from'];
+        unset($dict['from']);
+        $set = $this->set;
+        $dict['set'] = std\is_list($set)?
+            array_map(fn ($arg) => $arg->jsonSerialize(), $set):
+            $set->jsonSerialize();
+        return $dict;
+    }
+    public function append_set()
+    {
+        if (!$this->set)
+            $this->set = new SQLCaret($this);
+        
+        if ($this->set instanceof SQLCaret)
+            return $this->set;
+
+        throw new Exception('public function append_set()');
+    }    
+
+    public function append_comma($caret)
+    {
+        if (!$this->where) {
+            $new = new SQLCaret($this);
+            if (std\is_list($this->set))
+                $this->set[] = $new;
+            else
+                $this->set = [$this->set, $new];
+            return $new;
+        }
+    }
+}
+
 class SQLWith extends SQL
 {
+    public $recursive;
     public $with;
     public $sql;
-    public function __construct($with, $sql, $parent = null)
+    public function __construct($with, $sql, $parent = null, $recursive = false)
     {
         parent::__construct($parent);
         $this->with = $with;
         $this->sql = $sql;
         $with->parent = $this;
-        $sql->parent = $this;
+        if ($sql)
+            $sql->parent = $this;
+        $this->recursive = $recursive;
     }
     
     public function __get($vname)
@@ -1615,6 +2371,8 @@ class SQLWith extends SQL
         switch ($vname) {
             case "stack_precedence":
                 return 0;
+            default:
+                return parent::__get($vname);
         }
     }
     
@@ -1623,30 +2381,36 @@ class SQLWith extends SQL
         $sql = $this->sql;
         $with = $this->with;
         if ($with) {
-            $sql = "with $with $sql";
+            if (std\is_list($with))
+                $with = implode(', ', array_map(fn ($arg) => "$arg", $with));
+            
+            $recursive = $this->recursive? ' recursive': '';
+            $sql = "with$recursive $with $sql";
         }
         return $sql;
     }
     
     public function replace($old, $new)
     {
-        if ($this->with === $old) {
-            $this->with = $new;
-        }
-        elseif ($this->sql === $old) {
+        if ($this->replace_args($this->with, $old, $new));
+        elseif ($this->sql === $old)
             $this->sql = $new;
-        }
-        else {
+        else
             throw new Exception('public function replace($old, $new)');
-        }
         if (!$new->parent)
             $new->parent = $this;
     }
     
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $dict = $this->sql->jsonSerialize();
-        $dict['with'] = $this->with->jsonSerialize();
+        $func = 'with';
+        if ($this->recursive)
+            $func .= '_recursive';
+        if (std\is_list($this->with))
+            $dict[$func] = array_map(fn ($arg) => $arg->jsonSerialize(), $this->with);
+        else
+            $dict[$func] = $this->with->jsonSerialize();
         return $dict;
     }
     
@@ -1664,9 +2428,7 @@ class SQLWith extends SQL
 }
 
 
-function parseSQL() {
-//     $sql = "with _t as (with _t as (select json_remove(json_unquote(concat('[', group_concat(json_quote(pn)), ']')), '$[0]') as pn from corpus.markush group by text having count(*) > 1) select _s.pn from _t cross join json_table(pn, '$[*]' columns(pn varchar(36) path '$')) as _s) select pn, text from corpus.markush where pn in (select pn from _t) limit 1000";
-    $sql = "with _t as (with _t as (select json_remove(json_unquote(concat('[', group_concat(json_quote(cast(id as char))), ']')), '$[0]') as ids from axiom.latex_ group by latex having count(*) > 1)select id from _t cross join json_table(ids, '$[*]' columns(id int path '$')) as _s)delete from axiom.latex_ where id in (select id from _t)";
+function parseSQL($sql) {
     $expr = SQL::compile($sql);
     $expr->jsonSerialize();
     echo std\encode($expr);

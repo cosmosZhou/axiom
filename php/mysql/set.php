@@ -10,6 +10,6 @@ if ($password) {
 else {
     if ($password == null)
         $set['eq'][1] = '';
-    $dual = true;    
+    $dual = true;
 }
 ?>

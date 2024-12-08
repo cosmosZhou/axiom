@@ -11,18 +11,18 @@ def apply(imply):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     e = Symbol(real=True)
     f = Function(integer=True)
     Eq << apply(Any[e](f(e) > 0))
 
-    Eq << algebra.cond.then.any.apply(Eq[1], wrt=e)
+    Eq << Algebra.Cond.to.Any.apply(Eq[1], wrt=e)
 
 
 if __name__ == '__main__':
     run()
 
 
-from . import subs
 # created on 2018-12-02
+from . import subs

@@ -5,19 +5,19 @@ from util import *
 def apply(given, var=None):
     if var is None:
         var = given.wrt
-    from axiom.algebra.cond.then.all import all
+    from Axiom.Algebra.Cond.to.All import all
     return all(given, var)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     e = Symbol(positive=True)
     f = Function(shape=(), integer=True)
     Eq << apply(f(e) > 0)
 
-    Eq << algebra.all.then.ou.apply(Eq[1])
+    Eq << Algebra.All.to.Or.apply(Eq[1])
 
     Eq << Eq[-1].subs(Eq[1].variable, e)
 
@@ -25,5 +25,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-from . import domain_defined
 # created on 2019-03-15
+from . import domain_defined

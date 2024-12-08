@@ -8,14 +8,14 @@ def apply(self, factor=None):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     a, b, x, y = Symbol(complex=True)
     Eq << apply(a * x - a * y + b + b * y, factor=b)
 
-    Eq << Eq[0].this.find(Mul[Add]).apply(algebra.mul.to.add)
+    Eq << Eq[0].this.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
 
-    
+
 
 
 if __name__ == '__main__':

@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self, i=None):
-    from axiom.algebra.ne.to.any.ne import rewrite
+    from Axiom.Algebra.Ne.equ.Any.Ne import rewrite
     return rewrite(self, i)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     k = Symbol(integer=True)
     n = Symbol(integer=True, positive=True, given=True)
@@ -19,7 +19,7 @@ def prove(Eq):
     Eq << ~Eq[0]
 
 
-    Eq << algebra.eq.then.all.eq.apply(Eq[-1], simplify=None)
+    Eq << Algebra.Eq.to.All.Eq.apply(Eq[-1], simplify=None)
     Eq << ~Eq[-1]
 
 

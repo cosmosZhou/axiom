@@ -8,6 +8,7 @@
 
 <script>
 console.log('import mysqlArgs.vue');
+import {is_numeric_operator} from "../js/mysql.js"
 import mysqlLeaf from "./mysqlLeaf.vue"
 
 export default {
@@ -47,7 +48,7 @@ export default {
 		
 		is_leaf() {
 			return this.$parent.is_leaf;
-		},		
+		},
 		
 		numericFields() {
 			return this.$parent.numericFields;
@@ -60,11 +61,11 @@ export default {
 		tables() {
 			if (this.$data.tables)
 				return this.$data.tables;
-			return this.$parent.tables;	
+			return this.$parent.tables;
 		},
 		
 		databases() {
-			return this.$parent.databases;	
+			return this.$parent.databases;
 		},
 		
 		numeric_operators() {
@@ -85,7 +86,7 @@ export default {
 
 		textual_relations() {
 			return this.$parent.textual_relations;
-		},		
+		},
 
 		numeric_functions() {
 			return this.$parent.numeric_functions;
@@ -127,6 +128,10 @@ export default {
 			return this.$parent.is_aggregate_function;
 		},
 
+		is_numeric_operator(){
+			return is_numeric_operator(this.value);
+		},
+
 		is_numeric() {
 			return this.function_is_numeric || this.is_numeric_operator || this.is_numeric_relation;
 		},
@@ -148,12 +153,12 @@ export default {
 		
 		is_numeric_relation(){
 			var value = this.value[0];
-			return value.gt || value.lt || value.ge || value.le; 
+			return value.gt || value.lt || value.ge || value.le;
 		},
 		
 		is_jsonobj_relation(){
 			var value = this.value[0];
-			return this.value.json_contains || this.value.json_contains_path; 
+			return value.json_contains || value.json_contains_path || value.is || value.not_json_contains || value.not_json_contains_path || value.is_not;
 		},
 
 		is_operator(){
@@ -161,13 +166,13 @@ export default {
 		},
 		
 		is_numeric_operator(){
-			var value = this.value[0];
-			return this.value.add || this.value.sub || this.value.mul || this.value.div || this.value.mod || this.value.AND || this.value.XOR || this.value.right_shift || this.value.left_shift;
+			var {value} = this;
+			return value.add || value.sub || value.mul || value.div || value.mod || value.bit_and || value.bit_xor || value.shr || value.shl;
 		},
 		
 		is_jsonobj_operator(){
-			var value = this.value[0];
-			return this.value.json_extract || this.value.json_extract_unquote;
+			var {value} = this;
+			return value.json_extract || value.json_extract_unquote;
 		},
 		
 		is_relation() {
@@ -176,19 +181,18 @@ export default {
 
 		is_textual_relation(){
 			var value = this.value[0];
-			return value.regexp || value.like || value.regexp_binary || value.like_binary || value.not_regexp || value.not_like || value.not_regexp_binary || value.not_like_binary;
+			return value.regexp || value.like || value.regexp_binary || value.like_binary || value.not_regexp || value.not_like || value.not_regexp_binary || value.not_like_binary || value.not_in || value.in;
 		},
 		
 		operatorsOpted() {
-			return this.is_numeric_opeator ? this.numeric_operators: this.jsonobj_operators;
+			return this.is_numeric_operator ? this.numeric_operators: this.jsonobj_operators;
 		},
 		
 		relationsOpted() {
-			return this.is_numeric_relation ? this.numeric_relations: [...this.textual_relations, 'regexp_like', 'not regexp_like', ...this.jsonobj_relations];
+			return this.is_numeric_relation ? this.numeric_relations: [...this.textual_relations, 'regexp_like', 'not regexp_like', 'find_in_set', ...this.jsonobj_relations];
 		},
 		
 		functionsOpted() {
-			var value = this.value[0];
 			if (this.function_is_numeric)
 				return this.numeric_functions;
 
@@ -214,7 +218,7 @@ export default {
 		
 		is_logic(){
 			var value = this.value[0];
-			return value.and || value.or; 
+			return value.and || value.or;
 		},
 		
 		func(){
@@ -230,7 +234,7 @@ export default {
 		},
 		
 		PRI() {
-			return this.$parent.PRI;	
+			return this.$parent.PRI;
 		},
 		
 		database() {

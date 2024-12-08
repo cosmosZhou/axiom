@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.sum.doit.inner import doit
+    from Axiom.Algebra.Sum.doit.inner import doit
     return doit(All, self)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     x = Symbol(real=True, shape=(oo, oo))
     i, j = Symbol(integer=True)
     m = Symbol(integer=True, positive=True)
@@ -17,13 +17,13 @@ def prove(Eq):
     n = 5
     Eq << apply(All[j:n, i:m](x[i, j] > 0))
 
-    Eq << Equivalent(All[i:m](Equal(Bool(All[j:n](x[i, j] > 0)), 1)), All[j:n, i:m](x[i, j] > 0), plausible=True)
+    Eq << Iff(All[i:m](Equal(Bool(All[j:n](x[i, j] > 0)), 1)), All[j:n, i:m](x[i, j] > 0), plausible=True)
 
-    Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.piece)
+    Eq << Eq[-1].this.find(Bool).apply(Algebra.Bool.eq.Piece)
 
-    Eq << Eq[-1].this.find(Bool, All).apply(algebra.all.to.et.doit)
+    Eq << Eq[-1].this.find(Bool, All).apply(Algebra.All.equ.And.doit)
 
-    Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.piece)
+    Eq << Eq[-1].this.find(Bool).apply(Algebra.Bool.eq.Piece)
 
     Eq << Eq[-1].reversed
 
@@ -31,5 +31,5 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-from . import setlimit
 # created on 2018-12-05
+from . import setlimit

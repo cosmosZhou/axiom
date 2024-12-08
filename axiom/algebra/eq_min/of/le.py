@@ -11,12 +11,12 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y = Symbol(integer=True)
     Eq << apply(Equal(x, Min(x, y)))
 
-    Eq << algebra.le.then.eq.min.apply(Eq[1])
+    Eq << Algebra.Le.to.Eq.Min.apply(Eq[1])
 
     Eq << Eq[-1].reversed
 

@@ -46,7 +46,9 @@ $keyword = $dict["keyword"];
 $wholeWord = array_key_exists("wholeWord", $dict) ? true : false;
 $caseSensitive = array_key_exists("caseSensitive", $dict) ? true : false;
 $regularExpression = array_key_exists("regularExpression", $dict) ? true : false;
-
+$limit = $dict["limit"]?? 100;
+if (!$limit)
+    $limit = 100;
 // error_log("wholeWord = $wholeWord");
 // error_log("caseSensitive = $caseSensitive");
 // error_log("regularExpression = $regularExpression");
@@ -75,14 +77,32 @@ else  {
     $user = get_user();
     if ($like) {
         if ($regex == null) {
-            $list = select_axiom_by_state($user, $state);
+            $list = select_axiom_by_state($user, $state, $limit);
         } else {
-            $list = select_axiom_by_like($user, $regex, $caseSensitive);
+            $list = select_axiom_by_like($user, $regex, $caseSensitive, $limit);
         }
     } else {
-        $list = select_axiom_by_regex($user, $regex, $caseSensitive);
+        $list = select_axiom_by_regex($user, $regex, $caseSensitive, $limit);
     }
     
+    $replacement = array_key_exists("replacement", $dict) ? $dict["replacement"] : null;
+    if ($replacement) {
+        if ($like)
+            $regex = str_replace(".", "\\.", $regex);
+        else
+            $regex = str_replace("\\\\", "\\", $regex);
+        $regex = "/$regex/";
+        if (!$caseSensitive)
+            $regex .= 'i';
+        // error_log("regex = $regex");    
+        // error_log("replacement = $replacement");
+        foreach ($list as &$item) {
+            
+            // error_log("item = $item");
+            $item = [$item, preg_replace($regex, $replacement, $item)];
+        }
+    }
+
     $list = std\encode($list);
 }
 ?>
@@ -118,6 +138,8 @@ else {
         wholeWord: <?php echo std\encode($wholeWord)?>,
         caseSensitive: <?php echo std\encode($caseSensitive)?>,
         latex: <?php echo std\encode($latex)?>,
+        replacement: <?php echo std\encode($replacement)?>,
+        limit: <?php echo $limit?>,
     });
 }
 </script>

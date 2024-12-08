@@ -10,12 +10,12 @@ def apply(ge_a, ge_b):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y, b = Symbol(real=True, given=True)
     Eq << apply(x >= y, x >= b)
 
-    Eq << algebra.ge_max.then.et.ge.apply(Eq[-1])
+    Eq << Algebra.Ge_Max.to.And.Ge.apply(Eq[-1])
 
 
 

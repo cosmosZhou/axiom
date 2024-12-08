@@ -117,7 +117,7 @@ class Adminer {
 	* @return null
 	*/
 	function loginForm($auth=null) {
-	    [$db, $table] = get_db_table();
+	    [$db, $table] = get_db_table($_GET);
         $_POST['auth'] = ['host' => h(HOST), 'user' => $_GET['user']?? 'user', 'password' => '', 'db' => $db ?? 'corpus', 'table' => $table, 'permanent' => true];
 	    return 'login';
 	}

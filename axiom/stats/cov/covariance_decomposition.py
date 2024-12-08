@@ -11,23 +11,23 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import stats
+    from Axiom import Stats
 
     n = Symbol(integer=True, positive=True)
     x, y = Symbol(real=True, random=True, shape=(n,))
     Eq << apply(Covariance(x, y))
 
-    Eq << Eq[0].this.lhs.apply(stats.cov.to.sub.expect)
+    Eq << Eq[0].this.lhs.apply(Stats.Cov.eq.Sub.Expect)
 
-    Eq << Eq[-1].this.rhs.apply(stats.cov.to.sub.expect)
+    Eq << Eq[-1].this.rhs.apply(Stats.Cov.eq.Sub.Expect)
 
-    Eq << Eq[-1].this.find(Expectation[Expectation]).apply(stats.expect.law_of_total_expectation)
+    Eq << Eq[-1].this.find(Expectation[Expectation]).apply(Stats.Expect.law_of_total_expectation)
 
-    Eq << Eq[-1].this.find(Mul[Expectation]).apply(stats.mul.to.expect)
+    Eq << Eq[-1].this.find(Mul[Expectation]).apply(Stats.Mul.eq.Expect)
 
-    Eq << Eq[-1].this.rhs.apply(stats.expect.law_of_total_expectation)
+    Eq << Eq[-1].this.rhs.apply(Stats.Expect.law_of_total_expectation)
 
-    
+
 
 
 if __name__ == '__main__':

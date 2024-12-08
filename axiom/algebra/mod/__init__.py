@@ -1,2 +1,2 @@
-from . import to
-from . import mod
+from . import Mod
+from . import eq

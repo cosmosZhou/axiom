@@ -19,7 +19,7 @@ def apply(self, k=None):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, nonnegative=True)
     k = Symbol(integer=True)
@@ -30,17 +30,17 @@ def prove(Eq):
 
     Eq << Eq[1] * c
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul.to.add)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add)
 
-    Eq << Eq[-1].this.find(Symbol * Pow).args[:2].apply(algebra.mul.to.pow.add.exponent)
+    Eq << Eq[-1].this.find(Symbol * Pow).args[:2].apply(Algebra.Mul.eq.Pow.Add.exponent)
 
-    Eq << Eq[-1].this.find(Mul[Sum]).apply(algebra.mul.to.sum)
+    Eq << Eq[-1].this.find(Mul[Sum]).apply(Algebra.Mul.eq.Sum)
 
     Eq << Eq[1].subs(n, n + 1) - Eq[-1]
 
-    Eq << Eq[-1].this.find(Sum).apply(algebra.sum.to.add.pop)
+    Eq << Eq[-1].this.find(Sum).apply(Algebra.Sum.eq.Add.pop)
 
-    Eq << algebra.eq.then.eq.transport.apply(Eq[-1], lhs=-1)
+    Eq << Algebra.Eq.to.Eq.transport.apply(Eq[-1], lhs=-1)
 
 
 

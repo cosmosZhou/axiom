@@ -1,3 +1,3 @@
-from . import cup
-from . import condset
-from . import imageset
+from . import Cup
+from . import Condset
+from . import Imageset

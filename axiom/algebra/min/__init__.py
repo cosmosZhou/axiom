@@ -1,2 +1,2 @@
-from . import to
-from . import clip
+from . import Clip
+from . import eq

@@ -267,16 +267,16 @@ class BasicMeta(type):
     # self < other
     def __lshift__(self, other):
         from sympy.core.of import Basic, sympify
-        from sympy import Assuming
+        from sympy import Given
         other = sympify(other)
-        return Basic.__new__(Assuming, self, other)
+        return Basic.__new__(Given, self, other)
 
     # self > other
     def __rshift__(self, other):
         from sympy.core.of import Basic, sympify
-        from sympy import Infer
+        from sympy import Imply
         other = sympify(other)
-        return Basic.__new__(Infer, self, other)
+        return Basic.__new__(Imply, self, other)
     
     @property
     @cacheit

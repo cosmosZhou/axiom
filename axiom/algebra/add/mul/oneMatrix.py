@@ -18,7 +18,7 @@ def apply(self, i=None):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, positive=True)
     A = Symbol(real=True, shape=(n, n))
@@ -26,7 +26,7 @@ def prove(Eq):
     Eq << apply(A + B)
 
     j = Symbol(domain=Range(n))
-    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], j)
+    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], j)
 
 
 

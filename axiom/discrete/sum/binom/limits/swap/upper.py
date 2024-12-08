@@ -12,20 +12,20 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra, discrete
+    from Axiom import Algebra, Discrete
 
     n = Symbol(integer=True, positive=True)
     k, i, j, h = Symbol(integer=True)
     f = Function(real=True)
     Eq << apply(Sum[k:j:n, j:h:n](Binomial(i + k - j, i) * f(k)))
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.swap.intlimit)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.limits.swap.intlimit)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.limits.separate)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.limits.separate)
 
-    Eq << Eq[-1].this.lhs.find(Sum).apply(algebra.sum.limits.subs.negate, j, k - j)
+    Eq << Eq[-1].this.lhs.find(Sum).apply(Algebra.Sum.limits.subs.Neg, j, k - j)
 
-    Eq << Eq[-1].this.lhs.find(Sum).apply(discrete.sum.binom.to.binom)
+    Eq << Eq[-1].this.lhs.find(Sum).apply(Discrete.Sum.Binom.eq.Binom)
 
 
 

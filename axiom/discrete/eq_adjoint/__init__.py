@@ -1,2 +1,2 @@
-from . import infer_gt_zero
-from . import all_gt_zero
+from . import Imply_Gt_0
+from . import All_Gt_0

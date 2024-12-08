@@ -15,7 +15,7 @@ export function rotateImage(img, width, height, deg, ext){
 	
 	ctx.rotate(deg * Math.PI / 180);
 	
-	var [x, y] = deg > 0? [0, 0]: [-width, -height]; 
+	var [x, y] = deg > 0? [0, 0]: [-width, -height];
 	ctx.drawImage(img, 0, 0, width, height, x, y, width, height);
 	
 	return canvas.toDataURL(`image/${ext}`);

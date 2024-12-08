@@ -10,7 +10,7 @@ def apply(self):
 
 @prove(proved=False)
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     a, b = Symbol(integer=True)
     k = Symbol(integer=True, zero=False)
@@ -25,9 +25,9 @@ def prove(Eq):
 
     Eq << Eq[-2].subs(Eq[-1].reversed)
 
-    Eq << Eq[-1].this.find(Mod).apply(algebra.mod.to.sub)
+    Eq << Eq[-1].this.find(Mod).apply(Algebra.Mod.eq.Sub)
 
-    Eq << Eq[-1].this.find(Ceiling).apply(algebra.ceiling.to.add.floor)
+    Eq << Eq[-1].this.find(Ceiling).apply(Algebra.Ceiling.eq.Add.Floor)
 
     Eq << Eq[0].subs(Eq[1].reversed)
 

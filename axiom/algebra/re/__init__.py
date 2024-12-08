@@ -1,2 +1,2 @@
-from . import to
-from . import conj
+from . import Conj
+from . import eq

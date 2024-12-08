@@ -26,7 +26,7 @@ export default {
 		};
 	},
 	
-	created(){	
+	created(){
 		//var {value, name} = this;
 		//console.log({value, name});
 	},
@@ -70,7 +70,7 @@ export default {
 
 		style_select() {
 			return this.$parent.style_select;
-		},		
+		},
 
 		noSpace() {
 			return this.$parent.noSpace;
@@ -81,15 +81,15 @@ export default {
 		},
 		
 		name() {
-			return this.$parent.name;	
+			return this.$parent.name;
 		},
 		
 		value() {
-			return this.$parent.value;	
+			return this.$parent.value;
 		},
 		
 		dtype() {
-			return this.$parent.dtype;	
+			return this.$parent.dtype;
 		},
 		
 		numericFields() {
@@ -101,15 +101,15 @@ export default {
 		},
 		
 		tables() {
-			return this.$parent.tables;	
+			return this.$parent.tables;
 		},
 		
 		databases() {
-			return this.$parent.databases;	
+			return this.$parent.databases;
 		},
 		
 		PRI() {
-			return this.$parent.PRI;	
+			return this.$parent.PRI;
 		},
 
 		numeric_operators() {
@@ -130,7 +130,7 @@ export default {
 
 		textual_relations() {
 			return this.$parent.textual_relations;
-		},		
+		},
 
 		numeric_functions() {
 			return this.$parent.numeric_functions;
@@ -205,7 +205,7 @@ export default {
 				if (i == null)
 					return `${this.name}[${name}]`;
 				return `${this.name}[${name}][${i}]`;
-			}	
+			}
 
 			if (i == null)
 				return name;

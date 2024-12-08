@@ -1,2 +1,2 @@
-from . import eq_div
-from . import eq_sub
+from . import Eq_Div
+from . import Eq_Sub

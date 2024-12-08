@@ -1,4 +1,4 @@
-from . import then
 from . import of
-from . import notin
+from . import NotIn
 from . import to
+from . import equ

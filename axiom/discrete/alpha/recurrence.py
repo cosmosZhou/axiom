@@ -1,9 +1,9 @@
 from util import *
 
-from axiom.discrete.then.gt_zero.alpha import alpha
 
 @apply
 def apply(A):
+    from Axiom.Discrete.Alpha.gt.Zero import alpha
     x = A.of(alpha)
     n = x.shape[0] - 2
 
@@ -16,7 +16,8 @@ def apply(A):
 
 @prove
 def prove(Eq):
-    from axiom import algebra, discrete
+    from Axiom import Algebra, Discrete
+    from Axiom.Discrete.Alpha.gt.Zero import alpha
 
     x = Symbol(real=True, positive=True, shape=(oo,))
     n = Symbol(integer=True, positive=True, given=False)
@@ -40,15 +41,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(alpha).defun()
 
-    Eq << algebra.cond.then.cond.subs.apply(Eq[0], x[:n + 2], x[1:n + 3])
+    Eq << Algebra.Cond.to.Cond.subs.apply(Eq[0], x[:n + 2], x[1:n + 3])
 
-    Eq << discrete.then.ne_zero.alpha.apply(x[1:n + 3])
+    Eq << Discrete.Alpha.ne.Zero.apply(x[1:n + 3])
 
-    Eq << algebra.ne_zero.eq.then.eq.inverse.apply(Eq[-1], Eq[-2])
+    Eq << Algebra.Ne_0.Eq.to.Eq.Inv.apply(Eq[-1], Eq[-2])
 
-    Eq << Infer(Eq[0], Eq.induct, plausible=True)
+    Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.cond.infer.then.cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
+    Eq << Algebra.Cond.Imply.to.Cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
 
 

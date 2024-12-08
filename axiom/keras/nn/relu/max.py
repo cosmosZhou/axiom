@@ -9,13 +9,13 @@ def apply(x, y):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     x, y = Symbol(real=True)
     Eq << apply(x, y)
 
     Eq << Eq[0].this.lhs.args[1].defun()
 
-    Eq << Eq[-1].this.lhs.apply(algebra.add.to.max)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Add.eq.Max)
 
 
 if __name__ == '__main__':

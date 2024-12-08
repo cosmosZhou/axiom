@@ -9,12 +9,12 @@ def apply(lt):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y, z = Symbol(real=True, given=True)
     Eq << apply(Less(x, y))
 
-    Eq << algebra.lt.then.lt.exp.apply(Eq[1])
+    Eq << Algebra.Lt.to.Lt.Exp.apply(Eq[1])
 
 
 if __name__ == '__main__':

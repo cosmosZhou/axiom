@@ -9,16 +9,14 @@ def apply(lt):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
-
     x, a = Symbol(real=True, given=True)
     Eq << apply(x < a)
 
-    Eq << algebra.iff.of.et.infer.apply(Eq[0])
+    Eq << ~Eq[1]
 
-
+    Eq <<= Eq[-1] & Eq[0]
 
 
 if __name__ == '__main__':
     run()
-# created on 2020-01-10
+# created on 2019-07-17

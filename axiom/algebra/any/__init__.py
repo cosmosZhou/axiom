@@ -1,6 +1,7 @@
-from . import then
-from . import of
-from . import any, ou
-from . import to
-from . import doit
 from . import limits
+from . import of
+from . import Or
+from . import Any
+from . import doit
+from . import to
+from . import equ

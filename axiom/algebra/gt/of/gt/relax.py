@@ -16,12 +16,12 @@ def apply(given, lower=None, upper=None):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y = Symbol(real=True, given=True)
     Eq << apply(Greater(x, y), x - 1)
 
-    Eq << algebra.gt.then.gt.relax.apply(Eq[1], upper=x)
+    Eq << Algebra.Gt.to.Gt.relax.apply(Eq[1], upper=x)
 
 
 if __name__ == '__main__':

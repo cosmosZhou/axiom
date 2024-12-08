@@ -10,7 +10,7 @@ def apply(imply):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
 
     n = Symbol(integer=True, positive=True)
     i = Symbol(integer=True)
@@ -18,8 +18,7 @@ def prove(Eq):
     A = Symbol(etype=dtype.complex[n])
     Eq << apply(Subset(A, Cup[i:n](x[i])))
 
-
-    Eq << sets.any_subset.then.subset.cup.apply(Eq[-1])
+    Eq << Sets.Any_Subset.to.Subset.Cup.apply(Eq[-1])
 
 
 

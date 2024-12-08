@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.sum.limits.absorb import rewrite
+    from Axiom.Algebra.Sum.limits.absorb import rewrite
     return Equal(self, rewrite(Integral, self))
 
 
@@ -13,7 +13,7 @@ def prove(Eq):
     f = Function(real=True)
     Eq << apply(Integral[x:0:oo](f(x) * Bool(Element(x, Interval(-a, a)))))
 
-    
+
 
 
 if __name__ == '__main__':

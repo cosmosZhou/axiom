@@ -3,20 +3,20 @@ from util import *
 
 @apply
 def apply(self, index=0, offset=None):
-    from axiom.algebra.sum.limits.subs.offset import limits_subs
+    from Axiom.Algebra.Sum.limits.subs.offset import limits_subs
     return Equal(self, limits_subs(Lamda, self, index, offset, simplify=False), evaluate=False)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     a, b, i, d = Symbol(integer=True)
     f = Function(integer=True)
     Eq << apply(Lamda[i:a:b](f(i)), d)
 
     i = Symbol(domain=Range(b - a))
-    Eq << algebra.eq.of.eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
 
 
 

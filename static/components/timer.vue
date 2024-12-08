@@ -18,6 +18,7 @@ export default {
         	currentTime: 0,
         	startTime: 0,
         	timerID: null,
+			pause: false,
         };
     },
     
@@ -27,7 +28,7 @@ export default {
     		if (cond)
     			return false;
     		this.clearInterval();
-    		if (this.trigger) {
+    		if (!this.pause && this.trigger) {
     			this.trigger();
     		}
     		return true;
@@ -71,11 +72,11 @@ export default {
     
     methods: {
     	clearInterval() {
-    		clearInterval(this.timerID);	
+    		clearInterval(this.timerID);
     	},
     },
     
-    created() {    	
+    created() {
     },
     
     mounted(){
@@ -84,6 +85,22 @@ export default {
         this.timerID = setInterval(() => {
             this.currentTime = Date.now() / 1000;
         }, 1000);
+		var {repeat} = this.$parent.kwargs.kwargs;
+		if (repeat) {
+			if (typeof repeat == 'object')
+				var [[action, minutes]] = Object.entries(repeat);
+			else {
+				var action = 'reload';
+				var minutes = 10;
+			}
+
+			setTimeout(() => {
+				if (action == 'submit')
+					document.form.submit();
+				else
+    				location.reload();
+			}, minutes * 60 * 1000); // Reloads the page after 10 minutes
+		}
     },
     
     unmounted(){
@@ -96,8 +113,8 @@ export default {
 		    mounted(el, binding) {
 		    	el.focus();
 		    },
-		},		
-	},		
+		},
+	},
     
 }
 </script>

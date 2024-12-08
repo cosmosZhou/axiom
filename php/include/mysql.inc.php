@@ -9,13 +9,19 @@ if (!defined("DRIVER")) {
 			var $extension = "MySQLi";
 
 			function __construct() {
-				parent::init();
+				parent::__construct();
 			}
 
 			function connect($host = "", $user = "", $password = "", $database = null, $port = null, $socket = null) {
+				if (DIRECTORY_SEPARATOR == '/' && $host == 'localhost' && !$port) {
+					// $host = $_SERVER['SERVER_ADDR'];
+					$host = '127.0.0.1';
+				}
 				global $adminer;
 				mysqli_report(MYSQLI_REPORT_OFF); // stays between requests, not required since PHP 5.3.4
-				[$host, $port] = explode(":", $host, 2); // part after : is used for port or socket
+				if (strpos($host, ':') !== false) {
+					[$host, $port] = explode(":", $host, 2); // part after : is used for port or socket
+				}
 				$ssl = $adminer->connectSsl();
 				if ($ssl) {
 					$this->ssl_set($ssl['key'], $ssl['cert'], $ssl['ca'], '', '');

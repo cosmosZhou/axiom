@@ -1,3 +1,3 @@
-from . import eq_var
-from . import eq_expect
-from . import then
+from . import Eq_Expect
+from . import Eq_Var
+from . import to

@@ -1,22 +1,40 @@
 <template>
 	<div tabindex=2 @keydown=keydown_page>
 		<mysql :host=host :user=user :token=token :sql=sql :kwargs=kwargs :rowcount=data.length :sample=sample ref=mysql></mysql>
-		<table ref=table border=1>
-			<tr>
-				<th v-for="{Field, Type} of desc" :class=Field>
-					{{Field}}
-				</th>
-			</tr>
-			
-			<tr v-for="(data, index) of dataSampled">
-				<td v-for="[name, value] of Object.entries(data)" :class=name>
-					<select v-if="Array.isArray(dtype[name])" :value=value @blur="blur($event, index)">
-						<option v-for="value of dtype[name]" :value=value>{{value}}</option>
-					</select>
-					<span v-else :class=dtype[name]>{{stringify(value)}}</span>
-				</td>
-			</tr>
-		</table>
+		<template v-for="(data, index) of dataSampled">
+			<table border=1 class=dictionary :index=index>
+				<template v-for="{Field, Type, value} of detailed_values(data)" :class=Field>
+					<template v-if="value && value.isArray">
+						<template v-if=value.length>
+							<tr>
+								<td :rowspan=value.length>{{Field}}</td>
+								<td>
+									<mysqlObject :name="`${Field}[${index}][0]`" :value=value[0]></mysqlObject>
+								</td>
+							</tr>
+							<tr v-for="i of value.length - 1">
+								<td>
+									<mysqlObject :name="`${Field}[${index}][${i}]`" :value=value[i]></mysqlObject>
+								</td>
+							</tr>
+						</template>
+					    <tr v-else>
+							<td>{{Field}}</td>
+							<td></td>
+						</tr>
+					</template>
+					<tr v-else>
+						<td>{{Field}}</td>
+						<td>
+							<select v-if=dtype[Field].isArray :name="`${Field}[]`" :value=value>
+								<option v-for="value of dtype[Field]" :value=value>{{value}}</option>
+							</select>
+							<mysqlObject v-else :name="`${Field}[]`" :value=value></mysqlObject>
+						</td>
+					</tr>
+				</template>
+			</table>
+		</template>
 	</div>
 </template>
 
@@ -24,10 +42,11 @@
 console.log('import dual.vue');
 
 import mysql from "./mysql.vue"
+import mysqlObject from "./mysqlObject.vue"
 import {props} from "../js/mysql.js"
 
 export default {
-    components: {mysql},
+    components: {mysql, mysqlObject},
 
 	props: [...props, 'sample'],
 	
@@ -45,7 +64,7 @@ export default {
     
     computed: {
     	dataSampled() {
-    		var {data} = this;    		
+    		var {data} = this;
         	if (this.sample) {
         		return sample(data, this.sample < 1? parseInt(data.length * this.sample): this.sample);
         	}
@@ -55,7 +74,7 @@ export default {
     	},
     	
     	database() {
-    		return this.mysql.database;	
+    		return this.mysql.database;
     	},
     	
     	mysql() {
@@ -70,6 +89,14 @@ export default {
     },
     
     methods: {
+    	detailed_values(value) {
+    		var values = [];
+    		for (var {Field, Type} of this.desc) {
+    			values.push({Field, Type, value: value[Field]});
+    		}
+    		return values;
+    	},
+
     	stringify(value) {
     		if (!value)
     			return '';
@@ -85,12 +112,38 @@ export default {
     	initialize_header() {
     		this.dtype = {};
         	var {desc, dtype} = this;
-        	desc.clear();        	
+        	desc.clear();
         	var {data} = this;
         	for (var obj of data) {
         		for (var Field in obj) {
-        			if (!dtype[Field]) {
-        				dtype[Field] = this.getType(obj[Field]);
+        			if (dtype[Field]) {
+						if (dtype[Field] == 'json') {
+							var type = this.getType(obj[Field]);
+							if (type == 'string') {
+								try {
+									obj[Field] = JSON.parse(obj[Field]);
+									type = 'json';
+								}
+								catch (e) {
+									console.log("Inconsistent type for", Field, "expected", dtype[Field], "got", type, "value", obj[Field]);
+								}
+							}
+							else {
+								console.log("Inconsistent type for", Field, "expected", dtype[Field], "got", type, "value", obj[Field]);
+							}
+						}
+					}
+					else {
+						var type = this.getType(obj[Field]);
+						if (type == 'string') {
+							try {
+								obj[Field] = JSON.parse(obj[Field]);
+								type = 'json';
+							}
+							catch (e) {
+							}
+						}
+        				dtype[Field] = type;
         				desc.push({Field, Type: dtype[Field]});
         			}
         		}
@@ -213,7 +266,7 @@ export default {
 				}
 				
 				break;
-			}    		
+			}
     	},
     	
         blur(event, index){
@@ -238,7 +291,7 @@ export default {
 		    	el.focus();
 		    },
 		},
-	},		
+	},
     
 }
 </script>
@@ -250,6 +303,10 @@ table {
 	font-weight: normal;
 	font-family: Consolas;
 	background: transparent;
+}
+
+table.dictionary {
+	margin-bottom: 1em;
 }
 
 select {

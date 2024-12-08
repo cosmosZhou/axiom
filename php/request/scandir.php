@@ -19,7 +19,7 @@ switch($folder[0]){
 
 $folder = str_replace('.', '/', $folder);
 
-$folder = dirname(dirname(dirname(__file__))).'/axiom'.$folder;
+$folder = dirname(dirname(dirname(__file__))).'/Axiom'.$folder;
 
 foreach (scandir($folder) as $file) {
     switch ($file) {
@@ -30,7 +30,7 @@ foreach (scandir($folder) as $file) {
         case "__init__.py":
             break;
         default:
-            if (!std\endsWith($file, '.py')) {
+            if (!str_ends_with($file, '.py')) {
                 $packages[] = $file;
             }
     }

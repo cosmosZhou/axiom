@@ -38,26 +38,26 @@
   
 目前积累了<label id=count>____</label>个已知数学定理用于交互式半机械化数学推导。涉及：	
 	
-* [algebra](../?module=algebra) 初等代数，主要涉及等式的恒等、换元变换、有限级数[∑裂项求和](../?module=algebra.sum.to.add.telescope)、∏裂项求积技巧，[一元一次方程](../?module=algebra.poly_is_zero.then.et.infer.simple_equation)，[一元二次方程](../?module=algebra.poly_is_zero.then.et.infer.quadratic)，[一元三次方程](../?module=algebra.poly_is_zero.then.et.infer.cubic)，[一元四次方程](../?module=algebra.poly_is_zero.then.et.infer.quartic)的求解问题，[分部求和](../?module=algebra.sum.to.add.by_parts)定理；
-[数学归纳法](../?module=algebra.ne_zero.infer.then.ne_zero.induct)的证明；
-* [sets](../?module=sets) 集合论, 即sets theory，集合论是整个数学分析、数学推导系统的理论核心；比如
-[容斥原理](../?module=sets/eq/principle/inclusion_exclusion/basic)的证明。
-* [geometry](../?module=geometry) 几何学，包含不少三角函数恒等式，比如
-[和差化积](../?module=geometry.cos.to.add.principle)，[积化和差](../?module=geometry.mul.to.add.sin)，等等。
-* [calculus](../?module=calculus) 微积分，主要包含以下内容： 
-[极限定义](../?module=calculus/eq/to/any_all/limit_definition) 及其理论；[无穷级数](../?module=calculus.eq.then.eq.series.infinite.coefficient) 的运算性质；
-[分部积分](../?module=calculus.integral.to.add.by_parts) 定理；
-* [discrete](../?module=discrete) 数论，离散数学，组合数学，线性代数，[第二类Stirling数](../?module=discrete.stirling2.to.add.recurrence)的组合学推导，
-[Catalan数](../?module=discrete.eq.eq.then.eq.catalan.recurrence)的推导，[连分数](../?module=discrete.add.to.pow.HK.recurrence)初步理论；[Cholesky矩阵分解](../?module=discrete.eq_adjoint.infer_gt_zero.then.any.eq.Cholesky)存在定理。
-* [stats](../?module=stats) 概率统计学，比如[Bayes公式](../?module=stats.prob.to.div.prob.bayes)，[大数定理](../?module=stats.eq_conditioned.eq_expect.eq_var.then.eq.limit.prob.law_of_large_numbers)；
-* [keras](../?module=keras) 机器学习，深度学习中的数学模型，
-[LSTM](../?module=keras.eq.eq.then.eq.long_short_term_memory)，
-[GRU](../?module=keras.eq.gated_recurrent_unit)，
-[CNN](../?module=keras.eq_lamda_bool.then.eq.conv1d)，
-[BERT](../?module=keras.matmul_softmax.to.lamda.div.scaled_dot_product_attention)，
-[GPT](../?module=keras.matmul_softmax.to.lamda.matmul.gpt)，
-条件自由场[CRF](../?module=keras.ne_zero.eq.eq.eq.then.et.crf)，KMeans
-[聚类收敛性](../?module=sets.el.notin.le.then.le.st.variance)、用于Vision Transformer的[广义旋转位置编码](../?module=keras.eq_mul.eq_mul.eq_block.then.eq.matmul.softmax.to.lamda.sum.plane)、强化学习的[策略梯度定理](../?module=keras.eq_conditioned.eq_expect.is_finite.is_finite.then.eq.matmul.grad.expect.unbiased_advantage_estimate)的推导及证明。  
+* [Algebra](../?module=Algebra) 初等代数，主要涉及等式的恒等、换元变换、有限级数[∑裂项求和](../?module=Algebra.Sum.eq.Add.telescope.step)、∏裂项求积技巧，[一元一次方程](../?module=Algebra.Add.eq.Zero.to.AndImplyS_Eq.simple)，[一元二次方程](../?module=Algebra.Add.eq.Zero.to.And_Imply_Or_EqS_Div.quadratic)，[一元三次方程](../?module=Algebra.Add.eq.Zero.to.And_Imply_Or_EqS.cubic)，[一元四次方程](../?module=Algebra.Add.eq.Zero.to.And_Imply_Or_EqS.quartic)的求解问题，[分部求和](../?module=Algebra.Sum.eq.Add.by_parts)定理；
+[数学归纳法](../?module=Algebra.Ne_0.Imply.to.Ne_0.induct)的证明；
+* [Sets](../?module=Sets) 集合论, 即sets theory，集合论是整个数学分析、数学推导系统的理论核心；比如
+[容斥原理](../?module=Sets.CardUnion.eq.Sub_.AddCards.CardIntersect.principle.inclusion_exclusion)的证明。
+* [Geometry](../?module=Geometry) 几何学，包含不少三角函数恒等式，比如
+[和差化积](../?module=Geometry.Cos.eq.Add)，[积化和差](../?module=Geometry.Mul.eq.Add.Sin)，等等。
+* [Calculus](../?module=Calculus) 微积分，主要包含以下内容： 
+[极限定义](../?module=Calculus.Eq_Limit.to.Any.All.limit_definition) 及其理论；
+[分部积分](../?module=Calculus.Integral.eq.Add.by_parts) 定理；
+* [Discrete](../?module=Discrete) 数论，离散数学，组合数学，线性代数，[第二类Stirling数](../?module=Discrete.Stirling.eq.Add.recurrence)的组合学推导，
+[Catalan数](../?module=Discrete.Eq.Eq.to.Eq.catalan.recurrence)的推导，[连分数](../?module=Discrete.Add.eq.Pow.HK.recurrence)初步理论；[Cholesky矩阵分解](../?module=Discrete.Eq_Adjoint.Imply_Gt_0.to.Any.Eq.Cholesky)存在定理。
+* [Stats](../?module=Stats) 概率统计学，比如[Bayes公式](../?module=Stats.Prob.eq.Div.Prob.bayes)，[大数定理](../?module=Stats.Eq_Conditioned.Eq_Expect.Eq_Var.to.Eq.Limit.Prob.law_of_large_numbers)；
+* [Keras](../?module=Keras) 机器学习，深度学习中的数学模型，
+[LSTM](../?module=Keras.Eq.Eq.to.Eq.long_short_term_memory)，
+[GRU](../?module=Keras.Eq_AddMulS.gated_recurrent_unit)，
+[CNN](../?module=Keras.Eq_Lamda_Bool_In.to.Eq.conv1d)，
+[BERT](../?module=Keras.DotSoftmax.eq.Lamda_Div.scaled_dot_product_attention)，
+[GPT](../?module=Keras.DotSoftmax.eq.Lamda_Dot.gpt)，
+条件自由场[CRF](../?module=Keras.Ne_0.Eq.Eq.Eq.to.And.crf.y_given_x)，KMeans
+[聚类收敛性](../?module=Sets.In.NotIn.LeAbsSSub_Sum.to.LeAddSSumSSquareSub_Sum)、用于Vision Transformer的[广义旋转位置编码](../?module=Keras.Eq_Mul.Eq_Mul.Eq_Block.to.DotSoftmax.eq.Lamda_Sum.plane)、强化学习的[策略梯度定理](../?module=Keras.Eq_Conditioned.Eq_Expect.is_finite.is_finite.to.EqDot_GradExpect.unbiased_advantage_estimate)的推导及证明。  
 
 <br><br>
 -------
@@ -71,5 +71,5 @@
 [<font size=2>浙ICP备20017509号-3</font>](https://beian.miit.gov.cn/)
 
 <script type=module>
-	$('#count').innerHTML = await get("/axiom/php/request/count.php");
+	$('#count').innerHTML = await get("../php/request/count.php");
 </script>

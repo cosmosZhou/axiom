@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.sum.limits.swap.subs import rewrite 
+    from Axiom.Algebra.Sum.limits.swap.subs import rewrite
     return Equal(self, rewrite(Lamda, self))
 
 

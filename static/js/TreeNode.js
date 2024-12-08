@@ -80,11 +80,11 @@ class TreeNode {
 
 class TreeNodeCaret extends TreeNode {
     get is_TreeNodeCaret(){
-		return true;	
-	}	
+		return true;
+	}
 
 	constructor(parent){
-		super(parent);	
+		super(parent);
 	}
 	
     append_left_brace() {
@@ -128,8 +128,8 @@ class TreeNodeCaret extends TreeNode {
 
 class TreeNodeLexeme extends TreeNode {
     get is_TreeNodeLexeme(){
-		return true;	
-	}	
+		return true;
+	}
 
     constructor(lexeme, parent) {
 		super(parent);
@@ -187,8 +187,8 @@ class TreeNodeLexeme extends TreeNode {
 
 class TreeNodeBrace extends TreeNode {
     get is_TreeNodeBrace(){
-		return true;	
-	}	
+		return true;
+	}
 
 	constructor(ptr, parent) {
 		super(parent);
@@ -253,7 +253,7 @@ class TreeNodeBrace extends TreeNode {
 
 class TreeNodeArray extends TreeNode {
 	get is_TreeNodeArray(){
-		return true;	
+		return true;
 	}
 	
     constructor(args, parent) {
@@ -335,13 +335,13 @@ class TreeNodeArray extends TreeNode {
 
 class TreeNodeBinary extends TreeNodeLexeme {
 	get is_TreeNodeBinary(){
-		return true;	
+		return true;
 	}
 	
     constructor(lexeme, lhs, rhs, parent) {
         super(lexeme, parent);
         this.lhs = lhs;
-        this.rhs = rhs;        
+        this.rhs = rhs;
         lhs.parent = rhs.parent = this;
     }
 
@@ -380,7 +380,7 @@ class TreeNodeBinary extends TreeNodeLexeme {
 
 class TreeNodePrefix extends TreeNodeLexeme {
 	get is_TreeNodePrefix(){
-		return true;	
+		return true;
 	}
 	
     constructor(lexeme, caret, parent) {
@@ -420,7 +420,7 @@ class TreeNodePrefix extends TreeNodeLexeme {
 
 class TreeNodeSuffix extends TreeNodeLexeme {
 	get is_TreeNodeSuffix(){
-		return true;	
+		return true;
 	}
 
     constructor(lexeme, ptr, parent) {

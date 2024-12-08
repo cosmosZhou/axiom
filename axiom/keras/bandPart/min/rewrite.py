@@ -16,7 +16,7 @@ def apply(self, lower=True, upper=None):
 
 @prove
 def prove(Eq):
-    from axiom import algebra, sets
+    from Axiom import Algebra, Sets
 
     m, n, l, u = Symbol(domain=Range(2, oo))
     x = Symbol(shape=(n, m), real=True)
@@ -28,23 +28,23 @@ def prove(Eq):
 
     i = Symbol(domain=Range(n))
     j = Symbol(domain=Range(m))
-    Eq << algebra.eq.of.eq.getitem.apply(Eq[-1], (i, j))
+    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], (i, j))
 
-    Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.piece)
+    Eq << Eq[-1].this.find(Bool).apply(Algebra.Bool.eq.Piece)
 
-    Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.piece)
+    Eq << Eq[-1].this.find(Bool).apply(Algebra.Bool.eq.Piece)
 
-    Eq << Eq[-1].this.lhs.apply(algebra.mul.to.piece)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Piece)
 
-    Eq << Eq[-1].this.rhs.apply(algebra.mul.to.piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Piece)
 
-    Eq << Eq[-1].this.find(Element).apply(sets.el_range.to.et)
+    Eq << Eq[-1].this.find(Element).apply(Sets.In_Range.equ.And)
 
-    Eq << Eq[-1].this.find(Element).apply(sets.el_range.to.et)
+    Eq << Eq[-1].this.find(Element).apply(Sets.In_Range.equ.And)
 
-    Eq << Eq[-1].this.find(-Min).apply(algebra.mul.to.max)
+    Eq << Eq[-1].this.find(-Min).apply(Algebra.Mul.eq.Max)
 
-    Eq << Eq[-1].this.find(Add >= Max).apply(algebra.ge_max.to.et.ge)
+    Eq << Eq[-1].this.find(Add >= Max).apply(Algebra.Ge_Max.equ.And.Ge)
 
 
 

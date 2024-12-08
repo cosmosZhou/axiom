@@ -1,2 +1,2 @@
-from . import to
-from . import finiteset
+from . import FiniteSet
+from . import eq

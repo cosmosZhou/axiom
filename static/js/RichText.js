@@ -46,7 +46,7 @@ function compile(infix) {
 					break;
 				}
             }
-        }      
+        }
         else if (text.is_TagSingle || text.is_HTMLEntity)
             caret = caret.append_single_tag(text);
         else
@@ -66,12 +66,12 @@ export function construct_rich_text(text){
 	var start = 0;
 	
 	var richTexts = [];
-	var leftTagCount = {}; 
+	var leftTagCount = {};
 	for (let m of text.matchAll(/<([a-z][-:_a-z]*\d*)(?:\s+:?[a-z][-:_a-z]*(?:=(?:"[^"]*"|'[^']*'))?)*\s*>(?=[\s\S]*?<\/\1>)|<\/([a-z][-:_a-z]*\d*)>|<(img|mspace|br|input|span|meta|link)(?:\s+:?[a-z][-:_a-z]*(?:=(?:"[^"]*"|'[^']*'))?)*\s*\/>|&(#[0-9]+|#x[0-9a-f]+|[^\t\n\f <&#;]{1,32});/ig)) {
 //                                (1----------------)                                                                           (2----------------)   (3---------------------------------)                                                         (4---------------------------------------)
 		var prevText = text.slice(start, m.index);
 		if (prevText)
-			richTexts.push(new PlainText(text, start, m.index));	
+			richTexts.push(new PlainText(text, start, m.index));
 		
 		var end = m.index + m[0].length;
 		var richText;
@@ -126,7 +126,7 @@ class XMLText {
 	
 	reduceToNodeText() {
 		return new PlainText(this.src, this.start, this.stop);
-	}	
+	}
 }
 
 class TagBegin extends XMLText {
@@ -154,10 +154,10 @@ class TagSingle extends XMLText {
 		case 'img':
 			text = '★';
 			break;
-		case 'mspace':	
+		case 'mspace':
 			text = ' ';
 			break;
-		case 'br':	
+		case 'br':
 			text = '\n';
 			break;
 		default:
@@ -215,7 +215,7 @@ function style_type(ptr, style){
 			continue;
 			
 		style_intersected[tag] = intersection;
-	}			
+	}
 
 	if (isEmpty(style_intersected))
 		return;

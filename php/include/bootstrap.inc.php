@@ -4,7 +4,7 @@ function adminer_errors($errno, $errstr) {
 }
 
 error_reporting(6135); // errors and warnings
-set_error_handler('adminer_errors', E_WARNING);
+// set_error_handler('adminer_errors', E_WARNING);
 
 // disable filter.default
 $filter = !preg_match('~^(unsafe_raw)?$~', ini_get("filter.default"));
@@ -90,7 +90,7 @@ if ($adminer->operators === null) {
 
 define("HOST", $_GET['host']?? 'localhost');
 
-[$db, $table] = get_db_table();
+[$db, $table] = get_db_table($_GET);
 
 define("DB", $db); // for the sake of speed and size
 define("ME", preg_replace('~\?.*~', '', relative_uri()) . '?'

@@ -15,12 +15,12 @@ def apply(given, pivot=-1):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
 
     A, B, C = Symbol(etype=dtype.integer)
     Eq << apply(Subset(A, B | C))
 
-    Eq << sets.subset.then.subset.union.rhs.apply(Eq[1], B)
+    Eq << Sets.Subset.to.Subset.Union.rhs.apply(Eq[1], B)
 
 
 if __name__ == '__main__':

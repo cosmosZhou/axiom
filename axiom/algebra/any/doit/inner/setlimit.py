@@ -3,26 +3,26 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.all.doit.inner.setlimit import doit
+    from Axiom.Algebra.All.doit.inner.setlimit import doit
     return doit(Any, self)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     x = Symbol(real=True, shape=(oo, oo))
     i, j, a, b, c, d = Symbol(integer=True)
     m = Symbol(integer=True, positive=True)
 
     Eq << apply(Any[j:{a, b, c, d}, i:m](x[i, j] > 0))
 
-    Eq << Equivalent(Any[i:m](Equal(Bool(Any[j:{a, b, c, d}](x[i, j] > 0)), 1)), Any[j:{a, b, c, d}, i:m](x[i, j] > 0), plausible=True)
+    Eq << Iff(Any[i:m](Equal(Bool(Any[j:{a, b, c, d}](x[i, j] > 0)), 1)), Any[j:{a, b, c, d}, i:m](x[i, j] > 0), plausible=True)
 
-    Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.piece)
+    Eq << Eq[-1].this.find(Bool).apply(Algebra.Bool.eq.Piece)
 
-    Eq << Eq[-1].this.find(Bool, Any).apply(algebra.any.to.ou.doit.setlimit)
+    Eq << Eq[-1].this.find(Bool, Any).apply(Algebra.Any.equ.Or.doit.setlimit)
 
-    Eq << Eq[-1].this.find(Bool).apply(algebra.bool.to.piece)
+    Eq << Eq[-1].this.find(Bool).apply(Algebra.Bool.eq.Piece)
 
     Eq << Eq[-1].reversed
 

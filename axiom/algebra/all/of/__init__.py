@@ -1,4 +1,5 @@
-from . import ou, et
-from . import all
-from . import cond
-from . import infer
+from . import All
+from . import Or
+from . import And
+from . import Cond
+from . import Imply

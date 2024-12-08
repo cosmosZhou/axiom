@@ -137,7 +137,7 @@ export default {
 		var self = this;
 		
 		function locate_definition(cm, index, symbol) {
-		    var regex = eval(`/(?:    )*from axiom\\.(.+) import ${symbol}\\b/`);
+		    var regex = eval(`/(?:    )*from Axiom\\.(.+) import ${symbol}\\b/`);
 
 		    for (; index >= 0; --index) {
 		        var line = cm.getLine(index);
@@ -190,26 +190,24 @@ export default {
 		                module = m[1];
 		                var apply = true;
 		            }
-		            else {
+		            else
 		                var apply = false;
-		            }
 
-		            m = module.match(/^axiom\.(.+)/);
-		            if (m) {
+		            m = module.match(/^Axiom\.(.+)/);
+		            if (m)
 		                module = m[1];
-		            }
 
 		            var symbol = null;
 
 		            if (module.indexOf('.') < 0) {
 		                switch (module) {
-		                    case 'algebra':
-		                    case 'calculus':
-		                    case 'discrete':
-		                    case 'geometry':
-		                    case 'keras':
-		                    case 'sets':
-		                    case 'stats':
+		                    case 'Algebra':
+		                    case 'Calculus':
+		                    case 'Discrete':
+		                    case 'Geometry':
+		                    case 'Keras':
+		                    case 'Sets':
+		                    case 'Stats':
 		                        break;
 		                    default:
 		                        var symbol = module;
@@ -227,13 +225,13 @@ export default {
 		            else {
 		                m = module.match(/^(\w+)\.(.+)/);
 		                switch (m[1]) {
-		                    case 'algebra':
-		                    case 'calculus':
-		                    case 'discrete':
-		                    case 'geometry':
-		                    case 'keras':
-		                    case 'sets':
-		                    case 'stats':
+		                    case 'Algebra':
+		                    case 'Calculus':
+		                    case 'Discrete':
+		                    case 'Geometry':
+		                    case 'Keras':
+		                    case 'Sets':
+		                    case 'Stats':
 		                        break;
 		                    default:
 		                        return;
@@ -681,13 +679,13 @@ export default {
                 				m = prefix.match(/^(\w*)\.$/);
                 				if (m) {
                 					switch (m[1]) {
-                						case 'algebra':
-                						case 'calculus':
-                						case 'discrete':
-                						case 'geometry':
-                						case 'keras':
-                						case 'sets':
-                						case 'stats':
+                						case 'Algebra':
+                						case 'Calculus':
+                						case 'Discrete':
+                						case 'Geometry':
+                						case 'Keras':
+                						case 'Sets':
+                						case 'Stats':
                 							url += `suggest.php`;
                 							break;
                 						case 'Eq':

@@ -5,26 +5,20 @@ require dirname(__file__).'/../xml/RichText.php';
 
 $download = std\pop($props, 'download');
 
-if (std\not($kwargs['limit'])) {
-    $kwargs['limit'] = '40';
+if (!$is_union) {
+    if (std\not($kwargs['limit']))
+        $kwargs['limit'] = '40';
 }
 
-if ($table && ! std\startsWith("_", $table)) {
-    [$Field2Type, $primary_key, $indexKey, $transform] = mysql\field_to_type($database, $table);
-    $scanCriteria = search_for_scan_criteria($kwargs, $Field2Type, $primary_key, $transform);
-    
-    if (preprocess_kwargs($kwargs, $props, $Field2Type, $indexKey)) {
-        $kwargs['limit'] = '0';
-    }
-}
+$Field2Type = ['__props__' => $props];
+[$sql, $Field2Type] = parse_statement($kwargs, $Field2Type);
 
-[$sql, $table] = parse_statement($kwargs, $Field2Type, $transform);
+$scanCriteria = search_for_scan_criteria($kwargs, $Field2Type);
 
-if ($scanCriteria && count($scanCriteria) > 1) {
-    scan_data($sql, $Field2Type, $scanCriteria, $kwargs, $primary_key);
-} else {
+if ($scanCriteria && count($scanCriteria) > 1)
+    scan_data($sql, $Field2Type, $kwargs);
+else
     load_data($sql, $Field2Type, $table && ($kwargs['select'] == '*' || $kwargs['select'] == ['*']));
-}
 
 if ($download) {
     function fetch_data($table, &$data, $target = null, $batch_size = null, $offset = 0, $primary_key = '')
@@ -32,13 +26,13 @@ if ($download) {
         $id = std\uuid();
         if ($batch_size) {
             $offset = $offset ? (int)$offset : 0;
-            
+
             $root = $id;
             std\createDirectory($root);
             error_log("generating root folder: $root");
-            
+
             $start = $offset;
-            
+
             foreach (std\batches($data, $batch_size) as &$data) {
                 $stop = $start + count($data);
                 
@@ -48,9 +42,9 @@ if ($download) {
                 }
                 else
                     $filename = "$root/$start-$stop.json";
-                    
-                    fetch_data($table, $data, $filename);
-                    $start = $stop;
+
+                fetch_data($table, $data, $filename);
+                $start = $stop;
             }
             
             $target = "$table-$id.zip";
@@ -60,20 +54,18 @@ if ($download) {
         } else {
             if (! $target)
                 $target = "$table-$id.json";
-                elseif (!std\contains($target, ".")) {
-                    if ($target == 'jsonl')
-                        $jsonl = true;
-                        $target = "$table-$id.$target";
-                }
+            elseif (!std\contains($target, ".")) {
+                if ($target == 'jsonl')
+                    $jsonl = true;
+                $target = "$table-$id.$target";
+            }
                 
-                std\createNewFile($target);
-                $file = new std\Text($target);
-                if ($jsonl) {
-                    $file->writelines(array_map(fn(&$obj) => std\encode($obj), $data));
-                }
-                else {
-                    $file->write(std\encode($data));
-                }
+            std\createNewFile($target);
+            $file = new std\Text($target);
+            if ($jsonl)
+                $file->writelines(array_map(fn(&$obj) => std\encode($obj), $data));
+            else
+                $file->write(std\encode($data));
         }
         
         return $target;
@@ -88,20 +80,20 @@ if ($download) {
         $ext = $download;
         break;
     default:
-        if ($batch_size) {
-            $ext = 'zip';
-        }
-        else {
-            $ext = 'json';
-        }
+        $ext = $batch_size? 'zip': 'json';
         break;
     }
 
-    $filename = fetch_data($table, $data, $ext, $batch_size, $offset, (! $select || $select == '*') && $batch_size == 1 ? $primary_key : '');
-    $res = std\send_from_directory(dirname($filename), basename($filename), true);
+    $filename = fetch_data($table, $data, $ext, $batch_size, $offset, (! $select || $select == '*') && $batch_size == 1 ? $Field2Type['__primary_key__'] : '');
+    std\send_from_directory(dirname($filename), basename($filename), true);
     unlink($filename);
-    die($res);
+    die(0);
 }
 
-$dual = $kwargs['with'] || $kwargs['select'] && $kwargs['select'] != '*' && $kwargs['select'] != ['*'];
+if ($is_union || $kwargs['select'] && $kwargs['select'] != '*' && $kwargs['select'] != ['*'])
+    $dual = true;
+elseif ($kwargs['with'] || $kwargs['with_recursive'])
+    $dual = !is_string($database);
+else
+    $dual = false;
 ?>

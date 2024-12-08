@@ -16,7 +16,7 @@ def apply(given, old, new):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     x = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
 
@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << apply(All[x:n + 1](Element(f(x), s)), x, m)
 
-    Eq << algebra.cond.then.all.apply(Eq[1])
+    Eq << Algebra.Cond.to.All.apply(Eq[1])
 
 
 if __name__ == '__main__':

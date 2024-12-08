@@ -1,3 +1,3 @@
+from . import Eq
 from . import to
-from . import then
-from . import eq
+from . import equ

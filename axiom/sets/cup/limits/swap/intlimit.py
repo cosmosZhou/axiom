@@ -3,13 +3,13 @@ from util import *
 
 @apply
 def apply(self):
-    from axiom.algebra.sum.limits.swap.intlimit import limits_swap
+    from Axiom.Algebra.Sum.limits.swap.intlimit import limits_swap
     return Equal(self, limits_swap(Cup, self))
 
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
     i, j, d, a = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
 
@@ -19,13 +19,13 @@ def prove(Eq):
 
     Eq << apply(Cup[i:a + d:j + d, j:a + 1:n](f[i] & g[i, j]))
 
-    Eq << Eq[0].this.lhs.apply(sets.cup.piece)
+    Eq << Eq[0].this.lhs.apply(Sets.Cup.Piece)
 
-    Eq << Eq[-1].this.lhs.expr.args[0].cond.apply(sets.el.el.transform.i_lt_j)
+    Eq << Eq[-1].this.lhs.expr.args[0].cond.apply(Sets.In.In.transform.i_Lt_j)
 
-    Eq << Eq[-1].this.rhs.apply(sets.cup.piece)
+    Eq << Eq[-1].this.rhs.apply(Sets.Cup.Piece)
 
-    Eq << Eq[-1].this.rhs.apply(sets.cup.limits.swap)
+    Eq << Eq[-1].this.rhs.apply(Sets.Cup.limits.swap)
 
 
 if __name__ == '__main__':

@@ -14,7 +14,7 @@ class Canvas {
 		
 		if (!dir)
 			dir = 1;
-		Object.assign(this, {x0, y0, x1, y1, color, dir, curvature});	
+		Object.assign(this, {x0, y0, x1, y1, color, dir, curvature});
 	}
 	
 	get dx(){
@@ -175,7 +175,7 @@ class Canvas {
 		
 	get delta(){
 		if (this._delta == null){
-			//http://localhost/sympy/axiom.php?module=algebra.eq_add_sqrt.then.eq.radical_conjugate
+			//http://localhost/sympy/axiom.php?module=algebra.eq_add_sqrt.imply.eq.radical_conjugate
 			this._delta = this.distance * (1 / this.curvature - this.curvature) / 4;
 		}
 		return this._delta;
@@ -196,7 +196,7 @@ class Canvas {
 		}
 		
 		return this._distance;
-	}	
+	}
 		
 	contains(theta, strict){
 		var {alpha, beta} = this;
@@ -219,7 +219,7 @@ class Canvas {
 	theta(x, y){
 		var [xo, yo] = this.origin;
 		return Math.atan2(y - yo, x - xo);
-	}		
+	}
 		
 	drawDashedLine(ctx){
 		ctx.beginPath();
@@ -317,7 +317,7 @@ class Canvas {
 		ctx.strokeStyle = this.color;
 		ctx.fillStyle = this.color;
 		ctx.lineWidth = 1;
-	}	
+	}
 
 	distance_between_arc_and_point(x, y){
 		var theta = this.theta(x, y);
@@ -329,13 +329,13 @@ class Canvas {
 			return Math.abs(Math.sqrt(dx * dx + dy * dy) - this.radius);
 		}
 		else{
-			var dx0 = x - this.x0;	
+			var dx0 = x - this.x0;
 			var dy0 = y - this.y0;
 			
-			var dx1 = x - this.x1;	
+			var dx1 = x - this.x1;
 			var dy1 = y - this.y1;
 			
-			var d0 = Math.sqrt(dx0 * dx0 + dy0 * dy0); 
+			var d0 = Math.sqrt(dx0 * dx0 + dy0 * dy0);
 			var d1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
 			return Math.min(d0, d1);
 		}
@@ -397,7 +397,7 @@ class Canvas {
 			var x0_min = codonCell[row][col].x0_min[index];
 			if (x0 + dx < x0_min){
 				dx = x0_min - x0;
-			}			
+			}
 		}
 		
 		this.x0 += dx;

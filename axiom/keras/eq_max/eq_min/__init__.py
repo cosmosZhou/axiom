@@ -1,3 +1,3 @@
-from . import eq
-from . import eq_clip
-from . import then
+from . import Eq
+from . import Eq_Clip
+from . import to

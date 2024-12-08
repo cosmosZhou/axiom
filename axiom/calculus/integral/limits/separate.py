@@ -6,7 +6,7 @@ def apply(sgm, *, simplify=True):
     expr, *limits = sgm.of(Integral)
     assert len(limits) > 1
     limit, *limits = limits
-    
+
     expr = sgm.func(expr, limit)
     if simplify:
         expr = expr.simplify()
@@ -17,13 +17,13 @@ def apply(sgm, *, simplify=True):
 
 @prove
 def prove(Eq):
-    from axiom import calculus
+    from Axiom import Calculus
 
     x, y, a, b, c, d = Symbol(real=True)
     f, g = Function(real=True)
     Eq << apply(Integral[x:a:b, y:c:d](f(y) * g(x, y)))
 
-    Eq << Eq[-1].this.rhs.expr.apply(calculus.mul.to.integral)
+    Eq << Eq[-1].this.rhs.expr.apply(Calculus.Mul.eq.Integral)
 
 
 if __name__ == '__main__':

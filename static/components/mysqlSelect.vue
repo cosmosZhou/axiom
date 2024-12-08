@@ -30,7 +30,7 @@ with _t as (
 )
 delete from markush where pn in (select pn from _t);
 //url representation:
-//http://localhost/label/query.php?user=user&sql=with _t as (with _t as (select json_remove(json_unquote(concat('[', group_concat(json_quote(pn)), ']')), '$[0]') as pn from corpus.markush group by text having count(*) > 1) select _s.pn from _t cross join json_table(pn, '$[*]' columns(pn varchar(36) path '$')) as _s) select pn, text from corpus.markush where pn in (select pn from _t) limit 1000		
+//http://localhost/label/query.php?user=user&sql=with _t as (with _t as (select json_remove(json_unquote(concat('[', group_concat(json_quote(pn)), ']')), '$[0]') as pn from corpus.markush group by text having count(*) > 1) select _s.pn from _t cross join json_table(pn, '$[*]' columns(pn varchar(36) path '$')) as _s) select pn, text from corpus.markush where pn in (select pn from _t) limit 1000
 
 with _t as (
 	with _t as (
@@ -45,13 +45,25 @@ select group_concat(training), sum(if (training = 0, 1, 0)), text from markush w
 
 // url representation:
 // http://localhost/label/query.php?user=user&sql=with _t as (with _t as (with _t as (select json_remove(json_unquote(concat('[', group_concat(json_quote(pn) order by(training)), ']')), '$[0]') as pn from corpus.markush group by text having count(*) > 1) select _s.pn from _t cross join json_table(pn, '$[*]' columns(pn varchar(36) path '$')) as _s) select distinct text from corpus.markush where training = 0 and pn in (select pn from _t)) select group_concat(training order by(training)), sum(if(training = 0, 1, 0)), text from corpus.markush where text in (select text from _t) group by text limit 1000
+// unnest json array:
+with _t as (
+    with _t as (
+        with _t as (
+            select json_unquote(text) as texts, id from sentiment where training in (0, 1) limit 1000000
+        )
+        select _s.text as text, id from _t join sentiment using (id) cross join json_table(texts, '$[*]' columns(text text path '$')) as _s
+	)
+    select id from _t where text not in (select text->'$[0]' from sentiment where training = 2)
+)
+select * from corpus.sentiment where id in (select * from _t) limit 1 offset 1
+// url representation:
 */
  
 console.log('import mysqlSelect.vue');
 import mysqlExpr from "./mysqlExpr.vue"
 import mysqlDot from "./mysqlDot.vue"
 
-import {get_db_table, piece_together, is_number, is_enum, is_string, is_json} from "../js/mysql.js"
+import {get_db_table, piece_together} from "../js/mysql.js"
 
 export default {
 	components: {mysqlExpr, mysqlDot},
@@ -107,7 +119,7 @@ export default {
 		
 		sql() {
 			var kwargs = {...this.kwargs};
-			var {transform} = kwargs;
+			var {transform: __transform__} = kwargs;
 			delete kwargs.transform;
 			
 			if (!kwargs.limit)
@@ -116,7 +128,7 @@ export default {
 			if (!kwargs.select)
 				kwargs.select = '*';
 			
-			return this.process_statement(kwargs, this.dtype, transform);
+			return this.process_statement(kwargs, {...this.dtype, __transform__});
 		},
 		
 		parse_expression() {
@@ -124,16 +136,16 @@ export default {
 		},
 		
 		tables() {
-			return this.$parent.tables;	
+			return this.$parent.tables;
 		},
 		
 		databases() {
-			return this.$parent.databases;	
+			return this.$parent.databases;
 		},
 
 		is_leaf() {
 			return this.$parent.is_leaf;
-		},		
+		},
 
 		numeric_functions() {
 			return this.$parent.numeric_functions;
@@ -169,7 +181,7 @@ export default {
 
 		textual_relations() {
 			return this.$parent.textual_relations;
-		},		
+		},
 		
 		numeric_function_regexp() {
 			return this.$parent.numeric_function_regexp;
@@ -216,11 +228,11 @@ export default {
 		},
 		
 		value(){
-			return this.kwargs;	
+			return this.kwargs;
 		},
 		
 		PRI() {
-			return this.$parent.PRI;	
+			return this.$parent.PRI;
 		},
 		
 		database() {
@@ -238,7 +250,7 @@ export default {
 				var kwargs = {user, table: this.table, vue: 'backup'};
 				if (host && host != 'localhost')
 					kwargs.host = host;
-				return 'index.php' + get_url(kwargs);
+				return 'index.php?' + get_url(kwargs);
 			}
 			
 			var url = [];
@@ -290,7 +302,7 @@ export default {
 		
 		style_entity() {
 			return this.$parent.style_entity;
-		},	
+		},
 	},
 	
 	methods: {
@@ -301,7 +313,7 @@ export default {
 		    if (select) {
 		        if (select.isArray) {
 		        	sql += select.map(cond => this.parse_expression(cond)).join(", ");
-		        } 
+		        }
 		        else if (select.isString){
 		            sql += select;
 		        }
@@ -316,7 +328,7 @@ export default {
 		    return sql;
 		},
 		
-		process_statement(kwargs, Field2Type, transform) {
+		process_statement(kwargs, Field2Type) {
 		    var sql = this.process_select(kwargs);
 		    
 		    var {from} = kwargs;
@@ -332,7 +344,7 @@ export default {
 		        sql += `from ${database}.${table} `;
 		    }
 		    
-		    var condition = this.parse_expression(kwargs.where?? {}, Field2Type, transform);
+		    var condition = this.parse_expression(kwargs.where?? {}, Field2Type);
 		    
 		    if (condition) {
 		        sql += `where ${condition} `;
@@ -343,7 +355,7 @@ export default {
 		        sql += `group by ${group} `;
 		        var {having} = kwargs;
 		        if (having) {
-		            var having_condition = this.parse_expression(having, Field2Type, transform);
+		            var having_condition = this.parse_expression(having, Field2Type);
 		            if (having_condition) {
 		                sql += `having ${having_condition} `;
 		            }

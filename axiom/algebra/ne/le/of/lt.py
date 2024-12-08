@@ -11,16 +11,16 @@ def apply(ne, le):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     a, x = Symbol(real=True)
     Eq << apply(Unequal(x, a), x <= a + 1)
 
-    Eq << algebra.lt.then.ne.apply(Eq[2])
+    Eq << Algebra.Lt.to.Ne.apply(Eq[2])
 
-    Eq << algebra.lt.then.le.relax.apply(Eq[2])
+    Eq << Algebra.Lt.to.Le.relax.apply(Eq[2])
 
-    Eq << algebra.le.then.le.relax.apply(Eq[-1], a + 1)
+    Eq << Algebra.Le.to.Le.relax.apply(Eq[-1], a + 1)
 
 
 if __name__ == '__main__':

@@ -4,27 +4,25 @@ from util import *
 @apply
 def apply(le_a, le_b):
     x, a = le_a.of(LessEqual)
-    S[x], b = le_b.of(LessEqual)
-    return x <= Min(a, b)
+    y, b = le_b.of(LessEqual)
+    return Min(x, y) <= Min(a, b)
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
-    x, y, b = Symbol(real=True, given=True)
-    Eq << apply(x <= y, x <= b)
+    x, y, a, b = Symbol(real=True, given=True)
+    Eq << apply(x <= a, y <= b)
 
-    Eq << algebra.iff.of.et.apply(Eq[0])
+    Eq << Algebra.Ge.Ge.to.Ge.Min.apply(Eq[0].reversed, Eq[1].reversed)
 
-    Eq << Eq[-2].this.lhs.apply(algebra.le.le.then.le.min)
-
-    Eq << Eq[-1].this.lhs.apply(algebra.le.le.of.le.min)
+    Eq << Eq[-1].reversed
 
 
 
 
 if __name__ == '__main__':
     run()
-# created on 2022-01-03
-# updated on 2023-05-21
+# created on 2019-11-20
+# updated on 2023-04-23

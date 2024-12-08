@@ -1,35 +1,11 @@
 from util import *
 
 
-def unshift(fx, gy, _lhs, _rhs, n, k):
-    fx0 = fx._subs(k, -1)
-    gx0 = gy._subs(k, -1)
-
-    if fx0 == _lhs and gx0 == _rhs:
-        n += 1
-        fx = fx._subs(k, k - 1)
-        gy = gy._subs(k, k - 1)
-    elif fx0 == _lhs[0] and gx0 == _rhs[0]:
-        size = _lhs.shape[0]
-        n += size
-        fx = fx._subs(k, k - size)
-        gy = gy._subs(k, k - size)
-    else:
-        return
-
-    return fx, gy, n
-
-
 @apply
-def apply(eq, eq_historic):
-    lhs, rhs = eq.of(Equal)
-    _lhs, _rhs = eq_historic.of(Equal)
-
-    if len(lhs.shape) < len(_lhs.shape):
-        (lhs, rhs), (_lhs, _rhs) = (_lhs, _rhs), (lhs, rhs)
-        eq, eq_historic = eq_historic, eq
-
+def apply(eq_historic, eq_n):
+    lhs, rhs = eq_historic.of(Equal)
     n = lhs.shape[0]
+
     if lhs.is_Lamda and rhs.is_Lamda and lhs.variable == rhs.variable:
         k = rhs.variable
     else:
@@ -38,41 +14,22 @@ def apply(eq, eq_historic):
     fx = lhs[k]
     gy = rhs[k]
 
-    if n.is_finite:
-        fxn = fx._subs(k, n)
-        gyn = gy._subs(k, n)
-
-        if fxn == _lhs and gyn == _rhs:
-            n += 1
-        elif _lhs.shape and fxn == _lhs[0] and gyn == _rhs[0]:
-            n += _lhs.shape[0]
-        else:
-            fx, gy, n = unshift(fx, gy, _lhs, _rhs, n, k)
-    else:
-        fx, gy, n = unshift(fx, gy, _lhs, _rhs, n, k)
-
-    return Equal(Lamda[k:n](fx).simplify(), Lamda[k:n](gy).simplify())
+    S[fx._subs(k, n)], S[gy._subs(k, n)] = eq_n.of(Equal)
+    return Equal(Lamda[k:n + 1](fx).simplify(), Lamda[k:n + 1](gy).simplify())
 
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     n = Symbol(integer=True, positive=True)
     k = Symbol(integer=True)
     f, g = Function(real=True)
-    Eq << apply(Equal(f(n), g(n)), Equal(Lamda[k:n](f(k)), Lamda[k:n](g(k))))
+    Eq << apply(Equal(Lamda[k:n](f(k)), Lamda[k:n](g(k))), Equal(f(n), g(n)))
 
-    Eq << algebra.iff.of.et.apply(Eq[0])
-
-    Eq << Eq[-2].this.lhs.apply(algebra.eq.eq.then.eq.concat, simplify=None)
-
-    Eq << Eq[-1].this.rhs.apply(algebra.eq.then.et.eq.split, simplify=None)
-
-
+    Eq << Algebra.Eq.of.And.Eq.Block.apply(Eq[-1], simplify=None)
 
 
 if __name__ == '__main__':
     run()
-# created on 2023-03-30
-# updated on 2023-05-21
+# created on 2019-03-24

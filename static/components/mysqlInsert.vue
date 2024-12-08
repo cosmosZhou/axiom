@@ -9,8 +9,8 @@
 				<option value=''>{{'_'.repeat(Math.max(...dtype[Field].map(el => el.length)))}}</option>
 				<option v-for="value of dtype[Field]" :value=value>{{value}}</option>
 			</select>
-			<textarea v-else-if="Type == 'text' || Type == 'json'" v-focus :name=Field @change=change_input :value=get_initial_value(Field) @input=input_kwargs @keydown=keydown></textarea>
-			<input v-else v-focus type=text :name=Field @change=change_input :value=get_initial_value(Field) :style=style_input(Field) @input=input_kwargs @keydown=keydown :size=input_size(Field) />	
+			<textarea v-else-if="Type == 'text' || Type == 'json'" v-focus :name=Field @change=change_input :value=get_initial_value(Field) @input=input_kwargs @keydown=keydown :placeholder=Field></textarea>
+			<input v-else v-focus type=text :name=Field @change=change_input :value=get_initial_value(Field) :style=style_input(Field) @input=input_kwargs @keydown=keydown :size=input_size(Field) :placeholder=Field />
 			<template v-if="i < desc.length - 1">, </template>
 		</template>), (<div class=upload>
 	         upload
@@ -34,7 +34,24 @@ export default {
 		var data = this.$parent.$data;
 		data.files = {};
 		data.progress = {value: null, max: null};
-		//console.log(this.kwargs);
+		// console.log(this.kwargs);
+		var {kwargs} = this;
+		var {where} = kwargs;
+		if (where){
+			var {and} = where;
+			if (and){
+				if (and.isArray) {
+					for (var {eq, regexp} of and){
+						var arr = eq || regexp;
+						if (arr){
+							var [Field, Value] = arr;
+							if (kwargs[Field] == null)
+								kwargs[Field] = Value;
+						}
+					}
+				}
+			}
+		}
 		return data;
 	},
 
@@ -81,7 +98,7 @@ export default {
 		},
 		
 		value() {
-			return this.kwargs;	
+			return this.kwargs;
 		},
 		
 		database() {
@@ -98,7 +115,7 @@ export default {
 			for (var {Field} of desc){
 				if (Field == 'training'){
 					desc.delete(index);
-					break;	
+					break;
 				}
 				index++;
 			}
@@ -138,7 +155,7 @@ export default {
 	
 	methods: {
 		get_initial_value(Field) {
-			var obj = getParameter(Field);
+			var obj = getParameterByName(Field);
 			if (obj && obj.constructor == Object)
 				return JSON.stringify(obj);
 			return obj || this.kwargs[Field];
@@ -234,14 +251,15 @@ export default {
 				
 				console.log("insert data", data);
 				
-				if (data.training == null){
-					data.training = ~randrange(2);
+				if (data.training == null) {
+					var training = getParameterByName('training');
+					training = training? parseInt(training): randrange(2);
+					data.training = ~training;
 				}
 				else {
 					var training = parseInt(data.training);
-					if (training >= 0){
+					if (training >= 0)
 						data.training = ~training;
-					}
 				}
 				
 				this.process('.json', data);
@@ -279,13 +297,13 @@ input[type=file] {
 	bottom:0;
 	left:0;
 	right: 0;
-	top: 0;	
+	top: 0;
 	
 	font-size: 100px;
 	
 	z-index:1;
 	opacity:0;
-	filter: alpha(opacity=0);	
+	filter: alpha(opacity=0);
 	-ms-filter: alpha(opacity=0);
 }
 
@@ -295,7 +313,7 @@ input[type=file] {
 	overflow: hidden;
 	
 	width:100px;
-	height:30px;	
+	height:30px;
 	line-height:30px;
 	
 	top: 10px;

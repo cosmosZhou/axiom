@@ -1,7 +1,7 @@
 class Undoer {
 	
 	constructor() {
-		this.stack = [];		
+		this.stack = [];
 	}
 
 	push(cmd){
@@ -17,7 +17,7 @@ class Undoer {
 	}
 	
 	pop(){
-		return this.stack.pop();	
+		return this.stack.pop();
 	}
 	
 	undo() {
@@ -30,6 +30,10 @@ class Undoer {
 		}
 		
 		return false;
+	}
+
+	redo() {
+		// TODO
 	}
 }
 

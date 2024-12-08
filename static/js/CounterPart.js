@@ -21,31 +21,31 @@ class CounterPart{
 	}
 	
 	get confidence(){
-		return this.parent._confidence;	
+		return this.parent._confidence;
 	}
 	
 	get header(){
-		return this.parent._header;	
+		return this.parent._header;
 	}
 	
 	set header(header){
-		this.parent._header = header;	
+		this.parent._header = header;
 	}
 	
 	get phrase(){
-		return this.parent._phrase;	
+		return this.parent._phrase;
 	}
 	
 	set phrase(phrase){
-		this.parent._phrase = phrase;	
+		this.parent._phrase = phrase;
 	}
 	
 	get column(){
-		return this.parent._column;	
+		return this.parent._column;
 	}
 	
 	set column(column){
-		this.parent._column = column;	
+		this.parent._column = column;
 	}
 		
 	get confidence_pair(){
@@ -61,7 +61,7 @@ class CounterPart{
 	}
 	
 	get index2codon(){
-		return this.parent._index2codon;	
+		return this.parent._index2codon;
 	}
 	
 	get codonCell(){
@@ -73,11 +73,11 @@ class CounterPart{
 	}
 	
 	get async_render(){
-		return this.parent._async_render;	
+		return this.parent._async_render;
 	}
 	
 	get render(){
-		return this.parent._render;	
+		return this.parent._render;
 	}
 	
 	get get_indices(){
@@ -93,7 +93,7 @@ class CounterPart{
 	}
 	
 	get true_positive_per_entity(){
-		return this.parent.true_positive_per_entity;	
+		return this.parent.true_positive_per_entity;
 	}
 	
 	get entity_linking_from_that_to_this() {

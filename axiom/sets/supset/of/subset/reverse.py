@@ -9,12 +9,12 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
 
     A, B = Symbol(etype=dtype.integer)
     Eq << apply(Supset(A, B))
 
-    Eq << sets.subset.then.supset.reverse.apply(Eq[1])
+    Eq << Sets.Subset.to.Supset.reverse.apply(Eq[1])
 
 
 

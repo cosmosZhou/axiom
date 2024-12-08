@@ -26,17 +26,17 @@ def apply(given, wrt=None):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     m, n = Symbol(integer=True, positive=True)
     f = Symbol(real=True, shape=(n,))
     i = Symbol(integer=True)
     Eq << apply(All[i:Range(m)](f[i] > 0))
 
-    Eq << algebra.iff.of.et.apply(Eq[0])
+    Eq << Algebra.Iff.of.And.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(algebra.all.then.all.limits.domain_defined)
-    Eq << Eq[-1].this.lhs.apply(algebra.all.of.all.limits.domain_defined)
+    Eq << Eq[-2].this.lhs.apply(Algebra.All.to.All.limits.domain_defined)
+    Eq << Eq[-1].this.lhs.apply(Algebra.All.of.All.limits.domain_defined)
 
 
 if __name__ == '__main__':

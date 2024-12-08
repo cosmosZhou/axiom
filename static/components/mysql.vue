@@ -33,18 +33,21 @@ import mysqlUpdate from "./mysqlUpdate.vue"
 import mysqlAlter from "./mysqlAlter.vue"
 import mysqlShow from "./mysqlShow.vue"
 import mysqlSet from "./mysqlSet.vue"
+import mysqlUnion from "./mysqlUnion.vue"
 import mysqlExecute from "./mysqlExecute.vue"
 
 import mysqlExpr from "./mysqlExpr.vue"
 import mysqlGroup from "./mysqlGroup.vue"
 import mysqlOrder from "./mysqlOrder.vue"
 import mysqlArgs from "./mysqlArgs.vue"
-mysqlArgs.components.mysqlExpr = mysqlOrder.components.mysqlExpr = mysqlGroup.components.mysqlExpr = mysqlExpr;
+import {piece_together} from "../js/mysql.js"
+for (var component of [mysqlArgs, mysqlOrder, mysqlGroup])
+	component.components.mysqlExpr = mysqlExpr;
 
-import {get_db_table, simplify_expression, show_full_columns, show_tables, is_number, is_enum, is_string, is_json, physic2logic, get_cmd, set_cmd} from "../js/mysql.js"
+import {get_db_table, simplify_expression, show_full_columns, show_tables, is_numeric, is_enum, is_string, is_json, physic2logic, get_cmd, set_cmd} from "../js/mysql.js"
 
 export default {
-	components: {mysqlSelect, mysqlInsert, mysqlDelete, mysqlUpdate, mysqlExecute, mysqlAlter, mysqlShow, mysqlSet},
+	components: {mysqlSelect, mysqlInsert, mysqlDelete, mysqlUpdate, mysqlExecute, mysqlAlter, mysqlShow, mysqlSet, mysqlUnion},
 	
 	props : ['host', 'user', 'token', 'kwargs', 'sql', 'rowcount', 'sample', 'focus'],
 	
@@ -64,22 +67,22 @@ export default {
 			json_extract: {},
 			mounted: {},
 
-			//functions that operate on numeric values; 
+			//functions that operate on numeric values;
 			numeric_functions: ['sum', 'agv', 'max', 'min', 'ceiling', 'floor', 'round'],
 			//functions that operate on textual values;
-			textual_functions: ['substring', 'substring_index', 'regexp_substr', 'regexp_replace', 'replace', 'concat', 'group_concat', 'json_arrayagg', 'json_objectagg', 'json_quote', 'json_unquote', 'json_array', 'json_object', 'json_length', 'json_extract', 'json_valid', 'json_remove', 'cast', 'length', 'regexp_instr', 'char_length', 'regexp_like', 'not regexp_like', 'lower', 'upper', 'left', 'right', 'reverse'],
+			textual_functions: ['substring', 'substring_index', 'regexp_substr', 'regexp_replace', 'replace', 'concat', 'group_concat', 'json_arrayagg', 'json_objectagg', 'json_quote', 'json_unquote', 'json_array', 'json_object', 'json_length', 'json_extract', 'json_valid', 'json_remove', 'json_set', 'json_type', 'cast', 'length', 'regexp_instr', 'char_length', 'regexp_like', 'not regexp_like', 'lower', 'upper', 'left', 'right', 'reverse', 'find_in_set'],
 			//functions that operate on jsonobj values;
-			jsonobj_functions: ['count', 'json_length', 'json_extract', 'json_keys', 'json_value', 'json_search', 'json_array_append', 'json_array_insert', 'json_insert', 'json_remove', 'json_merge', 'json_replace', 'json_set', 'json_depth'],
+			jsonobj_functions: ['count', 'json_length', 'json_extract', 'json_keys', 'json_value', 'json_search', 'json_array_append', 'json_array_insert', 'json_array_replace', 'json_insert', 'json_remove', 'json_set', 'json_merge', 'json_replace', 'json_depth', 'json_merge', 'json_merge_patch', 'json_merge_preserve', 'json_type'],
 			//operators that operate on numeric values;
-			numeric_operators: ['+', '-', '*', '/', '%', '&', '^', '>>', '<<'], 
+			numeric_operators: ['+', '-', '*', '/', '%', '&', '^', '>>', '<<'],
 			//operators that operate on jsonobj values;
 			jsonobj_operators: ['->', '->>'],
 			//relations that operate on numeric values;
 			numeric_relations: ['=', '!=', '>', '<', '>=', '<='],
 			//relations that operate on textual values;
-			textual_relations: ['regexp', 'like', 'regexp binary', 'like binary', '=', 'not regexp', 'not like', 'not regexp binary', 'not like binary', '!=', 'in', 'not'],
+			textual_relations: ['regexp', 'like', 'regexp binary', 'like binary', '=', 'not regexp', 'not like', 'not regexp binary', 'not like binary', '!=', 'in', 'not', 'not in'],
 			//relations that operate on jsonobj values;
-			jsonobj_relations: ['json_contains', 'json_contains_path'],
+			jsonobj_relations: ['json_contains', 'json_contains_path', 'not json_contains', 'not json_contains_path', 'is', 'is not'],
 			
 			aggregate_functions: ['sum', 'agv', 'max', 'min', 'group_concat', 'json_arrayagg', 'json_objectagg'],
 		};
@@ -92,7 +95,7 @@ export default {
 				var {Field} = description;
 				desc[Field] = {dtype: this.dtype[Field], ...description};
 			}
-			return desc;			
+			return desc;
 		},
 
 		select() {
@@ -114,7 +117,7 @@ export default {
 		option() {
 			var option = {
 				fields: Object.keys(this.dtype),
-				function: ['count', 'sum', 'agv', 'max', 'min', 'length', 'char_length', 'round', 'ceiling', 'floor', 'substring', 'substring_index', 'regexp_substr', 'regexp_replace', 'concat', 'group_concat', 'json_array_append', 'json_array_insert', 'json_arrayagg', 'json_remove', 'json_object', 'json_extract', 'json_length', 'json_valid', 'lower', 'upper', 'left', 'right', 'reverse'],
+				function: ['count', 'sum', 'agv', 'max', 'min', 'length', 'char_length', 'round', 'ceiling', 'floor', 'substring', 'substring_index', 'regexp_substr', 'regexp_replace', 'concat', 'group_concat', 'json_array_append', 'json_array_insert', 'json_arrayagg', 'json_remove', 'json_set', 'json_object', 'json_extract', 'json_length', 'json_valid', 'lower', 'upper', 'left', 'right', 'reverse'],
 				operator: ['~', '+', '-', '*', '/', '%', '&', '^', '>>', '<<', '->', '->>'],
 			};
 			
@@ -123,7 +126,7 @@ export default {
 		
 		cmd: {
 			get() {
-				return get_cmd(this.kwargs);	
+				return get_cmd(this.kwargs);
 			},
 			
 			set(cmd) {
@@ -147,29 +150,25 @@ export default {
 			case 'update':
 				return 'update';
 				
-			case 'insert':				
+			case 'insert':
 				return 'into';
 			}
 		},
 		
 		numeric_function_regexp() {
-			var regexp = this.numeric_functions.join('|');
-			return eval(`/${regexp}/`);
+			return new RegExp(this.numeric_functions.join('|'));
 		},
 		
 		jsonobj_function_regexp() {
-			var regexp = this.jsonobj_functions.join('|');
-			return eval(`/${regexp}/`);
+			return new RegExp(this.jsonobj_functions.join('|'));
 		},
 		
 		textual_function_regexp() {
-			var regexp = this.textual_functions.join('|');
-			return eval(`/${regexp}/`);
+			return new RegExp(this.textual_functions.join('|'));
 		},
 
 		aggregate_function_regexp() {
-			var regexp = this.aggregate_functions.join('|');
-			return eval(`/${regexp}/`);
+			return new RegExp(this.aggregate_functions.join('|'));
 		},
 		
 		Fields() {
@@ -179,7 +178,7 @@ export default {
 		numericFields() {
 			var fields = [];
 			for (var {Field, Type, Key} of this.desc) {
-				if (is_number(Type))
+				if (is_numeric(Type))
 					fields.push(Field);
 			}
 			
@@ -189,7 +188,7 @@ export default {
 		textualFields() {
 			var fields = [];
 			for (var {Field, Type, Key} of this.desc) {
-				if (!is_number(Type))
+				if (!is_numeric(Type))
 					fields.push(Field);
 			}
 			
@@ -199,7 +198,7 @@ export default {
 		db_table() {
 			var value = this.kwargs[this.cmdAttr];
 			if (value)
-				return get_db_table(value);	
+				return get_db_table(value);
 		},
 		
 		database: {
@@ -213,7 +212,7 @@ export default {
 				if (database) {
 					var attr = this.cmdAttr;
 					this.kwargs[attr] = fromEntries(database, this.table);
-				} 
+				}
 			}
 		},
 		
@@ -246,7 +245,7 @@ export default {
 			if (sample)
 				kwargs.sample = sample;
 
-			return 'query.php' + get_url(kwargs);
+			return 'query.php?' + get_url(kwargs);
 		},
 		
 		action_insert() {
@@ -255,7 +254,40 @@ export default {
 			if (host && host != 'localhost')
 				kwargs.host = host;
     		
-    		return 'query.php' + get_url(kwargs);
+			var url_kwargs = get_url(kwargs);
+    		var url_insert = 'query.php?' + url_kwargs;
+    		var url = [];
+    		var {kwargs} = this;
+
+    		if (kwargs.where) {
+    			kwargs = {...kwargs};
+    			kwargs.select = '*';
+    			if (kwargs.update) {
+        			kwargs.from = kwargs.update;
+        			delete kwargs.update;
+        			delete kwargs.set;
+    			}
+				else if (kwargs.into) {
+					kwargs.from = kwargs.into;
+        			delete kwargs.into;
+				}
+				kwargs = piece_together(kwargs);
+				kwargs = kwargs.filter(s => s != `from[${database}]=${table}`);
+    			url.push(...kwargs);
+    		}
+			else {
+				var {limit} = kwargs;
+				if (limit != null)
+    				url.push('limit=' + limit);
+			}
+
+			if (url.length) {
+				url = url.join('&');
+				if (url_kwargs)
+					url = '&' + url;
+				url_insert += url;
+			}
+			return url_insert;
 		},
 		
 		style_select_table(){
@@ -281,6 +313,11 @@ export default {
 					return k;
 			}
 		},
+
+    	simplify(){
+			var kwargs = this.kwargs.kwargs?? {};
+			return kwargs.simplify;
+    	},
 	},
 
 	methods: {
@@ -291,17 +328,19 @@ export default {
 			location.href = `${protocol}\/\/${hostname}:${port}${pathname}${search}${hash}`;
 		},
 
-		href(PRI, source, kwargs) {
+		href(PRI, source, kwargs, value) {
+			value ||= true;
 			var {host, user, database, table} = this;
 			
 			Object.assign(kwargs, {user, from: fromEntries(database, table)})
 			if (host && host != 'localhost')
 				kwargs.host = host;
 
-			kwargs.kwargs = fromEntries(source, true);
-			kwargs[this.PRI] = PRI;
+			kwargs.kwargs = fromEntries(source, value);
+			if (PRI)
+				kwargs[this.PRI? this.PRI: 'id'] = PRI;
 			
-			var href = `query.php` + get_url(kwargs);
+			var href = 'query.php?' + get_url(kwargs);
 			switch (source) {
 			case 'json':
 				break;
@@ -312,7 +351,7 @@ export default {
 			return href;
 		},
 
-		async delete_instance(self) {
+		async delete_instance(self, physic) {
 			var {host, user, token, database, table, PRI} = this;
 			var ret = 0;
 			var $PRI = self.$parent[PRI];
@@ -331,9 +370,20 @@ export default {
 			if (ret){
 				var self = self.$parent;
 				var {index} = self;
-				self.$parent.data.delete(index);
-				console.log("instanceName =", this.instanceName);
-				self.$parent[this.instanceName].delete(index);
+				if (physic) {
+					// delete physically
+					self.$parent.data.delete(index);
+				}
+				else {
+					// delete logically
+					self.show = false;
+					var {training} = self.$parent.data[index];
+					if (training < 0)
+						training = ~training;
+					if (training & 64)
+						training &= -65;
+					self.$parent.data[index].training = training;
+				}
 			}
 		},
 
@@ -375,7 +425,7 @@ export default {
 			kwargs.training = training;
 			kwargs.limit = 1;
 			kwargs.offset = offset;
-			location.href = `query.php` + get_url(kwargs);
+			location.href = 'query.php?' + get_url(kwargs);
 		},
 		
 		preprocess_kwargs() {
@@ -391,15 +441,20 @@ export default {
 			
 			var cond = [];
 			for (var key in criteria) {
-				if (!this.descDict[key]) 
+				if (!this.descDict[key])
 					continue;
 
 				delete kwargs[key];
-				if (this.descDict[key].dtype == 'string' && !this.descDict[key].Key) {
-					cond.push({regexp: [key, criteria[key]]});	
+				var eq = [key, criteria[key]];
+				if (['string', 'json'].includes(this.descDict[key].dtype) && !this.descDict[key].Key) {
+					if (kwargs.where && kwargs.where.and && kwargs.where.and.some(c => c.regexp && c.regexp.equals(eq)));
+					else
+						cond.push({eq});
 				}
 				else {
-					cond.push({eq: [key, criteria[key]]});
+					if (kwargs.where && kwargs.where.and && kwargs.where.and.some(c => c.eq && c.eq.equals(eq)));
+					else
+						cond.push({eq});
 				}
 			}
 			
@@ -458,7 +513,7 @@ export default {
 				
 				for (var {Field, Type, Key} of this.desc) {
 					if (!where_dict[Field]) {
-						if (Key || is_number(Type) || is_enum(Type)) {
+						if (Key || is_numeric(Type) || is_enum(Type)) {
 							and.push({eq: [Field, '']});
 						}
 						else if (is_string(Type)){
@@ -469,7 +524,7 @@ export default {
 								and.push({eq: [Field, '']});
 							}
 							else {
-								and.push({regexp: [Field, '']});	
+								and.push({regexp: [Field, '']});
 							}
 						}
 					}
@@ -482,7 +537,7 @@ export default {
 			}
 			
 			if (limit == null) {
-				kwargs.limit = '';	
+				kwargs.limit = '';
 			}
 			
 			if (offset == null) {
@@ -492,7 +547,7 @@ export default {
 		
 		is_leaf(value) {
 			return value == null || value.isString || value.isNumber;
-		},		
+		},
 		
 		is_numeric_function(value) {
 			return value && value.fullmatch(this.numeric_function_regexp);
@@ -513,7 +568,7 @@ export default {
 		postprocess() {
 			var parent = this.$parent;
 			if (parent.postprocess)
-				parent.postprocess(...arguments);	
+				parent.postprocess(...arguments);
 		},
 
 		async table_comment() {
@@ -521,7 +576,7 @@ export default {
 			var sql = `select table_comment from information_schema.tables where table_name = '${table}' and table_schema = '${database}'`;
 			try {
 				var [{TABLE_COMMENT}] = await query(this.host, this.user, this.token, sql);
-				return TABLE_COMMENT;	
+				return TABLE_COMMENT;
 			}
 			catch(err) {
 				return;
@@ -614,7 +669,7 @@ export default {
 			input_kwargs(this.kwargs, name, value);
 			if (name == 'limit') {
 				var {sql} = this;
-				sql = sql.replace(/(?<= limit )\d+(?!=.* limit \d+)/, value);
+				sql = sql.replace(/(?<= limit )\d*(?!.* limit \d*)/, value);
 				if (sql != this.sql) {
 					console.log("old sql = ", this.sql);
 					console.log("new sql = ", sql);
@@ -653,10 +708,10 @@ export default {
 			var [lhs, rhs] = cond[func];
 			if (filterRhs && !rhs || !lhs.isString)
 				return {};
-			return fromEntries(lhs, cond); 
+			return fromEntries(lhs, cond);
 		},
 		
-		parse_expression(cond, Field2Type, transform){
+		parse_expression(cond, Field2Type){
 		    if (cond.isString || cond.isNumber)
 		        return cond;
 
@@ -668,12 +723,12 @@ export default {
 		    	return '';
 		    
 		    if (cond[func].isArray)
-		        var args = cond[func].map(cond => this.parse_expression(cond, Field2Type, transform));
+		        var args = cond[func].map(cond => this.parse_expression(cond, Field2Type));
 		    else
-		        var args = [this.parse_expression(cond[func], Field2Type, transform)];
+		        var args = [this.parse_expression(cond[func], Field2Type)];
 
 		    func = physic2logic[func] ?? func;
-
+			var transform = Field2Type.__transform__;
 		    switch (func) {
 		    case 'and':
 		        args.sort((lhs, rhs) => {
@@ -780,6 +835,9 @@ export default {
 		    case 'distinct':
 		        return `${func} ${args[0]}`;
 		        
+			case 'find_in_set':
+		        return `${func}(${args[0]}, ${args[1]})`;
+
 		    case 'regexp_like':
 		    case 'not regexp_like':
 		        if (Field2Type){
@@ -837,13 +895,28 @@ export default {
 			}
 		},
 		
-		async toggle_training(self, update){
+		toggle_training(self, update, value, index){
+			if (value == null) {
+				var {old_training: training} = self;
+				if (training == null) {
+					var {set} = self.kwargs;
+					if (set) {
+						var {training} = set;
+						if (training && training.isArray && index != null && index.isInteger) {
+							training = training[index];
+						}
+					}
+				}
+				value = training;
+			}
+
 			if (update == null)
 				update = true;
 		
-			var training = self.training;
-			var is_changed = false;
-			if (training < 0){
+			var {training} = self;
+			var old_training = training;
+			var is_changed = !update;
+			if (training < 0 || value != null){
 				training = ~training;
 				is_changed = true;
 			}
@@ -853,80 +926,36 @@ export default {
 				training &= -65;
 				text_is_changed = true;
 			}
-			
-			//if (training & 1){
-			if (training == 1){
-				//training = training & -2;
-				training = 0;
-			}
-			else{
-				//training = training | 1;
-				training = 1;
-			}
-			
-			var {database, table} = this;
-			var primary_key = self[this.PRI];
-			var sql = `update ${database}.${table} set training = ${training} where id = '${primary_key}'`;
-			console.log("sql =", sql);
-			
-			if (text_is_changed){
-				training |= 64;
-			}
-			
-			if (is_changed){
-				training = ~training;
-			}
-			
-			self.$parent.data[self.index].training = training;
 
-			if (update) {
-				var ret = await query(this.host, this.user, this.token, sql);
-				console.log("rowcount =", ret);
+			training = value == null? (training == 1? 0: 1): value;
+			if (training < 0) {
+				value = ~training;
+				if (value & 64){
+					value &= -65;
+				}
 			}
+			else {
+				value = training;
+				if (text_is_changed)
+					training |= 64;
+				if (is_changed)
+					training = ~training;
+			}
+			var {database, table, PRI} = this;
+			var sql = `update ${database}.${table} set training = ${value} where id = '${self[PRI]}'`;
+			console.log("sql =", sql);
+			self.$parent.data[self.index].training = training;
+			if (update) {
+				query(this.host, this.user, this.token, sql).then(ret => {
+					console.log("rowcount =", ret);
+				});
+			}
+
+			self.old_training = old_training;
 		},
 	},
 	
 	async created(){
-		var {operator} = this.kwargs;
-		if (operator) {
-			for (var Field in operator){
-				var m = Field.match(/(\w+)->'\$((?:\.[^.]+)+)'/);
-				if (m){
-					this.kwargs[m[1]] = this.kwargs[Field];
-					var [_, Field, jsonField] = m;
-					this.json_extract[Field] = jsonField;
-	//make query like:
-	//select * from tsr where colspan->'$."0"."0"' regexp 4;
-	//select sections->'$[4].type' from description_parser where sections->'$[4].type' regexp "DESCRIPTION OF EMBODIMENTS" LIMIT 1;
-				}
-			}
-			
-			for (var [key, value] of Object.entries(operator)) {
-				var m = key.match(/^(\w+)->'\$(.+)'$/);
-				if (m) {
-					var Field = m[1];
-					this.json_extract[Field] = m[2];
-					operator[Field] = value;
-					continue;
-				}
-				
-				if (key.contains('.')) {
-					delete operator[key];
-					
-					var op = operator;
-					var keys = key.split('.');
-					var last_key = keys.pop();
-					for (var key of keys) {
-						if (op[key] == null || op[key].isString) {
-							op[key] = {};
-						}
-						op = op[key];
-					}
-					op[last_key] = value;
-				}
-			}
-		}
-		
 		for (var [key, value] of Object.entries(this.kwargs)) {
 			if (key.contains('.')) {
 				delete this.kwargs[key];
@@ -1013,8 +1042,8 @@ export default {
 		    	var {mounted} = binding.instance;
 		    	--mounted[className];
 		    },
-		},		
-	},	
+		},
+	},
 }
 </script>
 

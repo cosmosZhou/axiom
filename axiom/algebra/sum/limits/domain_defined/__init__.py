@@ -28,7 +28,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     i, j = Symbol(integer=True)
     k = Symbol(integer=True, positive=True)
     x = Symbol(shape=(k,), integer=True)
@@ -38,7 +38,7 @@ def prove(Eq):
 
     Eq << apply(Sum[j:f(i), i](h(x[i], j)))
 
-    Eq << Eq[-1].this.rhs.apply(algebra.sum.limits.domain_defined.delete)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Sum.limits.domain_defined.delete)
 
 if __name__ == '__main__':
     run()

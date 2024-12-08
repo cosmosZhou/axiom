@@ -10,7 +10,7 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from axiom import sets
+    from Axiom import Sets
 
     n = Symbol(integer=True, positive=True, given=True)
     x = Symbol(integer=True, given=True)
@@ -20,7 +20,7 @@ def prove(Eq):
 
     Eq << ~Eq[0]
 
-    Eq << sets.el_cup.then.any_el.apply(Eq[-1], simplify=None)
+    Eq << Sets.In_Cup.to.Any_In.apply(Eq[-1], simplify=None)
 
     Eq << ~Eq[-1]
 

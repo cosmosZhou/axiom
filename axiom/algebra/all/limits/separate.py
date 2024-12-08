@@ -12,7 +12,7 @@ def apply(self, *, simplify=False):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     i, j = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
@@ -20,11 +20,11 @@ def prove(Eq):
     g = Symbol(shape=(oo, oo), bool=True)
     Eq << apply(All[i:n, j:n](f[j] & g[i, j]))
 
-    Eq << algebra.iff.of.et.infer.apply(Eq[0])
+    Eq << Algebra.Iff.of.And.Imply.apply(Eq[0])
 
-    Eq << Eq[-1].this.lhs.expr.apply(algebra.cond.all.then.all.et, simplify=None)
+    Eq << Eq[-1].this.lhs.expr.apply(Algebra.Cond.All.to.All.And, simplify=None)
 
-    Eq << Eq[-2].this.rhs.expr.apply(algebra.cond.all.of.all.et, simplify=None)
+    Eq << Eq[-2].this.rhs.expr.apply(Algebra.Cond.All.of.All.And, simplify=None)
 
 
 

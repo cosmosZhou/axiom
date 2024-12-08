@@ -1,5 +1,0 @@
-from . import lt
-from . import lt_maxima
-from . import sup_le
-from . import inf_ge
-from . import maxima_lt

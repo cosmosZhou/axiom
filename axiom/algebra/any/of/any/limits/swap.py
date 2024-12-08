@@ -20,14 +20,14 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     x, y = Symbol(integer=True)
     A = Symbol(etype=dtype.integer)
     f, g = Function(integer=True)
 
     Eq << apply(Any[x:A, y:f(y) > 0](g(x, y) > 0))
 
-    Eq << algebra.any.then.any.limits.swap.apply(Eq[1])
+    Eq << Algebra.Any.to.Any.limits.swap.apply(Eq[1])
 
 
 if __name__ == '__main__':

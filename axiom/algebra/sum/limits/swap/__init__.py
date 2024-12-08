@@ -22,7 +22,7 @@ def apply(self, i=0, j=1):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     i, j = Symbol(integer=True)
     m = Symbol(integer=True, positive=True)
@@ -33,28 +33,28 @@ def prove(Eq):
 
     Eq.induct = Eq[0].subs(n, n + 1)
 
-    Eq << Eq.induct.this.lhs.apply(algebra.sum.to.add.split, cond={n})
+    Eq << Eq.induct.this.lhs.apply(Algebra.Sum.eq.Add.split, cond={n})
 
     s = Symbol(Sum[j:n + 1](f[i] * g[i, j]))
     Eq << s.this.definition
 
-    Eq << Eq[-1].apply(algebra.eq.then.eq.sum, (i, 0, m))
+    Eq << Eq[-1].apply(Algebra.Eq.to.Eq.Sum, (i, 0, m))
 
-    Eq << Eq[-2].this.rhs.apply(algebra.sum.to.add.split, cond={n})
+    Eq << Eq[-2].this.rhs.apply(Algebra.Sum.eq.Add.split, cond={n})
 
-    Eq << Eq[-1].this.rhs.args[1].apply(algebra.mul.to.sum)
+    Eq << Eq[-1].this.rhs.args[1].apply(Algebra.Mul.eq.Sum)
 
     Eq << Eq[-3].subs(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(algebra.sum.to.add)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.eq.Add)
 
     Eq << Eq[1].subs(Eq[-1].reversed)
 
-    Eq << Eq[-1].this.apply(algebra.eq.simplify.terms.common)
+    Eq << Eq[-1].this.apply(Algebra.Eq.simp.terms.common)
 
-    Eq << Infer(Eq[0], Eq.induct, plausible=True)
+    Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << algebra.infer.then.eq.induct.apply(Eq[-1], n=n, start=1)
+    Eq << Algebra.Imply.to.Eq.induct.apply(Eq[-1], n=n, start=1)
 
 
 
@@ -63,7 +63,7 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-from . import intlimit
-from . import subs
 # created on 2018-04-30
 # updated on 2023-08-26
+from . import subs
+from . import intlimit

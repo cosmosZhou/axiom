@@ -102,10 +102,10 @@ function is_latex_print($latex, &$res)
 $module = str_replace('/', '.', $module);
 $title = str_replace('.', '/', $module);
              
-$path_info = substr(__FILE__, 0, - 9) . "axiom/" . $title;
+$path_info = substr(__FILE__, 0, - 9) . "Axiom/" . $title;
 
 $indexOfYield = - 1;
-if (! std\endsWith($path_info, '/')) {
+if (! str_ends_with($path_info, '/')) {
 
     $py = $path_info . ".py";
 
@@ -142,7 +142,7 @@ if (! std\endsWith($path_info, '/')) {
 
             $imports = [];
             if (file_exists($py)) {
-                if (! std\endsWith($py, "/__init__.py"))
+                if (! str_ends_with($py, "/__init__.py"))
                     die("$py already exists!");
                 else {
                     $file = new std\Text($py);
@@ -189,7 +189,7 @@ if (! std\endsWith($path_info, '/')) {
     $inputs = [];
     $input = [];
 
-    $numOfRequisites = preg_match('/([\w.]+)\.(imply|given|then|of)\./', $module, $m)? count(explode(".", $m[1])) - 1 : 0;
+    $numOfRequisites = preg_match('/([\w.]+)\.(to|of)\./', $module, $m)? count(explode(".", $m[1])) - 1 : 0;
 
     foreach (yield_from_py($py) as $dict) {
         if (! array_key_exists('statement', $dict))
@@ -245,7 +245,7 @@ if (! std\endsWith($path_info, '/')) {
             }
 
             $text = $statement;
-            if (!$input && (std\startsWith($statement, '    ') || $statement == ")"))
+            if (!$input && (str_starts_with($statement, '    ') || $statement == ")"))
                 // starting with more than 4 spaces indicates this line is a continuation of the previous line of code!
                 $inputs[count($inputs) - 1] .= "\n$text";
             else

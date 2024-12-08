@@ -33,7 +33,7 @@ def apply(piecewise, i=0, offset=1):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     k = Symbol(integer=True, positive=True)
     x = Symbol(real=True, shape=(k,))
@@ -41,7 +41,7 @@ def prove(Eq):
     g, f, h = Function(shape=(), real=True)
     Eq << apply(Piecewise((g(x), Element(x, A)), (f(x), NotElement(x, A | B)), (h(x), True)))
 
-    Eq << Eq[0].this.rhs.apply(algebra.piece.et.invert)
+    Eq << Eq[0].this.rhs.apply(Algebra.Piece.And.invert)
 
 
 if __name__ == '__main__':

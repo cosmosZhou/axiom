@@ -10,12 +10,12 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y = Symbol(real=True)
     n = Symbol(integer=True, even=True)
     Eq << apply((x - y) ** n)
-    Eq << Eq[-1].this.lhs.apply(algebra.pow.to.mul.neg)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Pow.eq.Mul.Neg)
 
 
 if __name__ == '__main__':

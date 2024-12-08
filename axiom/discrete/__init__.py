@@ -1,61 +1,74 @@
-from . import factorial, mul
-from . import det
-from . import stirling1
-from . import all_gt_zero
-from . import alpha
 from . import K
 from . import H
-from . import sigma
-from . import matmul
-
-from . import delta
-
-from . import sum
-
-from . import lamda
 
 
 
-from . import reducedSum
 
 
 
-from . import fallingFactorial
 
-from . import risingFactorial
-from . import all_el
-from . import all_eq
-from . import binom
-from . import prod
-from . import lt
-from . import pow
-from . import matProd
-from . import ne_zero
-from . import eq_transpose
-from . import ge
-from . import eq_inverse
-from . import matpow
-from . import eq_oneMatrix
-from . import factorial2
-from . import eq_adjoint
-from . import all_et
-from . import all_is_positive
-from . import conj
-from . import imply_is_zero
-from . import choose
-from . import stirling
-from . import matmul_lamda
-from . import eq
-from . import cup
-from . import block
-from . import eq_matmul
-from . import condset
-from . import indexed
-from . import add
-from . import all_ge
-from . import abs
-from . import square
-from . import inverse
-from . import diff
-from . import eq_reducedSum
-from . import then
+
+
+
+from . import Eq
+from . import Ge
+from . import Inv
+from . import Lt
+from . import Eq_Adjoint
+from . import Eq_Inv
+from . import Eq_Transpose
+from . import Ne_0
+from . import Add
+from . import Mul
+from . import Sum
+from . import Prod
+from . import Pow
+from . import Det
+from . import Dot
+from . import Abs
+from . import Square
+from . import Lamda
+from . import Block
+from . import Conj
+from . import Cup
+from . import All_Gt_0
+from . import All_is_positive
+from . import All_Eq
+from . import All_And
+from . import Eq_Dot
+from . import Diff
+from . import Factorial
+from . import Factorial2
+from . import Binom
+from . import MatPow
+from . import Delta
+from . import Stirling
+from . import Stirling1
+from . import Choose
+from . import FallingFactorial
+from . import RisingFactorial
+from . import Eq_Adjoint
+from . import Eq_Transpose
+from . import Indexed
+from . import All_Ge
+from . import MatProd
+from . import All_In
+from . import All_Gt_0
+from . import Alpha
+from . import Condset
+from . import Eq_ReducedSum
+from . import ReducedSum
+from . import Eq_OneMatrix
+from . import Sigma
+from . import Imply_Eq_0
+from . import All_GeRootSDiv_
+from . import All_Any_Eq
+from . import All_Any_Eq_Dot_MatProd_SwapMatrix
+from . import All_Gt_
+from . import Dot_
+from . import Conditionset
+from . import All_Any_In
+from . import All_Any_Eq_Lamda
+from . import All_InDot
+from . import All_In_MatProd
+from . import In

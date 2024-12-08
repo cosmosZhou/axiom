@@ -1,2 +1,2 @@
-from . import el
-from . import et
+from . import And
+from . import In

@@ -13,7 +13,7 @@ def apply(given, index=-1):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
     x, y = Symbol(integer=True)
 
     A, B = Symbol(etype=dtype.integer)
@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << ~Eq[0]
 
-    Eq << algebra.all.any.then.any.et.apply(Eq[1], Eq[-1])
+    Eq << Algebra.All.Any.to.Any.And.apply(Eq[1], Eq[-1])
 
 
 if __name__ == '__main__':

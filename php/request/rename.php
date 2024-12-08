@@ -15,8 +15,8 @@ if (! $dict) {
         'new::'
     ]);
     
-    $dict['old'] = "keras.eq_cup.then.eq.matmul.softmax.batch_gather";
-    $dict['new'] = "keras.eq_card.subset_cup.then.eq.matmul.softmax.batch_gather";
+    $dict['old'] = "Keras.Eq_Cup.to.Eq.Dot.Softmax.batch_gather";
+    $dict['new'] = "Keras.Eq_Card.Subset_Cup.to.Eq.Dot.Softmax.batch_gather";
 }
 
 $old = $dict['old'];
@@ -28,7 +28,7 @@ error_log("new = $new");
 $oldPy = module_to_py($old);
 $newPy = module_to_py($new);
 
-if (! std\endsWith($newPy, "/__init__.py")) {
+if (! str_ends_with($newPy, "/__init__.py")) {
     if (filesize($newPy)){
         die("$newPy already exists");
     }
@@ -42,7 +42,7 @@ error_log("oldPy = $oldPy");
 if (file_exists($newPy)) {
     error_log("newPy = $newPy");
     
-    if (std\endsWith($oldPy, "/__init__.py")) {
+    if (str_ends_with($oldPy, "/__init__.py")) {
         $__init__ = new Text($oldPy);
 
         $newPyText = new Text($newPy);
@@ -66,7 +66,7 @@ if (file_exists($newPy)) {
     
     std\createDirectory(dirname($newPy));
 
-    if (std\endsWith($oldPy, "/__init__.py")) {
+    if (str_ends_with($oldPy, "/__init__.py")) {
         $__init__ = new Text($oldPy);
         
         $newPyText = new Text($newPy);
@@ -76,7 +76,7 @@ if (file_exists($newPy)) {
         
         $substr = substr($new, 0, strrpos($new, '.'));        
         $substrPy = module_to_py($substr);
-        if (! std\endsWith($substrPy, "/__init__.py")) {
+        if (! str_ends_with($substrPy, "/__init__.py")) {
             $substrPyInit = substr($substrPy, 0, -3) . "/__init__.py";
             if (dirname($substrPyInit).".py" == $oldPy){
                 $__init__ = new Text($substrPyInit);

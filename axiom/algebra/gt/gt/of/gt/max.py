@@ -10,12 +10,12 @@ def apply(gt_a, gt_b):
 
 @prove
 def prove(Eq):
-    from axiom import algebra
+    from Axiom import Algebra
 
     x, y, b = Symbol(real=True, given=True)
     Eq << apply(x > y, x > b)
 
-    Eq << algebra.gt_max.then.et.gt.apply(Eq[2])
+    Eq << Algebra.Gt_Max.to.And.Gt.apply(Eq[2])
 
 
 if __name__ == '__main__':
