@@ -1,89 +1,95 @@
-<!DOCTYPE html>
-<meta charset="UTF-8">
-<link rel="stylesheet" href="static/css/style.css">
 <title>search</title>
+<link rel=stylesheet href="static/unpkg.com/katex@0.16.21/dist/katex.min.css">
 <?php
 require_once 'utility.php';
 require_once 'mysql.php';
 require_once 'std.php';
 $dict = empty($_POST) ? $_GET : $_POST;
 
-// if (! $dict) {
-//     // https://www.php.net/manual/en/function.getopt.php
-//     $dict = getopt("", [
-//         'keyword::',
-//         'regularExpression::',
-//         'caseSensitive::',
-//         'wholeWord::',
-//         'latex::',
-//     ]);
-// }
-
-if (array_key_exists("keyword", $dict)) {
-    if ($dict["latex"] == 'on') {
-        $latex = $dict["keyword"];
-    }
+if (array_key_exists("q", $dict)) {
+    if ($dict["fullText"] == 'on')
+        $fullText = $dict["q"];
+    elseif ($dict["latex"] == 'on')
+        $latex = $dict["q"];
 }
 else  {
-    if (array_key_exists("state", $dict)) {
-        $state = $dict["state"];
-        $dict["keyword"] = null;
+    if (array_key_exists("type", $dict)) {
+        $type = $dict["type"];
+        $dict["q"] = null;
     }
     elseif (array_key_exists("latex", $dict)) {
         $latex = $dict["latex"];
-        if ($dict["keyword"]) {
-            $latex = $dict["keyword"];
+        if ($dict["q"]) {
+            $latex = $dict["q"];
         }
         else 
-            $dict["keyword"] = null;
+            $dict["q"] = null;
     } else {
-        $dict["keyword"] = ".*";
+        $dict["q"] = ".*";
         $dict["regularExpression"] = true;
     }
 }
 
-$keyword = $dict["keyword"];
+$q = $dict["q"];
 $wholeWord = array_key_exists("wholeWord", $dict) ? true : false;
 $caseSensitive = array_key_exists("caseSensitive", $dict) ? true : false;
 $regularExpression = array_key_exists("regularExpression", $dict) ? true : false;
 $limit = $dict["limit"]?? 100;
 if (!$limit)
     $limit = 100;
-// error_log("wholeWord = $wholeWord");
-// error_log("caseSensitive = $caseSensitive");
-// error_log("regularExpression = $regularExpression");
-// error_log("latex = $latex");
 
 $like = false;
 
-$regex = $keyword;
-if ($wholeWord) {
+$regex = $q;
+if ($wholeWord)
     $regex = "\\\\b$regex\\\\b";
-} else if ($regularExpression) {
+elseif ($regularExpression)
     $regex = str_replace("\\", "\\\\", $regex);
-} else {
+else
     $like = true;
-}
 
-if ($latex){
+if ($fullText) {
+    if ($wholeWord || $regularExpression) {
+        $fullText = $regex;
+        $P = "P";
+    }
+    else {
+        $P = "";
+        $fullText = str_replace("\\", "\\\\", $fullText);
+    }
+    $fullText = str_replace("\"", "\\\"", $fullText);
+    // the following command is used to search for all typeclass names in the Axiom directory
+    // grep -rhP --include="*.lean" --exclude="*.echo.lean" -o "(?<=\[)\w+(?= \p{L}\])" Axiom | sort -u
+    exec("grep -rn$P --include=*.lean --exclude=*.echo.lean \"$fullText\" Axiom | head -n $limit", $output_array);
+    $data = [];
+    foreach ($output_array as &$item) {
+        [$file, $line, $text] = explode(":", $item, 3);
+
+        if (preg_match("#^Axiom/(.*)\.lean$#", $file, $matches)) {
+            $data[] = [
+                'module' => str_replace("/", ".", $matches[1]),
+                'line' => $line,
+                'text' => $text,
+            ];
+        }
+    }
+} elseif ($latex) {
     // $_GET['user'] = 'user';
     // include "include/bootstrap.inc.php";
-    // include "include/tmpfile.inc.php";    
+    // include "include/tmpfile.inc.php";
     //error_log('$latex = '.$latex);
-    $list = std\json_post('http://localhost:5000/latex/similarity', ['latex' => $latex]);
+    $data = std\json_post('http://localhost:5000/latex/similarity', ['latex' => $latex]);
 }
 else  {
     require_once 'init.php';
-    $user = get_user();
+    $user = get_project_name();
     if ($like) {
-        if ($regex == null) {
-            $list = select_axiom_by_state($user, $state, $limit);
-        } else {
-            $list = select_axiom_by_like($user, $regex, $caseSensitive, $limit);
-        }
-    } else {
-        $list = select_axiom_by_regex($user, $regex, $caseSensitive, $limit);
-    }
+        if ($regex == null)
+            $data = select_lemma_by_type($user, $type, $limit);
+        else
+            $data = select_lemma_by_like($user, $regex, $caseSensitive, $limit);
+    } else
+        $data = select_lemma_by_regex($user, $regex, $caseSensitive, $limit);
     
     $replacement = array_key_exists("replacement", $dict) ? $dict["replacement"] : null;
     if ($replacement) {
@@ -94,52 +100,26 @@ else  {
         $regex = "/$regex/";
         if (!$caseSensitive)
             $regex .= 'i';
-        // error_log("regex = $regex");    
-        // error_log("replacement = $replacement");
-        foreach ($list as &$item) {
-            
-            // error_log("item = $item");
-            $item = [$item, preg_replace($regex, $replacement, $item)];
-        }
+        foreach ($data as &$item)
+            $item['replacement'] = preg_replace($regex, $replacement, $item);
     }
-
-    $list = std\encode($list);
 }
+
+include_once 'script.php';
 ?>
-
-<script src="static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
-<script src="static/unpkg.com/qs@6.10.2/dist/qs.js"></script>
-
-<script src="static/unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
-<script src="static/unpkg.com/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
-
-<script src="static/js/std.js"></script>
-<script src="static/js/utility.js"></script>
-<script>
-MathJax = InitMathJax(1000);
-</script>
-<script async src="static/unpkg.com/mathjax@3.2.0/es5/tex-chtml.js"></script>
-
+<script defer src="static/unpkg.com/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="static/unpkg.com/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
 <script type=module>
-var latex = <?php echo std\encode($latex)?>;
-var list = <?php echo $list?>;
-if (latex) {
-    createApp('searchLatexResult', {
-        list,
-	    latex,
-    });
-}
-else {
-    createApp('searchResult', {
-        list,
-        user: <?php echo std\encode($user)?>,
-        keyword: <?php echo std\encode($keyword)?>,
-        regularExpression: <?php echo std\encode($regularExpression)?>,
-        wholeWord: <?php echo std\encode($wholeWord)?>,
-        caseSensitive: <?php echo std\encode($caseSensitive)?>,
-        latex: <?php echo std\encode($latex)?>,
-        replacement: <?php echo std\encode($replacement)?>,
-        limit: <?php echo $limit?>,
-    });
-}
+createApp('searchResult', {
+    data: <?php echo std\encode($data)?>,
+    user: <?php echo std\encode($user)?>,
+    q: <?php echo std\encode($q)?>,
+    regularExpression: <?php echo std\encode($regularExpression)?>,
+    wholeWord: <?php echo std\encode($wholeWord)?>,
+    caseSensitive: <?php echo std\encode($caseSensitive)?>,
+    fullText: <?php echo std\encode($fullText? true : false)?>,
+    latex: <?php echo std\encode($latex)?>,
+    replacement: <?php echo std\encode($replacement)?>,
+    limit: <?php echo $limit?>,
+});
 </script>

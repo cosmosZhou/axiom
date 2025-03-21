@@ -1,8 +1,10 @@
 import Axiom.Algebra.Mul.eq.Square
 import Axiom.Algebra.Mul_Neg.eq.NegMul
-namespace Algebra.Mul_Neg.eq
+open Algebra
 
-theorem NegSquare
+
+@[main]
+private lemma main
   [Ring α]
   {a : α} :
 -- imply
@@ -11,7 +13,5 @@ theorem NegSquare
   rw [Mul_Neg.eq.NegMul]
   rw [Mul.eq.Square]
 
-
-end Algebra.Mul_Neg.eq
 
 -- created on 2024-11-29

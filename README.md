@@ -1,8 +1,8 @@
-# axiom
+# lemma
 
 reference website:
 
-https://www.axiom.top/axiom/website/index.php
+https://www.lemma.cn/lean/website/index.php
 
 the latex is printed with the aid of the following project:
 
@@ -54,3 +54,18 @@ solutions:
 - [ ] echo 'export PATH="$HOME/.elan/bin:$PATH"' >> ~/.profile on the Target machine
 - [ ] scp -r yourLeanProject yourName@TargetIPAddress:targetFolder/
 Now you can work on yourLeanProject on your Target machine with no trouble.
+
+# related projects
+https://github.com/ImperialCollegeLondon/FLT
+
+# paper to read
+https://zhuanlan.zhihu.com/p/695704489
+https://github.com/Goedel-LM/Goedel-Prover
+https://github.com/deepseek-ai/DeepSeek-Prover-V1.5
+https://arxiv.org/abs/2408.08152v1
+https://arxiv.org/abs/2502.03438
+https://aclanthology.org/2024.emnlp-main.667
+https://github.com/leanprover-community/repl
+cd repl
+lake update -R && lake build
+lake exe repl

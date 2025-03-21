@@ -15,7 +15,7 @@ var previousTime = null;
 export default {		
 	props : [ 'text', 'lines'],
 	
-	data(){
+	data() {
 		return {
 			tagName: '',				
 		};
@@ -254,7 +254,7 @@ export default {
 				previousKey = '';
 		},
 
-		indexFocused(){
+		indexFocused() {
 			var self = this.$parent;				
 			return self.$parent.children.indexOf(self);
 		},			

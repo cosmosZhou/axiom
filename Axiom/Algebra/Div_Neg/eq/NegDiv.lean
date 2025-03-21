@@ -1,8 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.Div_Neg.eq
 
-theorem NegDiv
+@[main]
+private lemma main
   [DivisionMonoid α] [HasDistribNeg α]
   {a b : α} :
 -- imply
@@ -10,7 +10,5 @@ theorem NegDiv
 -- proof
   rw [div_neg]
 
-
-end Algebra.Div_Neg.eq
 
 -- created on 2024-07-01

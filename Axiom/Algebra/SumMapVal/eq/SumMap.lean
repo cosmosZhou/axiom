@@ -1,12 +1,9 @@
-import Axiom.sympy.core.containers.vector
-import Axiom.Algebra.All_Eq_.SumMap_FunMul.DotMapS
+import Axiom.Algebra.All_EqSumMap_FunMul__DotMapS
 import Axiom.Algebra.SumMap_FunMul.eq.MulSumMap
 
-open Mathlib
-namespace Algebra.SumMapVal.eq
 
-@[simp]
-theorem SumMap
+@[simp, main]
+private lemma main
   [Add β] [Zero β]
   {s : Vector α n}
   {f : α → β} :
@@ -15,7 +12,5 @@ theorem SumMap
 -- proof
   rfl
 
-
-end Algebra.SumMapVal.eq
 
 -- created on 2024-07-01

@@ -1,8 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.ProdCons.eq
 
-theorem Mul_Prod
+@[main]
+private lemma main
   [Monoid M]
   {l : List M} {a : M} :
 -- imply
@@ -10,7 +10,5 @@ theorem Mul_Prod
 -- proof
   List.prod_cons
 
-
-end Algebra.ProdCons.eq
 
 -- created on 2024-07-01

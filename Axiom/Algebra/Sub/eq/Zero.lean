@@ -1,9 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.Sub.eq
 
-@[simp]
-theorem Zero
+@[simp, main]
+private lemma main
   [AddGroup α]
   {a : α} :
 -- imply
@@ -11,6 +10,5 @@ theorem Zero
 -- proof
   rw [sub_self]
 
-end Algebra.Sub.eq
 
 -- created on 2024-07-01

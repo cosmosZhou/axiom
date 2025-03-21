@@ -278,10 +278,10 @@ export default {
         },
     },
     
-    mounted(){
+    mounted() {
     },
     
-    unmounted(){
+    unmounted() {
     },
     
 	directives: {

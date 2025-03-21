@@ -1,33 +1,54 @@
 <template>
-	<searchForm ref=searchForm :keyword=keyword :regularExpression=regularExpression :wholeWord=wholeWord :caseSensitive=caseSensitive :replacement=replacement :limit=limit @keydown=keydown></searchForm>
-	search results:
+	<searchForm ref=searchForm :q=q :regularExpression=regularExpression :wholeWord=wholeWord :caseSensitive=caseSensitive :fullText=fullText :replacement=replacement :limit=limit @keydown=keydown></searchForm>
+	<a :href=href>search</a> results:
 	<br>
-	in all, there are {{list.length}} hits:
+	in all, there are {{data.length}} hits:
 	<br>
 	<ul>
-    	<li v-for="module, i of list">
-    		<searchLink :module=module :ref="el => searchLink[i] = el"></searchLink>
+    	<li v-for="data, i of data">
+    		<searchLink :data=data :ref="el => searchLink[i] = el"></searchLink>
     	</li>
 	</ul>
 </template>
 
 <script>
-console.log('import searchResult.vue');
 import searchForm from "./searchForm.vue"
 import searchLink from "./searchLink.vue"
+console.log('import searchResult.vue');
 
 export default {
 	components: {searchForm, searchLink},
 
-	props : ['list', 'keyword', 'caseSensitive', 'wholeWord', 'regularExpression', 'replacement', 'limit'],
+	props : ['data', 'q', 'caseSensitive', 'wholeWord', 'regularExpression', 'fullText', 'replacement', 'limit'],
 
-	data(){
+	data() {
 		return {
 			searchLink: [],
 		};
 	},
+	created() {
+		// console.log('searchResult created', this.data);
+	},
 
 	computed: {
+		href() {
+			var {q, replacement, limit} = this;
+			q = q.encodeURI();
+			var kwargs = {q};
+			if (this.caseSensitive)
+				kwargs.caseSensitive = 'on';
+			if (this.wholeWord)
+				kwargs.wholeWord = 'on';
+			if (this.regularExpression)
+				kwargs.regularExpression = 'on';
+			if (this.fullText)
+				kwargs.fullText = 'on';
+			if (replacement)
+				kwargs.replacement = replacement.encodeURI();
+			if (limit)
+				kwargs.limit = limit;
+			return '?' + get_url(kwargs);
+		},
 	},
 
 	methods: {
@@ -47,15 +68,15 @@ export default {
 		async replace(event) {
 			var {searchLink: [searchLink]} = this;
 			await searchLink.replace();
-			this.list.shift();
+			this.data.shift();
 			this.$nextTick(() => {
-				if (this.list.length)
+				if (this.data.length)
 					this.searchLink[0].focus();
 			});
 		},
 
 		async replaceAll(event) {
-			while (this.list.length)
+			while (this.data.length)
 				await this.replace();
 		},
 	},		

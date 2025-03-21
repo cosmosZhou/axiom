@@ -1,8 +1,9 @@
 import Axiom.Algebra.MulMul.eq.Mul_Mul
+open Algebra
 
-namespace Algebra.Mul_Mul.eq
 
-theorem MulMul
+@[main]
+private lemma main
   [Semigroup α]
   {a b : α} :
 -- imply
@@ -10,7 +11,5 @@ theorem MulMul
 -- proof
   rw [MulMul.eq.Mul_Mul]
 
-
-end Algebra.Mul_Mul.eq
 
 -- created on 2024-07-01

@@ -1,9 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.Div1.eq
 
-@[simp]
-theorem Inv
+@[simp, main]
+private lemma main
   [DivInvMonoid α]
   {a : α} :
 -- imply
@@ -11,7 +10,5 @@ theorem Inv
 -- proof
   rw [one_div]
 
-
-end Algebra.Div1.eq
 
 -- created on 2024-07-01

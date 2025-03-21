@@ -1,8 +1,9 @@
 import Axiom.Algebra.SubMulS.eq.Mul_Sub
+open Algebra
 
-namespace Algebra.Mul_Sub.eq
 
-theorem SubMulS
+@[main]
+private lemma main
   [Ring α]
   {x a b : α} :
 -- imply
@@ -10,7 +11,5 @@ theorem SubMulS
 -- proof
   rw [SubMulS.eq.Mul_Sub]
 
-
-end Algebra.Mul_Sub.eq
 
 -- created on 2024-07-01

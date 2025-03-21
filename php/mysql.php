@@ -230,27 +230,6 @@ function load_data_from_csv($table, $csv, $replace = false, $ignore = true, $del
         $rowcount = 0;
     }
 
-//     if (!$rowcount && $connection['error'] == 'Malformed packet') {
-//         $password = get_password();
-//         $user = $_GET['user'];
-//         $host = HOST;
-//         [$host, $port] = explode(":", $host, 2);
-        
-//         $result_file = $csv.'.txt';
-//         $cmd = "mysql --local_infile=1 -h$host --port=$port -u$user -p$password -e\"$sql; select row_count();\" > $result_file";
-//         //error_log('$cmd = '.$cmd);
-//         $ret = shell_exec($cmd);
-//         $content = file_get_contents($result_file);
-//         //error_log('sql $content = '.$content);
-//         [$title, $rowcount] = explode("\n", $content);
-//         $rowcount = (int)$rowcount;
-//         try {
-//             unlink($result_file);
-//         } catch (Exception $e) {
-//             // error_log($e->getMessage());
-//         }
-//     }
-
     error_log('time cost = '.(time() - $start));
     if ($delete) {
         error_log("os.remove(csv) ".$csv);
@@ -326,16 +305,20 @@ function execute($sql, &$resulttype = MYSQLI_NUM)
 {
     global $connection;
     try {
-        $array = $connection->query($sql);
+        if (is_array($sql)) {
+            $sql = implode(';', $sql);
+            $array = $connection->multi_query($sql);
+        }
+        else
+            $array = $connection->query($sql);
     }
     catch (Exception $e) {
         error_log($e->getMessage());
         return 0;
     }
     
-    if ($array === true) {
+    if ($array === true)
         return $connection->affected_rows;
-    }
 
     if ($array === false) {
         error_log("error occurred in executing:");
@@ -545,12 +528,12 @@ class ConnectMysqli
     {
         $key_str = '';
         $v_str = '';
-        foreach ($data as $key => $v) {
-            if (empty($v)) {
+        foreach ($data as $key => $val) {
+            if (empty($val)) {
                 die("error");
             }
             $key_str .= $key . ',';
-            $v_str .= "'$v',";
+            $v_str .= "'$val',";
         }
         $key_str = trim($key_str, ',');
         $v_str = trim($v_str, ',');
@@ -602,8 +585,8 @@ class ConnectMysqli
     public function update($table, $data, $where)
     {
         $str = '';
-        foreach ($data as $key => $v) {
-            $str .= "$key='$v',";
+        foreach ($data as $key => $val) {
+            $str .= "$key='$val',";
         }
         $str = rtrim($str, ',');
         $sql = "update $table set $str where $where";
@@ -643,9 +626,12 @@ function is_enum($Type)
     return preg_match('/enum\((\S+)\)/', $Type);
 }
 
-function mysqlStr($value, $Type = '', $quote=true)
+function mysqlStr($value, $Type = '', $skip=true)
 {
     if (! is_numeric($Type)) {
+        if ($skip && str_starts_with($value, "'") && str_ends_with($value, "'"))
+            return $value;
+        $quote = true;
         $value = str_replace("'", "''", $value);
         if ($Type != 'regexp') {
             // if (str_starts_with($Type, "varchar(")) {
@@ -657,11 +643,14 @@ function mysqlStr($value, $Type = '', $quote=true)
                 $value = preg_replace("/((?<![\\\\])[\\\\](?![ntvr\"\\\\])|[\\\\]{2,})/", '$1$1', $value);
                 if ($Type == 'json') {
                     $value = preg_replace('/(?<![\\\\])[\\\\]([nt"])/', '\\\\\\\\$1', $value);
+                    if ($value == 'null' || $value == 'NULL')
+                        $quote = false;
                 }
             }
         }
         else {
-            $value = preg_replace("/((?<![\\\\])[\\\\](?![ntv\"\\\\]))/", '$1$1', $value);
+            // $value = preg_replace("/((?<![\\\\])[\\\\](?![ntv\"\\\\]))/", '$1$1', $value);
+            $value = preg_replace("/((?<![\\\\])[\\\\](?![ntvr\"\\\\])|[\\\\]{2,})/", '$1$1', $value);
         }
 
         if ($quote)
@@ -764,6 +753,11 @@ function extract_field_to_type(&$from, &$context=null) {
 
                 if (is_string($table))
                     return $context;
+            case 'join':
+                // $table = $table[0];
+                if (is_array($table[0]))
+                    return extract_field_to_type($table[0], $context);
+                return $context;
         }
     }
     else {
@@ -847,9 +841,9 @@ function dtype($value)
     }        
 
     if (is_array($value)) {
-        foreach ($value as $key => $v) {
+        foreach ($value as $key => $val) {
             switch ($key) {
-            case "count":
+            case 'count':
             case 'bit_and':
             case 'bit_or':
             case 'bit_xor':
@@ -938,6 +932,12 @@ function dtype($value)
             case 'json_replace':
                 return 'json';
         
+            case 'case':
+                foreach ($val as $case) {
+                    if ($dtype = dtype($case['then']))
+                        return $dtype;
+                }
+                return 'json';
             default:
                 break;
             }            

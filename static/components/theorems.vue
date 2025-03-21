@@ -18,7 +18,7 @@ import axiomTheorem from "./axiomTheorem.vue"
 import axiomContextmenu from "./axiomContextmenu.vue"
 import packageSelector from "./packageSelector.vue"
 export default {
-	data(){
+	data() {
 		return {
 			focusedIndex: -1,
 			left: -1,
@@ -32,16 +32,16 @@ export default {
 	props : [ 'theorems', 'initialIndex' ],
 
 	computed :{
-		children(){
+		children() {
 			return this.axiomTheorem;
 		},
 		
-		path(){
+		path() {
 			var href = location.href;
 			return href.match(/\/(index\.php)?\?module=((?:\w+[.\/])+)(\w+)[.\/]?(?:#\w+)?$/)[1];
 		},
 		
-		focusedElement(){
+		focusedElement() {
 			return this.axiomTheorem[this.focusedIndex];
 		},
 	},

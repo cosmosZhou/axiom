@@ -28,12 +28,12 @@
 	proof process of <a
 		href='../axiom/Discrete/combinatorics/binomial/theorem.php'>binomial
 		theorem</a>, we can also directly visit the get api: <a
-		href='../axiom/search.php?keyword=binomial'>www.axiom.top/sympy/axiom.php?keyword=binomial</a>
+		href='../axiom/search.php?keyword=binomial'>www.lemma.cn/sympy/axiom.php?keyword=binomial</a>
 	to acquire the search results. Both the graphical user interface and
 	get api support<a
 		href='http://www.regular-expressions.info/tutorial.html'>regular
 		expression</a>, and whole word matching, e.g., <a
-		href='../axiom/search.php?keyword=Discrete.*binomial&regularExpression=true'>www.axiom.top/sympy/axiom.php?keyword=Discrete.*binomial&amp;regularExpression=true</a>
+		href='../axiom/search.php?keyword=Discrete.*binomial&regularExpression=true'>www.lemma.cn/sympy/axiom.php?keyword=Discrete.*binomial&amp;regularExpression=true</a>
 	which indicates searching theorems that include both 'Discrete' and
 	'binomial'.
 </p>
@@ -73,7 +73,7 @@ content that we expanded before.
 <br>
 in "Dependency Graph of Callee Theorems", click the hyperlink
 <a
-	href='../axiom.php?callee=axiom.Discrete.combinatorics.binomial.theorem#deep'>callee</a>
+	href='../axiom.php?callee=Discrete.combinatorics.binomial.theorem#deep'>callee</a>
 , we can expand all the callee hiearchies, as follows:
 <img class=zoom src="png/hierarchy/deep/callee.png" />
 <hr />
@@ -104,7 +104,7 @@ theorem', we employed the following sub-theorems:
 
 in "Dependency Graph of Callee Theorems", click the hyperlink
 <a
-	href='../axiom.php?caller=axiom.Discrete.combinatorics.binomial.theorem#deep'>caller</a>
+	href='../axiom.php?caller=Discrete.combinatorics.binomial.theorem#deep'>caller</a>
 , we can expand the all callee hierarchies, as follows:
 <img class=zoom src="png/hierarchy/deep/caller.png" />
 <hr />

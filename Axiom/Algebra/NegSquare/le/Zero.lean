@@ -1,18 +1,17 @@
 import Axiom.Algebra.Square.ge.Zero
-import Axiom.Algebra.Ge_0.to.Neg.le.Zero
+import Axiom.Algebra.Neg.le.Zero.of.Ge_0
+open Algebra
 
-namespace Algebra.NegSquare.le
 
-theorem Zero
+@[main]
+private lemma main
   [LinearOrderedRing α]
   {a : α} :
 -- imply
   -a² ≤ 0 := by
 -- proof
   have h := Square.ge.Zero (a := a)
-  apply Ge_0.to.Neg.le.Zero h
+  apply Neg.le.Zero.of.Ge_0 h
 
-
-end Algebra.NegSquare.le
 
 -- created on 2024-11-29

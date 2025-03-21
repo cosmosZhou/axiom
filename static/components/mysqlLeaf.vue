@@ -9,7 +9,7 @@
 				</optgroup>
 			</template>
 		</select>
-		<input v-else type=text :name=name :value=value :size=input_size @input=input_kwargs @keydown=keydown_input />
+		<input v-else type=text :name=name :value=plain_text :size=input_size @input=input_kwargs @keydown=keydown_input />
 		<template v-if=!noSpace>{{' '}}</template>
 	</span>
 </template>
@@ -22,13 +22,13 @@ export default {
 	
 	props : ['name', 'value', 'option', 'color', 'noSpace'],
 	
-	data(){
+	data() {
 		return {
 			insert: null,
 		};
 	},
 
-	created(){
+	created() {
 		//var {value, name, option} = this;
 		//console.log({value, name, option});
 	},
@@ -113,6 +113,21 @@ export default {
 
 		textual_functions() {
 			return this.$parent.textual_functions;
+		},
+
+		plain_text() {
+			var {value} = this;
+			if (value && value.isString) {
+				if (value.startsWith("'") && value.endsWith("'")) {
+					try {
+						value = eval(value);
+					}
+					catch (error) {
+						console.error(error);
+					}
+				}
+			}
+			return value;
 		},
 	},
 	
@@ -317,7 +332,7 @@ export default {
 		keydown_select(event) {
 			var select = event.target;
 			switch (event.key) {
-			case "ArrowUp":
+			case 'ArrowUp':
 				if (!select.selectedIndex) {
 					//select.selectedIndex = select.children.length - 1;
 					select.value = select.children.back().value;
@@ -326,7 +341,7 @@ export default {
 					break;
 				}
 				break;
-			case "ArrowLeft":
+			case 'ArrowLeft':
 				event.preventDefault();
 				var m = select.name.fullmatch(/select\[(group_concat)\]\[(\d)\]/);
 				if (m) {
@@ -355,7 +370,7 @@ export default {
 				}
 				
 				break;
-			case "ArrowRight":
+			case 'ArrowRight':
 				event.preventDefault();
 				if (event.ctrlKey) {
 					var regexp = [...this.numeric_functions, ...this.textual_functions, ...this.jsonobj_functions].join('|');
@@ -460,7 +475,7 @@ export default {
 				
 				break;
 
-			case "Insert":
+			case 'Insert':
 				this.insert = true;
 				var {parentElement, name} = select;
 				this.$nextTick(()=>{
@@ -471,7 +486,7 @@ export default {
 				});
 				break;
 
-			case "F2":
+			case 'F2':
 				var hit = false;
 				if (this.$parent.value.select === this.value) {
 					this.$parent.value.select = {as: [this.value, this.PRI]};
@@ -493,7 +508,7 @@ export default {
 					});
 				}
 				break;
-			case "Delete":
+			case 'Delete':
 				this.$parent.delete(this.value);
 				break;
 			default:
@@ -507,7 +522,7 @@ export default {
 			if (parentElement.tagName == 'SPAN')
 				parentElement = parentElement.parentElement;
 			switch (event.key) {
-			case "F2":
+			case 'F2':
 				var hit = false;
 				if (this.$parent.value.select === this.value) {
 					this.$parent.value.select = {as: [this.value, this.PRI]};
@@ -530,7 +545,7 @@ export default {
 				}
 				break;
 
-			case "ArrowRight":
+			case 'ArrowRight':
 				if (event.ctrlKey) {
 					event.preventDefault();
 					var regexp = [...this.numeric_functions, ...this.textual_functions, ...this.jsonobj_functions].join('|');

@@ -1,17 +1,16 @@
-import Axiom.sympy.core.containers.list
-import Axiom.Algebra.All_Eq_.SumMap_FunMul.DotMapS
+import Axiom.Algebra.All_EqSumMap_FunMul__DotMapS
 import Axiom.Algebra.AddMulS.eq.MulAdd
+open Algebra
 
-namespace Algebra.SumMap_FunMul.eq
 
-theorem MulSumMap
-  -- [AddMonoid β]
+@[main]
+private lemma main
   [Add β] [MulZeroClass β] [RightDistribClass β]
   {s : List α}
   {f : α → β}
   {const : β} :
 -- imply
-  (s.map fun x => (f x) * const).sum = (s.map f).sum * const := by
+  (s.map fun x => f x * const).sum = (s.map f).sum * const := by
 -- proof
   induction s with
   | nil =>
@@ -21,7 +20,5 @@ theorem MulSumMap
     -- Inductive case: s is a non-empty list
     simp [List.sum_cons, ih, AddMulS.eq.MulAdd]
 
-
-end Algebra.SumMap_FunMul.eq
 
 -- created on 2024-07-01

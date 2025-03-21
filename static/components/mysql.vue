@@ -10,7 +10,7 @@
 			<component :is="'mysql' + cmd.capitalize()" :ref=cmd v-cmd :kwargs=kwargs @keydown=keydown></component>
 			<input id=submit_query type=submit value=query />
 			<mysqlExecute v-if=sql :cmd=cmd :sql=sql></mysqlExecute>
-			<input v-for="func, Field in transform" :name=`transform[${Field}]` type=hidden :value=func /> <br>
+			<input v-for="func, Field in transform" :name="`transform[${Field}]`" type=hidden :value=func /> <br>
 			<input type=hidden name=token :value=token />
 		</form>
 	</div>
@@ -45,13 +45,14 @@ for (var component of [mysqlArgs, mysqlOrder, mysqlGroup])
 	component.components.mysqlExpr = mysqlExpr;
 
 import {get_db_table, simplify_expression, show_full_columns, show_tables, is_numeric, is_enum, is_string, is_json, physic2logic, get_cmd, set_cmd} from "../js/mysql.js"
+import { reset_training } from "../js/Command.js";
 
 export default {
 	components: {mysqlSelect, mysqlInsert, mysqlDelete, mysqlUpdate, mysqlExecute, mysqlAlter, mysqlShow, mysqlSet, mysqlUnion},
 	
 	props : ['host', 'user', 'token', 'kwargs', 'sql', 'rowcount', 'sample', 'focus'],
 	
-	data(){
+	data() {
 		return {
 			cmds: ['select', 'update', 'insert', 'delete', 'rename', 'revoke', 'grant', 'alter', 'show', 'drop', 'set'],
 			databases: ['corpus', 'mysql'],
@@ -70,9 +71,9 @@ export default {
 			//functions that operate on numeric values;
 			numeric_functions: ['sum', 'agv', 'max', 'min', 'ceiling', 'floor', 'round'],
 			//functions that operate on textual values;
-			textual_functions: ['substring', 'substring_index', 'regexp_substr', 'regexp_replace', 'replace', 'concat', 'group_concat', 'json_arrayagg', 'json_objectagg', 'json_quote', 'json_unquote', 'json_array', 'json_object', 'json_length', 'json_extract', 'json_valid', 'json_remove', 'json_set', 'json_type', 'cast', 'length', 'regexp_instr', 'char_length', 'regexp_like', 'not regexp_like', 'lower', 'upper', 'left', 'right', 'reverse', 'find_in_set'],
+			textual_functions: ['substring', 'substring_index', 'regexp_substr', 'regexp_replace', 'replace', 'concat', 'group_concat', 'json_arrayagg', 'json_objectagg', 'json_quote', 'json_unquote', 'json_array', 'json_object', 'json_length', 'json_extract', 'json_valid', 'json_remove', 'json_set', 'json_type', 'json_search', 'cast', 'length', 'regexp_instr', 'char_length', 'regexp_like', 'not regexp_like', 'lower', 'upper', 'left', 'right', 'reverse', 'find_in_set'],
 			//functions that operate on jsonobj values;
-			jsonobj_functions: ['count', 'json_length', 'json_extract', 'json_keys', 'json_value', 'json_search', 'json_array_append', 'json_array_insert', 'json_array_replace', 'json_insert', 'json_remove', 'json_set', 'json_merge', 'json_replace', 'json_depth', 'json_merge', 'json_merge_patch', 'json_merge_preserve', 'json_type'],
+			jsonobj_functions: ['count', 'json_length', 'json_extract', 'json_keys', 'json_value', 'json_search', 'json_array_append', 'json_array_insert', 'json_array_replace', 'json_insert', 'json_remove', 'json_set', 'json_merge', 'json_replace', 'json_depth', 'json_merge', 'json_merge_patch', 'json_merge_preserve', 'json_type', 'json_search'],
 			//operators that operate on numeric values;
 			numeric_operators: ['+', '-', '*', '/', '%', '&', '^', '>>', '<<'],
 			//operators that operate on jsonobj values;
@@ -117,7 +118,7 @@ export default {
 		option() {
 			var option = {
 				fields: Object.keys(this.dtype),
-				function: ['count', 'sum', 'agv', 'max', 'min', 'length', 'char_length', 'round', 'ceiling', 'floor', 'substring', 'substring_index', 'regexp_substr', 'regexp_replace', 'concat', 'group_concat', 'json_array_append', 'json_array_insert', 'json_arrayagg', 'json_remove', 'json_set', 'json_object', 'json_extract', 'json_length', 'json_valid', 'lower', 'upper', 'left', 'right', 'reverse'],
+				function: ['count', 'sum', 'agv', 'max', 'min', 'length', 'char_length', 'round', 'ceiling', 'floor', 'substring', 'substring_index', 'regexp_substr', 'regexp_replace', 'concat', 'group_concat', 'json_array_append', 'json_array_insert', 'json_arrayagg', 'json_remove', 'json_set', 'json_object', 'json_extract', 'json_length', 'json_valid', 'json_search', 'lower', 'upper', 'left', 'right', 'reverse'],
 				operator: ['~', '+', '-', '*', '/', '%', '&', '^', '>>', '<<', '->', '->>'],
 			};
 			
@@ -236,8 +237,8 @@ export default {
 		},
 		
 		action() {
-			var {user, host, sample} = this;
-			var kwargs = {user};
+			var {host, sample} = this;
+			var kwargs = {};
 
 			if (host && host != 'localhost')
 				kwargs.host = host;
@@ -249,8 +250,8 @@ export default {
 		},
 		
 		action_insert() {
-			var {database, table, user, host} = this;
-    		var kwargs = {user, into: fromEntries(database, table)};
+			var {database, table, host} = this;
+    		var kwargs = {into: fromEntries(database, table)};
 			if (host && host != 'localhost')
 				kwargs.host = host;
     		
@@ -290,7 +291,7 @@ export default {
 			return url_insert;
 		},
 		
-		style_select_table(){
+		style_select_table() {
 			return this.style_select(this.table, 'green');
 		},
 
@@ -314,25 +315,26 @@ export default {
 			}
 		},
 
-    	simplify(){
+    	simplify() {
 			var kwargs = this.kwargs.kwargs?? {};
 			return kwargs.simplify;
     	},
 	},
 
 	methods: {
-		toggle_server(){
-			var hostname = location.hostname == 'localhost'? '192.168.18.132': 'localhost';
+		toggle_server() {
+			var hostname = location.hostname == 'localhost'? '192.168.18.131': 'localhost';
 			var port = location.hostname == 'localhost'? '8000': '80';
 			var {pathname, search, hash, protocol} = location;
 			location.href = `${protocol}\/\/${hostname}:${port}${pathname}${search}${hash}`;
 		},
 
-		href(PRI, source, kwargs, value) {
+		href(PRI, source, kwargs, value, table) {
 			value ||= true;
-			var {host, user, database, table} = this;
+			var {host, database} = this;
+			table ||= this.table;
 			
-			Object.assign(kwargs, {user, from: fromEntries(database, table)})
+			Object.assign(kwargs, {from: fromEntries(database, table)})
 			if (host && host != 'localhost')
 				kwargs.host = host;
 
@@ -352,7 +354,7 @@ export default {
 		},
 
 		async delete_instance(self, physic) {
-			var {host, user, token, database, table, PRI} = this;
+			var {host, token, database, table, PRI} = this;
 			var ret = 0;
 			var $PRI = self.$parent[PRI];
 			console.log("$PRI = ", $PRI);
@@ -360,7 +362,7 @@ export default {
 			case 'mysql':
 				var sql = `delete from ${database}.${table} where ${PRI} = '${$PRI}'`;
 				console.log(sql);
-				ret = await query(host, user, token, sql);
+				ret = await query(host, token, sql);
 				break;
 			default:
 				alert(`could not delete the table for source = ${self.source}`);
@@ -378,11 +380,7 @@ export default {
 					// delete logically
 					self.show = false;
 					var {training} = self.$parent.data[index];
-					if (training < 0)
-						training = ~training;
-					if (training & 64)
-						training &= -65;
-					self.$parent.data[index].training = training;
+					self.$parent.data[index].training = reset_training(training);
 				}
 			}
 		},
@@ -397,11 +395,10 @@ export default {
 			}
 
 			var {offset} = this.kwargs;
-			if ('lang' in this.dtype && !lang) {
-	    		var [{lang}] = await query(this.host, this.user, this.token, `select lang from ${database}.${table} where ${this.PRI} = ${PRI}`);
-			}
+			if ('lang' in this.dtype && !lang)
+	    		var [{lang}] = await query(this.host, this.token, `select lang from ${database}.${table} where ${this.PRI} = ${PRI}`);
 			
-			var {host, user, database, table} = this;
+			var {host, database, table} = this;
 			if (offset == '' || offset == null) {
 				PRI = PRI.mysqlStr();
 				var and = [];
@@ -410,11 +407,11 @@ export default {
 				and.push(`training = ${training}`);
 				var where = and.join(' and ');
 				var sql = [`select JSON_ARRAYAGG(cast(${this.PRI} as char)) into @PRI from ${database}.${table} where ${where}`, `select regexp_substr(json_search(@PRI, 'one', ${PRI}), '\\\\d+') as offset`];
-				var [rowcount, [{offset}]] = await query(host, user, this.token, sql);
+				var [rowcount, [{offset}]] = await query(host, this.token, sql);
 			}
 
 			offset = parseInt(offset) + delta;
-			Object.assign(kwargs, {user, mysql: true, from: fromEntries(database, table)});
+			Object.assign(kwargs, {mysql: true, from: fromEntries(database, table)});
 			if (host && host != 'localhost')
 				kwargs.host = host;
 			
@@ -575,7 +572,7 @@ export default {
 			var {table, database} = this;
 			var sql = `select table_comment from information_schema.tables where table_name = '${table}' and table_schema = '${database}'`;
 			try {
-				var [{TABLE_COMMENT}] = await query(this.host, this.user, this.token, sql);
+				var [{TABLE_COMMENT}] = await query(this.host, this.token, sql);
 				return TABLE_COMMENT;
 			}
 			catch(err) {
@@ -586,7 +583,7 @@ export default {
 		async show_full_columns(table){
 			table ||= this.table;
 			if (!table.startsWith('_')) {
-				Object.assign(this.$data, await show_full_columns(this.database?? 'corpus', table, this.host, this.user, this.token));
+				Object.assign(this.$data, await show_full_columns(this.database?? 'corpus', table, this.host, this.token));
 			}
 			
 			this.preprocess_kwargs();
@@ -684,7 +681,7 @@ export default {
 				database = null;
 			}
 
-			var tables = await show_tables(database?? 'corpus', this.host, this.user, this.token);
+			var tables = await show_tables(database?? 'corpus', this.host, this.token);
 			this.tables = tables;
 			if (database && !tables.contains(this.table))
 				this.table = tables[0];
@@ -886,7 +883,7 @@ export default {
 		
 		keydown(event) {
 			switch (event.key) {
-			case "Enter":
+			case 'Enter':
 				var select = event.target;
 				if (event.ctrlKey && select.tagName == 'SELECT') {
 					event.preventDefault();
@@ -902,8 +899,11 @@ export default {
 					var {set} = self.kwargs;
 					if (set) {
 						var {training} = set;
-						if (training && training.isArray && index != null && index.isInteger) {
-							training = training[index];
+						if (training != null) {
+							if (index != null && index.isInteger && training[index] != null)
+								training = training[index];
+							else
+								return;
 						}
 					}
 				}
@@ -928,12 +928,8 @@ export default {
 			}
 
 			training = value == null? (training == 1? 0: 1): value;
-			if (training < 0) {
-				value = ~training;
-				if (value & 64){
-					value &= -65;
-				}
-			}
+			if (training < 0)
+				value = reset_training(training);
 			else {
 				value = training;
 				if (text_is_changed)
@@ -941,21 +937,20 @@ export default {
 				if (is_changed)
 					training = ~training;
 			}
+			self.$parent.data[self.index].training = training;
+			self.old_training = old_training;
 			var {database, table, PRI} = this;
 			var sql = `update ${database}.${table} set training = ${value} where id = '${self[PRI]}'`;
 			console.log("sql =", sql);
-			self.$parent.data[self.index].training = training;
-			if (update) {
-				query(this.host, this.user, this.token, sql).then(ret => {
-					console.log("rowcount =", ret);
+			if (update && self[PRI]) {
+				query(this.host, this.token, sql).then(rowcount => {
+					console.log("rowcount =", rowcount);
 				});
 			}
-
-			self.old_training = old_training;
 		},
 	},
 	
-	async created(){
+	async created() {
 		for (var [key, value] of Object.entries(this.kwargs)) {
 			if (key.contains('.')) {
 				delete this.kwargs[key];
@@ -973,7 +968,7 @@ export default {
 			}
 		}
 		
-		this.databases = (await query(this.host, this.user, this.token, 'show databases')).map(obj => obj.Database);
+		this.databases = (await query(this.host, this.token, 'show databases')).map(obj => obj.Database);
 		//console.log(this.databases);
 		var {database} = this;
 		if (database)
@@ -981,7 +976,7 @@ export default {
 		//console.log(this.kwargs);
 	},
 	
-	mounted(){
+	mounted() {
 		var {mounted} = this.$parent;
 		if (mounted)
 			mounted.mysql = 1;
@@ -1003,7 +998,7 @@ export default {
 				mysql.querySelector('input[type=text]').focus();
 				break;
 				
-			case "ArrowRight":
+			case 'ArrowRight':
 				var select = event.target;
 				if (event.ctrlKey) {
 

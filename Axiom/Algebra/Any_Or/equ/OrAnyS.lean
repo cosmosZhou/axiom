@@ -1,16 +1,15 @@
-import Axiom.Algebra.Any_Or.to.OrAnyS
-import Axiom.Algebra.OrAnyS.to.Any_Or
+import Axiom.Algebra.OrAnyS.of.Any_Or
+import Axiom.Algebra.Any_Or.of.OrAnyS
+open Algebra
 
 
-namespace Algebra.Any_Or.equ
-
-theorem OrAnyS
+@[main]
+private lemma main
   {p q : α → Prop} :
 -- imply
   (∃ x : α, p x ∨ q x) ↔  (∃ x : α, p x) ∨ (∃ x : α, q x) :=
 -- proof
-  ⟨Any_Or.to.OrAnyS, OrAnyS.to.Any_Or⟩
+  ⟨OrAnyS.of.Any_Or, Any_Or.of.OrAnyS⟩
 
-end Algebra.Any_Or.equ
 
 -- created on 2024-07-01

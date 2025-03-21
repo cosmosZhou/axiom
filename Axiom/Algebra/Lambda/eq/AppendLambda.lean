@@ -1,15 +1,14 @@
-import Axiom.sympy.concrete.expr_with_limits.lambda
+import Axiom.Algebra.All_EqLambda__AppendLambda
 
-namespace Algebra.Lambda.eq
 
-theorem AppendLambda
+@[main]
+private lemma main
   {n : ℕ}
   {f : ℕ → α} :
 -- imply
   Lambda (n + 1) f = append (Lambda n f) (f n) := by
 -- proof
-  apply lambda_to_append_inductive
+  apply Algebra.All_EqLambda__AppendLambda
 
-end Algebra.Lambda.eq
 
 -- created on 2024-07-01

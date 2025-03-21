@@ -14,7 +14,7 @@ var previousTime = null;
 export default {
 	props : [ 'text', 'lines'],
 	
-	data(){
+	data() {
 		return {
 			tagName: '',
 			visible: true,
@@ -226,7 +226,7 @@ export default {
 				previousKey = '';
 		},
 
-		indexFocused(){
+		indexFocused() {
 			var self = this.$parent;				
 			return self.$parent.indexOf(self);
 		},
@@ -276,23 +276,24 @@ export default {
 			var folder = location.search.slice(8);
 			console.log('folder = ' + folder);
 
-			if (folder.indexOf('/') >= 0){
+			if (folder.indexOf('/') >= 0)
 				folder = folder.replaceAll('/', '.');
-			}
 			
-			if (folder.endsWith('.')){
+			if (folder.endsWith('.'))
 				folder = folder.slice(0, -1);
-			}
 			
 			var sympy = axiom_user();
 			
 			var self = this.$parent;
 			var data = {};
-			data['package'] = folder;
+			
 			data['old'] = this.text;
 			data['new'] = text;
+			if (folder)
+				folder += '.';
+			data['package'] = folder;
 
-			form_post(`/${sympy}/php/request/rename/${className}.php`, data).then(res => {
+			form_post(`/${sympy}/php/request/rename.php`, data).then(res => {
 				console.log('res = ' + res);
 				
 				if (text.indexOf('.') >= 0){

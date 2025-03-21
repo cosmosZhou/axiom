@@ -1,16 +1,13 @@
-import Axiom.sympy.core.numbers
+import Axiom.Basic
 
-namespace Algebra.Eq
 
-@[simp]
-theorem CubeCubic
+@[simp, main]
+private lemma main
   {x : ℂ} :
 -- imply
   x = (∛x)³ := by
+-- proof
   simp [Root.cubic]
 
-
-
-end Algebra.Eq
 
 -- created on 2024-07-01

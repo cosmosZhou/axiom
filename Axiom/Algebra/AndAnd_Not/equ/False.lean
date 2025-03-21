@@ -1,15 +1,14 @@
 import Axiom.Algebra.AndAndNot.equ.False
-namespace Algebra.AndAnd_Not.equ
+open Algebra
 
-@[simp]
-theorem False :
+
+@[simp, main]
+private lemma main :
 -- imply
   (q ∧ ¬p) ∧ p ↔ False := by
 -- proof
   rw [And.comm (a := q)]
   apply AndAndNot.equ.False
 
-
-end Algebra.AndAnd_Not.equ
 
 -- created on 2024-07-01

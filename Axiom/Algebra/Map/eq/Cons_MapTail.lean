@@ -1,9 +1,8 @@
-import Axiom.sympy.core.containers.vector
-open Mathlib
+import Axiom.Basic
 
-namespace Algebra.Map.eq
 
-theorem Cons_MapTail
+@[main]
+private lemma main
   {s : Vector α (Nat.succ n)}
   {f : α → β} :
 -- imply
@@ -12,8 +11,7 @@ theorem Cons_MapTail
   have h : s = s.head ::ᵥ s.tail := by simp
   -- rewrite only the left-hand side
   rw [h]
-  apply Vector.map_cons
+  apply Mathlib.Vector.map_cons
 
-end Algebra.Map.eq
 
 -- created on 2024-07-01

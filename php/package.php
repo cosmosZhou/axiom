@@ -1,19 +1,4 @@
 <?php
-function package_is_theorem($file)
-{
-    global $path_info;
-    $__init__ = $path_info . $file . "/__init__.lean";
-    // std\println("__init__ = $__init__");
-    if (file_exists($__init__)) {
-        $text = new std\Text($__init__);
-        foreach ($text as $line) {
-            return ! preg_match("/from *\. *import \w+/", $line, $m);
-        }
-    }
-
-    return false;
-}
-
 // error_log("path_info = $path_info");
 if (! str_ends_with($path_info, '/')) {
     $path_info .= "/";
@@ -25,42 +10,29 @@ $packages = [];
 
 foreach (scandir($path_info) as $file) {
     switch ($file) {
-        case ".":
-        case "..":
-        case "__pycache__":
-            break;
-        case "__init__.lean":
+        case '.':
+        case '..':
             break;
         default:
-//             error_log("file = $file");
-
             if (str_ends_with($file, '.lean')) {
+                if (str_ends_with($file, '.echo.lean'))
+                    break;
                 $theorems[] = substr($file, 0, - 5);
-            } else {
-                if (package_is_theorem($file))
-                    $theorems[] = $file;
-
+            } elseif (is_dir($path_info . $file)) {
                 $packages[] = $file;
             }
     }
 }
 
-if (str_ends_with($title, '/')) {
+if (str_ends_with($title, '/'))
     $title = substr($title, 0, - 1);
-}
 ?>
 
 <title><?php echo $title;?></title>
 <body></body>
-
-<script src="static/unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
-<script src="static/unpkg.com/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
-
-<script src="static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
-<script src="static/unpkg.com/qs@6.10.2/dist/qs.js"></script>
-
-<script src='static/js/std.js'></script>
-<script src='static/js/utility.js'></script>
+<?php
+include_once 'script.php';
+?>
 
 <script>
 createApp('axiomContents', {

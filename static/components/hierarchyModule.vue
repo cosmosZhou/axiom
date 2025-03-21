@@ -1,6 +1,6 @@
 <template>
 	<li :style=li_style>
-   		<searchLink :module=module></searchLink>
+   		<searchLink :data="{module}"></searchLink>
    		<template v-if=modules>
    			<button class=transparent @click=click :title=buttonTitle>{{buttonText}}</button>
    		 	<ul v-if=show>
@@ -20,7 +20,7 @@ export default {
 	
 	props : ['module'],
 	
-	data(){
+	data() {
 		return {
 			backgroundColor: 'inherit',
 			show: false,
@@ -28,7 +28,7 @@ export default {
 		};
 	},
 
-	created(){
+	created() {
 		var root = this.$root;
 		if (root.deep){
 			this.show = true;
@@ -48,7 +48,7 @@ export default {
 	
 	computed: {
 		deep: {
-			/*get(){
+			/*get() {
 				return 0;	
 			},*/
 			
@@ -64,11 +64,11 @@ export default {
 			},
 		},
 		
-		li_style(){
+		li_style() {
 			return `background-color:${this.backgroundColor}`;	
 		},
 		
-		depth(){
+		depth() {
 			var depth = -1;
 			var root = this.$root;
 			var parent = this.$parent;
@@ -83,15 +83,15 @@ export default {
 			return depth;
 		},
 		
-		buttonText(){
+		buttonText() {
 			return this.show? '<<<<' : '>>>>';
 		},
 		
-		buttonTitle(){
+		buttonTitle() {
 			return this.show? 'click to collapse' : 'click to expand';
 		},
 
-		modules(){
+		modules() {
 			return this.$root.graph[this.module];
 		},
 	},

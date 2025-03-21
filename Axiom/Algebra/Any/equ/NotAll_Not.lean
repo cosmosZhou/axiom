@@ -1,17 +1,15 @@
-import Axiom.Algebra.Any.to.NotAll_Not
-import Axiom.Algebra.NotAll_Not.to.Any
+import Axiom.Algebra.NotAll_Not.of.Any
+import Axiom.Algebra.Any.of.NotAll_Not
+open Algebra
 
 
-namespace Algebra.Any.equ
-
-theorem NotAll_Not
+@[main]
+private lemma main
   {p : α → Prop} :
 -- imply
   (∃ x : α, p x) ↔ ¬∀ x : α, ¬p x :=
 -- proof
-  ⟨Any.to.NotAll_Not, NotAll_Not.to.Any⟩
+  ⟨NotAll_Not.of.Any, Any.of.NotAll_Not⟩
 
-
-end Algebra.Any.equ
 
 -- created on 2024-07-01

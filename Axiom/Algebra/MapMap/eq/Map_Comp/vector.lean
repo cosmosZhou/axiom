@@ -1,11 +1,10 @@
 import Axiom.Algebra.MapMap.eq.Map_Comp
-import Axiom.Algebra.EqValS.to.Eq
+import Axiom.Algebra.Eq.of.EqValS
+open Mathlib Algebra
 
-open Mathlib
 
-namespace Algebra.MapMap.eq.Map_Comp
-
-theorem vector
+@[main]
+private lemma main
   (g : β → γ)
   (f : α → β)
   (l : Vector α n) :
@@ -14,19 +13,13 @@ theorem vector
 -- proof
   let v1 : Vector γ n := ⟨(l.val.map f).map g, by simp⟩
   let v2 : Vector γ n := ⟨l.val.map (g ∘ f), by simp⟩
-
   have h_eq : v1 = v2 :=
-    EqValS.to.Eq (MapMap.eq.Map_Comp g f l.val)
-
+    Eq.of.EqValS (MapMap.eq.Map_Comp g f l.val)
   have h_eq1 : v1 = (l.map f).map g := by
     rfl
-
   have h_eq2 : v2 = l.map (g ∘ f) := by
     rfl
-
   rw [h_eq1.symm, h_eq2.symm, h_eq]
 
-
-end Algebra.MapMap.eq.Map_Comp
 
 -- created on 2024-07-01

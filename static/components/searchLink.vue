@@ -1,6 +1,6 @@
 <template>
-	<a v-if="mode == 'a'" v-focus tabindex=2 :href=href @contextmenu.prevent=contextmenu @keydown=keydown_a>
-        {{module.isArray? module[1]: module}}
+	<a v-if="mode == 'a'" v-focus v-clipboard tabindex=2 :href=href @contextmenu.prevent=contextmenu @keydown=keydown_a target=search>
+        {{data.replacement ?? data.text?? module}}
        	<searchContextmenu v-if='showContextmenu' :left=left :top=top></searchContextmenu>
     </a>
 	<span v-else-if="mode == 'span'">
@@ -11,14 +11,14 @@
 </template>
 
 <script>
-console.log('import searchLink.vue');
 import searchContextmenu from "./searchContextmenu.vue"
+console.log('import searchLink.vue');
 
 var focusedAlready = false;
 export default {
 	components: {searchContextmenu},
 	
-	data(){
+	data() {
 		return {
 			mode: 'a',
 			showContextmenu: false,
@@ -27,18 +27,23 @@ export default {
 		};
 	},
 	
-	props: ['module'],
+	props: ['data'],
 	
 	computed: {
-		user(){
+		module() {
+			return this.data.module;
+		},
+
+		user() {
 			return axiom_user();
 		},
 		
-		href(){
-			var {module} = this;
-			if (module.isArray)
-				module = module[0];
-			return `/${this.user}/?module=${module}`;
+		href() {
+			var {line, module} = this.data;
+			var href = `?module=${module}`;
+			if (line)
+				href += `#${line}`;
+			return href;
 		},			
 	},
 	
@@ -68,7 +73,7 @@ export default {
 				undeletables = await form_post(`php/request/rename.php`, { old: this.module.replace(/\//g, '.'), new: module.replace(/\//g, '.')});
 				console.log('undeletables = ' + undeletables);
 				
-				var modules = this.$root.list;
+				var modules = this.$root.data;
 				if (!modules){
 					console.assert(this.module == this.$root.module, "this.module == this.$root.module");
 					this.$root.graph[module] = this.$root.graph[this.module];
@@ -139,13 +144,13 @@ export default {
 				break;
 			case 'Delete':
 				var self = this.$parent;
-				var {list} = self;
-				if (list) {
-					var index = list.indexOf(this.module);
-					list.delete(index);
-					if (list.length)
+				var {data} = self;
+				if (data) {
+					var index = data.indexOf(this.module);
+					data.delete(index);
+					if (data.length)
 						self.$nextTick(()=>{
-							self.searchLink[index % list.length].focus();
+							self.searchLink[index % data.length].focus();
 						});
 				}
 				break;
@@ -185,6 +190,8 @@ export default {
 		    	el.focus();
 		    }
 		},
+
+		clipboard,
 	},
 }
 </script>

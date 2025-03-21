@@ -30,16 +30,16 @@
 </template>
 
 <script>
-console.log('import latex2pythonTitle.vue');
-import latex2pythonContextmenu from "./latex2pythonContextmenu.vue";
+import latex2pythonContextmenu from "./latex2pythonContextmenu.vue"
 import fraction from "./fraction.vue"
+console.log('import latex2pythonTitle.vue');
 
 export default {
 	components : {latex2pythonContextmenu, fraction},
 	
 	props : [],
 	
-	data(){
+	data() {
 		return {
 			showContextmenu: false,
 			left: 0,
@@ -92,7 +92,7 @@ export default {
 			return this.$parent.lang;	
 		},
 
-		href_a(){
+		href_a() {
 			var {href} = this.$parent.$parent.mysql;
 			if (!href)
 				return;
@@ -150,12 +150,12 @@ export default {
 			return this.$parent.mysql;
 		},
 		
-		is_torch(){
+		is_torch() {
 			return this.$parent.is_torch;
 		},
 	},
 	
-	created(){
+	created() {
 		var kwargs = getParameter('kwargs');
 		if (kwargs) {
 			if (kwargs.python)

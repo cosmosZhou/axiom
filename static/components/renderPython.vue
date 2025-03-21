@@ -3,32 +3,32 @@
 </template>
 
 <script>
+import codeMirror from "./codeMirror.vue"
 console.log('import renderPython.vue');
-import codeMirror from "./codeMirror.vue";
 
 export default {
     props : [ 'text'],
     
-    created(){
+    created() {
     	var hash = location.hash;
     	if (hash){
     		this.hash = hash.slice(1);	
     	}
     },
     
-    updated(){
+    updated() {
     },
     
     computed: {
     	user: codeMirror.computed.user,
     	module: codeMirror.computed.module,
         
-    	firstSibling(){
+    	firstSibling() {
             return this;                
         },
     },
     
-    data(){
+    data() {
         return {
             editor: null,
             theme: 'eclipse',

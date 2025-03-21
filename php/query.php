@@ -5,7 +5,7 @@ require_once 'std.php';
 include "include/bootstrap.inc.php";
 include "include/tmpfile.inc.php";
 
-if ($statement = $_POST['sql']) {
+if ($statement = $_POST['sql']?? null) {
     if (is_string($statement)) {
         die(std\encode(get_rows($statement)));
     }
@@ -45,7 +45,7 @@ if ($statement = $_POST['sql']) {
 }
 
 $token = std\pop($_POST, 'token');
-$user = std\pop($_GET, 'user');
+$user = get_user("pwds");
 $host = std\pop($_GET, 'host', 'localhost');
 $sql = std\pop($_GET, 'sql');
 $kwargs = array_merge($_POST, $_GET);
@@ -72,16 +72,16 @@ require_once 'mysql.php';
 include_once 'utility.php';
 
 [$database, $table, $is_union] = get_db_table($kwargs);
-if ($update = $kwargs['update']) {
+if ($update = $kwargs['update']?? null) {
     $cmd = 'update';
-} elseif ($into = $kwargs['into']) {
+} elseif ($into = $kwargs['into']?? null) {
     $cmd = 'insert';
 } elseif (isset($kwargs['delete'])) {
     unset($kwargs['delete']);
     $cmd = 'delete';
-} elseif ($set = $kwargs['set']) {
+} elseif ($set = $kwargs['set']?? null) {
     $cmd = 'set';
-} elseif ($show = $kwargs['show']) {
+} elseif ($show = $kwargs['show']?? null) {
     $cmd = 'show';
 } else {
     $cmd = 'select';

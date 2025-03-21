@@ -1,9 +1,9 @@
 import Axiom.Algebra.All.equ.NotAny_Not
+open Algebra
 
 
-namespace Algebra.All_Not.equ
-
-theorem NotAny
+@[main]
+private lemma main
   {p : α → Prop} :
 -- imply
   (∀ x : α, ¬p x) ↔ ¬∃ x : α, p x := by
@@ -11,7 +11,5 @@ theorem NotAny
   rw [All.equ.NotAny_Not]
   simp
 
-
-end Algebra.All_Not.equ
 
 -- created on 2024-07-01

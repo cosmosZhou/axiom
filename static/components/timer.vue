@@ -28,9 +28,8 @@ export default {
     		if (cond)
     			return false;
     		this.clearInterval();
-    		if (!this.pause && this.trigger) {
+    		if (!this.pause && this.trigger)
     			this.trigger();
-    		}
     		return true;
     	},
 
@@ -57,15 +56,15 @@ export default {
     		return `${seconds} seconds`;
     	},
     	
-    	seconds(){
+    	seconds() {
     		return this.currentTime - this.startTime;
     	},
     	
-    	minutes(){
+    	minutes() {
     		return this.seconds / 60;
     	},
     	
-    	hours(){
+    	hours() {
     		return this.minutes / 60;
     	},
     },
@@ -79,7 +78,7 @@ export default {
     created() {
     },
     
-    mounted(){
+    mounted() {
 		this.startTime = Date.now() / 1000;
 		this.currentTime = this.startTime;
         this.timerID = setInterval(() => {
@@ -90,11 +89,14 @@ export default {
 			if (typeof repeat == 'object')
 				var [[action, minutes]] = Object.entries(repeat);
 			else {
-				var action = 'reload';
+				var action = typeof repeat != 'string' || repeat.isInteger? 'reload' : repeat;
 				var minutes = 10;
 			}
-
+			var self = this;
+			console.log(`page will be ${action}ed after ${minutes} minutes`);
 			setTimeout(() => {
+				if (self.pause)
+					return;
 				if (action == 'submit')
 					document.form.submit();
 				else
@@ -103,7 +105,7 @@ export default {
 		}
     },
     
-    unmounted(){
+    unmounted() {
     	this.clearInterval();
     },
 

@@ -1,60 +1,51 @@
 <template>
-	<div>
-		module :
-		<newInput ref=newInput :module=module></newInput>
-		<form name=form enctype=multipart/form-data method=post :action=action>
-			<newApply ref=newApply :text=apply></newApply>
-			<br>
-			<newProve ref=newProve :text=prove></newProve>
-		</form>
-	</div>
+	module :
+	<newInput ref=newInput :module=module></newInput>
+	<render ref=render :imports=imports :open=open :lemma=lemma :error=error :module=module :date=date></render>
 </template>
 
 <script>
-console.log('import newTheorem.vue');
+import render from "./render.vue"
 import newInput from "./newInput.vue"
-import newApply from "./newApply.vue"
-import newProve from "./newProve.vue"
+console.log('import newTheorem.vue');
 
 export default {
-	components: {newInput, newApply, newProve },
-	props : [ 'module', 'apply', 'prove'],
+	components: { render, newInput },
+	props : [ 'imports', 'open', 'lemma', 'error', 'date'],
 	
-	data(){
+	data() {
+		var module = getParameterByName('new');
+		var module = module.replace(/[/\\]/g, '.');
 		return {
+			module
 		};
 	},
 	
 	computed: {
-		renderProve(){
-   			var prove = [];
-   			prove.push(this.$refs.prove);
-   			return prove;
+		renderLean() {
+   			var proof = [];
+   			proof.push(this.$refs.proof);
+   			return proof;
    		},
    		
-   		newApply(){
-   			return this.$refs.newApply;
-   		},
-   		
-   		newProve(){
-   			return this.$refs.newProve;
-   		},   		
-   		
-   		newInput(){
+   		newInput() {
    			return this.$refs.newInput;
    		},
    		
-   		user(){
+   		user() {
    			return axiom_user();	
    		},
    		
-   		action(){
+   		action() {
    			var module = this.module.replace(/\./g, '/');
    			return `/${this.user}/?module=${module}`;
    		},
 	},
 	
 	methods: {
+		update_action() {
+			this.$refs.render.action = this.action;
+		},
 	},
 }
 </script>

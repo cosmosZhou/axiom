@@ -347,6 +347,7 @@ function sid() {
 * @return null
 */
 function set_password($vendor, $host, $user, $password) {
+	set_user("pwds", $user);
 	$_SESSION["pwds"][$vendor][$host][$user] = ($_COOKIE["adminer_key"] && is_string($password)
 		? array(encrypt_string($password, $_COOKIE["adminer_key"]))
 		: $password
@@ -588,12 +589,20 @@ function stop_session($force = false) {
 	}
 }
 
+function get_user($key) {
+	return $_SESSION[$key][DRIVER][HOST][REMOTE_ADDR]['user'];
+}
+
+
+function set_user($key, $user) {
+	$_SESSION[$key][DRIVER][HOST][REMOTE_ADDR]['user'] = $user;
+}
 /** Get session variable for current host
 * @param string
 * @return mixed
 */
 function &get_session($key) {
-	return $_SESSION[$key][DRIVER][HOST][$_GET["user"]];
+	return $_SESSION[$key][DRIVER][HOST][get_user($key)];
 }
 
 /** Set session variable for current host
@@ -602,7 +611,8 @@ function &get_session($key) {
 * @return mixed
 */
 function set_session($key, $val) {
-	$_SESSION[$key][DRIVER][HOST][$_GET["user"]] = $val; // used also in auth.inc.php
+	$user = get_user("pwds");
+	$_SESSION[$key][DRIVER][HOST][$user] = $val; // used also in auth.inc.php
 }
 
 /** Get authenticated URL
@@ -612,37 +622,32 @@ function set_session($key, $val) {
 * @param string
 * @return string
 */
-function auth_url($vendor, $host, $user, $db = null, $table = null) {
+function auth_url($vendor, $host, $db = null, $table = null) {
 	global $drivers;
-	$unwantedNames = implode("|", array_keys($drivers)) . "|user|host|" . ($db !== null ? "db|" : "") . session_name();
-// 	error_log('$unwantedNames = '.$unwantedNames);
+	$unwantedNames = implode("|", array_keys($drivers)) . "|host|" . ($db !== null ? "db|" : "") . session_name();
 	$line = remove_from_uri($unwantedNames);
-// 	error_log('$line = '.$line);
 	preg_match('~([^?]*)\??(.*)~', $line, $match);
 	
-// 	error_log('$match = '.std\encode($match));
 	$url = "$match[1]?";
-	
-	$url .= "user=" . urlencode($user);
-	
+	$params = [];
+
 	if ($host != 'localhost')
-	    $url .= "&host=$host";
+		$params[] = "host=$host";
 	    
-    if ($match[2])
-	   $url .= "&$match[2]";
+        if ($match[2])
+		$params[] = $match[2];
 	
-	if ($table && !preg_match("/\b(into|set|from|update|select)\b/", $url)) {
-        $url .= $db? "&from[$db]=$table": "&from=$table";
-    }
+	if ($table && !preg_match("/\b(into|set|from|update|select)\b/", $url))
+		$params[] = $db? "from[$db]=$table" : "from=$table";
     
-	return $url;
+	return $url . implode("&", $params);
 }
 
 /** Find whether it is an AJAX request
 * @return bool
 */
 function is_ajax() {
-	return ($_SERVER["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest");
+	return ($_SERVER["HTTP_X_REQUESTED_WITH"]?? null) == "XMLHttpRequest";
 }
 
 /** Send Location header and exit
@@ -897,7 +902,7 @@ function hidden_fields(&$process, $prefix = '') {
 function hidden_fields_get() {
 	echo (sid() ? '<input type="hidden" name="' . session_name() . '" value="' . h(session_id()) . '">' : '');
 	echo (HOST !== null ? '<input type="hidden" name="' . DRIVER . '" value="' . h(HOST) . '">' : "");
-	echo '<input type="hidden" name="user" value="' . h($_GET["user"]) . '">';
+	echo '<input type="hidden" name="user" value="' . h(get_user("pwds")) . '">';
 }
 
 /** Get status of a single table and fall back to name on error
@@ -1377,7 +1382,11 @@ function get_token() {
 * @return bool
 */
 function verify_token() {
-	[$token, $rand] = explode(":", $_POST["token"]);
+	$token = $_POST["token"]?? '';
+	if (strpos($token, ':') !== false)
+	    [$token, $rand] = explode(":", $token);
+	else
+	    $rand = null;
 	return ($rand ^ $_SESSION["token"]) == $token;
 }
 

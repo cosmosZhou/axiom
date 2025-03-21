@@ -2,16 +2,16 @@
 	<div tabindex=1 @keydown=keydown>
 		the whole math repertoire is composed of the following sections:
  
-		<searchForm v-if="issearch" :keyword=keyword :caseSensitive=caseSensitive :wholeWord=wholeWord :regularExpression=regularExpression :latex=latex></searchForm>		
+		<searchForm v-if="issearch" :q=q :caseSensitive=caseSensitive :wholeWord=wholeWord :regularExpression=regularExpression :latex=latex></searchForm>		
 		<ul>
 			<li v-for="(content, section) in repertoire">
 				<a :href=href_section(section)>
 					{{section}}
 				</a>
 				<ul>
-					<li v-for="(axioms, state) in content">
-						<font :class=state>
-							theorems {{state}}:
+					<li v-for="(axioms, type) in content">
+						<font :class=type>
+							{{type}}:
 						</font>
 						<ul>
 							<li v-for="axiom in axioms">
@@ -25,17 +25,17 @@
 			</li>
 		</ul>
 		<br>
-		in summary, the following is the total count of each state for all theorems:
+		in summary, the following is the total count of each type for all lemmas:
 		<br>
-		<table tabindex=align=left border=1>
+		<table tabindex=2 border=1>
 	
 			<tr>
-				<th>state</th>
+				<th>type</th>
 				<th>count</th>
 			</tr>
 	
 			<tr v-for="tuple of state_count_pairs">
-				<td><a :href="href_state(tuple.state)">{{tuple.state}}</a></td>
+				<td><a :href="href_state(tuple.type)">{{tuple.type}}</a></td>
 				<td>{{tuple.count}}</td>
 			</tr>	
 		</table>
@@ -58,18 +58,18 @@ export default {
 	props : ['state_count_pairs', 'repertoire'],
 	
 	computed: {
-		user(){
+		user() {
 			return axiom_user();
 		},	
 	},
 	
-	data(){
+	data() {
 		return {
 			issearch: false,
 			recentAxioms: [],
 			topk: 10,
 			
-			keyword: '',
+			q: '',
 			caseSensitive: false,
 			wholeWord: false, 
 			regularExpression: false,
@@ -77,7 +77,7 @@ export default {
 		};
 	},
 
-	created(){
+	created() {
 		this.updateRecentAxioms();
 	},
 	
@@ -92,12 +92,11 @@ export default {
 			return `/${user}/?module=${axiom}`;
 		},
 
-		href_state(state){
-			if (state == 'total'){
+		href_state(type){
+			if (type == 'total')
 				return `/${this.user}/run.py`;
-			}
 			var {user} = this;
-			return `/${user}/?state=${state}`;
+			return `/${user}/?type=${type}`;
 		},
 	
 		keydown(event){
@@ -111,7 +110,7 @@ export default {
 			}
 		},
 		
-		async updateRecentAxioms(){
+		async updateRecentAxioms() {
 			this.recentAxioms = await get(`php/request/recent.php?top=${this.topk}`);;
 		},
 		
@@ -120,15 +119,12 @@ export default {
 		},
 	},
 	
-	mounted(){
-		var failed = document.querySelector('a[href$=failed]') || 
-		document.querySelector('a[href$=plausible]')  || 
-		document.querySelector('a[href$=unproved]') || 
-		document.querySelector('a[href$=unprovable]') || 
-		document.querySelector('a[href$=slow]');
-		if (failed){
-			failed.focus();
-		}
+	mounted() {
+		var error = document.querySelector('a[href$=error]') || 
+			document.querySelector('a[href$=warning]') || 
+			document.querySelector('a[href$=unprovable]');
+		if (error)
+			error.focus();
 	},
 }
 </script>
@@ -142,11 +138,7 @@ div:focus{
 	outline: none;
 }
 
-font.slow{
-	color: yellow;
-}
-
-font.failed{
+font.error{
 	color: red;
 }
 
@@ -154,12 +146,8 @@ font.unprovable{
 	color: green;
 }
 
-font.plausible{
-	color: red;
-}
-
-font.unproved{
-	color: purple;
+font.warning{
+	color: yellow;
 }
 
 </style>

@@ -14,19 +14,19 @@
 </template>
 
 <script>
-console.log('import mysqlGroup.vue');
 import mysqlLeaf from "./mysqlLeaf.vue"
+console.log('import mysqlGroup.vue');
 
 export default {
 	components: {mysqlLeaf},
 	props : [],
 	
-	data(){
+	data() {
 		return {
 		};
 	},
 	
-	created(){
+	created() {
 		//var {value, name} = this;
 		//console.log({value, name});
 	},

@@ -1,8 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.Mul
 
-theorem comm
+@[main]
+private lemma main
   [CommMagma α]
   {a b : α} :
 -- imply
@@ -10,7 +10,5 @@ theorem comm
 -- proof
   apply mul_comm
 
-
-end Algebra.Mul
 
 -- created on 2024-07-01

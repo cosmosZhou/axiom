@@ -23,11 +23,11 @@ export default {
 	
 	props : ['Field'],
 	
-	data(){
+	data() {
 		return this.$parent.$data;
 	},
 
-	created(){
+	created() {
 	},
 	
 	computed: {
@@ -39,7 +39,7 @@ export default {
 			return this.$parent.primary_key;
 		},
 		
-		style_input(){
+		style_input() {
 			return this.$parent.style_input;
 		},
 		
@@ -47,7 +47,7 @@ export default {
 			return this.$parent.kwargs;
 		},
 		
-		change_input(){
+		change_input() {
 			return this.$parent.change_input;
 		},
 
@@ -63,11 +63,11 @@ export default {
 			return this.$parent.input_operator;
 		},
 		
-		look_behind(){
+		look_behind() {
 			return this.$parent.look_behind;
 		},
 		
-		look_ahead(){
+		look_ahead() {
 			return this.$parent.look_ahead;
 		},
 		

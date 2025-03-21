@@ -3,14 +3,15 @@
 </template>
 
 <script>
-console.log('import axiomTheorem.vue');
 import icon from "./icon.vue"
+console.log('import axiomTheorem.vue');
+
 export default {
 	components: {icon},
 	
 	props : [ 'theorem', 'index'],
 	
-	created(){
+	created() {
 		this.$parent.axiomTheorem[this.index] = this;	
 	},
 	
@@ -37,19 +38,19 @@ export default {
 			location.search = search;
 		},			
 
-		remove(){
+		remove() {
 			console.log("this.theorem = " + this.theorem);
 			var href = location.href;
 			var m = href.match(/\/([^\/]+)\/(?:index\.php)?\?module=([^#]+)/);
-			var user = m[1];
 			var module = m[2];
+			module = module.replace(/\//g, '.');
 			if (module.endsWith('.'))
 				module = module.slice(0, -1);
 
 			var data = {};
 			data['package'] = module;
-			data['theorem'] = this.theorem;
-			form_post(`php/request/delete/theorem.php`, data).then(res => {
+			data['lemma'] = this.theorem;
+			form_post(`php/request/delete/lemma.php`, data).then(res => {
 				console.log('res = ' + res);
 			});
 		},

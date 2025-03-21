@@ -1,8 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.MapMap.eq
 
-theorem Map_Comp
+@[main]
+private lemma main
   (g : β → γ)
   (f : α → β)
   (l : List α) :
@@ -11,7 +11,5 @@ theorem Map_Comp
 -- proof
   simp [List.map_map]
 
-
-end Algebra.MapMap.eq
 
 -- created on 2024-07-01

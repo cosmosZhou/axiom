@@ -1,13 +1,13 @@
 import Axiom.Algebra.OrNotS.equ.NotAnd
-namespace Algebra.NotAnd.equ
+open Algebra
 
-theorem OrNotS :
+
+@[main]
+private lemma main :
 -- imply
   ¬(p ∧ q) ↔ ¬p ∨ ¬q :=
 -- proof
   OrNotS.equ.NotAnd.symm
 
-
-end Algebra.NotAnd.equ
 
 -- created on 2024-07-01

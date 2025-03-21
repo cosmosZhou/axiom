@@ -122,6 +122,9 @@ import {addLegacyProps} from '../src/edit/legacy.js'
 
 import {CodeMirror} from '../src/edit/main.js'
 
+CodeMirror.deleteNearSelection = deleteNearSelection;
+CodeMirror.clipPos = clipPos;
+
 (function(global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 		typeof define === 'function' && define.amd ? define(factory) :

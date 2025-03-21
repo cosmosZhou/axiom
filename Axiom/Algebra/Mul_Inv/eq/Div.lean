@@ -1,9 +1,9 @@
 import Axiom.Algebra.Div.eq.Mul_Inv
+open Algebra
 
-namespace Algebra.Mul_Inv.eq
 
-@[simp]
-theorem Div
+@[simp, main]
+private lemma main
   [DivInvMonoid α]
   {a b : α} :
 -- imply
@@ -11,7 +11,5 @@ theorem Div
 -- proof
   rw [Div.eq.Mul_Inv]
 
-
-end Algebra.Mul_Inv.eq
 
 -- created on 2024-07-01

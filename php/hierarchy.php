@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<meta charset="UTF-8">
-<link rel="stylesheet" href="static/css/style.css">
 <title>hierarchy</title>
 <?php
 require_once 'utility.php';
@@ -22,12 +19,12 @@ if (count($array_keys) > 1) {
 $keyInput = array_keys($_GET)[0];
 
 switch ($keyInput) {
-    case "callee":
+    case 'callee':
         $key = 'caller';
         $invert = true;
         break;
 
-    case "caller":
+    case 'caller':
         $key = 'callee';
         $invert = false;
         break;
@@ -36,45 +33,29 @@ switch ($keyInput) {
 $module = $_GET[$keyInput];
 $module = str_replace('/', '.', $module);
 
-$user = get_user();
+$user = get_project_name();
 $graph = establish_hierarchy($user, $module, $invert);
 
-// $graph->convert_set_to_list();
 $graph->detect_cycle_traceback($module, $parent);
 
 if ($parent) {
-//     echo implode('<br>', $parent)."<br>";
-    
     $cyclicProof = $parent[0];
 
     for ($i = 1; $i < count($parent); ++ $i) {
-        if ($parent[$i] == $cyclicProof) {
+        if ($parent[$i] == $cyclicProof)
             break;
-        }
     }
 
     $parent[] = $module;
     
     $traceback = [];
-    for ($j = count($parent) - 1; $j >= $i; -- $j) {
+    for ($j = count($parent) - 1; $j >= $i; -- $j)
         $traceback[] = $parent[$j];
-    }    
-    
-//     echo implode('<br>', $traceback)."<br>";
-    
-} else {
+} else
     $traceback = null;
-}
+
+include_once 'script.php';
 ?>
-
-<script src="static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
-<script src="static/unpkg.com/qs@6.10.2/dist/qs.js"></script>
-
-<script src="static/unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
-<script src="static/unpkg.com/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
-
-<script src="static/js/std.js"></script>
-<script src="static/js/utility.js"></script>
 
 <script type=module>
 createApp('hierarchy', {

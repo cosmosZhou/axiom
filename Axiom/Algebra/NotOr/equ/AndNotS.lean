@@ -1,15 +1,14 @@
-import Axiom.Algebra.NotOr.to.AndNotS
-import Axiom.Algebra.AndNotS.to.NotOr
+import Axiom.Algebra.AndNotS.of.NotOr
+import Axiom.Algebra.NotOr.of.AndNotS
+open Algebra
 
-namespace Algebra.NotOr.equ
 
-theorem AndNotS :
+@[main]
+private lemma main :
 -- imply
   ¬(p ∨ q) ↔ ¬p ∧ ¬q :=
 -- proof
-  ⟨NotOr.to.AndNotS, AndNotS.to.NotOr⟩
+  ⟨AndNotS.of.NotOr, NotOr.of.AndNotS⟩
 
-
-end Algebra.NotOr.equ
 
 -- created on 2024-07-01

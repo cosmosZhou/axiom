@@ -3,14 +3,15 @@
 </template>
 
 <script>
-console.log('import axiomPackage.vue');
 import icon from "./icon.vue"
+console.log('import axiomPackage.vue');
+
 export default {
 	components: {icon},
 
 	props : ['module', 'index'],
 
-	created(){
+	created() {
 		this.$parent.axiomPackage[this.index] = this;	
 	},
 	
@@ -37,7 +38,7 @@ export default {
 			location.search = search;
 		},
 		
-		remove(){
+		remove() {
 			console.log("this.module = " + this.module);
 			var href = location.href;
 			var m = href.match(/\/([^\/]+)\/(index\.php)?\?module(.+)/);

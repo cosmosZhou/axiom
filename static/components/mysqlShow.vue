@@ -10,10 +10,10 @@
 </template>
 
 <script>
-console.log('import mysqlShow.vue');
 import {piece_together} from "../js/mysql.js"
 import mysqlExpr from "./mysqlExpr.vue"
 import mysqlLeaf from "./mysqlLeaf.vue"
+console.log('import mysqlShow.vue');
 
 /*
 show databases;
@@ -31,7 +31,7 @@ export default {
 	
 	props : ['kwargs'],
 	
-	data(){
+	data() {
 		var {$data} = this.$parent;
 		return {
 			...$data,
@@ -39,7 +39,7 @@ export default {
 		};
 	},
 
-	created(){
+	created() {
 		if (this.$parent.sql && !this.$parent.sql.match(/^show /)) {
 			var {data} = this.$parent.$parent;
 			if (data && data.isArray)
@@ -126,11 +126,11 @@ export default {
 			return Math.max(8, this.password.length, this.password_confirmed.length);
 		},
 		
-		change_table(){
+		change_table() {
 			return this.$parent.change_table;
 		},
 		
-		change_database(){
+		change_database() {
 			return this.$parent.change_database;
 		},
 
@@ -210,23 +210,23 @@ export default {
 			return this.kwargs;
 		},
 		
-		change_input(){
+		change_input() {
 			return this.$parent.change_input;
 		},
 		
-		style_select_table(){
+		style_select_table() {
 			return this.$parent.style_select_table;
 		},
 		
-		style_select(){
+		style_select() {
 			return this.$parent.style_select;
 		},
 		
-		style_input(){
+		style_input() {
 			return this.$parent.style_input;
 		},
 		
-		input_kwargs(){
+		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
 		
@@ -268,7 +268,7 @@ export default {
 		},
 	},
 	
-	mounted(){
+	mounted() {
 	},
 
 	directives: {

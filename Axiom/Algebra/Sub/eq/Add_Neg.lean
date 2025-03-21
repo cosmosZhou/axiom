@@ -1,8 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.Sub.eq
 
-theorem Add_Neg
+@[main]
+private lemma main
   [SubNegMonoid α]
   {a b : α} :
 -- imply
@@ -10,7 +10,5 @@ theorem Add_Neg
 -- proof
   rw [sub_eq_add_neg]
 
-
-end Algebra.Sub.eq
 
 -- created on 2024-07-01

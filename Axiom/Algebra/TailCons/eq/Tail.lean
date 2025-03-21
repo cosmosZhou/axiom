@@ -1,16 +1,13 @@
-import Axiom.sympy.core.containers.list
-open Mathlib
+import Axiom.Basic
 
-namespace Algebra.TailCons.eq
 
-@[simp]
-theorem Tail
+@[simp, main]
+private lemma main
   {l : List α} :
 -- imply
   (a :: l.tail).tail = l.tail := by
 -- proof
   rfl
 
-end Algebra.TailCons.eq
 
 -- created on 2024-07-01

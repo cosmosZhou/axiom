@@ -1,8 +1,9 @@
 import Axiom.Algebra.NegSub.eq.Sub
+open Algebra
 
-namespace Algebra.Sub.eq
 
-theorem NegSub
+@[main]
+private lemma main
   [AddGroup α]
   -- [Neg α]
   {a b : α} :
@@ -11,8 +12,5 @@ theorem NegSub
 -- proof
   rw [NegSub.eq.Sub]
 
-
-
-end Algebra.Sub.eq
 
 -- created on 2024-11-29

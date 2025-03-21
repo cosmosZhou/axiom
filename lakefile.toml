@@ -5,7 +5,6 @@ defaultTargets = ["Axiom"]
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
-linter.dupNamespace = false
 
 [[require]]
 name = "mathlib"
@@ -13,3 +12,10 @@ scope = "leanprover-community"
 
 [[lean_lib]]
 name = "Axiom"
+leanOptions = {linter.dupNamespace = false, linter.unusedTactic = false}
+
+[[lean_lib]]
+name = "sympy"
+
+[[lean_lib]]
+name = "std"

@@ -200,11 +200,11 @@ export default {
 	
 	props : ['value', 'name', 'noSpace'],
 	
-	data(){
+	data() {
 		return {};
 	},
 
-	created(){
+	created() {
 		var {from} = this.value;
 		if (from && from.isArray) {
 			var [database, table] = from;
@@ -464,7 +464,7 @@ export default {
 			return this.physic2logic(this.func);
 		},
 		
-		is_numeric_relation(){
+		is_numeric_relation() {
 			var {value} = this;
 			if (value.eq || value.ne) {
 				var [lhs, rhs] = this.args;
@@ -481,7 +481,7 @@ export default {
 			return value.gt || value.lt || value.ge || value.le;
 		},
 		
-		is_jsonobj_relation(){
+		is_jsonobj_relation() {
 			var {value} = this;
 			if (value.eq || value.ne) {
 				var [lhs, rhs] = this.args;
@@ -490,16 +490,16 @@ export default {
 			return value.is || value.is_not;
 		},
 
-		is_operator(){
+		is_operator() {
 			return this.is_numeric_operator || this.is_jsonobj_operator;
 		},
 		
-		is_prefix(){
+		is_prefix() {
 			var {value} = this;
 			return value.distinct || value.separator || value.path || value.create || value.table || value.global || value.comment || value.after || value.not;
 		},
 		
-		union_func(){
+		union_func() {
 			var {value} = this;
 			if (value.union)
 				return 'union';
@@ -507,7 +507,7 @@ export default {
 				return 'union all';
 		},
 
-		with_func(){
+		with_func() {
 			var {value} = this;
 			if (value.with)
 				return 'with';
@@ -515,7 +515,7 @@ export default {
 				return 'with recursive';
 		},
 
-		with_value(){
+		with_value() {
 			var {value} = this;
 			if (value.with)
 				return value.with;
@@ -523,11 +523,11 @@ export default {
 				return value.with_recursive;
 		},
 
-		is_numeric_operator(){
+		is_numeric_operator() {
 			return is_numeric_operator(this.value);
 		},
 		
-		is_jsonobj_operator(){
+		is_jsonobj_operator() {
 			var {value} = this;
 			return value.json_extract || value.json_extract_unquote;
 		},
@@ -536,7 +536,7 @@ export default {
 			return this.is_numeric_relation || this.is_textual_relation || this.is_jsonobj_relation;
 		},
 
-		is_textual_relation(){
+		is_textual_relation() {
 			var {value} = this;
 			if (value.eq || value.ne) {
 				var [lhs, rhs] = this.args;
@@ -597,11 +597,11 @@ export default {
 			return this.func.fullmatch(this.textual_function_regexp);
 		},
 		
-		is_logic(){
+		is_logic() {
 			return this.value.and || this.value.or;
 		},
 		
-		func(){
+		func() {
 			var keys = Object.keys(this.value);
 			if (keys.length)
 				return keys[0];
@@ -612,7 +612,7 @@ export default {
 			return this.args[0];
 		},
 
-		args(){
+		args() {
 			var values = Object.values(this.value);
 			if (values.length) {
 				if (values.length == 1) {
@@ -648,15 +648,15 @@ export default {
 			return this.$parent.database;
 		},
 		
-		change_input(){
+		change_input() {
 			return this.$parent.change_input;
 		},
 		
-		style_input(){
+		style_input() {
 			return this.$parent.style_input;
 		},
 		
-		input_kwargs(){
+		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
 		
@@ -794,9 +794,9 @@ export default {
 		keydown_select(event) {
 			var select = event.target;
 			switch (event.key) {
-			case "ArrowLeft":
+			case 'ArrowLeft':
 				break;
-			case "ArrowRight":
+			case 'ArrowRight':
 				event.preventDefault();
 				if (event.ctrlKey) {
 					var {parentElement} = select;
@@ -830,12 +830,20 @@ export default {
 							parentElement.querySelector(`select[name="set[1][eq][0]"]`).focus();
 						});
 					}
-					else if (this.$parent.value.select.isArray && (index = this.$parent.value.select.indexOf(value)) >= 0) {
+					else if (this.$parent.value.select && this.$parent.value.select.isArray && (index = this.$parent.value.select.indexOf(value)) >= 0) {
 						var {select} = this.$parent.value;
 						this.$parent.value.select = [...select.slice(0, index), value, deepCopy(value), ...select.slice(index + 1)];
 						var name = this.name.replace(/\[\d+\]$/, `[${index + 1}]`);
 						this.$parent.$nextTick(()=>{
 							parentElement.querySelector(`select[class="${name}"]`).focus();
+						});
+					}
+					else if (this.$parent.value.set && this.$parent.value.set.isArray && (index = this.$parent.value.set.indexOf(value)) >= 0) {
+						var {set} = this.$parent.value;
+						this.$parent.value.set = [...set.slice(0, index), value, deepCopy(value), ...set.slice(index + 1)];
+						var name = this.name.replace(/\[\d+\]$/, `[${index + 1}]`);
+						this.$parent.$nextTick(()=>{
+							parentElement.parentElement.querySelector(`select[name="${name}[eq][0]"]`).focus();
 						});
 					}
 					else {
@@ -894,10 +902,10 @@ export default {
 				
 				break;
 				
-			case "ArrowUp":
+			case 'ArrowUp':
 				break;
 				
-			case "ArrowDown":
+			case 'ArrowDown':
 				if (!event.ctrlKey) {
 					break;
 				}
@@ -982,7 +990,7 @@ export default {
 		keydown_cmd(event) {
 			var select = event.target;
 			switch (event.key) {
-			case "ArrowDown":
+			case 'ArrowDown':
 				if (!event.ctrlKey) {
 					break;
 				}

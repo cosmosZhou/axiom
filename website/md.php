@@ -30,8 +30,8 @@ if (preg_match('/(\w+)\/.+\.md/', $PATH_INFO, $m)) {
     error_log("prefix = $prefix");
     foreach (scandir($path) as $name) {
         switch ($name) {
-            case ".":
-            case "..":
+            case '.':
+            case '..':
                 break;
             default:
                 $file = "$path/$name";

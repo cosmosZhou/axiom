@@ -104,13 +104,13 @@ function balancedGroupsExtended($parentheses, $depth, $multiple = '*', $lookBehi
 function need_escape($s)
 {
     switch ($s) {
-        case "(":
-        case "[":
-        case "{":
+        case '(':
+        case '[':
+        case '{':
             
-        case ")":
-        case "]":
-        case "}":
+        case ')':
+        case ']':
+        case '}':
             return true;
         default:
             return false;

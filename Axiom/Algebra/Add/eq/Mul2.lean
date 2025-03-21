@@ -1,9 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.Add.eq
 
-@[simp]
-theorem Mul2
+@[simp, main]
+private lemma main
   [NonAssocSemiring α]
   {a : α} :
 -- imply
@@ -11,7 +10,5 @@ theorem Mul2
 -- proof
   rw [two_mul]
 
-
-end Algebra.Add.eq
 
 -- created on 2024-07-01

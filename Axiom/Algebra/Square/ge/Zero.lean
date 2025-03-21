@@ -1,18 +1,16 @@
-import Axiom.sympy.core.numbers
+import Axiom.Basic
 
-namespace Algebra.Square.ge
 
-theorem Zero
+@[main]
+private lemma main
   [Semiring α] [LinearOrder α]
   [IsRightCancelAdd α] [ZeroLEOneClass α] [ExistsAddOfLE α]
   [PosMulMono α] [AddLeftStrictMono α]
   {a : α} :
 -- imply
-  a² ≥ 0:= by
+  a² ≥ 0 :=
 -- proof
-  apply sq_nonneg
+  sq_nonneg a
 
-
-end Algebra.Square.ge
 
 -- created on 2024-11-29

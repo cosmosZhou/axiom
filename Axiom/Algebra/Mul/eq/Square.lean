@@ -1,7 +1,9 @@
 import Axiom.Algebra.Square.eq.Mul
-namespace Algebra.Mul.eq
+open Algebra
 
-theorem Square
+
+@[main]
+private lemma main
   [Monoid α]
   {x : α} :
 -- imply
@@ -9,7 +11,5 @@ theorem Square
 -- proof
   rw [Square.eq.Mul]
 
-
-end Algebra.Mul.eq
 
 -- created on 2024-07-01

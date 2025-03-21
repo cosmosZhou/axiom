@@ -22,15 +22,15 @@
 </template>
 
 <script>
-console.log('import mysqlInsert.vue');
 import mysqlDot from "./mysqlDot.vue"
+console.log('import mysqlInsert.vue');
 
 export default {
 	components: {mysqlDot},
 	
 	props : ['kwargs'],
 	
-	data(){
+	data() {
 		var data = this.$parent.$data;
 		data.files = {};
 		data.progress = {value: null, max: null};
@@ -55,7 +55,7 @@ export default {
 		return data;
 	},
 
-	async created(){
+	async created() {
 		var self = this;
 		
 		var {body} = document;
@@ -73,11 +73,11 @@ export default {
 	},
 	
 	computed: {
-		change_table(){
+		change_table() {
 			return this.$parent.change_table;
 		},
 		
-		change_database(){
+		change_database() {
 			return this.$parent.change_database;
 		},
 		
@@ -123,11 +123,11 @@ export default {
 			return desc;
 		},
 		
-		change_input(){
+		change_input() {
 			return this.$parent.change_input;
 		},
 
-		style_select_table(){
+		style_select_table() {
 			return this.$parent.style_select_table;
 		},
 		
@@ -135,15 +135,15 @@ export default {
 			return this.$parent.style_select;
 		},
 		
-		style_input(){
+		style_input() {
 			return this.$parent.style_input;
 		},
 		
-		input_kwargs(){
+		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
 		
-		args(){
+		args() {
 			var args = [];
 			for (var {Field} of this.desc){
 				if (Field != 'training')
@@ -212,13 +212,13 @@ export default {
                 };
 
 				switch (file.type){
-				case "image/jpeg":
-				case "image/png":
+				case 'image/jpeg':
+				case 'image/png':
 					reader.readAsDataURL(file);
 					break;
 					
-				case "application/pdf":
-				case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+				case 'application/pdf':
+				case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
 					reader.readAsArrayBuffer(file);
 					break;
 
@@ -268,6 +268,8 @@ export default {
 	},
 	
 	mounted(){
+		var {rowcount} = this.$parent;
+		console.log('rowcount = ' + rowcount);
 	},
 	
 	directives: {

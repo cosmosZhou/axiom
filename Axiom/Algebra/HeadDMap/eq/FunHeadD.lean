@@ -1,9 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.HeadDMap.eq
 
-@[simp]
-theorem FunHeadD
+@[simp, main]
+private lemma main
   {s : List α}
   {f : α → β}
   {default : α} :
@@ -12,7 +11,5 @@ theorem FunHeadD
 -- proof
   simp
 
-
-end Algebra.HeadDMap.eq
 
 -- created on 2024-07-01

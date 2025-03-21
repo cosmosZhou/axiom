@@ -1,18 +1,15 @@
-import Axiom.Algebra.Any.to.Cond
-import Axiom.Algebra.Cond.to.Any
+import Axiom.Algebra.Cond.of.Any
+import Axiom.Algebra.Any.of.Cond
+open Algebra
 
 
-namespace Algebra.Any.equ
-
-@[simp]
-theorem Cond
+@[simp, main]
+private lemma main
   [Inhabited α]:
 -- imply
   (∃ _ : α, r) ↔ r :=
 -- proof
-  ⟨Any.to.Cond, Cond.to.Any (a := default)⟩
+  ⟨Cond.of.Any, Any.of.Cond (a := default)⟩
 
-
-end Algebra.Any.equ
 
 -- created on 2024-07-01

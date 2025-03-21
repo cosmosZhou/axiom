@@ -402,7 +402,7 @@ class RegexSimple extends Regex
     public function __get($vname)
     {
         switch ($vname) {
-            case "length":
+            case 'length':
                 return count($this->chars());
         }
     }
@@ -629,7 +629,7 @@ class RegexComplex extends RegexMultiple
     public function __get($vname)
     {
         switch ($vname) {
-            case "stack_precedence":
+            case 'stack_precedence':
                 return 3;
         }
     }
@@ -848,7 +848,7 @@ class RegexCharProperty extends RegexUnary
     public function __get($vname)
     {
         switch ($vname) {
-            case "stack_precedence":
+            case 'stack_precedence':
                 return 2;
         }
     }
@@ -883,7 +883,7 @@ class RegexLazy extends Quantifier
     public function __get($vname)
     {
         switch ($vname) {
-            case "stack_precedence":
+            case 'stack_precedence':
                 return 2;
         }
     }
@@ -907,7 +907,7 @@ class RegexPossessive extends Quantifier
     public function __get($vname)
     {
         switch ($vname) {
-            case "stack_precedence":
+            case 'stack_precedence':
                 return 2;
         }
     }
@@ -931,7 +931,7 @@ class RegexQues extends Quantifier
     public function __get($vname)
     {
         switch ($vname) {
-            case "stack_precedence":
+            case 'stack_precedence':
                 return 2;
         }
     }
@@ -955,7 +955,7 @@ class RegexStar extends Quantifier
     public function __get($vname)
     {
         switch ($vname) {
-            case "stack_precedence":
+            case 'stack_precedence':
                 return 2;
         }
     }
@@ -979,7 +979,7 @@ class RegexPlus extends Quantifier
     public function __get($vname)
     {
         switch ($vname) {
-            case "stack_precedence":
+            case 'stack_precedence':
                 return 2;
         }
     }
@@ -1003,7 +1003,7 @@ class RegexCurly extends Quantifier
     public function __get($vname)
     {
         switch ($vname) {
-            case "stack_precedence":
+            case 'stack_precedence':
                 return 2;
         }
     }
@@ -1070,7 +1070,7 @@ class RegexOr extends RegexMultiple
     public function __get($vname)
     {
         switch ($vname) {
-            case "stack_precedence":
+            case 'stack_precedence':
                 return 2;
         }
     }
@@ -1127,7 +1127,7 @@ class RegexGroup extends RegexUnary
     public function __get($vname)
     {
         switch ($vname) {
-            case "stack_precedence":
+            case 'stack_precedence':
                 return 2;
         }
     }
@@ -1140,15 +1140,15 @@ class RegexGroup extends RegexUnary
     static public function getType($type)
     {
         switch ($type) {
-            case "?:":
+            case '?:':
                 return "RegexGroupUncaptured";
-            case "?=":
+            case '?=':
                 return "RegexGroupLookAhead";
-            case "?!":
+            case '?!':
                 return "RegexGroupNegativeLookAhead";
-            case "?<=":
+            case '?<=':
                 return "RegexGroupLookBehind";
-            case "?<!":
+            case '?<!':
                 return "RegexGroupNegativeLookBehind";
             default:
                 return "RegexGroupCaptured";
@@ -1255,7 +1255,7 @@ class RegexSentence extends RegexUnary
     public function __get($vname)
     {
         switch ($vname) {
-            case "stack_precedence":
+            case 'stack_precedence':
                 return 0;
         }
     }

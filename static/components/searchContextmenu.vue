@@ -21,7 +21,7 @@
 <script>    
 console.log('import searchContextmenu.vue');
 export default {
-    data(){
+    data() {
         return {
             focusedIndex: -1,    
         };
@@ -30,11 +30,11 @@ export default {
     props : [ 'left', 'top' ],
     
     computed:{
-        numOfLi(){
+        numOfLi() {
             return this.$el.children.length;
         },
         
-        href(){
+        href() {
             return this.$parent.href;
         },
     },

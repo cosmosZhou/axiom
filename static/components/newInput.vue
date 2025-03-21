@@ -3,7 +3,7 @@
 		<select v-if=phrases v-focus name=suggest class='non-arrowed' :style=select_style :size=select_size @keydown=keydown_select @blur=blur>
 			<option v-for="phrase in phrases" :value=phrase>{{phrase}}</option>
 		</select>
-		<input v-focus spellcheck=false ref=input name=module :value=module :size=input_size @keydown=keydown @input=oninput @change=onchange >
+		<input v-focus spellcheck=false ref=input name=module v-model=module :size=input_size @keydown=keydown @change=change >
 	</div>
 </template>
 
@@ -29,15 +29,15 @@ function getTextWidth(str) {
 
 console.log('import newInput.vue');
 export default {
-	props : [ 'module'],
+	props : [],
 	
-	created(){
+	created() {
 	},
 	
-	updated(){
+	updated() {
 	},
 	
-	data(){
+	data() {
 		return {
 			phrases: null,
 			start: -1,
@@ -45,73 +45,75 @@ export default {
 	},
 	
 	computed: {
-		input_size(){
+		module: {
+			get() {
+				return this.$parent.module;
+			},
+			set(module){
+				var self = this.$parent;
+				self.module = module;
+				self.update_action();
+			},
+		},
+
+		input_size() {
 			return this.module.length;
 		},
 		
-		select_size(){
+		select_size() {
 			return Math.min(this.phrases.length, 10);
 		},
 		
-		char_width(){
+		char_width() {
 			return getTextWidth("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") / 52;	
 		},
 		
-		select_style(){
+		select_style() {
 			var offset = this.start * this.char_width;
 			return `transform: translate(${offset}px, 20px)`;
 		},
 		
-		editor(){
+		editor() {
 			return this.$refs.input;
 		},
 		
-		input(){
+		input() {
 			return this.$refs.input;
 		},
 	},
 	
 	methods: {
-		async complete(hint, prefix, start){
-			var phrases = await form_post(`php/request/${hint}.php`, { prefix: prefix });
-			if (!phrases.length) {
-				return;
+		get_next_input() {
+			var self = this.$parent.$refs.render.renderLean[0];
+			if (self.instImplicit)
+				return self.instImplicit;
+			
+			if (self.strictImplicit)
+				return self.strictImplicit;
+
+			if (self.implicit)
+				return self.implicit;
+
+			if (self.given) {
+				for (var i of range(0, self.given.length)) {
+					if (self.given[i].insert)
+						return self.given[i];
+				}
 			}
 			
-			var input = this.input;
-			var value = input.value;
-			console.log("before assignment: value = ", value);
-			console.log("before assignment: module = ", this.module);
-			
-			if (phrases.length == 1) {
-				var [phrase] = phrases;
-				
-				var start1 = input.selectionStart;							
-				var start0 = start1;
-				start0 = start1 + prefix.search(/\w*$/) - prefix.length;						
-				value = value.slice(0, start0) + phrase + value.slice(start1);
-				console.log("after assignment:", value);
-				
-				input.value = value;
-				this.set_module(value);
-				
-				var selectionStart = start0 + phrase.length;
-				input.selectionStart = selectionStart;
-				input.selectionEnd = selectionStart;							
-			}
-			else{
-				this.phrases = phrases;
-				this.start = start + 1;
-			}
+			if (self.explicit)
+				return self.explicit;
+
+			cm = self.proof[0];
+			return cm.by ?? cm.calc?? cm;
 		},
-		
+
 		keydown(event){
 			var self = event.target; 
 			var text = self.value;
 
-			if (self.size <= text.length) {
+			if (self.size <= text.length)
 				self.size = text.length * 1.5;
-			}
 
 			var key = event.key;
 			switch (key) {
@@ -125,8 +127,8 @@ export default {
 					var prefix = text.match(/([\w.]+)$/)[1] + key;
 
 					console.log(`perform code suggestion on ${prefix}`);
-					this.complete("hint", prefix, start);
 					break;
+
 				case '.':
 					var start = self.selectionStart;
 					var text = text.slice(0, start);
@@ -134,26 +136,37 @@ export default {
 					var prefix = text.match(/([\w.]+)$/)[1] + key;
 
 					console.log(`perform code suggestion on ${prefix}`);
-					this.complete("suggest", prefix, start);
 					break;
-				case 'ArrowDown':
-					var cm = this.$parent.newApply.editor;
-					cm.focus();
 
-					var linesToMove = cm.getCursor().line;
-					for (let i = 0; i < linesToMove; ++i) {
-						cm.moveV(-1, "line");
+				case 'ArrowDown':
+					var start = self.selectionStart;
+					var cm = this.get_next_input().editor;
+					cm.focus();
+					if (start == 0) {
+						var linesToMove = cm.getCursor().line;
+						for (let i = 0; i < linesToMove; ++i)
+							cm.moveV(-1, "line");
 					}
+					else 
+						cm.setCursor(0, start);
 					break;
+
 				case 'F3':
 					console.log("F3 is pressed");
 					find_and_jump(event);
 					break;
-					
+
+				case 'F5':
+					if (event.ctrlKey){
+						event.preventDefault();
+						form.submit();
+					}					
+					break;
+
 				case 's':
 					if (event.ctrlKey){
 						event.preventDefault();
-						saveDocument();
+						form.submit();
 					}
 					break;						
 					
@@ -166,7 +179,6 @@ export default {
 		blur(event){
 			this.phrases = null;	
 		},
-		
 		
 		keydown_select(event){
 			var self = event.target;
@@ -188,7 +200,7 @@ export default {
 				
 				value = value.slice(0, pos) + phrase + value.slice(selectionStart);
 				input.value = value;
-				this.set_module(value);
+				this.module = value;
 				
 				this.phrases = null;
 				
@@ -207,7 +219,7 @@ export default {
 				var value = input.value;
 				value = text.slice(0, selectionStart - 1) + text.slice(selectionStart);
 				input.value = value;
-				this.set_module(value);
+				this.module = value;
 
 				this.phrases = null;
 				--selectionStart;
@@ -218,7 +230,7 @@ export default {
 				var value = input.value;
 				value = text.slice(0, selectionStart) + text.slice(selectionStart + 1);
 				input.value = value;
-				this.set_module(value);
+				this.module = value;
 				break;
 			case 'ArrowLeft':
 				var input = self.nextElementSibling;
@@ -249,16 +261,8 @@ export default {
 			});
 		},
 		
-		oninput(event){
-			this.set_module(event.target.value);
-		},
-		
-		onchange(event){
+		change(event){
 			document.title = event.target.value;	
-		},
-		
-		set_module(module){
-			setAttribute(this, 'module', module);
 		},
 	},
 	
@@ -270,13 +274,17 @@ export default {
 		    },
 		},
 	},
+
+	mounted() {
+		this.$parent.update_action();
+	}
 };
 </script>
 
 <style>
 
-select {	
-	width: auto;	
+select.non-arrowed {	
+	width: auto;
 	z-index: 10;
 	position: absolute;
 	outline: none;

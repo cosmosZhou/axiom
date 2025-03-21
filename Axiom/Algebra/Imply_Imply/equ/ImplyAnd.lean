@@ -1,10 +1,11 @@
 import Axiom.Algebra.Imply.equ.OrNot
 import Axiom.Algebra.NotAnd.equ.OrNotS
 import Axiom.Algebra.OrOr.equ.Or_Or
+open Algebra
 
-namespace Algebra.Imply_Imply.equ
 
-theorem ImplyAnd :
+@[main]
+private lemma main :
 -- imply
   p → q → r ↔ p ∧ q → r := by
 -- proof
@@ -16,7 +17,5 @@ theorem ImplyAnd :
     OrOr.equ.Or_Or
   ]
 
-
-end Algebra.Imply_Imply.equ
 
 -- created on 2024-07-01

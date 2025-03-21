@@ -18,7 +18,7 @@ export default {
 	props : [ 'module', 'graph', 'traceback', 'keyInput'],
 
 	computed: {
-		deep(){
+		deep() {
 			var hash = location.hash;			
 			if (hash){
 				hash = hash.slice(1);
@@ -32,7 +32,7 @@ export default {
 	methods: {
 	},
 	
-	mounted(){
+	mounted() {
 		var hierarchyModule = this.$refs.hierarchyModule;
 		if (this.deep){
 			hierarchyModule.deep = true;

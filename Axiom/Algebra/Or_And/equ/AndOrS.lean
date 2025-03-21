@@ -1,9 +1,9 @@
 import Axiom.Algebra.OrAnd.equ.AndOrS
+open Algebra
 
 
-namespace Algebra.Or_And.equ
-
-theorem AndOrS :
+@[main]
+private lemma main :
 -- imply
   r ∨ p ∧ q ↔ (r ∨ p) ∧ (r ∨ q) := by
 -- proof
@@ -14,7 +14,5 @@ theorem AndOrS :
   ]
   apply OrAnd.equ.AndOrS
 
-
-end Algebra.Or_And.equ
 
 -- created on 2024-07-01

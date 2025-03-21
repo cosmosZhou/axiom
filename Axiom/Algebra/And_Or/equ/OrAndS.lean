@@ -1,15 +1,14 @@
-import Axiom.Algebra.OrAndS.to.And_Or
-import Axiom.Algebra.And_Or.to.OrAndS
+import Axiom.Algebra.And_Or.of.OrAndS
+import Axiom.Algebra.OrAndS.of.And_Or
+open Algebra
 
-namespace Algebra.And_Or.equ
 
-theorem OrAndS :
+@[main]
+private lemma main :
 -- imply
   p ∧ (q ∨ r) ↔ p ∧ q ∨ p ∧ r :=
 -- proof
-  ⟨And_Or.to.OrAndS, OrAndS.to.And_Or⟩
+  ⟨OrAndS.of.And_Or, And_Or.of.OrAndS⟩
 
-
-end Algebra.And_Or.equ
 
 -- created on 2024-07-01

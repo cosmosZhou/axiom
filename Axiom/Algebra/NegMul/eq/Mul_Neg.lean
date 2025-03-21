@@ -1,8 +1,9 @@
 import Axiom.Algebra.Mul_Neg.eq.NegMul
+open Algebra
 
-namespace Algebra.NegMul.eq
 
-theorem Mul_Neg
+@[main]
+private lemma main
   [Mul α] [HasDistribNeg α]
   {a b : α} :
 -- imply
@@ -10,7 +11,5 @@ theorem Mul_Neg
 -- proof
   rw [Mul_Neg.eq.NegMul]
 
-
-end Algebra.NegMul.eq
 
 -- created on 2024-07-01

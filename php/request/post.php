@@ -6,14 +6,14 @@ if ($_POST) {
 else {
     $input = file_get_contents('php://input');
     $input = std\decode($input);
-    if ($header = $input['header']) {
+    if ($header = $input['header']?? null) {
         $header = array_map(fn($args) => "$args[0]: $args[1]", std\entries($header));
     }
 
-    // error_log('$url = '.$input['url']);
-    // error_log('$data = '.std\encode($input['data']));
-    // error_log('$id = '.$input['id']);
-    echo std\json_post($input['url'], $input['data'], $header, $input['id']);
+    if (function_exists('curl_init'))
+        echo std\json_post($input['url'], $input['data'], $header, $input['id']?? null);
+    else
+        echo std\json_post_native($input['url'], $input['data'], $header, $input['id']?? null);
 }
 ?>
 

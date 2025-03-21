@@ -77,28 +77,26 @@
 </template>
 
 <script>
-console.log('import mysqlUpdate.vue');
 import {piece_together} from "../js/mysql.js"
 import mysqlLeaf from "./mysqlLeaf.vue"
 import mysqlExpr from "./mysqlExpr.vue"
 import mysqlDot from "./mysqlDot.vue"
 import mysqlGroup from "./mysqlGroup.vue"
 import mysqlOrder from "./mysqlOrder.vue"
+console.log('import mysqlUpdate.vue');
 
 export default {
 	components: {mysqlLeaf, mysqlDot, mysqlExpr, mysqlGroup, mysqlOrder},
 	
 	props : ['table', 'limit', 'offset', 'kwargs'],
 	
-	data(){
+	data() {
 		var {$data} = this.$parent;
 		$data.fieldForLabelling = null;
 		return $data;
 	},
 
 	created(){
-		this.$data.execute = getParameterByName('execute');
-		this.$data.repeat = getParameterByName('repeat');
 		var {value} = this;
 		var {set} = value;
 		if (set.eq && !set.eq[0]) {
@@ -112,11 +110,61 @@ export default {
 	},
 	
 	computed: {
+		repeat: {
+			get(){
+				var {kwargs} = this.kwargs;
+				if (kwargs)
+					return kwargs.execute == 'repeat';
+				return false;
+			},
+
+			set(repeat){
+				var {kwargs} = this.kwargs;
+				if (kwargs) {
+					if (repeat)
+						kwargs.execute = 'repeat';
+					else if (kwargs.execute == 'repeat')
+						kwargs.execute = true;
+				}
+				else {
+					if (repeat)
+						this.kwargs.kwargs = {execute : 'repeat'};
+				}
+			},
+		},
+
+		execute: {
+			get(){
+				var {kwargs} = this.kwargs;
+				if (kwargs)
+					return kwargs.execute? true : false;
+				return false;
+			},
+
+			set(execute){
+				var {kwargs} = this.kwargs;
+				if (kwargs) {
+					if (execute) {
+						if (!kwargs.execute)
+							kwargs.execute = true;
+					}
+					else {
+						if (kwargs.execute)
+							kwargs.execute = false;
+					}
+				}
+				else {
+					if (execute)
+						this.kwargs.kwargs = {execute : true};
+				}
+			},
+		},
+
 		option() {
 			return this.$parent.option;
 		},
 
-		with_func(){
+		with_func() {
 			var {value} = this;
 			if (value.with)
 				return 'with';
@@ -124,7 +172,7 @@ export default {
 				return 'with recursive';
 		},
 
-		with_value(){
+		with_value() {
 			var {value} = this;
 			if (value.with)
 				return value.with;
@@ -164,11 +212,11 @@ export default {
 			return `${join_type}_join`;
 		},
 
-		change_table(){
+		change_table() {
 			return this.$parent.change_table;
 		},
 		
-		change_database(){
+		change_database() {
 			return this.$parent.change_database;
 		},
 
@@ -280,14 +328,13 @@ export default {
 			
 		},
 		
-		fieldsForLabelling(){
+		fieldsForLabelling() {
 			return Object.keys(this.autoLabellingType);
 		},
 		
 		href_select() {
-			var {sample, host, user, transform, kwargs} = this;
+			var {sample, host, transform, kwargs} = this;
 			var url = [];
-			url.push(`user=${user}`);
 			if (host && host != 'localhost')
 				url.push(`host=${host}`);
 			
@@ -332,9 +379,8 @@ export default {
 		},
 
 		href_update() {
-			var {sample, host, user, transform, kwargs} = this;
+			var {sample, host, transform, kwargs} = this;
 			var url = [];
-			url.push(`user=${user}`);
 			if (host && host != 'localhost')
 				url.push(`host=${host}`);
 			
@@ -345,33 +391,32 @@ export default {
 			for (var Field in transform) {
 				url.push(`transform[${Field}]=${transform[Field]}`);
 			}
-			
-			if (this.execute)
-				url.push("execute=true");
-			
-			if (this.repeat)
-				url.push("repeat=true");
-			
+			if (this.execute) {
+				if (this.repeat)
+					url.push("kwargs[execute]=repeat");
+				else
+					url.push("kwargs[execute]=true");
+			}
 			return 'query.php?' + url.join('&');
 		},
 
-		change_input(){
+		change_input() {
 			return this.$parent.change_input;
 		},
 		
-		style_select_table(){
+		style_select_table() {
 			return this.$parent.style_select_table;
 		},
 		
-		style_select(){
+		style_select() {
 			return this.$parent.style_select;
 		},
 		
-		style_input(){
+		style_input() {
 			return this.$parent.style_input;
 		},
 		
-		input_kwargs(){
+		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
 		
@@ -380,7 +425,7 @@ export default {
 		},
 
 		functor: {
-			get(){
+			get() {
 				var {set} = this.kwargs;
 				if (set) {
 					var [lhs, rhs] = set.eq;
@@ -433,7 +478,7 @@ export default {
 		},
 		
 		old: {
-			get(){
+			get() {
 				var {set: {eq: [lhs, rhs]}} = this.kwargs;
 				var {functor} = this;
 				if (functor) {
@@ -449,7 +494,7 @@ export default {
 		},
 		
 		new: {
-			get(){
+			get() {
 				var {set: {eq: [lhs, rhs]}} = this.kwargs;
 				var {functor} = this;
 				if (functor) {
@@ -679,7 +724,7 @@ export default {
 		},
 	},
 	
-	mounted(){
+	mounted() {
 	},
 }
 </script>

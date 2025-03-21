@@ -1,22 +1,16 @@
 import Axiom.Basic
 
 
-namespace Algebra.And_False.equ
-
-theorem False :
+@[main]
+private lemma main :
 -- imply
   p ∧ False ↔ False := by
 -- proof
   apply Iff.intro
-  focus
-    intro h
-    exact h.right
+  intro h
+  exact h.right
+  intro hf
+  exact hf.elim
 
-  focus
-    intro hf
-    exact hf.elim
-
-
-end Algebra.And_False.equ
 
 -- created on 2024-07-01

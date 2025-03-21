@@ -1,8 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.AddAdd.eq
 
-theorem Add_Add
+@[main]
+private lemma main
   [AddSemigroup α]
   {a b : α} :
 -- imply
@@ -10,7 +10,5 @@ theorem Add_Add
 -- proof
   rw [add_assoc]
 
-
-end Algebra.AddAdd.eq
 
 -- created on 2024-07-01

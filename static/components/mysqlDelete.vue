@@ -22,9 +22,9 @@
 </template>
 
 <script>
-console.log('import mysqlDelete.vue');
 import mysqlDot from "./mysqlDot.vue"
 import mysqlExpr from "./mysqlExpr.vue"
+console.log('import mysqlDelete.vue');
 
 import {piece_together} from "../js/mysql.js"
 
@@ -33,24 +33,24 @@ export default {
 	
 	props : ['kwargs'],
 	
-	data(){
+	data() {
 		var {$data} = this.$parent;
 		$data.actionToGet = 'browse';
 		//$data.name = '';
 		return $data;
 	},
 
-	created(){
+	created() {
 		this.$data.execute = getParameterByName('execute');
 		this.$data.repeat = getParameterByName('repeat');
 	},
 	
 	computed: {
-		change_table(){
+		change_table() {
 			return this.$parent.change_table;
 		},
 		
-		change_database(){
+		change_database() {
 			return this.$parent.change_database;
 		},
 		
@@ -163,19 +163,19 @@ export default {
 			return this.kwargs;
 		},
 
-		change_table(){
+		change_table() {
 			return this.$parent.change_table;
 		},
 
-		change_input(){
+		change_input() {
 			return this.$parent.change_input;
 		},
 
-		style_select_table(){
+		style_select_table() {
 			return this.$parent.style_select_table;
 		},
 
-		style_input(){
+		style_input() {
 			return this.$parent.style_input;
 		},
 		
@@ -205,14 +205,13 @@ export default {
 			var kwargs = {...this.kwargs};
 			delete kwargs.delete;
 			var url = piece_together(kwargs);
-			var {sample, host, user} = this;
+			var {sample, host} = this;
 			if (sample)
 				url.push(`sample=${sample}`);
 			
 			if (host && host != 'localhost')
 				url.push(`host=${host}`);
 			
-			url.push(`user=${user}`);
 			url.push(`delete=true`);
 			if (this.execute)
 				url.push("execute=true");

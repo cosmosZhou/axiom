@@ -1,18 +1,16 @@
-import Axiom.Basic
-import Axiom.Algebra.Or.to.Or.symm
+import Axiom.Algebra.Or.of.Or.symm
+open Algebra
 
-namespace Algebra.Or
 
-theorem comm :
+@[main]
+private lemma main :
 -- imply
   p ∨ q ↔ q ∨ p :=
 -- proof
   ⟨
-    Or.to.Or.symm,
-    Or.to.Or.symm
+    Or.of.Or.symm,
+    Or.of.Or.symm
   ⟩
 
-
-end Algebra.Or
 
 -- created on 2024-07-01

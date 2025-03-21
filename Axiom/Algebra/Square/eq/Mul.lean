@@ -1,16 +1,14 @@
-import Axiom.sympy.core.numbers
+import Axiom.Basic
 
-namespace Algebra.Square.eq
 
-theorem Mul
+@[main]
+private lemma main
   [Monoid α]
   {x : α} :
 -- imply
-  x² = x * x := by
+  x² = x * x :=
 -- proof
-  apply pow_two
+  pow_two x
 
-
-end Algebra.Square.eq
 
 -- created on 2024-07-01

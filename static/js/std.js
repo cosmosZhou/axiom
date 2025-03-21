@@ -296,7 +296,7 @@ Number.prototype.compareTo = function(that) {
 	return this - that;
 };
 
-Number.prototype.percentage = function(){
+Number.prototype.percentage = function() {
 	return (this * 10000).round() / 100 + '%';
 };
 
@@ -413,35 +413,35 @@ Number.prototype.__defineGetter__("isInteger", function() {
 	return Number.isInteger(this);
 });
 
-Number.prototype.sign = function(){
+Number.prototype.sign = function() {
 	return Math.sign(this);
 };
 	
-Number.prototype.round = function(){
+Number.prototype.round = function() {
 	return Math.round(this);
 };
 
-Number.prototype.floor = function(){
+Number.prototype.floor = function() {
 	return Math.floor(this);
 };
 
-Number.prototype.ceil = function(){
+Number.prototype.ceil = function() {
 	return Math.ceil(this);
 };
 
-Number.prototype.abs = function(){
+Number.prototype.abs = function() {
 	return Math.abs(this);
 };
 
-Number.prototype.neg = function(){
+Number.prototype.neg = function() {
 	return -this;
 };
 
-Number.prototype.sqrt = function(){
+Number.prototype.sqrt = function() {
 	return Math.sqrt(this);
 };
 
-Number.prototype.inverse = function(){
+Number.prototype.inverse = function() {
 	return Rational.new(1, this);
 };
 
@@ -465,7 +465,7 @@ Number.prototype.toRational = function() {
 	return Rational.new((this * (1 << 20)).round(), 1 << 20);
 };
 
-Number.prototype.encodeURI = function(){
+Number.prototype.encodeURI = function() {
 	return this.toString();
 };
 
@@ -637,7 +637,7 @@ BigInt.prototype.float = function() {
 
 BigInt.prototype.isInteger = true;
 
-BigInt.prototype.sign = function(){
+BigInt.prototype.sign = function() {
 	if (this > 0n)
 		return 1;
 	if (this < 0n)
@@ -645,33 +645,33 @@ BigInt.prototype.sign = function(){
 	return 0;
 };
 	
-BigInt.prototype.round = function(){
+BigInt.prototype.round = function() {
 	return this.float();
 };
 
-BigInt.prototype.floor = function(){
+BigInt.prototype.floor = function() {
 	return this;
 };
 
-BigInt.prototype.ceil = function(){
+BigInt.prototype.ceil = function() {
 	return this;
 };
 
-BigInt.prototype.abs = function(){
+BigInt.prototype.abs = function() {
 	if (this.sign() < 0)
 		return -this;
 	return this;
 };
 
-BigInt.prototype.neg = function(){
+BigInt.prototype.neg = function() {
 	return -this;
 };
 
-BigInt.prototype.sqrt = function(){
+BigInt.prototype.sqrt = function() {
 	return Math.sqrt(this.float());
 };
 
-BigInt.prototype.inverse = function(){
+BigInt.prototype.inverse = function() {
 	return Rational.new(1n, this);
 };
 
@@ -707,17 +707,39 @@ String.prototype.__defineGetter__("isNumber", function() {
 	return /^-?\d+(\.\d+)?$/.test(this);
 });
 
-String.prototype.lang = function(){
-	if (this.match(XRegExp('\\p{Han}')))
-		return 'cn';
+String.prototype.lang = function() {
+	if (this.match(XRegExp('\\p{Hiragana}')))
+		return 'jp';
+	
+	if (this.length <= 2) {
+		if (this.match(XRegExp('\\p{Han}')))
+			return 'cn';
+	}
+	else {
+		if (this.match(XRegExp('\\p{Han}{2,}')))
+			return 'cn';
+	}
+
+	if (this.match(/[éèàùçœæ]/))
+		return 'fr';
+
+	if (this.match(/[äöüß]/))
+		return 'de';
+
+	if (this.match(XRegExp('\\p{Arabic}')))
+		return 'ar';
+
+	if (this.match(XRegExp('\\p{Hangul}')))
+		return 'kr';
+
 	return 'en';
 };
 
-String.prototype.rows = function(){
+String.prototype.rows = function() {
 	return this.split('\n').length;
 };
 
-String.prototype.cols = function(){
+String.prototype.cols = function() {
 	var cols = [];
 	for (var line of this.split('\n')) {
 		cols.push(line.strlen());
@@ -733,7 +755,7 @@ String.prototype.equals = function(rhs){
 //from urllib import parse
 //parse.urlparse(url)
 //parse.quote(text)
-String.prototype.encodeURI = function(){
+String.prototype.encodeURI = function() {
 	return encodeURIComponent(this);
 };
 
@@ -763,7 +785,7 @@ String.prototype.format = function() {
 	);
 };
 
-String.prototype.percentage = function(){
+String.prototype.percentage = function() {
 	return 'NaN';
 };
 
@@ -791,11 +813,11 @@ String.prototype.__defineGetter__("hump", function() {
 	return this.replace(/_[a-z]/g, s => s.slice(1).capitalize());
 });
 
-String.prototype.protectReverseSolidus = function(){
+String.prototype.protectReverseSolidus = function() {
 	return this.replace(/\\/g, "\\\\").replace(/\n/g, "\\n");
 };
 
-String.prototype.toggleCase = function(){
+String.prototype.toggleCase = function() {
 	var array = [];
 	for (var i = 0; i < this.length; ++i) {
 		var ch = this[i];
@@ -809,19 +831,25 @@ String.prototype.toggleCase = function(){
 	return array.join('');
 };
 
-String.prototype.executeReverseSolidus = function(){
+String.prototype.executeReverseSolidus = function() {
 	return this.replace(/\\n/g, "\n").replace(/\\\\/g, "\\");
 };
 
-String.prototype.ltrim = function() {
-	return this.replace(/(^\s*)/g, "");
+String.prototype.ltrim = function(char) {
+	if (char)
+		return this.replace(new RegExp(`^[${char}]*`, 'g'), "");
+	else
+		return this.replace(/^\s*/g, "");
 };
 
-String.prototype.rtrim = function() {
-	return this.replace(/(\s*$)/g, "");
+String.prototype.rtrim = function(char) {
+	if (char)
+		return this.replace(new RegExp(`[${char}]*$`, 'g'), "");
+	else
+		return this.replace(/\s*$/g, "");
 };
 
-String.prototype.strip = function(){
+String.prototype.strip = function() {
 	return this.trim();
 };
 
@@ -834,11 +862,11 @@ String.prototype.back = function() {
 	return this.slice(-1);
 };
 
-String.prototype.isdigit = function(){
+String.prototype.isdigit = function() {
 	return /^\d+$/.test(this);
 };
 
-String.prototype.isChinese = function(){
+String.prototype.isChinese = function() {
 	var chineseCharCount = 0;
 	for (var ch of this) {
 		if (XRegExp('\\p{Han}').test(ch))
@@ -848,19 +876,19 @@ String.prototype.isChinese = function(){
 	return chineseCharCount > this.length / 8;
 };
 
-String.prototype.isalpha = function(){
+String.prototype.isalpha = function() {
 	return /^[a-zA-Z]+$/.test(this);
 };
 
-String.prototype.isupper = function(){
+String.prototype.isupper = function() {
 	return /^[A-Z]+$/.test(this);
 };
 
-String.prototype.islower = function(){
+String.prototype.islower = function() {
 	return /^[a-z]+$/.test(this);
 };
 
-String.prototype.ispunct = function(){
+String.prototype.ispunct = function() {
 	if (/^\s+$/.test(this))
 		return false;
 	return /^\W+$/.test(this);
@@ -876,15 +904,15 @@ String.prototype.fullmatch = function(regex){
 	);
 };
 
-String.prototype.isspace = function(){
+String.prototype.isspace = function() {
 	return /^\s+$/.test(this);
 };
 
-String.prototype.strlen = function(){
-	return strlen(this);
-};
+String.prototype.regexp = function(flags='') {
+    return new RegExp(this, flags);
+}
 
-String.prototype.strlen = function(){
+String.prototype.strlen = function() {
 	return strlen(this);
 };
 
@@ -1041,7 +1069,7 @@ Array.prototype.equals = function(rhs){
 	return true;
 };
 
-Array.prototype.sum = function(){
+Array.prototype.sum = function() {
 	return sum(this);
 };
 
@@ -1062,7 +1090,7 @@ Array.prototype.clear = function() {
 };
 
 Array.prototype.resize = function(newSize,defaultValue) {
-    while(newSize > this.length)
+    while (newSize > this.length)
         this.push(defaultValue);
     this.length = newSize;
 };
@@ -1086,6 +1114,7 @@ Array.prototype.back = function(val) {
 };
 
 Array.prototype.contains = function(val) {
+	// return this.include(val);
 	for (let obj of this){
 		if (equals(obj, val)){
 			return true;
@@ -1263,11 +1292,11 @@ Array.prototype.matmul = function(that){
 	return mat;
 };
 
-Array.prototype.toRational = function(){
+Array.prototype.toRational = function() {
 	return this.map(x => x.toRational());
 };
 
-Array.prototype.round = function(){
+Array.prototype.round = function() {
 	return this.map(x => x.round());
 };
 
@@ -1395,6 +1424,12 @@ Array.prototype.array_diff = function (other) {
 
 Array.prototype.array_merge = function (other) {
 	return [...new Set([...this, ...other])];
+}
+
+Array.prototype.array_assign = function (other) {
+	this.length = 0;
+	this.push(...other);
+	// this.splice(0, this.length, ...other);
 }
 
 Set.prototype.array_diff = function (other) {
@@ -1525,7 +1560,7 @@ class PriorityQueue {
 		return !this.length;
 	}
 
-	initialize_data(){
+	initialize_data() {
 		this._list = [];
 		this._Idx = 0; // used to look for the right kinder / parent.
 	}
@@ -1579,7 +1614,7 @@ class PriorityQueue {
             this.adjust_heap(_Hole);
     }
 
-	get length(){
+	get length() {
 		return this._list.length;
 	}
     // look for the right kinder _Idx * 2 + 2; remember the left kinder is
@@ -1653,7 +1688,7 @@ class PriorityQueue {
         return _Hole;
     }
 
-	shift(){
+	shift() {
 		this._list.shift();
 	}
 	
@@ -2029,7 +2064,7 @@ function toUnicodeDigit(digits){
     return ret;
 }
 
-function array_push(){
+function array_push() {
 	var [arr, ...keys] = arguments;
 	var value = keys.pop();
 	for (let key of keys){
@@ -2146,7 +2181,7 @@ function max(arr){
 	return arr.reduce((a, b) => b.gt(a) ? b: a, -Infinity);
 }
 
-function min(){
+function min() {
 	var arr = arguments.length == 1? arguments[0]: [...arguments];
 	return arr.reduce((a, b) => b.lt(a) ? b: a, Infinity);
 }
@@ -2233,11 +2268,11 @@ class SymbolicSet {
 }
 
 class EmptySet extends SymbolicSet {
-	get is_EmptySet(){
+	get is_EmptySet() {
 		return true;
 	}
 	
-	get card(){
+	get card() {
 		return 0;
 	}
 	
@@ -2279,7 +2314,7 @@ class EmptySet extends SymbolicSet {
 }
 
 class Union extends SymbolicSet {
-	static new(){
+	static new() {
 		if (!arguments.length)
 			return new EmptySet;
 			
@@ -2289,7 +2324,7 @@ class Union extends SymbolicSet {
 		return new Union(...arguments);
 	}
 	
-	get is_Union(){
+	get is_Union() {
 		return true;
 	}
 	
@@ -2304,12 +2339,12 @@ class Union extends SymbolicSet {
 		return false;
 	}
 	
-	constructor(){
+	constructor() {
 		super();
 		this.args = [...arguments];
 	}
 	
-	get card(){
+	get card() {
 		var card = 0;
 		for (var arg of this.args){
 			card = card.add(arg.card);
@@ -2488,7 +2523,7 @@ class Union extends SymbolicSet {
 		return this.args.map(domain => domain.sliced(obj)).join('\t');
 	}
 	
-	nonoverlapping_check(){
+	nonoverlapping_check() {
 		for (var j of range(1, this.args.length)) {
 			for (var i of range(j)) {
 				console.assert(this.args[i].intersects(this.args[j]).is_EmptySet, "args[i].intersects(args[j]).is_EmptySet");
@@ -2496,13 +2531,13 @@ class Union extends SymbolicSet {
 		}
 	}
 	
-	try_union(){
-		//http://localhost/axiom/?module=Sets.eq_card.subset.then.eq
+	try_union() {
+		//http://localhost/axiom/?module=Set.eq_card.subset.then.eq
 		var bbox = this.bbox;
 		return this.card == bbox.card ? bbox: this;
 	}
 	
-	_eval_bbox(){
+	_eval_bbox() {
 		var x_min = Infinity;
 		var y_min = Infinity;
 		var x_max = -Infinity;
@@ -2524,16 +2559,16 @@ class Union extends SymbolicSet {
 }
 
 class Intersection extends SymbolicSet {
-	get is_Intersection(){
+	get is_Intersection() {
 		return true;
 	}
 	
-	constructor(){
+	constructor() {
 		super();
 		this.args = [...arguments];
 	}
 	
-	get card(){
+	get card() {
 	}
 	
 	union(that){
@@ -2611,26 +2646,26 @@ class Intersection extends SymbolicSet {
 		return that;
 	}
 	
-	_eval_bbox(){
+	_eval_bbox() {
 	}
 	
-	static new(){
+	static new() {
 		var args = [...arguments];
 		return new Intersection(...args.sort((a, b)=> a.compareTo(b)));
 	}
 }
 
 class Complement extends SymbolicSet {
-	get is_Complement(){
+	get is_Complement() {
 		return true;
 	}
 	
-	constructor(){
+	constructor() {
 		super();
 		this.args = [...arguments];
 	}
 	
-	get card(){
+	get card() {
 	}
 	
 	union(that){
@@ -2659,12 +2694,12 @@ class Complement extends SymbolicSet {
 	intersects(that){
 	}
 	
-	_eval_bbox(){
+	_eval_bbox() {
 	}
 }
 
 class Range extends SymbolicSet {
-	get is_Range(){
+	get is_Range() {
 		return true;
 	}
 
@@ -2775,7 +2810,7 @@ class Range extends SymbolicSet {
 		}
 	}
 	
-	get card(){
+	get card() {
 		return this.stop - this.start;
 	}
 	
@@ -2834,7 +2869,7 @@ class Polygon extends SymbolicSet {
 		return this._p;
 	}
 	
-	get is_Polygon(){
+	get is_Polygon() {
 		return true;
 	}
 	
@@ -2856,7 +2891,7 @@ class Polygon extends SymbolicSet {
 }
 
 class Tetragon extends Polygon {
-	get is_Tetragon(){
+	get is_Tetragon() {
 		return true;
 	}
 	
@@ -2930,11 +2965,11 @@ class Tetragon extends Polygon {
 }
 
 class Rectangle extends Tetragon {
-	get is_Rectangle(){
+	get is_Rectangle() {
 		return true;
 	}
 
-	constructor(){
+	constructor() {
 		super();
 		if (arguments.length == 4)
 			var [x, y, width, height] = arguments;
@@ -2977,7 +3012,7 @@ class Rectangle extends Tetragon {
 		this.args[3] = height;
 	}
 	
-	get x_stop(){
+	get x_stop() {
 		return this.x.add(this.width);
 	}
 	
@@ -2985,7 +3020,7 @@ class Rectangle extends Tetragon {
 		this.width = x_stop.sub(this.x);
 	}
 	
-	get y_stop(){
+	get y_stop() {
 		return this.y.add(this.height);
 	}
 	
@@ -3251,7 +3286,7 @@ class Rectangle extends Tetragon {
 		return new Rectangle(this.x.add(dx), this.y.add(dy), this.width, this.height);
 	}
 	
-	distance(){
+	distance() {
 		if (arguments.length == 2) {
 			var [x0, y0] = arguments;
 			return distance(this.anchorPoint(x0, y0), [x0, y0]);
@@ -3367,11 +3402,11 @@ class Rectangle extends Tetragon {
 		return -1;
 	}
 	
-	_eval_bbox(){
+	_eval_bbox() {
 		return this;
 	}
 	
-	_eval_p(){
+	_eval_p() {
 		return [[this.x, this.y], [this.x_stop, this.y], [this.x_stop, this.y_stop], [this.x, this.y_stop]];
 	}
 }
@@ -3510,7 +3545,7 @@ function solve_y(x, p0, p1) {
 }
 
 class Parallelogram extends Tetragon {
-	get is_Parallelogram(){
+	get is_Parallelogram() {
 		return true;
 	}
 	
@@ -3568,7 +3603,7 @@ class Parallelogram extends Tetragon {
 }
 
 class Trapezoid extends Tetragon {
-	get is_Trapezoid(){
+	get is_Trapezoid() {
 		return true;
 	}
 
@@ -3588,7 +3623,7 @@ class Trapezoid extends Tetragon {
 		return new this.constructor(this.x.map(x => x.add(dx)), this.y.map(y => y.add(dy)));
 	}
 	
-	get args(){
+	get args() {
 		return [this.x, this.y];
 	}
 	
@@ -3610,7 +3645,7 @@ class Trapezoid extends Tetragon {
 //horizontal Trapezoid
 // in the form y: [y0, y1], x: [x0, x1, x2, x3]
 class TrapezoidH extends Trapezoid {
-	get is_TrapezoidH(){
+	get is_TrapezoidH() {
 		return true;
 	}
 	
@@ -3840,7 +3875,7 @@ class TrapezoidH extends Trapezoid {
 	    return Trapezoid.prototype.complement.apply(this, arguments);
 	}
 	
-	_eval_bbox(){
+	_eval_bbox() {
 		var {x, y} = this;
 		var x_min = min(x[0], x[3]);
 		var x_max = max(x[2], x[1]);
@@ -4015,7 +4050,7 @@ class TrapezoidV extends Trapezoid {
 		super(x, y);
 	}
 	
-	get is_TrapezoidV(){
+	get is_TrapezoidV() {
 		return true;
 	}
 		
@@ -4393,7 +4428,7 @@ function partitionText(text, d){
 }
 
 
-function *zip(){
+function *zip() {
     var size = Infinity;
     for (var arr of arguments) {
 		size = Math.min(arr.length, size);
@@ -4409,7 +4444,7 @@ function *zip(){
     }
 }
 
-function zipped(){
+function zipped() {
     return [...zip(...arguments)];
 }
 
@@ -4438,7 +4473,7 @@ class Real {
 }
 
 class Rational extends Real {
-	get is_Rational(){
+	get is_Rational() {
 		return true;
 	}
 	
@@ -4581,7 +4616,7 @@ class Rational extends Real {
 		return new Rational(p, q);
 	}
 	
-	float(){
+	float() {
 		return this.p.float() / this.q.float();
 	}
 	
@@ -4625,11 +4660,11 @@ class Rational extends Real {
 		return this.p.is_nonnegative;
 	}
 	
-	round(){
+	round() {
 		return this.float().round();
 	}
 	
-	floor(){
+	floor() {
 		if (this.is_negative)
 			return -((-this.p) / this.q) - 1n;
 		return this.p / this.q;
@@ -4641,7 +4676,7 @@ class Rational extends Real {
 		return -((-this.p) / this.q);
 	}
 	
-	sqrt(){
+	sqrt() {
 		return this.float().sqrt();
 	}
 	
@@ -5005,7 +5040,7 @@ class Cookie {
 			var pair = cookie[i].trim().split("=");
 			if (pair.length != 2)
 				continue;
-			console.log(pair);
+			// console.log(pair);
 			this.dict[pair[0]] = unescape(pair[1]);
 		}
 	}
@@ -5055,7 +5090,7 @@ async function createApp(component, data, id) {
 					var text = getitem(window.js, ...name.slice(1));
 					//console.log(text);
                     return {
-						getContentData(){
+						getContentData() {
 							return text;
 						},
 						type: ".mjs"
@@ -5071,7 +5106,7 @@ async function createApp(component, data, id) {
 			if (url.endsWith(".js")) {
 				return res.text().then(text => {
                     return {
-						getContentData(){
+						getContentData() {
 							return text;
 						},
 						type: ".mjs"
@@ -5143,22 +5178,69 @@ function track_mounted(tag){
 	};
 }
 
-function create_ClipboardJS(tag) {
-	var clipboard = new ClipboardJS(tag);
+const clipboard = {
+	instance: null,
+	mounted(el){
+		// var {tagName, id} = el;
+		// if (id) {
+		// 	id = id.replace(/([.:])/g, '\\$1');
+		// 	tagName += `#${id}`;
+		// }
 
-	clipboard.on('success', function(e) {
-		console.log(e);
-	});
+		if (!el.getAttribute('data-clipboard-action'))
+			el.setAttribute('data-clipboard-action', 'copy');
+		el.setAttribute('data-clipboard-target', '[data-clipboard-action="copy"]');
 
-	clipboard.on('error', function(e) {
-		console.log(e);
-	});
-}
+		// el.addEventListener('click', function(event) {
+			// Prevent left-click events from triggering ClipboardJS
+    		// event.stopImmediatePropagation();
+		// });
+		el.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+            clipboard.instance.onClick(event);
+        });
 
-async function query(host, user, token, sql) {
+		if (!clipboard.instance) {
+			var instance = clipboard.instance = new ClipboardJS('[data-clipboard-action="copy"]');
+
+			instance.on('success', function(event) {
+				var {trigger} = event;
+				if (trigger.getAttribute('data-clipboard-text')) {
+					var range = document.createRange();
+					range.selectNodeContents(trigger);
+					var selection = window.getSelection();
+					selection.removeAllRanges();
+					selection.addRange(range);				
+				}
+				else
+					console.log(event);
+			});
+
+			instance.on('error', function(event) {
+				console.log(event);
+				event.clearSelection();
+			});
+
+			// Store the original onClick function
+			const onClick = ClipboardJS.prototype.onClick;
+
+			// Override the onClick function
+			ClipboardJS.prototype.onClick = function(event) {
+				// Check if the event is a left-click (event.button === 0)
+				if (event.button === 0)
+					// Do nothing for left-click
+					return;
+				// Call the original onClick function for other events (e.g., right-click)
+				onClick.call(this, event);
+			};
+		}
+	},
+};
+
+async function query(host, token, sql) {
 	var data = {sql};
 	data.token = token;
-	var kwargs = {user};
+	var kwargs = {};
 	if (host && host != 'localhost')
 		kwargs.host = host;
 	return await form_post('query.php?' + get_url(kwargs), data);
@@ -5371,5 +5453,31 @@ function fetchEventSource(input, _a) {
 
 class FatalError extends Error {
 };
+
+// convert obj to python-like string
+function str(obj) {
+	if (obj == null)
+		return "None";
+    if (obj.isArray)
+        return "[%s]".format(obj.map(obj => str(obj)).join(", "));
+    if (obj.isString) {
+		obj = obj.replace(/\n/g, "\\n").replace(/\xa0/g, "\\xa0");
+        if (obj.contains("'")) {
+            if (obj.contains('"'))
+                return "'%s'".format(obj.replace(/'/g, "\\'"));
+			else
+				return '"%s"'.format(obj);
+        }
+		else 
+			return "'%s'".format(obj);
+    }
+
+	var array = [];
+	for (var [key, value] of Object.entries(obj)) {
+		array.push(str(key) + ": " + str(value));
+	}
+	return "{%s}".format(array.join(", "));
+}
+
 
 console.log("import std.js");

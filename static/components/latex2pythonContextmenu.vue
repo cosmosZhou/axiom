@@ -7,12 +7,13 @@
 </template>
 
 <script>
-console.log('import latex2pythonContextmenu.vue');
 import {keydown, directives} from "../js/contextmenu.js"
+console.log('import latex2pythonContextmenu.vue');
+
 export default {
 	props : [ 'left', 'top'],
 
-	data(){
+	data() {
 		return {
 			focusedIndex: -1,
 			hint : ['property', 'delete', 'toggle training', 'rename', 'toggle server'],
@@ -20,19 +21,19 @@ export default {
 		};
 	},
 
-	created(){
+	created() {
 	},
 	
 	computed: {
-		length(){
+		length() {
 			return this.color.length;
 		},
 
-		host(){
+		host() {
 			return this.$parent.host;
 		},
 		
-		user(){
+		user() {
 			return this.$parent.user;
 		},
 
@@ -76,7 +77,7 @@ export default {
 	},
 	
 	methods : {
-		coordinates(){
+		coordinates() {
 			var self = this.$parent;
 			var table = self.$refs.table;
 			return [this.left - table.getScrollLeft(), this.top - table.getScrollTop()];
@@ -95,19 +96,19 @@ export default {
 			return keydown(this, event);
 		},
 		
-		toggle_training(){
+		toggle_training() {
 			this.mysql.toggle_training(this.$parent.$parent);
 		},
 		
-		toggle_server(){
+		toggle_server() {
 			return this.mysql.toggle_server();
 		},
 
-		delete(){
+		delete() {
 			this.mysql.delete_instance(this.$parent);
 		},
 		
-		async rename(){
+		async rename() {
 			var self = this.$parent;
 			self.title.rename = true;
 		},

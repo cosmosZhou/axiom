@@ -1,8 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.MulMul.eq
 
-theorem Mul_Mul
+@[main]
+private lemma main
   [Semigroup α]
   {a b : α} :
 -- imply
@@ -10,7 +10,5 @@ theorem Mul_Mul
 -- proof
   rw [mul_assoc]
 
-
-end Algebra.MulMul.eq
 
 -- created on 2024-07-01

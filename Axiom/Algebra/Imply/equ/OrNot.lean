@@ -1,15 +1,14 @@
-import Axiom.Algebra.Imply.to.OrNot
-import Axiom.Algebra.OrNot.to.Imply
+import Axiom.Algebra.OrNot.of.Imply
+import Axiom.Algebra.Imply.of.OrNot
+open Algebra
 
-namespace Algebra.Imply.equ
 
-theorem OrNot :
+@[main]
+private lemma main :
 -- imply
   (p → q ↔ ¬p ∨ q)  :=
 -- proof
-  ⟨Imply.to.OrNot, OrNot.to.Imply⟩
+  ⟨OrNot.of.Imply, Imply.of.OrNot⟩
 
-
-end Algebra.Imply.equ
 
 -- created on 2024-07-01

@@ -1,14 +1,13 @@
 import Axiom.Algebra.AndAnd.equ.And_And
+open Algebra
 
-namespace Algebra.And_And.equ
 
-theorem AndAnd :
+@[main]
+private lemma main :
 -- imply
   p ∧ q ∧ r ↔ (p ∧ q) ∧ r :=
 -- proof
   AndAnd.equ.And_And.symm
 
-
-end Algebra.And_And.equ
 
 -- created on 2024-07-01

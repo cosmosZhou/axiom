@@ -13,20 +13,20 @@
 </template>
 
 <script>
-console.log('import mysqlOrder.vue');
 import mysqlLeaf from "./mysqlLeaf.vue"
+console.log('import mysqlOrder.vue');
 
 export default {
 	components: {mysqlLeaf},
 	
 	props : ['noSpace'],
 	
-	data(){
+	data() {
 		return {
 		};
 	},
 	
-	created(){
+	created() {
 		//var {value, name} = this;
 		//console.log({value, name});
 	},
@@ -160,7 +160,7 @@ export default {
 			return this.$parent.is_leaf;
 		},
 		
-		order(){
+		order() {
 			var {order} = this.value;
 			if (order) {
 				if (order.isString)
@@ -173,7 +173,7 @@ export default {
 			}
 		},
 		
-		sort(){
+		sort() {
 			var {order} = this.value;
 			if (order) {
 				if (order.isString)
@@ -184,7 +184,7 @@ export default {
 			}
 		},
 		
-		name_order(){
+		name_order() {
 			var {order} = this.value;
 			if (order) {
 				if (order.isString)
@@ -194,7 +194,7 @@ export default {
 			return this.node_name('order', 0);
 		},
 		
-		name_sort(){
+		name_sort() {
 			return this.node_name('order', 1);
 		},
 	},

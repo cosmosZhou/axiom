@@ -1,9 +1,10 @@
 import Axiom.Algebra.Div.eq.Mul_Inv
 import Axiom.Algebra.Mul.comm
+open Algebra
 
-namespace Algebra.Div.eq
 
-theorem MulInv
+@[main]
+private lemma main
   [CommGroup α]
   {a b : α} :
 -- imply
@@ -12,10 +13,5 @@ theorem MulInv
   rw [Div.eq.Mul_Inv]
   rw [Mul.comm]
 
-
-
-
-
-end Algebra.Div.eq
 
 -- created on 2024-11-29

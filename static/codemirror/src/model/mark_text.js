@@ -60,7 +60,7 @@ export class TextMarker {
         if (span.from != null) min = lineNo(line)
       }
       line.markedSpans = removeMarkedSpan(line.markedSpans, span)
-      if (span.from == null && this.collapsed && !lineIsHidden(this.doc, line) && cm)
+      if (span && span.from == null && this.collapsed && !lineIsHidden(this.doc, line) && cm)
         updateLineHeight(line, textHeight(cm.display))
     }
     if (cm && this.collapsed && !cm.options.lineWrapping) for (let i = 0; i < this.lines.length; ++i) {

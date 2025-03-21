@@ -8,6 +8,8 @@ $keys = array_keys($Field2Type);
 $values = [];
 
 foreach ($keys as $key) {
+    if (! array_key_exists($key, $_POST))
+        continue;
     $values[$key] = $_POST[$key];
     if ($Field2Type[$key] == 'text')
         $values[$key] = str_replace("\r\n", "\n", $values[$key]);
@@ -35,7 +37,7 @@ function transform_specials(&$data) {
         return $data;
     }
     else if (std\is_list($data))
-        return array_map(fn(&$arg) => transform_specials($arg), $data);
+        return array_map(fn($arg) => transform_specials($arg), $data);
     else if (is_array($data)){
         $result = [];
         foreach($data as $key => &$value) {
@@ -95,8 +97,8 @@ if ($values['training']) {
     if ($seq_param) {
         $rowcount = mysql\multi_query(array_map(function ($tuple) use ($database, $table, $primary_key, $Field2Type) {
             [$table_value, $table_primary_key] = $tuple;
-            $table_value = mysql\mysqlStr($table_value, $Field2Type[$table]);
-            $table_primary_key = mysql\mysqlStr($table_primary_key, $Field2Type[$primary_key]);
+            $table_value = mysql\mysqlStr($table_value, $Field2Type[$table], false);
+            $table_primary_key = mysql\mysqlStr($table_primary_key, $Field2Type[$primary_key], false);
             return "update $database.`$table` set $table = $table_value where $primary_key = $table_primary_key";
         }, $seq_param), false);
     } else
@@ -106,7 +108,7 @@ if ($values['training']) {
         $rowcount_text = mysql\multi_query(array_map(function ($key_rest_value) use ($database, $table, $primary_key, $keys_rest, $Field2Type) {
             $primary_key_value = array_pop($key_rest_value);
 
-            $parameters = implode(", ", array_map(fn ($tuple) => $tuple[0] . " = " . mysql\mysqlStr($tuple[1], $Field2Type[$tuple[0]]), std\zipped($keys_rest, $key_rest_value)));
+            $parameters = implode(", ", array_map(fn ($tuple) => $tuple[0] . " = " . mysql\mysqlStr($tuple[1], $Field2Type[$tuple[0]], false), std\zipped($keys_rest, $key_rest_value)));
             return "update $database.`$table` set $parameters where $primary_key = '$primary_key_value'";
         }, $seq_param_with_inputs), false);
     } else {
@@ -127,7 +129,7 @@ if ($values['training']) {
             $sql = "select $primary_key from $database.`$table` where $primary_key in ($primary_keys_str)";
         }
 
-        $duplicate_keys = array_map(fn ($tuple) => $tuple[0], get_rows($sql));
+        $duplicate_keys = array_map(fn ($tuple) => $tuple[0]?? null, get_rows($sql));
         $seq_param = [];
         foreach ($data as &$json) {
             if (in_array($json[$primary_key], $duplicate_keys)) {
@@ -140,7 +142,7 @@ if ($values['training']) {
 
         $rowcount += mysql\multi_query(array_map(function ($tuple) use ($database, $table, $Field2Type, $keys) {
             foreach (std\range(count($keys)) as $i) {
-                $tuple[$i] = mysql\mysqlStr($tuple[$i], $Field2Type[$keys[$i]]);
+                $tuple[$i] = mysql\mysqlStr($tuple[$i], $Field2Type[$keys[$i]], false);
             }
 
             $parameters = implode(', ', $tuple);

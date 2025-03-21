@@ -1,9 +1,10 @@
 import Axiom.Algebra.Mul.comm
 import Axiom.Algebra.Mul_Mul.eq.MulMul
+open Algebra
 
-namespace Algebra.MulMul
 
-theorem comm
+@[main]
+private lemma main
   [CommSemigroup α]
   {a b : α} :
 -- imply
@@ -13,7 +14,5 @@ theorem comm
   rw [Mul.comm (b := c)]
   rw [Mul_Mul.eq.MulMul]
 
-
-end Algebra.MulMul
 
 -- created on 2024-11-29

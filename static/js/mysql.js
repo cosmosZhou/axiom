@@ -28,20 +28,20 @@ export function	is_enum(Type){
 	return option.map(el => el.slice(1, -1));
 }
 
-export async function show_tables(database, host, user, token) {
+export async function show_tables(database, host, token) {
 	var sql = `show tables in ${database}`;
 	//console.log({sql});
-	return (await query(host, user, token, sql)).map(table => table[`Tables_in_${database}`]);
+	return (await query(host, token, sql)).map(table => table[`Tables_in_${database}`]);
 }
 
-export async function show_full_columns(database, table, host, user, token){
+export async function show_full_columns(database, table, host, token){
 	if (database) {
 		if (table.match(/\W/))
 			table = '`' + table + '`';
 		table =	`${database}.${table}`;
 	}
 
-	var desc = await query(host, user, token, `show full columns from ${table}`);
+	var desc = await query(host, token, `show full columns from ${table}`);
 	var dtype = {};
 	var transform = {};
 	var style_entity = {};
@@ -705,8 +705,11 @@ export function set_cmd(value, old_cmd, new_cmd) {
 export function normalize_desc(desc) {
 	desc = {...desc};
 	delete desc.Privileges;
-	if (desc.Type == 'int(11)') {
+	if (desc.Type.fullmatch(/int\(\d+\)/)) {
 		desc.Type = 'int';
+	}
+	else if (desc.Type.fullmatch(/tinyint\(\d+\)/)) {
+		desc.Type = 'tinyint';
 	}
 	delete desc.index;
 	return desc;

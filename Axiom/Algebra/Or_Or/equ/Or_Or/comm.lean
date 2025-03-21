@@ -1,8 +1,9 @@
 import Axiom.Algebra.Or_Or.equ.OrOr
+open Algebra
 
-namespace Algebra.Or_Or.equ.Or_Or
 
-theorem comm :
+@[main]
+private lemma main :
 -- imply
   a ∨ b ∨ c ↔ b ∨ a ∨ c := by
 -- proof
@@ -10,8 +11,5 @@ theorem comm :
   rw [Or.comm (b := b)]
   rw [OrOr.equ.Or_Or]
 
-
-
-end Algebra.Or_Or.equ.Or_Or
 
 -- created on 2024-07-01

@@ -1,8 +1,9 @@
 import Axiom.Algebra.AddDivS.eq.DivAdd
+open Algebra
 
-namespace Algebra.DivAdd.eq
 
-theorem AddDivS
+@[main]
+private lemma main
   [Field α]
   {x y a : α} :
 -- imply
@@ -10,6 +11,5 @@ theorem AddDivS
 -- proof
   rw [← AddDivS.eq.DivAdd]
 
-end Algebra.DivAdd.eq
 
 -- created on 2024-07-01

@@ -3,41 +3,41 @@
 </template>
 
 <script>
+import codeMirror from "./codeMirror.vue"
 console.log('import renderApply.vue');
-import codeMirror from "./codeMirror.vue";
 
 export default {
     props : [ 'text'],
     
-    created(){
+    created() {
     	var hash = location.hash;
     	if (hash){
     		this.hash = hash.slice(1);	
     	}
     },
     
-    updated(){
+    updated() {
     },
     
     computed: {
     	user: codeMirror.computed.user,
     	module: codeMirror.computed.module,
         
-    	firstSibling(){
+    	firstSibling() {
             return this;                
         },
         
-        nextSibling(){
-            return this.$parent.renderProve[0];
+        nextSibling() {
+            return this.$parent.renderLean[0];
         },
         
-        lastSibling(){
-            var prove = this.$parent.renderProve;
+        lastSibling() {
+            var prove = this.$parent.renderLean;
             return prove[prove.length - 1];                
         },        
     },
     
-    data(){
+    data() {
         return {
             editor: null,
             theme: 'eclipse',

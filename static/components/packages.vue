@@ -10,13 +10,14 @@
 </template>
 
 <script>
-console.log('import packages.vue');	
 import axiomPackage from "./axiomPackage.vue"
 import axiomContextmenu from "./axiomContextmenu.vue"
+console.log('import packages.vue');	
+
 export default {
 	components : {axiomPackage, axiomContextmenu},
 	
-	data(){
+	data() {
 		return {
 			focusedIndex: -1,
 			left: 0,
@@ -28,11 +29,11 @@ export default {
 	props : [ 'packages'],
 	
 	computed: {
-		children(){
+		children() {
 			return this.axiomPackage;
 		},
 
-		focusedElement(){
+		focusedElement() {
 			return this.axiomPackage[this.focusedIndex];
 		},		
 	},

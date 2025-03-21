@@ -1,5 +1,5 @@
 start_time=$(date +%s)
-source common.sh
+source ./sh/common.sh
 
 __file__=$(realpath "$0")
 user=$(dirname "$__file__")
@@ -8,19 +8,35 @@ echo "user = $user"
 
 > test.lean
 
+declare -A imports_dict
 function echo_import {
-  theorem=${1%.lean}
-  echo "import ${theorem////.}" >> test.lean
+  file=$1
+  lemma=${file%.lean}
+  module=${lemma////.}
+  echo "import $module" >> test.lean
+  # extract import statements from the lean file
+  module=${module#Axiom.}
+  mapfile -t lines < <(grep -E '^import[[:space:]]+' $file | sed -E 's/^import[[:space:]]+//')
+  if [ ${#lines[@]} -eq 0 ]; then
+    imports_dict[$module]="[]"
+  else
+    imports_dict[$module]=$(printf '%s\n' "${lines[@]}" | jq -R . | jq -s .)
+  fi
+  # echo "imports_dict[$module] = " ${imports_dict[$module]}
 }
 
-find Axiom -type f -name "*.lean" -print0 | while read -d $'\0' file; do
+while read -r file; do
   echo_import "$file"
-done
+done < <(find Axiom -type f -name "*.lean" -not -name "*.echo.lean" -not -name "Basic.lean") 
 
 imports=$(cat test.lean)
 
 touch test.log
-lake setup-file test.lean Init $imports 2>&1 | tee test.log
+lake setup-file test.lean Init $imports 2>&1 | \
+  grep -v -E 'warning: .*\.lean:[0-9]+:[0-9]+: `[^`]+'\''` is missing a doc-string, please add one\.' | \
+  grep -v "Declarations whose name ends with a \`'\` are expected to contain an explanation for the presence of a \`'\` in their doc-string. This may consist of discussion of the difference relative to the unprimed version, or an explanation as to why no better naming scheme is possible." | \
+  grep -v 'note: this linter can be disabled with `set_option linter.docPrime false`' | \
+  tee test.log
 
 sed -i -E "s/^import //" test.lean
 imports=$(cat test.lean)
@@ -28,19 +44,19 @@ imports=$(cat test.lean)
 
 imports=($imports)
 echo "modules:"
-touch axiom.sql
+touch test.sql
 
-echo "INSERT INTO axiom (user, axiom, state, lapse, latex) VALUES " > axiom.sql
+echo "INSERT INTO lemma (user, module, imports, open, def, lemma, error, date) VALUES " > test.sql
 for module in ${imports[*]}; do
   # echo "${module//.//}.lean"
   module=${module#Axiom.}
-  if [[ $module =~ ^sympy ]] || [[ $module =~ ^Basic ]]; then
+  if [ -z "${imports_dict[$module]}" ]; then
+    echo "imports_dict[$module] = " ${imports_dict[$module]}
     continue
   fi
-  echo "  ('$user', '$module', 'proved', '0', '')," >> axiom.sql
+  echo "  ('$user', '$module', '${imports_dict[$module]}', '[]', '[]', '[]', '[]', '[]')," >> test.sql
 done
-sed -i '$ s/,$/\nON DUPLICATE KEY UPDATE state = VALUES(state), lapse = VALUES(lapse), latex = VALUES(latex);/' axiom.sql
-
+sed -i '$ s/,$/\nON DUPLICATE KEY UPDATE imports = VALUES(imports), error = VALUES(error);/' test.sql
 
 echo "plausible:"
 sorryModules=($(grep -P "^warning: (\./)*[\w/]+\.lean:\d+:\d+: declaration uses 'sorry'" test.log | sed -E 's#^warning: ([.]/)*##' | sed -E "s/\.lean:[0-9]+:[0-9]+: declaration uses 'sorry'//" | sed 's#/#.#g'))
@@ -50,7 +66,7 @@ for module in ${sorryModules[*]}; do
   if [[ $module =~ ^sympy ]] || [[ $module =~ ^Basic ]]; then
     continue
   fi
-  echo "UPDATE axiom set state = 'plausible' where user = '$user' and axiom = '$module';" >> axiom.sql
+  echo "UPDATE lemma set error = '[{\"code\": \"\", \"file\": \"\", \"info\": \"declaration uses ''sorry''\", \"line\": 0, \"type\": \"warning\"}]' where user = '$user' and module = '$module';" >> test.sql
 done
 
 echo "failed:"
@@ -61,7 +77,7 @@ for module in ${failingModules[*]}; do
   if [[ $module =~ ^sympy ]] || [[ $module =~ ^Basic ]]; then
     continue
   fi
-  echo "UPDATE axiom set state = 'failed' where user = '$user' and axiom = '$module';" >> axiom.sql
+  echo "UPDATE lemma set error = '[{\"code\": \"\", \"file\": \"\", \"info\": \"\", \"line\": 0, \"type\": \"error\"}]' where user = '$user' and module = '$module';" >> test.sql
 done
 
 if [ -z "$MYSQL_USER" ]; then
@@ -69,12 +85,10 @@ if [ -z "$MYSQL_USER" ]; then
   source ~/.bash_profile
 fi
 if [ -z "$MYSQL_PORT" ]; then
-  MYSQL_PORT=""
-else
-  MYSQL_PORT="-P$MYSQL_PORT"
+  MYSQL_PORT="3306"
 fi
 
-mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_PORT -D axiom < axiom.sql 2>&1 | tee test.log
+mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -P$MYSQL_PORT -D axiom -e "update lemma set error = NULL" 2>&1 | tee test.log
 
 grep -P "ERROR \d+ \(\d+\): Unknown database 'axiom'" test.log
 if [ $? -eq 0 ]; then
@@ -83,37 +97,28 @@ if [ $? -eq 0 ]; then
   # Check if the mysql command was successful
   if [ $? -eq 0 ]; then
     echo "Database 'axiom' created successfully."
-    bash run.sh
-    exit 0  
+    bash $0 $*
+    exit 0
   else
     echo "Failed to create database 'axiom'."
     exit 1
   fi
 fi
-
-grep -P "ERROR \d+ \(\w+\) at line \d+: Table 'axiom.axiom' doesn't exist" test.log
+mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -P$MYSQL_PORT -D axiom < test.sql 2>&1 | tee test.log
+grep -P "ERROR \d+ \(\w+\) at line \d+: Table 'axiom.lemma' doesn't exist" test.log
 if [ $? -eq 0 ]; then
-  sql="CREATE TABLE axiom (
-  user varchar(32) NOT NULL,
-  axiom varchar(256) NOT NULL,
-  state enum('proved', 'failed', 'plausible', 'unproved', 'unprovable', 'slow') NOT NULL,
-  lapse double default NULL,
-  latex mediumblob NOT NULL,
-  PRIMARY KEY (user, axiom)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-PARTITION BY KEY() PARTITIONS 8"
-  echo $sql
-  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -P$MYSQL_PORT -D axiom -e "$sql;"
+  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -P$MYSQL_PORT -D axiom < sql/create/lemma.sql
   # Check if the mysql command was successful
   if [ $? -eq 0 ]; then
-    echo "Table 'axiom' created successfully."
+    echo "Table 'lemma' created successfully."
     bash run.sh
     exit 0
   else
-    echo "Failed to create table 'axiom'."
+    echo "Failed to create table 'lemma'."
     exit 1
   fi
 fi
+mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -P$MYSQL_PORT -D axiom -e "delete from lemma where error is NULL" 2>&1 | tee test.log
 end_time=$(date +%s)
 time_cost=$((end_time - start_time))
 
@@ -124,7 +129,7 @@ echo "total failed    = ${#failingModules[@]}"
 
 # post-processing
 
-function remove_invalid {
+function remove_invalid_lake_file {
   module=${1#*/*/*/}
   module=${module%%.*}
   module="$module.lean"
@@ -135,7 +140,20 @@ function remove_invalid {
 }
 
 find .lake/build -type f -regex '.*\.\(trace\|olean\|ilean\|hash\|c\)$' | while read -r file; do
-    remove_invalid $file
+    remove_invalid_lake_file $file
+done
+
+function remove_invalid_echo_file {
+  module=${1%%.*}
+  module="$module.lean"
+  if [ ! -f $module ]; then
+    echo "rm $1, becase $module doesn't exist"
+    rm $1
+  fi
+}
+
+find Axiom -type f -regex '.*\.echo\.lean$' | while read -r file; do
+    remove_invalid_echo_file $file
 done
 
 find . -type d -empty -exec rmdir {} +

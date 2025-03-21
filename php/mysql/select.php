@@ -74,9 +74,9 @@ if ($download) {
     $batch_size = std\pop($props, 'batch_size');
     $batch_size = (int)$batch_size;
     switch ($download) {
-    case "json":
-    case "jsonl":
-    case "zip":
+    case 'json':
+    case 'jsonl':
+    case 'zip':
         $ext = $download;
         break;
     default:
@@ -92,8 +92,8 @@ if ($download) {
 
 if ($is_union || $kwargs['select'] && $kwargs['select'] != '*' && $kwargs['select'] != ['*'])
     $dual = true;
-elseif ($kwargs['with'] || $kwargs['with_recursive'])
-    $dual = !is_string($database);
+elseif (isset($kwargs['with']) || isset($kwargs['with_recursive']))
+    $dual = !is_string($database) || !is_string($table);
 else
     $dual = false;
 ?>

@@ -1,25 +1,17 @@
 import Axiom.Algebra.AndOr.equ.OrAndS
+open Algebra
 
 
-namespace Algebra.AndOr.equ
-
-theorem Cond
--- imply
+@[main]
+private lemma main
   (right : Bool := true) :
+-- imply
   match right with
   | true => (q ∨ p) ∧ p ↔ p
   | false => (p ∨ q) ∧ p ↔ p := by
 -- proof
   simp [AndOr.equ.OrAndS]
+  cases right <;> simp
 
-  cases right
-  case true =>
-    simp
-  case false =>
-    simp
-
-
-
-end Algebra.AndOr.equ
 
 -- created on 2024-07-01

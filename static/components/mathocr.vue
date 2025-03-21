@@ -22,7 +22,7 @@
 		
 		<div v-if=width>
 			<p v-if=pn>
-				view <a :href=`/label/tsr.php?pn=${pn}` target=tsr>tsr result</a>,
+				view <a :href="`/label/tsr.php?pn=${pn}`" target=tsr>tsr result</a>,
 				or press <button class=transparent @click=click_delete>delete</button> to remove the file from database;
 			</p>
 			
@@ -36,22 +36,22 @@
 				<br>
 			</template>
 			<textarea v-update :rows="1 + output.length" :cols=cols_output :style=style_textarea>{{output.join('\n')}}</textarea>
-			<p v-for="latex of output" v-render v-text=`\\[${latex}\\]`></p>
+			<p v-for="latex of output" v-latex v-text="`\\[${latex}\\]`"></p>
 		</div>
 	</div>
 </template>
 
 <script>
-console.log('import mathocr.vue');
 import canvasDragRect from "./canvasDragRect.vue"
 import {rotateImage} from "../js/image.js"
+console.log('import mathocr.vue');
 
 export default {
 	components: {canvasDragRect},
 	
 	props : ['width', 'height', 'pn', 'ext', 'nocache'],
 	
-	data(){
+	data() {
 		return {
 			id: '',
 			lang: 'en',
@@ -80,7 +80,7 @@ export default {
 		};
 	},
 	
-	async created(){
+	async created() {
 		this.src = `../../assets/${this.lang}/ocr/${this.ext}/${this.pn}.${this.ext}`;
 		if (this.nocache) {
 			this.src += "?timestamp=" + new Date().getTime();
@@ -102,89 +102,72 @@ export default {
 				this.$root.width = 1000;
 				this.$root.height = 768;
 			}
-			else{
-				this.upload = true;
-				var [result] = await query(this.host, this.user, this.token, `select * from codon where pn = '${this.pn}'`);
-				console.log(result);
-				var {text, rowspan, colspan, align, valign, style, codon, training} = result;
-				this.text = JSON.parse(text);
-				this.rowspan = JSON.parse(rowspan);
-				this.colspan = JSON.parse(colspan);
-				this.align = JSON.parse(align);
-				this.valign = JSON.parse(valign);
-				this.style = JSON.parse(style);
-				this.codon = JSON.parse(codon);
-				this.training = training;
-			}
 		}
-		
-		this.methods = await form_post('ocr/baidu/methodNames.php');
-		this.id = await form_post('aws/pn2id.php', {pn: this.pn_simplified});
 	},
 	
 	computed: {
-		dataURL(){
+		dataURL() {
 			if ((this.deg / 90) & 1)
 				return rotateImage(this.$refs.img, this.width, this.height, this.deg);
 		},
 	
-		translateX(){
+		translateX() {
 			if ((this.deg / 90) & 1)
 				return (this.height - this.width) * this.scale / 2;
 			return 0;
 		},
 		
-		translateY(){
+		translateY() {
 			return -this.translateX;		
 		},
 		
-		cols_output(){
+		cols_output() {
 			if (this.output.length)
 				return Math.max(...this.output.map(el => el.length));
 			return 20;
 		},
 		
-		style_dialog(){
+		style_dialog() {
 			if ((this.deg / 90) & 1)
 				return `transform: translateY(${this.translateY * 2}px)`;
 		},
 		
-		style_textarea(){
+		style_textarea() {
 			var width = (this.selectedRegion? this.selectedRegion.width: this.width) * this.scale;
 			return `width: ${width}px`;
 		},
 		
-		canvas_pysical_width(){
+		canvas_pysical_width() {
 			if ((this.deg / 90) & 1)
 				return this.height_scale;
 			return this.width_scale;	
 		},
 		
-		canvas_pysical_height(){
+		canvas_pysical_height() {
 			if ((this.deg / 90) & 1)
 				return this.width_scale;
 			return this.height_scale;	
 		},
 		
-		width_scale(){
+		width_scale() {
 			return this.width * this.scale;
 		},
 		
-		height_scale(){
+		height_scale() {
 			return this.height * this.scale;
 		},
 		
-		pn_simplified(){
+		pn_simplified() {
 			return this.pn.match(/^[^$_-]+/)[0];
 		},
 		
-		style_img(){
+		style_img() {
 			return `transform: translate(${this.translateX}px, ${this.translateY}px) rotate(${this.deg}deg);`;
 		},		
 	},
 	
 	methods: {
-		coordinate_info(){
+		coordinate_info() {
 			var canvas = this.$refs.canvas;
 			if (!canvas)
 				return '';
@@ -367,12 +350,10 @@ export default {
 				ext = 'jpeg';
 			
 			var im_dataurl = canvas.toDataURL(`image/${ext}`);
-			var method = 'basicAccurate';
-			var lang = this.lang;
-			var res = await json_post('http://192.168.18.211:13338/image-latex/parser', {im_dataurl, ext});
+			var res = await form_post('http://192.168.18.102:5001/image-latex/parser', {im_dataurl, ext});
 			console.log(res);
-			var {prediction} = res;			
-			this.output = [prediction];
+			var {latex} = res;
+			this.output = [latex];
 			this.src_selected = im_dataurl;
 			console.log(this.output);
 		},
@@ -384,7 +365,7 @@ export default {
 		},
 	},
 	
-	mounted(){
+	mounted() {
 		var body = document.body;
 		
 		body.addEventListener("paste", event => {
@@ -408,15 +389,7 @@ export default {
 		    },
 		},
 		
-		render: {
-		    mounted(el, binding) {
-		    	MathJax.typesetPromise();
-		    },
-
-		    updated(el, binding) {
-		    	MathJax.typesetPromise();
-		    },
-		},
+		latex
 	},		
 }
 		

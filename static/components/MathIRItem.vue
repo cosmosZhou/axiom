@@ -32,7 +32,7 @@ export default {
 	
 	props : [ 'id', 'latex', 'mathml', 'offset', 'training', 'index'],
 	
-	data(){
+	data() {
 		return {
 			showContextmenu: false,
 			left: 0,
@@ -46,8 +46,6 @@ export default {
 			
 			that: new CounterPart(this, {python: null, latex: null}),
 			
-			index_focused: -1,
-
 			feedback: [],
 			prompt: [],
 
@@ -61,7 +59,7 @@ export default {
 		};
 	},
 	
-	created(){
+	created() {
 		this.$parent.MathIRItem[this.index] = this;
 		
 		this.is_predicted = this.is_regex;
@@ -126,7 +124,7 @@ export default {
 			return {id, lang, text, reply, training, label, source};
 		},
 		
-		style_input(){
+		style_input() {
 			var length = strlen(this.text);
 			length = length / 2 + 1;
 			return `width:${length}em;`;
@@ -160,19 +158,19 @@ export default {
 			return this.$parent.mysql;
 		},
 		
-		is_torch(){
+		is_torch() {
 			return this.$parent.is_torch;
 		},
 
-		is_python(){
+		is_python() {
 			return this.$parent.is_python;
 		},
 		
-		compare(){
+		compare() {
 			return this.$parent.compare;
 		},
 		
-		correct(){
+		correct() {
 			if (this.compare) {
 				return this.correct_comparison(this.upper_comparison) && this.correct_comparison(this.lower_comparison);
 			}
@@ -221,11 +219,11 @@ export default {
 			return this.$parent.database;
 		},
 		
-		host(){
+		host() {
 			return this.$parent.host;
 		},
 		
-		user(){
+		user() {
 			return this.$parent.user;
 		},
 
@@ -345,18 +343,18 @@ export default {
 			return new Listener(this, obj);	
 		},
 		
-		async_build(){
+		async_build() {
 			var self = this;
 			setTimeout(()=>{
 				self.build();
 			}, 128);
 		},
 		
-		build(){
+		build() {
 			//console.log(this.syntax);
 		},
 		
-		async_render(){
+		async_render() {
 		},
 		
 		keydown(event){
@@ -400,12 +398,12 @@ export default {
 			event.preventDefault();
 		},
 		
-		command(){
+		command() {
 			var [arg] = arguments;
 			if (typeof arg == 'function') {
 				var func = arg;
 				var self = this;
-				function push(){
+				function push() {
 					self.undoes.push(new Command(func, ...arguments));
 				}
 				
@@ -723,11 +721,7 @@ export default {
 						var result = await json_post('run.py', data);
 						console.log(result.latex);
 
-                  	  console.log("new p tags have been generated!");
-                	  setTimeout(() => {
-                		  console.log("MathJax.typesetPromise() due to new generation of p tags");
-                		  MathJax.typesetPromise();
-                	  }, 1000);
+                  	  	console.log("new p tags have been generated!");
 					}
 					else if (data.latex) {
 						var {latex: text} = data;
@@ -776,7 +770,7 @@ export default {
 		},
 	},
 	
-    async mounted(){
+    async mounted() {
 		if (this.is_python || this.is_torch) {
 			this.swap_view();
 		}

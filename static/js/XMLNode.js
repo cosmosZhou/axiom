@@ -351,18 +351,18 @@ export class XMLNodeBinaryTag extends XMLNode {
 				if (this.arg.is_XMLNodeArray) {
 					var args = this.arg.args;
 					switch (this.tag) {
-					case "msub":
-					case "munder":
+					case 'msub':
+					case 'munder':
 						if (args.length == 2)
 							args[1].modify_style('sub');
 						break;
-					case "msup":
-					case "mover":
+					case 'msup':
+					case 'mover':
 						if (args.length == 2)
 							args[1].modify_style('sup');
 						break;
-					case "msubsup":
-					case "munderover":
+					case 'msubsup':
+					case 'munderover':
 						if (args.length == 3) {
 							args[1].modify_style('sub');
 							args[2].modify_style('sup');

@@ -1,14 +1,14 @@
-import Axiom.Algebra.OrNotS.to.NotAnd
-import Axiom.Algebra.NotAnd.to.OrNotS
-namespace Algebra.OrNotS.equ
+import Axiom.Algebra.NotAnd.of.OrNotS
+import Axiom.Algebra.OrNotS.of.NotAnd
+open Algebra
 
-theorem NotAnd :
+
+@[main]
+private lemma main :
 -- imply
   ¬p ∨ ¬q ↔ ¬(p ∧ q) :=
 -- proof
-  ⟨OrNotS.to.NotAnd,  NotAnd.to.OrNotS⟩
+  ⟨NotAnd.of.OrNotS,  OrNotS.of.NotAnd⟩
 
-
-end Algebra.OrNotS.equ
 
 -- created on 2024-07-01

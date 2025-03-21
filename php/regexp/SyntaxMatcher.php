@@ -63,7 +63,7 @@ class TextMatcher
     public function __get($vname)
     {
         switch ($vname) {
-            case "regexp":
+            case 'regexp':
                 return $this->text;
             default:
                 return null;
@@ -601,7 +601,7 @@ class SyntaxMatcher
     public function __get($vname)
     {
         switch ($vname) {
-            case "regexp":
+            case 'regexp':
                 return $this->infix;
             default:
                 return null;

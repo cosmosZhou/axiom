@@ -70,10 +70,10 @@
 
 <script>
 
-console.log('import mysqlWhere.vue');
 import mysqlOrder from "./mysqlOrder.vue"
 import mysqlGroup from "./mysqlGroup.vue"
 import mysqlLookAround from "./mysqlLookAround.vue"
+console.log('import mysqlWhere.vue');
 
 import {is_numeric, is_string, is_json} from "../js/mysql.js"
 
@@ -82,22 +82,22 @@ export default {
 	
 	props : ['extra_kwargs', 'primary_key'], //used in primary_key search
 	
-	data(){
+	data() {
 		return {
 		};
 	},
 
-	created(){
+	created() {
 	},
 	
 	computed: {
-		style_limit(){
+		style_limit() {
 			var length = this.limit? this.limit.toString().length / 2 + 0.5: 1;
 			length = Math.max(2, length);
 			return `width: ${length}em`;
 		},
 
-		style_offset(){
+		style_offset() {
 			var length = this.offset ? this.offset.toString().length / 2 + 0.5 : 2;
 			length = Math.max(2, length);
 			return `width: ${length}em`;
@@ -220,23 +220,23 @@ export default {
 			},
 		},
 		
-		change_table(){
+		change_table() {
 			return this.$parent.change_table;
 		},
 		
-		change_input(){
+		change_input() {
 			return this.$parent.change_input;
 		},
 		
-		style_select_table(){
+		style_select_table() {
 			return this.$parent.style_select_table;
 		},
 		
-		style_input(){
+		style_input() {
 			return this.$parent.style_input;
 		},
 		
-		input_kwargs(){
+		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
 		

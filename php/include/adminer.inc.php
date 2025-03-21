@@ -16,7 +16,7 @@ class Adminer {
 	* @return array ($host, $user, $password)
 	*/
 	function credentials() {
-		return array(HOST, $_GET["user"], get_password());
+		return array(HOST, get_user("pwds"), get_password());
 	}
 
 	/** Get SSL connection options
@@ -118,8 +118,8 @@ class Adminer {
 	*/
 	function loginForm($auth=null) {
 	    [$db, $table] = get_db_table($_GET);
-        $_POST['auth'] = ['host' => h(HOST), 'user' => $_GET['user']?? 'user', 'password' => '', 'db' => $db ?? 'corpus', 'table' => $table, 'permanent' => true];
-	    return 'login';
+	    $user = get_user("pwds")?? 'user';
+            $_POST['auth'] = ['host' => h(HOST), 'user' => $user, 'password' => '', 'db' => $db ?? 'corpus', 'table' => $table, 'permanent' => true];
 	}
 	
 	/** Get login form field
@@ -933,7 +933,7 @@ class Adminer {
 						if ($password !== null) {
 						    $dbs = $_SESSION["db"][$vendor][$host][$user];
 							foreach (($dbs ? array_keys($dbs) : array("")) as $db) {
-							    $output .= "<li><a href='" . h(auth_url($vendor, $host, $user, $db)) . "'>($drivers[$vendor]) " . h($user . ($host != "" ? "@" . $this->serverName($host) : "") . ($db != "" ? " - $db" : "")) . "</a>\n";
+							    $output .= "<li><a href='" . h(auth_url($vendor, $host, $db)) . "'>($drivers[$vendor]) " . h($user . ($host != "" ? "@" . $this->serverName($host) : "") . ($db != "" ? " - $db" : "")) . "</a>\n";
 							}
 						}
 					}

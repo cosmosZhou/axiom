@@ -1,8 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.AddMulS.eq
 
-theorem Mul_Add
+@[main]
+private lemma main
   [Mul α] [Add α] [LeftDistribClass α]
   {x a b : α} :
 -- imply
@@ -10,7 +10,5 @@ theorem Mul_Add
 -- proof
   rw [mul_add]
 
-
-end Algebra.AddMulS.eq
 
 -- created on 2024-07-01

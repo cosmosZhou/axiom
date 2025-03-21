@@ -26,6 +26,10 @@ export function modify_training(training, refresh_all){
 	return ~training;
 }
 
+export function reset_training(training) {
+	return training < 0? ~training & -65 : training;
+}
+
 export function set_training(self, refresh_all){
 	var {index, $parent} = self;
 	var {training} = $parent.data[index];

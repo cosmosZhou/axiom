@@ -1,6 +1,6 @@
 <template>
 	<div tabindex=1 class=contents @keydown=keydown>
-		<searchForm v-if="issearch" :keyword=keyword :caseSensitive=caseSensitive :wholeWord=wholeWord :regularExpression=regularExpression :nlp=nlp></searchForm>
+		<searchForm v-if="issearch" :q=q :caseSensitive=caseSensitive :wholeWord=wholeWord :regularExpression=regularExpression :nlp=nlp></searchForm>
 		<packages ref=packages :packages=packages></packages>
 		<br>
 		<hr>
@@ -9,21 +9,21 @@
 </template>
 
 <script>
-console.log('import axiomContents.vue');
 import packages from "./packages.vue"
 import theorems from "./theorems.vue"
 import searchForm from "./searchForm.vue"
+console.log('import axiomContents.vue');
 
 export default {		
 	components : {packages, theorems, searchForm},		
 	
 	props : [ 'packages', 'theorems' ],
 
-	data(){
+	data() {
 		return {
 			issearch: false,
 			
-			keyword: '',
+			q: '',
 			caseSensitive: false,
 			wholeWord: false, 
 			regularExpression: false,
@@ -44,7 +44,7 @@ export default {
 		},			
 	},
 	
-	mounted(){
+	mounted() {
 		var hash = location.hash;			
 		if (hash){
 			hash = hash.slice(1);

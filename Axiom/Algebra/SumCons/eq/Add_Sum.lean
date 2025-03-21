@@ -1,8 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.SumCons.eq
 
-theorem Add_Sum
+@[main]
+private lemma main
   [Add α] [Zero α]
   {l : List α} {a : α} :
 -- imply
@@ -10,7 +10,5 @@ theorem Add_Sum
 -- proof
   List.sum_cons
 
-
-end Algebra.SumCons.eq
 
 -- created on 2024-07-01

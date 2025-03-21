@@ -8,7 +8,7 @@ if (array_key_exists('lang', $_GET)) {
 switch ($lang) {
     case 'cn':
         $header = '登陆定理库';
-        $title = "加入 axiom.top · axiom.top";
+        $title = "加入 lemma.cn · lemma.cn";
         
         $username = '用户名或者电子邮箱';
         $password = '登陆密码';
@@ -20,7 +20,7 @@ switch ($lang) {
         $privacy = "隐私权";
         $security = "保密声明";
         $contactAxiom = "联系作者";
-        $typingEffect = "[&quot;欢迎加入axiom.top！&quot;, &quot;让我们开启机器证明之旅&quot;]";
+        $typingEffect = "[&quot;欢迎加入lemma.cn！&quot;, &quot;让我们开启机器证明之旅&quot;]";
         
         $enterEmail = "填写您的电子邮箱";
         $continue = "继续";
@@ -30,8 +30,8 @@ switch ($lang) {
         
         break;
     case 'en':
-        $header = 'Sign in to axiom.top';
-        $title = "Join axiom.top · axiom.top";
+        $header = 'Sign in to lemma.cn';
+        $title = "Join lemma.cn · lemma.cn";
         $username = 'Username or email address';
         $password = 'Password';
         $forgotPassword = 'forgot password?';
@@ -42,8 +42,8 @@ switch ($lang) {
 
         $privacy = "Privacy";
         $security = "Security";
-        $contactAxiom = "Contact axiom.top";
-        $typingEffect = "[&quot;Welcome to axiom.top!&quot;, &quot;Let’s begin the adventure of Automated Theorem Proving&quot;]";
+        $contactAxiom = "Contact lemma.cn";
+        $typingEffect = "[&quot;Welcome to lemma.cn!&quot;, &quot;Let’s begin the adventure of Automated Theorem Proving&quot;]";
         
         $enterEmail = "Enter your email";
         $continue = "Continue";

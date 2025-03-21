@@ -8,7 +8,7 @@
 			<span class=hover>
 				{{hint}}
 			</span>
-			<p v-click :class=cmd @dblclick=dblclick data-clipboard-action=copy :style=style_p :data-clipboard-target="`p.${cmd}`" @mouseover=mouseover_p @mouseout=mouseout_p>
+			<p v-click v-clipboard :class=cmd @dblclick=dblclick :style=style_p @mouseover=mouseover_p @mouseout=mouseout_p>
 				{{sql.isArray? sql.join(';\n'): sql}}
 			</p>
 		</div>
@@ -30,7 +30,7 @@ export default {
 	
     data() {
 		return {
-			hint: 'click to copy the text, double click to execute the mysql statement',
+			hint: 'right click to copy the text, double click to execute the mysql statement',
 			edit: false,
 			rows: 0, 
 			cols: 0,
@@ -85,12 +85,24 @@ export default {
     		return hint + 'set';
     	},
     	
-    	execute() {
-    		return this.$parent.execute;
+    	execute: {
+			get() {
+				var {kwargs} = this.$parent.kwargs;
+				return kwargs? kwargs.execute: false;
+			},
+
+			set(execute) {
+				var self = this.$parent;
+				var {kwargs} = self.kwargs;
+				if (kwargs)
+					kwargs.execute = execute;
+				else
+					self.kwargs.kwargs = {execute};
+			}
     	},
     	
     	repeat() {
-    		return this.$parent.repeat;
+			return this.execute == 'repeat';
     	},
     	
     	rowsOfSQL() {
@@ -122,33 +134,30 @@ export default {
     		var {host} = this;
     		if (host && (this.$parent.from || this.$parent.from == 0))
        			host = null;
-   			return sql => query(host, this.user, this.token, sql);
+   			return sql => query(host, this.token, sql);
     	},
     },
 
-	mounted(){
-		create_ClipboardJS('p.' + this.cmd);
-	},
-    
 	methods: {
 		async dblclick(event){
-			var self = event.target;
 			var {sql} = this;
 			
-			if (sql.isArray) {
+			if (sql.isArray)
 				sql.forEach(sql => {
 					console.log(sql + ';');
 				});
-			}
-			else {
+			else
 				console.log(sql + ';');
-			}
 			
-			if (Array.isArray(sql)){
-				this.hint = 'click to copy the text';
+			if (Array.isArray(sql)) {
+				this.hint = 'right click to copy the text';
 				this.wait = true;
 				var rowcount = await this.query(sql);
 				console.log("rowcount = ", rowcount);
+				if (!rowcount.isArray) {
+					alert(rowcount);
+					return;
+				}
 				for (var [i, count] of enumerate(rowcount)) {
 					if (count.isString) {
 						alert(count);
@@ -216,7 +225,7 @@ export default {
 
 							sql = sql.format(tableName, Object.keys(result[0]).join(', '));
 							
-							this.hint = 'click to copy the text or press Insert to edit the content';
+							this.hint = 'right click to copy the text or press Insert to edit the content';
 							setAttribute(this, 'sql', sql + array.join(', '));
 						}
 						else{
@@ -291,14 +300,13 @@ export default {
 						
 						this.rowcount.push(rowcount);
 						this.hint = `execution of sql statement has succeeded, rowcount = ${rowcount}`;
-						if (this.rowcount.length > 1) {
+						if (this.rowcount.length > 1)
 							this.hint += `, cumulative rowcount = ${this.rowcount.sum()}`;
-						}
 						console.log(this.hint);
 						if (rowcount && this.repeat) {
 							if (this.rowsOfSQL > 1) {
 								this.$parent.offset[0] = this.$parent.offset[1];
-								this.$parent.execute=true;
+								this.execute = true;
 								location.href = this.$parent.$refs.update.href_update;
 							}
 							else {
@@ -341,7 +349,7 @@ export default {
 					
 					var sql = event.target.value;
 					var rowcount = await this.query(sql.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">"));
-					this.hint = 'click to copy the text or press Insert to edit the content';
+					this.hint = 'right click to copy the text or press Insert to edit the content';
 					this.edit = false;
 					setAttribute(this, 'sql', sql);
 					console.log(`rowcount of ${sql} = ${rowcount}`);
@@ -387,6 +395,8 @@ export default {
 		    		self.dblclick({target});
 		    },
 		},
+
+		clipboard,
 	},
 	
 }

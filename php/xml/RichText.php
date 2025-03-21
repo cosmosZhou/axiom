@@ -162,29 +162,29 @@ class XMLNode
     public function __get($vname)
     {
         switch ($vname) {
-            case "root":
+            case 'root':
                 $self = $this;
                 while ($self->parent)
                     $self = $self->parent;
                 return $self;
 
-            case "zeros":
+            case 'zeros':
                 return [];
 
-            case "style":
+            case 'style':
                 if ($this->_style === null) {
                     $this->_style = [];
                 }
 
                 return $this->_style;
 
-            case "length":
+            case 'length':
                 return $this->stop - $this->start;
 
-            case "physicalText":
+            case 'physicalText':
                 return $this->__toString();
 
-            case "style_input":
+            case 'style_input':
                 $style_input = array_map(fn ($i) => new std\Set(), std\ranged(std\len($this->text)));
 
                 foreach ($this->style as $tag => $s) {
@@ -203,7 +203,7 @@ class XMLNode
 
                 return $style_input;
 
-            case "style_traits":
+            case 'style_traits':
                 $style_traits = [];
                 foreach ($this->style_input as $s) {
                     $s = [...$s];
@@ -251,7 +251,7 @@ class XMLNode
             while (std\isspace(std\get($logicalText, $start)))
                 ++ $start;
 
-            if (! str_starts_with(std\slice($logicalText, $start), $seg)) {
+            if (! str_starts_with(std\substring($logicalText, $start), $seg)) {
                 $sCumulated = '';
                 $hit = false;
                 for ($i = $start; $i < $totalLength; ++ $i) {
@@ -330,19 +330,19 @@ class XMLNodeCaret extends XMLNode
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_XMLNodeCaret":
+            case 'is_XMLNodeCaret':
                 return true;
 
-            case "text":
+            case 'text':
                 return '';
 
-            case "logicalLength":
+            case 'logicalLength':
                 return 0;
 
-            case "texts":
+            case 'texts':
                 return [];
 
-            case "length":
+            case 'length':
                 return 0;
 
             default:
@@ -372,11 +372,11 @@ class XMLNodeText extends XMLNode
     public function __set($vname, $value)
     {
         switch ($vname) {
-            case "start":
+            case 'start':
                 $this->arg->start = $start;
                 break;
 
-            case "stop":
+            case 'stop':
                 $this->arg->stop = $stop;
                 break;
 
@@ -388,22 +388,22 @@ class XMLNodeText extends XMLNode
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_XMLNodeText":
+            case 'is_XMLNodeText':
                 return true;
 
-            case "start":
+            case 'start':
                 return $this->arg->start;
 
-            case "stop":
+            case 'stop':
                 return $this->arg->stop;
 
-            case "text":
+            case 'text':
                 return $this->arg->text;
 
-            case "logicalLength":
+            case 'logicalLength':
                 return $this->arg->length;
 
-            case "texts":
+            case 'texts':
                 return [$this->text];
 
             default:
@@ -464,16 +464,16 @@ class XMLNodeBinaryTag extends XMLNode
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_XMLNodeBinaryTag":
+            case 'is_XMLNodeBinaryTag':
                 return true;
 
-            case "tag":
+            case 'tag':
                 return $this->tagBegin->tag;
 
-            case "start":
+            case 'start':
                 return $this->tagBegin->start;
 
-            case "stop":
+            case 'stop':
                 if ($this->is_unbalanced) {
                     if ($this->arg->is_XMLNodeCaret)
                         return $this->tagBegin->stop;
@@ -482,37 +482,37 @@ class XMLNodeBinaryTag extends XMLNode
 
                 return $this->tagEnd->stop;
 
-            case "text":
+            case 'text':
                 return $this->arg->text;
 
-            case "logicalLength":
+            case 'logicalLength':
                 return $this->arg->logicalLength;
 
-            case "texts":
+            case 'texts':
                 return $this->arg->texts;
 
-            case "zeros":
+            case 'zeros':
                 return $this->text ? $this->arg->zeros : [0];
 
-            case "style":
+            case 'style':
                 if ($this->_style === null) {
                     $_style = [];
                     if ($this->text) {
                         if ($this->arg->is_XMLNodeArray) {
                             $args = $this->arg->args;
                             switch ($this->tag) {
-                                case "msub":
-                                case "munder":
+                                case 'msub':
+                                case 'munder':
                                     if (count($args) == 2)
                                         $args[1]->modify_style('sub');
                                     break;
-                                case "msup":
-                                case "mover":
+                                case 'msup':
+                                case 'mover':
                                     if (count($args) == 2)
                                         $args[1]->modify_style('sup');
                                     break;
-                                case "msubsup":
-                                case "munderover":
+                                case 'msubsup':
+                                case 'munderover':
                                     if (count($args) == 3) {
                                         $args[1]->modify_style('sub');
                                         $args[2]->modify_style('sup');
@@ -537,7 +537,7 @@ class XMLNodeBinaryTag extends XMLNode
 
                 return $this->_style;
 
-            case "is_unbalanced":
+            case 'is_unbalanced':
                 return ! $this->tagEnd || $this->tagEnd->is_XMLNodeUnbalancedTag;
 
             default:
@@ -747,28 +747,28 @@ class XMLNodeSingleTag extends XMLNode
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_XMLNodeSingleTag":
+            case 'is_XMLNodeSingleTag':
                 return true;
 
-            case "tag":
+            case 'tag':
                 return $this->arg->tag;
 
-            case "start":
+            case 'start':
                 return $this->arg->start;
 
-            case "stop":
+            case 'stop':
                 return $this->arg->stop;
 
-            case "text":
+            case 'text':
                 return $this->arg->text;
 
-            case "logicalLength":
+            case 'logicalLength':
                 return 1;
 
-            case "texts":
+            case 'texts':
                 return [$this->text];
 
-            case "style":
+            case 'style':
                 if ($this->_style === null) {
                     $_style = [];
                     $_style[$this->tag] = new std\Range(0, std\len($this->text));
@@ -849,29 +849,29 @@ class XMLNodeArray extends XMLNode
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_XMLNodeArray":
+            case 'is_XMLNodeArray':
                 return true;
 
-            case "start":
+            case 'start':
                 return $this->args[0]->start;
 
-            case "stop":
+            case 'stop':
                 return end($this->args)->stop;
 
-            case "text":
+            case 'text':
                 return implode('', array_map(fn (&$el) => $el->text, $this->args));
 
-            case "logicalLength":
+            case 'logicalLength':
                 return array_sum(array_map(fn (&$el) => $el->logicalLength, $this->args));
 
-            case "texts":
+            case 'texts':
                 $texts = [];
                 foreach ($this->args as &$arg) {
                     array_push($texts, ...$arg->texts);
                 }
                 return $texts;
 
-            case "zeros":
+            case 'zeros':
                 $zeros = [];
                 $length = 0;
                 foreach ($this->args as &$arg) {
@@ -880,7 +880,7 @@ class XMLNodeArray extends XMLNode
                 }
                 return $zeros;
 
-            case "style":
+            case 'style':
                 if ($this->_style === null) {
                     foreach (std\enumerate($this->args) as [$i,$tagEnd]) {
                         if ($tagEnd->is_XMLNodeUnbalancedTag) {
@@ -919,7 +919,7 @@ class XMLNodeArray extends XMLNode
 
                 return $this->_style;
 
-            case "logicalOffset":
+            case 'logicalOffset':
                 if ($this->_logicalOffset === null) {
                     $logicalOffset = [];
                     $start = 0;
@@ -934,7 +934,7 @@ class XMLNodeArray extends XMLNode
 
                 return $this->_logicalOffset;
 
-            case "physicalOffset":
+            case 'physicalOffset':
                 if ($this->_physicalOffset === null) {
                     $physicalOffset = [];
                     $start = 0;
@@ -948,7 +948,7 @@ class XMLNodeArray extends XMLNode
                 }
                 return $this->_physicalOffset;
 
-            case "offsets":
+            case 'offsets':
                 if ($this->_offsets === null) {
                     $offsets = [];
                     $offset = 0;
@@ -1061,28 +1061,28 @@ class XMLNodeUnbalancedTag extends XMLNode
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_XMLNodeUnbalancedTag":
+            case 'is_XMLNodeUnbalancedTag':
                 return true;
 
-            case "tag":
+            case 'tag':
                 return $this->tagEnd->tag;
 
-            case "start":
+            case 'start':
                 return $this->tagEnd->start;
 
-            case "stop":
+            case 'stop':
                 return $this->tagEnd->stop;
 
-            case "text":
+            case 'text':
                 return '';
 
-            case "logicalLength":
+            case 'logicalLength':
                 return 0;
 
-            case "texts":
+            case 'texts':
                 return [];
 
-            case "zeros":
+            case 'zeros':
                 return [0];
             default:
                 return parent::__get($vname);
@@ -1226,7 +1226,7 @@ class XMLText
     public function __get($vname)
     {
         switch ($vname) {
-            case "length":
+            case 'length':
                 return $this->stop - $this->start;
             default:
                 return null;
@@ -1255,7 +1255,7 @@ class TagBegin extends XMLText
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_TagBegin":
+            case 'is_TagBegin':
                 return true;
             default:
                 return parent::__get($vname);
@@ -1277,7 +1277,7 @@ class TagEnd extends XMLText
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_TagEnd":
+            case 'is_TagEnd':
                 return true;
             default:
                 return parent::__get($vname);
@@ -1316,7 +1316,7 @@ class TagSingle extends XMLText
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_TagSingle":
+            case 'is_TagSingle':
                 return true;
             default:
                 return parent::__get($vname);
@@ -1347,7 +1347,7 @@ class HTMLEntity extends XMLText
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_HTMLEntity":
+            case 'is_HTMLEntity':
                 return true;
             default:
                 return parent::__get($vname);
@@ -1367,9 +1367,9 @@ class PlainText extends XMLText
     {
         switch ($vname) {
 
-            case "text":
+            case 'text':
                 return std\slice($this->src, $this->start, $this->stop);
-            case "is_PlainText":
+            case 'is_PlainText':
                 return true;
 
             default:

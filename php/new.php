@@ -5,44 +5,116 @@ require_once 'utility.php';
 
 $module = $_GET['new'];
 
-$size = $module ? strlen($module) : 32;
-
 $module = str_replace("/", ".", $module);
 
-[$apply, $prove] = fetch_codes($module, true);
-
-error_log("apply = " . std\encode($apply));
-error_log("prove = " . std\encode($prove));
-
+$code = fetch_codes($module);
+if (!$code) {
+    require_once 'init.php';
+    $sql = <<<EOT
+select 
+    *
+from 
+    mathlib 
+where 
+    name = "$module"
+EOT;
+    [$lemma] = get_rows($sql);
+    if ($lemma) {
+        $lemma['imply'] = std\decode($lemma['imply']);
+        $lemma['imply']['lean'] .= " :=";
+        $lemma['imply']['latex'] .= "\\tag*{ :=}";
+        $proof = $module;
+        $vars = [];
+        if ($explicit = $lemma['default'] ?? null) {
+            unset($lemma['default']);
+            $parser = compile($explicit);
+            array_push($vars, ...$parser->parse_vars_default($parser->args));
+            $explicit .= " :";
+            $lemma['explicit'] = $explicit;
+        }
+    
+        if ($given = $lemma['given'] ?? null) {
+            $given = std\decode($given);
+            foreach ($given as $g) {
+                $parser = compile($g['lean']);
+                array_push($vars, ...$parser->parse_vars_default($parser->args));
+            }
+            if (!$explicit)
+                $given[count($given) - 1]['lean'] .= " :";
+            $lemma['given'] = $given;
+        }
+        $proof .= implode("", array_map(fn($args) => " $args[0]", $vars));
+        $lemma['proof'] = [
+            [
+                'lean' => $proof
+            ]
+        ];
+    }
+    else {
+        $sql = <<<EOT
+select 
+    *
+from 
+    axiom
+where 
+    axiom = "$module"
+EOT;
+        [$lemma] = get_rows($sql);
+        $latex = $lemma['latex'];
+        $latex = explode("\n", $latex);
+        $lean = $lemma['lean'];
+        $lean = std\decode($lean);
+        $lemma['imply'] = [
+            'lean' => $lean[0],
+            'latex' => preg_replace("/\\\\tag\*\{.*\}$/", "", std\substring($latex[0], 2, -2))
+        ];
+        $lemma['imply']['lean'] .= " := by";
+        $lemma['imply']['latex'] .= "\\tag*{ := by}";
+        $proof = 'sorry';
+        $lemma['proof'] = [
+            'by' => [
+                [
+                    'lean' => $proof
+                ]
+            ]
+        ];
+    }
+    $lemma['name'] = 'main';
+    $lemma['accessibility'] = 'private';
+    $lemma['attribute'] = ['main'];
+    
+    $code = [
+        'module' => $module,
+        'imports' => [],
+        'open' => [],
+        'def' => [], 
+        'lemma' => [$lemma],
+        'error' => [],
+        'date' => [
+            'created' => date('Y-m-d')
+        ],
+    ];
+}
 ?>
 
 <title><?php echo $module;?></title>
 <link rel=stylesheet href="static/codemirror/lib/codemirror.css">
 <link rel=stylesheet href="static/codemirror/theme/eclipse.css">
 <link rel=stylesheet href="static/codemirror/addon/hint/show-hint.css">
-
-<link rel=stylesheet href="static/css/style.css">
-	
-<script src="static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
-<script src="static/unpkg.com/qs@6.10.2/dist/qs.js"></script>
-
-<script src="static/unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
-<script src="static/unpkg.com/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
-
-<script src="static/js/std.js"></script>
-<script src="static/js/utility.js"></script>
-
+<link rel=stylesheet href="static/unpkg.com/katex@0.16.21/dist/katex.min.css">
+<?php
+include_once 'script.php';
+?>
+<script defer src="static/unpkg.com/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="static/unpkg.com/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
 <script type=module>
-import * as codemirror from "./static/codemirror/lib/codemirror.js";
-import * as python from "./static/codemirror/mode/python/python.js";
-import * as active_line from "./static/codemirror/addon/selection/active-line.js";
-import * as show_hint from "./static/codemirror/addon/hint/show-hint.js";
-import * as matchbrackets from "./static/codemirror/addon/edit/matchbrackets.js";
+import * as codemirror from "./static/codemirror/lib/codemirror.js"
+import * as lean from "./static/codemirror/mode/lean/lean.js"
+import * as active_line from "./static/codemirror/addon/selection/active-line.js"
+import * as show_hint from "./static/codemirror/addon/hint/show-hint.js"
+import * as matchbrackets from "./static/codemirror/addon/edit/matchbrackets.js"
+import * as comment from "./static/codemirror/addon/comment/comment.js"
 
-createApp('newTheorem', {
-    apply : <?php echo std\encode($apply)?>,
-    prove : <?php echo std\encode($prove)?>,
-    module : <?php echo std\encode($module)?>,
-});
+createApp('newTheorem', <?php echo std\encode($code) ?>);
 
 </script>

@@ -1,7 +1,7 @@
 <template>
-	<div tabindex=2>
+	<div tabindex=2 @keydown=keydown>
 		<mysql :host=host :user=user :token=token :sql=sql :kwargs=kwargs :rowcount=data.length ref=mysql v-mysql></mysql>
-		<form tabindex=1 name=form :action=action method=post class=monospace-form @keydown=keydown>
+		<form tabindex=1 name=form :action=action method=post class=monospace-form>
 			<template v-for="(data, index) of data">
 				<div v-if="show[index] != false">
 					<div v-if=api_url class=float :index=index v-torch>
@@ -20,8 +20,7 @@
 					</div>
 					<table border=1 class=dictionary :index=index>
 						<template v-for="{Field, Type, value} of detailed_values(data)" :class=Field>
-							<input v-if="Field == 'training'" type=hidden :name="`${Field}[]`" :value=value />
-							<template v-else-if="value && value.isArray">
+							<template v-if="value && value.isArray">
 								<template v-if=value.length>
 									<tr>
 										<td :rowspan=value.length>{{Field}}</td>
@@ -42,7 +41,11 @@
 							</template>
 							<tr v-else>
 								<td>{{Field}}</td>
-								<td>
+								<td v-if="Field == 'training'">
+									<input type=hidden :name="`${Field}[]`" :value=value />
+									<input :value="reset_training(value)" @change="change($event, index)" />
+								</td>
+								<td v-else>
 									<select v-if=dtype[Field].isArray :name="`${Field}[]`" :value=value @change="change($event, index)">
 										<option v-for="value of dtype[Field]" :value=value>{{value}}</option>
 									</select>
@@ -94,15 +97,15 @@
 </template>
 
 <script>
-console.log('import mysqlTable.vue');
 import {props, piece_together} from "../js/mysql.js"
 import {head_line_offset, last_line_offset} from "../js/textarea.js"
 
-import {modify_training} from "../js/Command.js"
+import {modify_training, reset_training} from "../js/Command.js"
 import fraction from "./fraction.vue"
 import timer from "./timer.vue"
 import mysql from "./mysql.vue"
 import mysqlObject from "./mysqlObject.vue"
+console.log('import mysqlTable.vue');
 
 export default {
     components: {mysql, fraction, timer, mysqlObject},
@@ -133,8 +136,14 @@ export default {
     },
     
     computed: {
+		reset_training() {
+			return reset_training;
+		},
+
     	trigger() {
-    		return this.is_torch? this.trigger_simplify: this.repeat? this.trigger_save: null;
+			if (this.data.length)
+				return this.repeat? this.trigger_save: this.is_torch? this.trigger_simplify: null;
+			return () => {};
     	},
     	
     	repeat() {
@@ -153,6 +162,9 @@ export default {
         		var {model} = kwargs.kwargs;
         		if (model)
         			url.push('kwargs[model]=' + model);
+				var {torch} = kwargs.kwargs;
+        		if (torch)
+        			url.push('kwargs[torch]=' + torch);
     		}
 
     		var {limit} = kwargs;
@@ -199,21 +211,21 @@ export default {
     		return this.mounted.mysql? this.$refs.mysql: {};
     	},
     	
-    	desc(){
+    	desc() {
     		var desc = this.mysql.desc;
     		if (desc)
     			return desc;
     		return [];
     	},
     	
-    	api(){
+    	api() {
     		var api = this.mysql.api;
     		if (api)
     			return api;
     		return {};
     	},
     	
-    	Comment(){
+    	Comment() {
     		var Comment = this.mysql.Comment;
     		if (Comment)
     			return Comment;
@@ -242,22 +254,22 @@ export default {
     		return this.api_parameters.api_output;
     	},
     	
-    	dtype(){
+    	dtype() {
     		var dtype = this.mysql.dtype;
     		if (dtype)
     			return dtype;
     		return {};
     	},
     	
-		is_torch(){
+		is_torch() {
 			return getParameterByName('torch') || this.kwargs.kwargs && this.kwargs.kwargs.torch;
 		},
 		
-		is_mysql(){
+		is_mysql() {
 			return getParameterByName('mysql') || getParameterByName('cmd') == 'select' || this.cmd == 'update';
 		},
 
-		compare(){
+		compare() {
 			if (this.is_torch)
 				return 'torch';
 		},
@@ -310,8 +322,8 @@ export default {
     	},
     	
     	primary_key_url(primary_key) {
-    		var {host, user, database, table, PRI} = this;
-    		var kwargs = {user, from: fromEntries(database, table)};
+    		var {host, database, table, PRI} = this;
+    		var kwargs = {from: fromEntries(database, table)};
 			if (primary_key)
     			kwargs[PRI] = primary_key.encodeURI();
     		if (host && host != 'localhost')
@@ -477,11 +489,27 @@ export default {
 				if (this.mysql.cmd == 'insert')
 					this.forward_next();
 				break;
+
+			case 'Pause':
+				this.Pause();
+				break;
 			}
     	},
     	
+		Pause() {
+			delete this.trigger_save;
+			var {timer} = this.$refs;
+			if (timer) {
+				timer.pause = true;
+				console.log('timer.pause =', timer.pause);
+				var {repeat} = this.kwargs.kwargs;
+				if (repeat && repeat != -1) // full-automation
+					this.kwargs.kwargs.repeat = -1; // semi-automation
+			}
+		},
+
 		forward_next() {
-			var {kwargs, user, host, database, table} = this;
+			var {kwargs, host, database, table} = this;
 			console.log(kwargs);
 
 			kwargs.select = '*';
@@ -490,21 +518,23 @@ export default {
 				limit = 1;
 
 			kwargs.limit = limit;
-			kwargs.from = fromEntries(database, table);
+			if (typeof kwargs.from != 'object')
+				kwargs.from = fromEntries(database, table);
 
 			var url = [];
-			url.push(`user=${user}`);
 			if (host && host != 'localhost')
 				url.push(`host=${host}`);
 
 			url.push(...piece_together(kwargs));
 
-			var {repeat, model} = kwargs.kwargs?? {};
+			var {repeat, model, torch} = kwargs.kwargs?? {};
 			kwargs = {};
 			if (model)
 				kwargs.model = model;
 			if (repeat)
 				kwargs.repeat = repeat;
+			if (torch)
+				kwargs.torch = torch;
 			
 			location.search = '?' + get_url({kwargs}) + '&' + url.join('&');
 		},
@@ -600,7 +630,7 @@ export default {
 			
 			var {PRI} = this;
 			if (this.dtype[PRI] == 'int') {
-	        	var [ret] = await query(this.host, this.user, this.token, `select max(${PRI}) as id from ${database}.${table}`);
+	        	var [ret] = await query(this.host, this.token, `select max(${PRI}) as id from ${database}.${table}`);
 	        	var primary_key = ret[PRI];
 	        	var primary_key = primary_key == null? 0: parseInt(primary_key);
 	        	for (var obj of this.data) {
@@ -620,13 +650,25 @@ export default {
         change(event, index){
         	var self = event.target;
         	var name = self.name.slice(0, -2);
-        	if (self.value != this.data[index][name]){
-        		this.data[index][name] = self.value;
-        		var {training} = this.data[index];
-        		this.data[index].training = modify_training(training, name != this.table);
+			if (name == '') {
+				name = 'training';
+				var training = this.data[index][name];
+				var value = parseInt(self.value);
+				if (value != reset_training(training)) {
+					if (training < 0 && ~training & 64)
+						value |= 64;
+					this.data[index][name] = ~value;
+				}
+			}
+			else {
+				if (self.value != this.data[index][name]) {
+					this.data[index][name] = self.value;
+					var {training} = this.data[index];
+					this.data[index].training = modify_training(training, name != this.table);
 
-        		console.assert(this.data[index].training < 0, "this.data[index].training < 0");
-        	}
+					console.assert(this.data[index].training < 0, "this.data[index].training < 0");
+				}
+			}
         },
 
         set_training(object) {
@@ -673,15 +715,21 @@ export default {
 		},
     },
     
-    async mounted(){
+    async mounted() {
     	++this.mounted.mysql;
-		if (this.repeat && this.mysql.cmd == 'insert')
+		if (this.repeat && this.mysql.cmd == 'insert') {
+			if (this.repeat == -1) // semi-automation
+				this.kwargs.kwargs.repeat = 1; // full-automation
 			this.forward_next();
+		}
 
 		this.report.simplify = this.$refs.mysql.simplify;
+		var {mounted} = this.$parent;
+		if (mounted)
+			mounted.mysql = 1;
     },
     
-    unmounted(){
+    unmounted() {
     	--this.mounted.mysql;
     },
     

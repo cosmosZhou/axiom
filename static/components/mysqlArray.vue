@@ -23,9 +23,9 @@
 </template>
 
 <script>
-console.log('import mysqlArray.vue');
-import {is_head_char, is_last_char, head_line_offset, last_line_offset, textarea_textContent} from "../js/textarea.js"
+import {head_line_offset, last_line_offset} from "../js/textarea.js"
 import {modify_training} from "../js/Command.js"
+console.log('import mysqlArray.vue');
 
 export default {
     components: {},
@@ -84,14 +84,14 @@ export default {
     		return this.mounted.mysql? this.$refs.mysql: {};
     	},
     	
-    	desc(){
+    	desc() {
     		var desc = this.mysql.desc;
     		if (desc)
     			return desc;
     		return [];
     	},
     	
-    	api(){
+    	api() {
     		var api = this.mysql.api;
     		if (api)
     			return api;
@@ -120,22 +120,22 @@ export default {
     		return this.api_parameters.api_output;
     	},
     	
-    	dtype(){
+    	dtype() {
     		var dtype = this.mysql.dtype;
     		if (dtype)
     			return dtype;
     		return {};
     	},
     	
-		is_torch(){
+		is_torch() {
 			return getParameterByName('torch') || this.kwargs.kwargs && this.kwargs.kwargs.torch;
 		},
 		
-		is_mysql(){
+		is_mysql() {
 			return getParameterByName('mysql') || getParameterByName('cmd') == 'select' || this.cmd == 'update';
 		},
 
-		compare(){
+		compare() {
 			if (this.is_torch)
 				return 'torch';
 		},
@@ -405,7 +405,7 @@ export default {
 			
 			var {PRI} = this;
 			if (this.dtype[PRI] == 'int') {
-	        	var [ret] = await query(this.host, this.user, this.token, `select max(${PRI}) as id from ${database}.${table}`);
+	        	var [ret] = await query(this.host, this.token, `select max(${PRI}) as id from ${database}.${table}`);
 	        	var primary_key = ret[PRI];
 	        	var primary_key = primary_key == null? 0: parseInt(primary_key);
 	        	for (var obj of this.data) {
@@ -435,10 +435,10 @@ export default {
         },
     },
     
-    mounted(){
+    mounted() {
     },
     
-    unmounted(){
+    unmounted() {
     },
     
 	directives: {

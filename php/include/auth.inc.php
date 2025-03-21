@@ -42,14 +42,14 @@ function add_invalid_login() {
 function check_invalid_login() {
 	global $adminer;
 	$invalids = unserialize(@file_get_contents(get_temp_dir() . "/adminer.invalid")); // @ - may not exist
-	$invalid = ($invalids ? $invalids[$adminer->bruteForceKey()] : array());
+	$invalid = ($invalids ? ($invalids[$adminer->bruteForceKey()]?? [0, 0]) : [0, 0]);
 	$next_attempt = ($invalid[1] > 29 ? $invalid[0] - time() : 0); // allow 30 invalid attempts
 	if ($next_attempt > 0) { //! do the same with permanent login
 		auth_error(lang('Too many unsuccessful logins, try again in %d minute(s).', ceil($next_attempt / 60)));
 	}
 }
 
-$auth = $_POST["auth"];
+$auth = $_POST["auth"]?? null;
 if ($auth) {
 	session_regenerate_id(); // defense against session fixation
 	$vendor = $auth["driver"] ?? 'server';
@@ -70,13 +70,13 @@ if ($auth) {
 	if (count($_POST) == 1 // 1 - auth
 		|| DRIVER != $vendor
 		|| HOST != $host
-		|| $_GET["user"] !== $user // "0" == "00"
+		|| get_user("pwds") !== $user // "0" == "00"
 		|| DB != $db
 	) {
-	    redirect(auth_url($vendor, $host, $user, $db, $table));
+	    redirect(auth_url($vendor, $host, $db, $table));
 	}
 	
-} elseif ($_POST["logout"] && (!$has_token || verify_token())) {
+} elseif (isset($_POST["logout"]) && (!$has_token || verify_token())) {
 	foreach (array("pwds", "db", "dbs", "queries") as $key) {
 		set_session($key, null);
 	}
@@ -98,7 +98,7 @@ function unset_permanent() {
 	global $permanent;
 	foreach ($permanent as $key => $val) {
 		[$vendor, $host, $user, $db] = array_map('base64_decode', explode("-", $key));
-		if ($vendor == DRIVER && $host == HOST && $user == $_GET["user"] && $db == DB) {
+		if ($vendor == DRIVER && $host == HOST && $user == get_user("pwds") && $db == DB) {
 			unset($permanent[$key]);
 		}
 	}
@@ -112,7 +112,8 @@ function unset_permanent() {
 function auth_error($error) {
 	global $adminer, $has_token;
 	$session_name = session_name();
-	if (isset($_GET["user"])) {
+	$user = get_user("pwds");
+	if ($user) {
 		header("HTTP/1.1 403 Forbidden"); // 401 requires sending WWW-Authenticate header
 		if (($_COOKIE[$session_name] || $_GET[$session_name]) && !$has_token) {
 			$error = lang('Session expired, please login again.');
@@ -124,7 +125,7 @@ function auth_error($error) {
 				if ($password === false) {
 					$error .= ($error ? '<br>' : '') . lang('Master password expired. <a href="https://www.adminer.org/en/extension/"%s>Implement</a> %s method to make it permanent.', target_blank(), '<code>permanentLogin()</code>');
 				}
-				set_password(DRIVER, HOST, $_GET["user"], null);
+				set_password(DRIVER, HOST, $user, null);
 			}
 			unset_permanent();
 		}
@@ -138,19 +139,20 @@ function auth_error($error) {
 	cookie("adminer_key", ($_COOKIE["adminer_key"] ? $_COOKIE["adminer_key"] : rand_string()), $params["lifetime"]);
 	page_header('Login', $error, null);
 
-	$auth = $_POST['auth'];
+	$auth = $_POST['auth']?? null;
 	unset($_POST['auth']);
 	$_POST['hidden_fields'] = hidden_fields($_POST);
-	$vue = $adminer->loginForm($auth);
+	$adminer->loginForm($auth);
 	$props = array_merge($_POST, $_GET);
     
 	$nonce = true;
+	$vue = 'login';
 	unset($props['with']);
 	include dirname(__file__).'/../templates/vue.php';
 	exit;
 }
-
-if (isset($_GET["user"]) && !class_exists("Min_DB")) {
+$user = get_user("pwds");
+if ($user && !class_exists("Min_DB")) {
 	unset($_SESSION["pwds"][DRIVER]);
 	unset_permanent();
 	page_header(lang('No extension'), lang('None of the supported PHP extensions (%s) are available.', implode(", ", $possible_drivers)), false);
@@ -161,8 +163,15 @@ stop_session(true);
 
 // error_log("\$_SESSION = ".json_encode($_SESSION));
 
-if (isset($_GET["user"]) && is_string(get_password())) {
-	[$host, $port] = explode(":", HOST, 2);
+if (isset($user) && is_string(get_password())) {
+	if (strpos(HOST, ':') !== false) {
+		// HOST contains a colon
+		[$host, $port] = explode(":", HOST, 2);
+	} else {
+		// HOST does not contain a colon
+		$host = HOST;
+		$port = '';
+	}
 	if (preg_match('~^\s*([-+]?\d+)~', $port, $match) && ($match[1] < 1024 || $match[1] > 65535)) { // is_numeric('80#') would still connect to port 80
 		auth_error('Connecting to privileged ports is not allowed.');
 	}
@@ -172,14 +181,19 @@ if (isset($_GET["user"]) && is_string(get_password())) {
 }
 
 $login = null;
-if (!is_object($connection) || ($login = $adminer->login($_GET["user"], get_password())) !== true) {
+if (!is_object($connection) || ($login = $adminer->login($user, get_password())) !== true) {
 	$error = (is_string($connection) ? h($connection) : (is_string($login) ? $login : 'Invalid credentials.'));
 	auth_error($error . (preg_match('~^ | $~', get_password()) ? '<br>There is a space in the input password which might be the cause.' : ''));
 }
 
-if ($_POST["logout"] && $has_token && !verify_token()) {
+if (isset($_POST["logout"]) && $has_token && !verify_token()) {
 	page_header('Logout', 'Invalid CSRF token. Send the form again.');
-	redirect(auth_url($vendor, $host, $user));
+	restart_session();
+	add_invalid_login();
+	set_user("pwds", null);
+	stop_session();
+
+	redirect(auth_url($vendor, $host));
 	exit;
 }
 
@@ -201,7 +215,7 @@ if ($_POST) {
 				}
 			}
 		}
-		$error = (!$_POST["token"] && $max_vars
+		$error = (!($_POST["token"]?? null) && $max_vars
 			? lang('Maximum number of allowed fields exceeded. Please increase %s.', "'$ini'")
 			: lang('Invalid CSRF token. Send the form again.') . ' ' . lang('If you did not send this request from Adminer then close this page.')
 		);

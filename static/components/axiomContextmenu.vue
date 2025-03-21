@@ -25,7 +25,7 @@
 <script>    
 console.log('import axiomContextmenu.vue');
 export default {
-    data(){
+    data() {
         return {
             focusedIndex: -1,    
         };
@@ -34,7 +34,7 @@ export default {
     props : [ 'left', 'top' ],
     
     computed: {
-        length(){
+        length() {
             return this.$el.children.length;
         },
     },
@@ -106,7 +106,7 @@ export default {
             window.open(this.get_href(), "_blank", "toolbar=yes");
         },
         
-        get_href(){
+        get_href() {
             var icon = this.$parent.focusedElement;
 
             var theorem = icon.$el.lastChild.textContent.trim();

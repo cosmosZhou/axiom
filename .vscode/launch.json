@@ -6,6 +6,15 @@
             "type": "php",
             "request": "launch",
             "port": 9003
+        },
+        {
+            "name": "Python: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": { "PYTHONPATH": "${workspaceFolder}" },
         }
     ]
 }

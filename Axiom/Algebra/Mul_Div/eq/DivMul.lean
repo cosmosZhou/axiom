@@ -1,8 +1,9 @@
 import Axiom.Algebra.DivMul.eq.Mul_Div
+open Algebra
 
-namespace Algebra.Mul_Div.eq
 
-theorem DivMul
+@[main]
+private lemma main
   [DivInvMonoid α]
   {a b c : α} :
 -- imply
@@ -10,7 +11,5 @@ theorem DivMul
 -- proof
   rw [DivMul.eq.Mul_Div]
 
-
-end Algebra.Mul_Div.eq
 
 -- created on 2024-07-01

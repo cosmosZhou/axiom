@@ -6,10 +6,11 @@ import Axiom.Algebra.OrAnd.equ.AndOrS
 import Axiom.Algebra.OrAndS.equ.AndOr
 import Axiom.Algebra.Or_Or.equ.OrOr
 import Axiom.Algebra.AndOr.equ.Cond
+open Algebra
 
-namespace Algebra.ImplyOr.equ
 
-theorem AndImplyS :
+@[main]
+private lemma main :
 -- imply
   (p ∨ q) → r ↔ (p → r) ∧ (q → r)  := by
 -- proof
@@ -25,10 +26,7 @@ theorem AndImplyS :
   rw [OrAnd.equ.AndOrS (q := r)]
   simp [OrAndS.equ.AndOr false]
   rw [Or_Or.equ.OrOr]
-
   simp [AndOr.equ.Cond true]
 
-
-end Algebra.ImplyOr.equ
 
 -- created on 2024-07-01

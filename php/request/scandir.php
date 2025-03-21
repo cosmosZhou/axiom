@@ -23,11 +23,8 @@ $folder = dirname(dirname(dirname(__file__))).'/Axiom'.$folder;
 
 foreach (scandir($folder) as $file) {
     switch ($file) {
-        case ".":
-        case "..":
-        case "__pycache__":
-            break;
-        case "__init__.lean":
+        case '.':
+        case '..':
             break;
         default:
             if (!str_ends_with($file, '.lean')) {

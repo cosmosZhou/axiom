@@ -11,31 +11,39 @@ function section($axiom)
 }
 
 $repertoire = [];
-$user = get_user();
-foreach (select_axiom_by_state_not($user, 'proved') as $tuple) {
-    [$axiom, $state] = $tuple;
-    $repertoire[section($axiom)][$state][] = $axiom;
+$user = get_project_name();
+foreach (select_lemma_by_error($user) as $tuple) {
+    [$axiom, $type] = $tuple;
+    $repertoire[section($axiom)][$type][] = $axiom;
 }
 
 $state_count_pairs = [];
+$_t_type = _t_type($user); 
+$_t_matrix = _t_matrix($user);
+$sql = <<<EOT
+with $_t_type, $_t_matrix
+select 
+    _t_type.type,
+    count(distinct _t_matrix.module) as count
+from 
+    _t_type
+    join _t_matrix using (type)
+group by
+    type
+EOT;
 
-foreach (get_rows("select state, count(*) as count from axiom where user = '$user' group by state order by count", MYSQLI_ASSOC) as $res) {
+foreach (get_rows($sql, MYSQLI_ASSOC) as $res) {
     $state_count_pairs[] = $res;
 }
 
+
 $state_count_pairs[] = [
-    'state' => 'total',
+    'type' => 'total',
     'count' => select_count($user)
 ];
+
+include_once 'script.php';
 ?>
-
-<script src="static/unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
-<script src="static/unpkg.com/qs@6.10.2/dist/qs.js"></script>
-
-<script src="static/unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
-<script src="static/unpkg.com/vue3-sfc-loader@0.8.4/dist/vue3-sfc-loader.js"></script>
-<script src="static/js/std.js"></script>
-<script src="static/js/utility.js"></script>
 
 <script type=module>    
 createApp('axiomSummary', {

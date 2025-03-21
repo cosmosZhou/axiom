@@ -1,6 +1,6 @@
 <template>
 	<form name=search enctype="multipart/form-data" method=post :action=action @keydown=keydown>
-		<input v-focus tabindex=1 type=text spellcheck=false name=keyword size=48 :value=keyword placeholder='input a hint in search of a formula/theorem/axiom' @input=input>
+		<input v-focus tabindex=1 type=text spellcheck=false name=q size=48 :value=q placeholder='input a hint in search of a formula/theorem/axiom' @input=input>
 		<br>
 		<template v-if="replacement != null" >
 			<input v-focus tabindex=1 name=replacement :value=replacement placeholder='input the replacement word' @input=input />
@@ -12,9 +12,12 @@
 			
 		<input tabindex=-1 type=checkbox name=wholeWord :checked=wholeWord><u>W</u>holeWord
 		
-		<input tabindex=-1 type=checkbox name=regularExpression :checked=regularExpression>Rege<u>x</u>
+		<input tabindex=-1 type=checkbox name=regularExpression :checked=regularExpression><u>R</u>egex
 		
-		<input tabindex=-1 type=checkbox name=latex :checked=latex><u>L</u>aTex<br>
+		<input tabindex=-1 type=checkbox name=latex :checked=latex><u>L</u>aTex
+
+		<input tabindex=-1 type=checkbox name=fullText :checked=fullText>F<u>u</u>llText
+		<br>
 		limit: <input tabindex=1 name=limit :value=limit placeholder='100' @input=input />
 		<input id=submit_query type=submit value=query style="display: none;" />
 	</form>
@@ -23,14 +26,14 @@
 <script>
 console.log('import searchForm.vue');
 export default {
-	props : ['keyword', 'caseSensitive', 'wholeWord', 'regularExpression', 'latex', 'replacement', 'limit'],
+	props : ['q', 'caseSensitive', 'wholeWord', 'regularExpression', 'fullText', 'latex', 'replacement', 'limit'],
 
 	computed: {
-		user(){
+		user() {
 			return axiom_user();	
 		}, 
 		
-		action(){
+		action() {
 			return `/${this.user}/index.php`;
 		},
 	},
@@ -49,11 +52,14 @@ export default {
 				case 'w':
 					setAttribute(this, 'wholeWord', !this.wholeWord);
 					break;
-				case 'x':
+				case 'r':
 					setAttribute(this, 'regularExpression', !this.regularExpression);
 					break;
 				case 'l':
 					setAttribute(this, 'latex', !this.latex);
+					break;
+				case 'u':
+					setAttribute(this, 'fullText', !this.fullText);
 					break;
 				}
 			}

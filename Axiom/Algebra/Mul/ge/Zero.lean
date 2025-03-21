@@ -1,9 +1,10 @@
 import Axiom.Algebra.Mul.eq.Square
 import Axiom.Algebra.Square.ge.Zero
+open Algebra
 
-namespace Algebra.Mul.ge
 
-theorem Zero
+@[main]
+private lemma main
   [Semiring α] [LinearOrder α]
   [IsRightCancelAdd α] [ZeroLEOneClass α] [ExistsAddOfLE α]
   [PosMulMono α] [AddLeftStrictMono α]
@@ -14,7 +15,5 @@ theorem Zero
   rw [Mul.eq.Square]
   apply Square.ge.Zero
 
-
-end Algebra.Mul.ge
 
 -- created on 2024-11-29

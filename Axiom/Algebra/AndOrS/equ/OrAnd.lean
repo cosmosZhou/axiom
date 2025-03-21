@@ -1,14 +1,13 @@
 import Axiom.Algebra.OrAnd.equ.AndOrS
+open Algebra
 
-namespace Algebra.AndOrS.equ
 
-theorem OrAnd :
+@[main]
+private lemma main :
 -- imply
   (p ∨ r) ∧ (q ∨ r) ↔ p ∧ q ∨ r :=
 -- proof
   OrAnd.equ.AndOrS.symm
 
-
-end Algebra.AndOrS.equ
 
 -- created on 2024-07-01

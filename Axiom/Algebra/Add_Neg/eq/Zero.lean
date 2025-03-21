@@ -1,10 +1,8 @@
 import Axiom.Basic
 
 
-namespace Algebra.Add_Neg.eq
-
-@[simp]
-theorem Zero
+@[simp, main]
+private lemma main
   [AddGroup α]
   {a : α} :
 -- imply
@@ -12,7 +10,5 @@ theorem Zero
 -- proof
   apply add_neg_cancel
 
-
-end Algebra.Add_Neg.eq
 
 -- created on 2024-11-25

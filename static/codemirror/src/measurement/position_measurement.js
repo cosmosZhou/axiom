@@ -61,6 +61,8 @@ function ensureLineHeights(cm, lineView, rect) {
 export function mapFromLineView(lineView, line, lineN) {
   if (lineView.line.equals(line))
     return {map: lineView.measure.map, cache: lineView.measure.cache}
+  if (!lineView.rest)
+    return {}
   for (let i = 0; i < lineView.rest.length; i++)
     if (lineView.rest[i] == line)
       return {map: lineView.measure.maps[i], cache: lineView.measure.caches[i]}
@@ -127,7 +129,9 @@ export function prepareMeasureForLine(cm, line) {
 export function measureCharPrepared(cm, prepared, ch, bias, varHeight) {
   if (prepared.before) ch = -1
   let key = ch + (bias || ""), found
-  if (prepared.cache.hasOwnProperty(key)) {
+  if (!prepared.cache)
+    found = {}; // Cheap hack for measuring a char without a prepared cache
+  else if (prepared.cache.hasOwnProperty(key)) {
     found = prepared.cache[key]
   } else {
     if (!prepared.rect)

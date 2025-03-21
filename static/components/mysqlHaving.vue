@@ -27,12 +27,12 @@ export default {
 	
 	props : [], 
 	
-	data(){
+	data() {
 		return {
 		};
 	},
 
-	created(){
+	created() {
 		console.log(this.kwargs);
 		console.log(this.logics);
 	},
@@ -157,23 +157,23 @@ export default {
 			},
 		},
 		
-		change_table(){
+		change_table() {
 			return this.$parent.change_table;
 		},
 		
-		change_input(){
+		change_input() {
 			return this.$parent.change_input;
 		},
 		
-		style_select_table(){
+		style_select_table() {
 			return this.$parent.style_select_table;
 		},
 		
-		style_input(){
+		style_input() {
 			return this.$parent.style_input;
 		},
 		
-		input_kwargs(){
+		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
 		

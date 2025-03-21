@@ -40,10 +40,6 @@
 				<th>Table</th>
 				<td><input name=auth[table] v-model=table autocapitalize=off /></td>
 			</tr>
-			<tr>
-				<th>Authorization</th>
-				<td><input name=auth[Authorization] v-model=Authorization autocapitalize=off placeholder="Authorization for ChatGPT"/></td>
-			</tr>
 			<p>
 				<input type=submit value=Login />
 				<label>
@@ -129,16 +125,6 @@ export default {
     		
     		set(table) {
     			Object.assign(this.auth, {table});
-    		},
-    	},
-
-    	Authorization: {
-    		get() {
-    			return this.auth.Authorization;
-    		},
-    		
-    		set(Authorization) {
-    			Object.assign(this.auth, {Authorization});
     		},
     	},
 

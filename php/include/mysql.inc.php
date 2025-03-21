@@ -12,37 +12,35 @@ if (!defined("DRIVER")) {
 				parent::__construct();
 			}
 
-			function connect($host = "", $user = "", $password = "", $database = null, $port = null, $socket = null) {
-				if (DIRECTORY_SEPARATOR == '/' && $host == 'localhost' && !$port) {
-					// $host = $_SERVER['SERVER_ADDR'];
-					$host = '127.0.0.1';
-				}
+			function connect($host = "", $user = "", $password = "", $database = null, $port = null, $socket = null): bool {
 				global $adminer;
 				mysqli_report(MYSQLI_REPORT_OFF); // stays between requests, not required since PHP 5.3.4
-				if (strpos($host, ':') !== false) {
-					[$host, $port] = explode(":", $host, 2); // part after : is used for port or socket
-				}
+				if (strpos($host, ':') !== false)
+				    [$host, $port] = explode(":", $host, 2); // part after : is used for port or socket
 				$ssl = $adminer->connectSsl();
 				if ($ssl) {
-					$this->ssl_set($ssl['key'], $ssl['cert'], $ssl['ca'], '', '');
+				    $this->ssl_set($ssl['key'], $ssl['cert'], $ssl['ca'], '', '');
 				}
 				$this->options(MYSQLI_OPT_LOCAL_INFILE, true);
+				if (!$socket)
+				    // Warning: mysqli::real_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+				    // DROP USER 'prod'@'localhost';
+				    $socket = getenv('HOME') . '/mysql/mysql.sock';
 				$return = @$this->real_connect(
 					($host != "" ? $host : ini_get("mysqli.default_host")),
 					($host . $user != "" ? $user : ini_get("mysqli.default_user")),
 					($host . $user . $password != "" ? $password : ini_get("mysqli.default_pw")),
 					$database,
 					(is_numeric($port) ? $port : ini_get("mysqli.default_port")),
-					(!is_numeric($port) ? $port : $socket),
+					$socket,
 					($ssl ? 64 : 0) // 64 - MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT (not available before PHP 5.6.16)
 				);
 				return $return;
 			}
 
-			function set_charset($charset) {
-				if (parent::set_charset($charset)) {
+			function set_charset($charset): bool {
+				if (parent::set_charset($charset))
 					return true;
-				}
 				// the client library may not support utf8mb4
 				parent::set_charset('utf8');
 				return $this->query("SET NAMES $charset");

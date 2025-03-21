@@ -1,8 +1,10 @@
 import Axiom.Algebra.Add.comm
 import Axiom.Algebra.Add_Add.eq.AddAdd
-namespace Algebra.AddAdd
+open Algebra
 
-theorem comm
+
+@[main]
+private lemma main
   [AddCommSemigroup α]
   {a b : α} :
 -- imply
@@ -12,7 +14,5 @@ theorem comm
   rw [Add.comm (b := c)]
   rw [Add_Add.eq.AddAdd]
 
-
-end Algebra.AddAdd
 
 -- created on 2024-11-28

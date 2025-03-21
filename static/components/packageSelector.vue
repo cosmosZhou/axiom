@@ -13,11 +13,11 @@
 </template>
 
 <script>
-console.log('import packageSelector.vue');    
 import smallPackage from "./smallPackage.vue"
+console.log('import packageSelector.vue');
 
 export default {
-    data(){
+    data() {
         return {
         	packages: [],
         };
@@ -25,17 +25,17 @@ export default {
     
     components : {smallPackage},
 
-    async created(){
+    async created() {
         var sympy = axiom_user();
 		var packages = await get(`/${sympy}/php/request/scandir.php`, {folder: this.path});
 		this.packages = packages;
-    	console.log("in created(){: ", this.packages);
+    	console.log("in created() {: ", this.packages);
     },
     
     props : [ 'path'],
     
     computed: {            
-        theorem(){
+        theorem() {
             var children = this.$parent.children;
             var index = this.$parent.focusedIndex;
             return children[index].$el.textContent.trim();

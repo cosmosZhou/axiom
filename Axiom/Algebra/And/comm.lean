@@ -1,19 +1,16 @@
-import Axiom.Basic
-import Axiom.Algebra.And.to.And.symm
+import Axiom.Algebra.And.of.And.symm
+open Algebra
 
-namespace Algebra.And
 
-theorem comm :
+@[main]
+private lemma main :
 -- imply
   p ∧ q ↔ q ∧ p :=
 -- proof
   ⟨
-    And.to.And.symm,
-    And.to.And.symm
+    And.of.And.symm,
+    And.of.And.symm
   ⟩
 
-
-
-end Algebra.And
 
 -- created on 2024-07-01

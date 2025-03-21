@@ -3,25 +3,25 @@
 </template>
 
 <script>
-console.log('import canvasDragRect.vue');
 import Canvas from "../js/Canvas.js"
+console.log('import canvasDragRect.vue');
 
 export default {
 	props : ['width', 'height'],
 	
-	data(){
+	data() {
 		return {
 			flag: false,
 			canvas: new Canvas(null, null, null, null, 'blue'),
 		};
 	},
 	
-	created(){
+	created() {
 	},
 	
 	computed: {
 		x0: {
-			get(){
+			get() {
 				return this.canvas.x0;
 			},
 				
@@ -32,7 +32,7 @@ export default {
 		},
 		
 		y0: {
-			get(){
+			get() {
 				return this.canvas.y0;
 			},
 				
@@ -43,7 +43,7 @@ export default {
 		},
 		
 		x1: {
-			get(){
+			get() {
 				return this.canvas.x1;
 			},
 				
@@ -54,7 +54,7 @@ export default {
 		},
 		
 		y1: {
-			get(){
+			get() {
 				return this.canvas.y1;
 			},
 				
@@ -65,7 +65,7 @@ export default {
 		},
 		
 		color: {
-			get(){
+			get() {
 				return this.canvas.color;
 			},
 				
@@ -74,13 +74,13 @@ export default {
 			}
 		},
 		
-		ctx(){
+		ctx() {
 			return this.$el.getContext("2d");
 		},
 	},
 	
 	methods: {
-		getSelectedRegion(){
+		getSelectedRegion() {
 			var [left, top] = this.leftTop();
 			var {x0, y0} = this;
 			var x = x0 - left;
@@ -99,7 +99,7 @@ export default {
 			return {x, y, width, height};
 		},
 		
-		leftTop(){
+		leftTop() {
 			var rect = this.$el.getBoundingClientRect();
 			return [rect.x, rect.y];
 		},

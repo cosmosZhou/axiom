@@ -9,14 +9,14 @@
 </template>
 
 <script>
-import codeMirror from "./codeMirror.vue";
+import codeMirror from "./codeMirror.vue"
 console.log('import module.vue');
 export default {
 	components: {codeMirror},
 	
     props : [ 'code'],
 
-    data(){
+    data() {
     	return {
     		theme: 'eclipse',
     		name: 'code',
@@ -33,7 +33,7 @@ export default {
     	}
     },
     
-    async created(){
+    async created() {
     	this.user = await get('system/user');
     	for (let [line] of await form_post('mysql/select', {sql:`select line from breakpoint where user = '${this.user}' and module = '${this.module}'`})){
     		this.breakpoint[line] = true;	
@@ -47,24 +47,24 @@ export default {
     	});
     },
     
-    updated(){
+    updated() {
     },
     
     computed:{
-    	pyScriptSize(){
+    	pyScriptSize() {
     		return Math.max(this.pyScript.length, 40);	
     	},
     	
-    	lines(){
+    	lines() {
     		return this.code.split('\n');	
     	},
     	
-        module(){
+        module() {
             return document.querySelector('title').textContent;
         },
         
         hash:{
-        	get(){
+        	get() {
             	var hash = location.hash;			
         		if (hash){
         			return hash.slice(1);
@@ -79,7 +79,7 @@ export default {
         	},
         },
         
-        stop_line(){
+        stop_line() {
     		var stop = this.start_line + 1;
     		for (; stop < this.breakpoint.length; ++stop){
     			if (this.breakpoint[stop]){
@@ -91,17 +91,17 @@ export default {
         
     },
     
-	mounted(){
+	mounted() {
 	},
     
     methods: {
-    	showExecutionPoint(){
+    	showExecutionPoint() {
     		var codeMirror = this.$refs.codeMirror;
     		codeMirror.showExecutionPoint(this.start_line, this.stop_line);
     		this.start_line = this.stop_line;
     	},
     	
-    	async run(){
+    	async run() {
     		var lines = this.lines.slice(this.start_line, this.stop_line);    		
     		
     		var res = await json_post('debug/exec', {py: lines.join('\n')});
@@ -110,7 +110,7 @@ export default {
     		this.showExecutionPoint();
     	},
     	
-		async resume(){
+		async resume() {
     		var lines = this.lines.slice(this.start_line, this.stop_line);    		
     		
     		var res = await json_post('debug/exec', {py: lines.join('\n')});
@@ -119,7 +119,7 @@ export default {
     		this.showExecutionPoint();
 		},
     	
-		save(){
+		save() {
     		if (this.breakpoint.length){
     			this.hash = null;
     		}
@@ -133,7 +133,7 @@ export default {
     		form.submit();
 		},
 		
-		async debug(){
+		async debug() {
 			console.log("debug in axiom.vue");
 			var user = axiom_user();
 			var [[port]] = await form_post('php/request/mysql/select.php', {sql: `select port from login where user = '${user}'`});

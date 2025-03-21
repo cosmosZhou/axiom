@@ -2,6 +2,7 @@
 require_once '../../utility.php';
 require_once '../../mysql.php';
 require_once '../../init.php';
+
 use std\Graph, std\Text, std\Set;
 
 $dict = empty($_POST) ? $_GET : $_POST;
@@ -26,8 +27,6 @@ error_log("basename = $basename");
 
 if (file_exists($old . ".lean")) {
     $old .= ".lean";
-} else {
-    $old .= "/__init__.lean";
 }
 
 $new = $folder . str_replace(".", "/", $dest) . "/$basename";
@@ -35,39 +34,13 @@ $new = $folder . str_replace(".", "/", $dest) . "/$basename";
 error_log("old = $old");
 error_log("new = $new");
 
-if (file_exists($new . ".lean")) {
-    $new .= "/__init__.lean";
+$new .= ".lean";
+rename($old, $new);
 
-    $newFile = new std\Text($new);
-    if ($newFile->search('^@apply\b')) {
-        die("$newFile already exists!");        
-    }
+$old = $oldPackage . "." . $basename;
+$new = $dest . "." . $basename;
 
-    $newFile->rewind();
-    $content = $newFile->read();
-
-    rename($old, $new);
-
-    $newFile = new std\Text($new);
-
-    $newFile->append("\n$content");
-} else {
-    $new .= ".lean";
-    rename($old, $new);
-}
-
-delete_from_init($oldPackage, $basename);
-
-insert_into_init($dest, $basename);
-
-$old = $oldPackage.".".$basename;
-$new = $dest.".".$basename;
-
-$user = get_user();
+$user = get_project_name();
 update_axiom($user, $old, $new);
-delete_from_suggest($user, $old);
-insert_into_suggest($user, $new);
-update_hierarchy($user, $old, $new);
 
 echo true;
-?>

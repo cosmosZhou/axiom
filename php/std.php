@@ -578,9 +578,8 @@ function createDirectory($dir)
 // delete a non-empty Directory recursively
 function deleteDirectory($directory)
 {
-    if (! file_exists($directory)) {
+    if (! file_exists($directory))
         return;
-    }
 
     error_log("deleting non-empty directory: $directory");
 
@@ -607,13 +606,11 @@ function deleteDirectory($directory)
         if (rmdir($directory) !== true) {
             error_log("Warning:  rmdir($directory): Directory not empty! trying popen method");
             if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
-                if (! preg_match("/^\w+:/", $directory)) {
+                if (! preg_match("/^\w+:/", $directory))
                     $directory = realpath($directory);
-                }
                 $cmd = "rmdir /s/q $directory";
-            } else {
+            } else
                 $cmd = "rm -Rf $directory";
-            }
 
             error_log("executing: " . $cmd);
             pclose(popen($cmd, "r"));
@@ -1035,6 +1032,8 @@ function encode($param, $flag = JSON_UNESCAPED_UNICODE)
 
 function decode($param)
 {
+    if ($param == null)
+        return null;
     return json_decode($param, true);
 }
 
@@ -1191,14 +1190,14 @@ function slice(&$s, $start, $stop = null, $step = 1)
     if (is_string($s)) {
         if ($step == 1) {
             if ($stop === null)
-                return (new CString($s))->slice($start, $stop);
-                // return mb_substr($s, $start, $stop, "utf8");
+                // return (new CString($s))->slice($start, $stop);
+                return mb_substr($s, $start, $stop, "utf8");
 
             if ($stop < 0)
                 $stop += len($s);
 
-            return (new CString($s))->slice($start, $stop);
-            // return mb_substr($s, $start, $stop - $start, "utf8");
+            // return (new CString($s))->slice($start, $stop);
+            return mb_substr($s, $start, $stop - $start, "utf8");
         }
         else {
             if ($stop === null)
@@ -1263,6 +1262,13 @@ function array_delete(&$array, $index)
     array_splice($array, $index, 1);
 }
 
+function array_remove(&$array, $value)
+{
+    $index = array_search($value, $array);
+    if ($index !== false)
+        array_delete($array, $index);
+}
+
 function is_linux()
 {
     return DIRECTORY_SEPARATOR == '/';
@@ -1289,9 +1295,9 @@ function form_post($url, $data = null, $decode = True)
     return $decode ? decode($result) : $result;
 }
 
-function json_post($url, $data = NULL, $decode = NULL, $stream_id = null)
+function json_post($url, $data = NULL, $header = NULL, $stream_id = null)
 {
-    $curl = curl_init();
+    $curl = \curl_init();
 
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -1307,12 +1313,12 @@ function json_post($url, $data = NULL, $decode = NULL, $stream_id = null)
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     curl_setopt($curl, CURLOPT_HEADER, 0);
 
-    if (is_array($decode)) {
-        $header = $decode;
+    if (is_array($header)) {
         $decode = null;
     }
     else {
         $header = [];
+        $decode = true;
     }
     
     $header[] = 'Content-Type: application/json; charset=utf-8';
@@ -1364,10 +1370,13 @@ function json_post($url, $data = NULL, $decode = NULL, $stream_id = null)
     }
 
     $res = curl_exec($curl);
-    $errorno = curl_errno($curl);
-    if ($errorno) {
-        return $errorno;
-    }
+    $errno = curl_errno($curl);
+    if ($errno)
+        return encode([
+            'errno' => $errno,
+            'error' => curl_error($curl)
+        ]);
+
     curl_close($curl);
     // if ($stream_id !== null) {
         // ob_end_clean();
@@ -1375,9 +1384,88 @@ function json_post($url, $data = NULL, $decode = NULL, $stream_id = null)
     return $decode ? decode($res) : $res;
 }
 
+function json_post_native($url, $data, $header = null, $stream_id = null) {
+    if (is_array($data))
+        $data = json_encode($data);
+    
+    if (is_array($header))
+        $decode = null;
+    else {
+        $header = [];
+        $decode = true;
+    }
+    $header[] = 'Content-Type: application/json; charset=utf-8';
+    $header[] = 'Content-Length:' . strlen($data);
+    $header[] = 'Cache-Control: no-cache';
+    $header[] = 'Pragma: no-cache';
+    $options = [
+        'http' => [
+            'method'  => 'POST',
+            'header'  => implode("\n", $header),
+            'content' => $data
+        ]
+    ];
+    
+    $context = stream_context_create($options);
+    if ($stream_id !== null) {
+        // Set SSE headers
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
+        header('X-Accel-Buffering: no');
+        
+        // Disable output buffering
+        while (ob_get_level() > 0) {
+            ob_end_flush();
+        }
+        
+        // Open the stream
+        $handle = fopen($url, 'r', false, $context);
+        if (!$handle) {
+            // Send error event
+            echo "event: error\ndata: " . json_encode(['error' => 'Stream open failed']) . "\n\n";
+            flush();
+            exit;
+        }
+        
+        $buffer = '';
+        while (!feof($handle)) {
+            $chunk = fread($handle, 8192);
+            if ($chunk === false) break;
+            
+            $buffer .= $chunk;
+            
+            // Split by "\n\n"
+            while (($pos = strpos($buffer, "\n\n")) !== false) {
+                $event = substr($buffer, 0, $pos);
+                $buffer = substr($buffer, $pos + 2);
+                
+                // Format with stream ID
+                $output = ($stream_id !== null ? "id: $stream_id\n" : "") . "$event\n\n";
+                echo $output;
+                // ob_flush();
+                flush();
+            }
+        }
+        // Remaining data
+        if ($buffer !== '') {
+            $output = ($stream_id !== null ? "id: $stream_id\n" : "") . "$buffer\n\n";
+            echo $output;
+            // ob_flush();
+            flush();
+        }
+        fclose($handle);
+    } else {
+        $result = file_get_contents($url, false, $context);
+        if ($result === false)
+            throw new Exception("HTTP request failed: " . error_get_last()['message']);
+        return $decode ? json_decode($result, true) : $result;
+    }
+}
+
 function octet_stream_post($url, $filename, $data = NULL, $decode = NULL)
 {
-    $curl = curl_init();
+    $curl = \curl_init();
 
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -1399,10 +1487,13 @@ function octet_stream_post($url, $filename, $data = NULL, $decode = NULL)
     ));
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     $res = curl_exec($curl);
-    $errorno = curl_errno($curl);
-    if ($errorno) {
-        return $errorno;
-    }
+    $errno = curl_errno($curl);
+    if ($errno)
+        return encode([
+            'errno' => $errno,
+            'error' => curl_error($curl)
+        ]);
+
     curl_close($curl);
 
     return $decode ? decode($res) : $res;
@@ -1410,7 +1501,7 @@ function octet_stream_post($url, $filename, $data = NULL, $decode = NULL)
 
 function http_get_data($url)
 {
-    $ch = curl_init();
+    $ch = \curl_init();
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -1584,7 +1675,7 @@ class HttpClient
         $url = $this->buildUrl($url, $params);
         $headers = array_merge($this->headers, $this->buildHeaders($headers));
 
-        $ch = curl_init();
+        $ch = \curl_init();
         $this->prepare($ch);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -1630,7 +1721,7 @@ class HttpClient
         $result = array();
         $mh = curl_multi_init();
         foreach ($datas as $data) {
-            $ch = curl_init();
+            $ch = \curl_init();
             $chs[] = $ch;
             $this->prepare($ch);
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -1679,7 +1770,7 @@ class HttpClient
         $url = $this->buildUrl($url, $params);
         $headers = array_merge($this->headers, $this->buildHeaders($headers));
 
-        $ch = curl_init();
+        $ch = \curl_init();
         $this->prepare($ch);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, false);
@@ -1883,10 +1974,10 @@ abstract class SymbolicSet implements JsonSerializable
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_Range":
-            case "is_Rectangle":
-            case "is_EmptySet":
-            case "is_Union":
+            case 'is_Range':
+            case 'is_Rectangle':
+            case 'is_EmptySet':
+            case 'is_Union':
                 return false;
         }
     }
@@ -1938,9 +2029,9 @@ class EmptySet extends SymbolicSet
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_EmptySet":
+            case 'is_EmptySet':
                 return true;
-            case "card":
+            case 'card':
                 return 0;
             default:
                 return parent::__get($vname);
@@ -2188,7 +2279,7 @@ class Union extends SymbolicSet
 
     public function try_union()
     {
-        // http://localhost/axiom/?module=Sets.Eq_Card.Subset.to.Eq
+        // http://localhost/axiom/?module=Set.Eq_Card.Subset.to.Eq
         $bbox = $this->bbox();
         return $this->card() == $bbox->card() ? $bbox : $this;
     }
@@ -2196,10 +2287,10 @@ class Union extends SymbolicSet
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_Union":
+            case 'is_Union':
                 return true;
 
-            case "card":
+            case 'card':
                 $card = 0;
                 foreach ($this->args as $arg) {
                     $card += $arg->card();
@@ -2207,7 +2298,7 @@ class Union extends SymbolicSet
 
                 return $card;
 
-            case "bbox":
+            case 'bbox':
                 $x_min = INF;
                 $y_min = INF;
                 $x_max = - INF;
@@ -2238,10 +2329,10 @@ class Range extends SymbolicSet
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_Range":
+            case 'is_Range':
                 return true;
 
-            case "card":
+            case 'card':
                 return $this->stop - $this->start;
 
             default:
@@ -2602,11 +2693,11 @@ class Rectangle extends SymbolicSet
     public function __get($vname)
     {
         switch ($vname) {
-            case "is_Rectangle":
+            case 'is_Rectangle':
                 return true;
-            case "card":
+            case 'card':
                 return $this->width * $this->height;
-            case "args":
+            case 'args':
                 return [
                     $this->x,
                     $this->y,
@@ -2848,7 +2939,7 @@ class CString implements IteratorAggregate
 
     public function endsWith($end)
     {
-        return endsWith($this->string, $end);
+        return str_ends_with($this->string, $end);
     }
 
     public function physical2logical($physicalOffset)
@@ -2871,7 +2962,7 @@ class CString implements IteratorAggregate
     public function __get($vname)
     {
         switch ($vname) {
-            case "length":
+            case 'length':
                 return count($this->physicalOffset);
         }
         return null;
@@ -3105,11 +3196,12 @@ function is_unicode_match(&$regex) {
     }
 }
 
-function &matchAll($regex, $str, $captureIndex=0)
+function &matchAll($regex, $str, $captureIndex=0, $postprocess_match=true)
 {
     $matches = [];
     preg_match_all($regex, $str, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE | PREG_UNMATCHED_AS_NULL);
-    postprocess_match($matches, $str, $captureIndex, is_unicode_match($regex));
+    if ($postprocess_match)
+        postprocess_match($matches, $str, $captureIndex, is_unicode_match($regex));
     return $matches;
 }
 
@@ -3221,9 +3313,9 @@ function indexOf($array, $element)
 
 function index($array, $element)
 {
-    foreach ($array as $key => &$value) {
-        if ($value === $element)
-            return $key;
+    foreach ($array as $index => &$match) {
+        if ($match === $element)
+            return $index;
     }
 
     return -1;
@@ -3343,5 +3435,23 @@ function boolval($bool) {
 
 function capitalize($s) {
     return strtoupper($s[0]).strtolower(substring($s, 1));
+}
+
+class Timer {
+    private $start, $message;
+
+    public function __construct($message = null) {
+        $this->start = microtime(true); // Start timer
+        $this->message = $message?? '';
+    }
+
+    public function __destruct() {
+        $end = microtime(true);
+        $duration = $end - $this->start;
+        $message = $this->message;
+        if ($message)
+            $message = " for $this->message";
+        error_log("Time cost$message: " . number_format($duration, 2) . " seconds\n");
+    }
 }
 ?>

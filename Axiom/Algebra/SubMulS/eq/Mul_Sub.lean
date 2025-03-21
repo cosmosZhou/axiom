@@ -1,10 +1,11 @@
 import Axiom.Algebra.Mul_Add.eq.AddMulS
 import Axiom.Algebra.Sub.eq.Add_Neg
 import Axiom.Algebra.NegMul.eq.Mul_Neg
+open Algebra
 
-namespace Algebra.SubMulS.eq
 
-theorem Mul_Sub
+@[main]
+private lemma main
   [Ring α]
   {x a b : α} :
 -- imply
@@ -17,7 +18,5 @@ theorem Mul_Sub
     NegMul.eq.Mul_Neg
   ]
 
-
-end Algebra.SubMulS.eq
 
 -- created on 2024-07-01

@@ -1,8 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.Add_Sub.eq
 
-theorem SubAdd
+@[main]
+private lemma main
   [SubNegMonoid α]
   {a b c : α} :
 -- imply
@@ -10,7 +10,5 @@ theorem SubAdd
 -- proof
   rw [add_sub_assoc]
 
-
-end Algebra.Add_Sub.eq
 
 -- created on 2024-07-01

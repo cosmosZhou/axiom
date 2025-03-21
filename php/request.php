@@ -52,7 +52,7 @@ function save($codeObject)
         run()
     EOT;
 
-    $py = module_to_py($module);
+    $py = module_to_lean($module);
 
     $py = new std\Text($py);
     $py->write($code);

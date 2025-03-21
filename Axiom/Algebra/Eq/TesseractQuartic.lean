@@ -1,16 +1,13 @@
-import Axiom.sympy.core.numbers
+import Axiom.Basic
 
-namespace Algebra.Eq
 
-@[simp]
-theorem CubeCTesseractQuarticubic
+@[simp, main]
+private lemma main
   {x : ℂ} :
 -- imply
   x = (∜x)⁴ := by
+-- proof
   simp [Root.quartic]
 
-
-
-end Algebra.Eq
 
 -- created on 2024-07-01

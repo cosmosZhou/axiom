@@ -9,7 +9,7 @@
 		</form>
 		
 		<div v-if=report.sum v-focus tabindex=4>
-			<div style=float:right>
+			<div style="float:right">
 				number of testing cases: {{data.length}}<br>
 				there {{report.err <= 1? 'is' : 'are'}} {{report.err}} {{report.err <= 1? 'error' : 'errors'}} in all, <button class=transparent @click=click_simplify>{{report.simplify? 'show all tables': 'show errors only'}}</button>
 				{{report.simplify? 'to inspect in detail.': 'to simplify the report.'}}<br>
@@ -122,21 +122,21 @@ export default {
     		return this.mounted.mysql? this.$refs.mysql: {};
     	},  
     	
-		is_torch(){
+		is_torch() {
     		var {kwargs} = this.kwargs;
 			return kwargs && kwargs.torch;
 		},
 		
-		is_python(){
+		is_python() {
 			var {kwargs} = this.kwargs;
 			return kwargs && kwargs.python;
 		},
 		
-		is_mysql(){
+		is_mysql() {
 			return getParameter('mysql') || getParameter('cmd') == 'select' || this.cmd == 'update';
 		},
 
-		compare(){
+		compare() {
 			if (this.is_torch)
 				return 'torch';
 		},
@@ -172,7 +172,7 @@ export default {
     methods: {
     	command,
     	
-    	getSimplify(){
+    	getSimplify() {
     		var simplify = getParameter('kwargs[simplify]');
     		return simplify && simplify.toLowerCase() == 'true';
     	},

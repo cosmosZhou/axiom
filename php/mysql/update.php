@@ -88,13 +88,6 @@ else {
 
 $where = $return['where']?? '';
 
-function quote_assignment($setter, $new, &$Field2Type) {
-    $_new = str_replace('\\', '\\\\', $new);
-    if ($Field2Type[$setter] != 'json' || $_new != 'NULL')
-        $_new = "'$_new'";
-    return "$setter = $_new";
-}
-
 function detect_subquery(&$kwargs, $path=[]) {
     if (is_array($kwargs)) {
         if (std\is_list($kwargs)) {
@@ -112,144 +105,74 @@ function detect_subquery(&$kwargs, $path=[]) {
     }
 }
 
-switch ($functor) {
-case 'json_set':
-    $sql_update = "update $database.$table set ";
-    $new = parse_expression($eq[1], $Field2Type);
-    $sql_update .= "$setter = $new ";
-    break;
-
-case 'regexp_replace':
-    [[$setter, $old, $new]] = array_values($eq[1]);
-    if (count($scanCriteria) > 1)
-        [$old, $new, , $binary] = $scanCriteria[0][1];
-    else {
-        $transform = $Field2Type['__transform__'];
-        if ($fn = $transform[$setter])
-            $fn = "transform_$transform[$setter]";
-
-        if ($fn && is_callable($fn))
-            [$old, $new, $binary] = $fn($old, $new);
-        else {
-            $new = preg_replace("/[\\\\](\d+)/", '$$1', $new);
-            $new = mysql\mysqlStr($new, '', false);
-        }
-    }
-
-    // error_log("after transforming");
-    // error_log("\$old = ".$old);
-    // error_log("\$new = ".$new);
-    $old_mysql = mysql\mysqlStr($old);
-    $match_parameter = $binary ? ", 1, 0, 'c'" : '';
-
-    if (! $match_parameter) {
-        if ($operator = std\get($kwargs, 'operator', [])) {
-            if ($regexp_replace = std\get($operator, 'regexp_replace')) {
-                if ($modifier = std\get($regexp_replace, $setter)) {
-                    $match_parameter = ", 1, 0, '$modifier'";
-                    $binary = $modifier == 'c';
-                }
-            }
-        }
-    }
-
-    $sql_update = "update $database.$table set $setter = $functor($setter, $old_mysql, '$new'$match_parameter) ";
-
-    if ($binary) {
-        $cond = "regexp_like($setter, $old_mysql, 'c')";
-        if (! std\contains($where, $cond))
-            $where = join_condition($where, $cond);
-    }
-    elseif (! preg_match("/\\b$setter regexp /", $where))
-        $where = join_condition($where, "$setter regexp $old_mysql");
-    break;
-
-case 'replace':
-    [[$setter, $old, $new]] = array_values($eq[1]);
-    $sql_update = "update $database.$table set $setter = $functor($setter, '$old', '$new') ";
-    $where = join_condition($where, "$setter regexp '$old'");
-    break;
-
-case 'substring':
-    [[$setter, $from, $length]] = array_values($eq[1]);
-    if ($length)
-        $length = ", $length";
-    $sql_update = "update $database.$table set $setter = $functor($setter, $from$length) ";
-    break;
-    
-default:
-    if ($functor) {
-        if (is_array($functor)) {
-            $sql_update = "update $database.$table set ";
-            foreach(std\enumerate(std\zipped($functor, $setter, $eq)) as [$i, [$functor_i, $setter_i, $eq_i]]) {
+if ($functor) {
+    if (is_array($functor)) {
+        $update = parse_table($kwargs['update'], $Field2Type);
+        $sql_update = "update $update set ";
+        foreach(std\enumerate(std\zipped($functor, $setter, $eq)) as [$i, [$functor_i, $setter_i, $eq_i]]) {
+            $sql_update .= $i? ", ": "";
+            if ($functor_i)
+                $sql_update .= "$setter_i = ".parse_expression($functor_i, $Field2Type);
+            else {
                 $new = $eq_i[1];
-                if ($functor_i) {
-                    $comma = $i? ", ": " ";
-                    $sql_update .= "$comma$setter_i = ".parse_expression($functor_i, $Field2Type);
-                }
-                else {
-                    if (mysql\is_numeric($Field2Type[$setter_i])) {
-                        $sql_update .= "$setter_i = $new ";
-                        $where = join_condition($where, "$setter_i != $new");
-                    } else if ($scanCriteria) {} else {
-                        if ($i)
-                            $sql_update .= ", ";
-                        $sql_update .= quote_assignment($setter_i, $new, $Field2Type);
-                        $where = join_condition($where, "binary $setter_i != '$new'");
-                    }
+                $new = mysql\mysqlStr($new, $Field2Type[$setter_i]);
+                $sql_update .= "$setter_i = $new";
+                if ($Field2Type[$setter_i] != 'json') {
+                    if (!mysql\is_numeric($Field2Type[$setter_i]))
+                        $setter_i = "binary $setter_i";
+                    $where = join_condition($where, "$setter_i != $new");
                 }
             }
-            $sql_update .= ' ';
         }
-        elseif (($with = $kwargs['with']) && ($as = $with['as']) && ($as[0] == $functor)) {
-            $sql_update = "update $database.$table set $setter = $functor.$setter ";
-        }
-        else {
-            $update = parse_table($kwargs['update'], $Field2Type);
-            $set = parse_expression($kwargs['set'], $Field2Type, ', ', $kwargs);
-            $sql_update = "update $update set $set ";
-        }
-    } else {
-        $new = $eq[1];
-        if ($scanCriteria) {
-
-        } else {
-            $paths = [];
-            foreach (detect_subquery($kwargs['where']) as $path) {                
-                if ($kwargs['update'] == std\getitem($kwargs['where'], ...$path)['from']) {
-                    $paths[] = $path;
-                }
-            }
-            if ($paths) {
-                if (!isset($return['with'])) {
-                    $with = [];
-                    foreach (std\enumerate($paths) as [$i, $path]) {
-                        $sql = std\getitem($kwargs['where'], ...$path);
-                        [$with[]] = parse_statement($sql, $Field2Type);
-                        
-                        $sql_kwargs = &std\getitem($kwargs_select['where'], ...$path);
-                        $sql_kwargs['from'] = "_t$i";
-                        unset($sql_kwargs['where']);
-                    }
-
-                    $as = implode(
-                        ", ",
-                        array_map(
-                            fn ($args) => "_t$args[0] as ($args[1])",
-                            iterator_to_array(std\enumerate($with))
-                        )
-                    );
-
-                    $return['with'] = "with $as ";
-                    $return['where'] = parse_expression($kwargs_select['where'], $Field2Type);
-                }
-            }
-            $update = parse_table($kwargs['update'], $Field2Type);
-            $set = parse_expression($kwargs['set'], $Field2Type, ', ', $kwargs);
-            $sql_update = "update $update set $set";
-        }
+        $sql_update .= ' ';
     }
-    break;
+    elseif (($with = $kwargs['with']) && ($as = $with['as']) && ($as[0] == $functor)) {
+        $sql_update = "update $database.$table set $setter = $functor.$setter ";
+    }
+    else {
+        $update = parse_table($kwargs['update'], $Field2Type);
+        $set = parse_expression($kwargs['set'], $Field2Type, ', ', $kwargs);
+        $sql_update = "update $update set $set ";
+    }
+} else {
+    $new = $eq[1];
+    if ($scanCriteria) {
+
+    } else {
+        $paths = [];
+        foreach (detect_subquery($kwargs['where']) as $path) {                
+            if ($kwargs['update'] == std\getitem($kwargs['where'], ...$path)['from']) {
+                $paths[] = $path;
+            }
+        }
+        if ($paths) {
+            if (!isset($return['with'])) {
+                $with = [];
+                foreach (std\enumerate($paths) as [$i, $path]) {
+                    $sql = std\getitem($kwargs['where'], ...$path);
+                    [$with[]] = parse_statement($sql, $Field2Type);
+                    
+                    $sql_kwargs = &std\getitem($kwargs_select['where'], ...$path);
+                    $sql_kwargs['from'] = "_t$i";
+                    unset($sql_kwargs['where']);
+                }
+
+                $as = implode(
+                    ", ",
+                    array_map(
+                        fn ($args) => "_t$args[0] as ($args[1])",
+                        iterator_to_array(std\enumerate($with))
+                    )
+                );
+
+                $return['with'] = "with $as ";
+                $return['where'] = parse_expression($kwargs_select['where'], $Field2Type);
+            }
+        }
+        $update = parse_table($kwargs['update'], $Field2Type);
+        $set = parse_expression($kwargs['set'], $Field2Type, ', ', $kwargs);
+        $sql_update = "update $update set $set";
+    }
 }
 
 if (count($scanCriteria) == 1) {
@@ -264,13 +187,13 @@ if (count($scanCriteria) > 1) {
 
     $sql_update = [];
     foreach ($data as &$inst) {
-        $primary_key_value = mysql\mysqlStr($inst[$primary_key]);
+        $primary_key_value = mysql\mysqlStr($inst[$primary_key], '', false);
 
         $setterValueStr = $inst[$setter];
         if (mysql\is_json($Field2Type[$setter]))
             $setterValueStr = std\encode($setterValueStr);
 
-        $setterValueStr = mysql\mysqlStr($setterValueStr, $Field2Type[$setter]);
+        $setterValueStr = mysql\mysqlStr($setterValueStr, $Field2Type[$setter], false);
 
         $sql_update[] = "update $database.$table set $setter = $setterValueStr where $primary_key = $primary_key_value";
 

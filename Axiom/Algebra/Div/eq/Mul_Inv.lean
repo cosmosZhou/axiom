@@ -1,8 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.Div.eq
 
-theorem Mul_Inv
+@[main]
+private lemma main
   [DivInvMonoid α]
   {a b : α} :
 -- imply
@@ -10,8 +10,5 @@ theorem Mul_Inv
 -- proof
   rw [div_eq_mul_inv]
 
-
-
-end Algebra.Div.eq
 
 -- created on 2024-07-01

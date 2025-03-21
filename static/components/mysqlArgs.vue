@@ -7,20 +7,20 @@
 </template>
 
 <script>
-console.log('import mysqlArgs.vue');
 import {is_numeric_operator} from "../js/mysql.js"
 import mysqlLeaf from "./mysqlLeaf.vue"
+console.log('import mysqlArgs.vue');
 
 export default {
 	components: {mysqlLeaf},//
 	
 	props : ['value', 'name', 'noSpace'],
 	
-	data(){
+	data() {
 		return {};
 	},
 
-	created(){
+	created() {
 		//var {value, name} = this;
 		//console.log({value, name});
 	},
@@ -128,7 +128,7 @@ export default {
 			return this.$parent.is_aggregate_function;
 		},
 
-		is_numeric_operator(){
+		is_numeric_operator() {
 			return is_numeric_operator(this.value);
 		},
 
@@ -151,26 +151,26 @@ export default {
 			return this.physic2logic(this.func);
 		},
 		
-		is_numeric_relation(){
+		is_numeric_relation() {
 			var value = this.value[0];
 			return value.gt || value.lt || value.ge || value.le;
 		},
 		
-		is_jsonobj_relation(){
+		is_jsonobj_relation() {
 			var value = this.value[0];
 			return value.json_contains || value.json_contains_path || value.is || value.not_json_contains || value.not_json_contains_path || value.is_not;
 		},
 
-		is_operator(){
+		is_operator() {
 			return this.is_numeric_operator || this.is_jsonobj_operator;
 		},
 		
-		is_numeric_operator(){
+		is_numeric_operator() {
 			var {value} = this;
 			return value.add || value.sub || value.mul || value.div || value.mod || value.bit_and || value.bit_xor || value.shr || value.shl;
 		},
 		
-		is_jsonobj_operator(){
+		is_jsonobj_operator() {
 			var {value} = this;
 			return value.json_extract || value.json_extract_unquote;
 		},
@@ -179,7 +179,7 @@ export default {
 			return this.is_numeric_relation || this.is_textual_relation || this.is_jsonobj_relation;
 		},
 
-		is_textual_relation(){
+		is_textual_relation() {
 			var value = this.value[0];
 			return value.regexp || value.like || value.regexp_binary || value.like_binary || value.not_regexp || value.not_like || value.not_regexp_binary || value.not_like_binary || value.not_in || value.in;
 		},
@@ -216,12 +216,12 @@ export default {
 			return this.func.fullmatch(this.textual_function_regexp);
 		},
 		
-		is_logic(){
+		is_logic() {
 			var value = this.value[0];
 			return value.and || value.or;
 		},
 		
-		func(){
+		func() {
 			return this.$parent.func;
 		},
 		
@@ -241,15 +241,15 @@ export default {
 			return this.$parent.database;
 		},
 		
-		change_input(){
+		change_input() {
 			return this.$parent.change_input;
 		},
 		
-		style_input(){
+		style_input() {
 			return this.$parent.style_input;
 		},
 		
-		input_kwargs(){
+		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
 		

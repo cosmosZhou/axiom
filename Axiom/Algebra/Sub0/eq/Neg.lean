@@ -1,9 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.Sub0.eq
 
-@[simp]
-theorem Neg
+@[simp, main]
+private lemma main
   [SubNegMonoid α]
   {a : α} :
 -- imply
@@ -11,7 +10,5 @@ theorem Neg
 -- proof
   simp
 
-
-end Algebra.Sub0.eq
 
 -- created on 2024-07-01

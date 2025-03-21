@@ -44,7 +44,7 @@ export default {
     methods: {
     },
     
-    mounted(){
+    mounted() {
     },
     
 	directives: {

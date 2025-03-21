@@ -1,8 +1,9 @@
 import Axiom.Algebra.DivNeg.eq.NegDiv
+open Algebra
 
-namespace Algebra.NegDiv.eq
 
-theorem DivNeg
+@[main]
+private lemma main
   [DivisionMonoid α] [HasDistribNeg α]
   {a b : α} :
 -- imply
@@ -10,7 +11,5 @@ theorem DivNeg
 -- proof
   rw [DivNeg.eq.NegDiv]
 
-
-end Algebra.NegDiv.eq
 
 -- created on 2024-07-01

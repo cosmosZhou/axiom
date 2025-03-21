@@ -122,21 +122,21 @@ export default {
     		return this.mounted.mysql? this.$refs.mysql: {};
     	},  
     	
-		is_torch(){
+		is_torch() {
     		var {kwargs} = this.kwargs;
 			return kwargs && kwargs.torch;
 		},
 		
-		is_python(){
+		is_python() {
 			var {kwargs} = this.kwargs;
 			return kwargs && kwargs.python;
 		},
 		
-		is_mysql(){
+		is_mysql() {
 			return getParameter('mysql') || getParameter('cmd') == 'select' || this.cmd == 'update';
 		},
 
-		compare(){
+		compare() {
 			if (this.is_torch)
 				return 'torch';
 		},
@@ -172,7 +172,7 @@ export default {
     methods: {
     	command,
     	
-    	getSimplify(){
+    	getSimplify() {
     		var simplify = getParameter('kwargs[simplify]');
     		return simplify && simplify.toLowerCase() == 'true';
     	},

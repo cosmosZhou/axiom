@@ -1,25 +1,19 @@
-import Axiom.Algebra.And_.And.Not.equ.False
-import Axiom.Algebra.Iff_Not.to.Iff_Not
-import Axiom.Algebra.Cond.to.Imply
+import Axiom.Algebra.AndAnd__Not.equ.False
+import Axiom.Algebra.Iff_Not.of.Iff_Not
+import Axiom.Algebra.Imply.of.Cond
+open Algebra
 
-namespace Algebra.AndAndNot.equ
 
-@[simp]
-theorem False :
+@[simp, main]
+private lemma main :
 -- imply
   (¬p ∧ q) ∧ p ↔ False := by
 -- proof
   let p' := ¬p
-  have h := Iff_Not.to.Iff_Not (show p' ↔ ¬p by rfl)
-
+  have h := Iff_Not.of.Iff_Not (by rfl : p' ↔ ¬p)
   rw [h]
   simp
+  apply Imply.of.Cond
 
-  apply Cond.to.Imply
-
-
-
-
-end Algebra.AndAndNot.equ
 
 -- created on 2024-07-01

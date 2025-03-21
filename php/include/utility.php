@@ -3,8 +3,8 @@ include_once dirname(__file__).'/../std.php';
 
 //is_array($table) && count($table) > 1
 function parse_joined_table($table=null) {
-    if (isset($table['join'])) {
-        [$table, $table_joined] = $table['join'];
+    if (isset($table['join']) || isset($table['inner_join'])) {
+        [$table, $table_joined] = $table['join']?? $table['inner_join'];
 
         if (is_string($table)) {
             if (is_array($table_joined)) {
@@ -20,22 +20,20 @@ function parse_joined_table($table=null) {
             return ['corpus', $table];
         }
 
-        if (array_key_exists('as', $table)) {
+        if (array_key_exists('as', $table))
             [$table] = $table['as'];
-            return get_db_table(["from" => $table]);
-        }
 
-        return get_db_table($table);
+        return get_db_table(["from" => $table]);
     }
     return [null, null];
 }
 function get_db_table($kwargs=null, $sql=null)
 {
-    $table = $kwargs['from']?? $kwargs['into']?? $kwargs['update'];
+    $table = $kwargs['from']?? $kwargs['into']?? $kwargs['update']?? null;
     if (is_array($table)) {
         if (count($table) > 1){
             if ($sql)
-                return [null, null];
+                return [null, null, null];
             return parse_joined_table($table);
         }
 
@@ -48,12 +46,12 @@ function get_db_table($kwargs=null, $sql=null)
             case 'right_join':
             case 'full_join':
                 if ($sql)
-                    return [null, [$database => $table]];
+                    return [null, [$database => $table], null];
                 $table = $table[0];
                 if (is_array($table))
                     return std\entries($table)[0];
                 else
-                    return [null, $table];
+                    return [null, $table, null];
             case 'as':
                 $table = $table[0];
                 return $table;
@@ -66,7 +64,7 @@ function get_db_table($kwargs=null, $sql=null)
         $database = 'corpus';
 
     if ($table == null) {
-        if ($union = $kwargs['union']?? $kwargs['union_all']) {
+        if ($union = $kwargs['union']?? $kwargs['union_all']?? null) {
             $db_table = array_map(fn(&$sql) => get_db_table($sql), $union);
             $db_table = std\zipped(...$db_table);
             return [...$db_table, true];
@@ -74,7 +72,7 @@ function get_db_table($kwargs=null, $sql=null)
         $table = 'reward';
     }
 
-    return [$database, $table];
+    return [$database, $table, null];
 }
 
 ?>

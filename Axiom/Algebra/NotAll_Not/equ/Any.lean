@@ -1,17 +1,14 @@
 import Axiom.Algebra.Any.equ.NotAll_Not
+open Algebra
 
 
-namespace Algebra.NotAll_Not.equ
-
-@[simp]
-theorem Any
+@[simp, main]
+private lemma main
   {p : α → Prop} :
 -- imply
   (¬∀ x : α, ¬p x) ↔ ∃ x : α, p x :=
 -- proof
   Any.equ.NotAll_Not.symm
 
-
-end Algebra.NotAll_Not.equ
 
 -- created on 2024-07-01

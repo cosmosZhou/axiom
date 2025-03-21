@@ -1,8 +1,8 @@
 import Axiom.Basic
 
-namespace Algebra.Sub_Add.eq
 
-theorem SubSub
+@[main]
+private lemma main
   [SubtractionCommMonoid α]
   {a b c : α} :
 -- imply
@@ -10,7 +10,5 @@ theorem SubSub
 -- proof
   rw [sub_add_eq_sub_sub]
 
-
-end Algebra.Sub_Add.eq
 
 -- created on 2024-07-01

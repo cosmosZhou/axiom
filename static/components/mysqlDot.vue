@@ -8,22 +8,22 @@
 </template>
 
 <script>
-console.log('import mysqlDot.vue');
 import mysqlLeaf from "./mysqlLeaf.vue"
 import {get_db_table, show_tables} from "../js/mysql.js"
+console.log('import mysqlDot.vue');
 
 export default {
 	components: {mysqlLeaf},
 	
 	props : ['name', 'value', 'noSpace'],
 	
-	data(){
+	data() {
 		return {
 			_tables: null,
 		};
 	},
 
-	created(){
+	created() {
 		//var {databases, tables, database, table, name, value} = this;
 		//console.log({databases, tables, database, table, name, value});
 	},

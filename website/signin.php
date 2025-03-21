@@ -21,8 +21,8 @@ switch($lang){
         $contactAxiom = "联系作者";
         break;
     case 'en':
-        $header = 'Sign in to axiom.top';
-        $title = "$header · axiom.top";
+        $header = 'Sign in to lemma.cn';
+        $title = "$header · lemma.cn";
         $username = 'Username or email address';
         $password = 'Password';
         $forgotPassword = 'forgot password?';
@@ -33,7 +33,7 @@ switch($lang){
         
         $privacy = "Privacy"; 
         $security = "Security";
-        $contactAxiom = "Contact axiom.top";
+        $contactAxiom = "Contact lemma.cn";
         
         break;
 }

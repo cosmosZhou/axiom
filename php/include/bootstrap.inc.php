@@ -23,7 +23,7 @@ if (function_exists("mb_internal_encoding")) {
 
 include "functions.inc.php";
 
-if ($_GET["script"] == "version") {
+if (($_GET["script"]?? null) == "version") {
 	$fp = file_open_lock(get_temp_dir() . "/adminer.version");
 	if ($fp) {
 		file_write_unlock($fp, serialize(array("signature" => $_POST["signature"], "version" => $_POST["version"])));
@@ -39,10 +39,10 @@ if (!$_SERVER["REQUEST_URI"]) { // IIS 5 compatibility
 if (!strpos($_SERVER["REQUEST_URI"], '?') && $_SERVER["QUERY_STRING"] != "") { // IIS 7 compatibility
 	$_SERVER["REQUEST_URI"] .= "?$_SERVER[QUERY_STRING]";
 }
-if ($_SERVER["HTTP_X_FORWARDED_PREFIX"]) {
+if (isset($_SERVER["HTTP_X_FORWARDED_PREFIX"])) {
 	$_SERVER["REQUEST_URI"] = $_SERVER["HTTP_X_FORWARDED_PREFIX"] . $_SERVER["REQUEST_URI"];
 }
-$HTTPS = ($_SERVER["HTTPS"] && strcasecmp($_SERVER["HTTPS"], "off")) || ini_bool("session.cookie_secure"); // session.cookie_secure could be set on HTTP if we are behind a reverse proxy
+$HTTPS = (isset($_SERVER["HTTPS"]) && strcasecmp($_SERVER["HTTPS"], "off")) || ini_bool("session.cookie_secure"); // session.cookie_secure could be set on HTTP if we are behind a reverse proxy
 
 @ini_set("session.use_trans_sid", false); // protect links in export, @ - may be disabled
 if (!defined("SID")) {
@@ -89,13 +89,14 @@ if ($adminer->operators === null) {
 }
 
 define("HOST", $_GET['host']?? 'localhost');
-
+define("REMOTE_ADDR", $_SERVER['REMOTE_ADDR']);
 [$db, $table] = get_db_table($_GET);
 
 define("DB", $db); // for the sake of speed and size
+$user = get_user("pwds");
 define("ME", preg_replace('~\?.*~', '', relative_uri()) . '?'
 	. (sid() ? SID . '&' : '')
-	. (isset($_GET["user"]) ? "user=" . urlencode($_GET["user"]) . '&' : '')
+	. ($user ? "user=" . urlencode($user) . '&' : '')
 	. (DB != "" ? 'db=' . urlencode(DB) . '&' . (isset($_GET["ns"]) ? "ns=" . urlencode($_GET["ns"]) . "&" : "") : '')
 );
 
