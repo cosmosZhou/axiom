@@ -68,7 +68,7 @@
 
 ![](png/national_emblem.png)
 [<font size=2>浙公网安备33060202000937号</font>](http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33060202000937)
-[<font size=2>浙ICP备20017509号-3</font>](https://beian.miit.gov.cn/)
+[<font size=2>浙ICP备20017509号-5</font>](https://beian.miit.gov.cn/)
 
 <script type=module>
 	$('#count').innerHTML = await get("../php/request/count.php");
