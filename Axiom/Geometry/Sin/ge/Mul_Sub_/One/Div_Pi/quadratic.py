@@ -7,17 +7,17 @@ def apply(x):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Geometry
+    from Axiom import Algebra, Geometry, Logic
 
     x = Symbol(real=True)
     Eq << apply(x)
 
-    Eq << Algebra.Cond.of.And.Imply.split.apply(Eq[0], cond=x >= 0)
+    Eq << Logic.Cond.given.And.Imp.split.apply(Eq[0], cond=x >= 0)
 
-    Eq << Eq[-2].this.lhs.apply(Geometry.Ge_0.to.GeSin.quadratic)
-    Eq << (x <= 0).this.apply(Geometry.Le_0.to.GeSin.quadratic)
+    Eq << Eq[-2].this.lhs.apply(Geometry.GeSin.of.Ge_0.quadratic)
+    Eq << (x <= 0).this.apply(Geometry.GeSin.of.Le_0.quadratic)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Le.of.Lt)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Le.given.Lt)
 
 
 

@@ -10,7 +10,7 @@ def apply(self, simplify=True):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     i = Symbol(integer=True)
     n = Symbol(integer=True, positive=True, given=False)
@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Imply.to.Eq.induct.apply(Eq[-1], n)
+    Eq << Logic.Eq.of.Imp.induct.apply(Eq[-1], n)
 
 
 

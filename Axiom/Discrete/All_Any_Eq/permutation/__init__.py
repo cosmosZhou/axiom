@@ -16,7 +16,7 @@ def apply(a):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Sets
+    from Axiom import Algebra, Set
 
     n = Symbol(integer=True, positive=True)
     a = Symbol(etype=dtype.integer, shape=(n,))
@@ -28,11 +28,11 @@ def prove(Eq):
 
     Eq << Element(a[n - 1], Eq[-1].rhs, plausible=True)
 
-    Eq << Eq[-1].this.rhs.apply(Sets.Cup.eq.Union.split, cond=slice(-1))
+    Eq << Eq[-1].this.rhs.apply(Set.Cup.eq.Union.split, cond=slice(-1))
 
-    Eq << Algebra.All_Eq.Cond.to.All.subs.apply(Eq[-2].reversed, Eq[-1])
+    Eq << Algebra.All.of.All_Eq.Cond.subs.apply(Eq[-2].reversed, Eq[-1])
 
-    Eq << Eq[-1].this.expr.apply(Sets.In_Cup.to.Any_In)
+    Eq << Eq[-1].this.expr.apply(Set.Any_Mem.of.Mem_Cup)
 
     Eq << Eq[-1].reversed
 

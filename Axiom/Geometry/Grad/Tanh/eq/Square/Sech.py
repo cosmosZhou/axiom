@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Derivative).apply(Geometry.Grad.Cosh.eq.Sinh)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(sinh).apply(Geometry.Sinh.eq.Mul.Tanh)
 

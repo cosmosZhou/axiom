@@ -133,7 +133,7 @@ def apply(self, *, cond=None, wrt=None, evaluate=False):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Sets
+    from Axiom import Algebra, Set
 
     x = Symbol(integer=True)
     f = Function(real=True)
@@ -150,7 +150,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expr.apply(Algebra.Add.eq.Mul)
 
-    Eq << Eq[-1].this.find(Element).apply(Sets.In.equ.Or.split, B)
+    Eq << Eq[-1].this.find(Element).apply(Set.Mem.Is.Or.split, B)
 
     Eq << Eq[-1].this.find(Bool).apply(Algebra.Bool.eq.Add)
 

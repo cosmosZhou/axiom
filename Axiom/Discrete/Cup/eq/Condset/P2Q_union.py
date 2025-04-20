@@ -14,7 +14,7 @@ def apply(n):
 
 @prove
 def prove(Eq):
-    from Axiom import Sets, Algebra
+    from Axiom import Set, Algebra, Logic
 
     n = Symbol(integer=True, positive=True)
     Eq << apply(n)
@@ -23,27 +23,27 @@ def prove(Eq):
     t = Q.definition.variable
     Eq << Subset(Eq[0].lhs, Eq[2].rhs, plausible=True)
 
-    Eq.subset_P = Sets.Subset.to.Subset.Cup.lhs.apply(Eq[-1], (t,), simplify=False)
+    Eq.subset_P = Set.Subset.Cup.of.Subset.lhs.apply(Eq[-1], (t,), simplify=False)
 
     Eq.subset_Q = Subset(Eq.subset_P.rhs, Eq.subset_P.lhs, plausible=True)
 
-    Eq << Sets.Subset.of.All_In.apply(Eq.subset_Q)
+    Eq << Set.Subset.given.All_Mem.apply(Eq.subset_Q)
 
     Eq << Eq[-1].limits_subs(Eq[-1].variable, Eq[0].rhs.variable)
 
-    Eq << Eq[-1].this.expr.apply(Sets.In_Cup.of.Any_In)
+    Eq << Eq[-1].this.expr.apply(Set.Mem_Cup.given.Any_Mem)
 
     Eq << Eq[-1].this.expr.expr.rhs.definition
 
-    Eq << Algebra.All_And.of.And.All.apply(Eq[-1])
+    Eq << Algebra.All_And.given.And.All.apply(Eq[-1])
 
     Eq << Eq[-2].this.limits[0][1].definition
 
     Eq << Eq[-1].this.limits[0][1].definition
 
-    Eq << Algebra.All.of.Imply.apply(Eq[-1])
+    Eq << Logic.All.given.Imp.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(Sets.Eq.to.In.st.Cup, index=n)
+    Eq << Eq[-1].this.lhs.apply(Set.Mem.of.EqCup_Finset, index=n)
 
     Eq <<= Eq.subset_P & Eq.subset_Q
 

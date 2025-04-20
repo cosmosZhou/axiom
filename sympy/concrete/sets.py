@@ -386,6 +386,15 @@ class Cup(Set, ExprWithLimits):
             return 'Cup[%s](%s)' % (limits, p._print(self.expr))
         return 'Cup(%s)' % p._print(self.expr)
 
+    def _lean(self, p):
+        if self.is_ConditionSet: 
+            return 'conditionset(%s)' % ', '.join(p._print(arg) for arg in self.limits[0])
+        
+        limits = ','.join([limit._format_ineq(p) for limit in self.limits])
+        if limits:
+            return 'Cup[%s](%s)' % (limits, p._print(self.expr))
+        return 'Cup(%s)' % p._print(self.expr)
+    
     def int_limit(self):
         if len(self.limits) == 1:
             limit = self.limits[0]
@@ -1267,6 +1276,12 @@ class Cap(Set, ExprWithLimits):
             return 'Cap[%s](%s)' % (limits, p._print(self.expr))
         return 'Cap(%s)' % p._print(self.expr)
 
+    def _lean(self, p):
+        limits = ','.join([limit._format_ineq(p) for limit in self.limits])
+        if limits:
+            return 'Cap[%s](%s)' % (limits, p._print(self.expr))
+        return 'Cap(%s)' % p._print(self.expr)
+    
     @property
     def etype(self):
         return self.expr.etype

@@ -120,3 +120,5 @@ class beta(Function):
     def _sympystr(self, p):
         return 'Β(%s, %s)' % (p._print(self.args[0]), p._print(self.args[1]))
     
+    def _lean(self, p):
+        return 'Β(%s, %s)' % (p._print(self.args[0]), p._print(self.args[1]))

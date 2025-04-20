@@ -3,22 +3,23 @@ from util import *
 
 @apply
 def apply(given):
-    x, y = given.of(Expr - Expr < 0)
-    return Greater(y, x)
+    x, y = given.of(Greater)
+    return Less(y - x, 0)
 
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    x, y = Symbol(real=True, given=True)
+    Eq << apply(x > y)
 
-    a, b = Symbol(real=True, given=True)
-    Eq << apply(Greater(0, a - b))
+    Eq << Eq[0] - y
+    Eq << -Eq[-1]
 
-    Eq << Algebra.Gt.to.Lt_0.apply(Eq[1]).reversed
-
-
+    
+    
 
 
 if __name__ == '__main__':
     run()
-# created on 2023-04-15
+# created on 2021-09-14
+# updated on 2023-04-15

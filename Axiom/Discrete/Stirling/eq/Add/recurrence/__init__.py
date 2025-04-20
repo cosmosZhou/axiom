@@ -16,16 +16,16 @@ def prove(Eq):
     k, n = Symbol(integer=True, positive=True)
     Eq << apply(Stirling(n + 1, k + 1))
 
-    Eq << Eq[0].apply(Algebra.Cond.of.And.All, cond=k < n)
+    Eq << Eq[0].apply(Algebra.Cond.given.And.All, cond=k < n)
 
-    Eq << Algebra.And.of.And.apply(Eq[-1])
+    Eq << Algebra.And.given.And.apply(Eq[-1])
 
     k_ = Symbol('k', domain=Range(1, n))
     Eq << Discrete.Stirling.eq.Add.recurrence.k_Less_than_n.apply(n, k_)
 
-    Eq << Eq[-1].apply(Algebra.Cond.to.All.restrict, (k_,))
+    Eq << Eq[-1].apply(Algebra.All.of.Cond.restrict, (k_,))
 
-    Eq << Algebra.All.of.And.All.apply(Eq[-2], cond=n.set)
+    Eq << Algebra.All.given.And.All.apply(Eq[-2], cond=n.set)
 
     Eq << Eq[-1].this().expr.simplify()
 

@@ -1,23 +1,23 @@
 from util import *
 
 
-
 @apply
 def apply(given):
-    x, y = given.of(Greater)
-    return Less(y - x, 0)
+    x, y = given.of(Expr - Expr < 0)
+    return Greater(y, x)
 
 
 @prove
 def prove(Eq):
-    x, y = Symbol(real=True, given=True)
-    Eq << apply(x > y)
+    a, b = Symbol(real=True, given=True)
 
-    Eq << Eq[0] - y
+    Eq << apply(Greater(0, a - b))
 
-    Eq << -Eq[-1]
+    Eq << Eq[0] + b
+
+    Eq << Eq[-1]
 
 
 if __name__ == '__main__':
     run()
-# created on 2021-08-09
+# created on 2021-08-04

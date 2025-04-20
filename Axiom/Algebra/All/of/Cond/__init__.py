@@ -1,25 +1,34 @@
 from util import *
 
 
+def all(self, x):
+    assert not x.is_given
+    assert self._has(x)
+
+    if x.is_bounded:
+        _x = x.unbounded
+        return ForAll(self._subs(x, _x), (_x, x.domain))
+    else:
+        return ForAll(self, (x,))
 
 @apply
-def apply(given):
-    fn, *limits = given.of(All)
-    return fn
+def apply(given, var=None):
+    if var is None:
+        var = given.wrt
+    assert var.is_symbol
+    return all(given, var)
 
 
-@prove
+@prove(provable=False)
 def prove(Eq):
     from Axiom import Algebra
 
-    S = Symbol(etype=dtype.real)
-    e = Symbol(real=True)
-    f = Function(shape=(), integer=True)
-    Eq << apply(All[e:S](f(e) > 0))
+    e = Symbol(positive=True)
+    f = Function(integer=True)
+    Eq << apply(f(e) > 0)
 
-    Eq << Algebra.All.of.Or.apply(Eq[0])
+    Eq << Algebra.All.given.Or.apply(Eq[1])
 
-    Eq << Algebra.Or.of.Cond.apply(Eq[-1], index=0)
 
 
 
@@ -27,6 +36,10 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-# created on 2018-12-13
-# updated on 2023-05-20
+# created on 2018-02-18
+# updated on 2021-12-01
+del All
+from . import All
+from . import domain_defined
+from . import restrict
 from . import subs

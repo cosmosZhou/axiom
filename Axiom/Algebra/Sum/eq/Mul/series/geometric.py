@@ -31,17 +31,17 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     k, n = Symbol(integer=True)
     λ = Symbol(real=True)
     Eq << apply(Sum[k:n](λ ** k))
 
-    Eq << Algebra.Cond_Piece.of.And.Imply.apply(Eq[0])
+    Eq << Logic.Cond_Ite.given.And.Imp.apply(Eq[0])
 
-    Eq << Algebra.Imply.of.Imply.subs.apply(Eq[-2])
+    Eq << Logic.Imp.given.Imp.subs.apply(Eq[-2])
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Ne.to.Eq.Sum.geometric_series, Eq[0].lhs)
+    Eq << Eq[-1].this.lhs.apply(Algebra.EqSum.of.Ne.geometric_series, Eq[0].lhs)
 
 
 

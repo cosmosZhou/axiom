@@ -19,18 +19,18 @@ def prove(Eq):
     n = Symbol(integer=True, positive=True)
     Eq << apply(z ** (1 / n))
 
-    Eq << Eq[-1].this.lhs.base.apply(Algebra.Expr.eq.Mul.ExpI)
+    Eq << Eq[-1].this.lhs.base.apply(Algebra.Expr.eq.MulAbs_ExpMulIArg)
 
     Eq << Eq[-1].this.lhs.apply(Algebra.Pow.eq.Mul.split.base)
 
-    Eq << Algebra.Eq.of.Eq.Div.apply(Eq[-1], Eq[-1].lhs.args[0])
+    Eq << Algebra.Eq.given.Eq.Div.apply(Eq[-1], Eq[-1].lhs.args[0])
 
     Eq << Eq[-1].this.lhs.apply(Algebra.Pow.Exp.eq.Exp)
 
     Eq << Eq[-1].this.lhs.find(Arg).simplify()
 
-    # Eq << Eq[-1].this.lhs.find(Arg).apply(Algebra.arg_expi.to.add.ceiling)
-    # Eq << Eq[-1].this.find(Ceiling).apply(Algebra.Ceiling.to.Zero.arg)
+    # Eq << Eq[-1].this.lhs.find(Arg).apply(Algebra.arg_expi.to.add.ceil)
+    # Eq << Eq[-1].this.find(Ceil).apply(Algebra.Ceiling.to.Zero.arg)
 
 
 if __name__ == '__main__':

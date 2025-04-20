@@ -5,42 +5,40 @@
             <renderProve :text="given.py" :index=0></renderProve>
             <template v-if=given.latex>
                 <hr>
-                <h3 title='callee hierarchy'>
-                    <a style='font-size: inherit' :href="`/${user}/?callee=${module}`">
-                        <font color=blue>{{given_hint}}:</font>
-                    </a>
+                <h3>
+                    <font color=blue>{{given_hint}}</font>
                 </h3>
-                <p>{{given.latex}}</p>
+                <p v-for="latex of given_latex" v-latex.block=latex></p>
             </template>
 
             <template v-if=where>
                 <hr>
                 <h3 title='caller hierarchy'>
                     <a style='font-size: inherit' :href="`/${user}/?caller=${module}`">
-                        <font color=blue>where:</font>
+                        <font color=blue>where</font>
                     </a>
                 </h3>
-                <p>{{where}}</p>
+                <p v-for="latex of where_latex" v-latex.block=latex></p>
             </template>
 
             <hr>
             <h3 title='callee hierarchy'>
-                <a style='font-size: inherit' :href="`/${user}/?callee=${module}`">
-                    <font color=blue>{{imply_hint}}:</font>
+                <a style='font-size: inherit' :href="`/${user}/?callee=${module}`" target="imply">
+                    <font color=blue>{{imply_hint}}</font>
                 </a>
             </h3>
-            <p>{{imply}}</p>
+            <p v-for="latex of imply_latex" v-latex.block=latex></p>
 
             <hr>
             <h3 title='caller hierarchy'>
-                <a style='font-size: inherit' :href="`/${user}/?caller=${module}`">
-                    <font color=blue>proof:</font>
+                <a style='font-size: inherit' :href="`/${user}/?caller=${module}`" target="proof">
+                    <font color=blue>proof</font>
                 </a>
             </h3>
 
-            <template v-for="(p, index) in prove">
-                <renderProve :text="p.py" :index="index + 1"></renderProve>
-                <p>{{p.latex}}</p>
+            <template v-for="(code, index) in prove">
+                <renderProve :text=code.py :index="index + 1"></renderProve>
+                <p v-for="latex of proof_latex[index]" v-latex.block=latex></p>
             </template>
 
             <template v-for="(_, i) in unused.length">
@@ -52,7 +50,7 @@
 
         <template v-if="logs.length != 0">
             <br><br>
-            <h3>debugging information is printed as follows:</h3>
+            <h3>Error Information</h3>
         </template>
 
         <font v-for="(err, index) of error" class=error :title=err.file @click="click_font(index, err.line)">
@@ -68,7 +66,7 @@
         
         <div class=bottom-right>
             <p>
-                <a :href="href_remote" target="_blank"><font size=2>Created on {{createdTime}}</font></a>
+                <a :href=href_switch><font size=2>Created on {{createdTime}}</font></a>
                 <br>
                 <font v-if=updatedTime size=2>Updated on {{updatedTime}}</font>
             </p>
@@ -99,20 +97,35 @@ export default {
     },
     
     computed: {
+        given_latex() {
+            return this.split_latex(this.given.latex);
+        },
+
+        imply_latex() {
+            return this.split_latex(this.imply);
+        },
+
+        where_latex() {
+            return this.split_latex(this.where);
+        },
+
+        proof_latex() {
+            return this.prove.map(code => this.split_latex(code.latex));
+        },
+
         user(){
             return axiom_user();
         },
 
         numOfRequisites(){
-            var m = this.module.match(/([\w.]+)\.(to|of)\./);
-            if (m.length){
+            var m = this.module.match(/([\w.]+)\.(of|given)\./);
+            if (m.length)
                 return m[1].split('.').length - 1;
-            }
             return 0;
         },
         
         is_given(){
-            return this.module.indexOf('.given.') >= 0 || this.module.indexOf('.of.') >= 0;
+            return this.module.indexOf('.given.') >= 0;
         },
 
         imply_hint(){
@@ -134,11 +147,14 @@ export default {
         	}
         },
 
-        href_remote(){
-            var hostname = location.hostname == 'localhost'? '192.168.18.132': 'localhost';
-			var port = location.hostname == 'localhost'? '8000': '80';
-			var {pathname, search, hash, protocol} = location;
-			return `${protocol}\/\/${hostname}:${port}${pathname}${search}${hash}`;
+        href_switch(){
+			var {protocol, host, pathname, search, hash} = location;
+            if (pathname.match(/\/py\/(index\.php)?/)) {
+                pathname = '/lean/';
+                search = search.replace(/(?<=[.\/\\])(In|Is)(?=[.\/\\])/g, m => m.toLowerCase());
+                search = search.replace(/(?<=[.\/\\])(given)(?=[.\/\\])/g, 'of');
+            }
+			return `${protocol}\/\/${host}${pathname}${search}${hash}`;
         },
     },
 
@@ -149,6 +165,10 @@ export default {
     },
     
     methods: {
+        split_latex(latex) {
+            return [...latex.matchAll(/\\\[(.+?)\\\]/g)].map(m => m[1]);
+        },
+
         async open_apply(hash){
             if (this.applyCode) {
                 this.$refs.apply.editor.focus();
@@ -203,10 +223,10 @@ export default {
                 window.open(href);
             }
         },
-        
     },
-    
+
     directives: {
+        latex,
         finish :{
             mounted(el, binding){
                 var self = binding.instance;
@@ -233,7 +253,7 @@ export default {
                             }
                         });
                     }
-                });                    
+                });
             },
         },
     },

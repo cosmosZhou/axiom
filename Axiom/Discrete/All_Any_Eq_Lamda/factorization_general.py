@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(given):
-    from Axiom.Sets.Eq.of.Eq.Cup.FiniteSet import of_cup_finiteset
+    from Axiom.Set.Eq.given.Eq.Cup.Finset import of_cup_finiteset
     cup_finiteset_abs, n = given.of(Equal)
     cup_finiteset = cup_finiteset_abs.of(Card)
     a = of_cup_finiteset(cup_finiteset)
@@ -24,7 +24,7 @@ def apply(given):
 
 @prove(proved=False)
 def prove(Eq):
-    from Axiom import Algebra, Sets, Discrete
+    from Axiom import Algebra, Set, Discrete
 
     n = Symbol(domain=Range(2, oo), given=False)
     a = Symbol(shape=(oo,), etype=dtype.integer, given=True)

@@ -17,11 +17,11 @@ def prove(Eq):
     x, y, z = Symbol(real=True)
     Eq << apply(Max(x, y) - z)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Max.eq.Piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Max.eq.Ite)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Piece.eq.Add)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Ite.eq.Add)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Max.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Max.eq.Ite)
 
 
 if __name__ == '__main__':

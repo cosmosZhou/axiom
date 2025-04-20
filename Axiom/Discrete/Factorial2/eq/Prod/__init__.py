@@ -8,7 +8,7 @@ def apply(self, i=None):
     assert n >= 0
     if i is None:
         i = self.generate_var(integer=True)
-    return Equal(self, Product[i: Ceiling(n / 2)](n - 2 * i))
+    return Equal(self, Product[i: Ceil(n / 2)](n - 2 * i))
 
 
 @prove(provable=False)

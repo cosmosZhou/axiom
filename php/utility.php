@@ -165,7 +165,7 @@ function analyze_apply($py, &$i)
 
 function detect_axiom(&$statement)
 {
-    // Eq << Eq.x_j_subset.apply(Discrete.Sets.subset.nonempty, Eq.x_j_inequality, evaluate=False)
+    // Eq << Eq.x_j_subset.apply(Discrete.Set.subset.nonempty, Eq.x_j_inequality, evaluate=False)
     if (preg_match('/\.apply\((.+)\)/', $statement, $matches)) {
         $theorem = preg_split("/\s*,\s*/", $matches[1], - 1, PREG_SPLIT_NO_EMPTY)[0];
         // error_log('create_a_tag: ' . __LINE__);
@@ -387,7 +387,7 @@ function yield_from_py($python_file)
 
 function match_section($statement, &$matches)
 {
-    return preg_match_all('/\b(?:Algebra|Sets|Calculus|Discrete|Geometry|Keras|Stats)(?:\.\w+)+/', $statement, $matches, PREG_SET_ORDER);
+    return preg_match_all('/\b(?:Algebra|Calculus|Discrete|Geometry|Neuro|Prob|Set)(?:\.\w+)+/', $statement, $matches, PREG_SET_ORDER);
 }
 
 function has_unterminated_parantheses($statement) {
@@ -906,13 +906,12 @@ function select_axiom_by_state($user, $state, $limit=100)
 
 function select_axiom_by_regex($user, $regex, $binary = false, $limit=100)
 {
-    if ($binary) {
-        $binary = " binary ";
-    } else {
-        $binary = " ";
-    }
+    if ($binary)
+        $binary = 'COLLATE utf8mb4_bin';
+    else
+        $binary = "";
 
-    $sql = "select axiom from axiom where user = '$user' and axiom regexp$binary'$regex' limit $limit";
+    $sql = "select axiom from axiom where user = '$user' and axiom regexp '$regex' $binary limit $limit";
     error_log('sql = '.$sql);
 
     $result = get_rows($sql, MYSQLI_NUM);

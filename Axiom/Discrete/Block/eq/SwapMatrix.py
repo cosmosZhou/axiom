@@ -27,17 +27,17 @@ def prove(Eq):
     h, k = Symbol(domain=Range(n + 1))
     Eq << (V[h, k].this.definition, W[h, k].this.definition)
 
-    Eq <<= Eq[-1].this.rhs.apply(Algebra.Piece.eq.Delta), Eq[-2].this.rhs.apply(Algebra.Piece.eq.Delta)
+    Eq <<= Eq[-1].this.rhs.apply(Algebra.Ite.eq.Delta), Eq[-2].this.rhs.apply(Algebra.Ite.eq.Delta)
 
     Eq << Eq[-2] - Eq[-1]
 
     Eq << Eq[-1].this.rhs.simplify()
 
-    Eq << Eq[-1].apply(Algebra.Eq.to.Eq.Lamda, (k,), (h,))
+    Eq << Eq[-1].apply(Algebra.EqLamda.of.Eq, (k,), (h,))
 
     Eq << Eq[-1].subs(Eq[1], Eq[2])
 
-    Eq << Algebra.Cond.to.All.restrict.apply(Eq[-1], (_i,), (_j,))
+    Eq << Algebra.All.of.Cond.restrict.apply(Eq[-1], (_i,), (_j,))
 
     Eq << Eq[-1].reversed
 

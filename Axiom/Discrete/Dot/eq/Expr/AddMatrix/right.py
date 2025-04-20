@@ -36,9 +36,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda)().find(Element[Complement]).simplify()
 
-    Eq << Eq[-1].this.find(Piecewise).apply(Algebra.Piece.eq.Delta)
+    Eq << Eq[-1].this.find(Piecewise).apply(Algebra.Ite.eq.Delta)
 
-    Eq << Eq[-1].this.find(Piecewise).apply(Algebra.Piece.eq.Delta)
+    Eq << Eq[-1].this.find(Piecewise).apply(Algebra.Ite.eq.Delta)
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Add.eq.Lamda)
 
@@ -52,9 +52,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Lamda)().find(Element[Complement]).simplify()
 
-    Eq << Eq[-1].this.find(Piecewise).apply(Algebra.Piece.eq.Delta)
+    Eq << Eq[-1].this.find(Piecewise).apply(Algebra.Ite.eq.Delta)
 
-    Eq << Eq[-1].this.find(Piecewise).apply(Algebra.Piece.eq.Delta)
+    Eq << Eq[-1].this.find(Piecewise).apply(Algebra.Ite.eq.Delta)
 
     Eq << Eq[-1].this.find(Mul[Add]).expand()
 

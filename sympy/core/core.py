@@ -18,7 +18,7 @@ ordering_of_classes = [
     'Derivative', 'Integral',
     # defined singleton functions
     'Abs', 'Sign', 'Sqrt',
-    'Floor', 'Ceiling',
+    'Floor', 'Ceil',
     'Re', 'Im', 'Arg',
     'Conjugate',
     'Exp', 'Log',

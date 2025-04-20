@@ -26,9 +26,9 @@ def prove(Eq):
 
 
 
-    Eq << Algebra.Eq.to.Eq.Lamda.apply(Eq[-1], (i, 0, n))
+    Eq << Algebra.EqLamda.of.Eq.apply(Eq[-1], (i, 0, n))
 
-    Eq.final = Algebra.Eq.to.Eq.Lamda.apply(Eq[-1], (j, 0, n))
+    Eq.final = Algebra.EqLamda.of.Eq.apply(Eq[-1], (j, 0, n))
 
     Eq << Eq.final[j, i]
 

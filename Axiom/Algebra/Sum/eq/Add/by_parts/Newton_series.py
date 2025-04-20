@@ -19,7 +19,7 @@ def apply(self, pivot=-1, i=None, d=1):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Discrete
+    from Axiom import Algebra, Discrete, Logic
 
     d = Symbol(integer=True, positive=True, given=False)
     n = Symbol(domain=Range(d, oo))
@@ -49,17 +49,17 @@ def prove(Eq):
 
     Eq << Eq.abel.find(-Sum).find(Sum[Tuple, Tuple]).this.apply(Discrete.Sum.Binom.limits.swap.lower)
 
-    Eq << Eq.abel.rhs.find((~Sum) * Sum).this.apply(Algebra.Sum.limits.subs.Neg, i, d - i).this.rhs.find(Binomial).apply(Discrete.Binom.Complement)
+    Eq << Eq.abel.rhs.find((~Sum) * Sum).this.apply(Algebra.Sum.limits.subs.Neg, i, d - i).this.rhs.find(Binomial).apply(Discrete.Binom.SDiff)
 
     Eq << Eq[0].subs(Eq.abel.subs(*Eq[-4:]))
 
-    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(-Pow).args[:2].apply(Algebra.Mul.eq.Pow.Add.exponent)
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Cond.Imply.to.Cond.induct.apply(Eq.initial, Eq[-1], d, 1)
+    Eq << Logic.Cond.of.Cond.Imp.induct.apply(Eq.initial, Eq[-1], d, 1)
 
     # https://en.wikipedia.org/wiki/Summation_by_parts
 

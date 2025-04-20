@@ -9,16 +9,14 @@ def apply(eq):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
-
     b, a = Symbol(real=True, given=True)
     Eq << apply(Equal(a, b))
 
-    Eq << Algebra.Eq.to.Eq.reverse.apply(Eq[1])
+    Eq << ~Eq[1]
 
-
+    Eq <<= Eq[-1] & Eq[0]
 
 
 if __name__ == '__main__':
     run()
-# created on 2019-03-29
+# created on 2018-05-25

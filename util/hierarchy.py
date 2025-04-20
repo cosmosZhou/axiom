@@ -26,7 +26,7 @@ def retrieve_all_dependency():
     for py, php in read_all_axioms(axiom_directory()):
         source = py_to_module(php)
 
-        count = defaultdict(int)        
+        count = defaultdict(int)
         if is_py_theorem(py):
             print("py =", py)
             for to in yield_callee_from_py(py):

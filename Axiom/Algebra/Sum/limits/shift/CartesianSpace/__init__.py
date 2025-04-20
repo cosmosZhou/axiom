@@ -17,7 +17,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Sets
+    from Axiom import Algebra, Set
 
     a, b = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
@@ -30,13 +30,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.rhs.find(Element[2]).apply(Sets.In_CartesianSpace.equ.All.In)
+    Eq << Eq[-1].this.rhs.find(Element[2]).apply(Set.Mem_CartesianSpace.Is.All.Mem)
 
     Eq << Eq[-1].this.rhs.find(All).apply(Algebra.All.limits.subs.offset, -i - 1)
 
-    Eq << Eq[-1].this.rhs.find(And).apply(Algebra.And.equ.All.limits.unshift)
+    Eq << Eq[-1].this.rhs.find(And).apply(Algebra.And.Is.All.limits.unshift)
 
-    Eq << Eq[-1].this.lhs.find(Element).apply(Sets.In_CartesianSpace.equ.All.In)
+    Eq << Eq[-1].this.lhs.find(Element).apply(Set.Mem_CartesianSpace.Is.All.Mem)
 
     Eq << Eq[-1].this.lhs.find(All).apply(Algebra.All.limits.subs.offset, -i)
 

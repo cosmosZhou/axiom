@@ -2664,7 +2664,7 @@ class Expr(Basic, EvalfMixin):
         >>> exp_polar(-I*pi).extract_branch_factor(allow_half=True)
         (1, -1/2)
         """
-        from sympy import exp_polar, pi, I, ceiling, Add
+        from sympy import exp_polar, pi, I, ceil, Add
         n = S(0)
         res = S(1)
         args = Mul.make_args(self)
@@ -2693,7 +2693,7 @@ class Expr(Basic, EvalfMixin):
         else:
             coeff, tail = piimult.as_coeff_add(*piimult.free_symbols)
         # round down to nearest multiple of 2
-        branchfact = ceiling(coeff / 2 - S(1) / 2) * 2
+        branchfact = ceil(coeff / 2 - S(1) / 2) * 2
         n += branchfact / 2
         c = coeff - branchfact
         if allow_half:
@@ -2953,7 +2953,7 @@ class Expr(Basic, EvalfMixin):
         -x
 
         """
-        from sympy import collect, Dummy, Order, Rational, Symbol, ceiling
+        from sympy import collect, Dummy, Order, Rational, Symbol, ceil
         if x is None:
             syms = self.free_symbols
             if not syms:
@@ -3032,7 +3032,7 @@ class Expr(Basic, EvalfMixin):
                         s1 = self._eval_nseries(x, n=n + more, logx=logx)
                         newn = s1.getn()
                         if newn != ngot:
-                            ndo = n + ceiling((n - ngot) * more / (newn - ngot))
+                            ndo = n + ceil((n - ngot) * more / (newn - ngot))
                             s1 = self._eval_nseries(x, n=ndo, logx=logx)
                             while s1.getn() < n:
                                 s1 = self._eval_nseries(x, n=ndo, logx=logx)

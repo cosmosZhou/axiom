@@ -734,7 +734,7 @@ def _check_antecedents_1(g, x, helper=False):
     int_1^\infty g dx exists.
     """
     # NOTE if you update these conditions, please update the documentation as well
-    from sympy import Eq, Not, ceiling, Ne, Re, unbranched_argument as arg
+    from sympy import Eq, Not, ceil, Ne, Re, unbranched_argument as arg
     delta = g.delta
     eta, _ = _get_coeff_exp(g.argument, x)
     m, n, p, q = len(g.bm), len(g.an), len(g.ap), len(g.bq)
@@ -779,7 +779,7 @@ def _check_antecedents_1(g, x, helper=False):
     tmp1 = [1 <= n, p < q, 1 <= m]
     tmp2 = [1 <= p, 1 <= m, Eq(q, p + 1), Not(And(Eq(n, 0), Eq(m, p + 1)))]
     tmp3 = [1 <= p, Eq(q, p)]
-    for k in range(ceiling(delta/2) + 1):
+    for k in range(ceil(delta/2) + 1):
         tmp3 += [Ne(abs(arg(eta)), (delta - 2*k)*pi)]
     tmp = [delta > 0, abs(arg(eta)) < delta*pi]
     extra = [Ne(eta, 0), cond_3]

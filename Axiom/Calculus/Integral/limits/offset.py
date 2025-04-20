@@ -47,7 +47,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(Calculus.Integral.eq.Add)
 
-    Eq << Calculus.Ge_0.to.Eq.Integral.limits.offset.apply(Eq.fp_is_nonnegative, Eq[-1].lhs.args[1], d)
+    Eq << Calculus.EqIntegral.of.Ge_0.limits.offset.apply(Eq.fp_is_nonnegative, Eq[-1].lhs.args[1], d)
 
     Eq << Eq[-2].subs(Eq[-1]).simplify()
 
@@ -55,7 +55,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(Calculus.Integral.eq.Mul)
 
-    Eq << Calculus.Ge_0.to.Eq.Integral.limits.offset.apply(Eq.fn_is_nonnegative, Eq[-1].lhs, d)
+    Eq << Calculus.EqIntegral.of.Ge_0.limits.offset.apply(Eq.fn_is_nonnegative, Eq[-1].lhs, d)
 
 
 

@@ -14,9 +14,9 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(Arg(exp(S.ImaginaryUnit * x)))
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Arg.ExpI.eq.Add.Ceiling) / 2
+    Eq << Eq[-1].this.lhs.apply(Algebra.Arg.ExpI.eq.Add.Ceil) / 2
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Floor.eq.Neg.Ceiling)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Floor.eq.Neg.Ceil)
 
 
 if __name__ == '__main__':

@@ -784,9 +784,6 @@ class MatrixSymbol(MatrixExpr):
                 [first, second],
             )]
 
-    def _sympystr(self, _):
-        return Symbol.subs_specials(self.name)
-
 
 class ConstantMatrix:
     
@@ -866,6 +863,11 @@ class Identity(ConstantMatrix, MatrixExpr):
         n = p._print(n)
         return f"Identity({n})"
 
+    def _lean(self, p):
+        n = self.shape[-1]
+        n = p._print(n)
+        return f"Identity({n})"
+    
     @property
     def n(self):
         return self.shape[-1]
@@ -1054,12 +1056,12 @@ class ZeroMatrix(ConstantMatrix, MatrixExpr):
 
     @staticmethod
     def static_entry(self, i, j):
-        from sympy.functions.elementary.integers import Ceiling
+        from sympy.functions.elementary.integers import Ceil
         if j is None:
             if isinstance(i, Tuple):
                 start, stop, step = i.slice_args
                 size = stop - start
-                return self.func(Ceiling(size / step), *self.shape[1:])
+                return self.func(Ceil(size / step), *self.shape[1:])
             
             return self.func(*self.shape[1:])
             
@@ -1069,7 +1071,7 @@ class ZeroMatrix(ConstantMatrix, MatrixExpr):
                 if isinstance(j, Tuple):
                     start, stop, step = j.slice_args
                     size = stop - start
-                    return self.func(self.shape[0], Ceiling(size / step), *self.shape[2:])
+                    return self.func(self.shape[0], Ceil(size / step), *self.shape[2:])
                 else:
                     return self.func(self.shape[0])
             raise Exception('unimplemented slice object %s' % i)
@@ -1087,6 +1089,9 @@ class ZeroMatrix(ConstantMatrix, MatrixExpr):
 #         return r"\mathbb{0}" if p._settings['mat_symbol_style'] == 'plain' else r"\mathbf{0}"
 
     def _sympystr(self, p):
+        return "ZeroMatrix(%s)" % ", ".join(p._print(s) for s in self.shape)
+
+    def _lean(self, p):
         return "ZeroMatrix(%s)" % ", ".join(p._print(s) for s in self.shape)
 
     def __rmul__(self, other): 
@@ -1236,6 +1241,9 @@ class OneMatrix(ConstantMatrix, MatrixExpr):
 #         return r"\mathbb{1}" if p._settings['mat_symbol_style'] == 'plain' else r"\mathbf{1}"
 
     def _sympystr(self, p):
+        return "OneMatrix(%s)" % ", ".join(p._print(s) for s in self.shape)
+
+    def _lean(self, p):
         return "OneMatrix(%s)" % ", ".join(p._print(s) for s in self.shape)
 
     def __mul__(self, rhs):
@@ -1494,6 +1502,9 @@ class ElementaryMatrix(ConstantMatrix):
     def _sympystr(self, p):
         return Basic._sympystr(self, p)
     
+    def _lean(self, p):
+        return Basic._sympystr(self, p)
+    
     @property
     def is_square(self):
         return True
@@ -1613,6 +1624,13 @@ class SwapMatrix(ElementaryMatrix, MatrixExpr):
         j = p._print(j)
         return f'SwapMatrix({n}, {i}, {j})'
 
+    def _lean(self, p):
+        n = self.shape[-1]
+        i, j = self.args
+        n = p._print(n)
+        i = p._print(i)
+        j = p._print(j)
+        return f'SwapMatrix({n}, {i}, {j})'
 
 class MulMatrix(ElementaryMatrix, MatrixExpr):
 
@@ -1741,6 +1759,14 @@ class MulMatrix(ElementaryMatrix, MatrixExpr):
             return False
         
     def _sympystr(self, p):
+        n = self.shape[-1]
+        i, j = self.args
+        n = p._print(n)
+        i = p._print(i)
+        j = p._print(j)
+        return f'MulMatrix({n}, {i}, {j})'
+
+    def _lean(self, p):
         n = self.shape[-1]
         i, j = self.args
         n = p._print(n)
@@ -1900,6 +1926,15 @@ class AddMatrix(ElementaryMatrix, MatrixExpr):
         k = p._print(k)
         return f'AddMatrix({n}, {i}, {j}, {k})'
 
+    def _lean(self, p):
+        n = self.shape[-1]
+        i, j, k = self.args
+        n = p._print(n)
+        i = p._print(i)
+        j = p._print(j)
+        k = p._print(k)
+        return f'AddMatrix({n}, {i}, {j}, {k})'
+
 
 class ShiftMatrix(ElementaryMatrix, MatrixExpr):
     '''
@@ -2031,6 +2066,14 @@ class ShiftMatrix(ElementaryMatrix, MatrixExpr):
         return self.i == self.j
 
     def _sympystr(self, p):
+        n = self.shape[-1]
+        i, j = self.args
+        n = p._print(n)
+        i = p._print(i)
+        j = p._print(j)
+        return f'ShiftMatrix({n}, {i}, {j})'
+
+    def _lean(self, p):
         n = self.shape[-1]
         i, j = self.args
         n = p._print(n)

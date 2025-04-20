@@ -15,30 +15,30 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     n, m = Symbol(integer=True, positive=True)
     Eq << apply(BlockMatrix([[Identity(n), ZeroMatrix(n, m)], [ZeroMatrix(m, n), Identity(m)]]))
 
     i = Symbol(domain=Range(n + m))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
     j = Symbol(domain=Range(n + m))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], j)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], j)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Piece.unnest)
+    Eq << Eq[-1].this.lhs.apply(Logic.Ite_Ite.eq.Ite__Ite)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Piece.swap, 1)
+    Eq << Eq[-1].this.lhs.apply(Logic.Ite__Ite.eq.IteAnd_Not__Ite, 1)
 
-    Eq << Algebra.Cond_Piece.of.And.Imply.apply(Eq[-1])
+    Eq << Logic.Cond_Ite.given.And.Imp.apply(Eq[-1])
 
-    Eq << Algebra.Imply_Or.of.And.Imply.apply(Eq[-1])
+    Eq << Logic.ImpOr.given.Imp.Imp.apply(Eq[-1])
 
-    Eq <<= Eq[-2].this.lhs.apply(Algebra.Lt.Ge.to.Lt.trans), Eq[-1].this.lhs.apply(Algebra.Lt.Ge.to.Gt.trans)
+    Eq <<= Eq[-2].this.lhs.apply(Algebra.Lt.of.Lt.Ge), Eq[-1].this.lhs.apply(Algebra.Gt.of.Lt.Ge)
 
-    Eq << Eq[-2].this.lhs.apply(Algebra.Lt.to.Ne)
+    Eq << Eq[-2].this.lhs.apply(Algebra.Ne.of.Lt)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Gt.to.Ne)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Ne.of.Gt)
 
 
 

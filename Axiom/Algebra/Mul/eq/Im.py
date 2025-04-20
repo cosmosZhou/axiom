@@ -17,7 +17,7 @@ def prove(Eq):
     z = Symbol(complex=True)
     Eq << apply(Im(z) * c)
 
-    Eq << Algebra.Expr.eq.Add.complex.apply(z)
+    Eq << Algebra.Expr.eq.AddRe_MulIIm.apply(z)
 
     Eq << Eq[0].subs(Eq[-1])
 

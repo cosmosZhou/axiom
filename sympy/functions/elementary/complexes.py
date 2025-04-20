@@ -7,7 +7,7 @@ from sympy.core.logic import fuzzy_not, fuzzy_or
 from sympy.core.numbers import pi, I, oo
 from sympy.core.relational import Eq
 from sympy.functions.elementary.exponential import exp, exp_polar, log
-from sympy.functions.elementary.integers import ceiling
+from sympy.functions.elementary.integers import ceil
 from sympy.core.power import sqrt
 from sympy.functions.elementary.piecewise import Piecewise
 from sympy.functions.elementary.trigonometric import atan, atan2
@@ -247,10 +247,6 @@ class Im(Function):
             return -S.ImaginaryUnit \
                 * Re(Derivative(self.args[0], x, evaluate=True))
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.imag_part(self.args[0]._sage_())
-
     def _eval_rewrite_as_re(self, arg, **kwargs):
         return -S.ImaginaryUnit * (self.args[0] - Re(self.args[0]))
 
@@ -431,10 +427,6 @@ class Sign(Function):
         ):
             return S.One
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.sgn(self.args[0]._sage_())
-
     def _eval_rewrite_as_Piecewise(self, arg, **kwargs):
         if arg.is_extended_real:
             return Piecewise((1, arg > 0), (-1, arg < 0), (0, True))
@@ -455,6 +447,9 @@ class Sign(Function):
             return tex
 
     def _sympystr(self, p):
+        return "sign(%s)" % p._print(self.arg)
+
+    def _lean(self, p):
         return "sign(%s)" % p._print(self.arg)
 
     def __iter__(self):
@@ -639,10 +634,6 @@ class Abs(Function):
             (sign(direction) * s, True),
         )
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.abs_symbolic(self.args[0]._sage_())
-
     def _eval_derivative(self, x):
         if self.args[0].is_extended_real or self.args[0].is_imaginary:
             return Derivative(self.args[0], x, evaluate=True) \
@@ -677,6 +668,9 @@ class Abs(Function):
     
     def _sympystr(self, p):
         return "abs(%s)" % p._print(self.arg)
+    
+    def _lean(self, p):
+        return "|%s|" % p._print(self.arg)
     
     def _latex(self, p, exp=None):
         tex = r"\left|{%s}\right|" % p._print(self.args[0])
@@ -778,6 +772,9 @@ class Norm(Function):
 
     def _sympystr(self, p):
         return "Norm(%s)" % p._print(self.arg)
+
+    def _lean(self, p):
+        return "‖%s‖" % p._print(self.arg)
 
     def _latex(self, p, exp=None):
         left_vert = r"\left|\kern-0.25ex" * 2
@@ -900,7 +897,12 @@ class Arg(Function):
         return 43
     
     def _latex(self, p, exp=None):
-        tex = r"arg\left({%s}\right)" % p._print(self.args[0])
+        arg = self.arg
+        if arg.is_Mul or arg.is_Add:
+            arg = r"\left(%s\right)" % p._print(arg)
+        else:
+            arg = p._print(arg)
+        tex = r"\arg {%s}" % arg
         if exp is not None:
             return r"%s^{%s}" % (tex, exp)
         else:
@@ -908,6 +910,9 @@ class Arg(Function):
     
     def _sympystr(self, p):
         return "arg(%s)" % p._print(self.arg)
+
+    def _lean(self, p):
+        return "arg %s" % p._print(self.arg)
 
 
 arg = Arg
@@ -1012,6 +1017,14 @@ class Conjugate(Function):
             return tex
 
     def _sympystr(self, p):
+        x = self.arg
+        
+        s = p._print(x)
+        if x.is_AssocOp or x.is_MatMul:
+            s = "(%s)" % s
+        return "~%s" % s
+
+    def _lean(self, p):
         x = self.arg
         
         s = p._print(x)
@@ -1191,8 +1204,8 @@ class periodic_argument(Function):
         if period == oo:
             return unbranched
         if period != oo:
-            n = ceiling(unbranched / period - S(1) / 2) * period
-            if not n.has(ceiling):
+            n = ceil(unbranched / period - S(1) / 2) * period
+            if not n.has(ceil):
                 return unbranched - n
 
     def _eval_evalf(self, prec):
@@ -1203,7 +1216,7 @@ class periodic_argument(Function):
                 return self
             return unbranched._eval_evalf(prec)
         ub = periodic_argument(z, oo)._eval_evalf(prec)
-        return (ub - ceiling(ub / period - S(1) / 2) * period)._eval_evalf(prec)
+        return (ub - ceil(ub / period - S(1) / 2) * period)._eval_evalf(prec)
 
 
 def unbranched_argument(arg):

@@ -23,13 +23,13 @@ def prove(Eq):
 
     Eq << Eq.g_is_continuous.this.lhs.doit()
 
-    Eq <<= Eq[-2].reversed * f(x), Calculus.Eq_Limit.Eq_Limit.to.Eq_Limit.Mul.apply(Eq[-1], Eq.g_is_continuous)
+    Eq <<= Eq[-2].reversed * f(x), Calculus.Eq_Limit.Mul.of.Eq_Limit.Eq_Limit.apply(Eq[-1], Eq.g_is_continuous)
 
     Eq << Eq[-2].this.lhs.apply(Calculus.Mul.eq.Limit)
 
-    Eq <<= Eq[-2].this.lhs.find(Mul).apply(Algebra.Mul.eq.Add), Eq[-1].this.lhs.find(Mul).apply(Algebra.Mul.eq.Add)
+    Eq <<= Eq[-2].this.lhs.find(Mul).apply(Algebra.Mul_Add.eq.AddMulS), Eq[-1].this.lhs.find(Mul).apply(Algebra.Mul_Add.eq.AddMulS)
 
-    Eq << Calculus.Eq_Limit.Eq_Limit.to.Eq_Limit.Add.apply(Eq[-1], Eq[-2])
+    Eq << Calculus.Eq_Limit.Add.of.Eq_Limit.Eq_Limit.apply(Eq[-1], Eq[-2])
 
     Eq << Eq[-1].this.lhs.expr.apply(Algebra.Add.eq.Mul)
 

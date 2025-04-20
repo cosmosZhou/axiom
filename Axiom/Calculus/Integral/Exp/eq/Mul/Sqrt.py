@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.doit()
 
-    Eq << Eq[-1].apply(Algebra.Eq.to.Eq.Sqrt)
+    Eq << Eq[-1].apply(Algebra.EqSqrt.of.Eq)
 
     # https://ccjou.wordpress.com/2012/11/26/jacobian-矩陣與行列式/
 

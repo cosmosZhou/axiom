@@ -4545,6 +4545,9 @@ class TensorRelational(TensorBinaryCondition, Expr):
     def _sympystr(self, p):
         return self.func.__name__[6:] + "(%s)" % p.stringify(self.args, ", ")
 
+    def _lean(self, p):
+        return self.func.__name__[6:] + "(%s)" % p.stringify(self.args, ", ")
+
     def _latex(self, p, exp=None):
         func = self.func.__name__[6:]
         args = [str(p._print(arg)) for arg in self.args]

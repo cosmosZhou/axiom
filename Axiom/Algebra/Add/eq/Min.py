@@ -18,11 +18,11 @@ def prove(Eq):
     x, y, z = Symbol(real=True)
     Eq << apply(Min(x, y) - z)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Min.eq.Piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Min.eq.Ite)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Piece.eq.Add)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Ite.eq.Add)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Min.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Min.eq.Ite)
 
 
 if __name__ == '__main__':

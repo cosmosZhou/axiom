@@ -145,7 +145,7 @@ from .random_matrix_models import (CircularEnsemble, CircularUnitaryEnsemble,
 
 from .matrix_distributions import MatrixGamma, Wishart, MatrixNormal
 
-from .symbolic_probability import (Probability, Expectation, Variance,
+from .symbolic_probability import (Probability as Pr, Expectation, Variance,
         Covariance, Moment, CentralMoment, Conditioned, Surrogate, KL, Distributed)
 
 from .symbolic_multivariate_probability import (ExpectationMatrix, VarianceMatrix,

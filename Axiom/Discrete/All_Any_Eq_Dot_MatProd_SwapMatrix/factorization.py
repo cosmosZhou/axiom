@@ -16,7 +16,7 @@ def apply(n):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Sets, Discrete
+    from Axiom import Algebra, Set, Discrete, Logic
 
     n = Symbol(domain=Range(2, oo), given=False)
     Eq << apply(n)
@@ -35,7 +35,7 @@ def prove(Eq):
     Eq << Eq[-1].this.find(Sliced).apply(Algebra.Slice.eq.Matrix)
 
     p0 = Eq[-1].variable
-    Eq << Eq[-1].this.expr.apply(Algebra.Any.of.Cond.subs, b[:2], Matrix((0, KroneckerDelta(p0, 0))))
+    Eq << Eq[-1].this.expr.apply(Algebra.Any.given.Cond.subs, b[:2], Matrix((0, KroneckerDelta(p0, 0))))
 
     Eq << Eq[-1].this.expr.rhs.expand()
 
@@ -45,25 +45,25 @@ def prove(Eq):
 
     Eq.limits_assertion = Algebra.All.limits_assert.apply(Eq.equation.limits)
 
-    Eq << Eq.limits_assertion.this.expr.apply(Sets.Eq.to.Eq.split.FiniteSet.Add)
+    Eq << Eq.limits_assertion.this.expr.apply(Set.Eq.of.Eq.split.Finset.Add)
 
     Eq.p1_equality = Eq[-1].this.expr - p0
 
     Eq <<= Eq.equation & Eq.p1_equality
 
-    Eq << Eq[-1].this.expr.apply(Algebra.Eq.Cond.of.And.subs)
+    Eq << Eq[-1].this.expr.apply(Algebra.Eq.Cond.given.And.subs)
 
-    Eq << Algebra.All_And.of.And.All.apply(Eq[-1])
+    Eq << Algebra.All_And.given.And.All.apply(Eq[-1])
 
-    Eq << Eq[-1].this.expr.apply(Algebra.Eq.of.And.split.Matrix)
+    Eq << Eq[-1].this.expr.apply(Algebra.Eq.given.And.split.Matrix)
 
-    Eq.premier, Eq.second = Algebra.All_And.of.And.All.apply(Eq[-1])
+    Eq.premier, Eq.second = Algebra.All_And.given.And.All.apply(Eq[-1])
 
-    Eq << Eq.limits_assertion.this.expr.apply(Sets.Eq.to.And.split.FiniteSet)
+    Eq << Eq.limits_assertion.this.expr.apply(Set.And.of.Eq.split.Finset)
 
-    Eq << Algebra.All_And.to.And.All.apply(Eq[-1])
+    Eq << Algebra.And.All.of.All_And.apply(Eq[-1])
 
-    Eq << Eq[-2].this.expr.apply(Sets.In.to.Eq.Delta.Zero).reversed
+    Eq << Eq[-2].this.expr.apply(Set.Eq.Delta.Zero.of.Mem).reversed
 
     Eq << -(Eq.premier - 1)
 
@@ -100,17 +100,17 @@ def prove(Eq):
 
     Eq << Eq.p_quote_definition.lhs[n].this.definition
 
-    Eq << Eq[-1].this.rhs.args[1].expr.apply(Algebra.Piece.eq.Delta)
+    Eq << Eq[-1].this.rhs.args[1].expr.apply(Algebra.Ite.eq.Delta)
 
     Eq << Eq[-1].this.rhs.apply(Discrete.Dot.eq.Sum)
 
-    Eq << Algebra.All_Any_Eq.Cond.to.All.Any.subs.apply(Eq.any_n, Eq[-1])
+    Eq << Algebra.All.Any.of.All_Any_Eq.Cond.subs.apply(Eq.any_n, Eq[-1])
 
     Eq << Eq[-1].this.expr().expr.rhs.simplify()
 
-    Eq.any_n_plausible = Eq[-1].this.expr.apply(Sets.Any.to.Any.limits.relax, wrt=Eq[-1].expr.variable)
+    Eq.any_n_plausible = Eq[-1].this.expr.apply(Set.Any.of.Any.limits.relax, wrt=Eq[-1].expr.variable)
 
-    Eq << Discrete.All_InDot.permutation.apply(n + 1, left=False)
+    Eq << Discrete.All_MemDot.permutation.apply(n + 1, left=False)
 
     i, j = Eq[-1].find(Indexed).indices
     Eq << Eq[-1].this.find(Indexed).definition
@@ -123,32 +123,32 @@ def prove(Eq):
 
     Eq <<= Eq.any_n_plausible & Eq[-1]
 
-    Eq << Eq[-1].this.expr.apply(Algebra.Cond.Any.to.Any.And)
+    Eq << Eq[-1].this.expr.apply(Algebra.Any.And.of.Cond.Any)
 
-    Eq << Eq[-1].this.expr.expr.apply(Discrete.Eq.Eq.to.Eq.permutation.pop.Interval)
+    Eq << Eq[-1].this.expr.expr.apply(Discrete.Eq.of.Eq.Eq.permutation.pop.Icc)
 
-    Eq << Algebra.All.to.Or.subs.apply(Eq.hypothesis, Eq.hypothesis.variable, p_quote[:n])
+    Eq << Algebra.Or.of.All.subs.apply(Eq.hypothesis, Eq.hypothesis.variable, p_quote[:n])
 
-    Eq << Algebra.Cond.All.to.All.And.apply(Eq[-1], Eq[-2])
+    Eq << Algebra.All.And.of.Cond.All.apply(Eq[-1], Eq[-2])
 
-    Eq << Eq[-1].this.expr.apply(Algebra.Any.Or.to.Cond, simplify=None)
+    Eq << Eq[-1].this.expr.apply(Algebra.Cond.of.Any.Or, simplify=None)
 
     Eq << Eq.p_quote_definition.lhs.this.apply(Algebra.Expr.eq.Block, n)
 
-    Eq << Algebra.Cond.All_Any.to.All.Any.And.apply(Eq[-1], Eq[-2])
+    Eq << Algebra.All.Any.And.of.Cond.All_Any.apply(Eq[-1], Eq[-2])
 
-    Eq << Eq[-1].this.expr.expr.apply(Algebra.Eq.Eq.to.Eq.subs, swap=True)
+    Eq << Eq[-1].this.expr.expr.apply(Algebra.Eq.of.Eq.Eq.subs, swap=True)
 
     Eq <<= Eq[-1] & Eq.any_n_plausible
 
-    Eq << Eq[-1].this.expr.apply(Algebra.Any.Any.to.Any.And, simplify=None)
+    Eq << Eq[-1].this.expr.apply(Algebra.Any.And.of.Any.Any, simplify=None)
 
-    Eq << Eq[-1].this.expr.expr.apply(Algebra.Eq.Eq.to.Eq.subs, swap=True)
+    Eq << Eq[-1].this.expr.expr.apply(Algebra.Eq.of.Eq.Eq.subs, swap=True)
 
     Eq << Eq[-1].this.find(Any).apply(Algebra.Any.limits.concat)
     Eq << Imply(Eq.hypothesis, Eq.induct, plausible=True)
 
-    Eq << Algebra.Cond.Imply.to.Cond.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
+    Eq << Logic.Cond.of.Cond.Imp.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
 
     Eq << Eq[1].subs(Eq[0])
 

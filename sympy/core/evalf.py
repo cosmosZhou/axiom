@@ -303,7 +303,7 @@ def check_target(expr, result, prec):
 
 def get_integer_part(expr, no, options, return_ints=False):
     """
-    With no = 1, computes ceiling(expr)
+    With no = 1, computes ceil(expr)
     With no = -1, computes floor(expr)
 
     Note: this function either gives the exact result or signals failure.
@@ -1255,7 +1255,7 @@ def _create_evalf_table():
     from sympy.core.symbol import Dummy, Symbol
     from sympy.functions.elementary.complexes import Abs, Im, Re
     from sympy.functions.elementary.exponential import exp, log
-    from sympy.functions.elementary.integers import ceiling, floor
+    from sympy.functions.elementary.integers import ceil, floor
     from sympy.functions.elementary.piecewise import Piecewise
     from sympy.functions.elementary.trigonometric import atan, cos, sin
     from sympy.integrals.integrals import Integral
@@ -1292,7 +1292,7 @@ def _create_evalf_table():
         Re: evalf_re,
         Im: evalf_im,
         floor: evalf_floor,
-        ceiling: evalf_ceiling,
+        ceil: evalf_ceiling,
 
         Integral: evalf_integral,
         Sum: evalf_sum,

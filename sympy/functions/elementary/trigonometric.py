@@ -9,7 +9,7 @@ from sympy.core.singleton import S
 from sympy.core.symbol import Symbol
 from sympy.functions.combinatorial.factorials import factorial, RisingFactorial
 from sympy.functions.elementary.exponential import log, exp
-from sympy.functions.elementary.integers import floor, ceiling
+from sympy.functions.elementary.integers import floor, ceil
 from sympy.functions.elementary.hyperbolic import (acoth, asinh, atanh, cosh,
     coth, HyperbolicFunction, sinh, tanh)
 from sympy.functions.elementary.miscellaneous import Min, Max
@@ -97,6 +97,9 @@ class TrigonometricFunction(Function):
 
     def _sympystr(self, p):
         return self.func.__name__.lower() + "(%s)" % p.stringify(self.args, ", ")
+
+    def _lean(self, p):
+        return self.func.__name__.lower() + " %s" % p.stringify(self.args, ", ")
 
     def _latex(self, p, exp=None):
         func = self.func.__name__.lower()
@@ -543,7 +546,7 @@ class Sin(TrigonometricFunction):
             a -= diff
         elif b < 0:
 #             b + 2k >0 => k > -b /2 =>
-            diff = ceiling(-b / 2) * 2
+            diff = ceil(-b / 2) * 2
             b += diff
             a += diff
 
@@ -570,7 +573,7 @@ class Sin(TrigonometricFunction):
             a -= diff
         elif b < 0:
 #             b + 2k >0 => k > -b /2 =>
-            diff = ceiling(-b / 2) * 2
+            diff = ceil(-b / 2) * 2
             b += diff
             a += diff
 
@@ -1024,7 +1027,7 @@ class Cos(TrigonometricFunction):
             a -= diff
         elif b < 0:
 #             b + 4k >0 => k > -b /4 => k = ceil(-b /4)
-            diff = ceiling(-b / 4) * 4
+            diff = ceil(-b / 4) * 4
             b += diff
             a += diff
 
@@ -1054,7 +1057,7 @@ class Cos(TrigonometricFunction):
             a -= diff
         elif b < 0:
 #             b + 4k >0 => k > -b /4 => k = ceil(-b /4)
-            diff = ceiling(-b / 4) * 4
+            diff = ceil(-b / 4) * 4
             b += diff
             a += diff
 

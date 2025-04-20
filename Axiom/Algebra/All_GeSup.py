@@ -19,7 +19,7 @@ def prove(Eq):
     y = Symbol(Eq[0].find(Sup))
     Eq << y.this.definition
 
-    Eq << Algebra.Eq_Sup.to.All.Ge.apply(Eq[-1])
+    Eq << Algebra.All.Ge.of.Eq_Sup.apply(Eq[-1])
 
     Eq << Eq[-1].subs(Eq[1])
 

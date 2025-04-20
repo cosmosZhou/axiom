@@ -84,36 +84,41 @@ function is_latex_print($latex, &$res)
     // Eq[-2:], (Eq.where, *Eq[-2:]), Eq[-2:] = ...
     // (*Eq[-4:], Eq.eq_s, Eq.eq_x, Eq.eq_G), Eq[-1] = ...
     // *Eq[-5:], Eq.hypothesis = ...
-    while (preg_match('/^(Eq\.\w+|\((Eq\.\w+|\*Eq\[-\d+:\]) *(, *Eq\.\w+)+ *\)|Eq\[-(\d+:|1)\]|\*Eq\[-\d+:\]|\*\w+|\w+)/u', $latex, $match)){
+    while (preg_match('/^(Eq\.\w+|\((Eq\.\w+|\*Eq\[-\d+:\]) *(, *Eq\.\w+)+ *\)|Eq\[-(\d+:|1)\]|\*Eq\[-\d+:\]|\*\w+|\w+)/u', $latex, $match)) {
         $res[] = $match[0];
         $latex = std\slice($latex, strlen($match[0]));
         if (preg_match('/^ *= */', $latex, $matchEqual))
             return true;
-        
+
         if (!preg_match('/^ *, */', $latex, $matchComma))
             return false;
-        
+
         $latex = std\slice($latex, strlen($matchComma[0]));
     }
-    
+
     return false;
 }
 
 $module = str_replace('/', '.', $module);
 $title = str_replace('.', '/', $module);
-             
-$path_info = substr(__FILE__, 0, - 9) . "Axiom/" . $title;
 
-$indexOfYield = - 1;
+$path_info = substr(__FILE__, 0, -9) . "Axiom/" . $title;
+
+$indexOfYield = -1;
 if (! str_ends_with($path_info, '/')) {
 
     $py = $path_info . ".py";
 
     if (! file_exists($py)) {
-        $__init__ = substr($py, 0, - 3) . "/__init__.py";
+        $__init__ = substr($py, 0, -3) . "/__init__.py";
         if (file_exists($__init__)) {
             $py = $__init__;
             $title .= "/";
+        } elseif (file_exists($pyOf = str_replace('/of/', '/given/', $py)) || file_exists(substr($pyOf, 0, -3) . "/__init__.py")) {
+            $user = get_user();
+            $module = str_replace('.of.', '.given.', $module);
+            header("location:?module=$module");
+            exit;
         }
     }
 
@@ -178,8 +183,9 @@ if (! str_ends_with($path_info, '/')) {
         }
 
         [$logs, $data] = run($py);
-    }
-    else
+        if (count($data) == 6)
+            array_pop($data);
+    } else
         $data = null;
 
     $lengths = [];
@@ -189,7 +195,7 @@ if (! str_ends_with($path_info, '/')) {
     $inputs = [];
     $input = [];
 
-    $numOfRequisites = preg_match('/([\w.]+)\.(to|of)\./', $module, $m)? count(explode(".", $m[1])) - 1 : 0;
+    $numOfRequisites = preg_match('/([\w.]+)\.(of|given)\./', $module, $m) ? count(explode(".", $m[1])) - 1 : 0;
 
     foreach (yield_from_py($py) as $dict) {
         if (! array_key_exists('statement', $dict))
@@ -201,16 +207,13 @@ if (! str_ends_with($path_info, '/')) {
             $module = $dict['module'];
             $indexOfYield = $counterOfLengths;
             $input[] = $statement;
-        } 
-        elseif (array_key_exists('a', $dict)) {
+        } elseif (array_key_exists('a', $dict)) {
             if (! $input && $inputs && end($inputs)[-1] == '\\') {
                 $length = count($inputs);
                 $inputs[$length - 1] .= "\n$statement";
-            }
-            else
+            } else
                 $input[] = $statement;
-        } 
-        else {
+        } else {
             unset($dict['statement']);
             if (array_key_exists('comment', $dict)) {
                 unset($dict['comment']);
@@ -219,8 +222,7 @@ if (! str_ends_with($path_info, '/')) {
                 elseif ($inputs && has_unterminated_parantheses(end($inputs))) {
                     $inputs[count($inputs) - 1] .= "\n$statement";
                     continue;
-                } 
-                else {
+                } else {
                     if ($dict) {
                         foreach ($dict as $key => $value) {
                             switch ($key) {
@@ -251,21 +253,20 @@ if (! str_ends_with($path_info, '/')) {
             else
                 $input[] = $text;
         }
-        
+
         if (preg_match('/^Eq *(<<|\[ *(- *\d+ *)?(: *)?\] *=) */', $statement, $matches)) {
             $inputs[] = piece_together($input);
 
-            ++ $counterOfLengths;
+            ++$counterOfLengths;
             $lengths[] = 1;
-        } 
-        elseif (is_latex_print($statement, $matches)) {
+        } elseif (is_latex_print($statement, $matches)) {
             // https://www.php.net/manual/en/function.preg-match-all.php
             $regexp = '/Eq\.\w+|Eq\[-(\d+:|1)\]/u';
             if (array_key_exists('module', $dict)) {
                 $count = count($matches);
                 switch ($count) {
                     case 1:
-                        $lengthOfGiven = $lengthOfWhere = 0;                        
+                        $lengthOfGiven = $lengthOfWhere = 0;
                         break;
                     case 2:
                         if ($numOfRequisites) {
@@ -286,30 +287,28 @@ if (! str_ends_with($path_info, '/')) {
                         $lengthOfWhere = count($matchWhere);
                         break;
                 }
-                
+
                 preg_match_all($regexp, $matches[$count - 1], $matchImply, PREG_SET_ORDER);
                 $lengthOfImply = count($matchImply);
                 $lengths[] = $lengthOfGiven + $lengthOfWhere + $lengthOfImply;
-            } 
-            else {
+            } else {
                 $assgnment_count = 0;
-                foreach ($matches as $text){
+                foreach ($matches as $text) {
                     preg_match_all($regexp, $text, $matches, PREG_SET_ORDER);
                     $assgnment_count += count($matches);
                 }
-                
+
                 if (!$assgnment_count)
                     continue;
-                
-                $lengths[] = $assgnment_count;                
+
+                $lengths[] = $assgnment_count;
             }
 
             $inputs[] = piece_together($input);
-            ++ $counterOfLengths;
+            ++$counterOfLengths;
         }
     }
 }
 
 require_once $indexOfYield < 0 ? 'php/package.php' : 'php/theorem.php';
 ?>
-

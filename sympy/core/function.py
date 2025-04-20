@@ -672,6 +672,9 @@ class Function(Application, Expr):
     def _sympystr(self, p):
         return self.func.__name__ + "(%s)" % p.stringify(self.args, ", ")
 
+    def _lean(self, p):
+        return self.func.__name__ + "(%s)" % p.stringify(self.args, ", ")
+
     def _pretty(self, p):
         # optional argument func_name for supplying custom names
         # XXX works only for applied functions
@@ -858,6 +861,14 @@ class AppliedUndef(Function):
         return self.args[:self.index_of_limits()]
         
     def _sympystr(self, p):
+        limits = self.limits
+        name = Symbol.subs_specials(self.func.__name__)
+        if limits: 
+            limits = [x for x, *_ in limits]
+            return name + "[%s](%s)" % (p.stringify(limits, ", "), p.stringify(self.inputs, ", "))
+        return name + "(%s)" % p.stringify(self.args, ", ")
+
+    def _lean(self, p):
         limits = self.limits
         name = Symbol.subs_specials(self.func.__name__)
         if limits: 
@@ -2115,11 +2126,6 @@ class Derivative(Expr):
                 break
         return d
 
-    def _sage_(self):
-        import sage.all as sage
-        args = [arg._sage_() for arg in self.args]
-        return sage.derivative(*args)
-
     def as_finite_difference(self, points=1, x0=None, wrt=None):
         """ Expresses a Derivative instance as a finite difference.
 
@@ -2243,6 +2249,9 @@ class Derivative(Expr):
         return shape
 
     def _sympystr(self, p):
+        return 'Derivative[%s](%s)' % (", ".join(p._print(x ** n) for x, n in self.limits), p._print(self.expr))
+    
+    def _lean(self, p):
         # \N{NABLA}, \N{BLACK DOWN-POINTING TRIANGLE},  \N{WHITE DOWN-POINTING TRIANGLE}
         return 'Derivative[%s](%s)' % (", ".join(p._print(x ** n) for x, n in self.limits), p._print(self.expr))
     
@@ -2548,6 +2557,14 @@ class Lambda(Expr):
         else:
             return "[%s](%s)" % (p._print(args), p._print(expr))
 
+    def _lean(self, p):
+        args, expr = self.args
+        if isinstance(args, Tuple):
+            arg_string = ", ".join(p._print(arg) for arg in args)
+            return "[%s](%s)" % (arg_string, p._print(expr))
+        else:
+            return "[%s](%s)" % (p._print(args), p._print(expr))
+
     @property
     def variables(self):
         """The variables used in the internal representation of the function"""
@@ -2777,6 +2794,12 @@ class Subs(Expr):
         limits = ', '.join(limits)
         return "Subs[%s](%s)" % (limits, p._print(expr))
 
+    def _lean(self, p):
+        expr, *limits = self.args
+        limits = ["%s:%s" % (p._print(old), p._print(new)) for old, new in limits]
+        limits = ', '.join(limits)
+        return "Subs[%s](%s)" % (limits, p._print(expr))
+    
     def _latex(self, p):
         expr, *limits = self.args
         latex_expr = p._print(expr)
@@ -4672,11 +4695,6 @@ class Difference(Expr):
                 break
         return d
 
-    def _sage_(self):
-        import sage.all as sage
-        args = [arg._sage_() for arg in self.args]
-        return sage.derivative(*args)
-
     def as_finite_difference(self, points=1, x0=None, wrt=None):
         """ Expresses a Difference instance as a finite difference.
 
@@ -4820,3 +4838,16 @@ class Difference(Expr):
 
         return 'Difference[%s ** %s](%s)' % (p._print(x), n, p._print(expr))
 
+    def _lean(self, p):
+        expr, (x, n) = self.args
+        if n == 1:
+            # '\N{GREEK CAPITAL LETTER DELTA}',  '\N{BLACK UP-POINTING TRIANGLE}', '\N{WHITE UP-POINTING TRIANGLE}'
+            # \N{INCREMENT}
+            return 'Difference[%s](%s)' % (p._print(x), p._print(expr))
+        
+        if n.is_Add:
+            n = "(%s)" % p._print(n)
+        else:
+            n = p._print(n)
+
+        return 'Difference[%s ** %s](%s)' % (p._print(x), n, p._print(expr))

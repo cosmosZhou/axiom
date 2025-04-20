@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Algebra.Le_Abs.apply(f(k))
 
-    Eq << Algebra.Le.to.Le.Sum.apply(Eq[-1], (k, 0, n))
+    Eq << Algebra.LeSum.of.Le.apply(Eq[-1], (k, 0, n))
 
 
 if __name__ == '__main__':

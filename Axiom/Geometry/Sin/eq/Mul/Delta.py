@@ -15,13 +15,13 @@ def prove(Eq):
     i, j = Symbol(integer=True)
     Eq << apply(sin(x * KroneckerDelta(i, j)))
 
-    Eq << Eq[-1].this.find(KroneckerDelta).apply(Algebra.Delta.eq.Piece)
+    Eq << Eq[-1].this.find(KroneckerDelta).apply(Algebra.Delta.eq.Ite)
 
-    Eq << Eq[-1].this.find(KroneckerDelta).apply(Algebra.Delta.eq.Piece)
+    Eq << Eq[-1].this.find(KroneckerDelta).apply(Algebra.Delta.eq.Ite)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Ite)
 
-    Eq << Eq[-1].this.find(Mul).apply(Algebra.Mul.eq.Piece)
+    Eq << Eq[-1].this.find(Mul).apply(Algebra.Mul.eq.Ite)
 
 
 if __name__ == '__main__':

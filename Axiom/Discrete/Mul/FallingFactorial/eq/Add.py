@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << FallingFactorial(x, k + 1).this.apply(Discrete.FallingFactorial.eq.Mul.pop)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.apply(Algebra.Eq.transport, rhs=-1)
 

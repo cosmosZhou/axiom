@@ -195,11 +195,14 @@ class ForAll(Quantifier):
 
     def _sympystr(self, p):
         limits = ','.join([limit._format_ineq(p) for limit in self.limits])        
-#         return '\N{FOR ALL}[%s](%s)' % (limits, p.print(self.expr))
         return 'All[%s](%s)' % (limits, p._print(self.expr))
 
+    def _lean(self, p):
+        limits = ','.join([limit._format_ineq(p) for limit in self.limits])        
+        return '\N{FOR ALL} %s, %s' % (limits, p._print(self.expr))
+
     def _pretty(self, p):
-        return Quantifier._pretty(self, p, '\N{FOR ALL}')    
+        return Quantifier._pretty(self, p, '\N{FOR ALL}')
 
     def int_limit(self):
         if len(self.limits) != 1:

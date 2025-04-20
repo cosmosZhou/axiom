@@ -150,12 +150,12 @@ class Sieve:
         >>> print([i for i in sieve.primerange(7, 18)])
         [7, 11, 13, 17]
         """
-        from sympy.functions.elementary.integers import ceiling
+        from sympy.functions.elementary.integers import ceil
 
         # wrapping ceiling in as_int will raise an error if there was a problem
         # determining whether the expression was exactly an integer or not
-        a = max(2, as_int(ceiling(a)))
-        b = as_int(ceiling(b))
+        a = max(2, as_int(ceil(a)))
+        b = as_int(ceil(b))
         if a >= b:
             return
         self.extend(b)
@@ -179,12 +179,12 @@ class Sieve:
         >>> print([i for i in sieve.totientrange(7, 18)])
         [6, 4, 6, 4, 10, 4, 12, 6, 8, 8, 16]
         """
-        from sympy.functions.elementary.integers import ceiling
+        from sympy.functions.elementary.integers import ceil
 
         # wrapping ceiling in as_int will raise an error if there was a problem
         # determining whether the expression was exactly an integer or not
-        a = max(1, as_int(ceiling(a)))
-        b = as_int(ceiling(b))
+        a = max(1, as_int(ceil(a)))
+        b = as_int(ceil(b))
         n = len(self._tlist)
         if a >= b:
             return
@@ -227,12 +227,12 @@ class Sieve:
         >>> print([i for i in sieve.mobiusrange(7, 18)])
         [-1, 0, 0, 1, -1, 0, -1, 1, 1, 0, -1]
         """
-        from sympy.functions.elementary.integers import ceiling
+        from sympy.functions.elementary.integers import ceil
 
         # wrapping ceiling in as_int will raise an error if there was a problem
         # determining whether the expression was exactly an integer or not
-        a = max(1, as_int(ceiling(a)))
-        b = as_int(ceiling(b))
+        a = max(1, as_int(ceil(a)))
+        b = as_int(ceil(b))
         n = len(self._mlist)
         if a >= b:
             return
@@ -273,11 +273,11 @@ class Sieve:
         >>> sieve.search(23)
         (9, 9)
         """
-        from sympy.functions.elementary.integers import ceiling
+        from sympy.functions.elementary.integers import ceil
 
         # wrapping ceiling in as_int will raise an error if there was a problem
         # determining whether the expression was exactly an integer or not
-        test = as_int(ceiling(n))
+        test = as_int(ceil(n))
         n = as_int(n)
         if n < 2:
             raise ValueError("n should be >= 2 but got: %s" % n)
@@ -590,11 +590,11 @@ def prevprime(n):
         nextprime : Return the ith prime greater than n
         primerange : Generates all primes in a given range
     """
-    from sympy.functions.elementary.integers import ceiling
+    from sympy.functions.elementary.integers import ceil
 
     # wrapping ceiling in as_int will raise an error if there was a problem
     # determining whether the expression was exactly an integer or not
-    n = as_int(ceiling(n))
+    n = as_int(ceil(n))
     if n < 3:
         raise ValueError("no preceding primes")
     if n < 8:
@@ -681,7 +681,7 @@ def primerange(a, b):
         .. [1] https://en.wikipedia.org/wiki/Prime_number
         .. [2] http://primes.utm.edu/notes/gaps.html
     """
-    from sympy.functions.elementary.integers import ceiling
+    from sympy.functions.elementary.integers import ceil
 
     if a >= b:
         return
@@ -694,8 +694,8 @@ def primerange(a, b):
 
     # wrapping ceiling in as_int will raise an error if there was a problem
     # determining whether the expression was exactly an integer or not
-    a = as_int(ceiling(a)) - 1
-    b = as_int(ceiling(b))
+    a = as_int(ceil(a)) - 1
+    b = as_int(ceil(b))
     while 1:
         a = nextprime(a)
         if a < b:

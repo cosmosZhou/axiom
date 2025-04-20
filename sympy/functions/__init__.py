@@ -1,7 +1,7 @@
 """A functions module, includes all the standard functions.
 
 Combinatorial - factorial, fibonacci, harmonic, bernoulli...
-Elementary - hyperbolic, trigonometric, exponential, floor and ceiling, sqrt...
+Elementary - hyperbolic, trigonometric, exponential, floor and ceil, sqrt...
 Special - gamma, zeta,spherical harmonics...
 """
 
@@ -26,7 +26,7 @@ from sympy.functions.elementary.exponential import (exp_polar, exp, log, Exp, Lo
         LambertW)
 from sympy.functions.elementary.hyperbolic import (sinh, cosh, tanh, coth,
         sech, csch, asinh, acosh, atanh, acoth, asech, acsch, Sinh, Cosh, Tanh, Coth, Sech, Csch)
-from sympy.functions.elementary.integers import floor, ceiling, frac, Floor, Ceiling, FractionalPart
+from sympy.functions.elementary.integers import floor, ceil, frac, Floor, Ceil, FractionalPart
 from sympy.functions.elementary.piecewise import Piecewise, piecewise_fold, ExprCondPair
 from sympy.functions.special.error_functions import (erf, erfc, erfi, erf2,
         erfinv, erfcinv, erf2inv, Ei, expint, E1, li, Li, Si, Ci, Shi, Chi,

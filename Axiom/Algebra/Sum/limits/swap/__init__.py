@@ -22,7 +22,7 @@ def apply(self, i=0, j=1):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     i, j = Symbol(integer=True)
     m = Symbol(integer=True, positive=True)
@@ -38,7 +38,7 @@ def prove(Eq):
     s = Symbol(Sum[j:n + 1](f[i] * g[i, j]))
     Eq << s.this.definition
 
-    Eq << Eq[-1].apply(Algebra.Eq.to.Eq.Sum, (i, 0, m))
+    Eq << Eq[-1].apply(Algebra.EqSum.of.Eq, (i, 0, m))
 
     Eq << Eq[-2].this.rhs.apply(Algebra.Sum.eq.Add.split, cond={n})
 
@@ -50,11 +50,11 @@ def prove(Eq):
 
     Eq << Eq[1].subs(Eq[-1].reversed)
 
-    Eq << Eq[-1].this.apply(Algebra.Eq.simp.terms.common)
+    Eq << Eq[-1].this.apply(Algebra.EqAddS.Is.Eq)
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Imply.to.Eq.induct.apply(Eq[-1], n=n, start=1)
+    Eq << Logic.Eq.of.Imp.induct.apply(Eq[-1], n=n, start=1)
 
 
 

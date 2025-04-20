@@ -46,9 +46,9 @@ def prove(Eq):
     Eq << apply(BlockMatrix(A, B) * x[i])
 
     j = Symbol(domain=Range(m * 2))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], j)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], j)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Piece.eq.Mul)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Ite.eq.Mul)
 
 
 if __name__ == '__main__':

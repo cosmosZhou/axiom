@@ -12,7 +12,7 @@ def apply(n, u=None):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Sets, Algebra
+    from Axiom import Discrete, Set, Algebra
 
     n = Symbol(integer=True, positive=True, given=True)
     Eq << apply(n)
@@ -25,9 +25,9 @@ def prove(Eq):
 
     Eq << a[n].this.definition.this.rhs.apply(Discrete.Dot.eq.Sum)
 
-    Eq << Discrete.Cup.FiniteSet.Dot.apply(a)
+    Eq << Discrete.Cup.Finset.Dot.apply(a)
 
-    Eq << Eq[-1].this.lhs.apply(Sets.Cup.limits.domain_defined)
+    Eq << Eq[-1].this.lhs.apply(Set.Cup.limits.domain_defined)
 
     Eq <<= Eq[-1] & Eq[-3]
 
@@ -36,17 +36,17 @@ def prove(Eq):
 
     Eq << Eq.plausible.this.expr.rhs.definition
 
-    Eq << Algebra.Any.of.Any.subs.apply(Eq[-1], x[:n + 1], a, simplify=None)
+    Eq << Algebra.Any.given.Any.subs.apply(Eq[-1], x[:n + 1], a, simplify=None)
 
-    Eq << Algebra.Any.of.Cond.apply(Eq[-1])
+    Eq << Algebra.Any.given.Cond.apply(Eq[-1])
 
-    Eq << Eq[-1].this.find(Element).apply(Sets.In.of.Subset.Cup.FiniteSet)
+    Eq << Eq[-1].this.find(Element).apply(Set.Mem.given.Subset.Cup.Finset)
 
-    Eq << Eq[-1].this.args[1:].apply(Algebra.Eq.Cond.of.And.subs)
+    Eq << Eq[-1].this.args[1:].apply(Algebra.Eq.Cond.given.And.subs)
 
-    Eq << Sets.Any_In.to.Ne_EmptySet.apply(Eq.plausible)
+    Eq << Set.Ne_EmptySet.of.Any_Mem.apply(Eq.plausible)
 
-    Eq << Algebra.Cond.to.All.apply(Eq[-1], _t)
+    Eq << Algebra.All.of.Cond.apply(Eq[-1], _t)
 
 
 

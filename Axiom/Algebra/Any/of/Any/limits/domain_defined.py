@@ -26,18 +26,24 @@ def apply(given, wrt=None):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Set
 
-    m, n = Symbol(integer=True, positive=True, given=True)
-    f = Symbol(real=True, shape=(n,), given=True)
+    m, n = Symbol(integer=True, positive=True)
+    f = Symbol(real=True, shape=(n,))
     i = Symbol(integer=True)
     Eq << apply(Any[i:Range(m)](f[i] > 0))
 
-    Eq << ~Eq[0]
+    Eq << Algebra.Any.And.of.Any.limits.unleash.apply(Eq[0], simplify=None)
 
-    Eq << Algebra.All.to.All.limits.domain_defined.apply(Eq[-1])
+    Eq << Algebra.Any.given.Any.And.limits.unleash.apply(Eq[1], simplify=None)
 
-    Eq << ~Eq[-1]
+    Eq << Eq[-1].this.find(Range).apply(Set.Range.Min.eq.Inter, simplify=None)
+
+    Eq << Eq[-1].this.find(Element).apply(Set.Mem_Inter.given.And, simplify=None)
+
+    Eq << Eq[-1].this(i).find(Element[2]).simplify()
+
+
 
 
 if __name__ == '__main__':

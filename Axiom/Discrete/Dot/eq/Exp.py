@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.simplify()
 
-    Eq << Eq[-1].this.rhs.expr.apply(Algebra.Exp.eq.Mul)
+    Eq << Eq[-1].this.rhs.expr.apply(Algebra.ExpAdd.eq.MulExpS)
 
 
 if __name__ == '__main__':

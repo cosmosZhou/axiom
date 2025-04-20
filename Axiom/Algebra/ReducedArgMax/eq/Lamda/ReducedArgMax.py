@@ -22,7 +22,7 @@ def prove(Eq):
     Eq << apply(ReducedArgMax(Lamda[i:n](f(x))))
 
     i = Symbol(domain=Range(n))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
 
 

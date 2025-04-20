@@ -22,7 +22,7 @@ def apply(x):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Algebra
+    from Axiom import Discrete, Algebra, Logic
     from Axiom.Discrete.K.eq.Add.definition import K
     from Axiom.Discrete.Alpha.gt.Zero import alpha
 
@@ -45,15 +45,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(K).defun()
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Discrete.Alpha.ne.Zero.apply(reverse(x[1:n + 1]))
 
-    Eq << Algebra.Ne_0.Eq.to.Eq.Inv.apply(Eq[-1], Eq[0])
+    Eq << Algebra.EqInv.of.Ne_0.Eq.apply(Eq[-1], Eq[0])
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Eq.Imply.to.Eq.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
+    Eq << Logic.Eq.of.Eq.Imp.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
 
 if __name__ == '__main__':

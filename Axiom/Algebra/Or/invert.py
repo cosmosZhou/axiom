@@ -24,7 +24,7 @@ def prove(Eq):
 
 
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Or.equ.And)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Or.Is.And)
 
 
 

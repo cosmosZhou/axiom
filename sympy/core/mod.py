@@ -266,6 +266,20 @@ class Mod(Function):
             
         return '%s %% %s' % (n, d)
 
+    def _lean(self, p):
+        n, d = self.args
+        if n.is_Add or n.is_Mul:
+            n = '(%s)' % p._print(n)
+        else:
+            n = p._print(n)
+            
+        if d.is_Add or d.is_Mul:
+            d = '(%s)' % p._print(d)
+        else:
+            d = p._print(d)
+            
+        return '%s %% %s' % (n, d)
+
     def _pretty(self, p):
         from sympy.printing.pretty.stringpict import prettyForm
         pform = p._print(self.args[0])

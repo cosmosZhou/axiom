@@ -20,13 +20,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(Algebra.Sum.eq.Add)
 
-    Eq.eq = Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add, 2)
+    Eq.eq = Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS, 2)
 
     Eq << Discrete.Binom.eq.Add.Pascal.apply(Binomial(i + 1, 2))
 
     Eq << Eq[-1].this.apply(Algebra.Eq.transport, rhs=1)
 
-    Eq << Algebra.Eq.to.Eq.Sum.apply(Eq[-1], (i, a, b)).reversed
+    Eq << Algebra.EqSum.of.Eq.apply(Eq[-1], (i, a, b)).reversed
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Sum.eq.Sub.telescope)
 

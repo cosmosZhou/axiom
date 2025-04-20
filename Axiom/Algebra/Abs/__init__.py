@@ -3,3 +3,5 @@ from . import Conj
 from . import Neg
 from . import eq
 from . import le
+from . import gt
+from . import ne

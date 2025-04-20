@@ -9,7 +9,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     x = Symbol(real=True)
     f = Function(complex=True)
@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq[1], plausible=True)
 
-    Eq << Algebra.Imply.to.Eq.induct.apply(Eq[-1], n)
+    Eq << Logic.Eq.of.Imp.induct.apply(Eq[-1], n)
 
 
 

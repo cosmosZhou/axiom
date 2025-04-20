@@ -12,3 +12,4 @@ from . import Mul
 from . import Pow
 from . import Matrix
 from . import Exp
+from . import Ite

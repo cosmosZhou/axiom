@@ -117,6 +117,17 @@ class ReducedSum(Reduced):
         return self.arg.dtype
 
     def _sympystr(self, p):
+        axis = self.axis
+        if axis == self.default_axis:
+            return 'ReducedSum(%s)' % p._print(self.arg)
+        else:
+            if isinstance(axis, (tuple, Tuple)):
+                axis = ', '.join(p._print(axis) for axis in axis)
+            else:
+                axis = p._print(axis)
+            return 'ReducedSum[%s](%s)' % (axis, p._print(self.arg))
+
+    def _lean(self, p):
         # return '\N{N-ARY SUMMATION}(%s)' % p._print(self.arg)
         axis = self.axis
         if axis == self.default_axis:
@@ -244,6 +255,9 @@ class ReducedMean(Reduced):
     def _sympystr(self, p):
         return 'ReducedMean(%s)' % p._print(self.arg)
 
+    def _lean(self, p):
+        return 'ReducedMean(%s)' % p._print(self.arg)
+    
     def _latex(self, p, exp=None):
         expr = p._print(self.arg)
         if self.arg.is_Add or self.arg.is_MatMul:
@@ -340,6 +354,9 @@ class ReducedMinMaxBase(Reduced):
     def _sympystr(self, p):
         return '%s(%s)' % (self.__class__.__name__, p._print(self.arg))
 
+    def _lean(self, p):
+        return '%s(%s)' % (self.__class__.__name__, p._print(self.arg))
+    
     def _latex(self, p, exp=None):
         expr = p._print(self.arg)
         name = self.__class__.__name__[-3:].lower()
@@ -440,6 +457,9 @@ class ReducedArgMinMaxBase(Reduced):
     def _sympystr(self, p):
         return '%s(%s)' % (self.__class__.__name__, p._print(self.arg))
 
+    def _lean(self, p):
+        return '%s(%s)' % (self.__class__.__name__, p._print(self.arg))
+    
     def _latex(self, p, exp=None):
         name = self.__class__.__name__.lower()[-3:]
         tex = r'\mathop{{\rm %s}^{-1}}' % name

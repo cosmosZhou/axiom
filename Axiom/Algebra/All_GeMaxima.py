@@ -19,7 +19,7 @@ def prove(Eq):
     y = Symbol(Eq[0].find(Maxima))
     Eq << y.this.definition
 
-    Eq << Algebra.Eq_Maxima.to.All.Ge.apply(Eq[-1])
+    Eq << Algebra.All.Ge.of.Eq_Maxima.apply(Eq[-1])
 
     Eq << Eq[-1].subs(Eq[1])
 

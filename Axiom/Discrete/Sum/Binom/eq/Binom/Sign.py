@@ -10,23 +10,23 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Discrete
+    from Axiom import Algebra, Discrete, Logic
 
     i, j = Symbol(integer=True)
     n, t = Symbol(integer=True, nonnegative=True)
     Eq << apply(Sum[j:i, i:n](Binomial(i - j, t)))
 
-    Eq << Eq[0].this.find(Sign).apply(Algebra.Sign.eq.Piece)
+    Eq << Eq[0].this.find(Sign).apply(Algebra.Sign.eq.Ite)
 
-    Eq << Algebra.Cond.of.And.Imply.split.apply(Eq[-1], cond=t > 0)
+    Eq << Logic.Cond.given.And.Imp.split.apply(Eq[-1], cond=t > 0)
 
-    Eq <<= Algebra.Imply.of.Imply.subs.Bool.apply(Eq[-2]), Algebra.Imply.of.Imply.subs.Bool.apply(Eq[-1], invert=True)
+    Eq <<= Logic.Imp.given.Imp.subs.Bool.apply(Eq[-2]), Logic.Imp.given.Imp.subs.Bool.apply(Eq[-1], invert=True)
 
     Eq << GreaterEqual(t, 0, plausible=True)
 
-    Eq << Algebra.Imply.of.And.Imply.invert.apply(Eq[-2], cond=Eq[-1])
+    Eq << Logic.Imp.given.And.Imp.invert.apply(Eq[-2], cond=Eq[-1])
 
-    Eq << Algebra.Imply.of.Imply.subs.apply(Eq[-1])
+    Eq << Logic.Imp.given.Imp.subs.apply(Eq[-1])
 
     Eq << Eq[-1].this.find(Sum).apply(Algebra.Sum.limits.separate)
 
@@ -48,15 +48,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Mul[~Binomial]).apply(Discrete.Binom.eq.Div.Binom)
 
-    Eq << Algebra.Cond.to.Imply.apply(Eq[-1], cond=t > 0)
+    Eq << Logic.Imp.of.Cond.apply(Eq[-1], cond=t > 0)
 
-    Eq << Algebra.Imply.to.All.apply(Eq[-1])
+    Eq << Logic.All.of.Imp.apply(Eq[-1])
 
     Eq << Eq[-1].this().find(Mul[~Binomial]).simplify()
 
-    Eq << Algebra.All.to.Imply.apply(Eq[-1])
+    Eq << Logic.Imp.of.All.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Ge.of.Gt.relax)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Ge.given.Gt.relax)
 
     Eq << Eq[-1].subs(Eq[-1].lhs.lhs, t)
 

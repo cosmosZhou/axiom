@@ -993,6 +993,17 @@ class Symbol(AtomicExpr, NotIterable):
         self, *attr = name
         return f'{self}.{".".join(attr)}'
 
+    def _lean(self, p):
+        name = self.name
+        if isinstance(name, str):
+            sym = Symbol.subs_specials(self.name)
+            if random_symbols := p._context.get('random_symbols'):
+                if self in random_symbols:
+                    sym += '.var' 
+            return sym
+        self, *attr = name
+        return f'{self}.{".".join(attr)}'
+
     def _latex(self, p, **kwargs):
         if self in p._settings['symbol_names']:
             return p._settings['symbol_names'][self]

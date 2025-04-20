@@ -16,7 +16,7 @@ def prove(Eq):
     Eq << apply(Conjugate(BlockMatrix([[A, B], [C, D]]), evaluate=False))
 
     i = Symbol(domain=Range(n * 2))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], i)
 
 
 

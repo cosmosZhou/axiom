@@ -17,7 +17,7 @@ def prove(Eq):
     Eq << apply(Conjugate(Lamda[i:n](h(i * S.ImaginaryUnit)), evaluate=False))
 
     i = Symbol(domain=Range(n))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
 
 

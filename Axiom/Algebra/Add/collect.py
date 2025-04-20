@@ -13,7 +13,7 @@ def prove(Eq):
     a, b, x, y = Symbol(complex=True)
     Eq << apply(a * x - a * y + b + b * y, factor=b)
 
-    Eq << Eq[0].this.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[0].this.find(Mul[Add]).apply(Algebra.Mul_Add.eq.AddMulS)
 
 
 

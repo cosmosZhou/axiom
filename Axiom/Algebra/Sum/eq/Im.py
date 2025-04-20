@@ -10,7 +10,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     n = Symbol(integer=True, nonnegative=True, given=False)
     z = Symbol(complex=True, shape=(oo,))
@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq[1], plausible=True)
 
-    Eq << Algebra.Imply.to.Cond.induct.apply(Eq[-1], n, 0)
+    Eq << Logic.Cond.of.Imp.induct.apply(Eq[-1], n, 0)
 
 
 if __name__ == '__main__':

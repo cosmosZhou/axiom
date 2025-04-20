@@ -777,6 +777,9 @@ class ProductSet(Set):
     def _sympystr(self, p):
         return ' @ '.join(p._print(s) for s in self.sets)
 
+    def _lean(self, p):
+        return ' @ '.join(p._print(s) for s in self.sets)
+    
 
 class CartesianSpace(Set):
 
@@ -1873,6 +1876,29 @@ class Interval(Set, EvalfMixin):
             
         return (format + "(%s, %s)") % (self.start, self.stop)
 
+    def _lean(self, _):
+        if self.left_open:
+            if self.right_open:
+                format = "Ioo" 
+            else:
+                format = "Ioc"
+
+                if self.stop is S.Infinity:
+                    return "Ioc %s %s" % (self.start, self.stop)
+        else:
+            if self.right_open:
+                format = "Ico"
+            else:
+                format = "Icc"
+
+                if self.start is S.NegativeInfinity:
+                    if self.stop is S.Infinity:
+                        return "Icc %s %s" % (self.start, self.stop)
+                    else:
+                        return "Ico %s %s" % (self.start, self.stop)
+            
+        return (format + " %s %s") % (self.start, self.stop)
+
     def handle_finite_sets(self, unk):
         if all(arg.domain in self for arg in unk.args):
             return unk
@@ -2388,8 +2414,10 @@ class Union(Set, LatticeOp, EvalfMixin):
         return Max(*(arg.max() for arg in self.args))        
 
     def _sympystr(self, p):
-        # \N{UNION}
         return ' | '.join(["(%s)" % p._print(a) if a.is_Complement else p._print(a) for a in self.args])
+
+    def _lean(self, p):
+        return ' \N{UNION} '.join(["(%s)" % p._print(a) if a.is_Complement else p._print(a) for a in self.args])
 
     def _latex(self, p):
         args = []
@@ -2659,13 +2687,20 @@ class Intersection(Set, LatticeOp):
         return Min(*(arg.max() for arg in self.args))
 
     def _sympystr(self, p):
-        # \N{INTERSECTION}
         args = ["(%s)" % p._print(a) if a.is_Complement or a.is_Union else p._print(a) for a in self.args]
         if self.args[0].is_FiniteSet:
             if self.args[1].is_FiniteSet:
                 args[0] = 'FiniteSet(%s)' % args[0][1:-1]
 
         return ' & '.join(args)
+
+    def _lean(self, p):
+        args = ["(%s)" % p._print(a) if a.is_Complement or a.is_Union else p._print(a) for a in self.args]
+        if self.args[0].is_FiniteSet:
+            if self.args[1].is_FiniteSet:
+                args[0] = 'FiniteSet(%s)' % args[0][1:-1]
+
+        return ' \N{INTERSECTION} '.join(args)
 
     def _latex(self, p):
         args = []
@@ -2814,6 +2849,15 @@ class Complement(Set, EvalfMixin):
             
         return r"%s - %s" % (p._print(A), B)
 
+    def _lean(self, p): 
+        A, B = self.args
+        if B.is_Complement or B.is_Intersection or B.is_Union:
+            B = r"(%s)" % p._print(B)
+        else:
+            B = p._print(B)
+            
+        return r"%s \ %s" % (p._print(A), B)
+
     def is_connected_interval(self): 
         A, B = self.args
         
@@ -2871,10 +2915,10 @@ class Complement(Set, EvalfMixin):
         
         if self.is_connected_interval():
             from sympy.core.numbers import epsilon
-            from sympy import ceiling
+            from sympy import ceil
             m = B.min()
             if A.etype.is_integer: 
-                m = ceiling(m) - 1
+                m = ceil(m) - 1
             else:
                 m -= epsilon
                 
@@ -3295,8 +3339,10 @@ class EmptySet(Set):
         return other
 
     def _sympystr(self, _):
-        #'\N{LATIN CAPITAL LETTER O WITH STROKE}'
         return f'dtype.{self.etype}.emptySet'
+
+    def _lean(self, _):
+        return '\N{LATIN CAPITAL LETTER O WITH STROKE}'
 
     def _latex(self, p):
         return r"\emptyset"
@@ -3421,6 +3467,9 @@ class UniversalSet(Set):
         return self
     
     def _sympystr(self, _):
+        return f'dtype.{self.etype}.universalSet'
+
+    def _lean(self, _):
         return f'dtype.{self.etype}.universalSet'
 
     def _latex(self, p):
@@ -3856,6 +3905,16 @@ class FiniteSet(Set):
             return S.false
     
     def _sympystr(self, p):
+        from sympy import default_sort_key
+        printset = sorted(self, key=default_sort_key)
+        args = [p._print(el) for el in printset]
+        for i in range(len(printset)):
+            if printset[i].is_FiniteSet:
+                args[i] = 'FiniteSet(%s)' % args[i][1:-1]
+
+        return '{%s}' % ', '.join(args)
+
+    def _lean(self, p):
         from sympy import default_sort_key
         printset = sorted(self, key=default_sort_key)
         args = [p._print(el) for el in printset]

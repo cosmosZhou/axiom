@@ -11,7 +11,7 @@ def apply(self, k=None):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Algebra
+    from Axiom import Discrete, Algebra, Logic
 
     f = Function(real=True)
     x = Symbol(real=True)
@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum).apply(Algebra.Sum.eq.Add.split, cond={n + 1})
 
-    Eq.hypothesis = Algebra.Cond.to.Cond.subs.apply(Eq[0], x, x + 1)
+    Eq.hypothesis = Algebra.Cond.of.Cond.subs.apply(Eq[0], x, x + 1)
 
     Eq << Eq.hypothesis - Eq[0]
 
@@ -59,7 +59,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Eq.Imply.to.Eq.induct.apply(Eq.initial, Eq[-1], n=n)
+    Eq << Logic.Eq.of.Eq.Imp.induct.apply(Eq.initial, Eq[-1], n=n)
 
 
 

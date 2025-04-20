@@ -619,6 +619,26 @@ class MatMul(MatrixExpr):
 
         return sign + ' @ '.join(args)
 
+    def _lean(self, p):
+        from sympy.core.mul import _keep_coeff
+        from sympy.printing.precedence import precedence
+        c, m = self.as_coeff_mmul()
+        if c.is_number and c < 0:
+            expr = _keep_coeff(-c, m)
+            sign = "-"
+            level = precedence(expr)
+        else:
+            sign = ""
+            level = precedence(self)
+
+        args = [p.parenthesize(arg, level) for arg in self.args]
+        if self.args[0].is_DenseMatrix or self.args[0].is_BlockMatrix:
+            if self.args[1].is_DenseMatrix or self.args[1].is_BlockMatrix:
+                #sympify the first element
+                args[0] = 'S' + args[0]
+
+        return sign + ' @ '.join(args)
+
     def _pretty(self, p):
         args = list(self.args)
         from sympy import Add, KroneckerProduct

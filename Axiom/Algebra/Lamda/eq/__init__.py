@@ -3,7 +3,6 @@ from . import ReducedMin
 from . import Matrix
 from . import Block
 from . import Transpose
-from . import Piece
 from . import ReducedArgMax
 from . import Sum
 from . import Add
@@ -13,3 +12,4 @@ from . import Pow
 from . import Exp
 from . import ReducedMax
 from . import ReducedSum
+from . import Ite

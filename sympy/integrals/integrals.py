@@ -1351,30 +1351,6 @@ class Integral(AddWithLimits):
             raise ValueError("Unknown method %s" % method)
         return result.doit() if evaluate else result
 
-    def _sage_(self):
-        import sage.all as sage
-        f, limits = self.expr._sage_(), list(self.limits)
-        for limit_ in limits:
-            if len(limit_) == 1:
-                x = limit_[0]
-                f = sage.integral(f,
-                                    x._sage_(),
-                                    hold=True)
-            elif len(limit_) == 2:
-                x, b = limit_
-                f = sage.integral(f,
-                                    x._sage_(),
-                                    b._sage_(),
-                                    hold=True)
-            else:
-                x, a, b = limit_
-                f = sage.integral(f,
-                                  (x._sage_(),
-                                    a._sage_(),
-                                    b._sage_()),
-                                    hold=True)
-        return f
-
     def principal_value(self, **kwargs):
         """
         Compute the Cauchy Principal Value of the definite integral of a real function in the given interval
@@ -1502,8 +1478,11 @@ class Integral(AddWithLimits):
 
     def _sympystr(self, p):
         limits = ','.join([':'.join([p._print(arg) for arg in limit]) for limit in self.limits])
-        # return '\N{INTEGRAL}[%s](%s)' % (limits, p._print(self.expr))
         return 'Integral[%s](%s)' % (limits, p._print(self.expr))
+
+    def _lean(self, p):
+        limits = ','.join([':'.join([p._print(arg) for arg in limit]) for limit in self.limits])
+        return '\N{INTEGRAL} %s, %s' % (limits, p._print(self.expr))
 
     def _latex(self, p):
         tex, symbols = "", []

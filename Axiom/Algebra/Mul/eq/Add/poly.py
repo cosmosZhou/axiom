@@ -62,13 +62,13 @@ def prove(Eq):
         s *= x - t[i]
     Eq << apply(s, x)
 
-    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul.eq.Add, deep=True)
+    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul_Add.eq.AddMulS, deep=True)
 
-    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul.eq.Add, deep=True)
+    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul_Add.eq.AddMulS, deep=True)
 
-    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul.eq.Add, deep=True)
+    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul_Add.eq.AddMulS, deep=True)
 
-    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul.eq.Add, deep=True)
+    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul_Add.eq.AddMulS, deep=True)
 
 
 if __name__ == '__main__':

@@ -50,7 +50,7 @@ from mpmath.libmp.libintmath import ifac
 from sympy.core import PoleError, Function, Expr
 from sympy.core.numbers import Rational, igcd
 from sympy.core.compatibility import as_int
-from sympy.functions import sin, cos, tan, atan, exp, atanh, tanh, log, ceiling
+from sympy.functions import sin, cos, tan, atan, exp, atanh, tanh, log, ceil
 from mpmath.libmp.libintmath import giant_steps
 import math
 
@@ -2002,7 +2002,7 @@ def rs_series(expr, a, prec):
             gen = gen.set_ring(p1.ring)
             new_prec = p1.degree(gen) + 1
             if new_prec != prec_got:
-                prec_do = ceiling(prec + (prec - prec_got)*more/(new_prec -
+                prec_do = ceil(prec + (prec - prec_got)*more/(new_prec -
                     prec_got))
                 p1 = _rs_series(expr, series, a, prec=prec_do)
                 while p1.degree(gen) + 1 < prec:

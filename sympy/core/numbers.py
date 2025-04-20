@@ -690,15 +690,15 @@ class Number(AtomicExpr):
         raise NotImplementedError('%s needs .floor() method' % 
             (self.__class__.__name__))
 
-    def ceiling(self):
-        raise NotImplementedError('%s needs .ceiling() method' % 
+    def ceil(self):
+        raise NotImplementedError('%s needs .ceil() method' % 
             (self.__class__.__name__))
 
     def __floor__(self):
         return self.floor()
 
     def __ceil__(self):
-        return self.ceiling()
+        return self.ceil()
 
     def _eval_exp(self):
         if self is S.NaN:
@@ -1302,7 +1302,7 @@ class Float(Number):
         return Integer(int(mlib.to_int(
             mlib.mpf_floor(self._mpf_, self._prec))))
 
-    def ceiling(self):
+    def ceil(self):
         return Integer(int(mlib.to_int(
             mlib.mpf_ceil(self._mpf_, self._prec))))
 
@@ -1310,7 +1310,7 @@ class Float(Number):
         return self.floor()
 
     def __ceil__(self):
-        return self.ceiling()
+        return self.ceil()
 
     @property
     def num(self):
@@ -1553,10 +1553,6 @@ class Float(Number):
 
     def epsilon_eq(self, other, epsilon="1e-15"):
         return abs(self - other) < Float(epsilon)
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.RealNumber(str(self))
 
     def __format__(self, format_spec):
         return format(decimal.Decimal(str(self)), format_spec)
@@ -1941,14 +1937,14 @@ class Rational(Number):
     def floor(self):
         return Integer(self.p // self.q)
 
-    def ceiling(self):
+    def ceil(self):
         return -Integer(-self.p // self.q)
 
     def __floor__(self):
         return self.floor()
 
     def __ceil__(self):
-        return self.ceiling()
+        return self.ceil()
 
     def __eq__(self, other):
         from sympy.core.power import integer_log
@@ -2094,10 +2090,6 @@ class Rational(Number):
     def as_numer_denom(self):
         return Integer(self.p), Integer(self.q)
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.Integer(self.p) / sage.Integer(self.q)
-
     def as_content_primitive(self, radical=False, clear=True):
         """Return the tuple (R, self/R) where R is the positive Rational
         extracted from self.
@@ -2208,6 +2200,11 @@ class Rational(Number):
         else:
             return "S(%s)/%s" % (self.p, self.q)
 
+    def _lean(self, p):
+        if self.q == 1:
+            return str(self.p)
+        else:
+            return "%s / %s" % (self.p, self.q)
 
 class Integer(Rational):
     """Represents integer numbers of any size.
@@ -2291,14 +2288,14 @@ class Integer(Rational):
     def floor(self):
         return Integer(self.p)
 
-    def ceiling(self):
+    def ceil(self):
         return Integer(self.p)
 
     def __floor__(self):
         return self.floor()
 
     def __ceil__(self):
-        return self.ceiling()
+        return self.ceil()
 
     def __neg__(self):
         return Integer(-self.p)
@@ -2610,6 +2607,9 @@ class Integer(Rational):
     def _sympystr(self, p):
         return str(self.p)
 
+    def _lean(self, p):
+        return str(self.p)
+    
     def _eval_try_div(self, factor):
         if factor.is_Integer:
             if not self % factor:
@@ -3207,7 +3207,9 @@ class Infinity(with_metaclass(Singleton, Number)):
 
     def _sympystr(self, p):
         return 'oo'
-        #return '\N{INFINITY}'
+    
+    def _lean(self, p):
+        return '\N{INFINITY}'
     
     def _eval_subs(self, old, new, **hints):
         if self == old:
@@ -3315,10 +3317,6 @@ class Infinity(with_metaclass(Singleton, Number)):
     def _as_mpf_val(self, prec):
         return mlib.finf
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.oo
-
     def __hash__(self):
         return super(Infinity, self).__hash__()
 
@@ -3377,7 +3375,7 @@ class Infinity(with_metaclass(Singleton, Number)):
     def floor(self):
         return self
 
-    def ceiling(self):
+    def ceil(self):
         return self
 
     @property
@@ -3429,9 +3427,11 @@ class NegativeInfinity(with_metaclass(Singleton, Number)):
         return r"-\infty"
 
     def _sympystr(self, p):
-#         return '-\N{INFINITY}'
         return '-oo'
 
+    def _lean(self, p):
+        return '-\N{INFINITY}'
+    
     def _eval_subs(self, old, new, **hints):
         if self == old:
             return new
@@ -3535,10 +3535,6 @@ class NegativeInfinity(with_metaclass(Singleton, Number)):
     def _as_mpf_val(self, prec):
         return mlib.fninf
 
-    def _sage_(self):
-        import sage.all as sage
-        return -(sage.oo)
-
     def __hash__(self):
         return super(NegativeInfinity, self).__hash__()
 
@@ -3597,7 +3593,7 @@ class NegativeInfinity(with_metaclass(Singleton, Number)):
     def floor(self):
         return self
 
-    def ceiling(self):
+    def ceil(self):
         return self
 
     def as_powers_dict(self):
@@ -3648,6 +3644,9 @@ class Aleph(Number):
         return r"\N{HEBREW LETTER ALEF}" + p._print(self.arg)
 
     def _sympystr(self, p):
+        return "Aleph(%s)" % p._print(self.arg)
+    
+    def _lean(self, p):
         return "Aleph(%s)" % p._print(self.arg)
     
     def _eval_subs(self, old, new, **hints):
@@ -3798,7 +3797,7 @@ class Aleph(Number):
     def floor(self):
         return self
 
-    def ceiling(self):
+    def ceil(self):
         return self
 
     @property
@@ -3880,6 +3879,9 @@ class NaN(with_metaclass(Singleton, Number)):
     def _sympystr(self, p):
         return "S.NaN"
     
+    def _lean(self, p):
+        return "S.NaN"
+    
     def _latex(self, p):
         return r"\text{NaN}"
 
@@ -3904,15 +3906,11 @@ class NaN(with_metaclass(Singleton, Number)):
     def floor(self):
         return self
 
-    def ceiling(self):
+    def ceil(self):
         return self
 
     def _as_mpf_val(self, prec):
         return _mpf_nan
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.NaN
 
     def __hash__(self):
         return super(NaN, self).__hash__()
@@ -3981,6 +3979,9 @@ class ComplexInfinity(with_metaclass(Singleton, AtomicExpr)):
     def _sympystr(self, p):
         return 'zoo'
 
+    def _lean(self, p):
+        return 'zoo'
+    
     def _latex(self, printer):
         return r"\tilde{\infty}"
 
@@ -3991,7 +3992,7 @@ class ComplexInfinity(with_metaclass(Singleton, AtomicExpr)):
     def floor(self):
         return self
 
-    def ceiling(self):
+    def ceil(self):
         return self
 
     @staticmethod
@@ -4010,10 +4011,6 @@ class ComplexInfinity(with_metaclass(Singleton, AtomicExpr)):
                     return S.ComplexInfinity
                 else:
                     return S.Zero
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.UnsignedInfinityRing.gen()
 
     def _eval_exp(self):
         return S.NaN
@@ -4164,10 +4161,6 @@ class Exp1(with_metaclass(Singleton, NumberSymbol)):
         I = S.ImaginaryUnit
         return cos(I) + I * cos(I + S.Pi / 2)
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.e
-
 
 e = E = S.Exp1
 
@@ -4234,17 +4227,15 @@ class Pi(with_metaclass(Singleton, NumberSymbol)):
         elif issubclass(number_cls, Rational):
             return (Rational(223, 71), Rational(22, 7))
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.pi
-
     def as_coeff_mmul(self):
         return 1, self
 
     def _sympystr(self, _):
-        #'\N{GREEK SMALL LETTER PI}'
         return 'S.Pi'
 
+    def _lean(self, _):
+        return '\N{GREEK SMALL LETTER PI}'
+    
     def is_consistently_of(self, struct):
         return struct.is_Pi
 
@@ -4308,10 +4299,6 @@ class GoldenRatio(with_metaclass(Singleton, NumberSymbol)):
             return (S.One, Rational(2))
         elif issubclass(number_cls, Rational):
             pass
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.golden_ratio
 
     _eval_rewrite_as_sqrt = _eval_expand_func
 
@@ -4438,10 +4425,6 @@ class EulerGamma(with_metaclass(Singleton, NumberSymbol)):
         elif issubclass(number_cls, Rational):
             return (S.Half, Rational(3, 5))
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.euler_gamma
-
 
 class Catalan(with_metaclass(Singleton, NumberSymbol)):
     r"""Catalan's constant.
@@ -4491,10 +4474,6 @@ class Catalan(with_metaclass(Singleton, NumberSymbol)):
         elif issubclass(number_cls, Rational):
             return (Rational(9, 10), S.One)
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.catalan
-
 
 class ImaginaryUnit(with_metaclass(Singleton, AtomicExpr)):
     r"""The imaginary unit, `i = \sqrt{-1}`.
@@ -4529,12 +4508,14 @@ class ImaginaryUnit(with_metaclass(Singleton, AtomicExpr)):
     __slots__ = []
 
     def _latex(self, p):
-#         return printer._settings['imaginary_unit_latex']
-        return r"{\color{blue} i}"
+        return "{I}"
 
     def _sympystr(self, p):
         return 'sqrt(-1)'
 
+    def _lean(self, p):
+        return 'I'
+    
     @staticmethod
     def __abs__():
         return S.One
@@ -4575,10 +4556,6 @@ class ImaginaryUnit(with_metaclass(Singleton, AtomicExpr)):
 
     def as_base_exp(self):
         return S.NegativeOne, S.Half
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.I
 
     @property
     def _mpc_(self):
@@ -4688,6 +4665,9 @@ class Infinitesimal(with_metaclass(Singleton, Number)):
         return AtomicExpr.__new__(cls)
 
     def _sympystr(self, p):
+        return "S.Infinitesimal"
+    
+    def _lean(self, p):
         return "S.Infinitesimal"
     
     def _latex(self, p):
@@ -4875,7 +4855,7 @@ class Infinitesimal(with_metaclass(Singleton, Number)):
     def floor(self):
         return S.Zero
 
-    def ceiling(self):
+    def ceil(self):
         return S.One
 
     def __neg__(self):
@@ -4916,6 +4896,9 @@ class NegativeInfinitesimal(with_metaclass(Singleton, Number)):
         return AtomicExpr.__new__(cls)
 
     def _sympystr(self, p):
+        return "-S.Infinitesimal"
+    
+    def _lean(self, p):
         return "-S.Infinitesimal"
     
     def _latex(self, p):
@@ -5105,7 +5088,7 @@ class NegativeInfinitesimal(with_metaclass(Singleton, Number)):
     def floor(self):
         return S.Zero
 
-    def ceiling(self):
+    def ceil(self):
         return S.One
 
     def __neg__(self):

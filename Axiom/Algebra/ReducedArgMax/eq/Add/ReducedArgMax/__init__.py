@@ -1,2 +1,2 @@
 from . import ZeroMatrix
-from . import minus_oo
+from . import NegInfty

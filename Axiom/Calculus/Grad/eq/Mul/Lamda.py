@@ -22,10 +22,10 @@ def prove(Eq):
     Eq << apply(Derivative[x](f(x)))
 
     j = Symbol(domain=Range(n))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], j)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], j)
 
     i = Symbol(domain=Range(n))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], i)
 
     Eq << Eq[-1].this.lhs.apply(Calculus.Grad.eq.Mul.Grad)
 

@@ -9,7 +9,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Algebra
+    from Axiom import Discrete, Algebra, Logic
 
     k = Symbol(integer=True)
     n = Symbol(integer=True, nonnegative=True, given=False)
@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << Eq[1].this.find(Stirling1).apply(Discrete.Stirling1.eq.Add.recurrence)
 
-    Eq << Eq[-1].this.find(Mul).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Mul).apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.lhs.apply(Algebra.Sum.eq.Add)
 
@@ -37,7 +37,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq[1], plausible=True)
 
-    Eq << Algebra.Imply.to.Eq.induct.apply(Eq[-1], n, 0)
+    Eq << Logic.Eq.of.Imp.induct.apply(Eq[-1], n, 0)
 
 
 if __name__ == '__main__':

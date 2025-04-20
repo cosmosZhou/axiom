@@ -23,11 +23,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(Pow).apply(Algebra.Pow.eq.Mul.split.exponent)
 
-    Eq << Eq[-1].this.find(Sum).expr.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Sum).expr.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(Sum).apply(Algebra.Sum.eq.Add)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(Sum[Mul[Symbol]]).apply(Algebra.Sum.eq.Sub.unshift)
 

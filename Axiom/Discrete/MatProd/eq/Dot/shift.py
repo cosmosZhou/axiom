@@ -13,7 +13,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Discrete
+    from Axiom import Algebra, Discrete, Logic
 
     i = Symbol(integer=True)
     n = Symbol(integer=True, nonnegative=True)
@@ -21,16 +21,16 @@ def prove(Eq):
     f = Function(real=True, shape=(m, m))
     Eq << apply(MatProduct[i:n + 1](f(i)))
 
-    Eq << Algebra.Cond.of.And.Imply.split.apply(Eq[0], cond=n > 0)
+    Eq << Logic.Cond.given.And.Imp.split.apply(Eq[0], cond=n > 0)
 
-    Eq << Eq[2].this.lhs.apply(Algebra.Le_0.to.Eq_0)
+    Eq << Eq[2].this.lhs.apply(Algebra.Eq_0.of.Le_0)
 
-    Eq << Algebra.Imply.of.Imply.subs.apply(Eq[-1])
+    Eq << Logic.Imp.given.Imp.subs.apply(Eq[-1])
 
-    Eq << Algebra.Imply.of.All.apply(Eq[1])
+    Eq << Logic.Imp.given.All.apply(Eq[1])
 
     n_ = Symbol('n', integer=True, positive=True)
-    Eq << Algebra.All.of.Cond.subs.apply(Eq[-1], Eq[-1].variable, n_)
+    Eq << Algebra.All.given.Cond.subs.apply(Eq[-1], Eq[-1].variable, n_)
 
     Eq << Eq[-1].this.lhs.apply(Discrete.MatProd.eq.Dot.pop)
     Eq << Eq[-1].this.rhs.args[1].apply(Discrete.MatProd.eq.Dot.pop)

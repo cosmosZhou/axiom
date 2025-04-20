@@ -9,17 +9,17 @@ def apply(self, index=0, offset=None):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     n, m, d = Symbol(integer=True)
     f = Function(integer=True)
     Eq << apply(All[n:1:m + 1](f(n) > 0), d)
 
-    Eq << Algebra.Iff.of.And.Imply.apply(Eq[-1])
+    Eq << Logic.Iff.given.Imp.Imp.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(Algebra.All.to.All.limits.subs.offset, d)
+    Eq << Eq[-2].this.lhs.apply(Algebra.All.of.All.limits.subs.offset, d)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.All.of.All.limits.subs.offset, d)
+    Eq << Eq[-1].this.rhs.apply(Algebra.All.given.All.limits.subs.offset, d)
 
 
 if __name__ == '__main__':

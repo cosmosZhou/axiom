@@ -3,9 +3,10 @@ from util import *
 
 @apply
 def apply(self, *, cond=None):
+    args = self.of(And)
     matched = []
     unmatch = []
-    for eq in self.of(And):
+    for eq in args:
         if eq.is_Or:
             if cond in eq.args:
                 matched.append(Or(*eq._argset - {cond}))
@@ -15,23 +16,27 @@ def apply(self, *, cond=None):
             continue
         unmatch.append(eq)
     assert unmatch
+
     return And(*unmatch), Or(cond, And(*matched))
 
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     a, b, c, d = Symbol(integer=True, given=True)
     x, y = Symbol(real=True, given=True)
     f, g = Function(real=True)
     Eq << apply(((a < b) | (c < d)) & (f(x) < g(y)) & ((x < y) | (c < d)), cond=c < d)
 
-    Eq << Algebra.Or.to.And.apply(Eq[-1])
+    Eq << ~Eq[-1]
 
-    Eq << Algebra.And.of.And.apply(Eq[0])
+    Eq <<= Eq[-1] & Eq[0]
 
-    Eq << Algebra.And.of.And.apply(Eq[-1])
+    Eq << Logic.OrAndS.of.And_Or.apply(Eq[-1])
+
+    Eq << Algebra.And.of.And.apply(Eq[0], index=1)
+
 
 
 
@@ -39,5 +44,6 @@ def prove(Eq):
 if __name__ == '__main__':
     run()
 
-# created on 2019-04-29
-# updated on 2023-05-21
+# created on 2019-04-28
+# updated on 2023-05-20
+

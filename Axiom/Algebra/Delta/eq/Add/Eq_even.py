@@ -14,13 +14,13 @@ def prove(Eq):
     n = Symbol(integer=True)
     Eq << apply(KroneckerDelta(0, n % 2))
 
-    Eq << Eq[0].this.find(Pow).apply(Algebra.Pow.eq.Piece.negativeOne)
+    Eq << Eq[0].this.find(Pow).apply(Algebra.Pow.eq.Ite.negativeOne)
 
-    Eq << Eq[-1].this.find(Mul[Piecewise]).apply(Algebra.Mul.eq.Piece)
+    Eq << Eq[-1].this.find(Mul[Piecewise]).apply(Algebra.Mul.eq.Ite)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Add.eq.Piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Add.eq.Ite)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Delta.eq.Piece, swap=True)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Delta.eq.Ite, swap=True)
 
 
 

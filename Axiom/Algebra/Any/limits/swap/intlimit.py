@@ -9,7 +9,7 @@ def apply(self):
 
 @prove(proved=False)
 def prove(Eq):
-    from Axiom import Algebra, Sets
+    from Axiom import Algebra, Set
 
     i, j, d, a = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
@@ -21,7 +21,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(Algebra.All.to.ou)
 
-    Eq << Sets.et_el.transform.i_lt_j.apply(Or(*Eq[-1].find(Or).args[1:]).invert())
+    Eq << Set.et_el.transform.i_lt_j.apply(Or(*Eq[-1].find(Or).args[1:]).invert())
 
     Eq << Eq[-1].this.apply(Algebra.Iff.contraposition).reversed
 

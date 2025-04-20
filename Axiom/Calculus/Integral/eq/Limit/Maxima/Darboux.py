@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << Less(a, b, plausible=True)
 
-    Eq << Calculus.Lt.to.Integral.eq.Mul.Limit.Maxima.Darboux.apply(Eq[-1], Eq[0].lhs, n)
+    Eq << Calculus.Integral.eq.Mul.Limit.Maxima.Darboux.of.Lt.apply(Eq[-1], Eq[0].lhs, n)
 
 
 

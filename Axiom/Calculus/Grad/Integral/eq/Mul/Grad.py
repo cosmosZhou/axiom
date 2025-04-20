@@ -39,21 +39,21 @@ def prove(Eq):
     epsilon = Eq[-1].lhs.variable
     Eq << Eq[-1].this.find(Add).apply(Calculus.Sub.eq.Integral)
 
-    Eq << Calculus.All_EqLimit.is_continuous.Interval.apply(*Eq[-1].find(Integral).args)
+    Eq << Calculus.All_EqLimit.IsContinuous.Icc.apply(*Eq[-1].find(Integral).args)
 
-    Eq << Calculus.is_continuous.to.Any.Eq.Interval01.mean_value_theorem.apply(Eq[-1], 'lamda')
+    Eq << Calculus.Any.Eq.Icc01.of.IsContinuous.mean_value_theorem.apply(Eq[-1], 'lamda')
 
-    Eq.exists = Eq[-1].this.expr.apply(Calculus.Eq.to.Eq.Limit.Div, epsilon)
+    Eq.exists = Eq[-1].this.expr.apply(Calculus.Eq.Limit.Div.of.Eq, epsilon)
 
     Eq.Limit_f = Equal(Limit[epsilon:0](Eq.exists.expr.rhs.find(f)), f(h(x)), plausible=True)
 
     Eq << Eq.Limit_f.this.lhs.apply(Calculus.Limit.eq.Expr.continuity)
 
-    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[0].rhs.find(Derivative).this.apply(Calculus.Grad.eq.Limit, epsilon).reversed
 
-    Eq << Calculus.Eq_Limit.Eq_Limit.to.Eq_Limit.Mul.apply(Eq[-1], Eq.Limit_f)
+    Eq << Calculus.Eq_Limit.Mul.of.Eq_Limit.Eq_Limit.apply(Eq[-1], Eq.Limit_f)
 
     Eq << Eq.exists.this.expr.subs(Eq[-1])
 

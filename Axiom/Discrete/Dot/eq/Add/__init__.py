@@ -48,7 +48,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(Discrete.Dot.eq.Lamda)
 
-    Eq << Eq[-1].this.find(Mul).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Mul).apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(Sum).apply(Algebra.Sum.eq.Add)
 
@@ -69,4 +69,3 @@ if __name__ == '__main__':
 
 # updated on 2023-06-24
 from . import shift
-from . import st

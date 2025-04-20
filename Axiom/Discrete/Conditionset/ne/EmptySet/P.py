@@ -11,7 +11,7 @@ def apply(n):
 
 @prove
 def prove(Eq):
-    from Axiom import Sets, Algebra
+    from Axiom import Set, Algebra
 
     n = Symbol(integer=True, positive=True, given=True)
     Eq << apply(n)
@@ -20,18 +20,18 @@ def prove(Eq):
     P = Eq[0].lhs
     Eq << Any[x[:n]](Element(x[:n] , P), plausible=True)
 
-    Eq << Sets.Any_In.to.Ne_EmptySet.apply(Eq[-1])
+    Eq << Set.Ne_EmptySet.of.Any_Mem.apply(Eq[-1])
 
     Eq << Eq[-1].this.expr.rhs.definition
 
     i = Symbol(integer=True)
-    Eq << Algebra.Any.of.Cond.subs.apply(Eq[-1], x[:n], Lamda[i:n](i))
+    Eq << Algebra.Any.given.Cond.subs.apply(Eq[-1], x[:n], Lamda[i:n](i))
 
-    Eq << Algebra.And.of.And.apply(Eq[-1])
+    Eq << Algebra.And.given.And.apply(Eq[-1])
 
     Eq << Eq[-2].this.lhs.simplify()
 
-    Eq << Sets.In_CartesianSpace.of.All.In.apply(Eq[-1])
+    Eq << Set.Mem_CartesianSpace.given.All.Mem.apply(Eq[-1])
 
 
 

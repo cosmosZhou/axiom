@@ -143,6 +143,7 @@ $logStr = "[$logStr]";
 <link rel=stylesheet href="static/codemirror/lib/codemirror.css">
 <link rel=stylesheet href="static/codemirror/theme/eclipse.css">
 <link rel=stylesheet href="static/codemirror/addon/hint/show-hint.css">
+<link rel=stylesheet href="static/unpkg.com/katex@0.16.21/dist/katex.min.css">
 <style>
 div {
 	caret-color: transparent;
@@ -157,11 +158,8 @@ div {
 
 <script src='static/js/std.js'></script>
 <script src='static/js/utility.js'></script>
-<script>
-MathJax = InitMathJax(1000);
-</script>
-<script async src="static/unpkg.com/mathjax@3.2.0/es5/tex-chtml.js"></script>
-
+<script defer src="static/unpkg.com/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="static/unpkg.com/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
 <script type=module>
 import * as codemirror from "./static/codemirror/lib/codemirror.js"
 import * as python from "./static/codemirror/mode/python/python.js"

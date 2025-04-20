@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << s[i].this.definition
 
-    Eq << Algebra.Eq.to.Eq.Prod.apply(Eq[-1], (i, finiteset))
+    Eq << Algebra.EqProd.of.Eq.apply(Eq[-1], (i, finiteset))
 
     Eq << Eq[-1].reversed
 

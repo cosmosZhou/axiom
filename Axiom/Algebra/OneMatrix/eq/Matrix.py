@@ -20,10 +20,10 @@ def prove(Eq):
     Eq << apply(OneMatrix(4, 5))
 
     i = Symbol(domain=Range(m))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
     j = Symbol(domain=Range(n))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], j)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], j)
 
 
 

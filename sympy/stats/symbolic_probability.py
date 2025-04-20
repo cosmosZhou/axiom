@@ -43,6 +43,9 @@ class Distributed(BinaryCondition):
     def _sympystr(self, p):
         return "Distributed(%s, %s)" % tuple(p._print(a) for a in self.args)
 
+    def _lean(self, p):
+        return "Distributed(%s, %s)" % tuple(p._print(a) for a in self.args)
+
     @classmethod
     def eval(cls, x, s):
         if not s.is_distribution:
@@ -82,6 +85,9 @@ class NotDistributed(BinaryCondition):
         return r"%s\ {\color{blue}{\nsim}}\ %s" % tuple(p._print(a) for a in self.args)
 
     def _sympystr(self, p):
+        return "NotDistributed(%s, %s)" % tuple(p._print(a) for a in self.args)
+
+    def _lean(self, p):
         return "NotDistributed(%s, %s)" % tuple(p._print(a) for a in self.args)
 
     @classmethod
@@ -281,6 +287,22 @@ class Conditioned(Expr):
             
         return f'{lhs} | {rhs}'
 
+    def _lean(self, p):
+        lhs, rhs = self.args
+        if lhs.is_Or or lhs.is_Inequality:
+            lhs = p._print(lhs)
+            lhs = f'({lhs})'
+        else:
+            lhs = p._print(lhs)
+
+        if rhs.is_Or or rhs.is_Inequality:
+            rhs = p._print(rhs)
+            rhs = f'({rhs})'
+        else:
+            rhs = p._print(rhs)
+            
+        return f'{lhs} | {rhs}'
+
 
 class Surrogate(AtomicExpr):
     is_symbol = True
@@ -311,7 +333,10 @@ class Surrogate(AtomicExpr):
     def __getitem__(self, indices):
         return Surrogate(self.arg.__getitem__(indices))
     
-    def _sympystr(self, p): 
+    def _sympystr(self, p):
+        return self.arg._sympystr(p) + '.surrogate'
+    
+    def _lean(self, p):
         return self.arg._sympystr(p) + '.surrogate'
     
     def _latex(self, p):
@@ -647,6 +672,14 @@ class Probability(Expr):
             return r'\mathbb{%s}\left(%s\right)' % (symbol_P, expr._latex(p))
 
     def _sympystr(self, p):
+        expr, *limits = self.args
+        if limits:
+            limits = self.normalize_limits(limits)
+            return 'Probability[%s](%s)' % (','.join([p._print(s) for s, *_ in limits]), p._print(expr))
+        else:
+            return 'Probability(%s)' % p._print(expr)
+
+    def _lean(self, p):
         expr, *limits = self.args
         if limits:
             limits = self.normalize_limits(limits)
@@ -1096,6 +1129,23 @@ class Expectation(ExprWithLimits):
 
         return 'Expectation[%s](%s)' % (','.join([_format_ineq(limit) for limit in self.limits]), p._print(self.expr))
 
+    def _lean(self, p):
+        if weights := self.weights:
+            weights_str = ','.join([p._print(w) for w in weights])
+            def _format_ineq(limit):
+                if len(limit) == 1:
+                    return r"%s:%s" % (p._print(limit[0]), weights_str)
+                x, cond = limit
+                return r"%s:%s:%s" % (p._print(x), p._print(cond), weights_str)
+        else:
+            def _format_ineq(limit):
+                if len(limit) == 1:
+                    return p._print(limit[0])
+                x, cond = limit
+                return r"%s:%s" % (p._print(x), p._print(cond))
+
+        return 'Expectation[%s](%s)' % (','.join([_format_ineq(limit) for limit in self.limits]), p._print(self.expr))
+
     def _eval_is_random(self):
         expr = self.expr
         
@@ -1495,6 +1545,19 @@ class Variance(ExprWithLimits):
         else:
             return 'Variance(%s)' % p._print(expr)
 
+    def _lean(self, p):
+        expr, *limits = self.args
+        if limits:
+            def _format_ineq(limit):
+                if len(limit) == 1:
+                    return p._print(limit[0])
+                x, cond = limit
+                return r"%s:%s" % (p._print(x), p._print(cond))
+            
+            return 'Variance[%s](%s)' % (','.join([_format_ineq(limit) for limit in limits]), p._print(expr))
+        else:
+            return 'Variance(%s)' % p._print(expr)
+
     def _eval_shape(self):
         shape = self.expr.shape
         if not shape:
@@ -1575,6 +1638,21 @@ class KL(Expr):
         return True
 
     def _sympystr(self, p):
+        lhs, rhs = self.args
+        limits = []
+
+        if limits:
+            def _format_ineq(limit):
+                if len(limit) == 1:
+                    return p._print(limit[0])
+                x, cond = limit
+                return r"%s:%s" % (p._print(x), p._print(cond))
+            
+            return 'KL[%s](%s, %s)' % (','.join([_format_ineq(limit) for limit in limits]), p._print(lhs), p._print(rhs))
+        else:
+            return 'KL(%s, %s)' % (p._print(lhs), p._print(rhs))
+
+    def _lean(self, p):
         lhs, rhs = self.args
         limits = []
 
@@ -1743,6 +1821,10 @@ class Covariance(Expr):
         return tex
 
     def _sympystr(self, p):
+        lhs, rhs = self.args
+        return 'Covariance(%s, %s)' % (p._print(lhs), p._print(rhs))
+
+    def _lean(self, p):
         lhs, rhs = self.args
         return 'Covariance(%s, %s)' % (p._print(lhs), p._print(rhs))
 

@@ -1,6 +1,4 @@
-from . import of
 from . import transport
-from . import Eq
 from . import reverse
 from . import Ge
 from . import simp
@@ -8,5 +6,6 @@ from . import Le
 from . import Lt
 from . import Gt
 from . import Cond
-from . import to
-from . import equ
+from . import given
+from . import of
+from . import Is

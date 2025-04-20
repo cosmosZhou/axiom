@@ -73,6 +73,9 @@ class Determinant(Expr):
     def _sympystr(self, p):
         return "det(%s)" % p._print(self.arg)
 
+    def _lean(self, p):
+        return "det(%s)" % p._print(self.arg)
+    
     @cacheit
     def _eval_domain_defined(self, x, **_):
         domain = Expr._eval_domain_defined(self, x)

@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(cosh ** 2).apply(Geometry.Square.Cosh.eq.Add.Square.Sinh)
 
-    Eq << Eq[-1].this.find(Mul).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Mul).apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(sinh).apply(Geometry.Sinh.eq.Inv.Csch)
 

@@ -17,7 +17,7 @@ def prove(Eq):
     Eq << apply(Lamda[j:n](Cos(a[j])))
 
     _j = Symbol('j', domain=Range(n))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], _j)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], _j)
 
 
 if __name__ == '__main__':

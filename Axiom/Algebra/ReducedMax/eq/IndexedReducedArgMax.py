@@ -24,13 +24,13 @@ def prove(Eq):
     Eq << Algebra.All_Le_Maxima.apply(Eq[-1].lhs)
 
     i = Eq[-1].variable
-    Eq.le = Algebra.All.to.Cond.subs.apply(Eq[-1], i, k)
+    Eq.le = Algebra.Cond.of.All.subs.apply(Eq[-1], i, k)
 
-    Eq << Algebra.Eq_ReducedArgMax.to.All.Ge.apply(Eq[1])
+    Eq << Algebra.All.Ge.of.Eq_ReducedArgMax.apply(Eq[1])
 
     Eq << Eq[-1].this.expr.reversed
 
-    Eq << Algebra.All_Le.to.LeMaxima.apply(Eq[-1])
+    Eq << Algebra.LeMaxima.of.All_Le.apply(Eq[-1])
 
 
     Eq <<= Eq[-1] & Eq.le

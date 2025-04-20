@@ -22,7 +22,7 @@ def prove(Eq):
 
     Eq << Eq[-1].lhs.this.apply(Algebra.Square.Abs.eq.Mul.Conj)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add, deep=True)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS, deep=True)
 
     Eq << Eq[-1].this.rhs.args[0].apply(Algebra.Mul.Conj.eq.Square.Abs)
 

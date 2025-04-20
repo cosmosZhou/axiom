@@ -18,13 +18,13 @@ def prove(Eq):
 
     Eq << apply('omega')
 
-    Eq << Algebra.Eq.to.Eq.Conj.apply(Eq[0])
+    Eq << Algebra.EqConj.of.Eq.apply(Eq[0])
 
     Eq << Eq[1] + Eq[0]
 
     Eq << Eq[1] * Eq[0]
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add, deep=True)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS, deep=True)
 
     Eq <<= Eq[0] ** 2, Eq[1] ** 2
 

@@ -303,19 +303,24 @@ class LatexPrinter(Printer):
         return r"\text{%s}" % e
 
     def rotate_arrow(self, arrow):
-        return {r'\Rightarrow': r'\Downarrow',
-         r'\Leftarrow': r'\Uparrow',
-         r'\Leftrightarrow': r'\Updownarrow',
-         r'\Downarrow': r'\Rightarrow',
-         r'\Uparrow': r'\Leftarrow',
-         r'\Updownarrow': r'\Leftrightarrow',
-         
-         r'\nRightarrow': r'\nDownarrow',
-         r'\nLeftarrow': r'\nUparrow',
-         r'\nLeftrightarrow': r'\nUpdownarrow',
-         r'\nDownarrow': r'\nRightarrow',
-         r'\nUparrow': r'\nLeftarrow',
-         r'\nUpdownarrow': r'\nLeftrightarrow'}[arrow]
+        return {
+            r'\Rightarrow': r'\Downarrow',
+            r'\rightarrow': r'\downarrow',
+            r'\Leftarrow': r'\Uparrow',
+            r'\Leftrightarrow': r'\Updownarrow',
+            r'\leftrightarrow': r'\updownarrow',
+            r'\Downarrow': r'\rightarrow',
+            r'\Uparrow': r'\Leftarrow',
+            r'\Updownarrow': r'\Leftrightarrow',
+            r'\updownarrow': r'\leftrightarrow',
+            
+            r'\nRightarrow': r'\nDownarrow',
+            r'\nLeftarrow': r'\nUparrow',
+            r'\nLeftrightarrow': r'\nUpdownarrow',
+            r'\nDownarrow': r'\nRightarrow',
+            r'\nUparrow': r'\nLeftarrow',
+            r'\nUpdownarrow': r'\nLeftrightarrow'
+        }[arrow]
         
     def conditions_wrapper(self, cond, right_brace=True, rotate=False):
         if cond.is_And:

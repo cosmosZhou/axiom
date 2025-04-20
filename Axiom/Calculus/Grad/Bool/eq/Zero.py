@@ -9,15 +9,15 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Calculus
+    from Axiom import Algebra, Calculus, Logic
 
     x = Symbol(real=True)
     p = Function(bool=True)
     Eq << apply(Derivative[x](Bool(p(x))))
 
-    Eq << Eq[0].this.find(Bool).apply(Algebra.Bool.eq.Piece)
+    Eq << Eq[0].this.find(Bool).apply(Logic.Bool.eq.Ite)
 
-    Eq << Eq[-1].this.lhs.apply(Calculus.Grad.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Calculus.Grad.eq.Ite)
 
 
 

@@ -40,9 +40,9 @@ def prove(Eq):
 
     Eq << Eq[-1] * n
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.Square.eq.Add.st.double_limits)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum_SquareSub.eq.Sub_SquareSum)
 
     Eq << Eq[-1].this.find(ReducedSum).apply(Algebra.ReducedSum.eq.Sum)
 

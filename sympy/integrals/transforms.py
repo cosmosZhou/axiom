@@ -398,12 +398,12 @@ def _rewrite_sin(m_n, s, a, b):
     # we create an undefined function!
     # So we try to write this in such a way that the gammas are
     # eminently on the right side of the strip.
-    from sympy import expand_mul, pi, ceiling, gamma
+    from sympy import expand_mul, pi, ceil, gamma
     m, n = m_n
 
     m = expand_mul(m / pi)
     n = expand_mul(n / pi)
-    r = ceiling(-m * a - n.as_real_imag()[0])  # Don't use re(n), does not expand
+    r = ceil(-m * a - n.as_real_imag()[0])  # Don't use re(n), does not expand
     return gamma(m * s + n + r), gamma(1 - n - r - m * s), (-1) ** r * pi
 
 

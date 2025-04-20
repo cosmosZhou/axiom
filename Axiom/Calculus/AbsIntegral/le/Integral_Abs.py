@@ -15,15 +15,15 @@ def prove(Eq):
     x, a, b = Symbol(real=True)
     Eq << apply(Integral[x:a:b](f(x)))
 
-    Eq << Algebra.LeAbs.of.And.apply(Eq[0])
+    Eq << Algebra.LeAbs.given.And.apply(Eq[0])
 
     Eq << Algebra.Le_Abs.apply(f(x))
 
-    Eq << Calculus.Le.to.Le.Integral.apply(Eq[-1], (x, a, b))
+    Eq << Calculus.LeIntegral.of.Le.apply(Eq[-1], (x, a, b))
 
     Eq << Algebra.Ge_NegAbs.apply(f(x))
 
-    Eq << Calculus.Ge.to.Ge.Integral.apply(Eq[-1], (x, a, b))
+    Eq << Calculus.GeIntegral.of.Ge.apply(Eq[-1], (x, a, b))
 
 
 

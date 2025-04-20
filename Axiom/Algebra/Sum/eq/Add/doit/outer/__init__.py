@@ -49,7 +49,7 @@ def prove(Eq):
     s = Symbol(Lamda[i](Sum[j:f(i)](x[i, j])))
     Eq << s[i].this.definition
 
-    Eq << Algebra.Eq.to.Eq.Sum.apply(Eq[-1], (i, 0, n))
+    Eq << Algebra.EqSum.of.Eq.apply(Eq[-1], (i, 0, n))
 
     Eq << Eq[-1].this.lhs.apply(Algebra.Sum.eq.Add.doit).reversed
 

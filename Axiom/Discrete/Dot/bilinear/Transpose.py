@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq << Eq.expansion.subs(W, W.T)
 
-    Eq << Eq[-1].apply(Algebra.Eq.to.Eq.swap, x, y)
+    Eq << Eq[-1].apply(Algebra.Eq.of.Eq.swap, x, y)
 
     Eq << Eq[-1].this.rhs.limits_subs(i, j)
 

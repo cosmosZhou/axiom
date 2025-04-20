@@ -22,12 +22,14 @@ def apply(self):
 def prove(Eq):
     from Axiom import Algebra
     x, y = Symbol(integer=True)
-    A = Symbol(etype=dtype.integer)
+    A = Symbol(etype=dtype.integer, given=True)
     f, g = Function(integer=True)
 
     Eq << apply(Any[x:A, y:f(y) > 0](g(x, y) > 0))
 
-    Eq << Algebra.Any.to.Any.limits.swap.apply(Eq[1])
+    Eq << ~Eq[-1]
+
+    Eq <<= Algebra.Any.And.of.All.Any.apply(Eq[-1], Eq[0])
 
 
 if __name__ == '__main__':

@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(Discrete.Dot.eq.Lamda)
 
-    Eq << Eq[-1].this.find(Piecewise).apply(Algebra.Piece.eq.Delta)
+    Eq << Eq[-1].this.find(Piecewise).apply(Algebra.Ite.eq.Delta)
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Add.eq.Lamda)
 

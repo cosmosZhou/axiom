@@ -32,13 +32,13 @@ def prove(Eq):
 
     Eq << apply(Min(n + floor(x), floor(y)))
 
-    Eq << Eq[0].apply(Algebra.Eq.of.And.split.Floor)
+    Eq << Eq[0].apply(Algebra.Eq.given.And.split.Floor)
 
     assert n + floor(x) <= n + x
 
     Eq <<= Algebra.Lt_Add_.Floor.One.apply(x) + n, Algebra.Lt_Add_.Floor.One.apply(y)
 
-    Eq << Algebra.Lt.Lt.to.Lt.Min.both.apply(Eq[-2], Eq[-1])
+    Eq << Algebra.LtMin.of.Lt.Lt.both.apply(Eq[-2], Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Min.eq.Add)
 

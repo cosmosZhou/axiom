@@ -8,17 +8,6 @@ $user = get_user();
 
 $dict = empty($_POST) ? $_GET : $_POST;
 
-if (! $dict) {
-    // https://www.php.net/manual/en/function.getopt.php
-    $dict = getopt("", [
-        'old::',
-        'new::'
-    ]);
-    
-    $dict['old'] = "Keras.Eq_Cup.to.Eq.Dot.Softmax.batch_gather";
-    $dict['new'] = "Keras.Eq_Card.Subset_Cup.to.Eq.Dot.Softmax.batch_gather";
-}
-
 $old = $dict['old'];
 $new = $dict['new'];
 

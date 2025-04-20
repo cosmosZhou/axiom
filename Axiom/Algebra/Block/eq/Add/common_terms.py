@@ -47,9 +47,9 @@ def prove(Eq):
     Eq << apply(BlockMatrix(A + x, B + x, C + x))
 
     i = Symbol(domain=Range(n * 3))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], i)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Piece.eq.Add)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Ite.eq.Add)
 
 
 

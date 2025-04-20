@@ -1,10 +1,15 @@
 import os, re
 from std.file import Text
-from _collections import defaultdict
+from std import listfolders
+from collections import defaultdict
 
 def axiom_directory():
     return os.path.dirname(os.path.dirname(__file__)) + '/Axiom'
 
+def get_sections():
+    return [os.path.basename(name) for name in listfolders(axiom_directory())]
+
+sections = get_sections()
 
 def read_directory(root):
     for name in os.listdir(root):
@@ -213,8 +218,8 @@ def yield_callee_from_py(py):
             
             if re.match('^ *#', line):
                 continue
-            
-            for m in re.finditer(r'\b(?:Algebra|Sets|Calculus|Discrete|Geometry|Keras|Stats)(?:\.\w+)+', line):
+
+            for m in re.finditer(fr"\b(?:{'|'.join(sections)})(?:\.\w+)+", line):
                 module = m[0]        
                 m = re.match('(.+)\.apply$', module)
                 if m:
@@ -242,7 +247,7 @@ def analyze_apply(py, i):
     return i, provability
 
 def match_section(statement):
-    return re.findall(r'\b(?:Algebra|Sets|Calculus|Discrete|Geometry|Keras|Stats)(?:\.\w+)+', statement)
+    return re.findall(fr"\b(?:{'|'.join(sections)})(?:\.\w+)+", statement)
 
 def yield_from_py(module):
     python_file = module_to_py(module)

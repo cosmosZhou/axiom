@@ -1,3 +1,3 @@
-from . import And
+from . import All
 from . import limits
-from . import Or
+from . import subs

@@ -39,7 +39,7 @@ def prove(Eq):
     Eq << apply(Lamda[i:k](Q[i] @ K[i]))
 
     j = Symbol(domain=Range(k))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], j)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], j)
 
 
 

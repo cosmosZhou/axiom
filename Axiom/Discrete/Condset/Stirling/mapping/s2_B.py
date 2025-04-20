@@ -20,7 +20,7 @@ def apply(n, k, s2=None, B=None):
 
 @prove(proved=False)
 def prove(Eq):
-    from Axiom import Sets, Algebra
+    from Axiom import Set, Algebra
 
     k, n = Symbol(integer=True, positive=True)
     Eq << apply(n, k)
@@ -43,20 +43,20 @@ def prove(Eq):
     plausible0 = Subset(s0_, s2, plausible=True)
     Eq << plausible0
 
-    Eq << Sets.Subset.of.All_In.apply(Eq[-1])
+    Eq << Set.Subset.given.All_Mem.apply(Eq[-1])
 
     Eq << Eq[-1].this.limits[0][1].subs(s0_definition)
 
     Eq << Eq[-1].subs(Eq.s2_definition)
 
     s0_plausible = Eq[-1]
-    Eq.s2_quote_definition = Sets.All_Eq_.CupFiniteSet.Range.apply(s2_quote)
+    Eq.s2_quote_definition = Set.All_CupFinset.eq.Range.apply(s2_quote)
 
-    Eq << Sets.All_Eq_.CupFiniteSet.Range.apply(s0_quote)
+    Eq << Set.All_CupFinset.eq.Range.apply(s0_quote)
 
-    Eq.x_abs_positive = Algebra.All_And.to.All.apply(Eq[-1])
-    Eq.x_abs_sum = Algebra.All_And.to.All.apply(Eq[-1], 1)
-    Eq.x_union_s0 = Algebra.All_And.to.All.apply(Eq[-1], 2)
+    Eq.x_abs_positive = Algebra.All.of.All_And.apply(Eq[-1])
+    Eq.x_abs_sum = Algebra.All.of.All_And.apply(Eq[-1], 1)
+    Eq.x_union_s0 = Algebra.All.of.All_And.apply(Eq[-1], 2)
 
     i = Eq.x_union_s0.lhs.limits[0][0]
     x = Eq.x_union_s0.variable.base
@@ -64,15 +64,15 @@ def prove(Eq):
     return
     Eq << Eq.x_k_definition.simplify()
 
-    Eq << Eq.x_union_s0.this.expr.apply(Sets.eq.then.eq.union, x[k])
+    Eq << Eq.x_union_s0.this.expr.apply(Set.eq.then.eq.union, x[k])
 
     return
     Eq << Eq[-1].subs(Eq.x_k_definition)
     x_union = Eq[-1]
-    Eq << Eq.x_k_definition.apply(Sets.eq.then.eq.set, simplify=False)
-    Eq << Eq[-1].apply(Sets.eq.then.eq.union, x[:k].cup_finiteset())
+    Eq << Eq.x_k_definition.apply(Set.eq.then.eq.set, simplify=False)
+    Eq << Eq[-1].apply(Set.eq.then.eq.union, x[:k].cup_finiteset())
     Eq << s0_plausible.subs(Eq[-1].reversed)
-    Eq << Eq[-1].this.expr.expr.apply(Sets.element.of.contains.split.imageset)
+    Eq << Eq[-1].this.expr.expr.apply(Set.element.of.contains.split.imageset)
     Eq << Eq[-1].this.expr.expr.rhs.definition
     Eq << Eq.x_k_definition.apply(Algebra.eq.then.eq.abs)
     Eq << Eq[-1] + Greater(1, 0, plausible=True)
@@ -85,46 +85,46 @@ def prove(Eq):
     Eq.subset_B = Subset(Eq[-1].rhs.args[0], Eq[-2].lhs, plausible=True)  # unproven
     Eq.supset_B = Supset(Eq[-1].rhs.args[0], Eq[-2].lhs, plausible=True)  # unproven
     Eq << Eq.supset_B.subs(Eq[2])
-    Eq << Sets.supset.of.All_contains.apply(Eq[-1])
+    Eq << Set.supset.of.All_contains.apply(Eq[-1])
     Eq << Eq[-1].this.expr.simplify()
     Eq << Eq.subset_B.subs(Eq[2])
-    Eq << Sets.Subset.of.All_In.apply(Eq[-1])
-    Eq << Eq[-1].this.expr.apply(Sets.element.of.any_eq.split.imageset)
+    Eq << Set.Subset.given.All_Mem.apply(Eq[-1])
+    Eq << Eq[-1].this.expr.apply(Set.element.of.any_eq.split.imageset)
     Eq << Algebra.All.of.All_And.conditionset.apply(Eq[-1], simplify=None)
     Eq << Eq[-1].this.expr.apply(Algebra.et.of.Any_And, simplify=None)
-    Eq.subset_B_definition = Eq[-1].this.expr.expr.apply(Sets.et.of.et.contains)
+    Eq.subset_B_definition = Eq[-1].this.expr.expr.apply(Set.et.of.et.contains)
     num_plausibles = len(Eq.plausibles_dict)
     Eq.plausible_notcontains = All(NotElement({n}, e), (e, s0), plausible=True)
     Eq << Eq.plausible_notcontains.this.limits[0][1].subs(s0_definition)
     Eq << ~Eq[-1]
-    Eq << Eq[-1].apply(Sets.element.then.any_contains.split.cup)
+    Eq << Eq[-1].apply(Set.element.then.any_contains.split.cup)
     Eq << Algebra.All.any.then.Any_And.apply(Eq.x_union_s0, Eq[-1].reversed, simplify=False)
-    Eq << Eq[-1].this.expr.apply(Sets.Eq.Eq.then.eq.Union)
+    Eq << Eq[-1].this.expr.apply(Set.Eq.Eq.then.eq.Union)
     Eq << Eq[-1].this().expr.lhs.simplify()
     Eq << Eq[-1].subs(Eq.x_union_s0)
     assert num_plausibles == len(Eq.plausibles_dict)
-    Eq << Eq.plausible_notcontains.apply(Sets.notcontains.then.is_empty.intersection)
-    Eq << Eq[-1].apply(Sets.is_empty.then.Eq.Complement).limits_subs(Eq[-1].variable, Eq.subset_B_definition.expr.variable)
+    Eq << Eq.plausible_notcontains.apply(Set.notcontains.then.is_empty.intersection)
+    Eq << Eq[-1].apply(Set.is_empty.then.Eq.Complement).limits_subs(Eq[-1].variable, Eq.subset_B_definition.expr.variable)
     Eq << Eq.subset_B_definition.subs(Eq[-1])
     s2_n = Symbol("s_{2, n}", conditionset(*Eq[-1].limits[0]))
     Eq.s2_n_definition = s2_n.this.definition
-    Eq << Sets.then.all.baseset.apply(s2_n)
+    Eq << Set.then.all.baseset.apply(s2_n)
     Eq << Eq[-1].subs(Eq.s2_definition)
-    Eq << Algebra.All_And.to.All.apply(Eq[-1])
-    Eq.s2_n_assertion = Eq[-2].this.expr.apply(Sets.element.of.any_eq.split.imageset)
+    Eq << Algebra.All.of.All_And.apply(Eq[-1])
+    Eq.s2_n_assertion = Eq[-2].this.expr.apply(Set.element.of.any_eq.split.imageset)
     Eq << Eq[-1].subs(Eq.s2_n_assertion)
-    Eq << Eq[-1].apply(Sets.element.then.any_contains.split.cup)
+    Eq << Eq[-1].apply(Set.element.then.any_contains.split.cup)
     Eq.x_j_definition = Eq[-1].limits_subs(Eq[-1].variable, j).reversed
-    Eq.x_abs_positive_s2, Eq.x_abs_sum_s2, Eq.x_union_s2 = Algebra.All_And.to.All.apply(Eq.s2_quote_definition, simplify=None)
+    Eq.x_abs_positive_s2, Eq.x_abs_sum_s2, Eq.x_union_s2 = Algebra.All.of.All_And.apply(Eq.s2_quote_definition, simplify=None)
     Eq << Algebra.All.any.then.Any_And.apply(Eq.x_union_s2, Eq.x_j_definition)
-    Eq << Eq[-1].this.expr.apply(Sets.Eq.Eq.then.Eq.Complement, swap=True)
+    Eq << Eq[-1].this.expr.apply(Set.Eq.Eq.then.Eq.Complement, swap=True)
     Eq << Eq[-1].this.expr.lhs.args[0].bisect({j})
-    Eq << Eq[-1].this.expr.lhs.apply(Sets.Complement.to.union, evaluate=True)
-    Eq << Eq.s2_quote_definition.this.expr.apply(Sets.Eq.Eq.All_is_positive.then.eq.Stirling2)
+    Eq << Eq[-1].this.expr.lhs.apply(Set.Complement.to.union, evaluate=True)
+    Eq << Eq.s2_quote_definition.this.expr.apply(Set.Eq.Eq.All_is_positive.then.eq.Stirling2)
     Eq << Eq[-2].subs(Eq[-1])
     x_tilde = Symbol(r"\tilde{x}", Lamda[i:k](Piecewise((x[i], i < j), (x[i + 1], True))))
     Eq.x_tilde_definition = x_tilde[i].this.definition
-    Eq << Sets.eq.then.eq.cup.apply(Eq.x_tilde_definition, (i, 0, k))
+    Eq << Set.eq.then.eq.cup.apply(Eq.x_tilde_definition, (i, 0, k))
     Eq << Eq[-1].this.rhs.args[1].limits_subs(i, i - 1)
     Eq.x_tilde_union = Eq[-1].subs(Eq[-3])
     Eq.x_tilde_abs = Eq.x_tilde_definition.apply(Algebra.eq.then.eq.abs)
@@ -152,16 +152,16 @@ def prove(Eq):
         return cls(base[x].set, (x, start, stop - 1))
     Eq.x_tilde_set_in_s0 = Eq[-3].func(Element(construct_finite_set(Cup, x_tilde), s0), *Eq[-3].limits, plausible=True)
     Eq << Eq.x_tilde_set_in_s0.subs(s0_definition)
-    Eq << Eq[-1].this.expr.apply(Sets.element.of.any_eq.split.imageset)
-    Eq << Sets.eq.then.eq.cup_finiteset.apply(Eq.x_tilde_definition, (i, 0, k))
+    Eq << Eq[-1].this.expr.apply(Set.element.of.any_eq.split.imageset)
+    Eq << Set.eq.then.eq.cup_finiteset.apply(Eq.x_tilde_definition, (i, 0, k))
     Eq << Eq[-1].subs(Eq.x_j_definition)
     Eq << Eq[-1].subs(Eq.s2_n_assertion.reversed)
     Eq << Eq.x_tilde_set_in_s0.subs(Eq[-1])
     Eq << Eq[-1].this.limits[0].subs(Eq.s2_n_definition)
-    Eq.subset_B_plausible = Eq.subset_B_definition.apply(Sets.eq.then.eq.union, {n.set})
+    Eq.subset_B_plausible = Eq.subset_B_definition.apply(Set.eq.then.eq.union, {n.set})
     Eq << All(Eq.subset_B_plausible.limits[0][1], *Eq.subset_B_plausible.limits, plausible=True)
     Eq << Eq[-1].simplify()
-    Eq << Eq[-1].apply(Sets.element.then.eq.Union)
+    Eq << Eq[-1].apply(Set.element.then.eq.Union)
     Eq << Eq.subset_B_plausible.subs(Eq[-1])
     Eq <<= Eq.supset_B & Eq.subset_B
 

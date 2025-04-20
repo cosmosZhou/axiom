@@ -18,7 +18,7 @@ def prove(Eq):
     Eq << apply(OneMatrix(4, 5), pivot=2)
 
     i = Symbol(domain=Range(m))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
 
 

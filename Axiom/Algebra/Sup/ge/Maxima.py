@@ -9,7 +9,7 @@ def apply(sup):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     x = Symbol(real=True)
     S = Symbol(etype=dtype.real)
@@ -20,11 +20,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(Algebra.ReducedMin.eq.Minima)
 
-    Eq << Algebra.GeMinima.of.All.Ge.apply(Eq[-1])
+    Eq << Algebra.GeMinima.given.All.Ge.apply(Eq[-1])
 
-    Eq << Algebra.All.of.Imply.apply(Eq[-1])
+    Eq << Logic.All.given.Imp.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.All_Le.to.LeMaxima)
+    Eq << Eq[-1].this.lhs.apply(Algebra.LeMaxima.of.All_Le)
 
 
 if __name__ == '__main__':

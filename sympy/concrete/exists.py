@@ -186,8 +186,11 @@ class Exists(Quantifier):
 
     def _sympystr(self, p):
         limits = ','.join([limit._format_ineq(p) for limit in self.limits])
-#         return '\N{THERE EXISTS}[%s](%s)' % (limits, p._print(self.expr))
         return 'Any[%s](%s)' % (limits, p._print(self.expr))
+
+    def _lean(self, p):
+        limits = ','.join([limit._format_ineq(p) for limit in self.limits])
+        return '\N{THERE EXISTS} %s, %s' % (limits, p._print(self.expr))
 
     def _pretty(self, p):
         return Quantifier._pretty(self, p, '\N{THERE EXISTS}')

@@ -642,6 +642,9 @@ class BooleanTrue(with_metaclass(Singleton, BooleanAtom)):
     def _sympystr(self, p):
         return "True"
 
+    def _lean(self, p):
+        return "True"
+    
     def _latex(self, p):
         return r"\text{True}"
 
@@ -731,6 +734,9 @@ class BooleanFalse(with_metaclass(Singleton, BooleanAtom)):
     def _sympystr(self, p):
         return "False"
 
+    def _lean(self, p):
+        return "False"
+    
     def _latex(self, p):
         return r"\text{False}"
 
@@ -1018,9 +1024,12 @@ class And(LatticeOp, BooleanFunction):
 
     def _sympystr(self, p):
         from sympy.printing.precedence import PRECEDENCE
-#         \N{LOGICAL AND}
         return p.stringify(self.args, " & ", PRECEDENCE["BitwiseAnd"])
 
+    def _lean(self, p):
+        from sympy.printing.precedence import PRECEDENCE
+        return p.stringify(self.args, " \N{LOGICAL AND} ", PRECEDENCE["BitwiseAnd"])
+    
     @classmethod
     def connected_equations(cls, args):
         child = {}
@@ -1158,10 +1167,25 @@ class And(LatticeOp, BooleanFunction):
         token = axiom.__name__.split(sep='.')
         i, type = inference_type(token)
         
-        if token[2].startswith('And') or type in ('to', 'of') and i == 3:
-            split = False
-            
-        if split: 
+        if type == 'of':
+            if token[token.index('of') + 1].startswith('And'):
+                split = False
+            else:
+                capitalWords = []
+                for cond in token[i + 1:]:
+                    if re.match('[A-Z]', cond):
+                        capitalWords.append(cond)
+                    else:
+                        break
+                if len(capitalWords) <= 1:
+                    split = False
+
+        elif type == 'to' or type == 'given':
+            if token[2].startswith('And') or i == 3:
+                split = False
+        elif type in ('equ', 'Is'):
+            split = split_and(axiom)
+        if split:
             funcs = []
             
             depth = kwargs.pop('depth', None)
@@ -1197,7 +1221,7 @@ class And(LatticeOp, BooleanFunction):
                 cond = And(*cond, **{clue: self})
 
             else:
-                if cond.is_Equivalent and type == 'equ':
+                if cond.is_Equivalent and type in ('equ', 'Is'):
                     if cond.clue is None:
                         return cond.rhs
                 
@@ -1543,8 +1567,11 @@ class Or(LatticeOp, BooleanFunction):
 
     def _sympystr(self, p):
         from sympy.printing.precedence import PRECEDENCE
-#         \N{LOGICAL OR}        
         return p.stringify(self.args, " | ", PRECEDENCE["BitwiseOr"])
+
+    def _lean(self, p):
+        from sympy.printing.precedence import PRECEDENCE
+        return p.stringify(self.args, " \N{LOGICAL OR} ", PRECEDENCE["BitwiseOr"])
 
     def __new__(cls, *args, evaluate=True, **options):
         valuable = set()
@@ -1923,12 +1950,16 @@ class Not(BooleanFunction):
         from sympy.printing.precedence import PRECEDENCE
         return '~%s' % (p.parenthesize(self.arg, PRECEDENCE["Not"]))
 
+    def _lean(self, p):
+        from sympy.printing.precedence import PRECEDENCE
+        return '~%s' % (p.parenthesize(self.arg, PRECEDENCE["Not"]))
+    
     def _latex(self, p):
         cond = self.arg
         if isinstance(cond, Equivalent):
-            return p._print_Equivalent(cond, r"\not\Leftrightarrow")
+            return p._print_Equivalent(cond, r"\not\leftrightarrow")
         if isinstance(cond, Imply):
-            return p._print_Imply(cond, r"\not\Rightarrow")
+            return p._print_Imply(cond, r"\not\rightarrow")
         
         return r"\neg %s" % p._print(cond)
 
@@ -2254,7 +2285,6 @@ class Imply(BooleanAssumption):
         return Or._to_nnf(~a, b, simplify=simplify)
 
     def _sympystr(self, p): 
-        #\N{RIGHTWARDS DOUBLE ARROW}
         lhs, rhs = self.args
         _lhs = p._print(lhs)
         _rhs = p._print(rhs)
@@ -2266,13 +2296,25 @@ class Imply(BooleanAssumption):
             
         return "%s >> %s" % (_lhs, _rhs)
     
-    def _latex(self, p, altchar='\Rightarrow', rotate=False):
+    def _lean(self, p): 
+        lhs, rhs = self.args
+        _lhs = p._print(lhs)
+        _rhs = p._print(rhs)
+        if lhs.is_Equivalent:
+            _lhs = f"({_lhs})"
+            
+        if rhs.is_Equivalent:
+            _rhs = f"({_rhs})"
+
+        return "%s \N{RIGHTWARDS ARROW} %s" % (_lhs, _rhs)
+
+    def _latex(self, p, altchar=r'\rightarrow', rotate=False):
         A = p.conditions_wrapper(self.lhs, rotate=rotate)
 
         B = p.conditions_wrapper(self.rhs, rotate=rotate)
         
         if rotate:
-            altchar = p.rotate_arrow(altchar)      
+            altchar = p.rotate_arrow(altchar)
             return r"\begin{array}{%s}%s\end{array}" % ('c', r'\\'.join([A, altchar, B]))      
         else: 
             return "%s %s %s" % (A, altchar, B)
@@ -2357,6 +2399,23 @@ class Imply(BooleanAssumption):
     def inference_status(self, child):
         return child == 0
 
+    def of(self, cls):
+        res = Boolean.of(self, cls)
+        if res is None:
+            if cls.is_Given:
+                args = cls.args
+                if isinstance(args, property):
+                    b, a = self.args
+                    return a, b
+                a, b = cls.args
+                cls = Basic.__new__(Imply, b, a)
+                res = Boolean.of(self, cls)
+                if isinstance(res, tuple):
+                    b, a = res
+                    return a, b
+            
+        return res
+
 Imply = Imply
 
 class Given(BooleanAssumption):
@@ -2383,7 +2442,6 @@ class Given(BooleanAssumption):
         return Or._to_nnf(a.invert(), b, simplify=simplify)
 
     def _sympystr(self, p):
-        #\N{LEFTWARDS DOUBLE ARROW}
         lhs, rhs = self.args
         _lhs = p._print(lhs)
         _rhs = p._print(rhs)
@@ -2394,6 +2452,18 @@ class Given(BooleanAssumption):
             _rhs = f"({_rhs})"
             
         return "%s << %s" % (_lhs, _rhs)
+
+    def _lean(self, p):
+        lhs, rhs = self.args
+        _lhs = p._print(lhs)
+        _rhs = p._print(rhs)
+        if lhs.is_Inequality or lhs.is_And or lhs.is_Or:
+            _lhs = f"({_lhs})"
+            
+        if rhs.is_Inequality or rhs.is_And or rhs.is_Or:
+            _rhs = f"({_rhs})"
+            
+        return "%s \N{RIGHTWARDS ARROW} %s" % (_rhs, _lhs)
 
     def _pretty(self, p, altchar=None): 
         if p._use_unicode:
@@ -2418,6 +2488,23 @@ class Given(BooleanAssumption):
 
     def inference_status(self, child):
         return child == 1
+
+    def of(self, cls):
+        res = Boolean.of(self, cls)
+        if res is None:
+            if cls.is_Imply:
+                args = cls.args
+                if isinstance(args, property):
+                    b, a = self.args
+                    return a, b
+                a, b = cls.args
+                cls = Basic.__new__(Given, b, a)
+                res = Boolean.of(self, cls)
+                if isinstance(res, tuple):
+                    b, a = res
+                    return a, b
+            
+        return res
 
 
 class Equivalent(BooleanAssumption):
@@ -2493,22 +2580,18 @@ class Equivalent(BooleanAssumption):
         return And._to_nnf(*args, simplify=simplify)
 
     def _sympystr(self, p):
-        # \N{LEFT RIGHT DOUBLE ARROW} 
         return "Equivalent(%s, %s)" % (p._print(self.lhs), p._print(self.rhs))
 
-    def _latex(self, p, rotate=False):
-        return Imply._latex(self, p, '\Leftrightarrow', rotate=rotate)
+    def _lean(self, p):
+        return "%s \N{LEFT RIGHT ARROW} %s" % (p._print(self.lhs), p._print(self.rhs))
 
-    def _pretty(self, p, altchar=None):
-        if p._use_unicode:
-            return p._print_Boolean(self, altchar or u"\N{LEFT RIGHT DOUBLE ARROW}", sort=False)
-        else:
-            return p._print_Function(self, sort=False)
+    def _latex(self, p, rotate=False):
+        return Imply._latex(self, p, r'\leftrightarrow', rotate=rotate)
 
     def inference_status(self, child):
         raise Exception("boolean conditions within Equivalent are not applicable for inequivalent inference!")       
 
-Iff = Equivalent       
+Iff = Equivalent
 
 
 class NotImply(BooleanAssumption):
@@ -2521,8 +2604,10 @@ class NotImply(BooleanAssumption):
         ...
         
     def _sympystr(self, p):
-        # \N{RIGHTWARDS DOUBLE ARROW WITH STROKE} 
         return "NotImply(%s, %s)" % (p._print(self.lhs), p._print(self.rhs))
+    
+    def _lean(self, p):
+        return "%s \N{RIGHTWARDS DOUBLE ARROW WITH STROKE} %s" % (p._print(self.lhs), p._print(self.rhs))
     
     def _latex(self, p, rotate=False):
         A = p.conditions_wrapper(self.lhs)
@@ -2544,8 +2629,10 @@ class NotGiven(BooleanAssumption):
         ...
 
     def _sympystr(self, p):
-        # \N{LEFTWARDS DOUBLE ARROW WITH STROKE} 
         return "NotGiven(%s, %s)" % (p._print(self.lhs), p._print(self.rhs))
+
+    def _lean(self, p):
+        return "%s \N{LEFTWARDS DOUBLE ARROW WITH STROKE} %s" % (p._print(self.lhs), p._print(self.rhs))
 
     def _latex(self, p, altchar='\nLeftarrow', rotate=False):
         return Imply._latex(self, p, altchar, rotate=rotate)
@@ -2557,9 +2644,11 @@ class NotGiven(BooleanAssumption):
 class NotIff(BooleanAssumption):
 
     def _sympystr(self, p):
-        # \N{LEFT RIGHT DOUBLE ARROW WITH STROKE} 
         return "NotIff(%s, %s)" % (p._print(self.lhs), p._print(self.rhs))
 
+    def _lean(self, p):
+        return "%s \N{LEFT RIGHT DOUBLE ARROW WITH STROKE} %s" % (p._print(self.lhs), p._print(self.rhs))
+    
     def _latex(self, p, altchar='\nLeftrightarrow', rotate=False):
         return Imply._latex(self, p, altchar, rotate=rotate)
 
@@ -3859,16 +3948,24 @@ def simplify_patterns_xor():
                      )
     return _matchers_xor
 
-binary_operators = 'equ', 'eq', 'ne', 'gt', 'ge', 'lt', 'le', 'el', 'subset', 'supset', 'et', 'ou', 'distributed'
+binary_operators = 'equ', 'Is', 'eq', 'ne', 'gt', 'ge', 'lt', 'le', 'In', 'to', 'subset', 'supset', 'et', 'ou', 'distributed'
 def inference_type(tokens):
 
-    for token in ('to', 'of', *binary_operators):
+    for token in ('of', 'given', *binary_operators):
         try:
             return tokens.index(token), token
         except ValueError:
             ...
 
     if m := re.match('[A-Z][a-z]*', tokens[0]):
-        if m[0] in ('Eq', 'Ne', 'Gt', 'Ge', 'Lt', 'Le', 'And', 'Or', 'In', 'Any', 'All', 'Not', 'Subset', 'Supset', 'Imply', 'Iff', 'Cond', 'Given', 'Distributed', 'Contain'):
-            return -1, 'equ'
-    return -1, 'equ'
+        if m[0] in ('Eq', 'Ne', 'Gt', 'Ge', 'Lt', 'Le', 'And', 'Or', 'Element', 'Any', 'All', 'Not', 'Subset', 'Supset', 'Imply', 'Iff', 'Cond', 'Given', 'Distributed', 'Contain'):
+            return -1, 'Is'
+    return -1, 'Is'
+
+
+def split_and(module):
+    cell_contents = module.apply.__closure__[0].cell_contents
+    co_argcount = cell_contents.__code__.co_argcount
+    if cell_contents.__defaults__ is not None:
+        co_argcount -= len(cell_contents.__defaults__)
+    return co_argcount > 1

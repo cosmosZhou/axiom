@@ -2,7 +2,8 @@ import os
 from util import utility
 os.environ['MYSQL_DATABASE'] = 'axiom'
 from std import MySQL
-
+from util.search import get_sections
+sections = get_sections()
 
 if __name__ == '__main__':
     
@@ -31,7 +32,7 @@ if __name__ == '__main__':
                 1
             ])
 
-    for sec in ['Algebra', 'Sets', 'Calculus', 'Discrete', 'Geometry', 'Keras', 'Stats']:
+    for sec in sections:
         data.append([
             user,
             'Axiom.',

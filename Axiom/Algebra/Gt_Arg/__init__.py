@@ -1,2 +1,2 @@
-from . import to
-from . import equ
+from . import of
+from . import Is

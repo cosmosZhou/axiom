@@ -23,7 +23,7 @@ def prove(Eq):
     s = Symbol(Product[j:f(i)](h(x[i], j)))
     Eq << s.this.definition
 
-    Eq << Algebra.Eq.to.Eq.Prod.apply(Eq[-1], (i, 0, k), simplify=False)
+    Eq << Algebra.EqProd.of.Eq.apply(Eq[-1], (i, 0, k), simplify=False)
 
     Eq << Eq[-1].this.lhs.expr.definition
 

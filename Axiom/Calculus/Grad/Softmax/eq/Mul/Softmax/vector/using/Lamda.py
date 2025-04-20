@@ -11,7 +11,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Keras, Calculus, Algebra
+    from Axiom import Neuro, Calculus, Algebra
 
     n = Symbol(integer=True, positive=True)
     x = Symbol(real=True, shape=(n,))
@@ -19,7 +19,7 @@ def prove(Eq):
     Eq << apply(Derivative[x](softmax(f(x))))
 
     i = Symbol(integer=True)
-    Eq << Derivative[x[i]](log(softmax(f(x)))).this.find(softmax).apply(Keras.Softmax.eq.Mul.ReducedSum)
+    Eq << Derivative[x[i]](log(softmax(f(x)))).this.find(softmax).apply(Neuro.Softmax.eq.Mul.ReducedSum)
 
     Eq << Eq[-1].this.rhs.apply(Calculus.Grad.eq.Add)
 
@@ -36,11 +36,11 @@ def prove(Eq):
 
     Eq << Eq[-1] * Eq[-1].find(Softmax)
 
-    Eq << Algebra.Eq.to.Eq.Lamda.apply(Eq[-1], (i, 0, n))
+    Eq << Algebra.EqLamda.of.Eq.apply(Eq[-1], (i, 0, n))
 
     Eq << Eq[-1].this.find(Lamda).apply(Algebra.Lamda.eq.Add)
 
-    Eq << Eq[-1].this.find(Exp).apply(Keras.Exp.eq.Mul.Softmax)
+    Eq << Eq[-1].this.find(Exp).apply(Neuro.Exp.eq.Mul.Softmax)
 
     Eq << Eq[-1].this.find(Lamda).apply(Calculus.Lamda.Grad.eq.Dot)
 

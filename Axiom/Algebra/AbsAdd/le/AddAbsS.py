@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << -Eq[-1]
 
-    Eq << Algebra.Ge.to.Ge.Sqrt.apply(Eq[-1])
+    Eq << Algebra.GeSqrt.of.Ge.apply(Eq[-1])
 
     Eq << Eq[-1].reversed
 

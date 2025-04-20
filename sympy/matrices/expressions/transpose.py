@@ -57,6 +57,13 @@ class Transpose(MatrixExpr):
 
         return "Transpose[%s](%s)" % (','.join(p._print(a) for a in self.axis), self.arg)
 
+    def _lean(self, p):
+        from sympy.printing.precedence import PRECEDENCE
+        if self.axis == self.default_axis:
+            return "%s.T" % p.parenthesize(self.arg, PRECEDENCE["Pow"])
+
+        return "Transpose[%s](%s)" % (','.join(p._print(a) for a in self.axis), self.arg)
+    
     def need_parenthesis_for_arg(self):
         arg = self.arg
         return arg.is_ExprWithLimits or arg.is_AssocOp or arg.is_MatMul

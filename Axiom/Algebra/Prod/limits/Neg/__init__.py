@@ -11,7 +11,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     i = Symbol(integer=True)
     n = Symbol(integer=True, nonnegative=True, given=False)
@@ -34,11 +34,10 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Imply.to.Eq.induct.apply(Eq[-1], n=n, start=0)
+    Eq << Logic.Eq.of.Imp.induct.apply(Eq[-1], n=n, start=0)
 
 
 if __name__ == '__main__':
     run()
 # created on 2020-02-24
-del oo
-from . import oo
+from . import Infty

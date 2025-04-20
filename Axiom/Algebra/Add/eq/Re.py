@@ -25,9 +25,9 @@ def prove(Eq):
     z, w = Symbol(complex=True)
     Eq << apply(Re(z) + Re(w))
 
-    Eq << Algebra.Expr.eq.Add.complex.apply(w)
+    Eq << Algebra.Expr.eq.AddRe_MulIIm.apply(w)
 
-    Eq << Algebra.Expr.eq.Add.complex.apply(z)
+    Eq << Algebra.Expr.eq.AddRe_MulIIm.apply(z)
 
     Eq << Eq[0].subs(*Eq[-2:])
 

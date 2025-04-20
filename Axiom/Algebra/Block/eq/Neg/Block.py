@@ -17,9 +17,9 @@ def prove(Eq):
     Eq << apply(BlockMatrix(-A, -B))
 
     i = Symbol(domain=Range(m * 2))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Piece.eq.Mul)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Ite.eq.Mul)
 
 
 

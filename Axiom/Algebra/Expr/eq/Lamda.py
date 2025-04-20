@@ -43,13 +43,13 @@ def prove(Eq):
     k = Symbol(domain=Range(q))
     h = Symbol(domain=Range(m))
     t = Symbol(domain=Range(n))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], k)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], k)
 
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], h)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], h)
 
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], t)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], t)
 
 
 

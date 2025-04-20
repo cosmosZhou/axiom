@@ -15,11 +15,11 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(abs(x))
 
-    Eq << Eq[0].this.lhs.apply(Algebra.Abs.eq.Piece)
+    Eq << Eq[0].this.lhs.apply(Algebra.Abs.eq.IteGe_0)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Max.eq.Piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Max.eq.Ite)
 
-    Eq << Eq[-1].this.find(Expr >= -Expr).apply(Algebra.Ge.equ.Ge_0)
+    Eq << Eq[-1].this.find(Expr >= -Expr).apply(Algebra.Ge.Is.Ge_0)
 
     Eq << Eq[-1].this.find(Expr * 2 >= 0) / 2
 

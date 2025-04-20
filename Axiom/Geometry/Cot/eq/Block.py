@@ -16,16 +16,16 @@ def prove(Eq):
     Eq << apply(Cot(BlockMatrix([[A, B], [C, D]])))
 
     i = Symbol(domain=Range(n * 2))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], i)
 
     j = Symbol(domain=Range(n * 2))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], j)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], j)
 
-    Eq << Eq[-1].this.lhs.apply(Geometry.Cot.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Geometry.Cot.eq.Ite)
 
-    Eq << Eq[-1].this.find(Cot[Piecewise]).apply(Geometry.Cot.eq.Piece)
+    Eq << Eq[-1].this.find(Cot[Piecewise]).apply(Geometry.Cot.eq.Ite)
 
-    Eq << Eq[-1].this.find(Cot[Piecewise]).apply(Geometry.Cot.eq.Piece, simplify=0)
+    Eq << Eq[-1].this.find(Cot[Piecewise]).apply(Geometry.Cot.eq.Ite, simplify=0)
 
 
 

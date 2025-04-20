@@ -840,9 +840,6 @@ class Csch(ReciprocalHyperbolicFunction):
         if self.args[0].is_extended_real:
             return self.args[0].is_extended_negative
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.csch(self.args[0]._sage_())
 
 csch = Csch
 
@@ -883,10 +880,6 @@ class Sech(ReciprocalHyperbolicFunction):
     def _eval_is_extended_positive(self):
         if self.args[0].is_extended_real:
             return True
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.sech(self.args[0]._sage_())
 
 
 sech = Sech

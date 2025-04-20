@@ -13,7 +13,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Algebra, Sets
+    from Axiom import Discrete, Algebra, Set
 
     k = Symbol(integer=True)
     i = Symbol(integer=True, nonnegative=True)
@@ -38,15 +38,15 @@ def prove(Eq):
     Eq << Eq[-1].this.rhs.find(Sum).apply(Algebra.Sum.Bool)
 
     k0, k1, k2 = Eq[-1].rhs.variables
-    Eq << Eq[-1].this.find(And).apply(Algebra.Eq.Cond.equ.And.subs)
+    Eq << Eq[-1].this.find(And).apply(Algebra.Eq.Cond.Is.And.subs)
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Sum.limits.absorb)
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Sum.limits.separate)
 
-    Eq << Eq[-1].this.find(Element).apply(Sets.In.Neg)
+    Eq << Eq[-1].this.find(Element).apply(Set.Mem.Neg)
 
-    Eq << Eq[-1].this.find(Element).apply(Sets.In.Add, n - k2)
+    Eq << Eq[-1].this.find(Element).apply(Set.Mem_Icc.Is.MemAdd, n - k2)
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Sum.limits.separate)
 
@@ -65,9 +65,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(Discrete.Pow.eq.Dot.Delta)
 
-    Eq << Discrete.Eq_Dot.to.Eq.vector.independence.st.Dot.apply(Eq[-1])
+    Eq << Discrete.Eq.of.EqDotSLamda_Pow.independence.vector.apply(Eq[-1])
 
-    Eq << Algebra.All.to.Cond.subs.apply(Eq[-1], i_, i)
+    Eq << Algebra.Cond.of.All.subs.apply(Eq[-1], i_, i)
 
     Eq << Eq[-1].this.find(Multinomial).simplify()
 

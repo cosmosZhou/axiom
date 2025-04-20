@@ -21,12 +21,12 @@ def prove(Eq):
     Eq << apply(Lamda[j:n, i:m](f(i, j)), 1)
 
     i = Symbol(domain=Range(m))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], i)
 
     j = Symbol(domain=Range(n))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], j)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], j)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Piece.eq.Delta)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Ite.eq.Delta)
 
 
 

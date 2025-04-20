@@ -39,9 +39,9 @@ def prove(Eq):
     Eq << apply(Mul(BlockMatrix(A, B), BlockMatrix(C, D)))
 
     i = Symbol(domain=Range(m * 2))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.Piece.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Mul_Ite.eq.Ite_MulS)
 
 
 if __name__ == '__main__':

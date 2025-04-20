@@ -363,11 +363,10 @@ class DiracDelta(Function):
                 rewrite(SingularityFunction) doesn't support
                 arguments with more that 1 variable.'''))
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.dirac_delta(self.args[0]._sage_())
-
     def _sympystr(self, p):
+        return 'δ(%s)' % ', '.join(p._print(arg) for arg in self.args)
+
+    def _lean(self, p):
         return 'δ(%s)' % ', '.join(p._print(arg) for arg in self.args)
 
 ###############################################################################
@@ -613,11 +612,10 @@ class Heaviside(Function):
                 rewrite(SingularityFunction) doesn't
                 support arguments with more that 1 variable.'''))
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.heaviside(self.args[0]._sage_())
+    def _sympystr(self, p):
+        return "H(%s)" % p._print(self.arg)
 
-    def _sympystr(self, p):        
+    def _lean(self, p):
         return "H(%s)" % p._print(self.arg)
 
     def _latex(self, p, exp=None):

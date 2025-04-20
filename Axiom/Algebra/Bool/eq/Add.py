@@ -11,24 +11,24 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
     x = Symbol(real=True)
     A, B = Symbol(etype=dtype.real)
     Eq << apply(Bool(Or(Element(x, A), Element(x, B))))
 
-    Eq << Eq[0].this.find(Bool).apply(Algebra.Bool.eq.Piece)
+    Eq << Eq[0].this.find(Bool).apply(Logic.Bool.eq.Ite)
 
-    Eq << Add(*Eq[-1].rhs.args[:2]).this.find(Bool).apply(Algebra.Bool.eq.Piece)
+    Eq << Add(*Eq[-1].rhs.args[:2]).this.find(Bool).apply(Logic.Bool.eq.Ite)
 
-    Eq << Eq[-1].this.rhs.find(Bool).apply(Algebra.Bool.eq.Piece)
+    Eq << Eq[-1].this.rhs.find(Bool).apply(Logic.Bool.eq.Ite)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Add.Piece.eq.Piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Add.Ite.eq.Ite)
 
-    Eq << Bool(Element(x, A & B)).this.apply(Algebra.Bool.eq.Piece)
+    Eq << Bool(Element(x, A & B)).this.apply(Logic.Bool.eq.Ite)
 
     Eq << Eq[-2] - Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Add.Piece.eq.Piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Add.Ite.eq.Ite)
 
     Eq << Eq[1].subs(Eq[-1])
 

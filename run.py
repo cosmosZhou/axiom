@@ -1,7 +1,7 @@
 #!/home/lizhi/miniconda3/bin/python
 #!python
 #!/usr/local/python3/bin/python3
-# make sure to run: chmod 777 run.py
+# make sure to run: chmod a+rwx run.py
 import os, sys
 if os.environ.get('CONTENT_TYPE') == "application/json":
     print("Content-type:text/html\n")
@@ -272,10 +272,12 @@ def import_module(package):
                     Ty = 'Eq'
                 case 'Unequal':
                     Ty = 'Ne'
-                case 'LessThan':
+                case 'Less':
                     Ty = 'Lt'
-                case 'GreaterThan':
+                case 'Greater':
                     Ty = 'Gt'
+                case 'GreaterEqual':
+                    Ty = 'Ge'
                 case 'LessEqual':
                     Ty = 'Le'
                 case 'Element':
@@ -288,16 +290,24 @@ def import_module(package):
                     Ty = 'Any'
                 case 'ForAll':
                     Ty = 'All'
+                # case 'Probability':
+                    # Ty = 'Pr'
 
-            index = -paths[::-1].index(Ty)
-            paths = paths[:index]
-            return tackle_type_error('.'.join(paths))
+            try:
+                index = -paths[::-1].index(Ty)
+                paths = paths[:index]
+                return tackle_type_error('.'.join(paths))
+            except ValueError as e:
+                print('type error:', e)
+                print('paths =', paths)
+                print('Ty =', Ty)
+                return -1
 
 def prove_with_timing(module, **kwargs):
     lapse = time.time()
-    state, latex = module.prove(**kwargs)
+    state, latex, *lean = module.prove(**kwargs)
     lapse = time.time() - lapse
-    return state, lapse, latex
+    return state, lapse, latex, *lean
 
 
 def tackle_type_error(package, debug=True):
@@ -351,11 +361,11 @@ def process(package, debug=False):
         if debug:
             print(file)
             
-        state, lapse, latex = prove_with_timing(module, debug=debug)
+        state, lapse, latex, *lean = prove_with_timing(module, debug=debug)
     except AttributeError as e:
         lapse = 0
         latex = None
-        
+        lean = ()
         if module is not None:
             print(module, 'from', module)
             print(e)
@@ -377,6 +387,7 @@ def process(package, debug=False):
             elif re.match("type object '[\w.]+' has no attribute 'prove'", str(e)):
                 lapse = 0
                 latex = None
+                lean = ()
                 tackle_type_error(package, debug)
 
         state = RetCode.failed
@@ -384,11 +395,12 @@ def process(package, debug=False):
     except TypeError:
         lapse = 0
         latex = None
+        lean = ()
         tackle_type_error(package, debug)
         state = RetCode.failed
         file = project_directory() + sep + package.replace('.', sep) + '.py'        
         
-    return package, file, state, lapse, latex
+    return package, file, state, lapse, latex, *lean
 
 
 @process.register(list) 
@@ -658,14 +670,14 @@ def print_summary():
         
 def post_process(result):
     data = []
-    for package, file, state, lapse, latex in result:
+    for package, file, state, lapse, latex, *lean in result:
         if latex is None:
             print(package)
             print(file)
             latex = ''
             assert state is RetCode.failed
-            
-        data.append((user, package, state, lapse, latex))
+
+        data.append((user, package, state, lapse, latex, *lean))
 
         if state is RetCode.plausible:
             Globals.plausible.append((file, MySQL.instance.url_address(package)))
@@ -733,6 +745,9 @@ def retry(package):
     return RetCode.failed, None, None
     
 def post_process_returns(returns):
+    state = RetCode.failed
+    lapse = 0
+    latex = ''
     for line in returns:
         m = re.match(r"seconds cost = (\d+\.\d+)", line)
         if m:
@@ -833,13 +848,12 @@ if __name__ == '__main__':
         print("Content-type:text/html\n")
         QUERY_STRING = os.environ['QUERY_STRING']
 #         print("QUERY_STRING =", QUERY_STRING, "<br>")
-        
         if not QUERY_STRING:
-            kwargs = {}            
+            kwargs = {}
         else:
             kwargs = {key: value for key, value in map(lambda s: s.split('='), QUERY_STRING.split('&'))}
         
-#         print("kwargs =", kwargs, "<br>")        
+#         print("kwargs =", kwargs, "<br>")
         args = ''
         
     else:
@@ -932,8 +946,8 @@ clearInterval(ret);
 # python run.py Algebra.EqX.Add.Zero.to.And.Imply.quartic
 # python run.py Algebra.EqX.Add.Zero.to.And.Imply.quartic.one_leaded
 # python run.py Discrete.Det.to.Sum.expansion_by_minors
-# python run.py Keras.Eq.Lamda.Bool.to.Eq.conv2d
-# python run.py Keras.Eq.Lamda.Lool.to.Eq.conv3d
+# python run.py Neuro.Eq.Lamda.Bool.to.Eq.conv2d
+# python run.py Neuro.Eq.Lamda.Lool.to.Eq.conv3d
 
 # python -c "exec(open('./util/hierarchy.py').read()); exec(open('./util/function.py').read())"
 # python -c "exec(open('./util/hint.py').read())"

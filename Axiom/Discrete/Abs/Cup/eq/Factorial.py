@@ -9,7 +9,7 @@ def apply(n):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Algebra, Sets
+    from Axiom import Discrete, Algebra, Set, Logic
 
     n = Symbol(integer=True, positive=True, given=False)
     Eq << apply(n)
@@ -23,7 +23,7 @@ def prove(Eq):
     Eq << Discrete.Cup.eq.Condset.P2Q_union.apply(n)
 
     Q = Eq[-1].lhs.expr.base
-    Eq << Eq[-1].apply(Sets.Eq.to.Eq.Card)
+    Eq << Eq[-1].apply(Set.EqCard.of.Eq)
 
     Eq << Discrete.Abs.Cup.eq.Sum.Abs.permutation.nonoverlapping.apply(n, Q=Q)
 
@@ -52,7 +52,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Cond.Imply.to.Cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
+    Eq << Logic.Cond.of.Cond.Imp.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
 
 if __name__ == '__main__':

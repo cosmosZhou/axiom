@@ -32,7 +32,7 @@ def apply(x, n):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
     x = Symbol(real=True, positive=True, shape=(oo,))
     n = Symbol(integer=True, positive=True, given=False)
 
@@ -46,17 +46,17 @@ def prove(Eq):
 
     Eq << Eq.induct.this.lhs.defun()
 
-    Eq << Algebra.Cond.to.Cond.subs.apply(Eq[0], x[:n], x[1:n + 1])
+    Eq << Algebra.Cond.of.Cond.subs.apply(Eq[0], x[:n], x[1:n + 1])
 
-    Eq << Eq[-1].apply(Algebra.Gt_0.to.Gt_0.Div)
+    Eq << Eq[-1].apply(Algebra.Gt_0.Div.of.Gt_0)
 
     Eq << Eq[-1] + x[0]
 
-    Eq << Algebra.Gt.to.Gt.relax.apply(Eq[-1], 0)
+    Eq << Algebra.Gt.of.Gt.relax.apply(Eq[-1], 0)
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Cond.Imply.to.Cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
+    Eq << Logic.Cond.of.Cond.Imp.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
 
 if __name__ == '__main__':

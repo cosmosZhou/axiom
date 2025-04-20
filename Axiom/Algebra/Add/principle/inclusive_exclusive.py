@@ -12,13 +12,13 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Sets, Algebra
+    from Axiom import Set, Algebra
 
     x = Symbol(real=True)
     A, B = Symbol(etype=dtype.real)
     Eq << apply(Bool(Element(x, A)) + Bool(Element(x, B)))
 
-    Eq << Eq[-1].this.rhs.args[1].arg.apply(Sets.In_Union.equ.Or)
+    Eq << Eq[-1].this.rhs.args[1].arg.apply(Set.Mem_Union.Is.Or)
 
     Eq << Eq[-1].this.find(Bool[Or]).apply(Algebra.Bool.eq.Add)
 

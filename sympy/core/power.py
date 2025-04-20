@@ -1498,7 +1498,7 @@ class Pow(Expr):
         #     c_0*x**e_0 + c_1*x**e_1 + ... (finitely many terms)
         # where e_i are numbers (not necessarily integers) and c_i are
         # expressions involving only numbers, the log function, and log(x).
-        from sympy import ceiling, collect, exp, log, O, Order, powsimp
+        from sympy import ceil, collect, exp, log, O, Order, powsimp
         b, e = self.args
         if e.is_Integer:
             if e > 0:
@@ -1518,7 +1518,7 @@ class Pow(Expr):
                     ord = b.as_leading_term(x)
                     cf = Order(ord, x).getn()
                     if cf and cf.is_Number:
-                        nuse = n + 2 * ceiling(cf)
+                        nuse = n + 2 * ceil(cf)
                     else:
                         cf = 1
                 except NotImplementedError:
@@ -1566,7 +1566,7 @@ class Pow(Expr):
                     dn = 0
 
                 terms = [1 / prefactor]
-                for m in range(1, ceiling((n - dn + 1) / l * cf)):
+                for m in range(1, ceil((n - dn + 1) / l * cf)):
                     new_term = terms[-1] * (-rest)
                     if new_term.is_Pow:
                         new_term = new_term._eval_expand_multinomial(
@@ -1656,7 +1656,7 @@ class Pow(Expr):
                 # lt**e + ... + O(x**m)*lt**(e - 1) = ... + O(x**n)
                 try:
                     cf = Order(lt, x).getn()
-                    nuse = ceiling(n - cf * (e - 1))
+                    nuse = ceil(n - cf * (e - 1))
                 except NotImplementedError:
                     pass
 
@@ -1726,9 +1726,6 @@ class Pow(Expr):
     def _taylor_term(self, n, x, *previous_terms):  # of (1 + x)**e
         from sympy import binomial
         return binomial(self.exp, n) * self.func(x, n)
-
-    def _sage_(self):
-        return self.args[0]._sage_() ** self.args[1]._sage_()
 
     def as_content_primitive(self, radical=False, clear=True):
         """Return the tuple (R, self/R) where R is the positive Rational
@@ -1962,6 +1959,51 @@ class Pow(Expr):
                 return '%s ** %s' % (p.parenthesize(self.base, PREC, strict=False), e[1:-1])
         return '%s ** %s' % (p.parenthesize(self.base, PREC, strict=False), e)
     
+    def _lean(self, p, rational=False):
+        from sympy.printing.precedence import precedence
+        PREC = precedence(self)
+
+        import re
+        if self.exp is S.Half and not rational:
+            arg = p._print(self.base)
+            # return "\N{SQUARE ROOT}(%s)" % arg
+            return "sqrt(%s)" % arg
+
+#         if self.is_commutative:
+        if -self.exp is S.Half and not rational:
+            # Note: Don't test "self.exp == -S.Half" here, because that will
+            # match -0.5, which we don't want.
+            arg = p._print(self.base)
+            # return "1/\N{SQUARE ROOT}(%s)" % arg
+            return "1 / sqrt(%s)" % arg
+        
+        if self.base.is_Function:
+            b = "(%s)" % p._print(self.base)
+        else:
+            b = p.parenthesize(self.base, PREC, strict=False)
+
+        e = self.exp
+        if e == -1:
+            e = '⁻¹'
+        elif e == 2:
+            e = '²'
+        elif e == 3:
+            e = '³'
+        elif e == 4:
+            e = '⁴'
+        else:
+            e = None
+        if e:
+            return f'{b}{e}'
+
+        e = p.parenthesize(self.exp, PREC, strict=False)
+        if p.printmethod == '_sympyrepr' and self.exp.is_Rational and self.exp.q != 1:
+            # the parenthesized exp should be '(Rational(a, b))' so strip parens,
+            # but just check to be sure.
+            if e.startswith('(Rational'):
+                return f'{b} ^ %s' % e[1:-1]
+        return f'{b} ^ %s' % e
+
     def _pretty(self, p):
         from sympy.simplify.simplify import fraction
         b, e = self.as_base_exp()

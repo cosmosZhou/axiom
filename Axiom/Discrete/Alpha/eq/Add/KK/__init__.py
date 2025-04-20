@@ -21,9 +21,9 @@ def prove(Eq):
 
     Eq << apply(x[:n + 1])
 
-    Eq << Eq[0].this.lhs.apply(Discrete.Alpha.eq.Mul.HK.st.Gt_0)
+    Eq << Eq[0].this.lhs.apply(Discrete.Alpha.eq.DivH_K.positive)
 
-    Eq << Eq[-1].this.find(alpha).apply(Discrete.Alpha.eq.Mul.HK.st.Gt_0)
+    Eq << Eq[-1].this.find(alpha).apply(Discrete.Alpha.eq.DivH_K.positive)
 
     Eq << Eq[-1] - Eq[-1].rhs.args[0]
 

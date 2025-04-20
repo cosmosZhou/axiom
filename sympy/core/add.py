@@ -955,12 +955,6 @@ class Add(Expr, AssocOp):
     def __neg__(self):
         return self * (-1)
 
-    def _sage_(self):
-        s = 0
-        for x in self.args:
-            s += x._sage_()
-        return s
-
     def primitive(self):
         """
         Return ``(R, self/R)`` where ``R``` is the Rational GCD of ``self```.
@@ -1567,6 +1561,31 @@ class Add(Expr, AssocOp):
         return tex
 
     def _sympystr(self, p, order=None):
+        if p.order == 'none':
+            terms = [*self.args]
+        else:
+            terms = p._as_ordered_terms(self, order=order)
+
+        from sympy.printing.precedence import precedence
+        PREC = precedence(self)
+        l = []
+        for term in terms:
+            t = p._print(term)
+            if t.startswith('-'):
+                sign = "-"
+                t = t[1:]
+            else:
+                sign = "+"
+            if precedence(term) < PREC:
+                l.extend([sign, "(%s)" % t])
+            else:
+                l.extend([sign, t])
+        sign = l.pop(0)
+        if sign == '+':
+            sign = ""
+        return sign + ' '.join(l)
+
+    def _lean(self, p, order=None):
         if p.order == 'none':
             terms = [*self.args]
         else:

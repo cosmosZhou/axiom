@@ -468,10 +468,6 @@ class KroneckerDelta(Function):
     def indices(self):
         return self.args[0:2]
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.kronecker_delta(self.args[0]._sage_(), self.args[1]._sage_())
-
     def domain_nonzero(self, x):
         from sympy import Equal
         domain = x.domain_conditioned(Equal(*self.args, evaluate=False))
@@ -488,6 +484,9 @@ class KroneckerDelta(Function):
         return dtype.integer
 
     def _sympystr(self, p):
+        return 'KroneckerDelta(%s)' % ', '.join(p._print(arg) for arg in self.args)
+        
+    def _lean(self, p):
         return 'KroneckerDelta(%s)' % ', '.join(p._print(arg) for arg in self.args)
         
     def _latex(self, p, exp=None):
@@ -614,7 +613,14 @@ class Bool(Function):
 
     def _sympystr(self, p):
         return 'Bool(%s)' % p._print(self.arg)
-        
+
+    def _lean(self, p):
+        arg = self.arg
+        argStr = p._print(arg)
+        if arg.is_Quantifier or arg.is_BinaryCondition:
+            argStr = '(%s)' % argStr
+        return 'Bool.toNat ' + argStr
+
     def _latex(self, p, exp=None):
         cond = p._print(self.arg)
         cond = r'\left|%s\right|' % cond

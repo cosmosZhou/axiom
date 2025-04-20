@@ -25,9 +25,9 @@ def prove(Eq):
     Eq << apply(Matrix((a, b, c, d)) * x)
 
     j = Symbol(domain=Range(4))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], j)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], j)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Ite)
 
 
 

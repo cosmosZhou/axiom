@@ -406,7 +406,7 @@ def convert_floor(floor):
 
 def convert_ceil(ceil):
     val = convert_expr(ceil.val)
-    return sympy.ceiling(val, evaluate=False)
+    return sympy.ceil(val, evaluate=False)
 
 def convert_func(func):
     if func.func_normal():

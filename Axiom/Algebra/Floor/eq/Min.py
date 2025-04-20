@@ -30,11 +30,11 @@ def prove(Eq):
 #     Eq << apply(Min(floor(x), floor(y), floor(z)))
     Eq << apply(floor(Min(x, y)))
 
-    Eq << Eq[0].apply(Algebra.Eq.of.And.split.Floor)
+    Eq << Eq[0].apply(Algebra.Eq.given.And.split.Floor)
 
     Eq <<= Algebra.Lt_Add_.Floor.One.apply(x), Algebra.Lt_Add_.Floor.One.apply(y)
 
-    Eq << Algebra.Lt.Lt.to.Lt.Min.both.apply(Eq[-2], Eq[-1])
+    Eq << Algebra.LtMin.of.Lt.Lt.both.apply(Eq[-2], Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Min.eq.Add)
 

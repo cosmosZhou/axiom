@@ -13,7 +13,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Algebra
+    from Axiom import Discrete, Algebra, Logic
     from Axiom.Discrete.Alpha.gt.Zero import alpha
     from Axiom.Discrete.H.eq.Add.definition import H
     from Axiom.Discrete.K.eq.Add.definition import K
@@ -34,10 +34,10 @@ def prove(Eq):
 
     Eq << Discrete.K.ne.Zero.apply(x[:3])
 
-    Eq << Algebra.And.of.And.apply(Eq[-2])
+    Eq << Algebra.And.given.And.apply(Eq[-2])
 
 
-    Eq << Eq[-1].this.lhs.args[1].apply(Algebra.Pow.eq.Mul.st.Inv, x[2])
+    Eq << Eq[-1].this.lhs.args[1].apply(Algebra.InvAdd_Inv.eq.Div_AddMul, x[2])
 
     Eq << Eq[-1] * (x[1] * x[2] + 1)
 
@@ -63,7 +63,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.args[0].base.expand()
 
-    Eq << Algebra.Cond.to.Cond.subs.apply(Eq[0], x[:n + 1], BlockMatrix(x[:n], x[n] + 1 / x[n + 1]))
+    Eq << Algebra.Cond.of.Cond.subs.apply(Eq[0], x[:n + 1], BlockMatrix(x[:n], x[n] + 1 / x[n + 1]))
 
     Eq << Eq[-1].this.lhs.apply(Discrete.Alpha.Block)
 
@@ -75,7 +75,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Cond.Imply.to.Cond.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
+    Eq << Logic.Cond.of.Cond.Imp.induct.apply(Eq.initial, Eq[-1], n=n, start=2)
 
 
 if __name__ == '__main__':

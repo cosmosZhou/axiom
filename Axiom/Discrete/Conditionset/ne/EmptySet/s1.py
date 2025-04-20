@@ -14,24 +14,24 @@ def apply(n, k=None):
 
 @prove
 def prove(Eq):
-    from Axiom import Sets, Algebra
+    from Axiom import Set, Algebra
 
     n = Symbol(integer=True, positive=True, given=True)
     k = Symbol(domain=Range(1, n + 1), given=True)
     Eq << apply(n, k=k)
 
-    Eq << Sets.Ne_EmptySet.of.Any.split.Conditionset.apply(Eq[0])
+    Eq << Set.Ne_EmptySet.given.Any.split.Conditionset.apply(Eq[0])
 
     i = Symbol(integer=True)
     x, (_, k), *_ = Eq[-1].variable.args
     a = Symbol(Lamda[i:k](Piecewise((Range(k - 1, n), Equal(i, k - 1)), (i.set, True))))
-    Eq << Algebra.Any.of.Cond.subs.apply(Eq[-1], x[:k], a)
+    Eq << Algebra.Any.given.Cond.subs.apply(Eq[-1], x[:k], a)
 
-    Eq << Algebra.And.of.And.apply(Eq[-1], 1)
+    Eq << Algebra.And.given.And.apply(Eq[-1], 1)
 
     Eq << Eq[-2].this.find(Indexed).definition
 
-    Eq << Algebra.And.of.And.apply(Eq[-1])
+    Eq << Algebra.And.given.And.apply(Eq[-1])
 
     Eq << Eq[-2].this.find(Indexed).definition
 

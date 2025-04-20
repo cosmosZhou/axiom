@@ -9,22 +9,22 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     n = Symbol(integer=True)
     Eq << apply(KroneckerDelta(1, n % 2))
 
-    Eq << Eq[0].this.find(Pow).apply(Algebra.Pow.eq.Piece.negativeOne)
+    Eq << Eq[0].this.find(Pow).apply(Algebra.Pow.eq.Ite.negativeOne)
 
-    Eq << Eq[-1].this.find(Mul[Piecewise]).apply(Algebra.Mul.eq.Piece, simplify=None)
+    Eq << Eq[-1].this.find(Mul[Piecewise]).apply(Algebra.Mul.eq.Ite, simplify=None)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Add.eq.Piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Add.eq.Ite)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Piece.swap)
+    Eq << Eq[-1].this.rhs.apply(Logic.Ite__Ite.eq.IteAnd_Not__Ite)
 
-    Eq << Eq[-1].this.find(Unequal).apply(Algebra.Ne_0.equ.Eq_odd)
+    Eq << Eq[-1].this.find(Unequal).apply(Algebra.Ne_0.Is.Eq_odd)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Delta.eq.Piece, swap=True)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Delta.eq.Ite, swap=True)
 
 
 if __name__ == '__main__':

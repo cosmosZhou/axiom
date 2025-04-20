@@ -18,7 +18,7 @@ def prove(Eq):
     x = Symbol(shape=(n, n), real=True)
     Eq << apply(Lamda[i:n](Sum[j:n](x[j, i])))
     i = Symbol(domain=Range(n))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
     Eq << Eq[-1].this.rhs.simplify()
 

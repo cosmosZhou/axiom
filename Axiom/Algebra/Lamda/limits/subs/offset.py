@@ -16,7 +16,7 @@ def prove(Eq):
     Eq << apply(Lamda[i:a:b](f(i)), d)
 
     i = Symbol(domain=Range(b - a))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
 
 

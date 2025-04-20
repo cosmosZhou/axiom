@@ -9,7 +9,7 @@ def apply(self, index=0, offset=None):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     n, d = Symbol(integer=True)
     f = Function(real=True)
@@ -28,7 +28,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Imply.to.Cond.induct.apply(Eq[-1], n=m, start=0)
+    Eq << Logic.Cond.of.Imp.induct.apply(Eq[-1], n=m, start=0)
 
 
 if __name__ == '__main__':

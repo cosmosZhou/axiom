@@ -16,7 +16,7 @@ def apply(self, var=None, swap=False):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Discrete
+    from Axiom import Algebra, Discrete, Logic
 
     x, y = Symbol(integer=True)
     n = Symbol(integer=True, nonnegative=True, given=False)
@@ -41,13 +41,13 @@ def prove(Eq):
 
     Eq << Discrete.Binom.eq.Add.Pascal.apply(Binomial(n + 1, k))
 
-    Eq << Algebra.Cond.of.And.subs.apply(Eq.induct, *Eq[-1].args)
+    Eq << Algebra.Cond.given.And.subs.apply(Eq.induct, *Eq[-1].args)
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Sum.Mul.eq.Add)
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Imply.to.Cond.induct.apply(Eq[-1], n=n)
+    Eq << Logic.Cond.of.Imp.induct.apply(Eq[-1], n=n)
 
 
 

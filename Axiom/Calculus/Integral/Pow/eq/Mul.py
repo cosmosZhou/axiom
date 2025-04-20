@@ -33,17 +33,17 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(Calculus.Add.eq.Grad)
 
-    Eq << Calculus.Eq_0.to.Any.Eq.constant.apply(Eq[-1])
+    Eq << Calculus.Any.Eq.of.Eq_0.constant.apply(Eq[-1])
 
     Eq << Eq[-1].this.expr.expr.lhs.args[0].definition
 
     Eq << Eq[-1].this.find(-~Symbol).definition
 
-    Eq << Algebra.Any_All.to.Any.And.subs.apply(Eq[-1], x, 0)
+    Eq << Algebra.Any.And.of.Any_All.subs.apply(Eq[-1], x, 0)
 
     Eq << Eq[-1].this.expr.expr.args[1].lhs.doit()
 
-    Eq << Eq[-1].this.expr.expr.apply(Algebra.Eq.Eq.to.Eq.trans)
+    Eq << Eq[-1].this.expr.expr.apply(Algebra.Eq.of.Eq.Eq)
 
     Eq << Eq[-1].reversed
 

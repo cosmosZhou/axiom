@@ -69,7 +69,7 @@ class RoundFunction(Function):
             return ipart
         elif spart.is_imaginary or (S.ImaginaryUnit * spart).is_real:
             return ipart + cls(Im(spart), evaluate=False) * S.ImaginaryUnit
-        elif isinstance(spart, (floor, ceiling)):
+        elif isinstance(spart, (floor, ceil)):
             return ipart + spart
         else:
             if ipart:
@@ -134,7 +134,7 @@ class Floor(RoundFunction):
     See Also
     ========
 
-    sympy.functions.elementary.integers.ceiling
+    sympy.functions.elementary.integers.ceil
 
     References
     ==========
@@ -150,7 +150,7 @@ class Floor(RoundFunction):
         if arg.is_Number:
             return arg.floor()
         elif any(isinstance(i, j)
-                for i in (arg, -arg) for j in (floor, ceiling)):
+                for i in (arg, -arg) for j in (floor, ceil)):
             return arg
         if arg.is_NumberSymbol:
             return arg.approximation_interval(Integer)[0]
@@ -188,14 +188,14 @@ class Floor(RoundFunction):
         return self.args[0].is_extended_negative
     
     def _eval_rewrite_as_ceiling(self, arg, **kwargs):
-        return -ceiling(-arg)
+        return -ceil(-arg)
 
     def _eval_rewrite_as_frac(self, arg, **kwargs):
         return arg - frac(arg)
 
     def _eval_Eq(self, other):
         if isinstance(self, floor):
-            if (self.rewrite(ceiling) == other) or \
+            if (self.rewrite(ceil) == other) or \
                     (self.rewrite(frac) == other):
                 return S.true
 
@@ -208,7 +208,7 @@ class Floor(RoundFunction):
                         return S.true
                 return self.args[0] < other + 1
             if other.is_number and other.is_real:
-                return self.args[0] < ceiling(other)
+                return self.args[0] < ceil(other)
         if self.args[0] == other and other.is_real:
             return S.true
         if other is S.Infinity and self.is_finite:
@@ -225,7 +225,7 @@ class Floor(RoundFunction):
                         return S.true
                 return self.args[0] >= other
             if other.is_number and other.is_real:
-                return self.args[0] >= ceiling(other)
+                return self.args[0] >= ceil(other)
         if self.args[0] == other and other.is_real:
             return S.false
         if other is S.NegativeInfinity and self.is_finite:
@@ -239,7 +239,7 @@ class Floor(RoundFunction):
             if other.is_integer:
                 return self.args[0] >= other + 1
             if other.is_number and other.is_real:
-                return self.args[0] >= ceiling(other)
+                return self.args[0] >= ceil(other)
         if self.args[0] == other and other.is_real:
             return S.false
         if other is S.NegativeInfinity and self.is_finite:
@@ -253,15 +253,17 @@ class Floor(RoundFunction):
             if other.is_integer:
                 return self.args[0] < other
             if other.is_number and other.is_real:
-                return self.args[0] < ceiling(other)
+                return self.args[0] < ceil(other)
         if other is S.Infinity and self.is_finite:
             return S.true
 
         return Lt(self, other, evaluate=False)
 
     def _sympystr(self, p):
-        #\N{left floor}%s\N{right floor}
         return 'Floor(%s)' % p._print(self.arg)        
+    
+    def _lean(self, p):
+        return '\N{left floor}%s\N{right floor}' % p._print(self.arg)        
     
     def _latex(self, p, exp=None):
         tex = r"\left\lfloor{%s}\right\rfloor" % p._print(self.args[0])
@@ -276,13 +278,13 @@ floor = Floor
 
 @dispatch(floor, Expr)
 def _eval_is_eq(lhs, rhs):  # noqa:F811
-    return is_eq(lhs.rewrite(ceiling), rhs) or \
+    return is_eq(lhs.rewrite(ceil), rhs) or \
         is_eq(lhs.rewrite(frac), rhs)
 
 
-class Ceiling(RoundFunction):
+class Ceil(RoundFunction):
     """
-    Ceiling is a univariate function which returns the smallest integer
+    Ceil is a univariate function which returns the smallest integer
     value not less than its argument. This implementation
     generalizes ceiling to complex numbers by taking the ceiling of the
     real and imaginary parts separately.
@@ -290,18 +292,18 @@ class Ceiling(RoundFunction):
     Examples
     ========
 
-    >>> from sympy import ceiling, E, I, S, Float, Rational
-    >>> ceiling(17)
+    >>> from sympy import ceil, E, I, S, Float, Rational
+    >>> ceil(17)
     17
-    >>> ceiling(Rational(23, 10))
+    >>> ceil(Rational(23, 10))
     3
-    >>> ceiling(2*E)
+    >>> ceil(2*E)
     6
-    >>> ceiling(-Float(0.567))
+    >>> ceil(-Float(0.567))
     0
-    >>> ceiling(I/2)
+    >>> ceil(I/2)
     I
-    >>> ceiling(S(5)/2 + 5*I/2)
+    >>> ceil(S(5)/2 + 5*I/2)
     3 + 3*I
 
     See Also
@@ -321,9 +323,9 @@ class Ceiling(RoundFunction):
     @classmethod
     def _eval_number(cls, arg):
         if arg.is_Number:
-            return arg.ceiling()
+            return arg.ceil()
         elif any(isinstance(i, j)
-                for i in (arg, -arg) for j in (floor, ceiling)):
+                for i in (arg, -arg) for j in (floor, ceil)):
             return arg
         if arg.is_NumberSymbol:
             return arg.approximation_interval(Integer)[1]
@@ -345,7 +347,7 @@ class Ceiling(RoundFunction):
         return self.args[0].is_extended_positive
 
     def _eval_Eq(self, other):
-        if isinstance(self, ceiling):
+        if isinstance(self, ceil):
             if (self.rewrite(floor) == other) or \
                     (self.rewrite(frac) == other):
                 return S.true
@@ -380,7 +382,7 @@ class Ceiling(RoundFunction):
         other = S(other)
         if self.args[0].is_real:
             if other.is_integer:
-                if other.is_Ceiling:
+                if other.is_Ceil:
                     if self.arg >= other.arg:
                         return S.true
                 return self.args[0] > other - 1
@@ -397,7 +399,7 @@ class Ceiling(RoundFunction):
         other = S(other)
         if self.args[0].is_real:
             if other.is_integer:
-                if other.is_Ceiling:
+                if other.is_Ceil:
                     if self.arg <= other.arg:
                         return S.true
                 return self.args[0] <= other
@@ -424,8 +426,10 @@ class Ceiling(RoundFunction):
         return self
 
     def _sympystr(self, p):
-        #\N{left ceiling}%s\N{right ceiling}
-        return 'Ceiling(%s)' % p._print(self.arg)        
+        return 'ceil(%s)' % p._print(self.arg)        
+
+    def _lean(self, p):
+        return '\N{left ceiling}%s\N{right ceiling}' % p._print(self.arg)        
 
     def _latex(self, p, exp=None):
         tex = r"\left\lceil{%s}\right\rceil" % p._print(self.args[0])
@@ -436,10 +440,10 @@ class Ceiling(RoundFunction):
             return tex
 
 
-ceiling = Ceiling
+ceil = Ceil
 
         
-@dispatch(ceiling, Basic)  # type:ignore
+@dispatch(ceil, Basic)  # type:ignore
 def _eval_is_eq(lhs, rhs):  # noqa:F811
     return is_eq(lhs.rewrite(floor), rhs) or is_eq(lhs.rewrite(frac), rhs)
 
@@ -484,7 +488,7 @@ class FractionalPart(Function):
     ========
 
     sympy.functions.elementary.integers.floor
-    sympy.functions.elementary.integers.ceiling
+    sympy.functions.elementary.integers.ceil
 
     References
     ===========
@@ -617,14 +621,17 @@ class FractionalPart(Function):
     def _sympystr(self, p): 
         return "frac(%s)" % p._print(self.args[0])
 
-        
+    def _lean(self, p): 
+        return "fract %s" % p._print(self.args[0])
+
+
 frac = FractionalPart
 
 
 @dispatch(frac, Basic)  # type:ignore
 def _eval_is_eq(lhs, rhs):  # noqa:F811
     if (lhs.rewrite(floor) == rhs) or \
-        (lhs.rewrite(ceiling) == rhs):
+        (lhs.rewrite(ceil) == rhs):
         return True
     # Check if other < 0
     if rhs.is_extended_negative:

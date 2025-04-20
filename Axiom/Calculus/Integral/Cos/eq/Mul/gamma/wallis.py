@@ -11,7 +11,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Calculus, Geometry, Algebra
+    from Axiom import Calculus, Geometry, Algebra, Logic
 
     n = Symbol(integer=True, positive=True, given=False)
     x = Symbol(real=True)
@@ -39,7 +39,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(sin ** 2).apply(Geometry.Square.Sin.eq.Sub.Square.Cos)
 
-    Eq << Eq[-1].this.rhs.expr.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.rhs.expr.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.rhs.expr.args[0].powsimp()
 
@@ -47,13 +47,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Integral[-Expr]).simplify()
 
-    Eq << Algebra.Eq.to.Eq.simple_equation.apply(Eq[-1], -Eq[-1].rhs.args[1])
+    Eq << Algebra.Eq.of.Eq.simple_equation.apply(Eq[-1], -Eq[-1].rhs.args[1])
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Div.cancel, n)
 
     Eq << Eq[-1].this.rhs.find(Integral).expr.apply(Algebra.Mul.eq.Pow.Add.exponent)
 
-    Eq << Algebra.Eq.Eq.to.Eq.subs.apply(Eq[0], Eq[-1])
+    Eq << Algebra.Eq.of.Eq.Eq.subs.apply(Eq[0], Eq[-1])
 
     Eq << Eq[-1].this.rhs.expand()
 
@@ -61,7 +61,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Eq.Eq.Imply.to.Eq.induct.apply(Eq[1], Eq[2], Eq[-1], n=n, start=1)
+    Eq << Logic.Eq.of.Eq.Eq.Imp.induct.apply(Eq[1], Eq[2], Eq[-1], n=n, start=1)
 
 
 

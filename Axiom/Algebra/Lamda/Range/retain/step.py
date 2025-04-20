@@ -8,7 +8,7 @@ def apply(self, axis=0):
     i, *ab = limits[axis]
     if len(ab) == 2:
         S[0], stop = ab
-        stop, step = stop.of(Ceiling[Expr / Expr])
+        stop, step = stop.of(Ceil[Expr / Expr])
         try:
             stop, start = stop.of(Expr - Expr)
         except:
@@ -28,7 +28,7 @@ def prove(Eq):
     d = Symbol(integer=True, positive=True)
     a, b, i = Symbol(integer=True)
     f = Function(integer=True)
-    Eq << apply(Lamda[i:Ceiling((b - a) / d)](f(a + d * i)))
+    Eq << apply(Lamda[i:Ceil((b - a) / d)](f(a + d * i)))
 
     Eq << Eq[0].this.rhs.apply(Algebra.Lamda.Range.simp)
 

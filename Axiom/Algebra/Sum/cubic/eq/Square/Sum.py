@@ -26,7 +26,7 @@ def prove(Eq):
 
     Eq << Eq[-3].subs(*Eq[-2:])
 
-    Eq << Algebra.Eq.to.Eq.Sum.apply(Eq[-1], (k, 0, n), simplify=None)
+    Eq << Algebra.EqSum.of.Eq.apply(Eq[-1], (k, 0, n), simplify=None)
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Sum.eq.Add)
 

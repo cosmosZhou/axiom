@@ -47,7 +47,7 @@ def prove(Eq):
     Eq << apply((a * Y * X).T)
 
     i = Symbol(domain=Range(n))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], i)
 
 
 

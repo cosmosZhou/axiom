@@ -278,6 +278,11 @@ class Factorial(CombinatorialFunction):
         latex = p._print(n)
         return 'Factorial(%s)' % latex
 
+    def _lean(self, p):
+        n = self.arg
+        latex = p._print(n)
+        return 'Factorial(%s)' % latex
+
     def _latex(self, p, exp=None):
         from sympy.printing.precedence import PRECEDENCE
         tex = r"%s!" % p.parenthesize(self.args[0], PRECEDENCE["Func"])
@@ -480,6 +485,11 @@ class Factorial2(CombinatorialFunction):
         latex = p._print(n)
         return 'Factorial2(%s)' % latex
 
+    def _lean(self, p):
+        n = self.arg
+        latex = p._print(n)
+        return 'Factorial2(%s)' % latex
+
     def _latex(self, p, exp=None):
         from sympy.printing.precedence import PRECEDENCE
         tex = r"%s!!" % p.parenthesize(self.args[0], PRECEDENCE["Func"])
@@ -632,11 +642,6 @@ class RisingFactorial(CombinatorialFunction):
         x, k = self.args
         return fuzzy_and((x.is_extended_integer, k.is_extended_integer, k.is_nonnegative))
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.rising_factorial(self.args[0]._sage_(),
-                                     self.args[1]._sage_())
-
     def _latex(self, p, exp=None):
         n, k = self.args
         if n.is_Add or n.is_Mul:
@@ -788,11 +793,6 @@ class FallingFactorial(CombinatorialFunction):
     def _eval_is_extended_integer(self):
         x, k = self.args
         return fuzzy_and((x.is_extended_integer, k.is_extended_integer, k.is_nonnegative))
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.falling_factorial(self.args[0]._sage_(),
-                                      self.args[1]._sage_())
 
     def _latex(self, p, exp=None):
         from sympy.printing.precedence import PRECEDENCE

@@ -13,7 +13,7 @@ def prove(Eq):
     x, y = Symbol(real=True)
     Eq << apply(abs(x * y))
 
-    Eq << Eq[0].this.rhs.apply(Algebra.Mul.eq.Abs)
+    Eq << Eq[0].this.rhs.apply(Algebra.MulAbsS.eq.AbsMul)
 
 
 if __name__ == '__main__':

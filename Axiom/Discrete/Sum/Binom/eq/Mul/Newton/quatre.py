@@ -26,11 +26,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Add ** 3).apply(Algebra.Pow.eq.Add)
 
-    Eq << Eq[-1].this.find(Sum).expr.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Sum).expr.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(Sum).apply(Algebra.Sum.eq.Add)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(Sum[Mul[Symbol]]).apply(Algebra.Sum.eq.Sub.unshift)
 
@@ -62,7 +62,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Add[Mul]).expand()
 
-    Eq << Algebra.Eq.of.Eq_0.apply(Eq[-1])
+    Eq << Algebra.Eq.given.Eq_0.apply(Eq[-1])
 
     Eq << Eq[-1].this.lhs.apply(Algebra.Add.collect, factor=(x + 1) ** (n - 4))
 

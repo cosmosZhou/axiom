@@ -10,23 +10,23 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Calculus, Algebra, Sets
+    from Axiom import Calculus, Algebra, Set, Logic
 
     x, a, b = Symbol(real=True)
     f = Function(real=True, continuous=True)
     Eq << apply(Integral[x:Interval(a, b)](f(x)))
 
-    Eq << Eq[0].this.rhs.find(Integral).apply(Calculus.Integral.eq.Piece)
+    Eq << Eq[0].this.rhs.find(Integral).apply(Calculus.Integral.eq.Ite)
 
-    Eq << Eq[-1].this.rhs.find(Bool).apply(Algebra.Bool.eq.Piece)
+    Eq << Eq[-1].this.rhs.find(Bool).apply(Logic.Bool.eq.Ite)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.Piece.eq.Piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Ite.eq.Ite_MulS)
 
-    Eq << Algebra.Cond_Piece.of.And.Imply.apply(Eq[-1])
+    Eq << Logic.Cond_Ite.given.And.Imp.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(Sets.Gt.to.Eq_EmptySet.Interval)
+    Eq << Eq[-1].this.lhs.apply(Set.Eq_EmptySet.Icc.of.Gt)
 
-    Eq << Algebra.Imply.of.Imply.subs.apply(Eq[-1])
+    Eq << Logic.Imp.given.Imp.subs.apply(Eq[-1])
 
 
 if __name__ == '__main__':

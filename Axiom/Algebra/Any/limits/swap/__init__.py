@@ -9,18 +9,18 @@ def apply(self, i=0, j=1):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     a, b, c, d = Symbol(real=True, positive=True)
     x, y = Symbol(real=True)
     f, g = Function(bool=True)
     Eq << apply(Any[x:a:b, y:c:d](f(x) & g(x, y)))
 
-    Eq << Algebra.Iff.of.And.Imply.apply(Eq[0])
+    Eq << Logic.Iff.given.Imp.Imp.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(Algebra.Any.to.Any.limits.swap, simplify=None)
+    Eq << Eq[-2].this.lhs.apply(Algebra.Any.of.Any.limits.swap, simplify=None)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Any.of.Any.limits.swap, simplify=None)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Any.given.Any.limits.swap, simplify=None)
 
 
 

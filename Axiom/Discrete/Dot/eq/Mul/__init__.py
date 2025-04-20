@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(MatMul).apply(Discrete.Dot.eq.Add)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS)
 
 
 

@@ -9,7 +9,7 @@ def apply(self, i=0, j=1):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     i, j = Symbol(integer=True)
     m = Symbol(integer=True, positive=True)
@@ -27,7 +27,7 @@ def prove(Eq):
     s = Symbol(Product[j:n + 1](f[i] + g[i, j]))
     Eq << s.this.definition
 
-    Eq << Eq[-1].apply(Algebra.Eq.to.Eq.Prod, (i, 0, m))
+    Eq << Eq[-1].apply(Algebra.EqProd.of.Eq, (i, 0, m))
 
     Eq << Eq[-2].this.rhs.apply(Algebra.Prod.eq.Mul.split, cond={n})
 
@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Imply.to.Eq.induct.apply(Eq[-1], n=n, start=1)
+    Eq << Logic.Eq.of.Imp.induct.apply(Eq[-1], n=n, start=1)
 
 
 

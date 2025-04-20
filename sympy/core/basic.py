@@ -2592,6 +2592,11 @@ class Basic(Printable, metaclass=ManagedProperties):
         return latex(self)
 
     @property
+    def lean(self):
+        from sympy.printing.lean import lean
+        return lean(self)
+
+    @property
     def python(self):
         random_symbols = set()
         definition = self.python_definition(set(), random_symbols)
@@ -2956,9 +2961,9 @@ class Basic(Printable, metaclass=ManagedProperties):
         from sympy import Floor
         return Floor(self)
 
-    def ceiling(self):
-        from sympy import Ceiling
-        return Ceiling(self)
+    def ceil(self):
+        from sympy import Ceil
+        return Ceil(self)
     
     def inference_status(self, child):
         return False
@@ -3205,6 +3210,9 @@ class Basic(Printable, metaclass=ManagedProperties):
         return True
 
     def _sympystr(self, p):
+        return self.__class__.__name__ + "(%s)" % ", ".join(p._print(o) for o in self.args)
+
+    def _lean(self, p):
         return self.__class__.__name__ + "(%s)" % ", ".join(p._print(o) for o in self.args)
 
     def _latex(self, p, exp=None):

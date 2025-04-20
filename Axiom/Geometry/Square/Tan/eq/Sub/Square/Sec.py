@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(sin ** 2).apply(Geometry.Square.Sin.eq.Sub.Square.Cos)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(sec).apply(Geometry.Sec.eq.Inv.Cos)
 

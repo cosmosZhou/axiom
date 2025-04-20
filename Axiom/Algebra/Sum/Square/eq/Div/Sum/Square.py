@@ -57,13 +57,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(Mul).args[2].apply(Algebra.Square.Sum.eq.Add.Sum)
 
-    Eq << Eq[-1].this.lhs.find(Mul).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.lhs.find(Mul).apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.rhs.find(Sum, Pow).apply(Algebra.Square.eq.Add)
 
     Eq << Eq[-1].this.rhs.find(Sum).apply(Algebra.Sum.eq.Add)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1] * n
 

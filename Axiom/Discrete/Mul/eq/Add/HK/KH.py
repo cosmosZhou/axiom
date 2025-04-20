@@ -22,13 +22,13 @@ def prove(Eq):
 
     Eq << apply(x[:n + 1])
 
-    Eq << Discrete.Alpha.eq.Mul.HK.st.Gt_0.apply(alpha(x[:n + 1]))
+    Eq << Discrete.Alpha.eq.DivH_K.positive.apply(alpha(x[:n + 1]))
 
     Eq << Eq[-1].this.lhs.defun()
 
-    Eq << Discrete.Alpha.eq.Mul.HK.st.Gt_0.apply(alpha(x[1:n + 1]))
+    Eq << Discrete.Alpha.eq.DivH_K.positive.apply(alpha(x[1:n + 1]))
 
-    Eq << Algebra.Eq.Eq.to.Eq.subs.apply(Eq[-1], Eq[-2])
+    Eq << Algebra.Eq.of.Eq.Eq.subs.apply(Eq[-1], Eq[-2])
 
     Eq << Eq[-1] - x[0]
 

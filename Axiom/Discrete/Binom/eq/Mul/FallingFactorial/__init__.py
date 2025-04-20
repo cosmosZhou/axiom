@@ -31,7 +31,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find((~Product) ** -1).apply(Algebra.Prod.limits.subs.Neg, i, n - i)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Prod.limits.Complement)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Prod.limits.SDiff)
 
 
 if __name__ == '__main__':

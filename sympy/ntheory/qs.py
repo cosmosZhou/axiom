@@ -186,13 +186,13 @@ def _initialize_ith_poly(N, factor_base, i, g, B):
     g : (i - 1)th polynomial
     B : array that stores a//q_l*gamma
     """
-    from sympy import ceiling
+    from sympy import ceil
     v = 1
     j = i
     while(j % 2 == 0):
         v += 1
         j //= 2
-    if ceiling(i / (2**v)) % 2 == 1:
+    if ceil(i / (2**v)) % 2 == 1:
         neg_pow = -1
     else:
         neg_pow = 1

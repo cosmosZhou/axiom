@@ -61,18 +61,18 @@ def prove(Eq):
 
     Eq.All_And = All[i:4](Equal(A[i], B[i]), plausible=True)
 
-    Eq << Eq.All_And.this.apply(Algebra.All.equ.And.doit)
+    Eq << Eq.All_And.this.apply(Algebra.All.Is.And.doit)
 
-    Eq << Algebra.And.of.And.apply(Eq[-1])
+    Eq << Algebra.And.given.And.apply(Eq[-1])
 
-    Eq << Algebra.And.of.And.apply(Eq[-1])
+    Eq << Algebra.And.given.And.apply(Eq[-1])
 
-    Eq << Algebra.And.of.And.apply(Eq[-1])
+    Eq << Algebra.And.given.And.apply(Eq[-1])
 
     _i = Symbol('i', domain=Range(4))
     Eq << Eq.All_And.limits_subs(i, _i)
 
-    Eq << Algebra.Eq.to.Eq.Lamda.apply(Eq[-1], (_i, 0, 4))
+    Eq << Algebra.EqLamda.of.Eq.apply(Eq[-1], (_i, 0, 4))
 
     Eq << Eq[-1].this.lhs.definition
 

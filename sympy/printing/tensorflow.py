@@ -18,7 +18,7 @@ class TensorflowPrinter(AbstractPythonCodePrinter):
     mapping = {
         sympy.Abs: "tensorflow.abs",
         sympy.sign: "tensorflow.sign",
-        sympy.ceiling: "tensorflow.ceil",
+        sympy.ceil: "tensorflow.ceil",
         sympy.floor: "tensorflow.floor",
         sympy.log: "tensorflow.log",
         sympy.exp: "tensorflow.exp",

@@ -7,7 +7,7 @@ from sympy.core.power import Pow
 from sympy.functions.special.zeta_functions import zeta
 from sympy.functions.special.error_functions import erf, erfc, Ei
 from sympy.functions.elementary.exponential import exp, log
-from sympy.functions.elementary.integers import ceiling, floor
+from sympy.functions.elementary.integers import ceil, floor
 from sympy.core.power import sqrt
 from sympy.functions.elementary.trigonometric import sin, cos, cot
 from sympy.functions.combinatorial.numbers import bernoulli, harmonic
@@ -209,10 +209,6 @@ class Gamma(Function):
         t = self.args[0] - x0
         return (self.func(t + 1)/rf(self.args[0], -x0 + 1))._eval_nseries(x, n, logx)
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.gamma(self.args[0]._sage_())
-
     def _eval_as_leading_term(self, x, cdir=0):
         arg = self.args[0]
         x0 = arg.subs(x, 0)
@@ -236,6 +232,10 @@ class Gamma(Function):
 
     def _sympystr(self, p):
         return 'Gamma(%s)' % p._print(self.arg)
+
+    def _lean(self, p):
+        return 'Gamma(%s)' % p._print(self.arg)
+
 ###############################################################################
 ################## LOWER and UPPER INCOMPLETE GAMMA FUNCTIONS #################
 ###############################################################################
@@ -578,10 +578,6 @@ class uppergamma(Function):
         from sympy import expint
         return expint(1 - s, x)*x**s
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.gamma(self.args[0]._sage_(), self.args[1]._sage_())
-
 
 ###############################################################################
 ###################### POLYGAMMA and LOGGAMMA FUNCTIONS #######################
@@ -733,7 +729,7 @@ class polygamma(Function):
             if n < 2:
                 o = Order(1/z, x)
             else:
-                m = ceiling((n + 1)//2)
+                m = ceil((n + 1)//2)
                 l = [bernoulli(2*k) / (2*k*z**(2*k)) for k in range(1, m)]
                 r -= Add(*l)
                 o = Order(1/z**n, x)
@@ -746,7 +742,7 @@ class polygamma(Function):
             #    quite a long time!
             fac = gamma(N)
             e0 = fac + N*fac/(2*z)
-            m = ceiling((n + 1)//2)
+            m = ceil((n + 1)//2)
             for k in range(1, m):
                 fac = fac*(2*k + N - 1)*(2*k + N - 2) / ((2*k)*(2*k - 1))
                 e0 += bernoulli(2*k)*fac/z**(2*k)
@@ -1081,10 +1077,6 @@ class loggamma(Function):
             return polygamma(0, self.args[0])
         else:
             raise ArgumentIndexError(self, argindex)
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.log_gamma(self.args[0]._sage_())
 
 
 class digamma(Function):

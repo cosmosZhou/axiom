@@ -322,6 +322,10 @@ class Limit(Expr):
         e, (z, z0) = self.args
         return "Limit[%s:%s](%s)" % tuple(map(p._print, (z, z0, e)))
 
+    def _lean(self, p):
+        e, (z, z0) = self.args
+        return "limit [%s:%s](%s)" % tuple(map(p._print, (z, z0, e)))
+
     def _latex(self, p):
         e, (z, z0) = self.args
 

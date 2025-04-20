@@ -14,22 +14,22 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Discrete
+    from Axiom import Algebra, Discrete, Logic
 
     n = Symbol(integer=True, nonnegative=True)
     k = Symbol(integer=True, positive=True)
     Eq << apply(binomial(n, k))
 
-    Eq << Algebra.Cond.of.And.Imply.split.apply(Eq[0], cond=Equal(n, 0))
+    Eq << Logic.Cond.given.And.Imp.split.apply(Eq[0], cond=Equal(n, 0))
 
-    Eq << Eq[-2].this.apply(Algebra.Imply.subs)
+    Eq << Eq[-2].this.apply(Logic.ImpAndEq.subst)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Ne_0.to.Gt_0)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Gt_0.of.Ne_0)
 
-    Eq << Eq[-1].apply(Algebra.Imply.of.All)
+    Eq << Eq[-1].apply(Logic.Imp.given.All)
 
     n_ = Symbol('n', integer=True, positive=True)
-    Eq << Algebra.All.of.Cond.subs.apply(Eq[-1], Eq[-1].variable, n_)
+    Eq << Algebra.All.given.Cond.subs.apply(Eq[-1], Eq[-1].variable, n_)
 
     Eq << Eq[-1].this.lhs.apply(Discrete.Binom.eq.Mul)
 

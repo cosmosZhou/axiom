@@ -34,11 +34,12 @@ sympy.init_printing()
 
 
 class Eq:
-    slots = {'list', 'latex', 'debug'}    
+    slots = {'list', 'latex', 'lean', 'debug'}
 
     def __init__(self, debug=True): 
-        self.__dict__['list'] = []        
+        self.__dict__['list'] = []
         self.__dict__['latex'] = []
+        self.__dict__['lean'] = []
         self.__dict__['debug'] = debug
 
     def postprocess(self):
@@ -66,7 +67,7 @@ class Eq:
                     eq = self[index]
                 else: 
                     index = attr
-                    eq = getattr(self, attr)                             
+                    eq = getattr(self, attr)
                 
                 res.append(line[m.start():m.start(1)])
                     
@@ -244,7 +245,7 @@ class Eq:
                 assert -start == len(rhs), f"{-start} == {len(rhs)}, lengths are not compatible! suggested codes are Eq[-{len(rhs)}:] = ..."
                  
             assert not index.stop and index.step is None
-            self.latex.append(''.join(self.yield_from(rhs))) 
+            self.return_from(rhs)
             return
         
         if isinstance(index, int) and index >= 0:
@@ -259,7 +260,7 @@ class Eq:
         # load_data(rhs)
         latex = rhs.latex
     
-        infix = str(rhs)
+        lean = rhs.lean
             
         if isinstance(rhs, Inference):
             index = self.add_to_list(rhs, index)
@@ -267,15 +268,13 @@ class Eq:
                 if isinstance(index, int):
                     index = 'Eq[%d]' % index
                 else:
-                    index = 'Eq.%s' % index
+                    index = 'Eq.%s' % index.replace('_', '\\_')
 
                 tag = r'\tag*{%s}' % index
                     
                 latex += tag
-                infix = '%s : %s' % (index, infix)
-            
-        if self.debug:
-            print(infix)
+                if self.debug:
+                    print('%s : %s' % (index, lean))
                         
         latex = r'\[%s\]' % latex
         #             latex = r'\(%s\)' % latex
@@ -283,8 +282,9 @@ class Eq:
         
         if flush:
             self.latex.append(latex)
+            self.lean.append(lean)
         else:
-            return latex
+            return latex, lean
 
     def __setattr__(self, index, rhs):
         if index in self.__dict__:
@@ -326,7 +326,6 @@ class Eq:
                     if equivalent is not None:
                         if not isinstance(equivalent, (list, tuple)):
                             equivalent.equivalent = lhs
-                                                
             elif lhs.plausible is False:
                 rhs.plausible = False
             else:
@@ -391,7 +390,6 @@ class Eq:
 
                                                     operations.append((imply, clue))
                                                     cond = imply
-                                                                                                                
                                                     clue = cond.clue
                                                 
                                                 operations.reverse()
@@ -407,7 +405,6 @@ class Eq:
                                                 if lhs.imply is not None and lhs.given is None and rhs.given is not None:
                                                     lhs.given = rhs.given
                                                     rhs = lhs
-                                                    
                             else:
                                 plausibles_set, is_equivalent = lhs.plausibles_set()
                                 if len(plausibles_set) == 1:
@@ -487,6 +484,12 @@ class Eq:
             self.__dict__[index] = rhs
         return index
         
+    def return_from(self, container):
+        if args := [*zip(*self.yield_from(container))]:
+            latex, lean = args
+            self.latex.append(''.join(latex))
+            self.lean.append(lean)
+
     def yield_from(self, container):
         for e in container:
             if isinstance(e, (list, tuple)):
@@ -497,16 +500,21 @@ class Eq:
     def __lshift__(self, rhs):
         if isinstance(rhs, list):
             # input is a matrix:
-            arr = []
+            latexArr = []
+            leanArr = []
+
             for v in rhs:
                 if isinstance(v, tuple):
-                    latex = ''.join(self.yield_from(v))
+                    latex, lean = zip(*self.yield_from(v))
+                    latex = ''.join(latex)
                 else:
-                    latex = self.process(v, flush=False)
-                arr.append(latex)
-            self.latex.append('\t'.join(arr))
+                    latex, lean = self.process(v, flush=False)
+                latexArr.append(latex)
+                leanArr.append(lean)
+            self.latex.append('\t'.join(latexArr))
+            self.lean.append({'tab' : leanArr})
         elif isinstance(rhs, tuple):
-            self.latex.append(''.join(self.yield_from(rhs)))
+            self.return_from(rhs)
         else:
             self.process(rhs)
         return self
@@ -575,12 +583,12 @@ def run():
         from util import javaScript as MySQL
 
     try:
-        state, lapse, latex = prove_with_timing(res, debug=True, slow=True)
+        state, lapse, latex, lean = prove_with_timing(res, debug=True, slow=True)
 #         if len(latex) > 65535:
 #             print('truncating date to 65535 bytes, original length =', len(latex))
 #             latex = latex[:65535]
         
-        sql = 'update axiom set state = "%s", lapse = %s, latex = %s where user = "%s" and axiom = "%s"' % (state, lapse, json_encode(latex), user, package)
+        sql = 'update axiom set state = "%s", lapse = %s, latex = %s, lean = %s where user = "%s" and axiom = "%s"' % (state, lapse, json_encode(latex), "'%s'" % json_encode(lean).replace("'", "''"), user, package)
         # print(sql)
     except AttributeError as e: 
         if m := re.match("'(\w+)' object has no attribute 'prove'", str(e)):
@@ -609,9 +617,8 @@ def run():
     except TypeError:
         if tackle_type_error(package):
             return
-            
-    rowcount = MySQL.instance.execute(sql)
-    if rowcount <= 0:
+
+    if MySQL.instance.execute(sql) <= 0:
         
         m = re.match('update axiom set state = "(\w+)", lapse = (\S+), latex = "([\s\S]+)" where user = "(\w+)" and axiom = "(\S+)"', sql)
         state, lapse, latex, _, axiom = m.groups()
@@ -632,7 +639,7 @@ def analyze_results_from_run(lines, latex=True):
         line = line.rstrip()
         m = re.match(r'''b(".+")|b('.+')''', line)
         if m:
-            user, package, state, lapse, latex = eval(m[1] or m[2]).split('\x0b')
+            user, package, state, lapse, latex, *_ = eval(m[1] or m[2]).split('\x0b')
         print(line)
 
 # PermissionError: [WinError 32]
@@ -649,7 +656,7 @@ def analyze_results_from_run(lines, latex=True):
 
         return state, lapse, json_encode(latex), user, package
     else:
-        return state, latex
+        return state, latex, None
     
 
 from std.file import Text
@@ -680,9 +687,9 @@ def from_axiom_import(py, section, eqs):
     except Exception as e:
         print(e)
         traceback.print_exc()
-        return RetCode.failed, eqs.postprocess()       
+        return RetCode.failed, eqs.postprocess(), None
     
-localhost='192.168.18.133:8000'
+localhost='192.168.18.131:8000'
 def website(py):
     return f"http://{localhost}/{basename(dirname(dirname(__file__)))}/?module={py_to_module(py, '.')}"
 
@@ -726,7 +733,8 @@ def _prove(func, debug=True, **kwargs):
                 attribute = m[2]
                 statement = messages[1].strip()
                 from run import tackle_type_error
-                if m := re.search('(?:Algebra|Sets|Calculus|Discrete|Geometry|Keras|Stats)(?:\.\w+)+', statement):
+                from util.search import sections
+                if m := re.search(f"(?:{'|'.join(sections)})(?:\.\w+)+", statement):
                     package = m[0]
                     paths = package.split('.')
                     if attribute == 'apply':
@@ -746,7 +754,7 @@ def _prove(func, debug=True, **kwargs):
                 elif attribute == 'apply' and statement == '__kwdefaults__ = axiom.apply.__closure__[0].cell_contents.__kwdefaults__':
                     messages = source_error(index=-4)
                     statement = messages[1].strip()
-                    if m := re.search('(?:Algebra|Sets|Calculus|Discrete|Geometry|Keras|Stats)(?:\.\w+)+', statement):
+                    if m := re.search(f"(?:{'|'.join(sections)})(?:\.\w+)+", statement):
                         lines = tackle_type_error(m[0], False)
                         args = analyze_results_from_run(lines)
                         if len(args) != 2:
@@ -796,22 +804,29 @@ def _prove(func, debug=True, **kwargs):
             
         print(website(py))
         ret = RetCode.failed
+    except NameError as e:
+        from util.search import sections
+        if (m := re.fullmatch("name '(\w+)' is not defined", str(e))) and m[1] in sections:
+            return from_axiom_import(py, m[1], eqs)
+        ret = default_error_handler(source_error(), py, e)
     except Exception as e: 
-        messages = source_error()
-        
-        kwargs = detect_error_in_prove(py, messages) or detect_error_in_apply(py, messages) or detect_error_in_imply(py, messages) or detect_error_in_axiom(py, messages) or detect_error_in_sympy(py, messages)
-        if isinstance(kwargs, list):
-            kwargs[0] |= get_error_info(e)
-        elif kwargs is None:
-            print('error info is lost!')
-            kwargs = get_error_info(e)
-        else:
-            kwargs |= get_error_info(e)
-        print(json_encode(kwargs))
-        print(website(py))
-        ret = RetCode.failed
+        ret = default_error_handler(source_error(), py, e)
     
-    return ret, eqs.postprocess()
+    return ret, eqs.postprocess(), eqs.lean
+
+
+def default_error_handler(messages, py, e):
+    kwargs = detect_error_in_prove(py, messages) or detect_error_in_apply(py, messages) or detect_error_in_imply(py, messages) or detect_error_in_axiom(py, messages) or detect_error_in_sympy(py, messages)
+    if isinstance(kwargs, list):
+        kwargs[0] |= get_error_info(e)
+    elif kwargs is None:
+        print('error info is lost!')
+        kwargs = get_error_info(e)
+    else:
+        kwargs |= get_error_info(e)
+    print(json_encode(kwargs))
+    print(website(py))
+    return RetCode.failed
 
 
 def skips_in_apply(py):
@@ -962,12 +977,12 @@ def remove_annotation(func, state):
 def unprovable(func):
 
     def unprovable(**kwargs):
-        state, latex = _prove(func, **kwargs)
+        state, latex, lean = _prove(func, **kwargs)
         if state == RetCode.proved:
             if remove_annotation(func, 'provable'):
-                return state, latex
+                return state, latex, lean
 
-        return RetCode.unprovable, latex
+        return RetCode.unprovable, latex, lean
 
     return unprovable
 
@@ -975,12 +990,12 @@ def unprovable(func):
 def unproved(func):
 
     def unproved(**kwargs):
-        state, latex = _prove(func, **kwargs)
+        state, latex, lean, *_ = _prove(func, **kwargs)
         if state == RetCode.proved:
             if remove_annotation(func, 'proved'):
-                return state, latex
+                return state, latex, lean
 
-        return RetCode.unproved, latex
+        return RetCode.unproved, latex, lean
 
     return unproved
 
@@ -994,9 +1009,9 @@ def slow(func):
             axiomPath = py_to_module(func.__code__.co_filename, '.')
             try:
                 from std import MySQL
-                [[latex]] = MySQL.instance().query(f"select latex from axiom where user = '{user}' and axiom = '{axiomPath}'")
+                [[latex, lean]] = MySQL.instance().query(f"select latex, lean from axiom where user = '{user}' and axiom = '{axiomPath}'")
                 if latex:
-                    return RetCode.slow, latex
+                    return RetCode.slow, latex, lean
                 return _prove(func, **kwargs)
             except ValueError as e:
                 print(e)
@@ -1006,7 +1021,7 @@ def slow(func):
                 print(e)
                 traceback.print_exc()
                 print(f"python run.py {axiomPath}\nis too slow to execute, so skipping, try it manually")
-                return RetCode.slow, ''
+                return RetCode.slow, '', None
     
     return slow
 
@@ -1038,7 +1053,7 @@ def apply(*args, **kwargs):
         axiom, = args
         from sympy.logic.boolalg import inference_type, binary_operators
         _, type = inference_type(split(axiom))
-        if type == 'of':
+        if type == 'given':
             return given(axiom, **kwargs)
 
         if type in binary_operators:
@@ -1101,6 +1116,14 @@ def imply(apply, **kwargs):
             kwargs['simplify'] = _simplify
         
         try:
+            co_argcount = apply.__code__.co_argcount
+            if apply.__defaults__ is not None:
+                co_argcount -= len(apply.__defaults__)
+            import std
+            args_cond, args_rest = std.array_split(args, lambda arg : isinstance(arg, (Inference, Boolean)))
+            if co_argcount > len(args_cond) == 1 and args_cond[0].is_And and len(args_cond[0].args) == co_argcount:
+                args_cond = args_cond[0].args
+                args = [*args_cond, *args_rest]
             statement = apply(*map(lambda inf: inf.cond if isinstance(inf, Inference) else inf, args), **kwargs)
         except Exception as e:
             _args = [*map(lambda inf: inf.cond if isinstance(inf, Inference) else inf, args)]
@@ -1135,7 +1158,7 @@ def imply(apply, **kwargs):
             if args and isinstance(args[0], (Boolean, Inference)):
                 tokens = split(apply)
                 from sympy.logic.boolalg import inference_type
-                if inference_type(tokens)[1] == 'equ':
+                if inference_type(tokens)[1] in ('equ', 'Is'):
                     from sympy import And, Iff
                     if isinstance(statement, tuple):
                         statement = And(*statement)
@@ -1255,6 +1278,11 @@ def given(apply, **kwargs):
         
         local = kwargs.pop('local', None)
         try:
+            co_argcount = apply.__code__.co_argcount
+            if apply.__defaults__ is not None:
+                co_argcount -= len(apply.__defaults__)
+            if co_argcount > len(args) == 1 and args[0].is_And and len(args[0].args) == co_argcount:
+                args = args[0].args
             statement = apply(*map(lambda inf: inf.cond if isinstance(inf, Inference) else inf, args), **kwargs)
         except Exception as e:
             _args = [*map(lambda inf: inf.cond if isinstance(inf, Inference) else inf, args)]
@@ -1416,7 +1444,7 @@ balancedParanthesis = balancedParentheses(7)
 
 
 def detect_axiom(statement):
-#     // Eq << Eq.x_j_subset.apply(Discrete.Sets.subset.nonempty, Eq.x_j_inequality, evaluate=False)
+#     // Eq << Eq.x_j_subset.apply(Discrete.Set.subset.nonempty, Eq.x_j_inequality, evaluate=False)
     matches = re.compile('\.apply\((.+)\)').search(statement)
     if matches:
         theorem = matches[1].split(',')[0].strip()
@@ -1534,7 +1562,7 @@ def recursive_parsing(theorem):
         
 def chmod():
     if os.sep == '/':  # is Linux system
-        cmd = 'chmod -R 777 Axiom'
+        cmd = 'chmod -R a+rwx Axiom'
     #         os.system(cmd)
         for s in os.popen(cmd).readlines():
             print(s)

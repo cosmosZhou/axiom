@@ -78,6 +78,9 @@ class ExprCondPair(Basic):
     def _sympystr(self, p):
         return '(%s, %s)' % (p._print(self.expr), p._print(self.cond))
 
+    def _lean(self, p):
+        return '(%s, %s)' % (p._print(self.expr), p._print(self.cond))
+
 
 class Piecewise(Function):
     """
@@ -1668,6 +1671,12 @@ class Piecewise(Function):
             ecpairs.append(r"{%s} & {\color{blue} {\text{if}}}\ \: {%s}" % (p._print(self.args[-1].expr), p._print(self.args[-1].cond)))
         tex = r"\begin{cases} %s \end{cases}"
         return tex % r" \\".join(ecpairs)
+
+    def _lean(self, p): 
+        args = self.args
+        (thenBranch, ifBranch), *args = args
+        elseBranch = args[0][0] if len(args) == 1 else Piecewise(*args)
+        return "if %s then %s else %s" % (p._print(ifBranch), p._print(thenBranch), p._print(elseBranch))
 
     def as_multiple_terms(self, x, domain, cls):
         universalSet = x.universalSet

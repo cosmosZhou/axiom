@@ -18,11 +18,11 @@ def prove(Eq):
     x, y = Symbol(integer=True)
     Eq << apply(KroneckerDelta(x, y))
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Delta.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Delta.eq.Ite)
 
-    Eq << Eq[-1].this.find(Equal).apply(Algebra.Eq.equ.Eq_0)
+    Eq << Eq[-1].this.find(Equal).apply(Algebra.Eq.Is.Eq_0)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Delta.eq.Piece, swap=True)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Delta.eq.Ite, swap=True)
 
 
 

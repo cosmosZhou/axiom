@@ -28,23 +28,39 @@ def prove(Eq):
     h = Function(real=True)
     Eq << apply(Equal(x[n + 1], x[n] * c + h(n)), k)
 
-    Eq << Eq[1] * c
+    Eq << Eq[0] / c ** (n + 1)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(Symbol * Pow).args[:2].apply(Algebra.Mul.eq.Pow.Add.exponent)
 
+    Eq << Eq[-1].subs(n, k)
+
+    Eq << Algebra.All.of.Or.apply(Eq[-1], 1)
+
+    Eq << Algebra.EqSum.of.Eq.apply(Eq[-1], (k, 0, n))
+
+    Eq << Eq[-1].this.rhs.apply(Algebra.Sum.eq.Add)
+
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.limits.subs.offset, -1)
+
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.eq.Sub.unshift)
+
+    Eq << Eq[-1] + x[0]
+
+    Eq << Eq[-1].this.lhs.apply(Algebra.Sum.eq.Add.pop)
+
+    Eq << Eq[-1] * c ** n
+
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS)
+
     Eq << Eq[-1].this.find(Mul[Sum]).apply(Algebra.Mul.eq.Sum)
 
-    Eq << Eq[1].subs(n, n + 1) - Eq[-1]
-
-    Eq << Eq[-1].this.find(Sum).apply(Algebra.Sum.eq.Add.pop)
-
-    Eq << Algebra.Eq.to.Eq.transport.apply(Eq[-1], lhs=-1)
 
 
 
 
 if __name__ == '__main__':
     run()
-# created on 2023-06-17
+# created on 2021-09-29
+# updated on 2023-06-17

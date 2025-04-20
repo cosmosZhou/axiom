@@ -11,7 +11,7 @@ def apply(self, var='k'):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Discrete, Sets
+    from Axiom import Algebra, Discrete, Set, Logic
 
     n = Symbol(integer=True, positive=True, given=False)
     x = Symbol(complex=True, shape=(oo,))
@@ -54,31 +54,31 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Sum).apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.rhs().find(And).apply(Sets.Eq_Sum.In_CartesianSpace.equ.And)
+    Eq << Eq[-1].this.rhs().find(And).apply(Set.Eq_Sum.Mem_CartesianSpace.Is.And)
 
     Eq << Eq[-1].this.rhs.find(Sum).apply(Algebra.Sum.limits.absorb)
 
     Eq << Eq[0].subs(m, m - k)
 
-    Eq << Algebra.Or.to.Imply.apply(Eq[-1], 1)
+    Eq << Logic.ImpNot.of.Or.apply(Eq[-1], 1)
 
-    Eq << Eq[-1].this.lhs.apply(Sets.In_Range.of.In.Range.restrict, upper=m + 1)
+    Eq << Eq[-1].this.lhs.apply(Set.Mem_Range.given.Mem.Range.restrict, upper=m + 1)
 
-    Eq << Eq[-1].this.lhs.apply(Sets.In.Neg)
+    Eq << Eq[-1].this.lhs.apply(Set.Mem.Neg)
 
-    Eq << Eq[-1].this.lhs.apply(Sets.In.Add, m)
+    Eq << Eq[-1].this.lhs.apply(Set.Mem_Icc.Is.MemAdd, m)
 
-    Eq << Algebra.Imply.to.All.single_variable.apply(Eq[-1])
+    Eq << Logic.All.of.Imp.single_variable.apply(Eq[-1])
 
     Eq << Eq[-1].this.expr * (x[n] ** k / (Factorial(m - k) * Factorial(k)))
 
     Eq << Eq[-1].this.expr.rhs.find(Sum).apply(Algebra.Sum.eq.Mul, simplify=1)
 
-    Eq << Algebra.All_Eq.to.Eq.Sum.apply(Eq[-1])
+    Eq << Algebra.EqSum.of.All_Eq.apply(Eq[-1])
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Eq.Imply.to.Eq.induct.apply(Eq[1], Eq[-1], n, 1)
+    Eq << Logic.Eq.of.Eq.Imp.induct.apply(Eq[1], Eq[-1], n, 1)
 
 
 if __name__ == '__main__':

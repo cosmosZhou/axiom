@@ -392,6 +392,10 @@ class Indexed(Expr):
         indices = list(map(p._print, self.indices))
         return "%s[%s]" % (p._print(self.base), ", ".join(indices))
 
+    def _lean(self, p):
+        indices = list(map(p._print, self.indices))
+        return "%s[%s]" % (p._print(self.base), ", ".join(indices))
+
     def _latex(self, p, **kwargs):
         base = self.base
         shape = base.shape
@@ -918,7 +922,7 @@ class Indexed(Expr):
                                 if len(ab) == 2:
                                     zero, shape = ab
                                     assert zero.is_zero
-                                    if shape.is_Ceiling:
+                                    if shape.is_Ceil:
                                         stop = shape.arg * step + start
                                         if not stop._has(var):
                                             return expr.base[indices[:i] + (slice(start, stop, step),) + indices[i + 1:]]
@@ -1542,7 +1546,7 @@ class Sliced(Expr):
                 stop = self_start + stop * step
                 
                 size = (stop - start) / step
-                if size.is_Ceiling:
+                if size.is_Ceil:
                     stop = size.arg * step + start
                     
                 return base[(slice(start, stop, step), *indices)]
@@ -1601,12 +1605,12 @@ class Sliced(Expr):
     @cacheit
     def _eval_shape(self):
         sizes = []
-        from sympy.functions.elementary.integers import Ceiling
+        from sympy.functions.elementary.integers import Ceil
         for index in self.indices:
             start, stop, step = index.slice_args
             if step is None:
                 step = S.One
-            sizes.append(Ceiling((stop - start) / step))
+            sizes.append(Ceil((stop - start) / step))
                 
         if len(self.base.shape) > len(sizes):
             sizes += [self.base.shape[i] for i in range(len(sizes), len(self.base.shape))]
@@ -1665,6 +1669,15 @@ class Sliced(Expr):
                 yield ':'.join([start, stop, p._print(step)])
 
     def _sympystr(self, p):
+        base = self.base
+        if base.is_Indexed:
+            base, *indices = base.args
+            indices = [p._print(index) for index in indices] + [*self.index_generator(p)]
+        else:
+            indices = self.index_generator(p)            
+        return "%s[%s]" % (p._print(base), ', '.join(indices))
+
+    def _lean(self, p):
         base = self.base
         if base.is_Indexed:
             base, *indices = base.args
@@ -1947,7 +1960,7 @@ class Sliced(Expr):
                                     
             indices = []
             
-            from sympy.functions.elementary.integers import Ceiling
+            from sympy.functions.elementary.integers import Ceil
             for self_index, index in zip(self_indices, old_indices):
                 self_start, self_stop, self_step = self_index.slice_args
                 start, stop, step = index.slice_args
@@ -1955,7 +1968,7 @@ class Sliced(Expr):
                     if step == 1:
                         indices.append(slice(self_start - start, self_stop - start))
                     else:
-                        indices.append(slice(Ceiling((self_start - start) / step), Ceiling((self_stop - start) / step)))
+                        indices.append(slice(Ceil((self_start - start) / step), Ceil((self_stop - start) / step)))
                 else: 
                     break
 
@@ -2579,14 +2592,14 @@ class SlicedIndexed(Expr):
 
     @cacheit
     def _eval_shape(self):
-        from sympy.functions.elementary.integers import Ceiling
+        from sympy.functions.elementary.integers import Ceil
         sizes = []
         for index in self.slices:
             start, stop, step = index.slice_args
             if step is None:
                 sizes.append(stop - start)
             else:
-                sizes.append(Ceiling((stop - start) / step))
+                sizes.append(Ceil((stop - start) / step))
         
         sizes = tuple(sizes)
         numOfIndices = len(self.args) - 1
@@ -2628,6 +2641,37 @@ class SlicedIndexed(Expr):
         return ranges
 
     def _sympystr(self, p):
+        slices, indices = self.slices_indices()
+        
+        args = []
+        for i, s in enumerate(slices):
+            start, stop, step = s.slice_args
+            if start.is_zero:
+                start = ''
+            else:
+                start = p._print(start)
+            
+            if stop == self.base.shape[i]:
+                stop = ''
+            else: 
+                stop = p._print(stop)
+            
+            if step == 1:                    
+                args.append('%s:%s' % (start, stop))
+            else:
+                step = p._print(step)
+                args.append('%s:%s:%s' % (start, stop, step))
+            
+        args += [p._print(i) for i in indices]
+            
+        base = self.base
+        if base.is_Indexed: 
+            args = [p._print(index) for index in base.indices] + args
+            base = base.base
+            
+        return "%s[%s]" % (p._print(base), ', '.join(args))
+
+    def _lean(self, p):
         slices, indices = self.slices_indices()
         
         args = []

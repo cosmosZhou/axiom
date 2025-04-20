@@ -5,25 +5,28 @@ from util import *
 def apply(given, lower=None, upper=None):
     lhs, rhs = given.of(Greater)
     if lower is not None:
-        assert lower <= lhs
-        lhs = lower
+        assert lower <= rhs
+        rhs = lower
     elif upper is not None:
-        assert upper >= rhs
-        rhs = upper
+        assert upper >= lhs
+        lhs = upper
 
     return Greater(lhs, rhs)
 
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
-
     x, y = Symbol(real=True, given=True)
-    Eq << apply(Greater(x, y), x - 1)
+    Eq << apply(Greater(x, y), y - 1)
 
-    Eq << Algebra.Gt.to.Gt.relax.apply(Eq[1], upper=x)
+    Eq << ~Eq[-1]
+
+    Eq <<= Eq[0] & Eq[-1]
+
+    # Eq <<= Eq[-1] & Eq[0]
 
 
 if __name__ == '__main__':
     run()
-# created on 2019-07-16
+
+# created on 2018-07-05

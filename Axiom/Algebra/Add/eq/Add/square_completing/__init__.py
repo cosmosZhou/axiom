@@ -3,7 +3,7 @@ from util import *
 
 @apply(simplify=False)
 def apply(self, x=None):
-    from Axiom.Algebra.Le.Ge.to.Le.quadratic import quadratic_coefficient
+    from Axiom.Algebra.Le.of.Le.Ge.quadratic import quadratic_coefficient
     x, a, b, c = quadratic_coefficient(self, x=x)
 
     assert a.is_finite
@@ -24,7 +24,7 @@ def prove(Eq):
 
     Eq << Unequal(a, 0, plausible=True)
 
-    Eq << Algebra.Ne_0.to.Eq.square_completing.apply(Eq[1], Eq[0].lhs, simplify=None)
+    Eq << Algebra.Eq.of.Ne_0.square_completing.apply(Eq[1], Eq[0].lhs, simplify=None)
 
     # Eq << Eq[0].this.rhs.expand()
     # https://en.wikipedia.org/wiki/Completing_the_square

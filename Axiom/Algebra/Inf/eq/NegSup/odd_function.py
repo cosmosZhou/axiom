@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(f).defun()
 
-    Eq << Algebra.Eq.to.Eq.Sup_Inf.st.odd_function.apply(Eq[-2], Eq[0].find(Interval), x)
+    Eq << Algebra.Sup.eq.NegInf.of.Eq_Neg.apply(Eq[-2], Eq[0].find(Interval), x)
 
     Eq << Eq[-1].this.find(f).defun()
 

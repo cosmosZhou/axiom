@@ -8,7 +8,7 @@ def apply(x):
 
 @prove(provable=False)
 def prove(Eq):
-    from Axiom import Algebra, Sets
+    from Axiom import Algebra, Set
 
     x = Symbol(real=True, given=True)
     Eq << apply(x)
@@ -35,10 +35,10 @@ def prove(Eq):
 
     Eq << Algebra.any.of.Any_And.limits.unleash.apply(Eq[-1])
 
-    Eq << Eq[-1].this.expr.apply(Sets.gt.le.of.el)
+    Eq << Eq[-1].this.expr.apply(Set.gt.le.of.el)
 
     n = Eq[-1].variable
-    Eq << Sets.then.any_el.integer.apply(x, n)
+    Eq << Set.then.any_el.integer.apply(x, n)
 
 
 if __name__ == '__main__':

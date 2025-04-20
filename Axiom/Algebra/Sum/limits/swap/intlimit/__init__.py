@@ -63,7 +63,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Sets
+    from Axiom import Algebra, Set
 
     i, j, d, a = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
@@ -73,7 +73,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.lhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.lhs.expr.args[-1].arg.apply(Sets.In.In.transform.i_Ge_j)
+    Eq << Eq[-1].this.lhs.expr.args[-1].arg.apply(Set.Mem.Mem.transform.i_Ge_j)
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Sum.Bool)
 

@@ -14,7 +14,7 @@ def prove(Eq):
     from Axiom import Algebra
     z = Symbol(complex=True)
     Eq << apply(abs(z))
-    Eq << Eq[0].this.lhs.arg.apply(Algebra.Expr.eq.Add.complex)
+    Eq << Eq[0].this.lhs.arg.apply(Algebra.Expr.eq.AddRe_MulIIm)
 
 
 if __name__ == '__main__':

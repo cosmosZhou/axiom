@@ -2,38 +2,28 @@ from util import *
 
 
 @apply
-def apply(self, i=None):
-    x, y = self.of(Equal)
+def apply(given, a, i=None):
+    x, y = given.of(Equal)
     assert x.shape == y.shape
-
-    if isinstance(i, (tuple, Tuple, list)):
-        shape = x.shape
-        for i_, n in zip(i, shape):
-            assert i_.domain == Range(n)
-    else:
-        n = x.shape[0]
-        assert i.domain == Range(n)
-
-    return Equal(x[i], y[i])
+    if i is None:
+        return Equal(a[x], a[y])
+    n = x.shape[0]
+    return Equal(Lamda[i:n](a[x[i]]), Lamda[i:n](a[y[i]]))
 
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
-
     n = Symbol(integer=True, positive=True, given=True)
-    a, b = Symbol(shape=(n,), etype=dtype.integer)
-    i = Symbol(domain=Range(n))
-    Eq << apply(Equal(a, b), i=i)
+    x, y = Symbol(shape=(n,), integer=True)
+    a = Symbol(shape=(n,), etype=dtype.integer)
+    i = Symbol(integer=True)
 
-    Eq << Algebra.Eq.to.Eq.Lamda.apply(Eq[1], (i,))
+    Eq << apply(Equal(x, y), a, i=i)
 
-
-
+    Eq << Eq[-1].subs(Eq[0])
 
 
 if __name__ == '__main__':
     run()
 
-# created on 2018-04-03
-# updated on 2021-11-26
+# created on 2021-08-26

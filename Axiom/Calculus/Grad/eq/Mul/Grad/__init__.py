@@ -20,7 +20,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Calculus
+    from Axiom import Algebra, Calculus, Logic
 
     n = Symbol(integer=True, positive=True)
     f = Function(real=True)
@@ -28,15 +28,15 @@ def prove(Eq):
     i, j = Symbol(integer=True)
     Eq << apply(Derivative[x[i]](f(x[j])))
 
-    Eq << Eq[-1].this.find(KroneckerDelta).apply(Algebra.Delta.eq.Piece)
+    Eq << Eq[-1].this.find(KroneckerDelta).apply(Algebra.Delta.eq.Ite)
 
-    Eq << Algebra.Cond.of.And.Imply.split.apply(Eq[-1], cond=Eq[-1].find(Equal))
+    Eq << Logic.Cond.given.And.Imp.split.apply(Eq[-1], cond=Eq[-1].find(Equal))
 
-    Eq <<= Algebra.Imply.of.Imply.subs.Bool.apply(Eq[-2]), Algebra.Imply.of.Imply.subs.Bool.apply(Eq[-1], invert=True)
+    Eq <<= Logic.Imp.given.Imp.subs.Bool.apply(Eq[-2]), Logic.Imp.given.Imp.subs.Bool.apply(Eq[-1], invert=True)
 
-    Eq << Algebra.Imply.of.Imply.subs.apply(Eq[-2])
+    Eq << Logic.Imp.given.Imp.subs.apply(Eq[-2])
 
-    Eq << Eq[-1].this.lhs.apply(Calculus.Ne.to.Eq.Zero, f, x)
+    Eq << Eq[-1].this.lhs.apply(Calculus.EqZero.of.Ne, f, x)
 
 
 

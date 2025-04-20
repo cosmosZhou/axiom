@@ -9,7 +9,7 @@ from sympy import (Matrix, MatrixSymbol, S, Indexed, Basic, Tuple, Range,
                    linsolve, eye, Or, Not, Intersection, factorial, Element,
                    Union, Expr, Function, exp, cacheit, sqrt, pi, Gamma,
                    Ge, Piecewise, Symbol, NonSquareMatrixError, EmptySet,
-                   ceiling, MatrixBase)
+                   ceil, MatrixBase)
 from sympy.core.relational import Relational
 from sympy.logic.boolalg import Boolean
 from sympy.utilities.exceptions import SymPyDeprecationWarning
@@ -290,7 +290,7 @@ class StochasticStateSpaceOf(Boolean):
                                 "support StochasticStateSpaceOf.")
         state_space = _state_converter(state_space)
         if isinstance(state_space, Range):
-            ss_size = ceiling((state_space.stop - state_space.start) / state_space.step)
+            ss_size = ceil((state_space.stop - state_space.start) / state_space.step)
         else:
             ss_size = len(state_space)
         state_index = Range(ss_size)
@@ -335,7 +335,7 @@ class MarkovProcess(StochasticProcess):
         elif trans_probs is None:
             state_space = _state_converter(state_space)
             if isinstance(state_space, Range):
-                _n = ceiling((state_space.stop - state_space.start) / state_space.step)
+                _n = ceil((state_space.stop - state_space.start) / state_space.step)
             else:
                 _n = len(state_space)
             trans_probs = MatrixSymbol('_T', _n, _n)
@@ -346,7 +346,7 @@ class MarkovProcess(StochasticProcess):
             # Range object doesn't want to give a symbolic size
             # so we do it ourselves.
             if isinstance(state_space, Range):
-                ss_size = ceiling((state_space.stop - state_space.start) / state_space.step)
+                ss_size = ceil((state_space.stop - state_space.start) / state_space.step)
             else:
                 ss_size = len(state_space)
             if ss_size != trans_probs.shape[0]:

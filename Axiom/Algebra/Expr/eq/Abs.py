@@ -14,7 +14,7 @@ def prove(Eq):
     x = Symbol(real=True, nonnegative=True)
     Eq << apply(x)
 
-    Eq << Eq[0].this.rhs.apply(Algebra.Abs.eq.Piece)
+    Eq << Eq[0].this.rhs.apply(Algebra.Abs.eq.IteGe_0)
 
 
 

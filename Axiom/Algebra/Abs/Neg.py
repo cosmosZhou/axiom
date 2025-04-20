@@ -29,9 +29,9 @@ def prove(Eq):
     x, y = Symbol(real=True)
     Eq << apply(abs(x - y))
 
-    Eq << Eq[0].this.lhs.apply(Algebra.Abs.eq.Piece)
+    Eq << Eq[0].this.lhs.apply(Algebra.Abs.eq.IteGe_0)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Abs.eq.Piece.Le_0)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Abs.eq.Ite.Le_0)
 
     Eq << -Eq[-1].this.find(LessEqual)
 

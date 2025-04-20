@@ -54,13 +54,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(Add ** 2).apply(Algebra.Square.eq.Add)
 
-    Eq << Eq[-1].this.lhs.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.lhs.find(Mul[Add]).apply(Algebra.Mul_Add.eq.AddMulS)
 
-    Eq << Eq[-1].this.lhs.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.lhs.find(Mul[Add]).apply(Algebra.Mul_Add.eq.AddMulS)
 
-    Eq << Eq[-1].this.lhs.find(Exp).apply(Algebra.Exp.eq.Mul)
+    Eq << Eq[-1].this.lhs.find(Exp).apply(Algebra.ExpAdd.eq.MulExpS)
 
-    Eq << Eq[-1].this.rhs.find(Exp).apply(Algebra.Exp.eq.Mul)
+    Eq << Eq[-1].this.rhs.find(Exp).apply(Algebra.ExpAdd.eq.MulExpS)
 
     Eq << Eq[-1].this.lhs.apply(Calculus.Integral.limits.domain_defined)
 

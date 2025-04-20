@@ -9,19 +9,19 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
     x, y, a, b = Symbol(real=True)
     Eq << apply(Bool((x > y) & (a > b)))
 
-    Eq << Eq[0].this.rhs.find(Bool).apply(Algebra.Bool.eq.Piece)
+    Eq << Eq[0].this.rhs.find(Bool).apply(Logic.Bool.eq.Ite)
 
-    Eq << Eq[-1].this.rhs.find(Bool).apply(Algebra.Bool.eq.Piece)
+    Eq << Eq[-1].this.rhs.find(Bool).apply(Logic.Bool.eq.Ite)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.Piece.eq.Piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Ite.eq.Ite_MulS)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Piece.unnest, index=0)
+    Eq << Eq[-1].this.rhs.apply(Logic.Ite_Ite.eq.Ite__Ite, index=0)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Bool.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Logic.Bool.eq.Ite)
 
 
 if __name__ == '__main__':

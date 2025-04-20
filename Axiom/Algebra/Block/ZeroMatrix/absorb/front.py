@@ -26,7 +26,7 @@ def prove(Eq):
     Eq << apply(BlockMatrix([x, 0, ZeroMatrix(n)]))
 
     i = Symbol(domain=Range(n + 2))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
 
 

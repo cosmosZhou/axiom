@@ -14,12 +14,12 @@ def prove(Eq):
     x, y = Symbol(real=True)
     Eq << apply(x, y)
 
-    Eq << Eq[0].this.rhs.apply(Algebra.Max.eq.Piece)
+    Eq << Eq[0].this.rhs.apply(Algebra.Max.eq.Ite)
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-04-23
 
-from . import of
-from . import to
+del given
+from . import given

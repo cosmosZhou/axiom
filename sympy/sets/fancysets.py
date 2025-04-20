@@ -850,11 +850,11 @@ class Range(Set):
                 left_open = False
         else:
             if start.is_finite and not start.is_integer: 
-                start = start.ceiling().simplify()
+                start = start.ceil().simplify()
             
         if right_open:
             if stop.is_finite and not stop.is_integer:
-                stop = stop.ceiling().simplify()
+                stop = stop.ceil().simplify()
             
             if start + step == stop:
                 return FiniteSet(start)
@@ -902,10 +902,10 @@ class Range(Set):
             stop = self.stop
         else:
             stop = self.stop + 1
-            
+
         step = self.step
-        from sympy import Ceiling
-        return Ceiling((stop - start) / step)
+        from sympy import Ceil
+        return Ceil((stop - start) / step)
 
     @property
     def physical_start(self):
@@ -914,8 +914,8 @@ class Range(Set):
             return self.start
 
         if step < 0:
-            from sympy import Ceiling
-            return self.start + (Ceiling((self.stop - self.start) / step) - 1) * step
+            from sympy import Ceil
+            return self.start + (Ceil((self.stop - self.start) / step) - 1) * step
 
     @property
     def start(self):
@@ -1549,11 +1549,31 @@ class Range(Set):
 
             return p._print_seq(self.args[:2], left, right, delimiter=';')
 
-    def _sympystr(self, _): 
+    def _sympystr(self, _):
         if self.step.is_One:
             return 'Range(%s, %s)' % (self.start, self.stop)
         else:
             return 'Range(%s, %s, %s)' % (self.start, self.stop, self.step)
+
+    def _lean(self, p):
+        def wrap(arg):
+            if arg.is_Add or arg.is_Mul:
+                return "(%s)" % p._print(arg)
+            return p._print(arg)
+
+        start = self.start
+        stop = self.stop
+        step = self.step
+        if step.is_One:
+            if start.is_NegativeInfinity:
+                if stop.is_Infinity:
+                    return '(univ : Set \N{DOUBLE-STRUCK CAPITAL Z})'
+                return 'Iio %s' % wrap(stop)
+            if stop.is_Infinity:
+                return 'Ici %s' % wrap(start)
+            return 'Ico %s %s' % (wrap(start), wrap(stop))
+        else:
+            return 'range %s %s %s' % (start, stop, step)
 
     def handle_finite_sets(self, unk):
         if all(arg.domain in self for arg in unk.args):
@@ -1748,8 +1768,8 @@ class Range(Set):
         if self.step == 1:
             return Piecewise((self.stop - self.start, self.stop >= self.start), (0, True))
         else:
-            from sympy.functions.elementary.integers import Ceiling
-            return Piecewise((Ceiling((self.stop - self.start) / self.step), self.stop >= self.start), (0, True))
+            from sympy.functions.elementary.integers import Ceil
+            return Piecewise((Ceil((self.stop - self.start) / self.step), self.stop >= self.start), (0, True))
 
     def adjust_domain(self, x, *cond):
         if self.step._has(x):
@@ -2362,6 +2382,9 @@ class Complexes(CartesianComplexRegion, metaclass=Singleton):
     def _sympystr(self, p):
         return "S.Complexes"
 
+    def _lean(self, p):
+        return "S.Complexes"
+
     def _latex(self, p):
         return r"\mathbb{C}"
 
@@ -2394,6 +2417,9 @@ class ExtendedComplexes(CartesianComplexRegion, metaclass=Singleton):
         return Set.__new__(cls, ProductSet(ExtendedReals, ExtendedReals))
     
     def _sympystr(self, p):
+        return "S.ExtendedComplexes"
+
+    def _lean(self, p):
         return "S.ExtendedComplexes"
 
     def _latex(self, p):
@@ -2441,5 +2467,5 @@ def arange(*args):
     if len(args) == 3:
         start, stop, step = args
         i = stop.generate_var(integer=True, var='i', excludes=start.free_symbols | step.free_symbols)
-        from sympy.functions.elementary.integers import Ceiling
-        return Lamda[i: Ceiling((stop - start) / step)](i * step + start)
+        from sympy.functions.elementary.integers import Ceil
+        return Lamda[i: Ceil((stop - start) / step)](i * step + start)

@@ -35,7 +35,7 @@ def swap_row(blocks, i, j):
 
 @apply
 def apply(self):
-    from Axiom.Discrete.Det.Block.eq.Mul.st.Identity import swap_col
+    from Axiom.Discrete.DetBlock.eq.PowNegativeOneMul import swap_col
     X = self.of(Det)
     blocks = [[*b] for b in X.blocks]
     n = X.shape[0]
@@ -115,7 +115,7 @@ def prove(Eq):
 
     Eq << Eq[-4].subs(Eq[-1].reversed)
 
-    Eq << Discrete.Eq.to.Eq.Det.apply(Eq[-1])
+    Eq << Discrete.EqDet.of.Eq.apply(Eq[-1])
 
     Eq << Eq[-1].this.rhs.apply(Discrete.Det.Block.eq.Mul.deux)
 
@@ -125,9 +125,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(Discrete.Det.eq.Mul)
 
-    Eq << Eq[-1].this.lhs.args[-1].apply(Discrete.Det.Block.eq.Mul.st.Identity)
+    Eq << Eq[-1].this.lhs.args[-1].apply(Discrete.DetBlock.eq.PowNegativeOneMul)
 
-    Eq << Eq[-1].this.lhs.args[-1].apply(Discrete.Det.Block.eq.Mul.st.Identity)
+    Eq << Eq[-1].this.lhs.args[-1].apply(Discrete.DetBlock.eq.PowNegativeOneMul)
 
 
 
@@ -139,5 +139,4 @@ if __name__ == '__main__':
 # created on 2021-11-21
 # updated on 2022-01-15
 from . import Prod
-from . import st
 from . import deux

@@ -11,14 +11,14 @@ def apply(self, swap=False):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     x, y = Symbol(integer=True)
     Eq << apply(KroneckerDelta(x, y))
 
-    Eq << Eq[0].this.rhs.apply(Algebra.Bool.eq.Piece)
+    Eq << Eq[0].this.rhs.apply(Logic.Bool.eq.Ite)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Delta.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Delta.eq.Ite)
 
 
 if __name__ == '__main__':

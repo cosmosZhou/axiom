@@ -27,7 +27,7 @@ def prove(Eq):
     Eq << apply(s @ W.T, t_p)
 
 
-    Eq << Eq[-1].this.find(Mod).apply(Algebra.Mod.eq.Sub)
+    Eq << Eq[-1].this.find(Mod).apply(Algebra.Mod.eq.Sub_Mul_Div)
 
 
 

@@ -16,13 +16,13 @@ def prove(Eq):
     f = Function(integer=True)
     Eq << apply(Any[n:1:m + 1](f(n) > 0), d)
 
+    Eq << ~Eq[1]
 
+    Eq << Algebra.All.of.All.limits.subs.offset.apply(Eq[-1], -d)
 
-    Eq << Algebra.Any.to.Any.limits.subs.offset.apply(Eq[-1], -d)
-
-
+    Eq << ~Eq[-1]
 
 
 if __name__ == '__main__':
     run()
-# created on 2019-02-14
+# created on 2018-07-12

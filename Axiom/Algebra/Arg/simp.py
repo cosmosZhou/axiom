@@ -14,9 +14,9 @@ def prove(Eq):
     z = Symbol(complex=True)
     Eq << apply(Arg(exp(S.ImaginaryUnit * Arg(z))))
 
-    Eq << Eq[0].this.lhs.apply(Algebra.Arg.ExpI.eq.Add.Ceiling)
+    Eq << Eq[0].this.lhs.apply(Algebra.Arg.ExpI.eq.Add.Ceil)
 
-    Eq << Eq[-1].this.find(Ceiling).apply(Algebra.Ceiling.eq.Zero.Arg)
+    Eq << Eq[-1].this.find(Ceil).apply(Algebra.CeilSubDivArg.eq.Zero)
 
     # https://en.wikipedia.org/wiki/Argument_(complex_analysis)
 

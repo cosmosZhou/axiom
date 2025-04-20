@@ -12,7 +12,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Algebra
+    from Axiom import Discrete, Algebra, Logic
 
     f, g = Function(real=True)
     x = Symbol(real=True)
@@ -25,7 +25,7 @@ def prove(Eq):
 
     Eq.induct = Eq[0].subs(d, d + 1)
 
-    Eq << Discrete.Eq.to.Eq.Diff.apply(Eq[0], (x, 1))
+    Eq << Discrete.EqDiff.of.Eq.apply(Eq[0], (x, 1))
 
     Eq << Eq[-1].this.lhs.simplify()
 
@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Eq.Imply.to.Eq.induct.apply(Eq.initial, Eq[-1], n=d, start=1)
+    Eq << Logic.Eq.of.Eq.Imp.induct.apply(Eq.initial, Eq[-1], n=d, start=1)
 
 
 if __name__ == '__main__':

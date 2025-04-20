@@ -34,7 +34,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(Discrete.Dot.eq.Lamda)
 
-    Eq << Eq[-1].this.rhs.expr.args[-1].expr.apply(Algebra.Add.eq.Piece)
+    Eq << Eq[-1].this.rhs.expr.args[-1].expr.apply(Algebra.Add.eq.Ite)
 
     Eq << Eq[-1].this.rhs().expr.simplify()
 

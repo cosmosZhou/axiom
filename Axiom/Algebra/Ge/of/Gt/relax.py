@@ -3,20 +3,23 @@ from util import *
 
 @apply
 def apply(given):
-    lhs, rhs = given.of(GreaterEqual)
-    assert lhs.is_integer
-    return Greater(lhs, rhs - 1)
+    lhs, rhs = given.of(Greater)
+    return GreaterEqual(lhs, rhs)
 
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
     x, y = Symbol(integer=True, given=True)
-    Eq << apply(x >= y)
+    Eq << apply(x > y)
 
-    Eq << Algebra.Gt.to.Ge.strengthen.apply(Eq[1])
+    Eq << ~Eq[-1]
+
+    Eq <<= Eq[0] & Eq[-1]
+
+    
 
 
 if __name__ == '__main__':
     run()
-# created on 2019-05-23
+# created on 2018-06-28
+# updated on 2023-04-18

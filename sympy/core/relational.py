@@ -411,6 +411,27 @@ class Relational(BinaryCondition, Expr, EvalfMixin):
                            p._relationals.get(self.rel_op) or self.rel_op,
                            p.parenthesize(self.rhs, precedence(self)))
 
+    def _lean(self, p):
+        from sympy.printing.precedence import precedence
+        charmap = {
+            "==": "Eq",
+            "!=": "Ne",
+            ":=": "Assignment",
+            '+=': "AddAugmentedAssignment",
+            "-=": "SubAugmentedAssignment",
+            "*=": "MulAugmentedAssignment",
+            "/=": "DivAugmentedAssignment",
+            "%=": "ModAugmentedAssignment",
+        }
+
+        if self.rel_op in charmap:
+            return '%s(%s, %s)' % (charmap[self.rel_op], p._print(self.lhs),
+                                   p._print(self.rhs))
+
+        return '%s %s %s' % (p.parenthesize(self.lhs, precedence(self)),
+                           p._relationals.get(self.rel_op) or self.rel_op,
+                           p.parenthesize(self.rhs, precedence(self)))
+
     def _latex(self, p):
         if p._settings['itex']:
             gt = r"\gt"
@@ -1089,6 +1110,18 @@ class Equal(Relational):
             
         return "Equal(%s, %s)" % (p._print(lhs), p._print(rhs))
 
+    def _lean(self, p):
+        lhs = self.lhs
+        rhs = self.rhs
+
+        if lhs.is_random and lhs.is_symbol:
+            if rhs == lhs.var:
+                return lhs._sympystr(p)
+            if rhs.is_Surrogate and rhs.arg == lhs:
+                return rhs._sympystr(p)
+            
+        return "%s = %s" % (p._print(lhs), p._print(rhs))
+
     def domain_conditioned(self, var):
         lhs, rhs = self.args
         if var.shape:
@@ -1239,8 +1272,10 @@ class Unequal(Relational):
     __slots__ = ()
 
     def _sympystr(self, p):
-        # return '%s \N{NOT EQUAL TO} %s' % tuple(p._print(arg) for arg in self.args)
         return 'Unequal(%s, %s)' % tuple(p._print(arg) for arg in self.args)
+
+    def _lean(self, p):
+        return '%s \N{NOT EQUAL TO} %s' % tuple(p._print(arg) for arg in self.args)
 
     def __new__(cls, lhs, rhs, **options):
         if options.pop('sympify', True):
@@ -2015,9 +2050,10 @@ class GreaterEqual(_Greater):
         return Relational.simplify(self, deep=deep, wrt=wrt)
     
     def _sympystr(self, p):
-        # GREATER-THAN OVER EQUAL TO
-        # \N{GREATER-THAN OR EQUAL TO}
         return '%s >= %s' % tuple(p._print(arg) for arg in self.args)
+
+    def _lean(self, p):
+        return '%s \N{GREATER-THAN OR EQUAL TO} %s' % tuple(p._print(arg) for arg in self.args)
 
     def of(self, cls):
         res = Boolean.of(self, cls)
@@ -2306,6 +2342,9 @@ class LessEqual(_Less):
         # LESS-THAN OVER EQUAL TO
         return '%s <= %s' % tuple(p._print(arg) for arg in self.args)
 
+    def _lean(self, p):
+        return '%s \N{LESS-THAN OR EQUAL TO} %s' % tuple(p._print(arg) for arg in self.args)
+
     def of(self, cls):
         res = Boolean.of(self, cls)
         if res is None:
@@ -2317,16 +2356,21 @@ class LessEqual(_Less):
                     return res
                 if isinstance(res, tuple):
                     b, a = res
-                    return (a, b)
+                    return a, b
             elif cls.is_GreaterEqual:
-                a, b = cls.args
-                cls = Basic.__new__(LessEqual, b, a)
-                res = Boolean.of(self, cls)
-                if b.is_Number:
-                    return res
-                if isinstance(res, tuple):
-                    b, a = res
-                    return (a, b)         
+                args = cls.args
+                if isinstance(args, property):
+                    b, a = self.args
+                    return a, b
+                else:
+                    a, b = args
+                    cls = Basic.__new__(LessEqual, b, a)
+                    res = Boolean.of(self, cls)
+                    if b.is_Number:
+                        return res
+                    if isinstance(res, tuple):
+                        b, a = res
+                        return a, b
             
         return res
 

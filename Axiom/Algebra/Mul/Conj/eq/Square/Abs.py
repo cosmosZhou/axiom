@@ -15,19 +15,19 @@ def prove(Eq):
     x = Symbol(complex=True)
     Eq << apply(x * ~x)
 
-    Eq << Algebra.Expr.eq.Add.complex.apply(x)
+    Eq << Algebra.Expr.eq.AddRe_MulIIm.apply(x)
 
-    Eq << Algebra.Expr.eq.Add.complex.apply(~x)
+    Eq << Algebra.Expr.eq.AddRe_MulIIm.apply(~x)
 
     Eq << Eq[-1] * Eq[-2]
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add, deep=True)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS, deep=True)
 
-    Eq << Algebra.Eq.to.Eq.Abs.apply(Eq[1])
+    Eq << Algebra.EqAbs.of.Eq.apply(Eq[1])
 
     Eq << Eq[-1] * Eq[-1]
 
-    Eq << Algebra.Eq.Eq.to.Eq.trans.apply(Eq[-3], Eq[-1])
+    Eq << Algebra.Eq.of.Eq.Eq.apply(Eq[-3], Eq[-1])
 
 
 

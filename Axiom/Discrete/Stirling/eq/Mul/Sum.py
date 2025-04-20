@@ -11,7 +11,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Algebra
+    from Axiom import Discrete, Algebra, Logic
 
     k = Symbol(integer=True, nonnegative=True, given=False)
     n = Symbol(integer=True, nonnegative=True)
@@ -33,7 +33,7 @@ def prove(Eq):
 
     j = Symbol(integer=True)
     # Eq << Eq[-1].this.apply(Algebra.eq.rsolve.linear, j)
-    Eq << Algebra.Eq.to.Eq.rsolve.apply(Eq[-1], j)
+    Eq << Algebra.Eq.of.Eq.rsolve.apply(Eq[-1], j)
 
     Eq << Eq[-1].this.rhs.args[0].args[0].defun()
 
@@ -49,11 +49,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Binomial).apply(Discrete.Binom.eq.Div.Binom.increase)
 
-    Eq << Eq[-1].this.find(Sum).expr.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Sum).expr.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(Sum).apply(Algebra.Sum.eq.Add)
 
-    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(Sum).apply(Algebra.Sum.eq.Mul)
 
@@ -83,7 +83,7 @@ def prove(Eq):
 
     Eq << Imply(Eq.hypothesis, Eq.induct, plausible=True)
 
-    Eq << Algebra.Imply.to.Cond.induct.apply(Eq[-1], n=k)
+    Eq << Logic.Cond.of.Imp.induct.apply(Eq[-1], n=k)
 
 
 

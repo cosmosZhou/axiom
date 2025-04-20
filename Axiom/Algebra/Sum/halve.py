@@ -13,27 +13,27 @@ def apply(self, *, simplify=True):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     i, a, b = Symbol(integer=True)
     f = Symbol(shape=(oo,), real=True)
     Eq << apply(Sum[i:Range(a, b, 2)](f[i]))
 
-    Eq << Algebra.Cond.of.And.Imply.split.apply(Eq[0], cond=Equal(a % 2, 0))
+    Eq << Logic.Cond.given.And.Imp.split.apply(Eq[0], cond=Equal(a % 2, 0))
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Ne_0.to.Eq_odd)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Eq_odd.of.Ne_0)
 
-    Eq <<= Algebra.Imply.of.Imply.subs.apply(Eq[-3]), Algebra.Imply.of.Imply.subs.apply(Eq[-1])
+    Eq <<= Logic.Imp.given.Imp.subs.apply(Eq[-3]), Logic.Imp.given.Imp.subs.apply(Eq[-1])
 
-    Eq <<= Eq[-2].this.lhs.apply(Algebra.Eq_even.to.Eq_odd, ret=0), Eq[-1].this.lhs.apply(Algebra.Eq_odd.to.Eq_even, ret=0)
+    Eq <<= Eq[-2].this.lhs.apply(Algebra.Eq_odd.of.Eq_even, ret=0), Eq[-1].this.lhs.apply(Algebra.Eq_even.of.Eq_odd, ret=0)
 
-    Eq <<= Algebra.Imply_And.of.Imply.And.subs.apply(Eq[-2], 1), Algebra.Imply_And.of.Imply.And.subs.apply(Eq[-1], 1)
+    Eq <<= Logic.Imp_And.given.Imp.And.subs.apply(Eq[-2], 1), Logic.Imp_And.given.Imp.And.subs.apply(Eq[-1], 1)
 
-    Eq <<= Algebra.Imply_And.of.Imply.delete.apply(Eq[-2]), Algebra.Imply_And.of.Imply.delete.apply(Eq[-1])
+    Eq <<= Logic.Imp_And.given.Imp.delete.apply(Eq[-2]), Logic.Imp_And.given.Imp.delete.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(Algebra.Eq_even.to.Eq.Sum, Eq[0].lhs)
+    Eq << Eq[-2].this.lhs.apply(Algebra.EqSum.of.Eq_even, Eq[0].lhs)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Eq_odd.to.Eq.Sum, Eq[0].lhs)
+    Eq << Eq[-1].this.lhs.apply(Algebra.EqSum.of.Eq_odd, Eq[0].lhs)
 
 
 

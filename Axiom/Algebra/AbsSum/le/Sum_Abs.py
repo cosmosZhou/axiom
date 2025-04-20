@@ -27,7 +27,7 @@ def prove(Eq):
 
     Eq << -Eq[-1].this.find(g).defun()
 
-    Eq << Algebra.Le.Ge.to.Le.Abs.apply(Eq[1], Eq[-1])
+    Eq << Algebra.LeAbs.of.Le.Ge.apply(Eq[1], Eq[-1])
 
 
 if __name__ == '__main__':

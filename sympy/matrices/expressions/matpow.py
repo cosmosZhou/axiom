@@ -187,6 +187,23 @@ class MatPow(MatrixExpr):
 
         return '%s ^ %s' % (_lhs, _rhs)
 
+    def _lean(self, p):
+#         deliberately to distinguish from x ** y which is element-wise power operator
+        lhs, rhs = self.args
+        _lhs = p._print(lhs)
+        if lhs.is_Add or lhs.is_Mul or lhs.is_MatMul:
+            _lhs = "(%s)" % _lhs
+            
+        _rhs = p._print(rhs)
+        if rhs.is_Add or rhs.is_Mul or rhs.is_MatMul:
+            _rhs = "(%s)" % _rhs
+            
+        if lhs.is_DenseMatrix or lhs.is_BlockMatrix:
+            if rhs.is_Integer:
+                _lhs = 'S' + _lhs
+
+        return '%s ^ %s' % (_lhs, _rhs)
+
     def _latex(self, p):
         base, exp = self.base, self.exp
         if base.is_symbol or base.is_BlockMatrix or base.is_DenseMatrix or base.is_Function:

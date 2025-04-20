@@ -1,35 +1,26 @@
 from util import *
 
 
-@apply
+@apply(simplify=False)
 def apply(given, old, new):
-    from sympy.concrete.limits import limits_dict
-    cond, *limits = given.of(All)
-
-    domain_defined = new.domain
-    domain = limits_dict(limits)[old]
-    assert domain.is_set
-    assert domain_defined in domain
-
-    return cond._subs(old, new)
+    assert given._has(old)
+    assert new.is_symbol
+    return All[new:{old}](given._subs(old, new))
 
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
-    x = Symbol(integer=True)
-    n = Symbol(integer=True, positive=True)
-
-    m = Symbol(domain=Range(n + 1))
+    S = Symbol(etype=dtype.real)
+    e = Symbol(real=True)
+    e_ = Symbol("e'", real=True)
     f = Function(shape=(), integer=True)
-    s = Symbol(etype=dtype.integer)
 
-    Eq << apply(All[x:n + 1](Element(f(x), s)), x, m)
+    Eq << apply(f(e) > 0, e, e_)
 
-    Eq << Algebra.Cond.to.All.apply(Eq[1])
+    Eq << Eq[-1].simplify()
 
 
 if __name__ == '__main__':
     run()
 
-# created on 2018-12-13
+# created on 2021-09-17

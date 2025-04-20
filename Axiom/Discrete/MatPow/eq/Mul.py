@@ -27,9 +27,9 @@ def prove(Eq):
 
     Eq << Eq[-1] * t
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS)
 
-    Eq << Discrete.Eq.to.Eq.Inv.apply(Eq[-1])
+    Eq << Discrete.EqInv.of.Eq.apply(Eq[-1])
 
     Eq << Eq[-1].this.lhs.find(MatPow).base.definition.reversed
 

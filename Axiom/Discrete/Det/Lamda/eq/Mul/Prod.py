@@ -31,7 +31,7 @@ def prove(Eq):
 
     Eq << MulMatrix(n, n - 1, b[n - 2]) @ Eq[-1]
 
-    Eq << Eq[-1].apply(Discrete.Eq.to.Eq.Det)
+    Eq << Eq[-1].apply(Discrete.EqDet.of.Eq)
     Eq << Eq[-1].this.lhs.apply(Discrete.Det.eq.Mul)
 
     Eq << Eq[-1].subs(Eq[1])

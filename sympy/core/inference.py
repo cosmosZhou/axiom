@@ -212,7 +212,12 @@ class Inference:
     
     def apply(self, axiom, *args, split=True, **kwargs):
         if self.is_And:
-            if axiom.__name__.split(sep='.', maxsplit=3)[2] == 'And':
+            token = axiom.__name__.split(sep='.')
+            from sympy.logic.boolalg import inference_type, split_and
+            i, type = inference_type(token)
+            if type == 'of':
+                split = split_and(axiom)
+            elif type == 'Is' or axiom.__name__.split(sep='.', maxsplit=3)[2] == 'And':
                 split = False
                 
             if split: 

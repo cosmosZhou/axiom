@@ -4,7 +4,9 @@ from . import Mul
 from . import Max
 from . import Square
 from . import Min
-from . import Piece
 from . import Block
-from . import Ceiling
 from . import eq
+from . import Ite
+from . import Ceil
+from . import gt
+from . import lt

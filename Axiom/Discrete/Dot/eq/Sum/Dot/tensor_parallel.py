@@ -29,12 +29,12 @@ def prove(Eq):
     Eq << apply(a @ W.T, t_p)
 
     k, j = Eq[0].find(Lamda).variables
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], j)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], j)
 
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], k)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], k)
 
     i = Symbol(domain=Range(d_o))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], i)
 
     Eq << Eq[-1].this.lhs.apply(Discrete.Dot.eq.Sum, simplify=None)
 

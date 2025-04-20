@@ -20,7 +20,7 @@ def apply(self, scale):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     i = Symbol(integer=True)
     n = Symbol(integer=True, positive=True, given=False)
@@ -41,7 +41,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq[1], plausible=True)
 
-    Eq << Algebra.Imply.to.Cond.induct.apply(Eq[-1], n, 0)
+    Eq << Logic.Cond.of.Imp.induct.apply(Eq[-1], n, 0)
 
 
 if __name__ == '__main__':

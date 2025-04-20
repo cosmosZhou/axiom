@@ -12,7 +12,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Calculus, Algebra
+    from Axiom import Calculus, Algebra, Logic
 
     # m is the inductive variable
     m = Symbol(integer=True, positive=True, given=False)
@@ -33,7 +33,7 @@ def prove(Eq):
 
     Eq << Eq[-1] / (m / n)
     Eq << Eq[-1].this.rhs.expand(func=True)
-    Eq << Algebra.Cond.to.Cond.subs.apply(Eq[0], n, n + 2)
+    Eq << Algebra.Cond.of.Cond.subs.apply(Eq[0], n, n + 2)
     Eq << Eq[-1].this.rhs.expand(func=True)
     Eq << Eq[-1].this.lhs.expand()
     Eq.two = Eq[0].subs(m, 2)
@@ -41,7 +41,7 @@ def prove(Eq):
     Eq << Eq[-1].this.lhs.apply(Calculus.Integral.Pow.eq.Mul)
     Eq << Eq[-1].this.rhs.expand(func=True)
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
-    Eq << Algebra.Eq.Eq.Imply.to.Eq.induct.apply(Eq.one, Eq.two, Eq[-1], n=m, start=1)
+    Eq << Logic.Eq.of.Eq.Eq.Imp.induct.apply(Eq.one, Eq.two, Eq[-1], n=m, start=1)
 
 
 

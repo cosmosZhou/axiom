@@ -9,7 +9,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     x = Symbol(real=True, shape=(oo, oo))
     i, j, a = Symbol(integer=True)
@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Iff(All[i:{a}](Equal(Bool(All[j:f(i, j) > 0](x[i, j] > 0)), 1)), All[j:f(i, j) > 0, i:{a}](x[i, j] > 0), plausible=True)
 
-    Eq << Eq[-1].this.lhs.expr.lhs.apply(Algebra.Bool.eq.Piece)
+    Eq << Eq[-1].this.lhs.expr.lhs.apply(Logic.Bool.eq.Ite)
 
     Eq << Eq[-1].this.rhs.simplify()
 

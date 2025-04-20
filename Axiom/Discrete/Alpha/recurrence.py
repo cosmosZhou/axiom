@@ -16,7 +16,7 @@ def apply(A):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Discrete
+    from Axiom import Algebra, Discrete, Logic
     from Axiom.Discrete.Alpha.gt.Zero import alpha
 
     x = Symbol(real=True, positive=True, shape=(oo,))
@@ -41,15 +41,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(alpha).defun()
 
-    Eq << Algebra.Cond.to.Cond.subs.apply(Eq[0], x[:n + 2], x[1:n + 3])
+    Eq << Algebra.Cond.of.Cond.subs.apply(Eq[0], x[:n + 2], x[1:n + 3])
 
     Eq << Discrete.Alpha.ne.Zero.apply(x[1:n + 3])
 
-    Eq << Algebra.Ne_0.Eq.to.Eq.Inv.apply(Eq[-1], Eq[-2])
+    Eq << Algebra.EqInv.of.Ne_0.Eq.apply(Eq[-1], Eq[-2])
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Cond.Imply.to.Cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
+    Eq << Logic.Cond.of.Cond.Imp.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
 
 

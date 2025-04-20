@@ -38,9 +38,9 @@ def prove(Eq):
     f = Function(complex=True)
     Eq << apply(f(y) * f(x) * KroneckerDelta(x, y))
 
-    Eq << Eq[-1].this.find(KroneckerDelta).apply(Algebra.Delta.eq.Piece)
+    Eq << Eq[-1].this.find(KroneckerDelta).apply(Algebra.Delta.eq.Ite)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Ite)
 
 
 

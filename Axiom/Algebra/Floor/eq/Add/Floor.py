@@ -16,15 +16,15 @@ def prove(Eq):
     x = Symbol(integer=True)
     Eq << apply((x - 1) // 2)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Floor.eq.Ceiling)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Floor.eq.CeilDivAdd_Sign)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Ceiling.eq.Add.Frac)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Ceil.eq.Add.Fract)
 
     Eq << Eq[-1] - x / 2
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Add.eq.Frac)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Add.eq.Fract)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Frac.half)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Fract.half)
 
 
 if __name__ == '__main__':

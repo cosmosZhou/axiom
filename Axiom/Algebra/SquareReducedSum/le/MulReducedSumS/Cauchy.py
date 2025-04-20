@@ -23,11 +23,11 @@ def prove(Eq):
 
     Eq << GreaterEqual(Eq[-1].lhs, 0, plausible=True)
 
-    Eq << Algebra.Eq.Ge.to.Ge.Add.apply(Eq[-2].reversed, Eq[-1])
+    Eq << Algebra.GeAdd.of.Eq.Ge.apply(Eq[-2].reversed, Eq[-1])
 
     Eq << ~Eq[-1]
 
-    Eq << Algebra.Any_Lt_0.of.Gt_.Add.Zero.apply(Eq[-1])
+    Eq << Algebra.Any_Lt_0.given.Add.gt.Zero.apply(Eq[-1])
 
     Eq << Eq[-1] / 4
 

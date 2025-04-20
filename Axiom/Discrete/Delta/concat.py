@@ -26,13 +26,13 @@ def prove(Eq):
 
     Eq << U[i].this.definition
 
-    Eq << Eq[-2].this.rhs.apply(Algebra.Piece.eq.Delta)
+    Eq << Eq[-2].this.rhs.apply(Algebra.Ite.eq.Delta)
 
     Eq << Eq[-2] - Eq[-1]
 
-    Eq << Algebra.Eq_0.to.Eq.apply(Eq[-1])
+    Eq << Algebra.Eq.of.Sub.eq.Zero.apply(Eq[-1])
 
-    Eq << Eq[-1].apply(Algebra.Eq.to.Eq.Lamda, (i,))
+    Eq << Eq[-1].apply(Algebra.EqLamda.of.Eq, (i,))
 
     Eq << Eq[-1].subs(Eq[1]).subs(Eq[2])
 

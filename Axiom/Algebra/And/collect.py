@@ -21,7 +21,7 @@ def apply(self, cond=None):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
     a, b, c, d = Symbol(integer=True, given=True)
 
 
@@ -31,11 +31,11 @@ def prove(Eq):
 
     Eq << apply(((a < b) | (c < d)) & (f(x) < g(y)) & ((x < y) | (c < d)), cond=c < d)
 
-    Eq << Algebra.Iff.of.And.apply(Eq[-1])
+    Eq << Logic.Iff.given.Imp.Imp.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.apply(Algebra.And.to.And.collect, cond=c < d)
+    Eq << Eq[-2].this.lhs.apply(Algebra.And.of.And.collect, cond=c < d)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.And.of.And.collect, cond=c < d)
+    Eq << Eq[-1].this.rhs.apply(Algebra.And.given.Or.collect, cond=c < d)
 
 
 if __name__ == '__main__':

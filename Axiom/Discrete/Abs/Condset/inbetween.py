@@ -16,7 +16,7 @@ def apply(n, Q=None):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Sets
+    from Axiom import Discrete, Set
     n = Symbol(integer=True, positive=True)
     Eq << apply(n)
 
@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << Discrete.All_And.mapping.Qu2v.apply(n, u, n)
 
-    Eq << Sets.All_And.All_And.to.Eq.apply(Eq[-1], Eq[-2])
+    Eq << Set.Eq.of.All_And.All_And.apply(Eq[-1], Eq[-2])
 
 
 if __name__ == '__main__':

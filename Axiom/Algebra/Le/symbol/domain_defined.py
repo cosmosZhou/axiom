@@ -9,7 +9,7 @@ def apply(x):
 
 @prove
 def prove(Eq):
-    from Axiom import Sets
+    from Axiom import Set
     a, b = Symbol(real=True)
     domain=Interval(a, b)
     x = Symbol(domain=domain)
@@ -17,8 +17,8 @@ def prove(Eq):
 
     Eq << Element(x, domain, plausible=True)
 
-    Eq << Sets.In.to.Ne_EmptySet.apply(Eq[-1])
-    Eq << Sets.Interval_Ne_EmptySet.to.Le.apply(Eq[-1])
+    Eq << Set.Ne_EmptySet.of.Mem.apply(Eq[-1])
+    Eq << Set.Le.of.Icc_Ne_EmptySet.apply(Eq[-1])
 
 
 if __name__ == '__main__':

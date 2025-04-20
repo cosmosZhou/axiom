@@ -21,9 +21,9 @@ def prove(Eq):
     Eq << apply(Lamda[i:n + 1](f(i)))
 
     i = Symbol(domain=Range(n + 1))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Piece.eq.Delta)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Ite.eq.Delta)
 
 
 if __name__ == '__main__':

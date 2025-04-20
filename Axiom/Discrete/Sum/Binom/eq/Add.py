@@ -18,7 +18,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.find(Binomial).apply(Discrete.Binom.eq.Add.Pascal)
 
-    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Mul[Add]).apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.lhs.expr.args[1].apply(Algebra.Mul.Neg)
 

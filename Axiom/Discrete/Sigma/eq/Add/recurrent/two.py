@@ -16,7 +16,7 @@ def apply(self):
 
 @prove(proved=False)
 def prove(Eq):
-    from Axiom import Sets, Algebra
+    from Axiom import Set, Algebra
     n = Symbol(integer=True, positive=True)
     x = Symbol(complex=True, shape=(oo,))
     k = Symbol(domain=Range(2, n + 1))
@@ -32,7 +32,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(Algebra.Sum.eq.Add.split, cond=CartesianSpace(Range(n), k))
 
-    Eq << Eq[-1].this.find(Complement).apply(Sets.Complement.eq.Conditionset)
+    Eq << Eq[-1].this.find(Complement).apply(Set.SDiff.eq.Conditionset)
 
 
 if __name__ == '__main__':

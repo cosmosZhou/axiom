@@ -77,7 +77,8 @@ keywords += ['axiom',
              'uncountable', 
              'zero']
 
-sections = ['Algebra', 'Calculus', 'Discrete', 'Geometry', 'Keras', 'Sets', 'Stats']
+from util.search import get_sections
+sections = get_sections()
 
 from sympy import *
 import sympy

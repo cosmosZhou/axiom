@@ -20,14 +20,14 @@ def prove(Eq):
 
     Eq << Eq[-1].reversed
 
-    Eq <<= Algebra.Eq.to.And.squeeze.apply(Eq[-1]), Eq[0].reversed.subs(Eq[-1])
+    Eq <<= Algebra.And.of.Eq.squeeze.apply(Eq[-1]), Eq[0].reversed.subs(Eq[-1])
 
-    Eq <<= Algebra.LeSup.to.All.Le.apply(Eq[-3]), Algebra.GeSup.to.All.Any.Gt.apply(Eq[-2]), Algebra.Eq.of.And.squeeze.apply(Eq[-1])
+    Eq <<= Algebra.All.Le.of.LeSup.apply(Eq[-3]), Algebra.All.Any.Gt.of.GeSup.apply(Eq[-2]), Algebra.Eq.given.And.squeeze.apply(Eq[-1])
 
-    Eq <<= Algebra.LeSup.of.All.Le.apply(Eq[-2]), Algebra.GeSup.of.All_Any_Gt.apply(Eq[-1])
+    Eq <<= Algebra.LeSup.given.All.Le.apply(Eq[-2]), Algebra.GeSup.given.All_Any_Gt.apply(Eq[-1])
 
-    Eq << Algebra.All.of.All.limits.subs.offset.apply(Eq[-2], -t)
-    Eq << Eq[-1].this.expr.apply(Algebra.Any.of.Any.limits.subs.offset, -t)
+    Eq << Algebra.All.given.All.limits.subs.offset.apply(Eq[-2], -t)
+    Eq << Eq[-1].this.expr.apply(Algebra.Any.given.Any.limits.subs.offset, -t)
 
 
 

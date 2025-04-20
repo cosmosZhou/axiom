@@ -10,17 +10,17 @@ def apply(given):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
     n = Symbol(integer=True, positive=True)
     x, y = Symbol(real=True, shape=(n,))
 
     Eq << apply(Equal(KroneckerDelta(x, y), 1))
 
-    Eq << Algebra.Iff.of.And.apply(Eq[-1])
+    Eq << Logic.Iff.given.Imp.Imp.apply(Eq[-1])
 
-    Eq << Eq[-2].this.lhs.lhs.apply(Algebra.Delta.eq.Piece)
+    Eq << Eq[-2].this.lhs.lhs.apply(Algebra.Delta.eq.Ite)
 
-    Eq << Eq[-1].this.lhs.lhs.apply(Algebra.Delta.eq.Piece)
+    Eq << Eq[-1].this.rhs.lhs.apply(Algebra.Delta.eq.Ite)
 
 
 if __name__ == '__main__':

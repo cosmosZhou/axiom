@@ -1,24 +1,27 @@
 from util import *
 
 
-@apply
+@apply(simplify=False)
 def apply(given):
-    x, y = given.of(Equal[Expr - Expr, 0])
+    x, y = given.of(Equal)
 
-    return Equal(x, y)
+    return Equal(x - y, ZeroMatrix(*x.shape))
 
 
 @prove
 def prove(Eq):
-    a, b = Symbol(real=True, given=True)
+    a = Symbol(real=True)
+    b = Symbol(real=True, zero=False)
+    Eq << apply(Equal(a, b))
 
-    Eq << apply(Equal(0, a - b))
+    Eq << Eq[1].subs(Eq[0])
 
-    Eq << Eq[0] + b
 
-    Eq << Eq[-1].reversed
 
 
 if __name__ == '__main__':
     run()
-# created on 2021-06-26
+# created on 2020-10-16
+# updated on 2022-01-01
+
+

@@ -26,15 +26,15 @@ def prove(Eq):
     t = Symbol(2 * binomial(n + a + 1, 2))
     Eq << t.this.definition
 
-    Eq << Algebra.Eq.to.Eq.Pow.apply(Eq[1], base=-1)
+    Eq << Algebra.EqPowS.of.Eq.apply(Eq[1], base=-1)
 
     Eq << Eq[1].this.find(Binomial).apply(Discrete.Binom.eq.Mul.FallingFactorial.doit)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Mul.eq.Add, deep=True)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Mul_Add.eq.AddMulS, deep=True)
 
     Eq << Eq[2].subs(Eq[-1])
 
-    Eq << Eq[0].this.find(Mul).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[0].this.find(Mul).apply(Algebra.Mul_Add.eq.AddMulS)
 
 
 if __name__ == '__main__':

@@ -25,7 +25,7 @@ def prove(Eq):
     Eq << Calculus.Integral.le.Integral_Abs.apply(Eq[0].lhs.find(Integral)._subs(f(x), g(x)))
     Eq << Eq[-1].this.find(g).defun()
     Eq << -Eq[-1].this.find(g).defun()
-    Eq << Algebra.Le.Ge.to.Le.Abs.apply(Eq[1], Eq[-1])
+    Eq << Algebra.LeAbs.of.Le.Ge.apply(Eq[1], Eq[-1])
 
 
 

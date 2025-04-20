@@ -6,15 +6,6 @@ use std\Graph, std\Text, std\Set;
 
 $dict = empty($_POST) ? $_GET : $_POST;
 $user = get_user();
-if (! $dict) {
-    // https://www.php.net/manual/en/function.getopt.php
-    $dict = getopt("", [
-        'section::',
-        'package::'
-    ]);
-    $dict['package'] = 'Keras.Eq_Block.to.Eq.Softmax.bilinear_matrix_attention.biased.st.LogSumExp';
-    $dict['section'] = 'tf';
-}
 
 $package = $dict['package'];
 $section = $dict['section'];

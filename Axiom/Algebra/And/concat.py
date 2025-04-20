@@ -33,7 +33,7 @@ def apply(self, i=None, j=None):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     n = Symbol(integer=True, positive=True)
     k = Symbol(integer=True)
@@ -42,11 +42,11 @@ def prove(Eq):
     A = Symbol(etype=dtype.real)
     Eq << apply(Equal(Lamda[k:n](f(k)), Lamda[k:n](g(k))) & Equal(f(n), g(n)) & Element(x, A), i=1, j=0)
 
-    Eq << Algebra.Iff.of.And.apply(Eq[0])
+    Eq << Logic.Iff.given.Imp.Imp.apply(Eq[0])
 
-    Eq <<= Algebra.Imply_And.of.Imply.delete.apply(Eq[-2]), Eq[-1].this.rhs.args[0].apply(Algebra.Eq.to.And.Eq.split, simplify=None)
+    Eq <<= Logic.Imp_And.given.Imp.delete.apply(Eq[-2]), Eq[-1].this.lhs.args[0].apply(Algebra.And.Eq.of.Eq.split, simplify=None)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Eq.Eq.to.Eq.concat, simplify=None)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Eq.of.Eq.Eq.concat, simplify=None)
 
 
 

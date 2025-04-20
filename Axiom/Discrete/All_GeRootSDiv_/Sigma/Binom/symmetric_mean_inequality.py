@@ -31,7 +31,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Product).apply(Algebra.Prod.eq.Mul.doit)
 
-    Eq << Eq[-1].this.find(All).apply(Algebra.All.equ.And.doit.outer)
+    Eq << Eq[-1].this.find(All).apply(Algebra.All.Is.And.doit.outer)
 
     Eq << Eq[-1].this.find(Sum).apply(Algebra.Sum.eq.Add.doit)
 
@@ -49,13 +49,13 @@ def prove(Eq):
 
     Eq << Algebra.Add_.AddSquareS.Mul2.ge.Zero.apply(sqrt(x[0]) - sqrt(x[1]))
 
-    Eq << Algebra.Ge_0.to.Ge.apply(Eq[-1])
+    Eq << Algebra.Ge.of.Ge_0.apply(Eq[-1])
 
     t = Function(real=True, eval=lambda k: (sigma[k](x[:n]) / binomial(n, k)) ** (1 / k))
     k_ = Symbol("k", domain=Range(2, n))
     Eq << t(k_).this.defun()
 
-    Eq << Algebra.Eq.to.Eq.Pow.apply(Eq[-1], exp=k_)
+    Eq << Algebra.EqPowS.of.Eq.apply(Eq[-1], exp=k_)
 
     Eq << Eq[-1] * binomial(n, k_)
 
@@ -63,7 +63,7 @@ def prove(Eq):
 
     Eq << t(k_ + 1).this.defun()
 
-    Eq << Algebra.Eq.to.Eq.Pow.apply(Eq[-1], exp=k_ + 1)
+    Eq << Algebra.EqPowS.of.Eq.apply(Eq[-1], exp=k_ + 1)
 
     Eq << Eq[-1] * binomial(n, k_ + 1)
 
@@ -71,17 +71,17 @@ def prove(Eq):
 
     Eq << t(k_ - 1).this.defun()
 
-    Eq << Algebra.Eq.to.Eq.Pow.apply(Eq[-1], exp=k_ - 1)
+    Eq << Algebra.EqPowS.of.Eq.apply(Eq[-1], exp=k_ - 1)
 
     Eq << Eq[-1] * binomial(n, k_ - 1)
 
     Eq.s_k1_neg = Eq[-1].reversed
 
-    Eq << Algebra.All.to.Cond.subs.apply(Eq[0], k, k_)
+    Eq << Algebra.Cond.of.All.subs.apply(Eq[0], k, k_)
 
     Eq.hypothesis_k = Eq[-1].subs(t(k_).this.defun().reversed).subs(t(k_ + 1).this.defun().reversed)
 
-    Eq << Algebra.All.to.Cond.subs.apply(Eq[0], k, k_ - 1)
+    Eq << Algebra.Cond.of.All.subs.apply(Eq[0], k, k_ - 1)
 
     Eq.hypothesis_k_1 = Eq[-1].subs(t(k_).this.defun().reversed).subs(t(k_ - 1).this.defun().reversed)
 

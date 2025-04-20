@@ -52,8 +52,10 @@ class Element(BinaryCondition):
         return r"%s \in %s" % tuple(p._print(a) for a in self.args)
 
     def _sympystr(self, p):
-#         return "%s \N{ELEMENT OF} %s" % tuple(p._print(a) for a in self.args)
         return "Element(%s, %s)" % tuple(p._print(a) for a in self.args)
+
+    def _lean(self, p):
+        return "%s \N{ELEMENT OF} %s" % tuple(p._print(a) for a in self.args)
 
     def _pretty(self, p):
         from sympy.printing.pretty.stringpict import prettyForm, stringPict
@@ -293,8 +295,10 @@ class NotElement(BinaryCondition):
         return r"%s \not\in %s" % tuple(p._print(a) for a in self.args)
 
     def _sympystr(self, p):
-#         return "%s \N{NOT AN ELEMENT OF} %s" % tuple(p._print(a) for a in self.args)
         return "NotElement(%s, %s)" % tuple(p._print(a) for a in self.args)
+
+    def _lean(self, p):
+        return "%s \N{NOT AN ELEMENT OF} %s" % tuple(p._print(a) for a in self.args)
 
     def _pretty(self, p):
         from sympy.printing.pretty.stringpict import prettyForm, stringPict
@@ -453,9 +457,11 @@ class Contain(BinaryCondition):
         return r"%s \ni %s" % tuple(p._print(a) for a in self.args)
 
     def _sympystr(self, p):
-        # unicodedata.lookup('CONTAINS AS MEMBER'), '\N{CONTAINS AS MEMBER}'
-#         return "%s \N{CONTAINS AS MEMBER} %s" % tuple(p._print(a) for a in self.args)
         return "Contain(%s, %s)" % tuple(p._print(a) for a in self.args)
+
+    def _lean(self, p):
+        # unicodedata.lookup('CONTAINS AS MEMBER'), '\N{CONTAINS AS MEMBER}'
+        return "%s \N{CONTAINS AS MEMBER} %s" % tuple(p._print(a) for a in self.args)
 
     def _pretty(self, p):
         from sympy.printing.pretty.stringpict import prettyForm, stringPict
@@ -548,8 +554,10 @@ class NotContain(BinaryCondition):
         return r"%s \not\ni %s" % tuple(p._print(a) for a in self.args)
 
     def _sympystr(self, p):
-#         return "%s \N{DOES NOT CONTAIN AS MEMBER} %s" % tuple(p._print(a) for a in self.args)
         return "NotContain(%s, %s)" % tuple(p._print(a) for a in self.args)
+
+    def _lean(self, p):
+        return "%s \N{DOES NOT CONTAIN AS MEMBER} %s" % tuple(p._print(a) for a in self.args)
 
     def _pretty(self, p):
         from sympy.printing.pretty.stringpict import prettyForm, stringPict

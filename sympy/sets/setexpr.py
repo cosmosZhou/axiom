@@ -200,10 +200,6 @@ class Card(Function):
             (sign(direction) * s, True),
         )
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.abs_symbolic(self.args[0]._sage_())
-
     def _eval_derivative(self, x):
         if self.args[0].is_extended_real or self.args[0].is_imaginary:
             return Derivative(self.args[0], x, evaluate=True) \
@@ -237,6 +233,9 @@ class Card(Function):
         return S.Zero
     
     def _sympystr(self, p):
+        return "Card(%s)" % p._print(self.arg)
+    
+    def _lean(self, p):
         return "Card(%s)" % p._print(self.arg)
     
     def _latex(self, p, exp=None):
@@ -380,10 +379,6 @@ class Measure(Function):
             (sign(direction) * s, True),
         )
 
-    def _sage_(self):
-        import sage.all as sage
-        return sage.abs_symbolic(self.args[0]._sage_())
-
     def _eval_derivative(self, x):
         if self.args[0].is_extended_real or self.args[0].is_imaginary:
             return Derivative(self.args[0], x, evaluate=True) \
@@ -417,8 +412,10 @@ class Measure(Function):
         return S.Zero
     
     def _sympystr(self, p):
-        #"\N{GREEK SMALL LETTER MU}(%s)" % p._print(self.arg)
         return 'Measure(%s)' % p._print(self.arg)
+    
+    def _lean(self, p):
+        return "\N{GREEK SMALL LETTER MU}(%s)" % p._print(self.arg)
     
     def _latex(self, p, exp=None):
         # tex = r"\boldsymbol\mu\left({%s}\right)" % p._print(self.arg)

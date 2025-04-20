@@ -1,1 +1,1 @@
-from . import equ
+from . import Is

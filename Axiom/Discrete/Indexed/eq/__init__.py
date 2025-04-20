@@ -1,2 +1,2 @@
 from . import Dot
-from . import Piece
+from . import Ite

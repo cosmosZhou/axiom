@@ -17,12 +17,11 @@ def prove(Eq):
     a, b = Symbol(real=True)
     Eq << apply(exp(a) * exp(b))
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Exp.eq.Mul)
+    Eq << Eq[-1].this.rhs.apply(Algebra.ExpAdd.eq.MulExpS)
 
 
 if __name__ == '__main__':
     run()
 # created on 2018-10-25
 
-del oo
-from . import oo
+from . import Infty

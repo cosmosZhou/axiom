@@ -30,7 +30,7 @@ def prove(Eq):
     Eq << apply(Lamda[j:n, i:m](x[i, j]))
 
     i = Symbol(domain=Range(m))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], i)
 
     Eq << Eq[-1].this.lhs.apply(Algebra.Lamda.eq.Matrix)
 

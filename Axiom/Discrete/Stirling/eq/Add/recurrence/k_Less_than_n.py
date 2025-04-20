@@ -9,7 +9,7 @@ def apply(n, k):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Sets, Algebra
+    from Axiom import Discrete, Set, Algebra
 
     n = Symbol(integer=True, positive=True)
     k = Symbol(domain=Range(1, n))
@@ -37,9 +37,9 @@ def prove(Eq):
     Eq.Stirling1 = Eq.Stirling1.subs(Eq[-1].reversed)
 
     e = Symbol(etype=dtype.integer.set)
-    Eq << Sets.Eq_Union_.Intersect.Complement.apply(s2, conditionset(e, Element({n}, e), s2))
+    Eq << Set.Eq_Union_.Inter.SDiff.apply(s2, conditionset(e, Element({n}, e), s2))
 
-    Eq.s2_abs = Eq[-1].apply(Sets.Eq.to.Eq.Card)
+    Eq.s2_abs = Eq[-1].apply(Set.EqCard.of.Eq)
 
     Eq.s2_abs_plausible = Eq[0].subs(Eq.Stirling2, Eq.Stirling0, Eq.Stirling1)
 
@@ -63,7 +63,7 @@ def prove(Eq):
 
     Eq << Discrete.Abs.Condset.Stirling.mapping.s1_Aj.apply(n, k, s1, A).reversed
 
-    Eq << Eq[-1].apply(Algebra.Eq.to.Eq.Sum, *Eq[-2].lhs.limits)
+    Eq << Eq[-1].apply(Algebra.EqSum.of.Eq, *Eq[-2].lhs.limits)
 
 
 if __name__ == '__main__':

@@ -15,7 +15,7 @@ def prove(Eq):
     x = Symbol(complex=True, zero=False)
     Eq << apply(abs(x ** -1))
 
-    Eq << Algebra.Expr.eq.Mul.ExpI.apply(x)
+    Eq << Algebra.Expr.eq.MulAbs_ExpMulIArg.apply(x)
 
     Eq << Eq[0].subs(Eq[1])
 

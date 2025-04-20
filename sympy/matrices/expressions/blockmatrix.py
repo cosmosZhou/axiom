@@ -711,6 +711,36 @@ class BlockMatrix(MatrixExpr):
             tex = "[%s]" % tex
         return tex
 
+    def _lean(self, p):
+        blocks = self.blocks
+        if blocks is not None:
+            blocks = [[p._print(cell) for cell in block] for block in blocks]
+            
+            rows = len(blocks)
+            cols = len(blocks[0])
+            col_width = [max(len(blocks[i][j]) for i in range(rows)) for j in range(cols)]
+            
+            for i in range(rows):
+                for j in range(cols):
+                    diff = col_width[j] - len(blocks[i][j])
+                    if diff:
+                        blocks[i][j] = ' ' * diff + blocks[i][j]
+
+            indent = p._context.get('indent', 0) + 1
+            newline = '\n' + '    ' * indent
+            return "[%s]" % (newline + f',{newline}'.join(['[%s]' % ', '.join(row) for row in blocks]))
+            
+        array = []
+        for X in self.args: 
+            array.append(p._print(X))
+
+        tex = ", ".join(array)
+        if self.axis:
+            tex = "BlockMatrix[%s](%s)" % (p._print(self.axis), tex)
+        else:
+            tex = "[%s]" % tex
+        return tex
+    
     def _pretty(self, p): 
         return p._print_seq(self.args, '[', ']')
     

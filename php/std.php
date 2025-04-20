@@ -2188,7 +2188,7 @@ class Union extends SymbolicSet
 
     public function try_union()
     {
-        // http://localhost/axiom/?module=Sets.Eq_Card.Subset.to.Eq
+        // http://localhost/axiom/?module=Set.Eq_Card.Subset.to.Eq
         $bbox = $this->bbox();
         return $this->card() == $bbox->card() ? $bbox : $this;
     }

@@ -25,17 +25,17 @@ def apply(self, old, new):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     x, a, b, c = Symbol(real=True)
     f = Function(real=True)
     Eq << apply(All[x:Interval(a, b, left_open=True)](f(x) > 0), x, c - x)
 
-    Eq << Algebra.Iff.of.And.apply(Eq[0])
+    Eq << Logic.Iff.given.Imp.Imp.apply(Eq[0])
 
-    Eq << Eq[-2].this.lhs.apply(Algebra.All.to.All.limits.subs.Neg.real, x, c - x)
+    Eq << Eq[-2].this.lhs.apply(Algebra.All.of.All.limits.subs.Neg.real, x, c - x)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.All.to.All.limits.subs.Neg.real, x, c - x)
+    Eq << Eq[-1].this.lhs.apply(Algebra.All.of.All.limits.subs.Neg.real, x, c - x)
 
 
 

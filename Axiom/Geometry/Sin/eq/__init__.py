@@ -5,6 +5,6 @@ from . import Block
 from . import Inv
 from . import Sub
 from . import Neg
-from . import Piece
 from . import Sum
 from . import Mul_
+from . import Ite

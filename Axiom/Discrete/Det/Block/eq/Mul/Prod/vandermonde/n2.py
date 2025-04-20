@@ -12,18 +12,18 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Discrete
+    from Axiom import Algebra, Discrete, Logic
 
     n = Symbol(domain=Range(2, oo))
     x1, x2 = Symbol(complex=True)
     i, j = Symbol(integer=True)
     Eq << apply(Det([Lamda[j:n + 2](x1 ** j), Lamda[j:n + 2](j * x1 ** j), Lamda[j:n + 2, i:n](j ** i * x2 ** j)]))
 
-    Eq << Algebra.Cond.of.And.Imply.split.apply(Eq[0], cond=Equal(x2, 0))
+    Eq << Logic.Cond.given.And.Imp.split.apply(Eq[0], cond=Equal(x2, 0))
 
-    Eq << Eq[-1].this.lhs.apply(Discrete.Ne_0.to.Eq.Det.Block.eq.Mul.Prod.vandermonde.n2, n, x1)
+    Eq << Eq[-1].this.lhs.apply(Discrete.Eq.Det.Block.eq.Mul.Prod.of.Ne_0.vandermonde.n2, n, x1)
 
-    Eq << Algebra.Imply.of.Imply.subs.apply(Eq[-2])
+    Eq << Logic.Imp.given.Imp.subs.apply(Eq[-2])
 
     Eq << Eq[-1].this.find(Lamda[2]).apply(Algebra.Lamda.eq.Block.shift)
 

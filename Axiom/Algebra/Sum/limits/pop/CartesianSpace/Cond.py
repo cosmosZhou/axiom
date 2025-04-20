@@ -14,7 +14,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Sets
+    from Axiom import Algebra, Set
 
     a, b = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
@@ -27,15 +27,15 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.rhs.find(Element[Sliced]).apply(Sets.In_CartesianSpace.equ.All.In)
+    Eq << Eq[-1].this.rhs.find(Element[Sliced]).apply(Set.Mem_CartesianSpace.Is.All.Mem)
 
     Eq << Eq[-1].this.rhs.find(All).apply(Algebra.All.limits.subs.offset, -i)
 
-    Eq << Eq[-1].this.lhs.find(Element[Sliced]).apply(Sets.In_CartesianSpace.equ.All.In)
+    Eq << Eq[-1].this.lhs.find(Element[Sliced]).apply(Set.Mem_CartesianSpace.Is.All.Mem)
 
     Eq << Eq[-1].this.lhs.find(All).apply(Algebra.All.limits.subs.offset, -i)
 
-    Eq << Eq[-1].this.lhs.find(All).apply(Algebra.All.equ.And.split, cond={n - 1})
+    Eq << Eq[-1].this.lhs.find(All).apply(Algebra.All.Is.And.split, cond={n - 1})
 
 
 

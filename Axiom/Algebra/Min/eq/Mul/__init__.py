@@ -33,11 +33,11 @@ def prove(Eq):
     r = Symbol(real=True, positive=True)
     Eq << apply(Min(x * r, y * r))
 
-    Eq << Eq[0].this.lhs.apply(Algebra.Min.eq.Piece)
+    Eq << Eq[0].this.lhs.apply(Algebra.Min.eq.Ite)
 
-    Eq << Eq[-1].this.rhs.args[1].apply(Algebra.Min.eq.Piece)
+    Eq << Eq[-1].this.rhs.args[1].apply(Algebra.Min.eq.Ite)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Piece.eq.Mul)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Ite.eq.Mul)
 
 
 
@@ -49,3 +49,4 @@ if __name__ == '__main__':
 # updated on 2023-03-26
 del Max
 from . import Max
+from . import of

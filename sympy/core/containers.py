@@ -377,6 +377,9 @@ class Tuple(Basic):
     def _sympystr(self, p):
         return p._print_tuple(self)
 
+    def _lean(self, p):
+        return p._print_tuple(self)
+    
     def _latex(self, p):
         return p._print_tuple(self)
 

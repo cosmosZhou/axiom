@@ -14,9 +14,9 @@ def prove(Eq):
     x, y, a, b = Symbol(real=True)
     Eq << apply(x, y, a, b)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(Algebra.Mul.eq.Abs)
+    Eq << Eq[-1].this.rhs.args[0].apply(Algebra.MulAbsS.eq.AbsMul)
 
-    Eq << Eq[-1].this.rhs.args[0].apply(Algebra.Mul.eq.Abs)
+    Eq << Eq[-1].this.rhs.args[0].apply(Algebra.MulAbsS.eq.AbsMul)
 
     Eq << Eq[-1].this.rhs.args[0].arg.expand()
 

@@ -65,16 +65,16 @@ def prove(Eq):
     Eq << apply(A, i, j, axis=2)
 
     t = Symbol(domain=Range(m))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], t)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], t)
 
     k = Symbol(domain=Range(m))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], k)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], k)
 
     l = Symbol(domain=Range(m))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], l)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], l)
 
     p = Symbol(domain=Range(m))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[-1], p)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[-1], p)
 
 
 

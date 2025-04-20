@@ -16,9 +16,9 @@ def prove(Eq):
     f, g = Function(bool=True)
     Eq << apply(All[x:a:b, y:c:d](f(x) & g(x, y)))
 
-    Eq << Eq[0].this.lhs.apply(Algebra.All.equ.Or)
+    Eq << Eq[0].this.lhs.apply(Algebra.All.Is.Or)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.All.equ.Or)
+    Eq << Eq[-1].this.rhs.apply(Algebra.All.Is.Or)
 
 
 if __name__ == '__main__':

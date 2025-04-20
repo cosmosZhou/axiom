@@ -7,3 +7,5 @@ from . import Sum
 from . import Add
 from . import Mul
 from . import Grad
+from . import Sup
+from . import Inf

@@ -15,9 +15,9 @@ def prove(Eq):
     z = Symbol(complex=True, zero=False)
     Eq << apply(Sign(z))
 
-    Eq << Eq[0].lhs.this.apply(Algebra.Sign.eq.Piece.Abs)
+    Eq << Eq[0].lhs.this.apply(Algebra.Sign.eq.Ite.Abs)
 
-    Eq << Algebra.Expr.eq.Mul.ExpI.apply(z)
+    Eq << Algebra.Expr.eq.MulAbs_ExpMulIArg.apply(z)
 
     Eq << Eq[-2].this.rhs.subs(Eq[-1])
 

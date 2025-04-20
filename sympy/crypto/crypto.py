@@ -741,7 +741,7 @@ def encipher_hill(msg, key, symbols=None, pad="Q"):
             0. Number the letters of the alphabet from 0, ..., N
             1. Compute from the string ``msg`` a list ``L`` of
                corresponding integers. Let ``n = len(L)``.
-            2. Break the list ``L`` up into ``t = ceiling(n/k)``
+            2. Break the list ``L`` up into ``t = ceil(n/k)``
                sublists ``L_1``, ..., ``L_t`` of size ``k`` (with
                the last list "padded" to ensure its size is
                ``k``).

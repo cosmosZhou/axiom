@@ -15,7 +15,7 @@ def apply(n):
 
 @prove
 def prove(Eq):
-    from Axiom import Sets, Algebra
+    from Axiom import Set, Algebra
     n = Symbol(integer=True, positive=True)
     Eq << apply(n)
 
@@ -25,9 +25,9 @@ def prove(Eq):
 
     Eq << Element(n - 1, Eq[-1].rhs, plausible=True)
 
-    Eq << Algebra.All_Eq.Cond.to.All.subs.apply(Eq[-2].reversed, Eq[-1])
+    Eq << Algebra.All.of.All_Eq.Cond.subs.apply(Eq[-2].reversed, Eq[-1])
 
-    Eq << Eq[-1].this.expr.apply(Sets.In_Cup.to.Any_In)
+    Eq << Eq[-1].this.expr.apply(Set.Any_Mem.of.Mem_Cup)
 
     Eq << Eq[-1].reversed
 

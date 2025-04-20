@@ -1,2 +1,2 @@
-from . import Eq
-from . import to
+from . import Add
+from . import of

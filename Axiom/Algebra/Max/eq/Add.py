@@ -42,11 +42,11 @@ def prove(Eq):
 
     Eq << apply(Max(x * r + 1, y * r + 1))
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Max.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Max.eq.Ite)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Piece.eq.Add)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Ite.eq.Add)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Max.eq.Piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Max.eq.Ite)
 
 if __name__ == '__main__':
     run()

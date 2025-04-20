@@ -30,7 +30,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     a, b = Symbol(real=True, nonnegative=True)
     n = Symbol(integer=True, nonnegative=True, given=False)
@@ -50,7 +50,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Imply.to.Eq.induct.apply(Eq[-1], n=n, start=0)
+    Eq << Logic.Eq.of.Imp.induct.apply(Eq[-1], n=n, start=0)
 
 
 if __name__ == '__main__':

@@ -15,7 +15,7 @@ from sympy.core.singleton import S
 from sympy.core.symbol import Wild, Dummy, symbols, Symbol
 from sympy.core.sympify import sympify
 from sympy.functions.combinatorial.factorials import binomial, factorial, rf
-from sympy.functions.elementary.integers import floor, frac, ceiling
+from sympy.functions.elementary.integers import floor, frac, ceil
 from sympy.functions.elementary.miscellaneous import Min, Max
 from sympy.functions.elementary.piecewise import Piecewise
 from sympy.series.limits import Limit
@@ -528,7 +528,7 @@ def rsolve_hypergeometric(f, x, P, Q, k, m):
     if mp is -oo:
         s = S.Zero
     elif mp.is_integer == False:
-        s = ceiling(mp)
+        s = ceil(mp)
     else:
         s = mp + 1
 

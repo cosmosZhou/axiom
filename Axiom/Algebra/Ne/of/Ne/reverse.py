@@ -9,16 +9,14 @@ def apply(ne):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
-
     b, a = Symbol(real=True, given=True)
     Eq << apply(Unequal(a, b))
 
-    Eq << Algebra.Ne.to.Ne.reverse.apply(Eq[1])
+    Eq << ~Eq[1]
 
-
+    Eq <<= Eq[-1] & Eq[0]
 
 
 if __name__ == '__main__':
     run()
-# created on 2020-02-05
+# created on 2020-02-04

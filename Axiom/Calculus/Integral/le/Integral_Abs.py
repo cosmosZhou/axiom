@@ -18,7 +18,7 @@ def prove(Eq):
 
 
     Eq << Algebra.Le_Abs.apply(f(x))
-    Eq << Calculus.Le.to.Le.Integral.apply(Eq[-1], (x, a, b))
+    Eq << Calculus.LeIntegral.of.Le.apply(Eq[-1], (x, a, b))
 
 
 

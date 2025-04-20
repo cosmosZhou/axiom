@@ -115,10 +115,6 @@ else  {
 
 <script src="static/js/std.js"></script>
 <script src="static/js/utility.js"></script>
-<script>
-MathJax = InitMathJax(1000);
-</script>
-<script async src="static/unpkg.com/mathjax@3.2.0/es5/tex-chtml.js"></script>
 
 <script type=module>
 var latex = <?php echo std\encode($latex)?>;

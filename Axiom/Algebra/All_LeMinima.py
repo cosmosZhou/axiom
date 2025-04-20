@@ -19,7 +19,7 @@ def prove(Eq):
     y = Symbol(Eq[0].find(Minima))
     Eq << y.this.definition
 
-    Eq << Algebra.Eq_Minima.to.All.Le.apply(Eq[-1])
+    Eq << Algebra.All.Le.of.Eq_Minima.apply(Eq[-1])
 
     Eq << Eq[-1].subs(Eq[1])
 

@@ -20,7 +20,7 @@ def prove(Eq):
     x = Symbol(real=True)
     Eq << apply(cos(x) - S.ImaginaryUnit * sin(x))
 
-    Eq << Eq[0].this.rhs.apply(Geometry.ExpI.eq.Add.Euler)
+    Eq << Eq[0].this.rhs.apply(Geometry.ExpMulI.eq.AddCos_MulISin.Euler)
 
 
 if __name__ == '__main__':

@@ -2,32 +2,51 @@ from util import *
 
 
 @apply
-def apply(imply):
-    from Axiom.Algebra.All.to.Or import rewrite_as_Or
-    return rewrite_as_Or(imply)
+def apply(given, pivot=0, wrt=None):
+    [*conds] = given.of(Or)
+
+    eq = conds.pop(pivot)
+
+    if wrt is None:
+        wrt = eq.wrt
+
+    assert eq._has(wrt)
+
+    cond = eq.invert()
+
+    return All[wrt:cond](given.func(*conds))
 
 
 @prove
 def prove(Eq):
     from Axiom import Algebra
-    x = Symbol(integer=True)
-    f = Function(shape=(), integer=True)
-    A = Symbol(etype=dtype.integer, given=True)
 
-    Eq << apply(All[x:A](f(x) > 0))
+    n = Symbol(integer=True, positive=True)
+    x = Symbol(complex=True, shape=(n,))
+    y = Symbol(complex=True, shape=(n,), given=True)
+    f, g = Function(complex=True, shape=())
+    Eq << apply(Unequal(f(x), g(y)) | Equal(x, y), pivot=1)
 
-    Eq << ~Eq[0]
+    Eq << ~Eq[-1]
 
-    Eq << Algebra.Any.to.Any.And.limits.single_variable.apply(Eq[-1], simplify=None)
+    Eq << Algebra.Any.And.of.Any.limits.single_variable.apply(Eq[-1])
 
-    Eq << Eq[-1].this.expr.apply(Algebra.Cond.to.Eq.Bool, split=False)
+    Eq << Algebra.Any.And.of.Cond.Any.apply(Eq[0], Eq[-1])
 
-    Eq << Algebra.Cond.to.Eq.Bool.invert.apply(Eq[1])
 
-    Eq << Eq[-2].this.expr.apply(Algebra.Eq.Eq.to.Eq.trans, Eq[-1])
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
     run()
 
-# created on 2018-02-17
+# created on 2018-04-11

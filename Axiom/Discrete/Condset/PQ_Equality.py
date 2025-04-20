@@ -13,28 +13,28 @@ def apply(n, P_quote=None):
 
 @prove
 def prove(Eq):
-    from Axiom import Sets, Algebra, Discrete
+    from Axiom import Set, Algebra, Discrete
 
     n = Symbol(integer=True, positive=True)
     Eq << apply(n)
 
-    Eq << Sets.All_Eq_.CupFiniteSet.Range.apply(Eq[-1].lhs)
+    Eq << Set.All_CupFinset.eq.Range.apply(Eq[-1].lhs)
 
-    Eq << Algebra.All_And.to.And.All.apply(Eq[-1])
+    Eq << Algebra.And.All.of.All_And.apply(Eq[-1])
 
-    Eq << Eq[-3].this.expr.apply(Discrete.Eq.Eq.to.Eq.permutation.pop.Interval)
+    Eq << Eq[-3].this.expr.apply(Discrete.Eq.of.Eq.Eq.permutation.pop.Icc)
 
     Eq.all_P_quote = Eq[-1] & Eq[-3]
 
-    Eq << Sets.All_Eq_.CupFiniteSet.Range.apply(Eq[1].lhs)
+    Eq << Set.All_CupFinset.eq.Range.apply(Eq[1].lhs)
 
-    Eq << Algebra.All_And.to.And.All.apply(Eq[-1])
+    Eq << Algebra.And.All.of.All_And.apply(Eq[-1])
 
-    Eq << Eq[-3].this.expr.apply(Discrete.Eq.Eq.to.Eq.permutation.push)
+    Eq << Eq[-3].this.expr.apply(Discrete.Eq.of.Eq.Eq.permutation.push)
 
     Eq <<= Eq[-1] & Eq[-3]
 
-    Eq << Sets.All.All.to.Eq.apply(Eq.all_P_quote, Eq[-1])
+    Eq << Set.Eq.of.All.All.apply(Eq.all_P_quote, Eq[-1])
 
 
 if __name__ == '__main__':

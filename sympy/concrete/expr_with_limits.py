@@ -1521,7 +1521,7 @@ class ExprWithLimits(Expr):
 
     @property
     def limits_shape(self):
-        from sympy.functions.elementary.integers import Ceiling
+        from sympy.functions.elementary.integers import Ceil
         shape = []
         for x, *ab in self.limits:
             if not ab:
@@ -1533,7 +1533,7 @@ class ExprWithLimits(Expr):
             else:
                 [domain] = ab
                 start, stop, step = domain.args
-                shape.append(Ceiling((stop - start) / step))
+                shape.append(Ceil((stop - start) / step))
         shape.reverse()
         return tuple(shape)
 
@@ -1729,6 +1729,12 @@ class MINMAXBase(ExprWithLimits):
             return self
     
     def _sympystr(self, p):
+        limits = ','.join([limit._format_ineq(p) for limit in self.limits])
+        if limits:
+            return '%s[%s](%s)' % (self.__class__.__name__, limits, p._print(self.expr))
+        return '%s(%s)' % (self.__class__.__name__, p._print(self.expr))
+    
+    def _lean(self, p):
         limits = ','.join([limit._format_ineq(p) for limit in self.limits])
         if limits:
             return '%s[%s](%s)' % (self.__class__.__name__, limits, p._print(self.expr))
@@ -2039,6 +2045,12 @@ class ArgMinMaxBase(ExprWithLimits):
             return '%s[%s](%s)' % (self.__class__.__name__, limits, p._print(self.expr))
         return '%s(%s)' % (self.__class__.__name__, p._print(self.expr))
     
+    def _lean(self, p):
+        limits = ','.join([limit._format_ineq(p) for limit in self.limits])
+        if limits:
+            return '%s[%s](%s)' % (self.__class__.__name__, limits, p._print(self.expr))
+        return '%s(%s)' % (self.__class__.__name__, p._print(self.expr))
+    
     def _latex(self, p):
         name = self.__class__.__name__.lower()[3:6]
         name = r'\mathop{{\rm %s}^{-1}}' % name
@@ -2268,6 +2280,12 @@ class INFSUPBase(ExprWithLimits):
             return self
     
     def _sympystr(self, p):
+        limits = ','.join([limit._format_ineq(p) for limit in self.limits])
+        if limits:
+            return '%s[%s](%s)' % (self.__class__.__name__, limits, p._print(self.expr))
+        return '%s(%s)' % (self.__class__.__name__, p._print(self.expr))
+    
+    def _lean(self, p):
         limits = ','.join([limit._format_ineq(p) for limit in self.limits])
         if limits:
             return '%s[%s](%s)' % (self.__class__.__name__, limits, p._print(self.expr))
@@ -2737,8 +2755,8 @@ class Lamda(ExprWithLimits):
             elif len(domain) == 1:
                 [domain] = domain
                 self_start, self_stop, self_step = domain.args
-                from sympy import Ceiling
-                n = Ceiling((self_stop - self_start) / self_step)
+                from sympy import Ceil
+                n = Ceil((self_stop - self_start) / self_step)
             else:
                 n = S.Infinity
                 self_step = 1
@@ -3004,6 +3022,10 @@ class Lamda(ExprWithLimits):
         limits = ', '.join([limit._format_ineq(p) for limit in self.limits])
         return 'Lamda[%s](%s)' % (limits, p._print(self.expr))
 
+    def _lean(self, p):
+        limits = ', '.join([limit._format_ineq(p) for limit in self.limits])
+        return 'Lamda[%s](%s)' % (limits, p._print(self.expr))
+    
     def _eval_is_finite(self):
         expr = self.expr
         for x, domain in self.limits_dict.items():

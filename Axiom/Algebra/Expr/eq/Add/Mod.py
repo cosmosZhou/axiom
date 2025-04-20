@@ -18,7 +18,7 @@ def prove(Eq):
     d = Symbol(integer=True, zero=False)
     Eq << apply(n, d)
 
-    Eq << Eq[0].this.find(Mod).apply(Algebra.Mod.eq.Sub)
+    Eq << Eq[0].this.find(Mod).apply(Algebra.Mod.eq.Sub_Mul_Div)
 
 
 

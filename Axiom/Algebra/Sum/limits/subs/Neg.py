@@ -23,7 +23,7 @@ def apply(self, old=None, new=None):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Sets
+    from Axiom import Algebra, Set
 
     i, a, b, c = Symbol(integer=True)
     f = Function(real=True)
@@ -31,13 +31,13 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Sum.Bool)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Sum.limits.Neg.oo)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Sum.limits.Neg.Infty)
 
-    Eq << Eq[-1].this.rhs.find(Element).apply(Sets.In.Neg)
+    Eq << Eq[-1].this.rhs.find(Element).apply(Set.Mem.Neg)
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Sum.limits.subs.offset, -c)
 
-    Eq << Eq[-1].this.rhs.find(Element).apply(Sets.In.Add, c)
+    Eq << Eq[-1].this.rhs.find(Element).apply(Set.Mem_Icc.Is.MemAdd, c)
 
     Eq << Eq[-1].this.lhs.apply(Algebra.Sum.Bool)
 

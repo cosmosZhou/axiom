@@ -59,7 +59,7 @@ def prove(Eq):
 
     Eq << Eq[-1][k]
     Eq << Eq.lhs_assertion.subs(Eq[-1].reversed)
-    Eq << Algebra.Eq.to.Eq.Lamda.apply(Eq[-1], (k, 0, n))
+    Eq << Algebra.EqLamda.of.Eq.apply(Eq[-1], (k, 0, n))
 
 
 

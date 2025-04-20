@@ -18,9 +18,12 @@ def prove(Eq):
 
     Eq << Discrete.K.gt.Zero.apply(x[:n])
 
-    Eq << Algebra.Gt_0.to.Ne_0.apply(Eq[-1])
+    Eq << Algebra.Ne.of.Gt.apply(Eq[-1])
+
+    
 
 
 if __name__ == '__main__':
     run()
 # created on 2023-04-05
+# updated on 2025-04-20

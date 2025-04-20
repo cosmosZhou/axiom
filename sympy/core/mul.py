@@ -1988,12 +1988,6 @@ class Mul(Expr, AssocOp):
 
         return log_term ** Mul(*coeffs) if log_term else None
 
-    def _sage_(self):
-        s = 1
-        for x in self.args:
-            s *= x._sage_()
-        return s
-
     def as_content_primitive(self, radical=False, clear=True):
         """Return the tuple (R, self/R) where R is the positive Rational
         extracted from self.
@@ -2476,6 +2470,70 @@ class Mul(Expr, AssocOp):
         return tex
     
     def _sympystr(self, p):
+        from sympy.printing.precedence import precedence
+        prec = precedence(self)
+
+        c, e = self.as_coeff_Mul()
+        if c < 0:
+            self = _keep_coeff(-c, e)
+            sign = "-"
+        else:
+            sign = ""
+
+        a = []  # items in the numerator
+        b = []  # items that are in the denominator (if any)
+
+        pow_paren = []  # Will collect all pow with more than one base element and exp = -1
+
+        if p.order not in ('old', 'none'):
+            args = self.as_ordered_factors()
+        else:
+            # use make_args in case self was something like -x -> x
+            args = Mul.make_args(self)
+
+        # Gather args for numerator/denominator
+        for item in args:
+#             if item.is_commutative and item.is_Pow and item.exp.is_Rational and item.exp.is_negative:
+            if item.is_Pow and item.exp.is_Rational and item.exp.is_negative:
+                if item.exp != -1:
+                    b.append(Pow(item.base, -item.exp, evaluate=False))
+                else:
+                    if len(item.args[0].args) != 1 and isinstance(item.base, Mul):  # To avoid situations like #14160
+                        pow_paren.append(item)
+                    b.append(Pow(item.base, -item.exp))
+            elif item.is_Rational and item is not S.Infinity:
+                if item.p != 1:
+                    a.append(Rational(item.p))
+                if item.q != 1:
+                    b.append(Rational(item.q))
+            else:
+                a.append(item)
+
+        a = a or [S.One]
+
+        a_str = [p.parenthesize(x, prec, strict=False) for x in a]
+        b_str = [p.parenthesize(x, prec, strict=False) for x in b]
+
+        # To parenthesize Pow with exp = -1 and having more than one Symbol
+        for item in pow_paren:
+            if item.base in b:
+                b_str[b.index(item.base)] = "(%s)" % b_str[b.index(item.base)]
+
+        if len(a) > 1:
+            if a[0].is_DenseMatrix or a[0].is_BlockMatrix and a[0].axis == 0:
+                if a[1].is_DenseMatrix or a[1].is_BlockMatrix:
+                    #sympify the first element
+                    a_str[0] = 'S' + a_str[0]
+
+        if not b:
+            return sign + ' * '.join(a_str)
+
+        if len(b) == 1:
+            return sign + ' * '.join(a_str) + " / " + b_str[0]
+
+        return sign + ' * '.join(a_str) + " / (%s)" % '*'.join(b_str)
+
+    def _lean(self, p):
         from sympy.printing.precedence import precedence
         prec = precedence(self)
 

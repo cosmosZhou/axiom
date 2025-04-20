@@ -3,7 +3,7 @@ from util import *
 
 @apply
 def apply(self):
-    x = self.of(-Ceiling)
+    x = self.of(-Ceil)
     return Equal(self, floor(-x))
 
 
@@ -11,9 +11,9 @@ def apply(self):
 def prove(Eq):
     from Axiom import Algebra
     x = Symbol(real=True)
-    Eq << apply(-ceiling(x))
+    Eq << apply(-ceil(x))
 
-    Eq << Eq[0].this.rhs.apply(Algebra.Floor.eq.Neg.Ceiling)
+    Eq << Eq[0].this.rhs.apply(Algebra.Floor.eq.Neg.Ceil)
 
 
 if __name__ == '__main__':

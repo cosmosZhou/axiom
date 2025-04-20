@@ -66,7 +66,7 @@ from sympy.core.compatibility import default_sort_key
 from sympy.core.mod import Mod
 from sympy.functions import (exp, sqrt, root, log, lowergamma, cos,
         besseli, Gamma, uppergamma, expint, erf, sin, besselj, Ei, Ci, Si, Shi,
-        sinh, cosh, Chi, fresnels, fresnelc, polar_lift, exp_polar, floor, ceiling,
+        sinh, cosh, Chi, fresnels, fresnelc, polar_lift, exp_polar, floor, ceil,
         rf, factorial, lerchphi, Piecewise, elliptic_k, elliptic_e)
 from sympy.functions.elementary.complexes import polarify, unpolarify
 from sympy.functions.special.hyper import (hyper, HyperRep_atanh,
@@ -798,7 +798,7 @@ class Formula(object):
                 for a, vals in zip(self.symbols, critical_values):
                     a0 = repl[a]
                     min_ = floor(min(vals))
-                    max_ = ceiling(max(vals))
+                    max_ = ceil(max(vals))
                     values.append([a0 + n for n in range(min_, max_ + 1)])
                 result.extend(dict(list(zip(self.symbols, l))) for l in product(*values))
         return result

@@ -356,6 +356,9 @@ class RandomSymbol(Expr):
     def _sympystr(self, p):
         return Symbol.subs_specials(self.name)
 
+    def _lean(self, p):
+        return Symbol.subs_specials(self.name)
+
     def _latex(self, p, style='plain'):
         return r'{\color{red} {\mathbf{%s}}}' % p._print(self.symbol.copy())
 
@@ -949,6 +952,15 @@ class PDFInvoker(Expr):
         return dtype.real
 
     def _sympystr(self, p):
+        expr, symbols = self.args
+
+        symbols = p._print(symbols)
+
+        tex = r"%s(%s)" % (p._print(expr), symbols)
+
+        return tex
+
+    def _lean(self, p):
         expr, symbols = self.args
 
         symbols = p._print(symbols)

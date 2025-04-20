@@ -14,7 +14,7 @@ from sympy.functions.combinatorial.factorials import CombinatorialFunction
 from sympy.functions.elementary.complexes import unpolarify
 from sympy.functions.elementary.exponential import ExpBase
 from sympy.functions.elementary.hyperbolic import HyperbolicFunction
-from sympy.functions.elementary.integers import ceiling
+from sympy.functions.elementary.integers import ceil
 from sympy.functions.elementary.trigonometric import TrigonometricFunction
 from sympy.functions.special.bessel import besselj, besseli, besselk, jn, bessely
 from sympy.polys import together, cancel, factor
@@ -1396,7 +1396,7 @@ def _real_to_rational(expr, tolerance=None, rational_conversion='base10'):
     reps = {}
     reduce_num = None
     if tolerance is not None and tolerance < 1:
-        reduce_num = ceiling(1/tolerance)
+        reduce_num = ceil(1/tolerance)
     for fl in p.atoms(Float):
         key = fl
         if reduce_num is not None:

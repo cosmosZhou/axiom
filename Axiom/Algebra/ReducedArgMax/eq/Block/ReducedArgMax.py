@@ -19,9 +19,9 @@ def prove(Eq):
     Eq << apply(ReducedArgMax(BlockMatrix(A, B)))
 
     i = Symbol(domain=Range(a + b))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.ReducedArgMax.eq.Piece.ReducedArgMax)
+    Eq << Eq[-1].this.lhs.apply(Algebra.ReducedArgMax.eq.Ite.ReducedArgMax)
 
 
 

@@ -15,9 +15,9 @@ def prove(Eq):
     x = Symbol(complex=True)
     Eq << apply(x - ~x)
 
-    Eq << Algebra.Expr.eq.Add.complex.apply(x)
+    Eq << Algebra.Expr.eq.AddRe_MulIIm.apply(x)
 
-    Eq << Algebra.Expr.eq.Add.complex.apply(~x)
+    Eq << Algebra.Expr.eq.AddRe_MulIIm.apply(~x)
 
     Eq << Eq[-2] - Eq[-1]
 

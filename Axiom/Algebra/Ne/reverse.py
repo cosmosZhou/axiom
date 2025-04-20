@@ -9,12 +9,12 @@ def apply(ne):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     b, a = Symbol(real=True, given=True)
     Eq << apply(Unequal(a, b))
 
-    Eq << Algebra.Iff.of.And.Imply.apply(Eq[0])
+    Eq << Logic.Iff.given.Imp.Imp.apply(Eq[0])
 
 
 

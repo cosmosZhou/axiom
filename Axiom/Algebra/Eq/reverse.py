@@ -9,12 +9,12 @@ def apply(eq):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     b, a = Symbol(real=True, given=True)
     Eq << apply(Equal(a, b))
 
-    Eq << Algebra.Iff.of.And.Imply.apply(Eq[0])
+    Eq << Logic.Iff.given.Imp.Imp.apply(Eq[0])
 
 
 if __name__ == '__main__':

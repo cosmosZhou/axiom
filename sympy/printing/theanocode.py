@@ -17,7 +17,7 @@ if theano:
             sympy.Mul: tt.mul,
             sympy.Abs: tt.abs_,
             sympy.sign: tt.sgn,
-            sympy.ceiling: tt.ceil,
+            sympy.ceil: tt.ceil,
             sympy.floor: tt.floor,
             sympy.log: tt.log,
             sympy.exp: tt.exp,

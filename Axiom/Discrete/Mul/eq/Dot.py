@@ -53,7 +53,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.find(MatMul).apply(Discrete.Dot.eq.Add)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Mul_Add.eq.AddMulS)
 
 
 

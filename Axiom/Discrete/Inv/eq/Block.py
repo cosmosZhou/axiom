@@ -43,7 +43,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Block.eq.Identity)
 
-    Eq << Discrete.Eq_Dot.to.Eq.Inv.apply(Eq[-1], left=True)
+    Eq << Discrete.EqInv.of.Eq_Dot.apply(Eq[-1], left=True)
 
     Eq << Eq[-1].reversed
 

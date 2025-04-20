@@ -13,7 +13,7 @@ def apply(n, Q=None):
 
 @prove
 def prove(Eq):
-    from Axiom import Sets, Algebra
+    from Axiom import Set, Algebra
 
     n = Symbol(integer=True, positive=True, given=True)
     Eq << apply(n)
@@ -25,19 +25,19 @@ def prove(Eq):
 
     Eq << ~Eq.nonoverlapping
 
-    Eq << Eq[-1].this.expr.apply(Sets.Intersect_Ne_EmptySet.to.Any_In, wrt=Eq[0].rhs.variable, simplify=None)
+    Eq << Eq[-1].this.expr.apply(Set.Any_Mem.of.Inter_Ne_EmptySet, wrt=Eq[0].rhs.variable, simplify=None)
 
     Eq << Eq[-1].this.find(Element).rhs.definition
 
-    Eq << Algebra.Any_And.to.Any.apply(Eq[-1], index=1)
+    Eq << Algebra.Any.of.Any_And.apply(Eq[-1], index=1)
 
-    Eq << Sets.All_Eq_.CupFiniteSet.Range.apply(Q[t])
+    Eq << Set.All_CupFinset.eq.Range.apply(Q[t])
 
-    Eq << Algebra.All_And.to.All.apply(Eq[-1], index=0)
+    Eq << Algebra.All.of.All_And.apply(Eq[-1], index=0)
 
-    Eq << Algebra.All.Any.to.Any.And.apply(Eq[-1], Eq[-3])
+    Eq << Algebra.Any.And.of.All.Any.apply(Eq[-1], Eq[-3])
 
-    Eq << Sets.All_Eq_EmptySet.to.Eq.nonoverlapping.setlimit.apply(Eq.nonoverlapping)
+    Eq << Set.Eq.of.All_Eq_EmptySet.nonoverlapping.setlimit.apply(Eq.nonoverlapping)
 
 
 

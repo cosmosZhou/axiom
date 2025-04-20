@@ -1,1 +1,1 @@
-from . import Mul
+from . import MulAbs_CosArg

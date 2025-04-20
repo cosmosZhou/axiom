@@ -32,4 +32,4 @@ if __name__ == '__main__':
 
 # created on 2019-11-11
 # updated on 2023-06-02
-from . import Piece
+from . import Ite

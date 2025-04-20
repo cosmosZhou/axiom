@@ -14,9 +14,9 @@ def prove(Eq):
     p, q = Symbol(bool=True)
     Eq << apply(Given(p, q))
 
-    Eq << Eq[0].this.lhs.apply(Algebra.Given.equ.Or)
+    Eq << Eq[0].this.lhs.apply(Algebra.Given.Is.Or)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Given.equ.Or)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Given.Is.Or)
 
 
 

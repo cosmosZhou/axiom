@@ -20,7 +20,7 @@ def prove(Eq):
     n = Symbol(integer=True, nonnegative=True)
     Eq << apply(x ** n)
 
-    Eq << Eq[-1].this.rhs.apply(Discrete.Sum.Stirling.eq.Pow.st.RisingFactorial)
+    Eq << Eq[-1].this.rhs.apply(Discrete.Sum_MulMul_RisingFactorial_Stirling.eq.Pow)
 
 
 if __name__ == '__main__':

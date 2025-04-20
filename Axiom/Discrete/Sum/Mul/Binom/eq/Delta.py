@@ -13,7 +13,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Discrete
+    from Axiom import Algebra, Discrete, Logic
 
     k = Symbol(integer=True)
     i = Symbol(integer=True, nonnegative=True, given=False)
@@ -45,11 +45,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum[Pow * Binomial]).apply(Discrete.Sum.Binom.eq.Add)
 
-    Eq << Eq[-1].this.find(Sum).expr.apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Sum).expr.apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(Sum).apply(Algebra.Sum.eq.Add)
 
-    Eq << Eq[-1].this.find(Mul).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Mul).apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(Pow * Pow).args[:2].apply(Algebra.Mul.eq.Pow.Add.exponent)
 
@@ -59,7 +59,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.find(Sum[Binomial]).apply(Algebra.Sum.eq.Sub.unshift)
 
-    Eq << Eq[-1].this.find(Mul).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[-1].this.find(Mul).apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(Sum[Binomial]).apply(Algebra.Sum.limits.subs.offset, i)
 
@@ -67,7 +67,7 @@ def prove(Eq):
 
     Eq << Imply(Eq.hypothesis, Eq.induct, plausible=True)
 
-    Eq << Algebra.Eq.Imply.to.Eq.induct.apply(Eq.initial, Eq[-1], i, 0)
+    Eq << Logic.Eq.of.Eq.Imp.induct.apply(Eq.initial, Eq[-1], i, 0)
 
     Eq << Eq.hypothesis.subs(m, n - i)
 

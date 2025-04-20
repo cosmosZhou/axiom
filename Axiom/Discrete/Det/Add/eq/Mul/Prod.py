@@ -9,7 +9,7 @@ def apply(n, a):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Algebra
+    from Axiom import Discrete, Algebra, Logic
 
     n = Symbol(integer=True, positive=True, given=False)
     a = Symbol(shape=(oo,), complex=True, zero=False)
@@ -43,7 +43,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.expand()
 
-    Eq << Algebra.And.of.And.trans.apply(Eq.deduct & Eq[-1])
+    Eq << Algebra.And.given.And.trans.apply(Eq.deduct & Eq[-1])
 
     Eq.deduction = Eq[-1].reversed
 
@@ -69,21 +69,21 @@ def prove(Eq):
 
     Eq << Eq[-2] + Eq[-1]
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Add.Piece.eq.Piece, swap=True)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Add.Ite.eq.Ite, swap=True)
 
     Eq << Eq.split.this.rhs.subs(Eq[-1])
 
-    Eq << Eq[-1].this.find(Lamda[~Add]).apply(Algebra.Add.eq.Piece)
+    Eq << Eq[-1].this.find(Lamda[~Add]).apply(Algebra.Add.eq.Ite)
 
-    Eq << Eq[-1].this.find(Add, Piecewise).apply(Algebra.Piece.swap)
+    Eq << Eq[-1].this.find(Add, Piecewise).apply(Logic.Ite__Ite.eq.IteAnd_Not__Ite)
 
-    Eq << Eq[-1].this.find(Add, Piecewise).apply(Algebra.Piece.swap, -2)
+    Eq << Eq[-1].this.find(Add, Piecewise).apply(Logic.Ite__Ite.eq.IteAnd_Not__Ite, -2)
 
-    Eq << Eq[-1].this.find(Add, Piecewise).apply(Algebra.Piece.And.invert)
+    Eq << Eq[-1].this.find(Add, Piecewise).apply(Logic.Ite__Ite.eq.Ite__IteAnd_Not)
 
     Eq << Eq[-1].this.find(Add, Lamda)().find(NotElement).simplify()
 
-    Eq << Eq[-1].this.find(Add, Piecewise).apply(Algebra.Piece.subs, index=1)
+    Eq << Eq[-1].this.find(Add, Piecewise).apply(Logic.Ite.subst, index=1)
 
     Eq << Eq[-1].this.find(Add, Lamda)().find(ExprCondPair)().expr.simplify()
 
@@ -97,11 +97,11 @@ def prove(Eq):
 
     Eq << Eq[-1].this.rhs.find(Add[Lamda]).apply(Algebra.Add.eq.Lamda)
 
-    Eq << Eq[-1].this.rhs.find(Add[Piecewise]).apply(Algebra.Add.eq.Piece)
+    Eq << Eq[-1].this.rhs.find(Add[Piecewise]).apply(Algebra.Add.eq.Ite)
 
     Eq << Eq[-1].this.rhs.find(Add[Lamda]).apply(Algebra.Add.eq.Lamda)
 
-    Eq << Eq[-1].this.rhs.find(Add[Piecewise]).apply(Algebra.Add.eq.Piece)
+    Eq << Eq[-1].this.rhs.find(Add[Piecewise]).apply(Algebra.Add.eq.Ite)
 
     Eq << Eq[-1].this.find(ExprCondPair[~Lamda])().find(Equal).simplify()
 
@@ -120,17 +120,17 @@ def prove(Eq):
 
     Eq.det_lamda = Eq[-2].subs((Eq[-1] / Eq[-1].rhs.args[0]).reversed)
 
-    Eq << Eq.column_transformation.apply(Discrete.Eq.to.Eq.Det)
+    Eq << Eq.column_transformation.apply(Discrete.EqDet.of.Eq)
 
     Eq << Eq[-1].this.lhs.apply(Discrete.Det.eq.Mul)
 
-    Eq << Eq[-1].subs(Eq.det_lamda).apply(Algebra.Cond.to.All, i)
+    Eq << Eq[-1].subs(Eq.det_lamda).apply(Algebra.All.of.Cond, i)
 
-    Eq << Algebra.And.of.And.subs.All_Eq.apply(Eq.deduction & Eq[-1])
+    Eq << Algebra.And.given.And.subs.All_Eq.apply(Eq.deduction & Eq[-1])
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Cond.Imply.to.Cond.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
+    Eq << Logic.Cond.of.Cond.Imp.induct.apply(Eq.initial, Eq[-1], n=n, start=1)
 
 
 

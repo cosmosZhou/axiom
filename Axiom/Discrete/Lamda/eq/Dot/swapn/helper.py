@@ -20,7 +20,7 @@ def apply(x, d, w=None):
 
 @prove(proved=False)
 def prove(Eq):
-    from Axiom import Discrete, Algebra
+    from Axiom import Discrete, Algebra, Logic
     n = Symbol(domain=Range(2, oo))
     assert n.is_integer
 
@@ -49,13 +49,13 @@ def prove(Eq):
 
     Eq << Eq[-1].subs(i, m).subs(j, d[m])
 
-    Eq << Algebra.Eq.to.Eq.Lamda.apply(Eq.hypothesis, (k, 0, n))
+    Eq << Algebra.EqLamda.of.Eq.apply(Eq.hypothesis, (k, 0, n))
 
     Eq << Eq[-1].subs(Eq[1])
 
     Eq << Imply(Eq.hypothesis, Eq.induct, plausible=True)
 
-    Eq << Algebra.Cond.Imply.to.Cond.induct.apply(Eq.initial, Eq[-1], n=m, start=1)
+    Eq << Logic.Cond.of.Cond.Imp.induct.apply(Eq.initial, Eq[-1], n=m, start=1)
 
 
 if __name__ == '__main__':

@@ -27,7 +27,7 @@ def prove(Eq):
     Eq << apply(x ** (a * OneMatrix(n)))
 
     i = Symbol(domain=Range(n))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
 
 

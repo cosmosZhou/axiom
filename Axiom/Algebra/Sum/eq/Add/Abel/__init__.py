@@ -23,7 +23,7 @@ def prove(Eq):
     f, g = Function(real=True)
     Eq << apply(Sum[k:n + 1](f(k) * g(k)), i=i)
 
-    Eq << Eq[0].this.rhs.find(Sum[~Mul]).apply(Algebra.Mul.eq.Add)
+    Eq << Eq[0].this.rhs.find(Sum[~Mul]).apply(Algebra.Mul_Add.eq.AddMulS)
 
     Eq << Eq[-1].this.find(Sum[Add]).apply(Algebra.Sum.eq.Add)
 

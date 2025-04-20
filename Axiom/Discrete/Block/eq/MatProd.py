@@ -12,7 +12,7 @@ def apply(n, m, b):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Algebra
+    from Axiom import Discrete, Algebra, Logic
 
     n = Symbol(domain=Range(2, oo))
     m = Symbol(positive=True, integer=True, given=False)
@@ -44,7 +44,7 @@ def prove(Eq):
 
     Eq << Imply(Eq[0], Eq.induct, plausible=True)
 
-    Eq << Algebra.Cond.Imply.to.Cond.induct.apply(Eq.initial, Eq[-1], n=m, start=1)
+    Eq << Logic.Cond.of.Cond.Imp.induct.apply(Eq.initial, Eq[-1], n=m, start=1)
 
 
 if __name__ == '__main__':

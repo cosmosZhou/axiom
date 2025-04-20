@@ -1244,8 +1244,8 @@ class FloatType(FloatBaseType):
         to loose precision due to rounding errors when storing a floating point value
         as text.
         """
-        from sympy.functions import ceiling, log
-        return ceiling((self.nmant + 1) * log(2)/log(10) + 1)
+        from sympy.functions import ceil, log
+        return ceil((self.nmant + 1) * log(2)/log(10) + 1)
 
     def cast_nocheck(self, value):
         """ Casts without checking if out of bounds or subnormal. """

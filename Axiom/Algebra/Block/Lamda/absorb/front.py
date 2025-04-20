@@ -20,7 +20,7 @@ def apply(self, index=-1):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     n = Symbol(integer=True, positive=True)
     i = Symbol(integer=True)
@@ -28,13 +28,13 @@ def prove(Eq):
     Eq << apply(BlockMatrix([f(0), f(-1), Lamda[i:n](f(i))]))
 
     i = Symbol(domain=Range(n + 2))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
-    Eq << Algebra.Eq.of.Eq_0.apply(Eq[-1])
+    Eq << Algebra.Eq.given.Eq_0.apply(Eq[-1])
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Add.Piece.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Add.Ite.eq.Ite)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Piece.And.invert, 0)
+    Eq << Eq[-1].this.lhs.apply(Logic.Ite__Ite.eq.Ite__IteAnd_Not, 0)
 
 
 

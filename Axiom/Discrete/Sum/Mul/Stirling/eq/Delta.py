@@ -38,9 +38,9 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(Discrete.FallingFactorial.eq.Dot.Delta)
 
-    Eq << Discrete.Eq_Dot.to.Eq.vector.independence.st.Dot.FallingFactorial.apply(Eq[-1])
+    Eq << Discrete.Eq.of.EqDotSLamdaFallingFactorial.vector_independence.apply(Eq[-1])
 
-    Eq << Algebra.All.to.Cond.subs.apply(Eq[-1], Eq[-1].variable, i)
+    Eq << Algebra.Cond.of.All.subs.apply(Eq[-1], Eq[-1].variable, i)
 
     Eq << Eq[-1] * (-1) ** (n - i)
 

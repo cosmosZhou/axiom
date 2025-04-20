@@ -200,42 +200,23 @@ export default {
 		            var symbol = null;
 
 		            if (module.indexOf('.') < 0) {
-		                switch (module) {
-		                    case 'Algebra':
-		                    case 'Calculus':
-		                    case 'Discrete':
-		                    case 'Geometry':
-		                    case 'Keras':
-		                    case 'Sets':
-		                    case 'Stats':
-		                        break;
-		                    default:
-		                        var symbol = module;
-		                        module = locate_definition(cm, cursor.line, symbol);
-		                        if (module == null){
-		                            var href = `/axiom/?symbol=${symbol}`;
-		                            if (refresh)
-		                                location.href = href;
-		                            else
-		                                window.open(href);
-		                            return;
-		                        }                                
+		                if (!sections.includes(module)) {
+							var symbol = module;
+							module = locate_definition(cm, cursor.line, symbol);
+							if (module == null) {
+								var href = `/axiom/?symbol=${symbol}`;
+								if (refresh)
+									location.href = href;
+								else
+									window.open(href);
+								return;
+							}
 		                }
 		            }
 		            else {
 		                m = module.match(/^(\w+)\.(.+)/);
-		                switch (m[1]) {
-		                    case 'Algebra':
-		                    case 'Calculus':
-		                    case 'Discrete':
-		                    case 'Geometry':
-		                    case 'Keras':
-		                    case 'Sets':
-		                    case 'Stats':
-		                        break;
-		                    default:
-		                        return;
-		                }
+		                if (!sections.includes(m[1]))
+							return;
 		            }
 
 		            var user = axiom_user();
@@ -391,7 +372,7 @@ export default {
                 if (module.match(/\W$/))
                 	module = module.slice(0, -1);
                 
-                var href = `/${self.user}/?new=${module}`;
+                var href = `/lean/?new=${module}`;
                 window.open(href);
             },
 
@@ -420,9 +401,6 @@ export default {
                     if (i == 0) {
                         cm = self.$parent.$refs.apply;
                     }
-                    else {
-                        cm = proveEditors[i - 1];
-                    }
                     cm = cm.editor;
                     
                     cm.focus();
@@ -432,11 +410,6 @@ export default {
 
             Right(cm) {
                 cm.moveH(1, "char");
-                if (cm.getCursor().hitSide) {
-                    cm = proveEditors[i + 1];
-                    cm.focus();
-                    CodeMirror.commands.goDocStart(cm);
-                }
             },
 
             Down(cm) {
@@ -678,26 +651,18 @@ export default {
                 				kwargs = { prefix: prefix, phrase: phrase };
                 				m = prefix.match(/^(\w*)\.$/);
                 				if (m) {
-                					switch (m[1]) {
-                						case 'Algebra':
-                						case 'Calculus':
-                						case 'Discrete':
-                						case 'Geometry':
-                						case 'Keras':
-                						case 'Sets':
-                						case 'Stats':
-                							url += `suggest.php`;
-                							break;
-                						case 'Eq':
-                        					return accept({
-                        						list: self.EqVariables(phrase),
-                        						from: Pos(cur.line, token.start),
-                        						to: Pos(cur.line, token.end)
-                        					});                							
-                						default:
-                							kwargs = { prefix: phrase };
-                							url += `hint.php`;
-                							break;
+                					if (sections.includes(m[1]))
+										url += `suggest.php`;
+									else if (m[1] == 'Eq') {
+										return accept({
+											list: self.EqVariables(phrase),
+											from: Pos(cur.line, token.start),
+											to: Pos(cur.line, token.end)
+										});
+									}
+									else {
+										kwargs = { prefix: phrase };
+										url += `hint.php`;
                 					}
                 				}
                 				else

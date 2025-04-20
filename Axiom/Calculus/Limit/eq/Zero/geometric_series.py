@@ -18,9 +18,9 @@ def prove(Eq):
 
     Eq << Less(Abs(x), 1, plausible=True)
 
-    Eq << Algebra.LtAbs.of.And.apply(Eq[-1])
+    Eq << Algebra.LtAbs.given.And.apply(Eq[-1])
 
-    Eq << Calculus.LtAbs.to.Eq_0.Limit.geometric_series.apply(Eq[1], n)
+    Eq << Calculus.Eq_0.Limit.of.LtAbs.geometric_series.apply(Eq[1], n)
 
 
 

@@ -9,7 +9,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra
+    from Axiom import Algebra, Logic
 
     A, B = Symbol(etype=dtype.integer)
     x, y = Symbol(integer=True)
@@ -18,15 +18,15 @@ def prove(Eq):
 
     Eq << Eq[0].this.find(Bool).apply(Algebra.Bool.eq.Mul)
 
-    Eq << Sum[x](Eq[-1].rhs.expr).this.find(Bool).apply(Algebra.Bool.eq.Piece)
+    Eq << Sum[x](Eq[-1].rhs.expr).this.find(Bool).apply(Logic.Bool.eq.Ite)
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Sum.eq.Mul)
 
-    Eq << Algebra.Eq.to.Eq.Sum.apply(Eq[-1], (y,))
+    Eq << Algebra.EqSum.of.Eq.apply(Eq[-1], (y,))
 
     Eq << Eq[1].this.rhs.subs(Eq[-1])
 
-    Eq << Eq[-1].this.rhs.expr.args[0].apply(Algebra.Bool.eq.Piece)
+    Eq << Eq[-1].this.rhs.expr.args[0].apply(Logic.Bool.eq.Ite)
 
 
 

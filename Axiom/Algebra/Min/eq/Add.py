@@ -45,11 +45,11 @@ def prove(Eq):
 
     Eq << apply(Min(x * r + 1, y * r + 1))
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Min.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Min.eq.Ite)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Piece.eq.Add)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Ite.eq.Add)
 
-    Eq << Eq[-1].this.rhs.apply(Algebra.Min.eq.Piece)
+    Eq << Eq[-1].this.rhs.apply(Algebra.Min.eq.Ite)
 
 
 if __name__ == '__main__':

@@ -23,7 +23,7 @@ def prove(Eq):
 
     Eq << s(i).this.defun()
 
-    Eq << Algebra.Eq.to.Eq.Prod.apply(Eq[-1], (i, {a}))
+    Eq << Algebra.EqProd.of.Eq.apply(Eq[-1], (i, {a}))
 
     Eq << Eq[-1].this.lhs.defun()
 

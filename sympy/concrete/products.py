@@ -650,9 +650,12 @@ class Product(ExprWithIntLimits):
             return self.func(dependent, limit).doit() * independent ** x.dimension
 
     def _sympystr(self, p):
-        # \N{N-ARY PRODUCT}
         limits = ','.join([':'.join([p._print(arg) for arg in limit]) for limit in self.limits])
         return 'Product[%s](%s)' % (limits, p._print(self.expr))
+
+    def _lean(self, p):
+        limits = ','.join([':'.join([p._print(arg) for arg in limit]) for limit in self.limits])
+        return '\N{N-ARY PRODUCT} %s, %s' % (limits, p._print(self.expr))
 
     latex_name_of_operator = 'prod'
 
@@ -1050,9 +1053,12 @@ class MatProduct(ExprWithIntLimits, MatrixExpr):
             return self.func(dependent, limit).doit() @ (independent ^ x.dimension)
 
     def _sympystr(self, p):
-        #\N{N-ARY PRODUCT}
         limits = ','.join([':'.join([p._print(arg) for arg in limit]) for limit in self.limits])
         return 'MatProduct[%s](%s)' % (limits, p._print(self.expr))
+
+    def _lean(self, p):
+        limits = ','.join([':'.join([p._print(arg) for arg in limit]) for limit in self.limits])
+        return '\N{N-ARY PRODUCT} %s, %s' % (limits, p._print(self.expr))
 
     latex_name_of_operator = 'prod'
 

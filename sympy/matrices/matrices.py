@@ -1220,6 +1220,27 @@ class MatrixBase(MatrixCommon):
         newline = '\n' + '    ' * indent
         return f'[{newline}%s]' % f',{newline}'.join(['[%s]' % ','.join(row) for row in arr])
 
+    def _lean(self, p):
+        rows = self.rows
+        cols = self.cols
+        args = self.args
+        if rows == 1:
+            return '[%s]' % ', '.join(p._print(a) for a in args)
+
+        arr = [[p._print(self[i, j]) for j in range(cols)] for i in range(rows)]
+
+        col_width = [max(len(arr[i][j]) for i in range(rows)) for j in range(cols)]
+        
+        for i in range(rows):
+            for j in range(cols):
+                diff = col_width[j] - len(arr[i][j])
+                if diff:
+                    arr[i][j] = ' ' * diff + arr[i][j]
+                
+        indent = p._context.get('indent', 0) + 1
+        newline = '\n' + '    ' * indent
+        return f'[{newline}%s]' % f',{newline}'.join(['[%s]' % ','.join(row) for row in arr])
+
     def _diagonalize_clear_subproducts(self):
         del self._is_symbolic
         del self._is_symmetric

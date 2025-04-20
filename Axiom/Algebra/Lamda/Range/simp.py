@@ -7,7 +7,7 @@ def apply(self, axis=0):
 
     i, domain = limits[axis]
     start, stop, step = domain.of(Range)
-    limits[axis] = i, 0, Ceiling((stop - start) / step)
+    limits[axis] = i, 0, Ceil((stop - start) / step)
     expr = expr._subs(i, i * step + start)
 
     return Equal(self, Lamda(expr, *limits))
@@ -22,8 +22,8 @@ def prove(Eq):
     f = Function(integer=True)
     Eq << apply(Lamda[i:Range(a, b, d)](f(i)))
 
-    i = Symbol(domain=Range(Ceiling((b - a) / d)))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    i = Symbol(domain=Range(Ceil((b - a) / d)))
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
 
 

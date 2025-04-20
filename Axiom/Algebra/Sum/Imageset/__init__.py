@@ -14,7 +14,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Sets
+    from Axiom import Algebra, Set
 
     n, a, b, m = Symbol(integer=True)
     f = Symbol(shape=(oo,), real=True)
@@ -29,7 +29,7 @@ def prove(Eq):
 
     Eq << Eq[-1].this.lhs.apply(Algebra.Sum.limits.subs.offset, b)
 
-    Eq << Eq[-1].this.find(Element).apply(Sets.In.Sub, b)
+    Eq << Eq[-1].this.find(Element).apply(Set.Mem_Icc.Is.MemSub, b)
 
     Eq << Eq[-1].this.lhs.apply(Algebra.Sum.limits.absorb)
 

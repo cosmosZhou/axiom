@@ -45,9 +45,9 @@ def prove(Eq):
     Eq << apply(exp(BlockMatrix(A, B)))
 
     i = Symbol(domain=Range(a + b))
-    Eq << Algebra.Eq.of.Eq.getitem.apply(Eq[0], i)
+    Eq << Algebra.Eq.given.Eq.getitem.apply(Eq[0], i)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Exp.eq.Piece)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Exp.eq.Ite)
 
 
 

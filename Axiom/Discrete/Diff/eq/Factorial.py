@@ -10,7 +10,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Discrete, Algebra
+    from Axiom import Discrete, Algebra, Logic
 
     x = Symbol(real=True)
     k = Symbol(integer=True, nonnegative=True)
@@ -45,13 +45,13 @@ def prove(Eq):
     _k = Symbol('k', domain=Range(n))
     Eq.hypothesis_k = Eq[0].subs(n, _k)
 
-    Eq << Discrete.Eq.to.Eq.Diff.apply(Eq.hypothesis_k, (x, n - _k))
+    Eq << Discrete.EqDiff.of.Eq.apply(Eq.hypothesis_k, (x, n - _k))
 
     Eq << Eq[-1].this.lhs.apply(Discrete.Diff.merge)
 
     Eq << Eq[-1] * binomial(n + 1, _k)
 
-    Eq << Eq[-1].apply(Algebra.Eq.to.Eq.Sum, (_k,))
+    Eq << Eq[-1].apply(Algebra.EqSum.of.Eq, (_k,))
 
     Eq << Eq[-1].this.lhs.limits_subs(_k, k)
 
@@ -61,11 +61,11 @@ def prove(Eq):
 
     Eq << Imply(Eq[0] & Eq.hypothesis_k, Eq.induct, plausible=True)
 
-    Eq << Eq[-1].this.lhs.args[0].apply(Algebra.Cond.of.All, _k)
+    Eq << Eq[-1].this.lhs.args[0].apply(Algebra.Cond.given.All, _k)
 
-    Eq << Eq[-1].this.lhs.apply(Algebra.Cond.All.of.All.push)
+    Eq << Eq[-1].this.lhs.apply(Algebra.Cond.All.given.All.push)
 
-    Eq << Algebra.Cond.Imply.to.Cond.induct.second.split.All.apply(Eq.initial, Eq[-1], n=n)
+    Eq << Logic.Cond.of.Cond.Imp.induct.second.split.All.apply(Eq.initial, Eq[-1], n=n)
 
     Eq << Eq[0].subs(n, _k)
 

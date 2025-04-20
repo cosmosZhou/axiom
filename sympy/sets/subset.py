@@ -30,12 +30,14 @@ class Subset(BinaryCondition):
         return self
 
     def _sympystr(self, p):
-# \N{SUBSET OF}
-# \N{SUBSET OF OR EQUAL TO}
         return 'Subset(%s, %s)' % tuple(p._print(x) for x in self.args)
     
+    def _lean(self, p):
+# \N{SUBSET OF}
+        return '%s \N{SUBSET OF OR EQUAL TO} %s' % tuple(p._print(x) for x in self.args)
+    
     def _latex(self, printer):
-        return r'%s \subset %s' % tuple(printer._print(x) for x in self.args)
+        return r'%s \subseteq %s' % tuple(printer._print(x) for x in self.args)
 
     def _pretty(self, p):
         from sympy.printing.pretty.stringpict import prettyForm, stringPict
@@ -185,10 +187,12 @@ class NotSubset(BinaryCondition):
         return self
 
     def _sympystr(self, p):
-# NEITHER A SUBSET OF NOR EQUAL TO
-# \N{SUBSET OF WITH NOT EQUAL TO}
-# \N{NOT A SUBSET OF}
         return 'NotSubset(%s, %s)' % tuple(p._print(x) for x in self.args)
+
+    def _lean(self, p):
+# NEITHER A SUBSET OF NOR EQUAL TO
+# \N{NOT A SUBSET OF}
+        return '%s \N{SUBSET OF WITH NOT EQUAL TO} %s' % tuple(p._print(x) for x in self.args)
 
     def _latex(self, printer):
         return r'%s \not\subset %s' % tuple(printer._print(x) for x in self.args)
@@ -320,12 +324,14 @@ class Supset(BinaryCondition):
         return self
 
     def _sympystr(self, p):
-# \N{SUPERSET OF}
-# \N{SUPERSET OF OR EQUAL TO}
         return 'Supset(%s, %s)' % tuple(p._print(x) for x in self.args)
 
+    def _lean(self, p):
+# \N{SUPERSET OF}
+        return '%s \N{SUPERSET OF OR EQUAL TO} %s' % tuple(p._print(x) for x in self.args)
+
     def _latex(self, printer):
-        return r'%s\supset %s' % tuple(printer._print(x) for x in self.args)
+        return r'%s\supseteq %s' % tuple(printer._print(x) for x in self.args)
 
     def _pretty(self, p):
         from sympy.printing.pretty.stringpict import prettyForm, stringPict
@@ -415,11 +421,13 @@ class NotSupset(BinaryCondition):
         return self
 
     def _sympystr(self, p):
-# NEITHER A SUPERSET OF NOR EQUAL TO
-# \N{SUPERSET OF WITH NOT EQUAL TO}
-# \N{NOT A SUPERSET OF}
         return 'NotSupset(%s, %s)' % tuple(p._print(x) for x in self.args)
 
+    def _lean(self, p):
+# NEITHER A SUPERSET OF NOR EQUAL TO
+# \N{NOT A SUPERSET OF}
+        return '%s \N{SUPERSET OF WITH NOT EQUAL TO} %s' % tuple(p._print(x) for x in self.args)
+    
     def _latex(self, printer):
         return r'%s\not\supset %s' % tuple(printer._print(x) for x in self.args)
 

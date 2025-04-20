@@ -9,7 +9,7 @@ def apply(self):
 
 @prove
 def prove(Eq):
-    from Axiom import Algebra, Sets
+    from Axiom import Algebra, Set
 
     i, j, d, a = Symbol(integer=True)
     n = Symbol(integer=True, positive=True)
@@ -19,7 +19,7 @@ def prove(Eq):
 
     Eq << Eq[0].this.lhs.apply(Algebra.Prod.Bool)
 
-    Eq << Eq[-1].this.find(And).apply(Sets.In.In.transform.i_Lt_j.left_close)
+    Eq << Eq[-1].this.find(And).apply(Set.Mem.Mem.transform.i_Lt_j.left_close)
 
     Eq << Eq[-1].this.rhs.apply(Algebra.Prod.Bool)
 
