@@ -16,7 +16,7 @@ if ($statement = $_POST['sql']?? null) {
             try {
                 $count = get_rows($sql);
                 if (is_string($count)) {
-                    if (preg_match("/File '(\S+.csv)' already exists/", $count, $m)) {
+                    if (preg_match("/File '(\S+.tsv)' already exists/", $count, $m)) {
                         error_log("unlink($m[1])");
                         unlink($m[1]);
                         error_log("reexecuting: $sql");
@@ -33,7 +33,10 @@ if ($statement = $_POST['sql']?? null) {
 
     require_once 'mysql.php';
 	if ($statement['get']) {
-		die(std\encode(['password' => get_password()]));
+		die(std\encode([
+            'password' => get_password(),
+            'user' => get_user("pwds"),
+        ]));
 	}
 	
     $data = &$statement['data'];

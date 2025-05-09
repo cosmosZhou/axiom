@@ -1,8 +1,5 @@
-import sympy.Lean.Expr
+import stdlib.Lean.Expr
 import sympy.core.singleton
-import std.Basic
-import std.Name
-import std.String
 open Lean.Meta
 open Lean (Name Json Level BinderInfo getMCtx)
 set_option linter.unusedVariables false
@@ -25,37 +22,45 @@ deriving BEq, Repr
 def BinaryInfix.func : BinaryInfix → Func
   | ⟨name⟩ =>
     match name with
-    | `HAdd.hAdd => ⟨40, "+", "+"⟩ -- LAdd
-    | `HSub.hSub => ⟨40, "-", "-"⟩  -- LSub
-    | `HMul.hMul => ⟨43, "*", "\\cdot"⟩  -- LMul
-    | `HPow.hPow => ⟨44, "^", "^"⟩  -- LPow
-    | `HDiv.hDiv => ⟨43, "/", "\\frac"⟩  -- LDiv
-    | `Rat.divInt => ⟨43, "/", "\\frac"⟩  -- LDiv
-    | `HMod.hMod => ⟨43, "%%", "\\%%"⟩  -- LMod
-    | `Union.union => ⟨33, "∪", "\\cup"⟩  -- L_cup
-    | `Inter.inter => ⟨34, "∩", "\\cap"⟩  -- L_cap
-    | `OPlus.f => ⟨45, "⊕", "\\oplus"⟩  -- L_oplus
-    | `OTimes.f => ⟨46, "⊗", "\\otimes"⟩  -- L_otimes
-    | `ODot.f => ⟨46, "⊙", "\\odot"⟩  -- L_odot
-    | `Bullet.f => ⟨46, "•", "\\bullet"⟩  -- L_bullet
-    | `Function.comp => ⟨40, "∘", "\\circ"⟩  -- L_circ
-    | `List.cons => ⟨40, "::", "::"⟩  -- LConcat
-    | `Mathlib.Vector.cons => ⟨40, "::ᵥ", "::_v"⟩  -- LVConcat
-    | `Mathlib.Vector.dot => ⟨40, "⬝", "\\cdotp"⟩  -- L_cdotp
-    | `LE.le => ⟨32, "≤", "\\le"⟩  -- L_le
-    | `GE.ge => ⟨32, "≥", "\\ge"⟩  -- L_ge
-    | `LT.lt => ⟨32, "<", "<"⟩  -- L_lt
-    | `GT.gt => ⟨32, ">", ">"⟩  -- L_gt
-    | `Eq => ⟨32, "=", "="⟩  -- LEq
-    | `Ne => ⟨32, "≠", "\\ne"⟩ -- L_ne
-    | `And => ⟨10, "∧", "\\land"⟩  -- L_land
-    | `Or => ⟨9, "∨", "\\lor"⟩  -- L_lor
-    | `Iff => ⟨8, "↔", "\\leftrightarrow"⟩  -- L_leftrightarrow
+    -- relational operator
+    | `Iff => ⟨21, "↔", "\\leftrightarrow"⟩  -- L_leftrightarrow
+    | `Or => ⟨30, "∨", "\\lor"⟩  -- L_lor
+    | `And => ⟨35, "∧", "\\land"⟩  -- L_land
+    | `LE.le => ⟨51, "≤", "\\le"⟩  -- L_le
+    | `GE.ge => ⟨51, "≥", "\\ge"⟩  -- L_ge
+    | `LT.lt => ⟨51, "<", "<"⟩  -- L_lt
+    | `GT.gt => ⟨51, ">", ">"⟩  -- L_gt
+    | `Eq => ⟨51, "=", "="⟩  -- LEq
+    | `Ne => ⟨51, "≠", "\\ne"⟩ -- L_ne
     | `Membership.mem
-    | `List.Mem => ⟨39, "∈", "\\in"⟩  -- L_in ∋ \\ni
-    | `HasSubset.Subset => ⟨20, "⊆", "\\subseteq"⟩  -- L_subset
-    | `Superset => ⟨20, "⊇", "\\supseteq"⟩  -- L_supset
-    | `Dvd.dvd => ⟨32, "∣", "\\mid"⟩  -- L_mid
+    | `List.Mem => ⟨51, "∈", "\\in"⟩  -- L_in ∋ \\ni
+    | `HasSubset.Subset => ⟨51, "⊆", "\\subseteq"⟩  -- L_subset
+    | `Superset => ⟨51, "⊇", "\\supseteq"⟩  -- L_supset
+    | `Dvd.dvd => ⟨51, "∣", "\\mid"⟩  -- L_mid
+    -- arithmetic operator
+    | `HAdd.hAdd => ⟨66, "+", "+"⟩ -- LAdd
+    | `HSub.hSub => ⟨66, "-", "-"⟩  -- LSub
+    | `HAppend.hAppend => ⟨66, "++", "+\\!\\!+"⟩ -- LAppend
+    | `HMul.hMul => ⟨71, "*", "\\cdot"⟩  -- LMul
+    | `HDiv.hDiv => ⟨71, "/", "\\frac"⟩  -- LDiv
+    | `Rat.divInt => ⟨71, "/", "\\frac"⟩  -- LDiv
+    | `HMod.hMod => ⟨71, "%%", "\\%%"⟩  -- LMod
+    | `SDiff.sdiff => ⟨71, "\\", "\\setminus"⟩  -- L_setminus
+    | `Union.union => ⟨66, "∪", "\\cup"⟩  -- L_cup
+    | `Inter.inter => ⟨71, "∩", "\\cap"⟩  -- L_cap
+    | `OPlus.oplus => ⟨31, "⊕", "\\oplus"⟩  -- L_oplus
+    | `OTimes.otimes => ⟨32, "⊗", "\\otimes"⟩  -- L_otimes
+    | `ODot.odot => ⟨73, "⊙", "\\odot"⟩  -- L_odot
+    | `Bullet.bullet
+    | `HSMul.hSMul => ⟨73, "•", "\\bullet"⟩  -- L_bullet
+    | `List.cons => ⟨68, "::", "::"⟩  -- LConstruct
+    | `List.Vector.cons => ⟨68, "::ᵥ", "::_v"⟩  -- LVConstruct
+    | `Max.max => ⟨68, "⊔", "\\sqcup"⟩  -- L_sqcup
+    | `Min.min => ⟨69, "⊓", "\\sqcap"⟩  -- L_sqcap
+    | `Dot.dot
+    | `List.Vector.dot => ⟨71, "⬝", "{\\color{red}\\cdotp}"⟩  -- L_cdotp
+    | `HPow.hPow => ⟨80, "^", "^"⟩  -- LPow
+    | `Function.comp => ⟨91, "∘", "\\circ"⟩  -- L_circ
     | _ => panic! s!"BinaryInfix.func : unknown operator {name}"
 
 
@@ -87,15 +92,17 @@ deriving BEq, CtorName, Repr
 def UnaryPrefix.func : UnaryPrefix → Func
   | ⟨name⟩ =>
     match name with
-    | `Neg.neg => ⟨41, "-", "-"⟩  -- LNeg
-    | `Not => ⟨38, "¬", "\\lnot"⟩  -- L_lnot
-    | `Complex.ofReal => ⟨45, "↑", "\\uparrow"⟩  -- L_uparrow
+    | `Neg.neg => ⟨68, "-", "-"⟩  -- LNeg
+    | `Not => ⟨50, "¬", "\\lnot"⟩  -- L_lnot
+    | `Complex.ofReal => ⟨72, "↑", "\\uparrow"⟩  -- L_uparrow
+    | `Int.ofNat
     | `Nat.cast
-    | `Int.cast => ⟨45, "↑", "\\uparrow"⟩  -- L_uparrow
-    | `DFunLike.coe => ⟨45, "⇑", "\\Uparrow"⟩  -- LUparrow
-    | `Real.sqrt => ⟨45, "√", "\\sqrt"⟩  -- LRealSqrt
-    | `Root.sqrt => ⟨45, "√", "\\sqrt"⟩  -- L_sqrt
-    | `OfNat.ofNat => ⟨80, "cast", ""⟩  -- L_cast
+    | `Int.cast
+    | `Rat.cast => ⟨72, "↑", "\\uparrow"⟩  -- L_uparrow
+    | `DFunLike.coe => ⟨72, "⇑", "\\Uparrow"⟩  -- LUparrow
+    | `Real.sqrt
+    | `Root.sqrt => ⟨72, "√", "\\sqrt"⟩  -- L_sqrt
+    | `OfNat.ofNat => ⟨107, "cast", ""⟩  -- L_cast
     | _ => panic! s!"UnaryPrefix.func : unknown operator {name}"
 
 
@@ -112,7 +119,7 @@ deriving BEq, Repr
 def UnaryPostfix.func: UnaryPostfix → Func
   | ⟨name⟩ =>
     match name with
-    | `Inv.inv => ⟨45, "⁻¹", "^{-1}"⟩
+    | `Inv.inv => ⟨72, "⁻¹", "^{-1}"⟩
     | _ => panic! s!"UnaryPostfix.func : unknown operator {name}"
 
 
@@ -135,20 +142,20 @@ deriving BEq, Repr
 
 
 def ExprWithLimits.func : ExprWithLimits → Func
-  | L_sum  => ⟨33, "∑", "\\sum"⟩
-  | L_prod => ⟨33, "∏", "\\prod"⟩
-  | L_int _ => ⟨33, "∫", "\\int"⟩
-  | L_bigcap _ => ⟨33, "⋂", "\\bigcap"⟩
-  | L_bigcup _ => ⟨33, "⋃", "\\bigcup"⟩
-  | L_lim _ => ⟨33, "lim", "\\lim"⟩
-  | L_sup _ => ⟨33, "sup", "\\sup"⟩
-  | L_inf _ => ⟨33, "inf", "\\inf"⟩
-  | L_max _ => ⟨33, "max", "\\max"⟩
-  | L_min _ => ⟨33, "min", "\\min"⟩
-  | L_forall => ⟨20, "∀", "\\forall"⟩
-  | L_exists => ⟨20, "∃", "\\exists"⟩
-  | L_lambda => ⟨45, "fun", "\\operatorname{\\color{magenta}fun}"⟩
-  | L_let => ⟨20, "let", "let"⟩
+  | L_sum  => ⟨52, "∑", "\\sum"⟩
+  | L_prod => ⟨52, "∏", "\\prod"⟩
+  | L_int _ => ⟨52, "∫", "\\int"⟩
+  | L_bigcap _ => ⟨52, "⋂", "\\bigcap"⟩
+  | L_bigcup _ => ⟨52, "⋃", "\\bigcup"⟩
+  | L_lim _ => ⟨52, "lim", "\\lim"⟩
+  | L_sup _ => ⟨52, "sup", "\\sup"⟩
+  | L_inf _ => ⟨52, "inf", "\\inf"⟩
+  | L_max _ => ⟨52, "max", "\\max"⟩
+  | L_min _ => ⟨52, "min", "\\min"⟩
+  | L_forall => ⟨24, "∀", "\\forall"⟩
+  | L_exists => ⟨24, "∃", "\\exists"⟩
+  | L_lambda => ⟨72, "fun", "\\operatorname{\\color{magenta}fun}"⟩
+  | L_let => ⟨47, "let", "let"⟩
 
 
 def ExprWithLimits.name : ExprWithLimits → Name
@@ -169,12 +176,12 @@ def ExprWithLimits.name : ExprWithLimits → Name
 
 
 def Binder.func : Binder → Func
-  | implicit => ⟨20, "{%s : %s}", "\\left\\lbrace %s : %s\\right\\rbrace"⟩
-  | strictImplicit => ⟨20, "⦃%s : %s⦄", "⦃%s : %s⦄"⟩
-  | instImplicit => ⟨20, "[%s]", "\\left[%s\\right]"⟩
-  | given => ⟨20, "(%s : %s)", "\\left(%s : %s\\right)"⟩
-  | default => ⟨20, "(%s : %s)", "\\left(%s : %s\\right)"⟩
-  | contains => ⟨20, "%s ∈ %s", "{%s \\in %s}"⟩
+  | implicit => ⟨47, "{%s : %s}", "\\left\\lbrace %s : %s\\right\\rbrace"⟩
+  | strictImplicit => ⟨47, "⦃%s : %s⦄", "⦃%s : %s⦄"⟩
+  | instImplicit => ⟨47, "[%s]", "\\left[%s\\right]"⟩
+  | given => ⟨47, "(%s : %s)", "\\left(%s : %s\\right)"⟩
+  | default => ⟨47, "(%s : %s)", "\\left(%s : %s\\right)"⟩
+  | contains => ⟨47, "%s ∈ %s", "{%s \\in %s}"⟩
 
 
 structure Special where
@@ -185,16 +192,25 @@ deriving BEq, Repr
 def Special.func : Special → Func
   | ⟨name⟩ =>
     match name with
-    | .anonymous => ⟨45, "__call__", "__call__"⟩
-    | `abs => ⟨33, "|%s|", "\\left|%s\\right|"⟩  -- LAbs
-    | `Norm.norm => ⟨33, "‖%s‖", "\\left\\lVert%s\\right\\rVert"⟩  -- LNorm
-    | `Int.ceil => ⟨45, "⌈%s⌉", "\\left\\lceil%s\\right\\rceil"⟩  -- LCeil
-    | `Int.floor => ⟨45, "⌊%s⌋", "\\left\\lfloor%s\\right\\rfloor"⟩  -- LFloor
-    | `ite => ⟨33, "ite", "ite"⟩  -- LITE
-    | `Prod.mk => ⟨90, "⟨%s, %s⟩", "\\langle %s, %s \\rangle"⟩  -- LAngleBracket
-    | `GetElem.getElem => ⟨90, "%s[%s]", "%s_%s"⟩  -- LGetElem
+    | .anonymous => ⟨72, "__call__", "__call__"⟩
+    | `abs => ⟨72, "|%s|", "\\left|%s\\right|"⟩  -- LAbs
+    | `Bool.toNat => ⟨72, "Bool.toNat %s", "\\left|%s\\right|"⟩  -- LAbs
+    | `Finset.card => ⟨72, "#%s", "\\left|%s\\right|"⟩  -- LCard
+    | `Norm.norm => ⟨60, "‖%s‖", "\\left\\lVert%s\\right\\rVert"⟩  -- LNorm
+    | `Int.ceil => ⟨72, "⌈%s⌉", "\\left\\lceil%s\\right\\rceil"⟩  -- LCeil
+    | `Int.floor => ⟨72, "⌊%s⌋", "\\left\\lfloor%s\\right\\rfloor"⟩  -- LFloor
+    | `ite => ⟨60, "ite", "ite"⟩  -- LITE
+    | `Prod.mk => ⟨117, "⟨%s, %s⟩", "\\langle %s, %s \\rangle"⟩  -- LAngleBracket
+    | `List.get
+    | `List.Vector.get
+    | `GetElem.getElem => ⟨99, "%s[%s]", "%s_%s"⟩  -- LGetElem
     | `Nat.ModEq => ⟨32, "%s ≡ %s [MOD %s]", "%s \\equiv %s\\ \\left[\\operatorname{MOD}\\ %s\\right]"⟩  -- L_equiv
-    | .str _ "match_1" => ⟨33, "match", "match"⟩  -- L_match
+    | `Singleton.singleton
+    | `Insert.insert => ⟨72, "{%s}", "\\left\\{%s\\right\\}"⟩  -- LBrace
+    | `setOf => ⟨72, "{%s | %s}", "\\left\\{%s \\mid %s\\right\\}"⟩  -- LSetOf
+    | .str _ "match_1"
+    | .str _ "match_2" => ⟨60, "match", "match"⟩  -- L_match
+    | `Decidable.decide => ⟨72, "%s", "%s"⟩  -- LDecide
     | _ => panic! s!"Special.func : unknown operator {name}"
 
 
@@ -210,27 +226,27 @@ deriving BEq, Repr
 def ExprWithAttr.func : ExprWithAttr → Func
   | L_function name =>
     let name := name.getLast.toString
-    ⟨44, name, "\\" ++ name⟩
+    ⟨71, name, "\\" ++ name⟩
   | L_operatorname name =>
     let name := name.getLast.toString
     ⟨
-      44,
+      72,
       name,
-      "\\operatorname{%s}".format name
+      "\\operatorname{%s}".format name.escape_specials
     ⟩
   | LMethod name =>
     let name := name.getLast.toString
-    ⟨44, s!"%s.{name} %s", s!"%s.{name}\\ %s"⟩
+    ⟨71, s!"%s.{name} %s", s!"%s.{name.escape_specials}\\ %s"⟩
   | L_typeclass name =>
     let name := name.getLast.toString
     ⟨
-      42,
+      72,
       name,
-      "\\operatorname{\\color{#770088}{%s}}".format name
+      "\\operatorname{\\color{#770088}{%s}}".format name.escape_specials
     ⟩
   | LAttr name =>
     let name := name.getLast.toString
-    ⟨90, s!".{name}", s!".{name}"⟩
+    ⟨81, s!".{name}", s!".{name.escape_specials}"⟩
 
 
 def ExprWithAttr.name : ExprWithAttr → Name
@@ -309,7 +325,7 @@ def Expr.priority : Expr → Nat
   | nil => 0
   | sort ..
   | Symbol ..
-  | const _ => 90
+  | const _ => 100
   | Basic op _ => op.priority
   | Binder binder _ _ _ => binder.func.priority
 
@@ -355,8 +371,10 @@ dAssign.fvars = {dAssign.fvars}
 "
 -/
           pure e
+    return .const `«?» []
 
-    panic! s!"Expr.func.mvar.some : unknown metavariable {mvarId.name}"
+
+def «?» := 0
 
 
 inductive TreeNode where
@@ -364,15 +382,18 @@ inductive TreeNode where
   | const (expr : Expr)
 
 
-partial def Expr.func (e : Lean.Expr) (toExpr : Lean.Expr → MetaM Expr) (binders : List Expr) : MetaM TreeNode := do
+partial def Expr.func (e : Lean.Expr) (toExpr : Lean.Expr → List Expr → MetaM Expr) (binders : List Expr) : MetaM TreeNode := do
   match e with
   | .bvar deBruijnIndex  =>
-    return .const (binders.get! deBruijnIndex)
+    if h : deBruijnIndex < binders.length then
+      return .const binders[deBruijnIndex]
+    else
+      panic! s!"Expr.func.bvar : unknown deBruijn index {deBruijnIndex} in {binders.length} binders"
 
   | .fvar fvarId  =>
     if let some decl ← fvarId.findDecl? then
       let type := decl.type
-      return .const (Symbol decl.userName (← toExpr type))
+      return .const (Symbol decl.userName (← toExpr type []))
     else
       panic! s!"Expr.func.fvar : unknown free variable {fvarId.name}"
 
@@ -397,6 +418,7 @@ e = {e}, e = {← ppExpr e}, e.type = {← inferType e}"
     | `Eq
     | `HAdd.hAdd
     | `HSub.hSub
+    | `HAppend.hAppend
     | `HMul.hMul
     | `HPow.hPow
     | `HDiv.hDiv
@@ -407,19 +429,23 @@ e = {e}, e = {← ppExpr e}, e.type = {← inferType e}"
     | `Iff
     | `Membership.mem
     | `List.Mem
+    | `SDiff.sdiff
     | `Inter.inter
     | `Union.union
     | `Function.comp
     | `List.cons
-    | `Mathlib.Vector.cons
-    | `Mathlib.Vector.dot
+    | `List.Vector.cons
+    | `List.Vector.dot
+    | `Max.max
+    | `Min.min
     | `HasSubset.Subset
     | `Superset
     | `Dvd.dvd
-    | `OPlus.f
-    | `OTimes.f
-    | `ODot.f
-    | `Bullet.f =>
+    | `OPlus.oplus
+    | `OTimes.otimes
+    | `ODot.odot
+    | `HSMul.hSMul
+    | `Bullet.bullet =>
       return .Operator (.BinaryInfix ⟨declName⟩)
 
     | `Neg.neg
@@ -427,9 +453,11 @@ e = {e}, e = {← ppExpr e}, e.type = {← inferType e}"
     | `Real.sqrt
     | `Root.sqrt
     | `Complex.ofReal
+    | `Int.ofNat
+    | `OfNat.ofNat
     | `Nat.cast
     | `Int.cast
-    | `OfNat.ofNat
+    | `Rat.cast
     | `DFunLike.coe =>
       return .Operator (.UnaryPrefix ⟨declName⟩)
 
@@ -447,13 +475,15 @@ e = {e}, e = {← ppExpr e}, e.type = {← inferType e}"
     | `List.tail
     | `List.sum
     | `List.prod
+    | `List.flatten
     | `Prod.fst
     | `Prod.snd
-    | `Mathlib.Vector.length
-    | `Mathlib.Vector.head
-    | `Mathlib.Vector.tail
-    | `Mathlib.Vector.sum
-    | `Mathlib.Vector.toList
+    | `List.Vector.length
+    | `List.Vector.head
+    | `List.Vector.tail
+    | `List.Vector.sum
+    | `List.Vector.toList
+    | `List.Vector.flatten
     | `Nat.pred
     | `Nat.succ
     | `Complex.cos
@@ -463,14 +493,14 @@ e = {e}, e = {← ppExpr e}, e.type = {← inferType e}"
     | `IsConstant.is_constant
     | `Subtype.val
     | `Tensor.shape
-    | `Tensor.args =>
+    | `Tensor.args
+    | `Int.negSucc =>
       return .Operator (.ExprWithAttr (.LAttr declName))
 
     | `id
     | `Real.exp
     | `Complex.re
     | `Complex.im
-    | `Complex.abs
     | `Complex.normSq
     | `Complex.cpow
     | `List.replicate
@@ -484,7 +514,9 @@ e = {e}, e = {← ppExpr e}, e.type = {← inferType e}"
     | `Set.Ici
     | `Set.Ioi
     | `Int.sign
-    | `Mathlib.Vector.replicate =>
+    | `List.Vector.replicate
+    | `toIcoDiv
+    | `Int.subNatNat =>
       return .Operator (.ExprWithAttr (.L_operatorname declName))
 
     -- instImplicit
@@ -496,27 +528,36 @@ e = {e}, e = {← ppExpr e}, e.type = {← inferType e}"
     | `OTimes
     | `ODot
     | `Bullet
-    | `Mathlib.Vector
+    | `List.Vector
     | `Tensor =>
       return .Operator (.ExprWithAttr (.L_typeclass declName))
 
-    | `abs             -- LAbs
-    | `Norm.norm       -- LNorm
-    | `Int.ceil        -- LCeil
-    | `Int.floor       -- LFloor
-    | `Prod.mk         -- LAngleBracket
-    | `GetElem.getElem -- LGetElem
-    | `ite             -- LITE
-    | `Nat.ModEq =>    -- L_equiv
+    | `abs                 -- LAbs
+    | `Bool.toNat          -- LAbs
+    | `Finset.card         -- LAbs
+    | `Norm.norm           -- LNorm
+    | `Int.ceil            -- LCeil
+    | `Int.floor           -- LFloor
+    | `Prod.mk             -- LAngleBracket
+    | `List.get
+    | `List.Vector.get
+    | `GetElem.getElem     -- LGetElem
+    | `ite                 -- LITE
+    | `Singleton.singleton -- LBrace
+    | `Insert.insert       -- LBrace
+    | `setOf               -- LSetOf
+    | `Decidable.decide    -- LDecide
+    | `Nat.ModEq =>        -- L_equiv
       return .Operator (.Special ⟨declName⟩)
 
-    | `List.get
     | `List.map
     | `List.headD
-    | `List.join
-    | `Mathlib.Vector.get
-    | `Mathlib.Vector.map
-    | `Mathlib.Vector.headD
+    | `List.substr
+    | `List.Vector.map
+    | `List.Vector.headD
+    | `List.Vector.substr
+    | `Int.fdiv
+    | `Int.fmod
     | `Int.tdiv
     | `Int.tmod =>
       return .Operator (.ExprWithAttr (.LMethod declName))
@@ -547,8 +588,8 @@ e = {e}, e = {← ppExpr e}, e.type = {← inferType e}"
       return .const (const .Nat)
     | `Int =>
       return .const (const .Int)
-    | `Rational =>
-      return .const (const .Rational)
+    | `Rat =>
+      return .const (const .Rat)
     | `Real =>
       return .const (const .Real)
     | `List.nil =>
@@ -569,15 +610,17 @@ e = {e}, e = {← ppExpr e}, e.type = {← inferType e}"
     | `Exists =>
       return .Operator (.ExprWithLimits .L_exists)
 
-    | .str _ "match_1" =>
+    | .str _ "match_1"
+    | .str _ "match_2" =>
       return .Operator (.Special ⟨declName⟩)
 
     | _ =>
-      if Lean.isClass (← Lean.getEnv) declName || (← toExpr (← declName.toConstantInfo).type).isTypeClass then
+      if Lean.isClass (← Lean.getEnv) declName || (← toExpr (← declName.toConstantInfo).type []).isTypeClass then
         return .Operator (.ExprWithAttr (.L_typeclass declName))
       else
         -- println! s!"unknown constant {declName}"
-        return .const nil
+        return .Operator (.ExprWithAttr (.L_operatorname declName))
+        -- return .const nil
 
   | .app fn arg =>
     let op ← Expr.func fn toExpr binders
@@ -624,7 +667,7 @@ c.ctorName = {c.ctorName}
       | const .EmptyList =>
         return .const c
       | _ =>
-        return .const nil
+        return .const (.Basic (.Special ⟨.anonymous⟩) [c, ← toExpr arg binders])
 
   | .lam ..  =>
     return .Operator (.ExprWithLimits .L_lambda)
@@ -651,16 +694,20 @@ e = {e}, e.ctorName = {e.ctorName}, val = {val}"
 e = {e}, e.ctorName = {e.ctorName}"
 
 
-def Expr.filter_default (func : Operator) (args : List Expr) : MetaM (List Expr) := do
+def Expr.filter_default (func : Operator) (args : List Expr) : MetaM (List Expr × List Expr) := do
   let name := func.name
   match name with
   | .anonymous =>
-    return args
+    return ⟨args, []⟩
   | _ =>
-    return List.zip (← func.name.binderInfo) args |>.filterMap fun (binderInfo, arg) =>
-      match binderInfo with
-      | .default => some arg
-      | _ => none
+    let binderInfo ← func.name.binderInfo
+    return ⟨
+      List.zip binderInfo args |>.filterMap fun (binderInfo, arg) =>
+        match binderInfo with
+        | .default => some arg
+        | _ => none,
+      args.drop binderInfo.length
+    ⟩
 
 
 def Expr.isProp : Expr → Bool
@@ -672,6 +719,7 @@ def Expr.isProp : Expr → Bool
     | .ExprWithAttr op, _ => op.isProp
     | .Special ⟨`ite⟩, [_, thenBranch, _] => thenBranch.isProp
     | _, _ => false
+  | Symbol _ (sort .zero) => true
   | _ => false
 
 

@@ -1,6 +1,6 @@
 import Axiom.Algebra.Square.ge.Zero
 import Axiom.Algebra.Square.ne.Zero.of.Ne_0
-import Axiom.Algebra.Gt.of.Ne.Ge
+import Axiom.Algebra.Gt.of.Ge.Ne
 open Algebra
 
 
@@ -13,9 +13,10 @@ private lemma main
 -- imply
   a² > 0 :=
 -- proof
-  Gt.of.Ne.Ge
-    (Square.ne.Zero.of.Ne_0 h)
+  Gt.of.Ge.Ne
     (Square.ge.Zero (a := a))
+    (Square.ne.Zero.of.Ne_0 h)
 
 
 -- created on 2024-11-29
+-- updated on 2025-03-30

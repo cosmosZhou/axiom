@@ -1,18 +1,18 @@
-import Axiom.Geometry.ExpMulI.eq.AddCos_MulISin.Euler
+import Axiom.Trigonometry.ExpMulI.eq.AddCos_MulISin.Euler
 import Axiom.Algebra.Expr.eq.AddRe_MulIIm
-import Axiom.Algebra.Eq.of.Eq.Eq.trans
+import Axiom.Logic.Eq.of.Eq.Eq.trans
 import Axiom.Algebra.Mul_Add.eq.AddMulS
-import Axiom.Geometry.Re.eq.MulAbs_CosArg
-import Axiom.Geometry.Im.eq.MulAbs_SinArg
+import Axiom.Trigonometry.Re.eq.MulAbs_CosArg
+import Axiom.Trigonometry.Im.eq.MulAbs_SinArg
 import Axiom.Algebra.Eq.of.EqReS.EqImS
-open Algebra Geometry
+open Algebra Logic Trigonometry
 
 
 @[main]
 private lemma main
   {z : ℂ} :
 -- imply
-  z = abs z * (I * arg z).exp := by
+  z = ‖z‖ * (I * arg z).exp := by
 -- proof
   rw [ExpMulI.eq.AddCos_MulISin.Euler]
   apply Eq.of.Eq.Eq.trans (f := fun z _ => ↑z.re + I * ↑z.im) (h_a := (Expr.eq.AddRe_MulIIm (z := z)).symm)

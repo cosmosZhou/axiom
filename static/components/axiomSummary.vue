@@ -2,7 +2,7 @@
 	<div tabindex=1 @keydown=keydown>
 		the whole math repertoire is composed of the following sections:
  
-		<searchForm v-if="issearch" :q=q :caseSensitive=caseSensitive :wholeWord=wholeWord :regularExpression=regularExpression :latex=latex></searchForm>		
+		<searchForm v-if="issearch" :q=q :caseSensitive=caseSensitive :wholeWord=wholeWord :regularExpression=regularExpression :latex=latex :fullText=fullText></searchForm>		
 		<ul>
 			<li v-for="(content, section) in repertoire">
 				<a :href=href_section(section)>
@@ -68,12 +68,12 @@ export default {
 			issearch: false,
 			recentAxioms: [],
 			topk: 10,
-			
 			q: '',
 			caseSensitive: false,
 			wholeWord: false, 
 			regularExpression: false,
 			latex: null,
+			fullText: false
 		};
 	},
 

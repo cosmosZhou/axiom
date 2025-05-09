@@ -3,7 +3,7 @@
 		<mysql :host=host :user=user :token=token :sql=sql :kwargs=kwargs :rowcount=data.length :sample=sample ref=mysql></mysql>
 		<template v-for="(data, index) of dataSampled">
 			<table border=1 class=dictionary :index=index>
-				<template v-for="{Field, Type, value} of detailed_values(data)" :class=Field>
+				<template v-for="{Field, value} of detailed_values(data)" :class=Field>
 					<template v-if="value && value.isArray">
 						<template v-if=value.length>
 							<tr>
@@ -29,6 +29,10 @@
 							<select v-if=dtype[Field].isArray :name="`${Field}[]`" :value=value>
 								<option v-for="value of dtype[Field]" :value=value>{{value}}</option>
 							</select>
+							<span v-else-if=is_primary_key[Field]>
+								<a :href=primary_key_url(value) :target=PRI>{{value}}</a>
+								<input type=hidden :name="`${Field}[]`" :value=value />
+							</span>
 							<mysqlObject v-else :name="`${Field}[]`" :value=value></mysqlObject>
 						</td>
 					</tr>
@@ -49,19 +53,19 @@ export default {
     components: {mysql, mysqlObject},
 
 	props: [...props, 'sample'],
-	
+
     data() {
         return {
         	mounted: {},
-        	
+
         	_column_size: {},
-        	
+
         	desc: [],
-        	
+
         	dtype: {},
         };
     },
-    
+
     computed: {
     	dataSampled() {
     		var {data} = this;
@@ -72,22 +76,53 @@ export default {
         		return data;
         	}
     	},
-    	
+
+    	is_primary_key() {
+			var dict = {};
+			var {is_primary_key} = this.mysql;
+			if (is_primary_key) {
+				var {select} = this.kwargs;
+				if (select) {
+					if (select.isArray) {
+						for (var key of select) {
+							if (is_primary_key[key])
+								dict[key] = true;
+						}
+					}
+					else {
+						if (is_primary_key[select])
+							dict[select] = true;
+					}
+				}
+			}
+			return dict;
+    	},
+
+		primary_key_url() {
+			return this.mysql.primary_key_url;
+    	},
+
     	database() {
     		return this.mysql.database;
     	},
-    	
+
+    	table() {
+    		return this.mysql.table;
+    	},
+
+    	PRI() {
+    		return this.mysql.PRI;
+    	},
+
     	mysql() {
     		return this.mounted.mysql? this.$refs.mysql: {};
     	},
     },
-    
+
     created() {
-    	var {user, host, sql, data, kwargs, sample} = this;
-    	console.log({user, host});
     	this.initialize_header();
     },
-    
+
     methods: {
     	detailed_values(value) {
     		var values = [];
@@ -100,15 +135,15 @@ export default {
     	stringify(value) {
     		if (!value)
     			return '';
-    		
+
     		if (value.isString)
     			return value.replace(/\n/g, '\\n');
-    		
+
     		if (value.isNumber)
     			return value;
     		return JSON.stringify(value);
     	},
-    	
+
     	initialize_header() {
     		this.dtype = {};
         	var {desc, dtype} = this;
@@ -148,23 +183,21 @@ export default {
         			}
         		}
         	}
-
-        	//console.log(data);
     	},
-    	
+
     	getType(value) {
     		if (value == null)
     			return 'json';
-    		
+
     		if (value.isString)
     			return 'string';
-    		
+
     		if (value.isNumber)
     			return 'number';
-    		
+
     		return 'json';
     	},
-    	
+
     	column_size(name){
     		var column_size = this._column_size[name];
     		if (column_size == null) {
@@ -173,13 +206,13 @@ export default {
     					return strlen(tr[name]);
     				return 10;
     			}));
-    			
+
     			this._column_size[name] = column_size;
     		}
-    		
+
     		return column_size;
     	},
-    	
+
     	coordinate(self){
     		var td = self.parentElement;
     		if (td.tagName == 'TD'){
@@ -191,7 +224,7 @@ export default {
     		}
     		return [-1, -1];
     	},
-    	
+
     	focus(row, col, offset){
     		var table = this.$refs.table;
     		var tr = table.children[row];
@@ -202,12 +235,12 @@ export default {
     			if (offset < 0){
     				offset.value.length;
     			}
-    			
+
     			input.selectionStart = offset;
     			input.selectionEnd = offset;
     		}
     	},
-    	
+
     	keydown_table(event){
 			var self = event.target;
 			var key = event.key;
@@ -220,7 +253,7 @@ export default {
 					--row;
 					this.focus(row, col, self.selectionStart);
 				}
-				
+
 				break;
 			case 'ArrowDown':
 				event.preventDefault();
@@ -230,10 +263,10 @@ export default {
 					++row;
 					this.focus(row, col, self.selectionStart);
 				}
-				
+
 				break;
 			case 'ArrowLeft':
-				
+
 				var self = event.target;
 				if (self.tagName == 'SELECT' || !self.selectionStart){
 					event.preventDefault();
@@ -247,10 +280,10 @@ export default {
 					}
 					this.focus(row, col, -1);
 				}
-				
+
 				break;
 			case 'ArrowRight':
-				
+
 				var self = event.target;
 				if (self.tagName == 'SELECT' || self.selectionStart == self.value.length){
 					event.preventDefault();
@@ -264,11 +297,11 @@ export default {
 					}
 					this.focus(row, col, 0);
 				}
-				
+
 				break;
 			}
     	},
-    	
+
         blur(event, index){
         	var self = event.target;
         	var name = self.name.slice(0, -2);
@@ -277,13 +310,13 @@ export default {
         	}
         },
     },
-    
+
     mounted() {
     },
-    
+
     unmounted() {
     },
-    
+
 	directives: {
 		focus: {
 		    // after dom is inserted into the document
@@ -292,7 +325,7 @@ export default {
 		    },
 		},
 	},
-    
+
 }
 </script>
 

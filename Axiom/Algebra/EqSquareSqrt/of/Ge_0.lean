@@ -1,7 +1,8 @@
+import sympy.core.power
 import Axiom.Basic
 
 
-@[simp, main]
+@[main]
 private lemma main
   {x : ℝ}
 -- given

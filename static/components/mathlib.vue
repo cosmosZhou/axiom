@@ -1,5 +1,7 @@
 <template>
-	<lemma :name=name :instImplicit=instImplicit :strictImplicit=strictImplicit :implicit=implicit :given=given :explicit=explicit :imply=imply :index=0 @keydown=keydown></lemma>
+	<div @keydown=keydown>
+		<lemma v-for="lemma, index of lemma" :name=lemma.name :instImplicit=lemma.instImplicit :strictImplicit=lemma.strictImplicit :implicit=lemma.implicit :given=lemma.given :explicit=lemma.explicit :imply=lemma.imply :index=index></lemma>
+	</div>
 </template>
 
 <script>
@@ -11,9 +13,8 @@ console.log('import mathlib.vue');
 export default {
 	components: {
 		lemma
-		// 'console': () => import('./console.vue'),
 	},
-	props : [ 'name', 'type', 'instImplicit', 'strictImplicit', 'implicit', 'given', 'explicit', 'imply'],
+	props : [ 'lemma' ],
 	
 	created() {
 	},
@@ -28,30 +29,51 @@ export default {
 	},
 
 	computed: {
-		lemma() {
-			return [this.$parent.$data];
+	},
+
+	methods: {
+        leanSourceCode(index) {
+            return this.lemma[index].type;
+        },
+
+		new_file() {
+			var {lemma} = this;
+			var module = lemma[0].name;
+			window.open(`?new=${module}`);
 		},
 
-        leanFile() {
-            return this.type;
+		openContainingFolder() {
+			var search = location.search;
+			var m = search.match(/\?mathlib=(.*)/)
+			var mathlib = m[1];
+			location.search = `?q=${mathlib}&fullText=on`;
         },
-	},
-	
-	methods: {
+
         click_left,
 		async keydown(event) {
 			switch (event.key) {
 			case 'F5':
+				console.log('F5 is pressed, refreshing');
+				for (var lemma of this.lemma)
+					delete lemma.type;
 				await this.build();
 				event.preventDefault();
 				break;
 			}
 		},
 
-		async build() {
-			var {name} = this;
+		async build(lemma) {
+			if (!lemma) {
+				for (var lemma of this.lemma) {
+					var {type, imply} = lemma;
+					if (!type || !imply || !imply.lean || !imply.latex)
+						await this.build(lemma);
+				}
+				return;
+			}
+			var {name} = lemma;
 			var {type, instImplicit, strictImplicit, implicit, given, default: explicit, imply} = await form_post('php/request/mathlib.php', {name});
-			Object.assign(this.$parent.$data, {type, instImplicit, strictImplicit, implicit, given, explicit, imply});
+			Object.assign(lemma, {type, instImplicit, strictImplicit, implicit, given, explicit, imply});
             var sql = `
 replace into 
     axiom.mathlib
@@ -74,10 +96,7 @@ replace into
 	},
 	
 	mounted() {
-		var {imply, type} = this;
-		if (!type || !imply.lean || !imply.latex)
-			this.build();
-
+		this.build();
 		mounted(this);
 	},
 }

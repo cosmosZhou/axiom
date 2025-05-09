@@ -9,10 +9,10 @@
 console.log('import timer.vue');
 
 export default {
-	props: ['cond', 'trigger'], 
+	props: ['cond', 'trigger'],
 
     components: {},
-	
+
     data() {
         return {
         	currentTime: 0,
@@ -21,7 +21,7 @@ export default {
 			pause: false,
         };
     },
-    
+
     computed: {
     	stop() {
     		var {cond} = this;
@@ -39,45 +39,45 @@ export default {
 
     		var minutes = (seconds / 60).floor();
     		seconds %= 60;
-    		
+
     		seconds = seconds.toString().padStart(2, '0');
-    		
+
     		var hours = (minutes / 60).floor();
     		minutes %= 60;
-    		
+
     		if (hours) {
     			return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds}`;
     		}
-    		
+
     		if (minutes) {
     			return `${minutes.toString().padStart(2, '0')}:${seconds}`;
     		}
-    		
+
     		return `${seconds} seconds`;
     	},
-    	
+
     	seconds() {
     		return this.currentTime - this.startTime;
     	},
-    	
+
     	minutes() {
     		return this.seconds / 60;
     	},
-    	
+
     	hours() {
     		return this.minutes / 60;
     	},
     },
-    
+
     methods: {
     	clearInterval() {
     		clearInterval(this.timerID);
     	},
     },
-    
+
     created() {
     },
-    
+
     mounted() {
 		this.startTime = Date.now() / 1000;
 		this.currentTime = this.startTime;
@@ -90,7 +90,7 @@ export default {
 				var [[action, minutes]] = Object.entries(repeat);
 			else {
 				var action = typeof repeat != 'string' || repeat.isInteger? 'reload' : repeat;
-				var minutes = 10;
+				var minutes = 20;
 			}
 			var self = this;
 			console.log(`page will be ${action}ed after ${minutes} minutes`);
@@ -104,7 +104,7 @@ export default {
 			}, minutes * 60 * 1000); // Reloads the page after 10 minutes
 		}
     },
-    
+
     unmounted() {
     	this.clearInterval();
     },
@@ -117,7 +117,7 @@ export default {
 		    },
 		},
 	},
-    
+
 }
 </script>
 

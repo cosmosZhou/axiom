@@ -1,13 +1,13 @@
 <template>
-	
+
 	<form action="" method=post>
 		<br>
-		
+
 		<div v-if=hidden_fields.length>
 			<input v-for="[value, name] of hidden_fields" type=hidden :name=name :value=value />
 			<p class=message>
 				The action will be performed after successful login with the same credentials.
-			</p>		
+			</p>
 		</div>
 		<table cellspacing=0 class=layout>
 			<tr>
@@ -15,7 +15,7 @@
 					Login Form
 				</td>
 			</tr>
-		
+
 			<tr>
 				<th>Host</th>
 				<td><input name=auth[host] v-model=host :title="`${host}:${port}`" placeholder=localhost autocapitalize=off /></td>
@@ -55,7 +55,7 @@
 			<li>A user named <font color=blue>prod</font> has <font color=red>select/insert/delete/update</font> privileges of dataset created by other users</li>
 			<li>A user named <font color=blue>boss</font> has <font color=red>select/insert/delete/update</font> privileges of dataset created by other users</li>
 			<li>A user named <font color=blue>root</font> has <font color=red>select/insert/delete/update/create/alter/drop</font> privileges of dataset created by other users</li>
-		</ul>		
+		</ul>
 	</form>
 </template>
 
@@ -66,14 +66,14 @@ export default {
 	props: ['auth', 'hidden_fields'],
 
     components: {},
-	
+
     data() {
         return {
         	mounted: {
         	},
         };
     },
-    
+
     computed: {
     	port() {
     		return 3306;
@@ -88,7 +88,7 @@ export default {
     			Object.assign(this.auth, {host});
     		},
     	},
-    	
+
     	user: {
     		get() {
     			return this.auth.user;
@@ -97,32 +97,32 @@ export default {
     			Object.assign(this.auth, {user});
     		},
     	},
-    	
+
     	password: {
     		get() {
     			return this.auth.password;
     		},
-    		
+
     		set(password) {
     			Object.assign(this.auth, {password});
     		},
     	},
-    	
+
     	db: {
     		get() {
     			return this.auth.db;
     		},
-    		
+
     		set(db) {
     			Object.assign(this.auth, {db});
     		},
     	},
-    	
+
     	table: {
     		get() {
     			return this.auth.table;
     		},
-    		
+
     		set(table) {
     			Object.assign(this.auth, {table});
     		},
@@ -144,11 +144,11 @@ export default {
     		if (!this.password)
    				this.password = this.user;
     	}
-    	
+
     	if (!this.table)
     		this.table = 'reward';
     },
-    
+
 	directives: {
 		focus: {
 		    // after dom is inserted into the document
@@ -157,7 +157,7 @@ export default {
 		    },
 		},
 	},
-    
+
 }
 </script>
 
@@ -167,7 +167,7 @@ body {
 	font-size: 1em;
 	font-weight: normal;
 	font-family: Consolas;
-	
+
 	background-color: rgb(199, 237, 204);
 	margin-left: 1.5em;
 }

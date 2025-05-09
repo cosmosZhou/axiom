@@ -5,7 +5,7 @@ open Algebra
 @[main]
 private lemma main
   [AddGroup α]
-  {x a b: α}
+  {x a b : α}
 -- given
   (h : a = x - b) :
 -- imply

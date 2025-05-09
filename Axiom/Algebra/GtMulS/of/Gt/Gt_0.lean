@@ -7,12 +7,12 @@ private lemma main
   [Mul α] [Zero α] [Preorder α] [MulPosStrictMono α]
   {x a b : α}
 -- given
-  (h1 : a > b)
-  (h2 : x > 0) :
+  (h₀ : a > b)
+  (h₁ : x > 0) :
 -- imply
   a * x > b * x := by
 -- proof
-  apply LtMulS.of.Lt.Gt_0 h1 h2
+  apply LtMulS.of.Lt.Gt_0 h₀ h₁
 
 
 -- created on 2024-07-01

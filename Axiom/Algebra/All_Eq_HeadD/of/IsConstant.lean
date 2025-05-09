@@ -1,3 +1,4 @@
+import stdlib.List.Vector
 import Axiom.Basic
 
 
@@ -5,15 +6,15 @@ import Axiom.Basic
 private lemma main
   {s : List α}
 -- given
-  (h: s is constant)
-  (default: α) :
+  (h : s is constant)
+  (default : α) :
 -- imply
   ∀ x ∈ s, x = s.headD default := by
 -- proof
-  cases s with
-  | nil =>
+  match s with
+  | .nil =>
     simp [IsConstant.is_constant]
-  | cons x xs =>
+  | .cons x xs =>
     simp [IsConstant.is_constant] at *
     intro x x_in_s
     exact h x x_in_s

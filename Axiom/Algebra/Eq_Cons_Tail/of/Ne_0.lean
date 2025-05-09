@@ -9,11 +9,11 @@ private lemma main
 -- imply
   s = s[0]::s.tail := by
 -- proof
-  cases s with
-  | nil =>
+  match s with
+  | .nil =>
     -- If s is nil, then its length is 0, which contradicts h.
     contradiction
-  | cons head tail =>
+  | .cons head tail =>
     -- If s is cons head tail, then we need to show that s = head :: tail.
     -- This is trivially true by definition of cons.
     rfl

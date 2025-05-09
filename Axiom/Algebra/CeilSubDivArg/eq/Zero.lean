@@ -1,5 +1,5 @@
 import Axiom.Algebra.CeilSubDivArg.eq.Zero.of.Gt_0
-open Set Algebra
+open Algebra
 
 
 @[main]

@@ -1,3 +1,4 @@
+import sympy.core.power
 import Axiom.Basic
 
 

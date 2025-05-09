@@ -1,3 +1,4 @@
+import sympy.core.numbers
 import Axiom.Algebra.Mul.eq.Square
 open Algebra
 
@@ -6,12 +7,10 @@ open Algebra
 private lemma main
   {x y : ℝ} :
 -- imply
-  abs (x + I * y) = √(x² + y²) := by
+  ‖x + I * y‖ = √(x² + y²) := by
 -- proof
-  simp [Root.sqrt]
-  rw [Complex.abs_def]
-  simp [normSq]
+  dsimp [Norm.norm]
+  simp [Complex.normSq]
   rw [Mul.eq.Square, Mul.eq.Square]
-
 
 -- created on 2025-01-05

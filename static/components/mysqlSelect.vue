@@ -2,14 +2,14 @@
 	<span class=select>
 		<mysqlExpr :name="''" :value=value></mysqlExpr>
 		<br><br>
-		
+
 		<select v-model=actionToGet :style=style_select(actionToGet)>
 			<option v-for="value of ['browse', 'download', 'backup']" :value=value>{{value}}</option>
 		</select>
 		<a :href=href_select title="click here to get the data via url" target=_blank>
 			data from url
 		</a>&nbsp;
-		<label>sample =  
+		<label>sample =
 			<input type=text name=sample v-model=sample :size="sample? sample.toString().length + 2: 5" />
 		</label>
 	</span>
@@ -58,7 +58,7 @@ with _t as (
 select * from corpus.sentiment where id in (select * from _t) limit 1 offset 1
 // url representation:
 */
- 
+
 import mysqlExpr from "./mysqlExpr.vue"
 import mysqlDot from "./mysqlDot.vue"
 console.log('import mysqlSelect.vue');
@@ -67,9 +67,9 @@ import {get_db_table, piece_together} from "../js/mysql.js"
 
 export default {
 	components: {mysqlExpr, mysqlDot},
-	
+
 	props : ['kwargs'],
-	
+
 	data() {
 		var {$data} = this.$parent;
 		$data.actionToGet = 'browse';
@@ -84,12 +84,12 @@ export default {
 			kwargs[this.table] = regexp[this.table];
 			kwargs.operator[this.table] = 'regexp';
 		}
-		
+
 		if (!kwargs.where) {
 			kwargs.where = {};
 		}
 	},
-	
+
 	computed: {
 		cmds() {
 			return this.$parent.cmds;
@@ -98,47 +98,47 @@ export default {
 		host() {
 			return this.$parent.host;
 		},
-		
+
 		user() {
 			return this.$parent.user;
 		},
-		
+
 		token() {
 			return this.$parent.token;
 		},
-		
+
 		sample: {
 			get() {
 				return this.$parent.sample;
 			},
-			
+
 			set(sample) {
 				setAttribute(this, 'sample', sample);
 			},
 		},
-		
+
 		sql() {
 			var kwargs = {...this.kwargs};
 			var {transform: __transform__} = kwargs;
 			delete kwargs.transform;
-			
+
 			if (!kwargs.limit)
 				kwargs.limit = 40;
-			
+
 			if (!kwargs.select)
 				kwargs.select = '*';
-			
+
 			return this.process_statement(kwargs, {...this.dtype, __transform__});
 		},
-		
+
 		parse_expression() {
 			return this.$parent.parse_expression;
 		},
-		
+
 		tables() {
 			return this.$parent.tables;
 		},
-		
+
 		databases() {
 			return this.$parent.databases;
 		},
@@ -150,7 +150,7 @@ export default {
 		numeric_functions() {
 			return this.$parent.numeric_functions;
 		},
-		
+
 		aggregate_functions() {
 			return this.$parent.aggregate_functions;
 		},
@@ -166,15 +166,15 @@ export default {
 		numeric_operators() {
 			return this.$parent.numeric_operators;
 		},
-		
+
 		jsonobj_operators() {
 			return this.$parent.jsonobj_operators;
 		},
-		
+
 		numeric_relations() {
 			return this.$parent.numeric_relations;
 		},
-		
+
 		jsonobj_relations() {
 			return this.$parent.jsonobj_relations;
 		},
@@ -182,19 +182,19 @@ export default {
 		textual_relations() {
 			return this.$parent.textual_relations;
 		},
-		
+
 		numeric_function_regexp() {
 			return this.$parent.numeric_function_regexp;
 		},
-		
+
 		jsonobj_function_regexp() {
 			return this.$parent.jsonobj_function_regexp;
 		},
-		
+
 		textual_function_regexp() {
 			return this.$parent.textual_function_regexp;
 		},
-		
+
 		is_textual_function() {
 			return this.$parent.is_textual_function;
 		},
@@ -202,7 +202,7 @@ export default {
 		is_numeric_function() {
 			return this.$parent.is_numeric_function;
 		},
-		
+
 		is_jsonobj_function() {
 			return this.$parent.is_jsonobj_function;
 		},
@@ -210,7 +210,7 @@ export default {
 		is_aggregate_function() {
 			return this.$parent.is_aggregate_function;
 		},
-		
+
 		numericFields() {
 			return this.$parent.numericFields;
 		},
@@ -218,31 +218,31 @@ export default {
 		textualFields() {
 			return this.$parent.textualFields;
 		},
-		
+
 		where_dict() {
 			return this.$parent.where_dict;
 		},
-		
+
 		option() {
 			return this.$parent.option;
 		},
-		
+
 		value() {
 			return this.kwargs;
 		},
-		
+
 		PRI() {
 			return this.$parent.PRI;
 		},
-		
+
 		database() {
 			return this.$parent.database;
 		},
-		
+
 		table() {
 			return this.$parent.table;
 		},
-		
+
 		href_select() {
 			var {sample, host, transform, kwargs} = this;
 
@@ -252,7 +252,7 @@ export default {
 					kwargs.host = host;
 				return 'index.php?' + get_url(kwargs);
 			}
-			
+
 			var url = [];
 			if (host && host != 'localhost')
 				url.push(`host=${host}`);
@@ -260,54 +260,54 @@ export default {
 			url.push(...piece_together(kwargs));
 			if (sample)
 				url.push(`sample=${sample}`);
-			
+
 			if (this.actionToGet == 'download')
 				url.push(`download=true`);
-			
+
 			for (var Field in transform) {
 				url.push(`transform[${Field}]=${transform[Field]}`);
 			}
-			
+
 			return 'query.php?' + url.join('&');
 		},
-		
+
 		change_table() {
 			return this.$parent.change_table;
 		},
-		
+
 		change_database() {
 			return this.$parent.change_database;
 		},
-		
+
 		change_input() {
 			return this.$parent.change_input;
 		},
-		
+
 		style_select_table() {
 			return this.$parent.style_select_table;
 		},
-		
+
 		style_input() {
 			return this.$parent.style_input;
 		},
-		
+
 		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
-		
+
 		style_select() {
 			return this.$parent.style_select;
 		},
-		
+
 		style_entity() {
 			return this.$parent.style_entity;
 		},
 	},
-	
+
 	methods: {
 		process_select(kwargs) {
 		    var {select} = kwargs;
-		    
+
 		    var sql = "select ";
 		    if (select) {
 		        if (select.isArray) {
@@ -322,14 +322,14 @@ export default {
 		    } else {
 		        sql += "*";
 		    }
-		    
+
 		    sql += " ";
 		    return sql;
 		},
-		
+
 		process_statement(kwargs, Field2Type) {
 		    var sql = this.process_select(kwargs);
-		    
+
 		    var {from} = kwargs;
 		    if (from.from) {
 		        var statement = this.process_statement(kwargs.from, Field2Type);
@@ -342,13 +342,13 @@ export default {
 		        var {database, table} = get_db_table(from);
 		        sql += `from ${database}.${table} `;
 		    }
-		    
+
 		    var condition = this.parse_expression(kwargs.where?? {}, Field2Type);
-		    
+
 		    if (condition) {
 		        sql += `where ${condition} `;
 		    }
-		    
+
 		    var {group} = kwargs;
 		    if (group) {
 		        sql += `group by ${group} `;
@@ -365,17 +365,17 @@ export default {
 		            sql += `order by ${order} `;
 		        }
 		    }
-		    
+
 		    var {limit, offset} = kwargs;
 		    if (limit)
 		        sql += `limit ${limit} `;
-		    
+
 		    if (offset)
 		        sql += `offset ${offset} `;
-		        
+
 		   return sql;
 		},
-		
+
 		extract_funcs_and_args(select) {
 			if (!select) {
 				var {select} = this.kwargs;
@@ -383,16 +383,16 @@ export default {
 					return this.extract_funcs_and_args(select);
 				return {};
 			}
-			
+
 			var funcs = [];
 			var [[func, args]] = Object.entries(select);
 			funcs.push(func);
-			
+
 			if (args.isArray || args.isString)
 				return {funcs, args};
-			
+
 			var {funcs: _funcs, args} = this.extract_funcs_and_args(args);
-			
+
 			funcs.push(..._funcs);
 			return {funcs, args};
 		},
@@ -405,11 +405,11 @@ export default {
 					this.$parent.json_decode(data, Field);
 				}
 			}
-			
+
 			this.$parent.json_decode_by_field_to_type(data);
 		},
 	},
-	
+
 	mounted() {
 	},
 }

@@ -37,29 +37,34 @@ export default {
 			return `/${this.user}/index.php`;
 		},
 	},
-	
+
 	methods: {
-		input(event){
-			setAttribute(this, event.target.name, event.target.value);
+		setAttribute(key, value) {
+			// this.$parent.$data[key] = value;
+			setAttribute(this, key, value);
+		},
+
+		input(event) {
+			this.setAttribute(event.target.name, event.target.value);
 		},
 		
-		keydown(event){
+		keydown(event) {
 			if (event.altKey){
 				switch(event.key){
 				case 'c':
-					setAttribute(this, 'caseSensitive', !this.caseSensitive);
+					this.setAttribute('caseSensitive', !this.caseSensitive);
 					break;
 				case 'w':
-					setAttribute(this, 'wholeWord', !this.wholeWord);
+					this.setAttribute('wholeWord', !this.wholeWord);
 					break;
 				case 'r':
-					setAttribute(this, 'regularExpression', !this.regularExpression);
+					this.setAttribute('regularExpression', !this.regularExpression);
 					break;
 				case 'l':
-					setAttribute(this, 'latex', !this.latex);
+					this.setAttribute('latex', !this.latex);
 					break;
 				case 'u':
-					setAttribute(this, 'fullText', !this.fullText);
+					this.setAttribute('fullText', !this.fullText);
 					break;
 				}
 			}

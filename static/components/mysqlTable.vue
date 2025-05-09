@@ -19,7 +19,7 @@
 						</table>
 					</div>
 					<table border=1 class=dictionary :index=index>
-						<template v-for="{Field, Type, value} of detailed_values(data)" :class=Field>
+						<template v-for="{Field, value} of detailed_values(data)" :class=Field>
 							<template v-if="value && value.isArray">
 								<template v-if=value.length>
 									<tr>
@@ -61,9 +61,8 @@
 					<p v-for="feedback, i of data.__feedback" v-html=feedback :title=data.__prompt[i] @dblclick=dblclick_p></p>
 				</div>
 			</template>
-			<input type=hidden name=table :value=table>
 		</form>
-		
+
 		<div v-if=report.sum v-focus tabindex=4>
 			<div style="float:right">
 				number of testing cases: {{data.length}}<br>
@@ -81,7 +80,7 @@
 					<th>\</th><th>accuracy</th>
 				</tr>
 				<tr>
-					<td align=middle><font color=green>{{api_output}}</font></td>					
+					<td align=middle><font color=green>{{api_output}}</font></td>
 					<fraction :numerator="report.sum - report.err" :denominator="report.sum" :operator="'='"></fraction>
 				</tr>
 				<template v-for="type of dtype[api_output]">
@@ -111,7 +110,7 @@ export default {
     components: {mysql, fraction, timer, mysqlObject},
 
 	props,
-	
+
     data() {
         return {
         	mounted: {},
@@ -123,18 +122,18 @@ export default {
         	true_positive: [],
         	sum_predicted: [],
 			sum_labelling: [],
-			
+
         	report: {
            		sum: 0,
            		err: 0,
            		sums: {},
            		errs: {},
         	},
-        	
+
         	label_prompted: null,
         };
     },
-    
+
     computed: {
 		reset_training() {
 			return reset_training;
@@ -145,7 +144,7 @@ export default {
 				return this.repeat? this.trigger_save: this.is_torch? this.trigger_simplify: null;
 			return () => {};
     	},
-    	
+
     	repeat() {
     		var {kwargs} = this;
     		return kwargs.kwargs && kwargs.kwargs.repeat;
@@ -156,7 +155,7 @@ export default {
     		var url = [];
     		if (this.repeat)
     			url.push('kwargs[repeat]=true');
-    		
+
     		var {kwargs} = this;
     		if (kwargs.kwargs) {
         		var {model} = kwargs.kwargs;
@@ -183,55 +182,52 @@ export default {
     		}
     		return action_insert + '&' + url.join('&');
     	},
-    	
+
     	is_primary_key() {
-    		var is_primary_key = {};
-    		var {Comment} = this;
-    		for (var {Field, Key} of this.desc) {
-    			if (Key == 'PRI')
-    				is_primary_key[Field] = true;
-    			else {
-    				var comment = Comment[Field];
-   					if (comment && comment.PRI)
-       					is_primary_key[Field] = true;
-    			}
-    		}
-    		return is_primary_key;
+			return this.mysql.is_primary_key;
     	},
-    	
+
+		primary_key_url() {
+			return this.mysql.primary_key_url;
+    	},
+
     	database() {
     		return this.mysql.database;
     	},
-    	
+
+    	table() {
+    		return this.mysql.table;
+    	},
+
     	PRI() {
     		return this.mysql.PRI;
     	},
-    	
+
     	mysql() {
     		return this.mounted.mysql? this.$refs.mysql: {};
     	},
-    	
+
     	desc() {
     		var desc = this.mysql.desc;
     		if (desc)
     			return desc;
     		return [];
     	},
-    	
+
     	api() {
     		var api = this.mysql.api;
     		if (api)
     			return api;
     		return {};
     	},
-    	
+
     	Comment() {
     		var Comment = this.mysql.Comment;
     		if (Comment)
     			return Comment;
     		return {};
     	},
-    	
+
     	api_parameters() {
     		var api = this.api;
     		for (var Field in api) {
@@ -241,30 +237,30 @@ export default {
 
     		return {};
     	},
-    	
+
     	api_url() {
     		return this.api_parameters.api_url;
     	},
-    	
+
     	api_inputs() {
     		return this.api_parameters.api_inputs;
     	},
-    	
+
     	api_output() {
     		return this.api_parameters.api_output;
     	},
-    	
+
     	dtype() {
     		var dtype = this.mysql.dtype;
     		if (dtype)
     			return dtype;
     		return {};
     	},
-    	
+
 		is_torch() {
 			return getParameterByName('torch') || this.kwargs.kwargs && this.kwargs.kwargs.torch;
 		},
-		
+
 		is_mysql() {
 			return getParameterByName('mysql') || getParameterByName('cmd') == 'select' || this.cmd == 'update';
 		},
@@ -274,15 +270,15 @@ export default {
 				return 'torch';
 		},
     },
-    
+
     created() {
     	for (var json of this.data){
     		if (json.training == null){
     			json.training = 0;
     		}
-    	}    	
+    	}
     },
-    
+
     methods: {
 		dblclick_p() {
 			if (this.repeat) {
@@ -299,7 +295,7 @@ export default {
     		}
     		return values;
     	},
-    	
+
     	async prompting(model, text, lang, labels) {
     		console.log('text = ', text);
     		console.log('model = ', model);
@@ -317,27 +313,17 @@ export default {
     			}
     			await sleep(3 + i);
     		}
-    		
+
     		return {bool: null, prompt: '', reply: 'Erroneous result from prompting API!', label: null};
     	},
-    	
-    	primary_key_url(primary_key) {
-    		var {host, database, table, PRI} = this;
-    		var kwargs = {from: fromEntries(database, table)};
-			if (primary_key)
-    			kwargs[PRI] = primary_key.encodeURI();
-    		if (host && host != 'localhost')
-				kwargs.host = host;
-    		return 'query.php?' + get_url(kwargs);
-    	},
-    	
+
     	column_size(name){
     		var column_size = this._column_size[name];
     		if (column_size == null) {
     			column_size = Math.max(...this.data.map(tr => {
     				if (tr[name] && tr[name].isString)
     					return strlen(tr[name]);
-    				
+
     				switch (this.dtype[name]) {
     				case 'int':
     					return 4;
@@ -347,13 +333,13 @@ export default {
     					return 10;
     				}
     			}));
-    			
+
     			this._column_size[name] = column_size;
     		}
-    		
+
     		return column_size;
     	},
-    	
+
     	coordinate(self){
     		var td = self.parentElement;
     		if (td.tagName == 'TD'){
@@ -365,7 +351,7 @@ export default {
     		}
     		return [-1, -1];
     	},
-    	
+
     	focus(row, col, offset, table){
     		table ||= this.$refs.table;
     		var tr = table.children[row];
@@ -376,12 +362,12 @@ export default {
     			if (offset < 0){
     				offset.value.length;
     			}
-    			
+
     			input.selectionStart = offset;
     			input.selectionEnd = offset;
     		}
     	},
-    	
+
     	keydown(event){
 			var self = event.target;
 			var key = event.key;
@@ -391,22 +377,22 @@ export default {
 				if (!event.ctrlKey)
 					break;
 				event.preventDefault();
-				
+
 				document.mysql.querySelector('input[type=text]').focus();
 				this.$nextTick(()=>{
 					form.submit();
 				});
-			
+
 				break;
-				
+
 			case 'Z':
 			case 'z':
 				if (!event.ctrlKey)
 					break;
-				
+
 				this.undoer.undo();
 				break;
-				
+
 			case 'ArrowUp':
 				if (self.tagName == 'TEXTAREA') {
 					var selectionStart = head_line_offset(self);
@@ -419,7 +405,7 @@ export default {
 					var {selectionStart} = self;
 					var table = null;
 				}
-				
+
 				event.preventDefault();
 				var self = event.target;
 				var [row, col] = this.coordinate(self);
@@ -427,7 +413,7 @@ export default {
 					--row;
 					this.focus(row, col, selectionStart, table);
 				}
-				
+
 				break;
 			case 'ArrowDown':
 				var self = event.target;
@@ -442,17 +428,17 @@ export default {
 					var {selectionStart} = self;
 					var table = null;
 				}
-				
+
 				event.preventDefault();
 				var [row, col, rows] = this.coordinate(self);
 				if (row + 1 < rows){
 					++row;
 					this.focus(row, col, selectionStart, table);
 				}
-				
+
 				break;
 			case 'ArrowLeft':
-				
+
 				var self = event.target;
 				if (self.tagName == 'SELECT' || !self.selectionStart){
 					event.preventDefault();
@@ -466,10 +452,10 @@ export default {
 					}
 					this.focus(row, col, -1);
 				}
-				
+
 				break;
 			case 'ArrowRight':
-				
+
 				var self = event.target;
 				if (self.tagName == 'SELECT' || self.selectionStart == self.value.length){
 					event.preventDefault();
@@ -483,7 +469,7 @@ export default {
 					}
 					this.focus(row, col, 0);
 				}
-				
+
 				break;
 			case 'PageDown':
 				if (this.mysql.cmd == 'insert')
@@ -495,7 +481,7 @@ export default {
 				break;
 			}
     	},
-    	
+
 		Pause() {
 			delete this.trigger_save;
 			var {timer} = this.$refs;
@@ -535,10 +521,10 @@ export default {
 				kwargs.repeat = repeat;
 			if (torch)
 				kwargs.torch = torch;
-			
+
 			location.search = '?' + get_url({kwargs}) + '&' + url.join('&');
 		},
-    	
+
         async process(name, data) {
     		var [name, ext] = split_filename(name);
     		var array = [];
@@ -555,15 +541,16 @@ export default {
 
     		case 'txt':
     		case 'csv':
+			case 'tsv':
             	for (var line of data.split('\n')){
             		var obj = {};
-            		for (var [{Field, Type}, value] of zip(this.desc, line.split('\t'))) {
+            		for (var [{Field}, value] of zip(this.desc, line.split('\t'))) {
             			obj[Field] = value;
             		}
             		array.push(obj);
             	}
             	break;
-                
+
 			case 'xlsx':
 				var workbook = XLSX.read(data, {type: 'array'});
 		        for (var sheet in workbook.Sheets) {
@@ -610,7 +597,7 @@ export default {
 
     		this.insert(array);
         },
-        
+
     	async insert(data) {
         	var database = this.database;
         	var table = this.table;
@@ -627,7 +614,7 @@ export default {
 					obj.training = ~obj.training;
 				}
 			}
-			
+
 			var {PRI} = this;
 			if (this.dtype[PRI] == 'int') {
 	        	var [ret] = await query(this.host, this.token, `select max(${PRI}) as id from ${database}.${table}`);
@@ -696,7 +683,7 @@ export default {
     			this.click_simplify();
     		}
     	},
-    	
+
 		click_simplify(event) {
     		var {show} = this;
 			if (this.report.simplify){
@@ -714,7 +701,7 @@ export default {
 			}
 		},
     },
-    
+
     async mounted() {
     	++this.mounted.mysql;
 		if (this.repeat && this.mysql.cmd == 'insert') {
@@ -728,11 +715,11 @@ export default {
 		if (mounted)
 			mounted.mysql = 1;
     },
-    
+
     unmounted() {
     	--this.mounted.mysql;
     },
-    
+
 	directives: {
 		focus: {
 		    // after dom is inserted into the document
@@ -740,7 +727,7 @@ export default {
 		    	el.focus();
 		    },
 		},
-		
+
 		mysql: {
 		    // after dom is inserted into the document
 		    async mounted(el, binding) {
@@ -755,14 +742,14 @@ export default {
 		    	}
 		    },
 		},
-		
+
 		torch: {
 		    // after dom is inserted into the document
 		    async mounted(el, binding) {
 		    	var {instance: self} = binding;
 				if (self.mysql.cmd == 'insert')
 					return;
-		    	
+
 	    		var {api_url, api_inputs} = self;
 	    		//console.log({api_url, api_inputs});
 	    		var index = el.getAttribute('index');
@@ -784,7 +771,7 @@ export default {
 		    		var old_label = data[self.api_output];
 		    		var judge = new_label == old_label;
 	    			self.correct[index] = judge;
-	    			
+
 	    			self.sum_predicted[index] = 1;
 	    			self.sum_labelling[index] = 1;
 	    			++self.report.sum;
@@ -852,7 +839,7 @@ export default {
 	    					prompts.push(prompt.length > 1000? "..." + prompt.slice(-1000): prompt);
 	    					if (bool || bool == null)
 	    						data.training = ~data.training;
-	    					
+
 	        				if (bool)
 	        					feedback[0] += `it is related to <font color=blue>${old_label}</font>; `;
 	        			    else if (bool == false)
@@ -860,7 +847,7 @@ export default {
 	    				}
 	    				else if (bool == false) {
 	    					feedback[0] += `it is <font color=red>not</font> related to ${new_label}; `;
-	    					
+
 	    					if (!label)
 	    						return;
 
@@ -872,7 +859,7 @@ export default {
 	        					feedback[0] += `it is related to <font color=blue>${old_label}</font>; `;
 	        			    else if (bool == false)
 	        			    	feedback[0] += `it is <font color=red>not</font> related to ${old_label}; `;
-	    					
+
 	    					if (bool == false) {
 	    						for (var label of self.dtype[self.api_output]) {
 	    							if (label == old_label || label == new_label)
@@ -887,7 +874,7 @@ export default {
 	    		        					feedback[0] += `it is related to <font color=blue>${label}</font>; `;
 	    		        			    else if (bool == false)
 	    		        			    	feedback[0] += `it is <font color=red>not</font> related to ${label}; `;
-	    		    					
+
 	    		    					if (bool) {
 	    		    						data[self.api_output] = label;
 	    		    						if (data.training >= 0)
@@ -939,10 +926,10 @@ export default {
 					var lang = data.lang;
 					var text = Object.values(inputs).join('\n');
 					text = text.slice(0, 2330);
-					
+
 					feedback.push(`the labelled tag is ${data[self.api_output]}; `);
 					prompts.push('');
-					
+
 					var old_label = data[self.api_output];
 					var label = label_prompted[old_label];
 	    			if (label) {

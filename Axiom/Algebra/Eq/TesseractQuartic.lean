@@ -1,7 +1,8 @@
+import sympy.polys.polyroots
 import Axiom.Basic
 
 
-@[simp, main]
+@[main]
 private lemma main
   {x : ℂ} :
 -- imply

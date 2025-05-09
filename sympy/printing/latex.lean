@@ -1,19 +1,44 @@
+import stdlib.Lean.Level
+import stdlib.Lean.Name
 import sympy.core.expr
-import std.String
-import std.Level
-import std.Name
 open Lean (Name)
+
+
+def Expr.is_Div : Expr → Bool
+  | Basic (.BinaryInfix ⟨`HDiv.hDiv⟩) _ => true
+  | _ => false
+
+
+def Expr.is_Mem : Expr → Bool
+  | Basic (.BinaryInfix ⟨op⟩) args =>
+    match op with
+    | `Membership.mem
+    | `List.Mem => args.length == 2
+    | _ => false
+  | _ => false
+
+
+def Expr.is_Bool : Expr → Bool
+  | Basic (.Special ⟨`Bool.toNat⟩) args => args.length == 1
+  | _ => false
+
+
+def Expr.is_Card : Expr → Bool
+  | Basic (.Special ⟨`Finset.card⟩) args => args.length == 1
+  | _ => false
+
+
+def Expr.is_Abs : Expr → Bool
+  | Basic (.Special ⟨`abs⟩) args => args.length == 1
+  | _ => false
 
 
 def Expr.countCases : Expr → Nat
   | Basic (.Special ⟨`ite⟩) args =>
     match args with
-    | [_, _, elseBranch] =>
-      elseBranch.countCases + 1
-    | _ =>
-      1
-  | _ =>
-    0
+    | [_, _, elseBranch] => elseBranch.countCases + 1
+    | _ => 1
+  | _ => 0
 
 
 def Expr.latexFormat : Expr → String
@@ -21,72 +46,101 @@ def Expr.latexFormat : Expr → String
 
   | const _
   | sort _
-  | Symbol .. =>
-    "%s"
+  | Symbol .. => "%s"
 
   | e@(Basic func args) =>
     let opStr := func.command
     match func with
-    | .BinaryInfix op =>
+    | .BinaryInfix ⟨op⟩ =>
       match args with
       | [left, right] =>
         match op with
-        | ⟨`HDiv.hDiv⟩
-        | ⟨`Rat.divInt⟩ =>
-          if let Basic (.BinaryInfix ⟨`HDiv.hDiv⟩) _ := left then
+        | `HDiv.hDiv
+        | `Rat.divInt =>
+          if left.is_Div then
             "\\left. %s \\right/ %s"
           else
             s!"{opStr} %s %s"
 
-        | ⟨`FloorDiv⟩ =>
+        | `FloorDiv =>
           "%s {/\\!\\!/} %s"
 
-        | ⟨`HPow.hPow⟩ =>
+        | `HPow.hPow =>
           let left :=
-            match left with
-            | Basic (.ExprWithAttr (.L_operatorname (.str _ "abs"))) _ =>
+            if func.priority ≤ left.priority || left.is_Abs || left.is_Bool || left.is_Card then
               "%s"
-            | _ =>
-              if func.priority > left.priority then
-                "{\\left(%s\\right)}"
-              else
-                "%s"
+            else
+              "{\\left(%s\\right)}"
           s!"{left} {opStr} %s"
-        | _ =>
+        | `And
+        | `Or =>
+          -- right associative operators
           let left :=
-            if func.priority > left.priority then
+            if func.priority ≥ left.priority then
               "{\\left(%s\\right)}"
             else
               "%s"
           let right :=
-            if func.priority ≥ right.priority then
-              if let Basic (.BinaryInfix ⟨`HDiv.hDiv⟩) _ := right then
-                "%s"
-              else
-                "{\\left(%s\\right)}"
+            if func.priority > right.priority then
+              "{\\left(%s\\right)}"
             else
               "%s"
 
           s!"{left} {opStr} {right}"
+        | _ =>
+          -- left associative operators
+          let left :=
+            if func.priority ≤ left.priority || left.is_Abs || left.is_Bool || left.is_Card then
+              "%s"
+            else
+              "{\\left(%s\\right)}"
+          let right :=
+            if func.priority < right.priority || right.is_Div then
+              "%s"
+            else
+              "{\\left(%s\\right)}"
+
+          s!"{left} {opStr} {right}"
 
       | _ =>
-        opStr
+        op.toString
 
-    | .UnaryPrefix _ =>
+    | .UnaryPrefix ⟨op⟩ =>
+      if let [arg] := args then
+        let format :=
+          match op with
+          | `Not =>
+            if arg.is_Mem then
+              "%s \\notin %s"
+            else
+              ""
+          | `Real.sqrt
+          | `Root.sqrt =>
+            s!"{opStr}%s"
+          | _ =>
+            ""
+        if format.isEmpty then
+          let arg :=
+            if func.priority > arg.priority then
+              "{\\left(%s\\right)}"
+            else
+              "%s"
+          s!"{opStr}{arg}"
+        else
+          format
+      else
+        op.toString
+
+    | .UnaryPostfix ⟨op⟩ =>
       if let [arg] := args then
         let arg :=
           if func.priority > arg.priority then
             "{\\left(%s\\right)}"
           else
             "%s"
-        s!"{opStr}{arg}"
+        s!"{arg}{opStr}"
       else
-        s!"{opStr}%s"
-
-    | .UnaryPostfix op =>
-      match op with
-      | _ =>
-        s!"%s{opStr}"
+        op.toString
 
     | .ExprWithLimits op =>
       let opStr' :=
@@ -97,12 +151,9 @@ def Expr.latexFormat : Expr → String
             "%s \\rightarrow %s"
           | [_, Binder .given _ type nil] =>
             match type with
-            | Basic (.BinaryInfix ⟨`Membership.mem⟩) _ =>
-              ""
-            | _ =>
-              "%s \\rightarrow %s"
-          | _ =>
-            ""
+            | Basic (.BinaryInfix ⟨`Membership.mem⟩) _ => ""
+            | _ => "%s \\rightarrow %s"
+          | _ => ""
         | .L_lambda =>
           opStr ++ "\\ %s".repeat (args.length - 1) ++ "\\mapsto\\ %s"
         | .L_sum
@@ -115,26 +166,38 @@ def Expr.latexFormat : Expr → String
       else
         opStr'
 
-    | .Special op =>
-      match op.name with
+    | .Special ⟨op⟩ =>
+      match op with
       | .anonymous =>
-        let args := args.map fun arg =>
-        if func.priority ≥ arg.priority then
-          "{\\left(%s\\right)}"
-        else
-          "%s"
+        -- similar like Python' list.enumerate
+        let args := args.zipIdx.map fun ⟨arg, i⟩ =>
+          if i > 0 && arg.priority ≤ func.priority || i == 0 && arg.priority < func.priority then
+            "{\\left(%s\\right)}"
+          else
+            "%s"
         "\\ ".intercalate args
       | `ite =>
         "\\begin{cases} %s \\\\ {%%s} & {\\color{blue}\\text{else}} \\end{cases}".format "\\\\".implode (List.replicate e.countCases "%s")
-      | `Prod.mk
-      | `abs
-      | `Norm.norm
-      | `GetElem.getElem
+      | `Insert.insert =>
+        "\\left\\{%s, %s\\right\\}"
+      | `List.get
+      | `List.Vector.get
+      | `GetElem.getElem =>
+        match args with
+        | list :: _ :: _ =>
+          let list :=
+            if func.priority < list.priority || list.is_Abs || list.is_Bool || list.is_Card then
+              "%s"
+            else
+              "{\\left(%s\\right)}"
+          s!"{list}_%s"
+        | _ =>
+          opStr
       | _ =>
         opStr
     | .ExprWithAttr op =>
       match op with
-      | .L_function name =>
+      | .L_function _ =>
         let args := args.map fun arg =>
           if func.priority ≥ arg.priority then
             "\\left(%s\\right)"
@@ -143,7 +206,6 @@ def Expr.latexFormat : Expr → String
         opStr ++ "\\ " ++ "\\ ".intercalate args
       | .L_operatorname name =>
         match name with
-        | `Complex.abs => "{\\left|%s\\right|}"
         | `Real.exp => "{\\color{RoyalBlue} e} ^ %s"
         | `Set.Ioo => "\\left(%s, %s\\right)"
         | `Set.Ico => "\\left[%s, %s\\right)"
@@ -153,6 +215,8 @@ def Expr.latexFormat : Expr → String
         | `Set.Ioc => "\\left(%s, %s\\right]"
         | `Set.Ici => "\\left[%s, \\infty\\right)"
         | `Set.Ioi => "\\left(%s, \\infty\\right)"
+        | `Zeros => "\\mathbf{0}_{%s}"
+        | `Ones => "\\mathbf{1}_{%s}"
         | _  =>
           let args := args.map fun arg =>
             if func.priority ≥ arg.priority then
@@ -161,7 +225,7 @@ def Expr.latexFormat : Expr → String
               "%s"
           opStr ++ "\\ " ++ "\\ ".intercalate args
       | .LMethod name =>
-        let attr := name.getLast.toString
+        let attr := name.getLast.toString.escape_specials
         match attr, args with
         | "map", [fn, obj] =>
           let fn :=
@@ -189,22 +253,57 @@ def Expr.latexFormat : Expr → String
             else
               "%s"
           s!"{left} \\div {right}"
-        | _, [obj, arg] =>
-          let arg :=
-            if func.priority > arg.priority then
-              "\\left(%s\\right)"
+        | "fdiv", [left, right] =>
+          let divOperator : BinaryInfix := ⟨`HDiv.hDiv⟩
+          let func := divOperator.func
+          let left :=
+            if func.priority > left.priority then
+              "{\\left(%s\\right)}"
             else
               "%s"
+          let right :=
+            if func.priority ≥ right.priority then
+              "{\\left(%s\\right)}"
+            else
+              "%s"
+          s!"{left} /\\!\\!/ {right}"
+        | "fmod", [left, right] =>
+          let divOperator : BinaryInfix := ⟨`HDiv.hDiv⟩
+          let func := divOperator.func
+          let left :=
+            if func.priority ≥ left.priority then
+              "{\\left(%s\\right)}"
+            else
+              "%s"
+          let right :=
+            if func.priority ≥ right.priority then
+              "{\\left(%s\\right)}"
+            else
+              "%s"
+          "%s \\textcolor{red}{\\%%%%} %s".format left, right
+        | _, obj :: args =>
           let obj :=
             if func.priority ≥ obj.priority then
               "\\left(%s\\right)"
             else
               "%s"
-          s!"{obj}.{attr}\\ {arg}"
+          let args := args.map fun arg =>
+            if func.priority > arg.priority then
+              "\\left(%s\\right)"
+            else
+              "%s"
+          let args := "\\ ".intercalate args
+          s!"{obj}.{attr}\\ {args}"
         | _, _ =>
           opStr
       | .L_typeclass _ =>
-        opStr ++ "\\ %s".repeat args.length
+        let args := args.map fun arg =>
+          if func.priority ≥ arg.priority then
+            "\\left(%s\\right)"
+          else
+            "%s"
+        let args := "\\ ".intercalate args
+        s!"{opStr}\\ {args}"
       | .LAttr name =>
         let attr := name.getLast.toString
         match name with
@@ -225,11 +324,13 @@ def Expr.latexFormat : Expr → String
               else
                 "%s"
             s!"{arg}.{attr}"
+          | .nil =>
+            name.toString
           | _ =>
             s!"%s.{attr}"
 
   | Binder binder binderName _ value =>
-    let binderName := "\\ ".intercalate (binderName.components.map Name.toString)
+    let binderName := binderName.escape_specials "\\ "
     match binder with
     | .instImplicit =>
       binder.func.command
@@ -255,7 +356,7 @@ where
     [u.toString]
 
   | Symbol name _ =>
-    [name.normalized.toString.escape_underscore]
+    [name.normalized.toString.escape_specials]
 
   | Basic func args =>
     match func with
@@ -293,17 +394,38 @@ where
         map args |>.reverse
       else
         args'
-    | .Special ⟨`Nat.ModEq⟩ =>
-      match args with
-      | [d, a, b] =>
-        [a.toLatex, b.toLatex, d.toLatex]
+    | .Special ⟨op⟩ =>
+      match op with
+      | `Nat.ModEq =>
+        match args with
+        | [d, a, b] =>
+          [a.toLatex, b.toLatex, d.toLatex]
+        | _ =>
+          map args
+      | `ite =>
+        merge_ite e []
+      | `Insert.insert =>
+        match args with
+        | [a, Basic (.Special ⟨`Singleton.singleton⟩) [b]] =>
+          [a.toLatex, b.toLatex]
+        | [a, .Symbol b _] =>
+          [a.toLatex, "..." ++ b.toString]
+        | _ =>
+          map args
       | _ =>
         map args
     | .BinaryInfix ⟨`Membership.mem⟩
     | .ExprWithAttr (.LMethod (.str _ "map")) =>
       map args |>.reverse
-    | .Special ⟨`ite⟩ =>
-      merge_ite e []
+    | .UnaryPrefix ⟨`Not⟩ =>
+      match args with
+      | [arg] =>
+        if arg.is_Mem then
+          latexArgs arg
+        else
+          map args
+      | _ =>
+        map args
     | _ =>
       map args
 
@@ -330,6 +452,4 @@ where
 
 
 def Expr.latex_tagged (expr : Expr) (hypId : Name) (color : String := "green") : String :=
-  "%s\\tag*{$\\color{%s}%s$}".format expr.toLatex, color, ".".intercalate (
-    hypId.normalized.components.map (·.toString.escape_underscore)
-  )
+  "%s\\tag*{$\\color{%s}%s$}".format expr.toLatex, color, (hypId.escape_specials ".")

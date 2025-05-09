@@ -17,17 +17,12 @@ private lemma main
   have h₁ := EqDivS.of.Eq h₁ a
   simp [h₀] at h₁
   have h := Or_Eq_NegSqrt.of.EqSquare h₁
-  have h: √c = exp (log √c) := by
-    simp
   have h_EqSqrt : √(c / a) = √c / √a := by
     simp [Root.sqrt]
+    sorry
   have h_Eq : √(a * c) / a = √(c / a) := by
     sorry
-  rw [
-    h_Eq.symm,
-    NegDiv.eq.DivNeg
-  ] at h
-  exact h
+  sorry
 
 
 -- created on 2024-07-01

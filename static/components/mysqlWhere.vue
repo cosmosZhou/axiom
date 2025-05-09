@@ -1,5 +1,5 @@
 <template>
-	{{' '}}<font color=blue>where</font> 
+	{{' '}}<font color=blue>where</font>
 	<template v-for="{Field, Type, Null, Key, Default, Extra}, i of desc">
 		<font v-if=i color=blue>and</font>
 		<template v-if="Array.isArray(dtype[Field])">
@@ -8,7 +8,7 @@
 				<template v-if=json_extract[Field]>->'$<input v-model=json_extract[Field] :size="Math.max(json_extract[Field].length, 5)" />'</template>
 			</template>
 			<template v-else>{{' ' + Field + ' '}}</template>
-		
+
 			<select :name="`operator[${Field}]`" :value=operator_value[Field] :style=style_select_operator(Field) @input=input_operator>
 				<option v-for="value of ['=', '!=']" :value=value>{{value}}</option>
 			</select>
@@ -23,7 +23,7 @@
 				<template v-if=json_extract[Field]>->'$<input v-model=json_extract[Field] :size="Math.max(json_extract[Field].length, 5)" />'</template>
 			</template>
 			<template v-else>{{' ' + Field + ' '}}</template>
-			
+
 			<select :name="`operator[${Field}]`" :value=operator_value[Field] :style=style_select_operator(Field) @input=input_operator>
 				<option v-for="value of ['=', '!=']" :value=value>{{value}}</option>
 			</select>
@@ -40,7 +40,7 @@
 					<template v-if=json_extract[Field]>->'$<input v-model=json_extract[Field] :size="Math.max(json_extract[Field].length, 5)" />'</template>
 				</template><template v-else>{{Field}}</template>,
 				<mysqlLookAround :Field=Field></mysqlLookAround>
-				<template v-if="operator.regexp_like && operator.regexp_like[Field]">, 
+				<template v-if="operator.regexp_like && operator.regexp_like[Field]">,
 					<select :name=regexp_like_operator_name(Field) :value=operator.regexp_like[Field] @input=input_operator>
 						<option v-for="op of ['i', 'c', 'n', 'm', 'x']" :value=op>{{op}}</option>
 					</select>
@@ -52,7 +52,7 @@
 					<template v-if=json_extract[Field]>->'$<input v-model=json_extract[Field] :size="Math.max(json_extract[Field].length, 5)" />'</template>
 				</template>
 				<template v-else>{{' ' + Field + ' '}}</template>
-			
+
 				<select :name=operator_name(Field) :value=operator_value[Field] :style=style_select_operator(Field) @input=input_operator @change=change_select>
 					<option v-for="op of operators(Type)" :value=op>{{op}}</option>
 				</select>
@@ -63,7 +63,7 @@
 				<input v-else v-focus type=text :name=value_name(Field) @change=change_input v-model=kwargs[Field] :style=style_input(Field) />
 			</template>
 		</template>
-	</template> 
+	</template>
 	<mysqlGroup v-if=group :group=group :Field=Field></mysqlGroup>
 	<mysqlOrder v-else :order=order :desc=desc :Field=Field></mysqlOrder>
 </template>
@@ -79,9 +79,9 @@ import {is_numeric, is_string, is_json} from "../js/mysql.js"
 
 export default {
 	components: {mysqlOrder, mysqlLookAround, mysqlGroup},
-	
+
 	props : ['extra_kwargs', 'primary_key'], //used in primary_key search
-	
+
 	data() {
 		return {
 		};
@@ -89,7 +89,7 @@ export default {
 
 	created() {
 	},
-	
+
 	computed: {
 		style_limit() {
 			var length = this.limit? this.limit.toString().length / 2 + 0.5: 1;
@@ -102,11 +102,11 @@ export default {
 			length = Math.max(2, length);
 			return `width: ${length}em`;
 		},
-		
+
 		PRI() {
 			return this.$parent.PRI;
 		},
-		
+
 		operator_value() {
 			var operator_value = {};
 			var {Field2Description} = this;
@@ -115,7 +115,7 @@ export default {
 			}
 			return operator_value;
 		},
-		
+
 		Field2Description() {
 			var Field2Description = {};
 			for (var {Field, Type, Null, Key, Default, Extra} of this.desc) {
@@ -123,50 +123,50 @@ export default {
 			}
 			return Field2Description;
 		},
-		
+
 		look_behind() {
 			var {look_behind} = this.kwargs;
 			return look_behind? look_behind: {};
 		},
-		
+
 		look_ahead() {
 			var {look_ahead} = this.kwargs;
 			return look_ahead? look_ahead: {};
 		},
-		
+
 		style() {
 			return this.$parent.style;
 		},
-		
+
 		desc() {
 			return this.$parent.desc;
 		},
-		
+
 		json_extract() {
 			return this.$parent.json_extract;
 		},
-		
+
 		kwargs() {
 			if (this.extra_kwargs)
 				return this.extra_kwargs;
 			return this.$parent.kwargs;
 		},
-		
+
 		dtype() {
 			return this.$parent.dtype;
 		},
-		
+
 		table() {
 			return this.$parent.table;
 		},
-		
+
 		limit: {
 			get() {
 				if (this.primary_key)
 					return this.extra_kwargs.limit;
 				return this.$parent.limit;
 			},
-			
+
 			set(limit) {
 				if (this.primary_key)
 					this.extra_kwargs.limit = limit;
@@ -174,14 +174,14 @@ export default {
 					this.$root.limit = limit;
 			}
 		},
-		
+
 		offset: {
 			get() {
 				if (this.primary_key)
 					return this.extra_kwargs.offset;
 				return this.$parent.offset;
 			},
-			
+
 			set(offset) {
 				if (this.primary_key)
 					this.extra_kwargs.offset = offset;
@@ -189,14 +189,14 @@ export default {
 					this.$root.offset = offset;
 			},
 		},
-		
+
 		order: {
 			get() {
 				if (this.primary_key)
 					return this.extra_kwargs.order;
 				return this.$parent.order;
 			},
-			
+
 			set(order) {
 				if (this.primary_key)
 					this.extra_kwargs.order = order;
@@ -204,14 +204,14 @@ export default {
 					this.$parent.order = order;
 			},
 		},
-		
+
 		group: {
 			get() {
 				if (this.primary_key)
 					return this.extra_kwargs.group;
 				return this.$parent.group;
 			},
-			
+
 			set(group) {
 				if (this.primary_key)
 					this.extra_kwargs.group = group;
@@ -219,36 +219,36 @@ export default {
 					this.$parent.group = group;
 			},
 		},
-		
+
 		change_table() {
 			return this.$parent.change_table;
 		},
-		
+
 		change_input() {
 			return this.$parent.change_input;
 		},
-		
+
 		style_select_table() {
 			return this.$parent.style_select_table;
 		},
-		
+
 		style_input() {
 			return this.$parent.style_input;
 		},
-		
+
 		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
-		
+
 		operator() {
 			return this.kwargs.operator;
 		},
-		
+
 		style_select() {
 			return this.$parent.style_select;
 		},
 	},
-	
+
 	methods: {
 		change_select(event) {
 			var {name, value} = event.target;
@@ -261,14 +261,14 @@ export default {
 					setitem(this.operator.regexp_like, ...name,  'c');
 			}
 		},
-		
+
 		operator_name(Field) {
 			if (this.primary_key)
 				return `operator[${this.primary_key}][${this.value_name(Field)}]`;
-			
+
 			return `operator[${this.value_name(Field)}]`;
 		},
-		
+
 		regexp_like_operator_name(Field) {
 			if (this.primary_key)
 				return `operator[regexp_like]${this.primary_key}[${Field}]`;
@@ -281,11 +281,11 @@ export default {
 
 			return `${Field}${this.normalizeJsonExtract(this.json_extract[Field])}`;
 		},
-		
+
 		operators(Type){
 			if (is_numeric(Type))
 				return ["=", "!=", ">", "<", ">=", "<="];
-			
+
 			var operators = [
 				"regexp", "like", "regexp binary", "like binary", "=", "regexp_like", "find_in_set",
 				"not regexp", "not like", "not regexp binary", "not like binary", "!=", "not regexp_like"
@@ -293,10 +293,10 @@ export default {
 
 			if (!is_json(Type))
 				operators.push('in');
-			
+
 			return operators;
 		},
-		
+
 		get_operator_value(Field, Type, Key){
 			if (this.operator){
 				var value = this.operator[Field];
@@ -306,10 +306,10 @@ export default {
 					return "in";
 				}
 			}
-			
+
 			if (this.kwargs[Field] && !this.kwargs[Field].isString)
 				return "in";
-			
+
 			if (is_json(Type)) {
 				if (this.style[Field])
 					return '=';
@@ -318,7 +318,7 @@ export default {
 
 			if (Key)
 				return '=';
-			
+
 			if (is_string(Type))
 				return 'regexp';
 
@@ -335,25 +335,25 @@ export default {
 			name = name.slice(1, -1);
 			setitem(this.operator, ...name, value);
 		},
-		
+
 		normalizeJsonExtract(s){
 			if (s) {
 				var digits = [];
 				for (var m of s.matchAll(/\[\d+\]/g)) {
 					digits.push(m[0]);
 				}
-				
+
 				if (digits.length) {
 					s = s.replace(/\[\d+\]/g, "%");
 					return `->'$${s}'` + digits.join('');
 				}
-				
+
 				return `->'$${s}'`;
 			}
 			else
 				return '';
 		},
-		
+
 		click(event){
 			var Field = event.target.textContent;
 			if (this.json_extract[Field]){
@@ -364,7 +364,7 @@ export default {
 			}
 		},
 	},
-	
+
 	directives: {
 		focus: {
 		    // after dom is inserted into the document

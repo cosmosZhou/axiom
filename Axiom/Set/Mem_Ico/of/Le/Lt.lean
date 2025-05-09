@@ -1,6 +1,11 @@
+import sympy.sets.sets
 import Axiom.Basic
 
 
+/--
+This lemma asserts that an element `x` is in the interval `Ico a b` (closed on the left, open on the right) if `a ≤ x` and `x < b`. 
+The proof combines these two inequalities to establish membership in the interval by constructing the pair `⟨h₀, h₁⟩`, where `h₀` and `h₁` are the given bounds.
+-/
 @[main]
 private lemma main
   [Preorder α]
@@ -15,3 +20,4 @@ private lemma main
 
 
 -- created on 2025-03-02
+-- updated on 2025-04-04

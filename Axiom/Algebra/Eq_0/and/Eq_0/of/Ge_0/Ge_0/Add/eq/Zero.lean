@@ -1,15 +1,15 @@
-import Axiom.Algebra.NotAnd.equ.OrNotS
-import Axiom.Algebra.NotEq.equ.Ne
-import Axiom.Algebra.Gt.of.Ne.Ge
+import Axiom.Logic.NotAnd.is.OrNotS
+import Axiom.Logic.NotEq.is.Ne
+import Axiom.Algebra.Gt.of.Ge.Ne
 import Axiom.Algebra.Add.gt.Zero.of.Gt_0.Ge_0
 import Axiom.Algebra.Add.gt.Zero.of.Ge_0.Gt_0
 import Axiom.Algebra.Ne.of.Gt
-open Algebra
+open Algebra Logic
 
 
 @[main]
 private lemma main
-  [LinearOrderedField α]
+  [LinearOrderedRing α]
   {x y : α}
 -- given
   (h_x : x ≥ 0)
@@ -19,20 +19,20 @@ private lemma main
   x = 0 ∧ y = 0 := by
 -- proof
   by_contra h
-  rw [NotAnd.equ.OrNotS] at h
-  rw [NotEq.equ.Ne, NotEq.equ.Ne] at h
+  rw [NotAnd.is.OrNotS] at h
+  rw [NotEq.is.Ne, NotEq.is.Ne] at h
   cases h with
-  | inl h => 
-    have := Gt.of.Ne.Ge h h_x
+  | inl h =>
+    have := Gt.of.Ge.Ne h_x h
     have := Add.gt.Zero.of.Gt_0.Ge_0 this h_y
     have := Ne.of.Gt this
     contradiction
-  | inr h => 
-    have := Gt.of.Ne.Ge h h_y
+  | inr h =>
+    have := Gt.of.Ge.Ne h_y h
     have := Add.gt.Zero.of.Ge_0.Gt_0 h_x this
-  
     have := Ne.of.Gt this
     contradiction
 
 
 -- created on 2025-01-17
+-- updated on 2025-03-30

@@ -1,4 +1,4 @@
-source common.sh
+source utility.sh
 
 full_theorem=$(normalize $1)
 echo full_theorem = $full_theorem

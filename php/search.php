@@ -5,7 +5,7 @@ require_once 'utility.php';
 require_once 'mysql.php';
 require_once 'std.php';
 $dict = empty($_POST) ? $_GET : $_POST;
-
+$fullText = false;
 if (array_key_exists("q", $dict)) {
     if ($dict["fullText"] == 'on')
         $fullText = $dict["q"];
@@ -58,16 +58,24 @@ if ($fullText) {
         $fullText = str_replace("\\", "\\\\", $fullText);
     }
     $fullText = str_replace("\"", "\\\"", $fullText);
-    // the following command is used to search for all typeclass names in the Axiom directory
-    // grep -rhP --include="*.lean" --exclude="*.echo.lean" -o "(?<=\[)\w+(?= \p{L}\])" Axiom | sort -u
-    exec("grep -rn$P --include=*.lean --exclude=*.echo.lean \"$fullText\" Axiom | head -n $limit", $output_array);
+    if (std\is_linux()) {
+        // the following command is used to search for all typeclass names in the Axiom directory
+        // grep -rhP --include="*.lean" --exclude="*.echo.lean" -o "(?<=\[)\w+(?= \p{L}\])" Axiom | sort -u        
+        exec("grep -rn$P --include=*.lean --exclude=*.echo.lean \"$fullText\" Axiom | head -n $limit", $output_array);
+        $sep = '/';
+    }
+    else {
+        exec("powershell.exe -Command \"[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8; \$OutputEncoding = [System.Text.Encoding]::UTF8; Get-ChildItem -Path Axiom -Recurse -Include *.lean -Exclude *.echo.lean | Select-String -CaseSensitive -Pattern '" . addslashes($fullText) . "' -AllMatches | Select-Object -First $limit\"", $output_array);
+        $sep = '\\\\';
+    }
+
     $data = [];
     foreach ($output_array as &$item) {
         [$file, $line, $text] = explode(":", $item, 3);
 
-        if (preg_match("#^Axiom/(.*)\.lean$#", $file, $matches)) {
+        if (preg_match("#^Axiom$sep(.*)\.lean$#", $file, $matches)) {
             $data[] = [
-                'module' => str_replace("/", ".", $matches[1]),
+                'module' => str_replace($sep, ".", $matches[1]),
                 'line' => $line,
                 'text' => $text,
             ];
@@ -101,7 +109,7 @@ else  {
         if (!$caseSensitive)
             $regex .= 'i';
         foreach ($data as &$item)
-            $item['replacement'] = preg_replace($regex, $replacement, $item);
+            $item['replacement'] = preg_replace($regex, $replacement, $item['module']);
     }
 }
 

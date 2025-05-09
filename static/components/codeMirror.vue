@@ -107,22 +107,25 @@ export default {
 	
     mounted() {
 		var self = this;
-		const {open_lemma_sections, regexp_section} = self.$parent;
 
 		function preppend(prefix) {
-			var section = open_lemma_sections;
-			if (section.length == 1)
+			if (prefix == '.')
+				return prefix;
+			var section = self.open_lemma_sections;
+			switch (section.length) {
+			case 0:
+				section = [self.module.split(/[\/.]/)[0]];
+			case 1:
 				return `${section[0]}.${prefix}`;
-			else
-				return section.map(section => `'${section}.${prefix}'`).join(', ');
+			default:
+				return section.map(section => `${section}.${prefix}`);
+			}
 		}
 
 		async function locate_definition(cm, index, module) {
-			var section = open_lemma_sections;
-			var section = await form_post('php/request/disambiguate.php', {module, section});
+			var section = await form_post('php/request/disambiguate.php', {module});
 			if (!section)
 				return null;
-
 			return section + '.' + module;
 		}
 		
@@ -152,25 +155,25 @@ where
 			var user = axiom_user();
 			var table = 'module';
 			if (module.indexOf('.') < 0) {
-				if (!module.fullmatch(regexp_section)) {
+				if (!module.fullmatch(self.regexp_section)) {
 					var symbol = module;
 					module = await locate_definition(cm, cursor.line, symbol);
 					if (module == null){
-						var href = `/${user}?mathlib=${symbol}`;
+						var href = `?mathlib=${symbol}`;
 						if (refresh)
 							location.href = href;
 						else
 							window.open(href);
 						return;
 					}
-					m = text.slice(prefix.length).match(/\.(\w+)/);
+					m = text.slice(prefix.length).match(/\.([\w']+)/);
 					symbol = m? m[1]: null;
 				}
 			}
 			else {
-				m = module.match(/^(\w+)\.(.+)/);
-				if (m[1].fullmatch(regexp_section)) {
-					if (!await form_post('php/request/disambiguate.php', {module: m[2], section : [m[1]]})) {
+				m = module.match(/^([\w']+)\.(.+)/);
+				if (m[1].fullmatch(self.regexp_section)) {
+					if (!await form_post('php/request/disambiguate.php', {module: m[2]})) {
 						if (await select_mathlib(module))
 							table = 'mathlib';
 						else
@@ -178,34 +181,20 @@ where
 					}
 				}
 				else{
-					var section = open_lemma_sections;
-					switch (section.length) {
-					case 0:
-						if (await select_mathlib(module))
-							table = 'mathlib';
-						else
-							return;
-						break;
-					case 1:
-						if (await select_mathlib(module))
-							table = 'mathlib';
-						else {
-							var [section] = section;
-							module = section + '.' + module;
-						}
-						break;
-					default:
-						var section = await form_post('php/request/disambiguate.php', {module, section});
-						if (section) {
-							module = section + '.' + module;
-							m = text.slice(prefix.length).match(/\.(\w+)/);
-							symbol = m? m[1]: null;
-						}
-						else if (await select_mathlib(module))
-							table = 'mathlib';
-						else
-							return;
-						break;
+					if (await select_mathlib(module))
+						table = 'mathlib';
+					else {
+						var regexp = `^([\\w'']+)\\.${module.replace('.', '\\.')}(?=\\.|$)`.replace(/\\/g, "\\\\");
+						var sql = `
+select 
+	regexp_replace(module, "${regexp}.*", '$1')
+from 
+	axiom.lemma
+where 
+	module regexp "${regexp}"`;
+						console.log('sql =', sql);
+						var [section] = await form_post(`php/request/execute.php`, {sql});
+						module = section + '.' + module;
 					}
 				}
 			}
@@ -343,6 +332,20 @@ where
 				return cm.showHint();
 			},
 
+			Space(cm) {
+				var cur = cm.getCursor();
+				var line = cm.getLine(cur.line);
+				var text = line.slice(0, cur.ch);
+				var m = text.match(/\\[\w.|<>=^~{} \\+\p{Script=Greek}-]+$/u);
+				if (m) {
+					var prefix = m[0];
+					console.log('prefix = ' + prefix);
+					return cm.showHint();
+				}
+				else 
+					cm.replaceSelection(' ');
+			},
+
 			"Ctrl-/": function(cm) {
 				return cm.toggleComment();
 			},
@@ -350,54 +353,33 @@ where
 			"Ctrl-I": function(cm) {
 				var cursor = cm.getCursor();
     			var currentLine = cursor.line;
-    			// Start from the beginning of the document
-    			var from = { line: 0, ch: 0 };
-    			// End at the last character of the current line
-    			var to = { line: currentLine, ch: cm.getLine(currentLine).length };
-    			// Get all text in this range
-    			var text = cm.getRange(from, to);
-				console.log('text = ' + text);
-				self.code_generation(text);
+    			// // Start from the beginning of the document
+    			// var from = { line: 0, ch: 0 };
+    			// // End at the last character of the current line
+    			// var to = { line: currentLine, ch: cm.getLine(currentLine).length };
+    			// // Get all text in this range
+    			// var text = cm.getRange(from, to);
+				self.code_generation(currentLine);
 			},
 
-			".": function(cm) {
+			'.': function(cm) {
 				cm.replaceSelection('.');
 				return cm.showHint();
 			},
 
             'Ctrl-O': function(cm) {
-                console.log("'Ctrl-O' is pressed! self.module = ", self.module);
-                var module = self.module;
-                if (module.match(/\W$/))
-                	module = module.slice(0, -1);
-                
-                var href = `/${self.user}/?new=${module}`;
-                window.open(href);
+				self.new_file();
             },
 
             'Ctrl-S': function(cm) {
-            	form.submit();
+				self.save();
             },
 
 			'F5': function(cm) {
             },
 
             'Shift-Alt-W': function(cm) {
-                console.log('Shift-Alt-W');
-                var search = location.search;
-				var m = search.match(/\?mathlib=(.*)/)
-				if (m) {
-					var mathlib = m[1];
-					search = `?q=${mathlib}&fullText=on`;
-					index = search.length;
-				}
-				else {
-					var index = search.lastIndexOf('.') + 1;
-                	if (!index)
-						index = search.lastIndexOf('/') + 1;
-				}
-                location.hash = search.substring(index);
-                location.search = search.substring(0, index);
+				self.openContainingFolder();
             },
             
             'Alt-D': function(cm) {
@@ -422,14 +404,6 @@ where
             Left(cm) {
                 cm.moveH(-1, "char");
                 if (cm.getCursor().hitSide) {
-                    if (i == 0) {
-                        cm = self.$parent.$refs.apply;
-						cm = cm.editor;
-                    }
-					else {
-						cm = extraKeys.Up(cm);
-					}
-                    
                     cm.focus();
                     CodeMirror.commands.goDocEnd(cm);
                 }
@@ -475,6 +449,22 @@ where
 					cm.setCursor(cm.lineCount() - 1, cursor.ch);
 				else
 					cm.selectionStart = cm.selectionEnd = cursor.ch;
+            },
+
+            Enter(cm) {
+				var cur = cm.getCursor();
+				var {ch, line} = cur;
+				var line = cm.getLine(cur.line);
+				var former = line.slice(0, cur.ch);
+				var latter = line.slice(cur.ch);
+				var space = space = former.match(/^ */)[0];
+				if (latter.isspace()) {
+					if (space.length >= latter.length)
+						space = ' '.repeat(space.length - latter.length);
+					else
+						space = '';
+				}
+				cm.replaceSelection("\n" + space);
             },
 
             "Ctrl-Enter": cm => {
@@ -540,7 +530,7 @@ where
 					cm.removeLineClass(line, "gutter", "breakpoint");
 					self.clear_breakpoint(line);
 				}
-				else{					
+				else{
 					cm.addLineClass(line, "gutter", "breakpoint");
 					self.set_breakpoint(line);
 				}
@@ -579,7 +569,7 @@ where
             styleActiveLine: this.styleActiveLine,
 
             hintOptions: { 
-                hint(cm, options){
+                hint(cm, options) {
                 	var Pos = CodeMirror.Pos;
                 	return new Promise(function(accept) {
                 		var cur = cm.getCursor();
@@ -589,7 +579,7 @@ where
 
 						var line = cm.getLine(cur.line);
 						var text = line.slice(0, cur.ch);
-						var prefix = text.match(/\\[\w.|<>=^~{} \\+-]+$|[\w.]+$/)[0];
+						var prefix = text.match(/\\[\w.|<>=^~{} \\+\p{Script=Greek}-]+$|[\w.\p{Script=Greek}]+$/u)[0];
 
 						var user = axiom_user();
 
@@ -597,14 +587,13 @@ where
 						var search_lemma = tokenString == '.' && prefix[0] != '\\' || prefix[0] =='.';
 						if (search_lemma || (prefix.indexOf('.') >= 0 && prefix[0] != '\\')) {
 							if (search_lemma) {
-								token.start += 1;
-								m = !prefix.match(new RegExp(`^(${regexp_section.source})`, 'g'));
-							}
-							else {
+								++token.start;
+								m = !prefix.match(new RegExp(`^(${self.regexp_section.source})`, 'g'));
+							} else {
 								m = prefix.match(/([\w.]*\.)(\w*)$/);
 								var [_, prefix, phrase] = m;
 								m = prefix.match(/^(\w*)\.$/);
-								m = m && !m[1].fullmatch(regexp_section);
+								m = m && !m[1].fullmatch(self.regexp_section);
 									
 							}
 							if (m)
@@ -614,7 +603,7 @@ where
 select 
   distinct substring_index(substring(module from length(jt.prefix) + 1), '.', 1) as phrase
 from 
-  lemma 
+  axiom.lemma 
   join 
     json_table(
       '${JSON.stringify(prefix)}', 
@@ -622,21 +611,31 @@ from
     ) as jt
 where 
   user = '${user}' and module like concat(jt.prefix, '%')`;
-							}
-							else {
+							} else if (prefix == '.' && (m = line.match(/^( *)\.( *)$/))) {
+								--token.start;
+								var constants = [`·\\n${m[1]}  sorry`];
 								var sql = `
-select distinct substring_index(substring(module from length('${prefix}') + 1), '.', 1) as phrase
+SELECT
+  name
+FROM
+  json_table(
+    '${JSON.stringify(constants)}',
+    '$[*]' columns(name text path '$')
+  ) as _t`;
+							} else {
+								var sql = `
+select distinct substring_index(substring(module from length("${prefix}") + 1), '.', 1) as phrase
 from 
-  lemma 
+  axiom.lemma 
 where 
-	user = '${user}' and module like concat('${prefix}', '%')`;
+	user = '${user}' and module like concat("${prefix}", '%')`;
 							}
 
 							if (!search_lemma)
 								sql += ` having phrase regexp '${phrase}' COLLATE utf8mb4_0900_bin`;
-						}
-						else {
-							token.start -= prefix.length - tokenString.length;
+						} else {
+							token.start -= prefix.length - (tokenString.length - (token.end - cur.ch));
+							token.end = cur.ch;
 							var match_unicodedata_right_open = prefix.fullmatch(/\\N\{[A-Z\d -]+/i) && line[cur.ch] == '}';
 							if (match_unicodedata_right_open || prefix.fullmatch(/\\N\{[A-Z\d -]+\}/i)) {
 								if (match_unicodedata_right_open) {
@@ -665,10 +664,9 @@ FROM
   unicode
 where name = '${hint}'`;
 								}
-							}
-							else if (m = prefix.match(/^\\(.+)/)){
-									var hint = m[1];
-									var sql = `
+							} else if (m = prefix.match(/^\\(.+)/)){
+								var hint = m[1];
+								var sql = `
 with _t as (
   select 
     unicode, jt.latex
@@ -679,31 +677,60 @@ with _t as (
     '$[*]' COLUMNS (latex varchar(255) PATH '$')
   ) as jt
   where 
-    jt.latex like binary'${hint}%'
+    jt.latex like binary "${hint}%"
 )
 select 
   CASE
     WHEN (SELECT COUNT(*) FROM _t) > 1 THEN 
-      _t.latex
+      concat('\\\\', _t.latex)
     ELSE 
       unicode
   END as unicode
 from 
   _t
+where
+  latex != "${hint}"
 union
 select 
   unicode
 from 
   _t
 where 
-  latex = '${hint}'
+  latex = "${hint}"
 order by char_length(unicode)`;
+							} else if (m = prefix.match(/^[A-Za-z_]+$/)) {
+								var {sections, typeclass, tactics} = self.$parent.$parent;
+								var constants = [...sections, ...typeclass, ...tactics];
+								var sql = `
+SELECT
+  name
+FROM
+  json_table(
+    '${JSON.stringify(constants)}',
+    '$[*]' columns(name text path '$')
+  ) as _t
+where name like binary '${prefix}%'`;
+
+							} else {
+								// transform an indexed variable into a human readable symbol with an integer subscript
+								var sql = `
+SELECT
+  CONCAT(
+    LEFT(name, 1),
+    CHAR(CONV(hex(CONVERT('₀' USING utf16)), 16, 10) + (ASCII(RIGHT(name, 1)) - ASCII('0')) USING utf16)
+  )
+FROM 
+  json_table(
+    '["${prefix}"]',
+	'$[*]' columns(name text path '$')
+  ) as _t
+where name REGEXP '^[\\\\p{Script=Greek}a-zA-Z][0-9]$'`;
 							}
 						}
 
 						sql += "\nlimit 20";
 						console.log(sql);
-                		form_post(`/${user}/php/request/execute.php`, {sql}).then(list => {
+                		form_post(`php/request/execute.php`, {sql}).then(list => {
                 			// Find the token at the cursor
 							list = list.map(item => item[0]);
                 			console.log('hint = ' + list);
@@ -786,32 +813,6 @@ order by char_length(unicode)`;
 
 .CodeMirror-focused .CodeMirror-selected {
 	background: rgb(0, 120, 215);
-}
-
-.breakpoint:before{
-	width: 4px;
-	height: 1.5px;
-	position: absolute;
-	left: 0px;
-	top: 11.5px;
-	content: "";
-	transform: rotate(-45deg);
-	background: #00FF00;
-	box-shadow: 1px 1px 0 0 #9da0a0;
-	z-index: 0;
-}
-    
-.breakpoint:after {
-	width: 6px;
-	height: 6px;
-	position: absolute;
-	left: 2.3px;
-	top: 6px;
-	content: "";
-	background: #00FF00;
-	border-radius: 50%;
-	box-shadow: 1px 1px 0 0 #9da0a0;
-	z-index: 0;
 }
 
 .executionPoint > pre > span {

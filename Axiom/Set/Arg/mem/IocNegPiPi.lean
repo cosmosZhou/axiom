@@ -1,3 +1,5 @@
+import sympy.functions.elementary.complexes
+import sympy.sets.sets
 import Axiom.Basic
 
 

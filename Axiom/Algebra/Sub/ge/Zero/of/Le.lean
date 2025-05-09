@@ -1,4 +1,4 @@
-import Axiom.Algebra.GeSub__0.equ.Le
+import Axiom.Algebra.Sub.ge.Zero.is.Le
 open Algebra
 
 
@@ -11,7 +11,7 @@ private lemma main
 -- imply
   b - a ≥ 0 :=
 -- proof
-  GeSub__0.equ.Le.mpr h
+  Sub.ge.Zero.is.Le.mpr h
 
 
 -- created on 2024-11-25

@@ -1093,13 +1093,14 @@ function parse_statement(&$kwargs, &$Field2Type = null, &$return=null)
         $sql .= " group by $group";
         if ($return)
             $return['group'] = $group;
+    }
 
-        if ($having = std\get($kwargs, 'having', []))
-            if ($having = parse_expression($having, $NewField2Type)) {
-                $sql .= " having $having";
-                if ($return)
-                    $return['having'] = $having;
-            }
+    if ($having = std\get($kwargs, 'having', [])) {
+        if ($having = parse_expression($having, $NewField2Type)) {
+            $sql .= " having $having";
+            if ($return)
+                $return['having'] = $having;
+        }
     }
 
     if ($order = $kwargs['order']?? null) {

@@ -1,18 +1,18 @@
 import Axiom.Algebra.MapMap.eq.Map_Comp
 import Axiom.Algebra.Eq.of.EqValS
-open Mathlib Algebra
+open Algebra
 
 
 @[main]
 private lemma main
   (g : β → γ)
   (f : α → β)
-  (l : Vector α n) :
+  (l : List.Vector α n) :
 -- imply
   (l.map f).map g = l.map (g ∘ f) := by
 -- proof
-  let v1 : Vector γ n := ⟨(l.val.map f).map g, by simp⟩
-  let v2 : Vector γ n := ⟨l.val.map (g ∘ f), by simp⟩
+  let v1 : List.Vector γ n := ⟨(l.val.map f).map g, by simp⟩
+  let v2 : List.Vector γ n := ⟨l.val.map (g ∘ f), by simp⟩
   have h_eq : v1 = v2 :=
     Eq.of.EqValS (MapMap.eq.Map_Comp g f l.val)
   have h_eq1 : v1 = (l.map f).map g := by

@@ -1,3 +1,4 @@
 /.lake
 test.*
 *.echo.lean
+.vscode/PythonImportHelper-v2-Completion.json

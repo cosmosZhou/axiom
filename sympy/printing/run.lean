@@ -4,17 +4,15 @@ import sympy.printing.json
 import sympy.io
 
 #eval do
-  let name := `Nat.modEq_iff_dvd
+  let name := `Matrix.mul_apply
   let expr ← name.toExpr
   println! ← Lean.Meta.ppExpr expr
-  let expr ← Expr.toExpr expr
+  let expr ← Expr.toExpr expr []
   println! expr
   println! expr.toLatex
-  println! ← Name.toJson name
+  -- println! ← Name.toJson name
 
 def main (args : List String) : IO Unit := do
   IO.println <| ← Name.toJson args.head!.toName |> exec
 
-#check Nat.ModEq
-
--- http://192.168.18.133:8000/lean/?mathlib=Nat.modEq_iff_dvd
+#check Matrix.mul_apply

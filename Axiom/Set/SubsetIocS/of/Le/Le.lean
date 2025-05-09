@@ -13,7 +13,6 @@ private lemma main
   Ioc a b ⊆ Ioc a' b' := by
 -- proof
   apply SubsetIocS.of.Le.Ge <;>
-  ·
     assumption
 
 

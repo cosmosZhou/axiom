@@ -1,3 +1,4 @@
+import stdlib.List.Vector
 import Axiom.Algebra.SumCons.eq.Add_Sum
 open Algebra
 
@@ -5,7 +6,7 @@ open Algebra
 @[main]
 private lemma main
   [Add α] [Zero α]
-  {l : Vector α n}
+  {l : List.Vector α n}
   {a : α} :
 -- imply
   (a ::ᵥ l).sum = a + l.sum :=

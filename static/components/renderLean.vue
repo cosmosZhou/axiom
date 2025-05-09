@@ -25,12 +25,20 @@ export default {
         },
         
         name() {
-            return 'lemma' + this.index.map(i => `[${i}]`).join('');
+            return this.$parent.postname + this.index.map(i => `[${i}]`).join('');
         },
         
     	user: codeMirror.computed.user,
     	module: codeMirror.computed.module,
         
+		open_lemma_sections() {
+			return this.$parent.open_lemma_sections;
+		},
+
+		regexp_section() {
+			return this.$parent.regexp_section;
+		},
+
         firstSibling() {
             return this.$parent.renderLean[0];
         },
@@ -200,8 +208,8 @@ export default {
             return prove[prove.length - 1];
         },
 
-        leanFile() {
-            return this.$parent.leanFile;
+        leanSourceCode() {
+            return this.$parent.leanSourceCode;
         },
     },
     
@@ -215,18 +223,30 @@ export default {
     },
     
     methods: {
-        code_generation(code) {
-            var {index} = this;
-            var [, key] = index;
-            if (key == 'proof') {
-                var self = this.$parent;
-                var {lemma} = self.$parent;
-                var j = index.back();
-                var attr = index.slice(0, -1);
-                var codes = ranged(j).map(t => getitem(lemma, ...attr, t));
-                codes.push({lean: code});
-                this.$parent.code_generation(codes, j);
-            }
+        save() {
+            this.$parent.save();
+        },
+
+        code_generation(line) {
+            this.$parent.code_generation(this.index, line);
+        },
+
+		append(word) {
+			// precondition: word does not contain newlines
+			var cm = this.editor;
+			var line = cm.lineCount() - 1;
+			var ch = cm.getLine(line).length;
+			cm.setCursor(line, ch);
+			cm.replaceSelection(word);
+			cm.setCursor(line, ch + word.length);
+		},
+
+        new_file() {
+            this.$parent.new_file();
+        },
+
+        openContainingFolder() {
+            this.$parent.openContainingFolder();
         },
     },
     

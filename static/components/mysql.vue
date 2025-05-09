@@ -49,22 +49,22 @@ import { reset_training } from "../js/Command.js";
 
 export default {
 	components: {mysqlSelect, mysqlInsert, mysqlDelete, mysqlUpdate, mysqlExecute, mysqlAlter, mysqlShow, mysqlSet, mysqlUnion},
-	
+
 	props : ['host', 'user', 'token', 'kwargs', 'sql', 'rowcount', 'sample', 'focus'],
-	
+
 	data() {
 		return {
 			cmds: ['select', 'update', 'insert', 'delete', 'rename', 'revoke', 'grant', 'alter', 'show', 'drop', 'set'],
 			databases: ['corpus', 'mysql'],
 			tables: [],
-			
+
 			dtype: {},
 			desc: [],
 			style_entity: {},
 			transform: {},
 			api: {},
 			Comment: {},
-			
+
 			json_extract: {},
 			mounted: {},
 
@@ -84,7 +84,7 @@ export default {
 			textual_relations: ['regexp', 'like', 'regexp binary', 'like binary', '=', 'not regexp', 'not like', 'not regexp binary', 'not like binary', '!=', 'in', 'not', 'not in'],
 			//relations that operate on jsonobj values;
 			jsonobj_relations: ['json_contains', 'json_contains_path', 'not json_contains', 'not json_contains_path', 'is', 'is not'],
-			
+
 			aggregate_functions: ['sum', 'agv', 'max', 'min', 'group_concat', 'json_arrayagg', 'json_objectagg'],
 		};
 	},
@@ -102,34 +102,34 @@ export default {
 		select() {
 			return this.mounted.select? this.$refs.select : {};
 		},
-		
+
 		update() {
 			return this.mounted.update? this.$refs.update : {};
 		},
-		
+
 		delete() {
 			return this.mounted.delete? this.$refs.delete : {};
 		},
-		
+
 		insert() {
 			return this.mounted.insert? this.$refs.insert : {};
 		},
-		
+
 		option() {
 			var option = {
 				fields: Object.keys(this.dtype),
 				function: ['count', 'sum', 'agv', 'max', 'min', 'length', 'char_length', 'round', 'ceiling', 'floor', 'substring', 'substring_index', 'regexp_substr', 'regexp_replace', 'concat', 'group_concat', 'json_array_append', 'json_array_insert', 'json_arrayagg', 'json_remove', 'json_set', 'json_object', 'json_extract', 'json_length', 'json_valid', 'json_search', 'lower', 'upper', 'left', 'right', 'reverse'],
 				operator: ['~', '+', '-', '*', '/', '%', '&', '^', '>>', '<<', '->', '->>'],
 			};
-			
+
 			return ['*', 'distinct', option];
 		},
-		
+
 		cmd: {
 			get() {
 				return get_cmd(this.kwargs);
 			},
-			
+
 			set(cmd) {
 				var {kwargs} = this;
 				var old_cmd = this.cmd;
@@ -147,23 +147,23 @@ export default {
 			case 'delete':
 			case 'select':
 				return 'from';
-				
+
 			case 'update':
 				return 'update';
-				
+
 			case 'insert':
 				return 'into';
 			}
 		},
-		
+
 		numeric_function_regexp() {
 			return new RegExp(this.numeric_functions.join('|'));
 		},
-		
+
 		jsonobj_function_regexp() {
 			return new RegExp(this.jsonobj_functions.join('|'));
 		},
-		
+
 		textual_function_regexp() {
 			return new RegExp(this.textual_functions.join('|'));
 		},
@@ -171,28 +171,28 @@ export default {
 		aggregate_function_regexp() {
 			return new RegExp(this.aggregate_functions.join('|'));
 		},
-		
+
 		Fields() {
 			return this.desc.map(obj => obj.Field);
 		},
-		
+
 		numericFields() {
 			var fields = [];
 			for (var {Field, Type, Key} of this.desc) {
 				if (is_numeric(Type))
 					fields.push(Field);
 			}
-			
+
 			return fields;
 		},
-		
+
 		textualFields() {
 			var fields = [];
 			for (var {Field, Type, Key} of this.desc) {
 				if (!is_numeric(Type))
 					fields.push(Field);
 			}
-			
+
 			return fields;
 		},
 
@@ -201,14 +201,14 @@ export default {
 			if (value)
 				return get_db_table(value);
 		},
-		
+
 		database: {
 			get() {
 				var {db_table} = this;
 				if (db_table)
 					return db_table.database;
 			},
-			
+
 			set(database) {
 				if (database) {
 					var attr = this.cmdAttr;
@@ -216,14 +216,14 @@ export default {
 				}
 			}
 		},
-		
+
 		table: {
 			get() {
 				var {db_table} = this;
 				if (db_table)
 					return db_table.table;
 			},
-			
+
 			set(table) {
 				var attr = this.cmdAttr;
 				var value = this.kwargs[attr];
@@ -235,26 +235,26 @@ export default {
 				}
 			}
 		},
-		
+
 		action() {
 			var {host, sample} = this;
 			var kwargs = {};
 
 			if (host && host != 'localhost')
 				kwargs.host = host;
-		
+
 			if (sample)
 				kwargs.sample = sample;
 
 			return 'query.php?' + get_url(kwargs);
 		},
-		
+
 		action_insert() {
 			var {database, table, host} = this;
     		var kwargs = {into: fromEntries(database, table)};
 			if (host && host != 'localhost')
 				kwargs.host = host;
-    		
+
 			var url_kwargs = get_url(kwargs);
     		var url_insert = 'query.php?' + url_kwargs;
     		var url = [];
@@ -290,7 +290,7 @@ export default {
 			}
 			return url_insert;
 		},
-		
+
 		style_select_table() {
 			return this.style_select(this.table, 'green');
 		},
@@ -319,9 +319,34 @@ export default {
 			var kwargs = this.kwargs.kwargs?? {};
 			return kwargs.simplify;
     	},
+
+    	is_primary_key() {
+    		var is_primary_key = {};
+    		var {Comment} = this;
+    		for (var {Field, Key} of this.desc) {
+    			if (Key == 'PRI')
+    				is_primary_key[Field] = true;
+    			else {
+    				var comment = Comment[Field];
+   					if (comment && comment.PRI)
+       					is_primary_key[Field] = true;
+    			}
+    		}
+    		return is_primary_key;
+    	},
 	},
 
 	methods: {
+    	primary_key_url(primary_key) {
+    		var {host, database, table, PRI} = this;
+    		var kwargs = {from: fromEntries(database, table)};
+			if (primary_key)
+    			kwargs[PRI] = primary_key.encodeURI();
+    		if (host && host != 'localhost')
+				kwargs.host = host;
+    		return 'query.php?' + get_url(kwargs);
+    	},
+
 		toggle_server() {
 			var hostname = location.hostname == 'localhost'? '192.168.18.131': 'localhost';
 			var port = location.hostname == 'localhost'? '8000': '80';
@@ -333,15 +358,16 @@ export default {
 			value ||= true;
 			var {host, database} = this;
 			table ||= this.table;
-			
+
 			Object.assign(kwargs, {from: fromEntries(database, table)})
 			if (host && host != 'localhost')
 				kwargs.host = host;
 
-			kwargs.kwargs = fromEntries(source, value);
+			if (source)
+				kwargs.kwargs = fromEntries(source, value);
 			if (PRI)
 				kwargs[this.PRI? this.PRI: 'id'] = PRI;
-			
+
 			var href = 'query.php?' + get_url(kwargs);
 			switch (source) {
 			case 'json':
@@ -367,7 +393,7 @@ export default {
 			default:
 				alert(`could not delete the table for source = ${self.source}`);
 			}
-			
+
 			console.log("rowcount =", ret);
 			if (ret){
 				var self = self.$parent;
@@ -397,7 +423,7 @@ export default {
 			var {offset} = this.kwargs;
 			if ('lang' in this.dtype && !lang)
 	    		var [{lang}] = await query(this.host, this.token, `select lang from ${database}.${table} where ${this.PRI} = ${PRI}`);
-			
+
 			var {host, database, table} = this;
 			if (offset == '' || offset == null) {
 				PRI = PRI.mysqlStr();
@@ -414,7 +440,7 @@ export default {
 			Object.assign(kwargs, {mysql: true, from: fromEntries(database, table)});
 			if (host && host != 'localhost')
 				kwargs.host = host;
-			
+
 			if (lang) {
 				kwargs.lang = lang;
 			}
@@ -424,18 +450,18 @@ export default {
 			kwargs.offset = offset;
 			location.href = 'query.php?' + get_url(kwargs);
 		},
-		
+
 		preprocess_kwargs() {
 			var {kwargs} = this;
-			
+
 			var criteria = {};
 			for (var key in kwargs) {
 				if (key.fullmatch(/where|select|from|into|with|having|order|group|on|using|limit|order|offset|update|transform|sample|execute|repeat|mysql|keras|torch|regex/))
 					continue;
-				
+
 				criteria[key] = kwargs[key];
 			}
-			
+
 			var cond = [];
 			for (var key in criteria) {
 				if (!this.descDict[key])
@@ -454,22 +480,22 @@ export default {
 						cond.push({eq});
 				}
 			}
-			
+
 			if (!cond.length)
 				return;
-			
+
 			if (kwargs.where) {
 				if (kwargs.where.and) {
 					kwargs.where.and.push(...cond);
 					return;
 				}
-				
+
 				if (len(kwargs.where)) {
 					kwargs.where = {and: [kwargs.where, ...cond]};
 					return;
 				}
 			}
-			
+
 			if (cond.length > 1){
 				kwargs.where = {and: cond};
 			}
@@ -478,7 +504,7 @@ export default {
 				kwargs.where = cond;
 			}
 		},
-		
+
 		initialize_kwargs() {
 			var {kwargs} = this;
 			var {where} = kwargs;
@@ -498,7 +524,7 @@ export default {
 
 					where.and = and;
 				}
-				
+
 				for (var key in where_dict) {
 					if (!this.dtype[key]) {
 						deleteIndices(and, (key => (and, i) => {
@@ -507,7 +533,7 @@ export default {
 						})(key));
 					}
 				}
-				
+
 				for (var {Field, Type, Key} of this.desc) {
 					if (!where_dict[Field]) {
 						if (Key || is_numeric(Type) || is_enum(Type)) {
@@ -527,25 +553,25 @@ export default {
 					}
 				}
 			}
-			
+
 			var {order, limit, offset} = kwargs;
 			if (order == null) {
 				kwargs.order = '';
 			}
-			
+
 			if (limit == null) {
 				kwargs.limit = '';
 			}
-			
+
 			if (offset == null) {
 				kwargs.offset = '';
 			}
 		},
-		
+
 		is_leaf(value) {
 			return value == null || value.isString || value.isNumber;
 		},
-		
+
 		is_numeric_function(value) {
 			return value && value.fullmatch(this.numeric_function_regexp);
 		},
@@ -553,15 +579,15 @@ export default {
 		is_jsonobj_function(value) {
 			return value && value.fullmatch(this.jsonobj_function_regexp);
 		},
-		
+
 		is_textual_function(value) {
 			return value && value.fullmatch(this.textual_function_regexp);
 		},
-		
+
 		is_aggregate_function(value) {
 			return value && value.fullmatch(this.aggregate_function_regexp);
 		},
-		
+
 		postprocess() {
 			var parent = this.$parent;
 			if (parent.postprocess)
@@ -585,23 +611,23 @@ export default {
 			if (!table.startsWith('_')) {
 				Object.assign(this.$data, await show_full_columns(this.database?? 'corpus', table, this.host, this.token));
 			}
-			
+
 			this.preprocess_kwargs();
 			this.initialize_kwargs();
 		},
-		
+
 		async change_table(event){
 			var table = event.target.value;
 			if (this.table != table)
 				this.table = table;
-			
+
 			var root = this.$root;
 			if (root.data)
 				root.data.clear();
-			
+
 			this.show_full_columns(table);
 		},
-		
+
 		change_database(event){
 			var database = event.target.value;
 			if (this.database != database)
@@ -610,17 +636,17 @@ export default {
 			var root = this.$root;
 			if (root.data)
 				root.data.clear();
-			
+
 			if (!database) {
 				database = 'mysql';
-				
+
 				this.kwargs.from = {select: '*', from: [database, 'help_topic']};
 				this.kwargs.where = {};
 			}
-			
+
 			this.show_tables(database);
 		},
-		
+
 		change_input(event){
 			var self = event.target;
 			var value = self.value;
@@ -628,14 +654,14 @@ export default {
 			length = Math.max(5, length);
 			self.style = `width: ${length}em`;
 		},
-		
+
 		style_input(Field){
 			var text = this.kwargs[Field];
 			var length = text == null ? 3 : text.strlen() / 2 + 2;
 			length = Math.max(5, length);
 			return `width: ${length}em`;
 		},
-		
+
 		style_select(text, color, min){
 			text ||= '_';
 			min ||= 0.5;
@@ -660,7 +686,7 @@ export default {
 				css += `color: ${color}`;
 			return css;
 		},
-		
+
 		input_kwargs(event){
 			var {name, value} = event.target;
 			input_kwargs(this.kwargs, name, value);
@@ -674,7 +700,7 @@ export default {
 				}
 			}
 		},
-		
+
 		async show_tables(database) {
 			if (!database) {
 				simplify_expression(this.kwargs);
@@ -685,15 +711,15 @@ export default {
 			this.tables = tables;
 			if (database && !tables.contains(this.table))
 				this.table = tables[0];
-			
+
 			this.show_full_columns();
 		},
-		
+
 		where_dict(cond, filterRhs) {
 			var func = Object.keys(cond)[0];
 			if (!func)
 				return {};
-				
+
 			if (func == 'and') {
 				var result = {};
 				for (var cond of cond.and) {
@@ -701,13 +727,13 @@ export default {
 				}
 				return result;
 			}
-			
+
 			var [lhs, rhs] = cond[func];
 			if (filterRhs && !rhs || !lhs.isString)
 				return {};
 			return fromEntries(lhs, cond);
 		},
-		
+
 		parse_expression(cond, Field2Type){
 		    if (cond.isString || cond.isNumber)
 		        return cond;
@@ -718,7 +744,7 @@ export default {
 		    var [func] = Object.keys(cond);
 		    if (!func)
 		    	return '';
-		    
+
 		    if (cond[func].isArray)
 		        var args = cond[func].map(cond => this.parse_expression(cond, Field2Type));
 		    else
@@ -796,10 +822,10 @@ export default {
 		                rhs = eval(fn)(rhs)[0];
 		                args[1] = rhs;
 		            }
-		            
+
 		            args = args.map(arg => Field2Type[arg]? arg: arg.mysqlStr(Field2Type[arg]));
 		        }
-		        
+
 		        return args.join(` ${func} `);
 		    case '->':
 		    case '->>':
@@ -816,22 +842,22 @@ export default {
 		        if (args.length == 2) {
 		            return `order by ${args[0]} ${args[1]}`;
 		        }
-		        
+
 		        return `order by ${args[0]}`;
-		        
+
 		    case 'group_concat':
 		        if (args[2]) {
 		            args[2] = `separator ${args[2]}`;
 		        }
-		        
+
 		        args = args.join(' ');
 		        return `${func}(${args})`;
-		        
+
 		    case 'path':
 		    case 'separator':
 		    case 'distinct':
 		        return `${func} ${args[0]}`;
-		        
+
 			case 'find_in_set':
 		        return `${func}(${args[0]}, ${args[1]})`;
 
@@ -852,7 +878,7 @@ export default {
 		        for (var i of range(0, args.length, 2)) {
 	            	args[i] = args[i].mysqlStr();
 	        	}
-		        
+
 	        	args = args.join(', ');
 	        	return `${func}(${args})`;
 		    default:
@@ -861,7 +887,7 @@ export default {
 		        return `${func}(${args})`;
 		    }
 		},
-		
+
 		json_decode(data, Field) {
             for (var dict of data) {
                 var value = dict[Field];
@@ -870,7 +896,7 @@ export default {
                 }
             }
 		},
-		
+
 		json_decode_by_field_to_type(data) {
 			var {dtype} = this;
 		    for (var Field in dtype) {
@@ -880,7 +906,7 @@ export default {
 		        }
 		    }
 		},
-		
+
 		keydown(event) {
 			switch (event.key) {
 			case 'Enter':
@@ -891,28 +917,31 @@ export default {
 				}
 			}
 		},
-		
+
 		toggle_training(self, update, value, index){
 			if (value == null) {
 				var {old_training: training} = self;
 				if (training == null) {
 					var {set} = self.kwargs;
 					if (set) {
-						var {training} = set;
-						if (training != null) {
-							if (index != null && index.isInteger && training[index] != null)
-								training = training[index];
-							else
+						if (index != null && index.isInteger && set[index] != null) {
+							set = set[index];
+							var {training} = set;
+							if (training == null)
 								return;
 						}
+						else
+							return;
 					}
+					else
+						return;
 				}
 				value = training;
 			}
 
 			if (update == null)
 				update = true;
-		
+
 			var {training} = self;
 			var old_training = training;
 			var is_changed = !update;
@@ -920,7 +949,7 @@ export default {
 				training = ~training;
 				is_changed = true;
 			}
-			
+
 			var text_is_changed = false;
 			if (training & 64){
 				training &= -65;
@@ -949,12 +978,12 @@ export default {
 			}
 		},
 	},
-	
+
 	async created() {
 		for (var [key, value] of Object.entries(this.kwargs)) {
 			if (key.contains('.')) {
 				delete this.kwargs[key];
-				
+
 				var kwargs = this.kwargs;
 				var keys = key.split('.');
 				var last_key = keys.pop();
@@ -967,7 +996,7 @@ export default {
 				kwargs[last_key] = value;
 			}
 		}
-		
+
 		this.databases = (await query(this.host, this.token, 'show databases')).map(obj => obj.Database);
 		//console.log(this.databases);
 		var {database} = this;
@@ -975,7 +1004,7 @@ export default {
 			this.show_tables(database);
 		//console.log(this.kwargs);
 	},
-	
+
 	mounted() {
 		var {mounted} = this.$parent;
 		if (mounted)
@@ -988,7 +1017,7 @@ export default {
 			case 'Home':
 				if (!event.ctrlKey)
 					break;
-				
+
 				var {activeElement, mysql} = document;
 				if (mysql.contains(activeElement)) {
 					mysql.querySelector('select.cmd').focus();
@@ -997,7 +1026,7 @@ export default {
 
 				mysql.querySelector('input[type=text]').focus();
 				break;
-				
+
 			case 'ArrowRight':
 				var select = event.target;
 				if (event.ctrlKey) {
@@ -1011,13 +1040,13 @@ export default {
 			}
 		});
 	},
-	
+
 	unmounted() {
 		var {mounted} = this.$parent;
 		if (mounted && 'mysql' in mounted)
 			mounted.mysql = 0;
 	},
-	
+
 	directives: {
 		cmd: {
 		    // after dom is inserted into the document
@@ -1028,10 +1057,10 @@ export default {
 		    	if (!mounted[className]) {
 		    		mounted[className] = 0;
 		    	}
-		    	
+
 		    	++mounted[className];
 		    },
-		    
+
 		    unmounted(el, binding) {
 		    	var {className} = el;
 		    	var {mounted} = binding.instance;

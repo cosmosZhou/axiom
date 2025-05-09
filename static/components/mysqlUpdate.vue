@@ -7,7 +7,7 @@
 		</template>
 		<select class=cmd v-model=$parent.cmd>
 			<option v-for="value of cmds" :value=value>{{value}}</option>
-		</select>{{' '}} 
+		</select>{{' '}}
 		<template v-if=join_type>
 			<template v-if=join_table[0].join>
 				<mysqlLeaf :name="'update[join][0]'" :value=join_table[0].join[0]></mysqlLeaf>
@@ -20,7 +20,7 @@
 				<mysqlExpr v-else-if=join_table[0].on :name="'update[on]'" :value="join_table[0].on"></mysqlExpr>
 			</template>
 			<mysqlDot v-else :name="'update'" :value=join_table[0]></mysqlDot>
-		
+
 			<select class=join_type v-model=join_type>
 				<option v-for="value of ['inner', 'cross', 'left', 'right', 'full']" :value=value>{{value}}</option>
 			</select><font color=blue> join </font>
@@ -43,36 +43,36 @@
 			{{' '}}
 			<mysqlOrder :noSpace=true></mysqlOrder>
 		</template>
-		
+
 		<template v-if="'limit' in value">
 			<font color=blue> limit </font>
-			<mysqlLeaf :name="'limit'" :value=value.limit :noSpace=true></mysqlLeaf>	
+			<mysqlLeaf :name="'limit'" :value=value.limit :noSpace=true></mysqlLeaf>
 		</template>
-		
+
 		<template v-if="'offset' in value">
 			<font color=blue> offset </font>
-			<mysqlLeaf :name="'offset'" :value=value.offset :noSpace=true></mysqlLeaf>	
+			<mysqlLeaf :name="'offset'" :value=value.offset :noSpace=true></mysqlLeaf>
 		</template>
-		
+
 		<br><br>
 		<a :href=href_select title="click here to view the old data before transformation" target=oldData>view old data</a>
 		&nbsp;&nbsp;&nbsp;&nbsp;<a :href=href_update title="batch execute" target=execute>batch execute</a>&nbsp;
-		<label>sample =  
+		<label>sample =
 			<input type=text name=sample v-model=sample :size="sample? sample.toString().length + 2: 5">
 		</label>
 		<button type=button class=transparent @click=click_execute><u>execute</u></button>
 		<input type=checkbox v-model=execute />&nbsp;&nbsp;
 		<button type=button class=transparent @click=click_repeat><u>repeat</u></button>
 		<input type=checkbox v-model=repeat />
-		
+
 		<template v-if=fieldsForLabelling.length>
 			&nbsp;&nbsp;&nbsp;
 			<select v-model=fieldForLabelling>
 				<option v-for="field of fieldsForLabelling" :value=field>{{field}}</option>
 			</select>
 			<button type=button class=transparent @click=click_labelling :title="`labelling ${fieldForLabelling} semi-automatically`"><u>auto-labelling</u></button>
-		</template> 
-		
+		</template>
+
 	</span>
 </template>
 
@@ -87,16 +87,16 @@ console.log('import mysqlUpdate.vue');
 
 export default {
 	components: {mysqlLeaf, mysqlDot, mysqlExpr, mysqlGroup, mysqlOrder},
-	
+
 	props : ['table', 'limit', 'offset', 'kwargs'],
-	
+
 	data() {
 		var {$data} = this.$parent;
 		$data.fieldForLabelling = null;
 		return $data;
 	},
 
-	created(){
+	created() {
 		var {value} = this;
 		var {set} = value;
 		if (set.eq && !set.eq[0]) {
@@ -104,14 +104,14 @@ export default {
 			this.fieldForLabelling = setter;
 			console.log({setter, functor});
 		}
-		
+
 		if (!value.where)
 			value.where = {};
 	},
-	
+
 	computed: {
 		repeat: {
-			get(){
+			get() {
 				var {kwargs} = this.kwargs;
 				if (kwargs)
 					return kwargs.execute == 'repeat';
@@ -134,7 +134,7 @@ export default {
 		},
 
 		execute: {
-			get(){
+			get() {
 				var {kwargs} = this.kwargs;
 				if (kwargs)
 					return kwargs.execute? true : false;
@@ -184,16 +184,16 @@ export default {
 			var {value: {update}} = this;
 			if (update.inner_join || update.join)
 				return 'inner';
-			
+
 			if (update.left_join)
 				return 'left';
-			
+
 			if (update.right_join)
 				return 'right';
-			
+
 			if (update.cross_join)
 				return 'cross';
-			
+
 			if (update.full_join)
 				return 'full';
 		},
@@ -215,7 +215,7 @@ export default {
 		change_table() {
 			return this.$parent.change_table;
 		},
-		
+
 		change_database() {
 			return this.$parent.change_database;
 		},
@@ -223,7 +223,7 @@ export default {
 		cmds() {
 			return this.$parent.cmds;
 		},
-		
+
 		host() {
 			return this.$parent.host;
 		},
@@ -231,7 +231,7 @@ export default {
 		user() {
 			return this.$parent.user;
 		},
-		
+
 		token() {
 			return this.$parent.token;
 		},
@@ -239,11 +239,11 @@ export default {
 		is_leaf() {
 			return this.$parent.is_leaf;
 		},
-		
+
 		numericFields() {
 			return this.$parent.numericFields;
 		},
-		
+
 		textualFields() {
 			return this.$parent.textualFields;
 		},
@@ -251,7 +251,7 @@ export default {
 		numeric_function_regexp() {
 			return this.$parent.numeric_function_regexp;
 		},
-		
+
 		jsonobj_function_regexp() {
 			return this.$parent.jsonobj_function_regexp;
 		},
@@ -263,7 +263,7 @@ export default {
 		is_numeric_function() {
 			return this.$parent.is_numeric_function;
 		},
-		
+
 		is_aggregate_function() {
 			return this.$parent.is_aggregate_function;
 		},
@@ -275,7 +275,7 @@ export default {
 		is_jsonobj_function() {
 			return this.$parent.is_jsonobj_function;
 		},
-		
+
 		is_aggregate_function() {
 			return this.$parent.is_aggregate_function;
 		},
@@ -287,22 +287,22 @@ export default {
 		value() {
 			return this.kwargs;
 		},
-		
+
 		order: {
 			get() {
 				return this.$parent.order;
 			},
-			
+
 			set(order) {
 				this.$parent.order = order;
 			}
 		},
-		
+
 		group: {
 			get() {
 				return this.$parent.group;
 			},
-			
+
 			set(order) {
 				this.$parent.group = group;
 			}
@@ -318,26 +318,26 @@ export default {
 						labellingType[field] = 'syntax';
 				}
 			}
-			
+
 			var {style} = this;
 			for (var field in style) {
 				labellingType[field] = 'entity';
 			}
-			
+
 			return labellingType;
-			
+
 		},
-		
+
 		fieldsForLabelling() {
 			return Object.keys(this.autoLabellingType);
 		},
-		
+
 		href_select() {
 			var {sample, host, transform, kwargs} = this;
 			var url = [];
 			if (host && host != 'localhost')
 				url.push(`host=${host}`);
-			
+
 			kwargs = {...kwargs};
 			kwargs.from = kwargs.update;
 			delete kwargs.update;
@@ -355,7 +355,7 @@ export default {
 
 			delete kwargs.set;
 			if (set.isArray) {
-				
+
 			}
 			else {
 				var {functor, setter, old, new: $new} = this;
@@ -365,16 +365,16 @@ export default {
 					and.push({regexp});
 				}
 			}
-			
+
 			kwargs.where = {and};
 			url.push(...piece_together(kwargs));
 			if (sample)
 				url.push(`sample=${sample}`);
-			
+
 			for (var Field in transform) {
 				url.push(`transform[${Field}]=${transform[Field]}`);
 			}
-			
+
 			return 'query.php?' + url.join('&');
 		},
 
@@ -383,11 +383,11 @@ export default {
 			var url = [];
 			if (host && host != 'localhost')
 				url.push(`host=${host}`);
-			
+
 			url.push(...piece_together(kwargs));
 			if (sample)
 				url.push(`sample=${sample}`);
-			
+
 			for (var Field in transform) {
 				url.push(`transform[${Field}]=${transform[Field]}`);
 			}
@@ -403,23 +403,23 @@ export default {
 		change_input() {
 			return this.$parent.change_input;
 		},
-		
+
 		style_select_table() {
 			return this.$parent.style_select_table;
 		},
-		
+
 		style_select() {
 			return this.$parent.style_select;
 		},
-		
+
 		style_input() {
 			return this.$parent.style_input;
 		},
-		
+
 		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
-		
+
 		PRI() {
 			return this.$parent.PRI;
 		},
@@ -438,22 +438,22 @@ export default {
 						return '';
 					}
 				}
-				
+
 				var where_dict = this.where_dict(this.value.where, true);
 				var args = [this.setter, '', ''];
 				if (where_dict[this.setter]) {
 					args[1] = where_dict[this.setter].regexp[1];
 				}
-				
+
 				set.eq = [this.setter, {regexp_replace: args}];
 				return 'regexp_replace';
 			},
-			
+
 			set(functor){
 				if (this.functor == functor) {
 					return;
 				}
-				
+
 				var {set} = this.kwargs;
 				if (set) {
 					var [lhs, rhs] = set.eq;
@@ -476,7 +476,7 @@ export default {
 				}
 			},
 		},
-		
+
 		old: {
 			get() {
 				var {set: {eq: [lhs, rhs]}} = this.kwargs;
@@ -492,7 +492,7 @@ export default {
 			set(old){
 			},
 		},
-		
+
 		new: {
 			get() {
 				var {set: {eq: [lhs, rhs]}} = this.kwargs;
@@ -504,11 +504,11 @@ export default {
 					}
 				}
 			},
-			
+
 			set(val){
 			},
 		},
-		
+
 		setter: {
 			get() {
 				var {set} = this.kwargs;
@@ -523,7 +523,7 @@ export default {
 					}
 				}
 			},
-			
+
 			set(setter) {
 				var {set} = this.kwargs;
 				if (set) {
@@ -540,7 +540,7 @@ export default {
 			},
 		},
 	},
-	
+
 	methods: {
 		delete(child) {
 			var {set} = this.value;
@@ -569,11 +569,11 @@ export default {
 
 			if (fieldsToSet.length == 1)
 				return fieldsToSet[0];
-			
+
 			if (fieldsToSet.length == 0) {
 				return 'text';
 			}
-			
+
 			for (var field of fieldsToSet) {
 				if (field in transform)
 					return field;
@@ -585,21 +585,21 @@ export default {
 						return field;
 				}
 			}
-			
+
 			for (var field of fieldsToSet) {
 				if (!field.fullmatch(/lang|training/))
 					return field;
 			}
-			
+
 			return fieldsToSet[0];
 		},
-		
+
 		regexp_replace_operator_name(Field) {
 			if (this.primary_key)
 				return `operator[regexp_replace]${this.primary_key}[${Field}]`;
 			return `operator[regexp_replace][${Field}]`;
 		},
-		
+
 		change_setter(event){
 			var setter = event.target.value;
 			if (this.style[setter]) {
@@ -614,19 +614,19 @@ export default {
 			this.execute = !this.execute;
 			event.preventDefault();
 		},
-		
+
 		click_repeat(event) {
 			this.repeat = !this.repeat;
 			event.preventDefault();
 		},
-		
+
 		input_operator(event){
 			var {name, value} = event.target;
 			name = name.split(/[\[\]]+/);
 			name = name.slice(1, -1);
 			setitem(this.operator, ...name, value);
 		},
-		
+
 		keydown(event) {
 			switch (event.key) {
 			case 'ArrowRight':
@@ -637,20 +637,20 @@ export default {
 					if (name != 'new'){
 						break;
 					}
-					
+
 					var functor = input.previousElementSibling.previousElementSibling.previousElementSibling.value;
 					if (functor != 'regexp_replace')
 						break;
-					
+
 					var setter = input.previousElementSibling.previousElementSibling.value;
-					
+
 					if (!this.operator.regexp_replace) {
 						this.operator.regexp_replace = {};
 					}
-					
+
 					if (!this.operator.regexp_replace[setter])
 						this.operator.regexp_replace[setter] = 'c';
-					
+
 					this.$nextTick(() => {
 						input.nextElementSibling.focus();
 					});
@@ -658,7 +658,7 @@ export default {
 				break;
 			}
 		},
-		
+
 		click_labelling(event) {
 			var {table, fieldForLabelling:setter, autoLabellingType} = this;
 			autoLabellingType = autoLabellingType[setter];
@@ -670,22 +670,22 @@ export default {
 				var url = `index.php?vue=${autoLabellingType}Labelling&table=${table}&setter=${setter}&textField=text`;
 				break;
 			}
-			
+
 			if (this.execute)
 				url += "&execute=true";
-			
+
 			window.open(url, "_self", "toolbar=yes");
 		},
-		
+
 		input_select(event) {
 			var {target} = event;
 			var $new = target.value;
 			var {kwargs} = this;
-			
+
 			if (target.name.startsWith('set')) {
 				var {set} = kwargs;
 				if (set.isArray) {
-					
+
 				}
 				else {
 					var {eq} = set;
@@ -723,7 +723,7 @@ export default {
 			}
 		},
 	},
-	
+
 	mounted() {
 	},
 }

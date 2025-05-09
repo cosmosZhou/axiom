@@ -1,12 +1,12 @@
 <template>
 	<li :style=li_style>
-   		<searchLink :data="{module}"></searchLink>
+   		<searchLink :data=data></searchLink>
    		<template v-if=modules>
    			<button class=transparent @click=click :title=buttonTitle>{{buttonText}}</button>
    		 	<ul v-if=show>
    	 			<hierarchyModule v-for="module, i of modules" :module=module :ref="el => children[i] = el"></hierarchyModule>
    			</ul>
-		</template>				
+		</template>
     </li>
 </template>
 
@@ -43,10 +43,23 @@ export default {
 					this.show = true;
 				}
 			}
-		}			
+		}
 	},
 	
 	computed: {
+		keyInput() {
+			return this.$parent.keyInput;
+		},
+
+		data() {
+			var data = {module: this.module};
+			if (this.keyInput == 'callee' && !this.$parent.graph) {
+				var {module} = this.$parent;
+				data.line = module.slice(module.indexOf('.') + 1);
+			}
+			return data;
+		},
+
 		deep: {
 			/*get() {
 				return 0;	
@@ -84,7 +97,7 @@ export default {
 		},
 		
 		buttonText() {
-			return this.show? '<<<<' : '>>>>';
+			return this.show? '«««' : '»»»';
 		},
 		
 		buttonTitle() {

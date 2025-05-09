@@ -654,7 +654,7 @@ function ajaxForm(form, message, button) {
 		}
 	}
 	data = data.join('&');
-	
+
 	var url = form.action;
 	if (!/post/i.test(form.method)) {
 		url = url.replace(/\?.*/, '') + '?' + data;

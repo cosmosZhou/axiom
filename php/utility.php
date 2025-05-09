@@ -108,23 +108,6 @@ function retrieve_all_dependency()
     }
 }
 
-function analyze_apply($lean, &$i)
-{
-    $count = count($lean);
-    $provability = null;
-    for (; $i < $count; ++$i) {
-        $statement = $lean[$i];
-        if (is_def_start('prove', $statement))
-            break;
-
-        if (preg_match('/^@prove(.+)/', $statement, $matches)) {
-            if (preg_match('/^\((.+)=(.+)\)/', $matches[1], $matches))
-                $provability = $matches[1];
-        }
-    }
-
-    return $provability;
-}
 
 function detect_axiom(&$statement)
 {
@@ -157,53 +140,11 @@ function detect_axiom_given_theorem(&$theorem, &$statement)
     return detect_axiom($statement);
 }
 
-function match_section($statement, &$matches)
-{
-    return preg_match_all('/\b(?:Algebra|Set|Calculus|Discrete|Geometry|Neuro|Probability)(?:\.\w+)+/', $statement, $matches, PREG_SET_ORDER);
-}
-
 function has_unterminated_parantheses($statement)
 {
     return substr_count($statement, "(") > substr_count($statement, ")");
 }
 
-function insert_section(&$proveCodes)
-{
-    $from_axiom_import = determine_section($proveCodes);
-    if ($from_axiom_import != "") {
-        if (is_array($proveCodes)) {
-            std\array_insert($proveCodes, 0, $from_axiom_import);
-        } else {
-            $proveCodes = "$from_axiom_import\n$proveCodes";
-        }
-    }
-    return $proveCodes;
-}
-
-function determine_section($proveCodes)
-{
-    if (is_array($proveCodes)) {
-        $proveCodes = implode("\n", $proveCodes);
-    }
-
-    $section = [];
-
-    if (match_section($proveCodes, $matches)) {
-        foreach ($matches as $module) {
-            $section[] = explode(".", $module[0])[0];
-        }
-    }
-
-    if (! count($section)) {
-        return "";
-    }
-
-    $section = new std\Set($section);
-    $section = $section->jsonSerialize();
-    $section = implode(", ", $section);
-    $section = "from Axiom import $section";
-    return $section;
-}
 
 function split_module($theorem)
 {
@@ -508,7 +449,7 @@ function select_lemma_by_regex($user, $regex, $binary = false, $limit = 100)
     else
         $binary = '';
 
-    $sql = "select module from lemma where user = '$user' and module regexp '$regex' $binary limit $limit";
+    $sql = "select module from lemma where user = '$user' and module regexp \"$regex\" $binary limit $limit";
     return get_rows($sql);
 }
 
@@ -520,7 +461,7 @@ function select_lemma_by_like($user, $keyword, $binary = false, $limit = 100)
         $binary = " ";
 
     $keyword = str_replace('_', '\_', $keyword);
-    $sql = "select module from lemma where user = '$user' and module like$binary'%$keyword%' limit $limit";
+    $sql = "select module from lemma where user = '$user' and module like$binary\"%$keyword%\" limit $limit";
     return get_rows($sql);
 }
 
@@ -599,7 +540,7 @@ EOT;
 
 function fetch_from_mysql($user, $module)
 {
-    foreach (get_rows("select * from lemma where user = '$user' and module = '$module'") as $code) {
+    foreach (get_rows("select * from lemma where user = '$user' and module = \"$module\"") as $code) {
         return $code;
     }
 }
@@ -611,7 +552,7 @@ function select_hierarchy($user, $module, $reverse = false)
             yield $result;
     }
     else {
-        foreach (get_rows("select imports from lemma where user = '$user' and module = '$module'", MYSQLI_NUM) as [$result])
+        foreach (get_rows("select imports from lemma where user = '$user' and module = \"$module\"", MYSQLI_NUM) as [$result])
             foreach (json_decode($result) as &$result) {
                 if (preg_match('/^Axiom\.(.+)/', $result, $matches)) {
                     $result = $matches[1];
@@ -658,10 +599,10 @@ function delete_from_lemma($user, $old, $regex = false)
 {
     if ($regex) {
         // using regex engine;
-        $sql = "delete from lemma where user = '$user' and module regexp '^$old'";
+        $sql = "delete from lemma where user = '$user' and module regexp \"^$old\"";
         $rows_affected = mysql\execute($sql);
     } else {
-        $sql = "delete from lemma where user = '$user' and module = '$old'";
+        $sql = "delete from lemma where user = '$user' and module = \"$old\"";
         $rows_affected = mysql\execute($sql);
     }
 
@@ -673,9 +614,9 @@ function update_axiom($user, $old, $new, $is_folder = false)
 {
     if ($is_folder) {
         $old_regex = str_replace('.', "\\.", $old);
-        $sql = "update lemma set module = regexp_replace(module, '^$old_regex\.(.+)', '$new.$1') where user = '$user' and module like '$old.%'";
+        $sql = "update lemma set module = regexp_replace(module, \"^$old_regex\.(.+)\", \"$new.$1\") where user = '$user' and module like \"$old.%\"";
     } else {
-        $sql = "update lemma set module = '$new' where user = '$user' and module = '$old'";
+        $sql = "update lemma set module = \"$new\" where user = '$user' and module = \"$old\"";
     }
 
     // error_log("sql = $sql");
@@ -690,7 +631,7 @@ function update_lemma($user, $old, $new, $is_folder, $fn)
         $old_regex = str_replace('.', "\\.", $old);
 
         $replaceDict = [];
-        foreach (get_rows("select module from lemma where user = '$user' and module like '$old.%'", MYSQLI_NUM) as [$axiom]) {
+        foreach (get_rows("select module from lemma where user = '$user' and module like \"$old.%\"", MYSQLI_NUM) as [$axiom]) {
             $oldAxiom = $axiom;
             $newAxiom = preg_replace("/^$old_regex\.(.+)/", "$new.$1", $oldAxiom);
 

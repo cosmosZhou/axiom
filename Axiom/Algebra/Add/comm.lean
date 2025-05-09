@@ -1,6 +1,10 @@
 import Axiom.Basic
 
 
+/--
+This lemma asserts the commutativity of the addition operation in an additive commutative magma (`AddCommMagma`). 
+It demonstrates that for any two elements `a` and `b` in the magma, the sum `a + b` is equal to `b + a`, a property inherent to the structure's algebraic definition.
+-/
 @[main]
 private lemma main
   [AddCommMagma α]
@@ -12,3 +16,4 @@ private lemma main
 
 
 -- created on 2024-07-01
+-- updated on 2025-04-04

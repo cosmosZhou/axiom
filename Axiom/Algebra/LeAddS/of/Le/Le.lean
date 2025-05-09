@@ -17,8 +17,9 @@ private lemma main
   a + x ≤ b + y := by
 -- proof
   have h₂ := LeAddS.of.Le h₀ x
-  have h₃ := LeAddS.of.Le h₁ b true
+  have h₃ := LeAddS.of.Le.left h₁ b
   apply Le.of.Le.Le h₂ h₃
 
 
 -- created on 2024-11-25
+-- updated on 2025-04-30

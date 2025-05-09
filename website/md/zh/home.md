@@ -42,8 +42,8 @@
 [数学归纳法](../?module=Algebra.Ne_0.Imply.to.Ne_0.induct)的证明；
 * [Set](../?module=Set) 集合论, 即sets theory，集合论是整个数学分析、数学推导系统的理论核心；比如
 [容斥原理](../?module=Set.CardUnion.eq.Sub_.AddCards.CardIntersect.principle.inclusion_exclusion)的证明。
-* [Geometry](../?module=Geometry) 几何学，包含不少三角函数恒等式，比如
-[和差化积](../?module=Geometry.Cos.eq.Add)，[积化和差](../?module=Geometry.Mul.eq.Add.Sin)，等等。
+* [Trigonometry](../?module=Trigonometry) 几何学，包含不少三角函数恒等式，比如
+[和差化积](../?module=Trigonometry.Cos.eq.Add)，[积化和差](../?module=Trigonometry.Mul.eq.Add.Sin)，等等。
 * [Calculus](../?module=Calculus) 微积分，主要包含以下内容： 
 [极限定义](../?module=Calculus.Eq_Limit.to.Any.All.limit_definition) 及其理论；
 [分部积分](../?module=Calculus.Integral.eq.Add.by_parts) 定理；
@@ -68,7 +68,7 @@
 
 ![](png/national_emblem.png)
 [<font size=2>浙公网安备33060202000937号</font>](http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33060202000937)
-[<font size=2>浙ICP备20017509号-5</font>](https://beian.miit.gov.cn/)
+[<font size=2>浙ICP备20017509号-3</font>](https://beian.miit.gov.cn/)
 
 <script type=module>
 	$('#count').innerHTML = await get("../php/request/count.php");

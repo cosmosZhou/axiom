@@ -1,5 +1,6 @@
-import Axiom.Algebra.All_EqFunS.of.All_Eq
-open Algebra
+import stdlib.List.Vector
+import Axiom.Logic.All_EqFunS.of.All_Eq
+open Logic
 
 
 @[main]
@@ -9,14 +10,14 @@ private lemma main
   (h : s is constant)
   (f : α → β) :
 -- imply
-  s.map f is constant := by
+  (s.map f) is constant := by
 -- proof
   induction s with
-  | nil => 
+  | nil =>
     simp [IsConstant.is_constant]
   | cons =>
     simp [IsConstant.is_constant]
-    exact All_EqFunS.of.All_Eq h
+    exact All_EqFunS.of.All_Eq.list h
 
 
 -- created on 2024-07-01

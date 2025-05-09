@@ -1,8 +1,8 @@
 import Axiom.Algebra.Div.eq.AddDiv___Mod
-import Axiom.Algebra.GeDivS.of.Gt_0
+import Axiom.Algebra.Div.ge.EDiv.of.Gt_0
 import Axiom.Algebra.Div.lt.One.of.Gt_0
 import Axiom.Algebra.Lt_Add.of.Eq_Add.Lt
-import Axiom.Algebra.EqFloor.equ.Le.et.Lt
+import Axiom.Algebra.EqFloor.is.Le.et.Lt
 open Algebra
 
 
@@ -15,9 +15,9 @@ private lemma main
   n / d = ⌊n / (d : ℚ)⌋ := by
 -- proof
   apply Eq.symm
-  rw [EqFloor.equ.Le.et.Lt]
+  rw [EqFloor.is.Le.et.Lt]
   constructor
-  exact GeDivS.of.Gt_0 h
+  exact Div.ge.EDiv.of.Gt_0 h
   have h_Eq := Div.eq.AddDiv___Mod (n := n) (d := d)
   have := Div.lt.One.of.Gt_0 (n := n) h
   exact Lt_Add.of.Eq_Add.Lt h_Eq this

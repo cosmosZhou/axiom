@@ -1,7 +1,9 @@
 <template>
     <div class=lemma>
         <template v-if=comment>
-            <span class=green>-- </span><input class=green :name="`lemma[${index}][comment]`" v-model=comment :size="comment.length + 1" />
+            <span class=green>/--</span><br>
+            <textarea class=green :name="`lemma[${index}][comment]`" :value=comment :rows=comment_rows :cols=comment_cols @keydown=keydown_textarea></textarea>
+            <span class=green>-/</span>
             <br>
         </template>
         <template v-if=attribute>
@@ -13,46 +15,48 @@
             <option v-for="value of accessibilities" :value=value>{{value}}</option>
         </select>
 
-        <span v-clipboard class=blue :data-clipboard-text=leanFile>lemma</span> <input class=orange :name="`lemma[${index}][name]`" :value=name :size="name.length + 1" />
+        <span v-clipboard class=blue :data-clipboard-text=leanSourceCode>lemma</span> <input class=orange :name="`lemma[${index}][name]`" :value=name :size="name.length + 1" @keydown=keydown_input :title=leanSourceCode />
         {{ instImplicit || strictImplicit || implicit || given || explicit? '': ':'}}
-        <renderLean v-if=instImplicit :text=instImplicit :index="[index, 'instImplicit']"></renderLean>
-        <renderLean v-if=strictImplicit :text=strictImplicit :index="[index, 'strictImplicit']"></renderLean>
+        <renderLean v-if=instImplicit :text="given || explicit || strictImplicit || implicit? instImplicit: instImplicit + ' :'" :index="[index, 'instImplicit']"></renderLean>
+        <renderLean v-if=strictImplicit :text="given || explicit || implicit? strictImplicit: strictImplicit + ' :'" :index="[index, 'strictImplicit']"></renderLean>
         <renderLean v-if=implicit :text="given || explicit? implicit: implicit + ' :'" :index="[index, 'implicit']"></renderLean>
 
         <div v-if=given>
             <hr>
             <span v-clipboard class=green :data-clipboard-text=module :index=index><b>-- given</b></span>
-            <div v-for="given, i of given" @keydown=keydown @click.left.stop=click_select :index=i :class="class_given(i)" tabindex="1000">
+            <div v-for="given, i of given" @keydown=keydown_div @click.left.stop=click_select :index=i :class="class_given(i)" tabindex="1000">
                 <renderLean v-if=given.insert :text=given.lean :index="[index, 'given', i]"></renderLean>
                 <template v-else>
                     <p v-latex.block=given.latex></p>
                     <input type=hidden :name="`lemma[${index}][given][${i}]`" :value=given.lean />
                 </template>
+                <markdown v-if=given.think :root=given.think.root v-clipboard :data-clipboard-text=given.prompt />
             </div>
         </div>
 
         <renderLean v-if=explicit :text=explicit :index="[index, 'explicit']"></renderLean>
         <hr>
         <a style='font-size: inherit' :href="module? `?callee=${module}`: `?q=${name}&fullText=on`" title='callee hierarchy'>
-            <span class=green><b>-- imply</b></span>
+            <span v-clipboard class=green :data-clipboard-text=module><b>-- imply</b></span>
         </a>
-        <div @keydown=keydown @click.left.stop=click_select :class=class_imply tabindex="1000">
+        <div @keydown=keydown_div @click.left.stop=click_select :class=class_imply tabindex="1000">
             <renderLean v-if=imply.insert :text=imply.lean :index="[index, 'imply']"></renderLean>
             <template v-else>
                 <p v-latex.block=imply.latex></p>
                 <input type=hidden :name="`lemma[${index}][imply]`" :value=imply.lean />
             </template>
+            <markdown v-if=imply.think :root=imply.think.root v-clipboard :data-clipboard-text=imply.prompt />
         </div>
         <template v-if=proof>
             <hr>
-            <a style='font-size: inherit' :href="`?caller=${module}`" title='caller hierarchy'>
+            <a style='font-size: inherit' :href="`?caller=${module}`" title='caller hierarchy' target="_blank">
                 <span class=green><b>-- proof</b></span>
             </a>
 
             <template v-for="(code, i) in get_proof_list(proof)" :key=refresh>
                 <renderLean :text=code.lean :index="get_index(index, i)"></renderLean>
                 <p v-latex.block=gather(code.latex)></p>
-                <span v-if=code.think v-html=code.think v-clipboard></span>
+                <markdown v-if=code.think :root=code.think.root v-clipboard :data-clipboard-text=code.prompt />
             </template>
         </template>
     </div>
@@ -60,12 +64,12 @@
 
 <script>
 import renderLean from "./renderLean.vue"
-import { fetch_code } from "../js/lemma.js"
+import markdown from "./markdown.vue"
 console.log('import lemma.vue');
-const accessibilities = ['public', 'protected', 'private'];
+const accessibilities = ['public', 'protected', 'private', 'noncomputable'];
 
 export default {
-    components: { renderLean },
+    components: { renderLean, markdown },
     props : [ 'comment', 'attribute', 'accessibility', 'name', 'instImplicit', 'strictImplicit', 'implicit', 'given', 'explicit', 'imply', 'proof', 'index'],
     
     created() {
@@ -73,11 +77,22 @@ export default {
     
     data() {
         return {
+            postname: 'lemma',
             accessibilities,
         };
     },
     
     computed: {
+        comment_rows() {
+            var {comment} = this;
+			return comment.split('\n').length;
+		},
+		
+		comment_cols() {
+            var {comment} = this;
+			return max(comment.split('\n').map(arg => max(arg.length, 200)));
+		},
+
         lemma() {
             return this.$parent.lemma[this.index];
         },
@@ -128,8 +143,8 @@ export default {
             return section;
         },
 
-        leanFile() {
-            return this.$parent.leanFile;
+        leanSourceCode() {
+            return this.$parent.leanSourceCode(this.index);
         },
     },
 
@@ -140,6 +155,14 @@ export default {
     },
 
     methods: {
+        save() {
+            this.$parent.save();
+        },
+
+        new_file() {
+            this.$parent.new_file();
+        },
+
         gather(latex) {
             if (latex && latex.isArray) {
                 latex = latex.join(' \\\\\n');
@@ -150,18 +173,8 @@ ${latex}
             return latex;
         },
 
-        code_generation(code, i) {
-            var {index} = this;
-            var self = this.$parent;
-            var codes = ranged(index).map(i => fetch_code(self.lemma[i]));
-            var lemma = self.lemma[index];
-            codes.push(fetch_code(lemma, code));
-            var {proof} = lemma;
-            var by = proof.by ? 'by' : (proof.calc ? 'calc' : '');
-            index = [index, 'proof'];
-            if (by)
-                index.push(by);
-            self.code_generation(codes.join("\n\n\n"), ...index, i);
+        code_generation(indices, line) {
+            this.$parent.code_generation(indices, line);
         },
 
         async Escape(code, indices) {
@@ -255,7 +268,7 @@ ${latex}
             console.log('click_select(event) in lemma.vue', this.selectedIndex);
         },
 
-        async keydown(event) {
+        async keydown_div(event) {
             var {key, target} = event;
             switch (key) {
             case 'Insert':
@@ -294,9 +307,20 @@ ${latex}
                 var {index, given} = this;
                 if (target.tagName == 'TEXTAREA')
                     return;
-                var p = target.tagName == 'MJX-CONTAINER'? target.parentElement: target;
-                var div = p.parentElement;
-                var i = div.getAttribute('index');
+                if (target.className == 'focus' && target.parentElement.className == 'lemma') {
+                    var {lemma} = this.$parent;
+                    if (lemma.length > 1) {
+                        lemma.delete(index);
+                        this.$parent.renderLean.clear();
+                        this.$parent.refresh = true;
+                        if (lemma.length == 1)
+                            lemma[0].name = 'main';
+                    }
+                    return;
+                }
+                if (!given)
+                    return;
+                var i = target.getAttribute('index');
                 given.delete(i);
                 if (given.length == i) {
                     var back = given.back();
@@ -317,8 +341,9 @@ ${latex}
                                 key = 'instImplicit';
                             else
                                 return;
-                            lemma[key] += ' :';
-                            this.renderLean[index][key].editor.setValue(lemma[key]);
+                            var word = ' :';
+                            lemma[key] += word;
+                            this.renderLean[index][key].append(word);
                         }
                     }
                 }
@@ -326,6 +351,45 @@ ${latex}
             case 'F5':
                 console.log('F5');
                 event.preventDefault();
+                break;
+            }
+        },
+
+        async keydown_input(event) {
+            var {key, target} = event;
+            switch (key) {
+            case 'Enter':
+                var {selectionStart, selectionEnd, value} = target;
+                if (selectionStart == selectionEnd && value.length == selectionStart) {
+                    var {lemma} = this.$parent;
+                    if (!lemma[this.index].instImplicit)
+                        lemma[this.index].instImplicit = "[]";
+                }
+                event.preventDefault();
+                break;
+            case 'W':
+                if (event.altKey)
+                    this.openContainingFolder();
+                break;
+            }
+        },
+
+        openContainingFolder() {
+            this.$parent.openContainingFolder();
+        },
+
+        async keydown_textarea(event) {
+            var {key, target} = event;
+            switch (key) {
+            case 's':
+                if (event.ctrlKey) {
+                    this.save();
+                    event.preventDefault();
+                }
+                break;
+            case 'W':
+                if (event.altKey)
+                    this.openContainingFolder();
                 break;
             }
         },
@@ -406,4 +470,24 @@ div.focus {
     /* background-color: white; */
 }
 
+textarea{
+	font-style: normal;
+	font-size: 1em;
+	font-weight: normal;
+	font-family: Consolas;
+
+	background: transparent;
+	resize: none;
+	border: none;
+	border-style: none;
+	padding: 0px 0px 0px 0px;
+	
+	display: block;
+	overflow: hidden;
+}
+
+textarea:focus {
+	outline: none;
+	caret-color: rgb(127, 0, 85);
+}
 </style>

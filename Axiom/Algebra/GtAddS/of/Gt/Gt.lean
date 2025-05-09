@@ -17,8 +17,9 @@ private lemma main
   a + x > b + y := by
 -- proof
   have h₂ := GtAddS.of.Gt h₀ x
-  have h₃ := GtAddS.of.Gt h₁ b true
+  have h₃ := GtAddS.of.Gt.left h₁ b
   apply Gt.of.Gt.Gt h₂ h₃
 
 
 -- created on 2024-11-25
+-- updated on 2025-04-30

@@ -3,8 +3,7 @@ open Algebra
 
 
 @[main]
-private lemma main
-  -- [OrderedAddCommGroup α]
+private lemma left
   [Add α]
   [LT α]
   [AddLeftStrictMono α]
@@ -12,20 +11,28 @@ private lemma main
   {b c : α}
 -- given
   (h : b > c)
-  (a : α)
-  (left: Bool := false) :
+  (a : α) :
 -- imply
-  match left with
-  | true =>
-    a + b > a + c
-  | false =>
-    b + a > c + a :=
+  a + b > a + c :=
 -- proof
-  match left with
-  | true =>
-    LtAddS.of.Lt h a true
-  | false =>
-    LtAddS.of.Lt h a
+  LtAddS.of.Lt.left h a
+
+
+@[main]
+private lemma main
+  [Add α]
+  [LT α]
+  [AddLeftStrictMono α]
+  [AddRightStrictMono α]
+  {b c : α}
+-- given
+  (h : b > c)
+  (a : α) :
+-- imply
+  b + a > c + a :=
+-- proof
+  LtAddS.of.Lt h a
 
 
 -- created on 2024-07-01
+-- updated on 2025-04-30

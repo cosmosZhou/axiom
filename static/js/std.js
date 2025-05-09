@@ -7,7 +7,7 @@ function argmin(args){
 	else{
 		args = arguments;
 	}
-	
+
 	var min = Infinity;
 	var argmin = -1;
 	for (var index of range(args.length)){
@@ -16,7 +16,7 @@ function argmin(args){
 			argmin = index;
 		}
 	}
-	
+
 	return argmin;
 }
 
@@ -27,7 +27,7 @@ function argmax(args){
 	else{
 		args = arguments;
 	}
-	
+
 	var max = -Infinity;
 	var argmax = -1;
 	for (var index of range(args.length)){
@@ -36,7 +36,7 @@ function argmax(args){
 			argmax = index;
 		}
 	}
-	
+
 	return argmax;
 }
 
@@ -115,7 +115,7 @@ function octet_stream_post(url, data, successCallback, errorCallback) {
 		xhr.sendAsBinary(binary);
 	else
 		xhr.send(binary);
-	
+
 	xhr.onreadystatechange = function(event){
 		if(xhr.readyState===4){
 			if(xhr.status===200){
@@ -188,14 +188,14 @@ function getParameter(name, evaluate) {
 				for (var m of attr.matchAll(/\[([^\[\]]+)\]/g)) {
 					arglist.push(m[1]);
 				}
-				
+
 				if (attrs.length) {
 					if (attrs.equals(arglist))
 						return expr;
 
 					if (attrs.length >= arglist.length || arglist.slice(0, attrs.length).equals(attrs))
 						continue;
-					
+
 					arglist = arglist.slice(attrs.length);
 				}
 				setitem(result, ...arglist, expr);
@@ -223,7 +223,7 @@ function getParameters() {
 			input_kwargs(kwargs, ...tuple.split('='));
 		}
 	}
-	
+
 	return kwargs;
 }
 
@@ -242,33 +242,33 @@ function equals(obj, _obj){
 	if (obj == null){
 		return _obj == null;
 	}
-	
+
 	if (_obj == null){
 		return false;
 	}
-	
+
 	if (Array.isArray(obj)){
 		if (Array.isArray(_obj)){
 			return obj.equals(_obj);
 		}
 		return false;
 	}
-	
+
 	if (Array.isArray(_obj)){
 		return false;
 	}
-	
+
 	if (typeof(obj) === "object"){
 		if (typeof(_obj) === "object"){
 			return dict_equals(obj, _obj);
 		}
 		return false;
 	}
-	
+
 	if (typeof(_obj) === "object"){
 		return false;
 	}
-	
+
 	return obj == _obj;
 }
 
@@ -277,7 +277,7 @@ function dict_equals(dict, _dict){
 	var _keys = Object.keys(_dict);
 	if (keys.length != _keys.length)
 		return false;
-	
+
 	for (let key of keys){
 		if (!_dict.hasOwnProperty(key))
 			return false;
@@ -286,7 +286,7 @@ function dict_equals(dict, _dict){
 			return false;
 		}
 	}
-	
+
 	return true;
 }
 
@@ -303,81 +303,81 @@ Number.prototype.percentage = function() {
 Number.prototype.equals = function(rhs){
 	return this == rhs;
 };
- 
+
 Number.prototype.add = function(rhs){
 	if (rhs.is_Real)
 		return rhs.add(this);
-	
+
 	if (rhs.isBigInt)
 		return BigInt(this) + rhs;
-		
+
 	return this + rhs;
 };
- 
+
 Number.prototype.sub = function(rhs){
 	if (rhs.is_Real)
 		return rhs.neg().add(this);
-		
+
 	if (rhs.isBigInt)
 		return BigInt(this) - rhs;
-		
+
 	return this - rhs;
 };
- 
+
 Number.prototype.mul = function(rhs){
 	if (rhs.is_Real)
 		return rhs.mul(this);
-		
+
 	if (rhs.isBigInt)
 		return BigInt(this) * rhs;
-		
+
 	return this * rhs;
 };
- 
+
 Number.prototype.div = function(rhs){
 	if (rhs.is_Real)
 		return rhs.inverse().mul(BitInt(this));
-		
+
 	return Rational.new(this, rhs);
 };
 
 Number.prototype.gt = function(rhs){
 	if (rhs.is_Real)
 		return rhs.lt(this);
-		
+
 	if (rhs.isBigInt)
 		return BigInt(this) > rhs;
-		
+
 	return this > rhs;
 };
 
 Number.prototype.lt = function(rhs){
 	if (rhs.is_Real)
 		return rhs.gt(this);
-		
+
 	if (rhs.isBigInt)
 		return BigInt(this) < rhs;
-		
+
 	return this < rhs;
 };
 
 Number.prototype.ge = function(rhs){
 	if (rhs.is_Real)
 		return rhs.le(this);
-		
+
 	if (rhs.isBigInt)
 		return BigInt(this) >= rhs;
-		
+
 	return this >= rhs;
 };
 
 Number.prototype.le = function(rhs){
 	if (rhs.is_Real)
 		return rhs.ge(this);
-		
+
 	if (rhs.isBigInt)
 		return BigInt(this) <= rhs;
-		
+
 	return this <= rhs;
 };
 
@@ -416,7 +416,7 @@ Number.prototype.__defineGetter__("isInteger", function() {
 Number.prototype.sign = function() {
 	return Math.sign(this);
 };
-	
+
 Number.prototype.round = function() {
 	return Math.round(this);
 };
@@ -448,10 +448,10 @@ Number.prototype.inverse = function() {
 Number.prototype.clip = function(min, max){
 	if (this.lt(min))
 		return min;
-	
+
 	if (this.gt(max))
 		return max;
-		
+
 	return this;
 };
 
@@ -475,139 +475,139 @@ BigInt.prototype.isBigInt = true;
 BigInt.prototype.equals = function(rhs){
 	if (rhs.is_Real)
 		return false;
-		
+
 	if (!rhs.isBigInt) {
 		if (rhs == Infinity || rhs == -Infinity)
 			return false;
-			
+
 		rhs = BigInt(rhs);
 	}
-		
-	
+
+
 	return this == rhs;
 };
 
 BigInt.prototype.add = function(rhs){
 	if (rhs.is_Real)
 		return rhs.add(this);
-		
+
 	if (!rhs.isBigInt) {
 		if (rhs == Infinity || rhs == -Infinity)
 			return rhs;
-			
+
 		rhs = BigInt(rhs);
 	}
-		
+
 	return this + rhs;
 };
- 
+
 BigInt.prototype.sub = function(rhs){
 	if (rhs.is_Real)
 		return rhs.neg().add(this);
-		
+
 	if (!rhs.isBigInt) {
 		if (rhs == Infinity || rhs == -Infinity)
 			return -rhs;
-			
+
 		rhs = BigInt(rhs);
 	}
-		
+
 	return this - rhs;
 };
- 
+
 BigInt.prototype.mul = function(rhs){
 	if (rhs.is_Real)
 		return rhs.mul(this);
-		
+
 	if (!rhs.isBigInt) {
 		if (rhs == Infinity || rhs == -Infinity)
 			return this.sign() * rhs;
-			
+
 		rhs = BigInt(rhs);
 	}
-		
+
 	return this * rhs;
 };
- 
+
 BigInt.prototype.div = function(rhs){
 	if (rhs.is_Real)
 		return rhs.inverse().mul(this);
-		
+
 	if (!rhs.isBigInt) {
 		if (rhs == Infinity || rhs == -Infinity)
 			return 0;
-			
+
 		rhs = BigInt(rhs);
 	}
-		
+
 	return Rational.new(this, rhs);
 };
 
 BigInt.prototype.gt = function(rhs){
 	if (rhs.is_Real)
 		return rhs.lt(this);
-		
+
 	if (!rhs.isBigInt) {
 		if (rhs == Infinity)
 			return false;
-			
+
 		if (rhs == -Infinity)
 			return true;
-			
+
 		rhs = BigInt(rhs)
 	}
-		
+
 	return this > rhs;
 };
 
 BigInt.prototype.lt = function(rhs){
 	if (rhs.is_Real)
 		return rhs.gt(this);
-		
+
 	if (!rhs.isBigInt) {
 		if (rhs == Infinity)
 			return true;
-			
+
 		if (rhs == -Infinity)
 			return false;
-			
+
 		rhs = BigInt(rhs)
 	}
-		
+
 	return this < rhs;
 };
 
 BigInt.prototype.ge = function(rhs){
 	if (rhs.is_Real)
 		return rhs.le(this);
-		
+
 	if (!rhs.isBigInt) {
 		if (rhs == Infinity)
 			return false;
-			
+
 		if (rhs == -Infinity)
 			return true;
-			
+
 		rhs = BigInt(rhs)
 	}
-		
+
 	return this >= rhs;
 };
 
 BigInt.prototype.le = function(rhs){
 	if (rhs.is_Real)
 		return rhs.ge(this);
-		
+
 	if (!rhs.isBigInt) {
 		if (rhs == Infinity)
 			return true;
-			
+
 		if (rhs == -Infinity)
 			return false;
-			
+
 		rhs = BigInt(rhs)
 	}
-		
+
 	return this <= rhs;
 };
 
@@ -644,7 +644,7 @@ BigInt.prototype.sign = function() {
 		return -1;
 	return 0;
 };
-	
+
 BigInt.prototype.round = function() {
 	return this.float();
 };
@@ -684,10 +684,10 @@ BigInt.prototype.toJSON = function() {
 BigInt.prototype.clip = function(min, max) {
 	if (this.lt(min))
 		return min;
-	
+
 	if (this.gt(max))
 		return max;
-		
+
 	return this;
 };
 
@@ -710,7 +710,7 @@ String.prototype.__defineGetter__("isNumber", function() {
 String.prototype.lang = function() {
 	if (this.match(XRegExp('\\p{Hiragana}')))
 		return 'jp';
-	
+
 	if (this.length <= 2) {
 		if (this.match(XRegExp('\\p{Han}')))
 			return 'cn';
@@ -763,7 +763,7 @@ String.prototype.compareTo = function(that){
 	var lhs = Number(this);
 	if (lhs.isNaN)
 		return this.localeCompare(rhs);
-		
+
 	var rhs = Number(that);
 	if (rhs.isNaN)
 		return this.localeCompare(rhs);
@@ -778,7 +778,7 @@ String.prototype.contains = function(rhs){
 String.prototype.format = function() {
 	var args = arguments;
 	var index = 0;
-	return this.replace(/%s/g,
+	return this.replace(/%[sd]/g,
 		function() {
 			return args[index++];
 		}
@@ -793,14 +793,14 @@ String.prototype.percentage = function() {
 String.prototype.transform = function(regex, transformer){
 	var newText = [];
 	var start = 0;
-	
+
 	for (let m of this.matchAll(regex)){
 		newText.push(this.slice(start, m.index));
 		newText.push(transformer(m));
-	    
+
 		start = m.index + m[0].length;
 	}
-	
+
 	newText.push(this.slice(start));
 	return newText.join('');
 }
@@ -827,7 +827,7 @@ String.prototype.toggleCase = function() {
 			ch = ch.toLowerCase();
 		array.push(ch);
 	}
-	
+
 	return array.join('');
 };
 
@@ -872,7 +872,7 @@ String.prototype.isChinese = function() {
 		if (XRegExp('\\p{Han}').test(ch))
 			++chineseCharCount;
 	}
-	
+
 	return chineseCharCount > this.length / 8;
 };
 
@@ -1055,17 +1055,17 @@ HTMLCollection.prototype.back = function() {
 Array.prototype.equals = function(rhs){
 	if (!Array.isArray(rhs))
 		return false;
-		
+
 	if (this.length != rhs.length){
 		return false;
 	}
-	
+
 	for (let i = 0; i < rhs.length; ++i){
 		if (!equals(this[i], rhs[i])){
 			return false;
 		}
 	}
-	
+
 	return true;
 };
 
@@ -1089,7 +1089,7 @@ Array.prototype.clear = function() {
 	this.splice(0, this.length);
 };
 
-Array.prototype.resize = function(newSize,defaultValue) {
+Array.prototype.resize = function(newSize, defaultValue) {
     while (newSize > this.length)
         this.push(defaultValue);
     this.length = newSize;
@@ -1109,7 +1109,7 @@ Array.prototype.back = function(val) {
 	if (val == null){
 		return this[this.length - 1];
 	}
-		
+
 	this[this.length - 1] = val;
 };
 
@@ -1120,7 +1120,7 @@ Array.prototype.contains = function(val) {
 			return true;
 		}
 	}
-	
+
 	return false;
 };
 
@@ -1149,7 +1149,7 @@ Array.prototype.enumerated = function(func) {
 Array.prototype.repeat = function(count) {
 	var array = [];
 	for (var _ of range(count)){
-		
+
 		for (var el of this){
 			if (Array.isArray(el)){
 				el = [...el];
@@ -1177,7 +1177,7 @@ Array.prototype.sub = function(rhs){
 			ret[i] = this[i] == null? NaN: this[i].sub(rhs);
 		}
 	}
-	
+
 	return ret;
 };
 
@@ -1193,7 +1193,7 @@ Array.prototype.add = function(rhs){
 			ret[i] = this[i].add(rhs);
 		}
 	}
-	
+
 	return ret;
 };
 
@@ -1220,7 +1220,7 @@ Array.prototype.mul = function(that){
 	var ret = [];
 	if (that.isArray) {
 		console.assert(this.length == that.length, "this.length == rhs.length");
-		 
+
 		for (let i = 0; i < this.length; ++i){
 			ret[i] = this[i].mul(that[i]);
 		}
@@ -1230,7 +1230,7 @@ Array.prototype.mul = function(that){
 			ret[i] = this[i].mul(that);
 		}
 	}
-	
+
 	return ret;
 };
 
@@ -1288,7 +1288,7 @@ Array.prototype.matmul = function(that){
 			throw Error("matrix size does not match");
 		}
 	}
-	
+
 	return mat;
 };
 
@@ -1312,9 +1312,9 @@ Array.prototype.equal_range = function(value, compareTo) {
     for (;;) {
         if (begin == end)
             break;
-            
+
         var mid = begin + end >> 1;
-            
+
         var ret = compareTo(this[mid], value);
         if (ret < 0)
             begin = mid + 1;
@@ -1327,7 +1327,7 @@ Array.prototype.equal_range = function(value, compareTo) {
 				var pivot = -(-begin - stop >> 1);
 				if (pivot == begin)
 					break;
-					
+
 				if (compareTo(this[pivot], value))
 					stop = pivot;
 				else
@@ -1338,7 +1338,7 @@ Array.prototype.equal_range = function(value, compareTo) {
 				var pivot = mid + end >> 1;
 				if (pivot == mid)
 					break;
-					
+
 				if (compareTo(this[pivot], value))
 					end = pivot;
 				else
@@ -1365,17 +1365,17 @@ Array.prototype.shuffle = function() {
 function compareTo(lhs, rhs) {
 	if (lhs.isString)
 		return compareTo(lhs.map(ch => ord(ch)), rhs.map(ch => ord(ch)));
-	
+
 	if (lhs.isArray) {
 		for (var [lhs, rhs] of zip(lhs, rhs)) {
 			var cmp = compareTo(lhs, rhs);
 			if (cmp)
 				return cmp;
 		}
-		
+
 		return 0;
 	}
-	
+
 	return lhs - rhs;
 }
 
@@ -1389,14 +1389,14 @@ Array.prototype.binary_search = function(value, compareTo) {
 	else {
 		compareTo = (a, b) => a.compareTo(b);
 	}
-		
+
     var begin = 0, end = this.length;
     for (;;) {
         if (begin == end)
             return begin;
-            
+
         var mid = begin + end >> 1;
-            
+
         var ret = compareTo(this[mid], value);
         if (ret < 0)
             begin = mid + 1;
@@ -1545,14 +1545,14 @@ class PriorityQueue {
 			this.initialize_data();
 			return;
 		}
-		
+
 		if (Array.isArray(inputs)){
 			this.init(true);
 			var arr = inputs;
 			this.make_heap(arr, arr.length);
 			return;
 		}
-		
+
 		this.init(inputs);
     }
 
@@ -1564,7 +1564,7 @@ class PriorityQueue {
 		this._list = [];
 		this._Idx = 0; // used to look for the right kinder / parent.
 	}
-	
+
 	init(bMaximumHeap){
         if (bMaximumHeap){
             this.pred = function(o1, o2) {
@@ -1584,14 +1584,14 @@ class PriorityQueue {
                 return 0;
             };
 		}
-		
+
 		this.initialize_data();
 	}
-	
+
 	push(el){
 		this._list.push(el);
 	}
-	
+
     make_heap(ptr, size) {
         for (var i = 0; i < size; ++i)
             this.push(ptr[i]);
@@ -1629,15 +1629,15 @@ class PriorityQueue {
 	get(index){
 		return this._list[index];
 	}
-	
+
 	delete(index){
 		return this._list.delete(index);
 	}
-	
+
 	set(index, val){
 		this._list[index] = val;
 	}
-	
+
     adjust_heap(_Hole) { // percolate _Hole to _Bottom, then push
                                  // _Val, using pred
         var _Val = this.get(_Hole);
@@ -1691,7 +1691,7 @@ class PriorityQueue {
 	shift() {
 		this._list.shift();
 	}
-	
+
     // dequeue operator
     // pop *_First to *(_Last - 1) and reheap, using pred
     pop(i) {
@@ -1703,13 +1703,13 @@ class PriorityQueue {
 				this.shift();
 	            return _Val;
 	        }
-	
+
 	        this.set(0, this.get(this.length - 1));
 	        this.delete(this.length - 1);
 	        this.adjust_heap(0);
 	        return _Val;
 		}
-		
+
         var _Val = this.get(i);
 
         var end = this.get(this.length - 1);
@@ -1890,7 +1890,7 @@ function deepCopy(obj, excludes) {
 		result = {};
 	else if (oClass == "Array") {
 		result = [];
-		
+
 		for (var copy of obj) {
 			if (getClass(copy) == "Object")
 				result.push(deepCopy(copy, excludes));
@@ -1899,7 +1899,7 @@ function deepCopy(obj, excludes) {
 			else
 				result.push(copy);
 		}
-		
+
 		return result;
 	}
 	else
@@ -1989,7 +1989,7 @@ HTMLElement.prototype.distance = function(rhs) {
 	var [x0, y0] = this.center();
 	if (!Array.isArray(rhs))
 		rhs = rhs.center();
-	
+
 	var [x1, y1] = rhs;
 	return distance(x0, y0, x1, y1);
 };
@@ -1999,13 +1999,13 @@ HTMLElement.prototype.hiddenStatus = function() {
     var offsetLeft = this.getOffsetLeft() - scrollLeft;
     var offsetTop = this.getOffsetTop() - scrollTop;
 	var {offsetWidth, offsetHeight} = this;
-	
+
     var hidden = {};
     if (offsetTop < 0)
     	hidden.y = offsetTop;
     else if (offsetTop + offsetHeight > clientHeight)
     	hidden.y = offsetTop + offsetHeight - clientHeight;
-    	
+
     if (offsetLeft < 0)
     	hidden.x = offsetLeft;
     else if (offsetLeft + offsetWidth > clientWidth)
@@ -2019,7 +2019,7 @@ function intersects(rectA, rect) {
 		var [a1, b1] = rangeB;
 		return Math.max(a0, a1) < Math.min(b0, b1);
 	}
-	
+
 	return intersects([rect.x, rect.x + rect.width], [rectA.x, rectA.x + rectA.width]) && intersects([rect.y, rect.y + rect.height], [rectA.y, rectA.y + rectA.height]);
 }
 
@@ -2027,13 +2027,13 @@ function merge_sort(arr1, arr2, compareTo, ret) {
 	if (ret == null){
 		ret = [];
 	}
-	
+
 	if (compareTo == null){
 		compareTo = (a, b) => a.compareTo(b);
 	}
-	
+
     _merge_sort(arr1, arr1.length, arr2, arr2.length, compareTo, ret);
-    
+
     return ret;
 }
 
@@ -2046,10 +2046,10 @@ function _merge_sort(arr1, sz1, arr2, sz2, compareTo, dst) {
         else
             dst[k++] = arr2[j++];
     }
-    
+
     while (i < sz1)
         dst[k++] = arr1[i++];
-        
+
     while (j < sz2)
         dst[k++] = arr2[j++];
 }
@@ -2071,17 +2071,17 @@ function array_push() {
 		if (arr[key] == null){
 			arr[key] = [];
 		}
-		
+
 		arr = arr[key];
 	}
-	
+
 	arr.push(value);
 }
 
 
 function compare_debug(obj, _obj){
 	console.log(obj, _obj, "are not equal!");
-	
+
     if (obj instanceof Object && _obj instanceof Object){
         if (Object.keys(obj).length != Object.keys(_obj).length){
 			console.log("keys lengths are not equal!");
@@ -2105,11 +2105,11 @@ function compare_debug(obj, _obj){
 			console.log(obj.length, _obj.length);
 			return;
 		}
-		
+
         for (let i = 0; i < obj.length; ++i){
             if (equals(obj[i], _obj[i]))
                 continue;
-            
+
             console.log("difference at index", i);
             compare_debug(obj[i], _obj[i]);
 		}
@@ -2117,20 +2117,20 @@ function compare_debug(obj, _obj){
 }
 
 function sunday(haystack, needle, offsetStart) {
-    
+
 	if (offsetStart == null)
 		offsetStart = 0;
-		
+
     var needelLength = needle.length;
-    
+
     var haystackLength = haystack.length;
-    
+
 	var dic = {};
 	for (var k = 0; k < needle.length; ++k){
 		var v = needle[k];
 		dic[v] = needelLength - k;
 	}
-    
+
     var end = needelLength + offsetStart;
     var begin, offset;
 
@@ -2145,11 +2145,11 @@ function sunday(haystack, needle, offsetStart) {
         offset = dic[haystack[end]];
         if (!offset)
             offset = needelLength + 1;
-        
+
         end += offset;
 	}
     return -1;
-    
+
 }
 
 function distance() {
@@ -2159,7 +2159,7 @@ function distance() {
 		var [[x0, y0], [x1, y1]] = arguments;
 	else
 		throw new Error("arguments.length == 2 || arguments.length == 4");
-		
+
 	var dx = x1.sub(x0);
 	var dy = y1.sub(y0);
 	return dx.mul(dx).add(dy.mul(dy)).sqrt();
@@ -2168,7 +2168,7 @@ function distance() {
 function mean(p0, p1, rate) {
 	if (rate == null)
 		rate = new Rational(1n, 2n);
-		
+
 	return p0.mul(rate.neg().add(1n)).add(p1.mul(rate));
 }
 
@@ -2226,43 +2226,43 @@ function *range(start, stop, step){
 class SymbolicSet {
 	sanctity_check() {
 	}
-	
+
 	symmetric_difference(that){
 		return this.union(that).complement(this.intersects(that));
 	}
-	
+
 	jaccard(that){
 		return this.intersects(that).card / this.union(that).card;
 	}
-	
+
 	contains(that){
 		return this.intersects(that).equals(that);
 	}
-	
+
 	get bbox() {
 		if (!this._bbox)
 			this._bbox = this._eval_bbox();
 		return this._bbox;
 	}
-	
+
 	complement(that) {
 		if (that.is_EmptySet)
 			return this;
-			
+
 		if (that.is_Union) {
 			var args = [];
 			for (var arg of that.args) {
 				var arg = this.complement(arg);
 				if (arg.is_Complement)
 					break;
-				
+
 				args.push(arg);
 			}
-			
+
 			if (args.length == that.args.length)
 				return args.reduce((a, b) => a.intersects(b));
 		}
-		
+
 		return new Complement(this, that);
 	}
 }
@@ -2271,23 +2271,23 @@ class EmptySet extends SymbolicSet {
 	get is_EmptySet() {
 		return true;
 	}
-	
+
 	get card() {
 		return 0;
 	}
-	
+
 	equals(that){
 		return that == null || that.is_EmptySet;
 	}
-	
+
 	complement(that) {
 		return this;
 	}
-	
+
 	add(offset){
 		return this;
 	}
-	
+
 	union(that){
 		return that;
 	}
@@ -2295,15 +2295,15 @@ class EmptySet extends SymbolicSet {
 	symmetric_difference(that){
 		return that;
 	}
-	
+
 	intersects(that){
 		return this;
 	}
-	
+
 	get args() {
 		return [];
 	}
-	
+
 	[Symbol.iterator]() {
 		return {
 			next() {
@@ -2317,17 +2317,17 @@ class Union extends SymbolicSet {
 	static new() {
 		if (!arguments.length)
 			return new EmptySet;
-			
+
 		if (arguments.length == 1)
 			return arguments[0];
-			
+
 		return new Union(...arguments);
 	}
-	
+
 	get is_Union() {
 		return true;
 	}
-	
+
 	sanctity_check() {
 		for (var arg of this.args) {
 			if (arg.is_EmptySet || arg.is_Union) {
@@ -2338,12 +2338,12 @@ class Union extends SymbolicSet {
 		}
 		return false;
 	}
-	
+
 	constructor() {
 		super();
 		this.args = [...arguments];
 	}
-	
+
 	get card() {
 		var card = 0;
 		for (var arg of this.args){
@@ -2351,11 +2351,11 @@ class Union extends SymbolicSet {
 		}
 		return card;
 	}
-	
+
 	intersects(that){
 		if (that.is_EmptySet)
 			return that;
-		
+
 		var args = [];
 		if (that.is_Range) {
 			for (var i of range(...this.args.equal_range(that))) {
@@ -2370,17 +2370,17 @@ class Union extends SymbolicSet {
 				arg = arg.intersects(that);
 				if (arg.is_EmptySet)
 					continue;
-					
+
 				if (arg.is_Union)
 					args.push(...arg.args);
 				else
 					args.push(arg);
 			}
 		}
-		
+
 		return Union.new(...args);
 	}
-	
+
 	equals(that){
 		if (that && that.is_Union && this.args.length == that.args.length){
 			for (var i = 0; i < this.args.length; ++i){
@@ -2390,14 +2390,14 @@ class Union extends SymbolicSet {
 			return true;
 		}
 	}
-	
+
 	complement(that) {
 		var args = [];
 		for (var arg of this.args){
 			arg = arg.complement(that);
 			if (arg.is_EmptySet)
 				continue;
-				
+
 			if (arg.is_Union){
 				args.push(...arg.args);
 			}
@@ -2408,7 +2408,7 @@ class Union extends SymbolicSet {
 
 		return Union.new(...args);
 	}
-	
+
 	add(offset){
 		return new Union(...this.args.map(el => el.add(offset)));
 	}
@@ -2417,7 +2417,7 @@ class Union extends SymbolicSet {
 		if (that.is_EmptySet){
 			return this;
 		}
-		
+
 		if (that.is_Range){
 			for (var i = 0; i < this.args.length; ++i){
 				var arg = this.args[i];
@@ -2428,16 +2428,16 @@ class Union extends SymbolicSet {
 					if (args.length == 1){
 						return args[0].union(arg);
 					}
-					
+
 					return new Union(...args).union(arg);
 				}
 			}
-			
+
 			var args = [...this.args];
 			var index = args.binary_search(that);
-			
+
 			args.insert(index, that);
-			
+
 			return new Union(...args);
 		}
 		else if (that.is_Rectangle){
@@ -2450,14 +2450,14 @@ class Union extends SymbolicSet {
 					if (args.length == 1){
 						return args[0].union(arg);
 					}
-					
+
 					return new Union(...args).union(arg);
 				}
 			}
-			
+
 			var args = [...this.args];
 			args.insert(args.binary_search(that), that);
-			
+
 			return new Union(...args).try_union();
 		}
 		else if (that.is_Trapezoid){
@@ -2470,46 +2470,46 @@ class Union extends SymbolicSet {
 					if (args.length == 1){
 						return args[0].union(arg);
 					}
-					
+
 					return new Union(...args).union(arg);
 				}
 			}
-			
+
 			var args = [...this.args];
 			args.insert(args.binary_search(that), that);
-			
+
 			return new Union(...args);
 		}
-		
+
 		for (var arg of this.args){
 			that = that.union(arg)
 		}
 		return that;
 	}
-	
+
 	union_without_merging(that){
 		if (that.is_EmptySet)
 			return this;
-		
+
 		if (that.is_Range){
             for (var arg of this.args)
                 that = that.complement(arg);
-			
+
 			if (that.is_EmptySet)
 				return this;
-			
+
             if (that.is_Range)
                 that = [that];
             else
                 that = that.args;
-			
+
 			var args = [...this.args];
 			for (var that of that)
 				args.insert(args.binary_search(that), that);
-			
+
 			return new Union(...args);
 		}
-		
+
         if (that.is_Union) {
 			var self = this;
             for (var arg of that.args) {
@@ -2518,11 +2518,11 @@ class Union extends SymbolicSet {
             return self;
 		}
 	}
-	
+
 	sliced(obj){
 		return this.args.map(domain => domain.sliced(obj)).join('\t');
 	}
-	
+
 	nonoverlapping_check() {
 		for (var j of range(1, this.args.length)) {
 			for (var i of range(j)) {
@@ -2530,13 +2530,13 @@ class Union extends SymbolicSet {
 			}
 		}
 	}
-	
+
 	try_union() {
 		//http://localhost/axiom/?module=Set.eq_card.subset.then.eq
 		var bbox = this.bbox;
 		return this.card == bbox.card ? bbox: this;
 	}
-	
+
 	_eval_bbox() {
 		var x_min = Infinity;
 		var y_min = Infinity;
@@ -2562,24 +2562,24 @@ class Intersection extends SymbolicSet {
 	get is_Intersection() {
 		return true;
 	}
-	
+
 	constructor() {
 		super();
 		this.args = [...arguments];
 	}
-	
+
 	get card() {
 	}
-	
+
 	union(that){
 		if (that.is_EmptySet){
 			return this;
 		}
-		
+
 		var args = [];
 		for (var arg of this.args){
 			arg = arg.union(that);
-				
+
 			if (arg.is_Intersection){
 				args.push(...arg.args);
 			}
@@ -2587,16 +2587,16 @@ class Intersection extends SymbolicSet {
 				args.push(arg);
 			}
 		}
-		
+
 		if (!args.length)
 			return new EmptySet;
-			
+
 		if (args.length == 1)
 			return args[0];
-			
+
 		return new Intersection(...args);
 	}
-	
+
 	equals(that) {
 		if (that && that.is_Intersection && this.args.length == that.args.length){
 			for (var i = 0; i < this.args.length; ++i){
@@ -2606,14 +2606,14 @@ class Intersection extends SymbolicSet {
 			return true;
 		}
 	}
-	
+
 	complement(that) {
 		var args = [];
 		for (var arg of this.args){
 			arg = arg.complement(that);
 			if (arg.is_EmptySet)
 				continue;
-				
+
 			if (arg.is_Intersection){
 				args.push(...arg.args);
 			}
@@ -2621,16 +2621,16 @@ class Intersection extends SymbolicSet {
 				args.push(arg);
 			}
 		}
-		
+
 		if (!args.length)
 			return new EmptySet;
-			
+
 		if (args.length == 1)
 			return args[0];
-			
+
 		return new Intersection(...args);
 	}
-	
+
 	add(offset){
 		return new Intersection(...this.args.map(el => el.add(offset)));
 	}
@@ -2639,16 +2639,16 @@ class Intersection extends SymbolicSet {
 		if (that.is_EmptySet){
 			return that;
 		}
-		
+
 		for (var arg of this.args){
 			that = that.intersects(arg);
 		}
 		return that;
 	}
-	
+
 	_eval_bbox() {
 	}
-	
+
 	static new() {
 		var args = [...arguments];
 		return new Intersection(...args.sort((a, b)=> a.compareTo(b)));
@@ -2659,21 +2659,21 @@ class Complement extends SymbolicSet {
 	get is_Complement() {
 		return true;
 	}
-	
+
 	constructor() {
 		super();
 		this.args = [...arguments];
 	}
-	
+
 	get card() {
 	}
-	
+
 	union(that){
 		if (that.is_EmptySet){
 			return this;
 		}
 	}
-	
+
 	equals(that) {
 		if (that && that.is_Complement){
 			for (var i = 0; i < this.args.length; ++i){
@@ -2683,17 +2683,17 @@ class Complement extends SymbolicSet {
 			return true;
 		}
 	}
-	
+
 	complement(that) {
 	}
-	
+
 	add(offset){
 		return new Complement(...this.args.map(el => el.add(offset)));
 	}
 
 	intersects(that){
 	}
-	
+
 	_eval_bbox() {
 	}
 }
@@ -2708,19 +2708,19 @@ class Range extends SymbolicSet {
 		this.start = start;
 		this.stop = stop;
 	}
-	
+
 	get args() {
 		return [this.start, this.stop];
 	}
-	
+
 	intersects(that){
 		if (that.is_Union)
 			return that.intersects(this);
-		
+
 		var {start, stop} = that;
 		if (start >= this.stop || stop <= this.start)
 			return new EmptySet;
-			
+
 		return new Range(Math.max(this.start, start), Math.min(this.stop, stop));
 	}
 
@@ -2729,71 +2729,71 @@ class Range extends SymbolicSet {
 			return this.start == that.start && this.stop == that.stop;
 		}
 	}
-	
+
 	union(that){
 		if (that.is_Range){
 			var {start, stop} = that;
 			if (start > this.stop)
 				return new Union(this, that);
-				
+
 			if (stop < this.start)
 				return new Union(that, this);
-				
+
 			return new Range(Math.min(this.start, start), Math.max(this.stop, stop));
 		}
-		
+
 		if (that.is_EmptySet)
 			return this;
-			
+
 		return that.union(this);
 	}
-	
+
 	contains(pt) {
 		if (pt.is_Range)
 			return pt.start >= this.start && pt.stop <= this.stop;
 		else
 			return pt >= this.start && pt < this.stop;
 	}
-	
+
 	union_without_merging(that){
 		if (that.is_EmptySet)
 			return this;
-			
+
 		if (that.is_Range){
 			var {start, stop} = that;
 			if (start >= this.stop)
 				return new Union(this, that);
-				
+
 			if (stop <= this.start)
 				return new Union(that, this);
-				
+
 			var mid = this.intersects(that);
 			var lhs = this.complement(that);
             var rhs = that.complement(this);
 	        if (rhs.is_EmptySet)
                 return mid.union_without_merging(lhs);
-            
+
             if (lhs.is_EmptySet)
                 return mid.union_without_merging(rhs);
-            
+
             if (lhs.start > rhs.start)
                 [lhs, rhs] = [rhs, lhs];
-                
+
             return new Union(lhs, mid, rhs);
 		}
-		
+
 		return that.union_without_merging(this);
 	}
-	
+
 	complement(that) {
 		if (that.start >= this.stop)
 			return this;
-		
+
 		if (that.start > this.start){
 			//now that that.start < this.stop
 			if (that.stop >= this.stop)
 				return new Range(this.start, that.start);
-				
+
 			//now that that.stop < this.stop
 			return new Union(new Range(this.start, that.start), new Range(that.stop, this.stop));
 		}
@@ -2801,47 +2801,47 @@ class Range extends SymbolicSet {
 			//now that that.start <= this.start
 			if (that.stop >= this.stop)
 				return new EmptySet;
-				
+
 			//now that that.stop < this.stop
 			if (that.stop > this.start)
 				return new Range(that.stop, this.stop);
-			
+
 			return new Range(this.start, this.stop);
 		}
 	}
-	
+
 	get card() {
 		return this.stop - this.start;
 	}
-	
+
 	add(offset){
 		return new Range(this.start + offset, this.stop + offset);
 	}
-	
+
 	sliced(obj){
 		return obj.slice(this.start, this.stop);
 	}
-	
+
 	[Symbol.iterator]() {
 		var {start, stop} = this;
-		
+
 		return {
 			next() {
 				if (start == stop)
 					return {done: true};
-				
+
 				return {value: start++};
 			}
 		};
 	}
-	
+
 	compareTo(that) {
 		if (this.stop <= that.start)
 			return -1;
-		
+
 		if (that.stop <= this.start)
 			return 1;
-			
+
 		return 0;
 	}
 }
@@ -2852,35 +2852,35 @@ class Polygon extends SymbolicSet {
 		ctx.fillStyle = fillStyle;
 		var p = this.p.map(p => p.map(e => e.round()));
 		ctx.moveTo(...p[0]);
-		
+
 		for (var i of range(1, this.p.length)) {
 			ctx.lineTo(...p[i]);
 		}
-		
+
 		ctx.lineTo(...p[0]);
 		ctx.fill();
 		ctx.fillStyle = oldStyle;
 	}
-	
+
 	get p() {
 		if (!this._p) {
 			this._p = this._eval_p();
 		}
 		return this._p;
 	}
-	
+
 	get is_Polygon() {
 		return true;
 	}
-	
+
 	distance(x0, y0) {
 		return distance(this.anchorPoint(x0, y0), [x0, y0]);
 	}
-	
+
 	complement(that) {
 		return SymbolicSet.prototype.complement.apply(this, arguments);
 	}
-	
+
 	static is_straight_line() {
 		for (var i of range(2, arguments.length)) {
 			if (!new Triangle(arguments[i - 2], arguments[i - 1], arguments[i]).is_straight_line())
@@ -2894,7 +2894,7 @@ class Tetragon extends Polygon {
 	get is_Tetragon() {
 		return true;
 	}
-	
+
 	contains() {
 		var {p} = this;
 		var pt = arguments.length == 2 ? arguments: arguments[0];
@@ -2904,30 +2904,30 @@ class Tetragon extends Polygon {
 		var delta3 = new Triangle(p[3], p[0], pt).direction();
 		return delta0.is_positive && delta1.is_positive && delta2.is_positive && delta3.is_positive;
 	}
-	
+
 	static new() {
 		if (arguments.length >= 4)
 			return new Rectangle(...arguments);
 		return Trapezoid.new(...arguments);
 	}
-	
+
 	is_nonoverlapping(that) {
 		var {p} = that;
 		if (p.any(pt => this.contains(pt)))
 			return false;
-			
+
 		var {p: points} = this;
 		var dir01 = points.map(pt => new Triangle(p[0], p[1], pt).direction().sign());
 		var dir32 = points.map(pt => new Triangle(p[3], p[2], pt).direction().sign());
 		if (dir01.is_constant() && dir32.is_constant() && dir01[0] == dir32[0])
 			return true;
-		
+
 		var dir12 = points.map(pt => new Triangle(p[1], p[2], pt).direction().sign());
 		var dir03 = points.map(pt => new Triangle(p[0], p[3], pt).direction().sign());
 		if (dir12.is_constant() && dir03.is_constant() && dir12[0] == dir03[0])
 			return true;
 	}
-	
+
 	intersects(that) {
 		if (that.is_EmptySet)
 			return that;
@@ -2935,30 +2935,30 @@ class Tetragon extends Polygon {
 		if (that.is_Parallelogram || that.is_Rectangle) {
 			if (this.bbox.intersects(that).is_EmptySet)
 				return new EmptySet;
-			
+
 			if (this.is_nonoverlapping(that))
 				return new EmptySet;
-			
+
 			return Intersection.new(that, this);
 		}
-		
+
 		if (that.is_Trapezoid) {
 			var cmp = this.compareTo(that);
 			if (cmp > 0)
 				return that.intersects(this);
-				
+
 			if (this.y[1] <= that.y[0])
 				return new EmptySet;
-			
+
 			if (that.p.any(pt => this.contains(pt)) || this.p.any(pt => that.contains(pt)))
 				return Intersection.new(this, that);
-							
+
 			return new EmptySet;
 		}
-		
+
 		return new Intersection(that, this);
 	}
-	
+
 	complement(that) {
 		return Polygon.prototype.complement.apply(this, arguments);
 	}
@@ -2979,69 +2979,69 @@ class Rectangle extends Tetragon {
 
 		this.args = [x, y, width, height];
 	}
-	
+
 	get x() {
 		return this.args[0];
 	}
-	
+
 	set x(x) {
 		this.args[0] = x;
 	}
-	
+
 	get y() {
 		return this.args[1];
 	}
-	
+
 	set y(y) {
 		this.args[1] = y;
 	}
-	
+
 	get width() {
 		return this.args[2];
 	}
-	
+
 	set width(width) {
 		this.args[2] = width;
 	}
-	
+
 	get height() {
 		return this.args[3];
 	}
-	
+
 	set height(height) {
 		this.args[3] = height;
 	}
-	
+
 	get x_stop() {
 		return this.x.add(this.width);
 	}
-	
+
 	set x_stop(x_stop) {
 		this.width = x_stop.sub(this.x);
 	}
-	
+
 	get y_stop() {
 		return this.y.add(this.height);
 	}
-	
+
 	set y_stop(y_stop) {
 		this.height = y_stop.sub(this.y);
 	}
-	
+
 	intersects(that){
 		if (that.is_Union || that.is_Parallelogram || that.is_Trapezoid)
 			return that.intersects(this);
-		
+
 		var {x, y, x_stop, y_stop} = that;
 		if (x.ge(this.x_stop) || x_stop.le(this.x) || y.ge(this.y_stop) || y_stop.le(this.y))
 			return new EmptySet;
-			
+
 		var x = max(this.x, x);
 		var x_stop = min(this.x_stop, x_stop);
-		
+
 		var y = max(this.y, y);
 		var y_stop = min(this.y_stop, y_stop);
-		
+
 		var width = x_stop.sub(x);
 		var height = y_stop.sub(y);
 		return new Rectangle(x, y, width, height);
@@ -3052,7 +3052,7 @@ class Rectangle extends Tetragon {
 			return this.x == that.x && this.width == that.width && this.y == that.y && this.height == that.height;
 		}
 	}
-	
+
 	union(that){
 		if (that.is_Rectangle) {
 			var {x, y, x_stop, y_stop} = that;
@@ -3068,21 +3068,21 @@ class Rectangle extends Tetragon {
 				if (this.x == x_stop)
 					return new Rectangle(x, y, this.width + that.width, this.height);
 			}
-				
+
 			return new Union(this, that);
 		}
-		
+
 		if (that.is_EmptySet)
 			return this;
-			
+
 		return that.union(this);
 	}
-	
+
 	complement(that) {
 		if (that.is_Rectangle){
 			if (that.x >= this.x_stop || that.y >= this.y_stop || that.x_stop <= this.x || that.y_stop <= this.y)
 				return this;
-			
+
 			// that.x < this.x_stop && that.x_stop > this.x
 			// that.y < this.y_stop && that.y_stop > this.y
 			if (that.x <= this.x){
@@ -3194,27 +3194,27 @@ class Rectangle extends Tetragon {
 				}
 			}
 		}
-		
+
 		if (that.is_EmptySet){
 			return this;
 		}
-		
+
 		if (that.is_Union){
 			var self = this;
 			for (var region of that.args){
 				self = self.complement(region);
 			}
-			
+
 			return self;
 		}
-		
+
 		if (that.is_TrapezoidV) {
 			if (this.x.equals(that.x[0])) {
 				if (this.x_stop.gt(that.x[1]))
 					return new Rectangle(that.x[1], this.y, this.width - that.width, this.height).union(new Rectangle(this.x, this.y, that.width, this.height).complement(that));
-					
+
 				if (this.x_stop.lt(that.x[1])) {
-					
+
 				}
 				else {
 					var args = [];
@@ -3224,14 +3224,14 @@ class Rectangle extends Tetragon {
 						args.push(new Triangle([this.x, this.y], [solve_x(this.y, that.p[0], that.p[1]), this.y], [this.x, that.y[0]]));
 					else if (this.y.lt(that.y[1]))
 						args.push(new Triangle([solve_x(this.y, that.p[0], that.p[1]), this.y], [this.x_stop, this.y], [this.x_stop, that.y[1]]));
-					
+
 					if (this.y_stop.gt(that.bbox.y_stop))
 						args.push(new TrapezoidV(that.x, [that.y[3], that.y[2], this.y_stop, this.y_stop]).simplify());
 					else if (this.y_stop.gt(that.y[3]))
 						args.push(new Triangle([this.x, that.y[3]], [solve_x(this.y_stop, that.p[2], that.p[3]), this.y_stop], [this.x, this.y_stop]));
 					else if (this.y_stop.gt(that.y[2]))
 						args.push(new Triangle([solve_x(this.y_stop, that.p[2], that.p[3]), this.y_stop], [this.x_stop, that.y[2]], [this.x_stop, this.y_stop]));
-					
+
 					return Union.new(...args);
 				}
 			}
@@ -3245,9 +3245,9 @@ class Rectangle extends Tetragon {
 			if (this.y.equals(that.y[0])) {
 				if (this.y_stop.gt(that.y[1]))
 					return new Rectangle(this.x, that.y[1], this.width, this.height - that.height).union(new Rectangle(this.x, this.y, this.width, that.height).complement(that));
-					
+
 				if (this.y_stop.lt(that.y[1])) {
-					
+
 				}
 				else {
 					var args = [];
@@ -3257,14 +3257,14 @@ class Rectangle extends Tetragon {
 						args.push(new Triangle([this.x, this.y], [that.x[0], this.y], [this.x, solve_y(this.x, that.p[3], that.p[0])]));
 					else if (this.x.lt(that.x[3]))
 						args.push(new Triangle([this.x, solve_y(this.x, that.p[3], that.p[0])], [that.x[3], this.y_stop], [this.x, this.y_stop]));
-					
+
 					if (this.x_stop.gt(that.bbox.x_stop))
 						args.push(new TrapezoidH([that.x[1], this.x_stop, this.x_stop, that.x[2]], that.y).simplify());
 					else if (this.x_stop.gt(that.x[1]))
 						args.push(new Triangle([that.x[1], this.y], [this.x_stop, this.y], [this.x_stop, solve_y(this.x_stop, that.p[1], that.p[2])]));
 					else if (this.x_stop.gt(that.x[2]))
 						args.push(new Triangle([that.x[2], this.y_stop], [this.x_stop, solve_y(this.x_stop, that.p[1], that.p[2])], [this.x_stop, this.y_stop]));
-					
+
 					return Union.new(...args);
 				}
 			}
@@ -3274,18 +3274,18 @@ class Rectangle extends Tetragon {
 				return this.complement(new TrapezoidH([x0, x1, that.x[2], that.x[3]], [this.y, this.y_stop]));
 			}
 		}
-		
+
 		return new Complement(this, that);
 	}
-	
+
 	get card() {
 		return this.width.mul(this.height);
 	}
-	
+
 	offset(dx, dy) {
 		return new Rectangle(this.x.add(dx), this.y.add(dy), this.width, this.height);
 	}
-	
+
 	distance() {
 		if (arguments.length == 2) {
 			var [x0, y0] = arguments;
@@ -3293,14 +3293,14 @@ class Rectangle extends Tetragon {
 		}
 		else {
 			var [that] = arguments;
-			
+
 			if (that.x.ge(this.x_stop)) {
 				if (that.y_stop.le(this.y))
 					return distance(this.x_stop, this.y, that.x, that.y_stop);
-				
+
 				if (that.y.ge(this.y_stop))
 					return distance(this.x_stop, this.y_stop, that.x, that.y);
-				
+
 				return that.x.sub(this.x_stop).abs();
 			}
 			else if (that.x_stop.le(this.x)) {
@@ -3318,94 +3318,94 @@ class Rectangle extends Tetragon {
 
 				if (that.y.ge(this.y_stop))
 					return this.y_stop.sub(that.y).abs();
-				
+
 				return 0;
 			}
 		}
 	}
-	
+
 	// the anchor point is defined to be the point that is closest to the target point;
 	anchorPoint(x0, y0) {
 		if (x0.lt(this.x)) {
 			if (y0.lt(this.y))
 				return [this.x, this.y];
-				
+
 			if (y0.lt(this.y_stop))
 				return [this.x, y0];
-				
+
 			return [this.x, this.y_stop];
 		}
-		
+
 		if (x0.lt(this.x_stop)) {
 			if (y0.lt(this.y))
 				return [x0, this.y];
-				
+
 			if (y0.lt(this.y_stop))
 				return [x0, y0];
-				
+
 			return [x0, this.y_stop];
 		}
-		
+
 		if (y0.lt(this.y))
 			return [this.x_stop, this.y];
-			
+
 		if (y0.lt(this.y_stop))
 			return [this.x_stop, y0];
-			
+
 		return [this.x_stop, this.y_stop];
 	}
-	
+
 	rotate(anchor, theta) {
 		var {x: x0, y: y0, x_stop: x1, y_stop: y1} = this;
 		var rotation = rotationMatrix(theta);
-		
+
 		var args = [
 			rotatePoint([x0, y0], anchor, rotation),
 			rotatePoint([x1, y0], anchor, rotation),
 			rotatePoint([x1, y1], anchor, rotation),
 			rotatePoint([x0, y1], anchor, rotation),
 		];
-		
+
 		var index = argmin(args.map(tuple => tuple[1]));
 		return Parallelogram.new(args[index], args[(index + 1) % 4], args[(index + 2) % 4]);
 	}
-	
+
 	compareTo(rhs) {
 		if (rhs.is_Rectangle) {
 			if (this.x.lt(rhs.x))
 				return -1;
-	
+
 			if (this.x.gt(rhs.x))
 				return 1;
-	
+
 			if (this.y.lt(rhs.y))
 				return -1;
-	
+
 			if (this.y.gt(rhs.y))
 				return 1;
-	
+
 			if (this.width.lt(rhs.width))
 				return -1;
-	
+
 			if (this.width.gt(rhs.width))
 				return 1;
-	
+
 			if (this.height.lt(rhs.height))
 				return -1;
-	
+
 			if (this.height.gt(rhs.height))
 				return 1;
-	
+
 			return 0;
 		}
-		
+
 		return -1;
 	}
-	
+
 	_eval_bbox() {
 		return this;
 	}
-	
+
 	_eval_p() {
 		return [[this.x, this.y], [this.x_stop, this.y], [this.x_stop, this.y_stop], [this.x, this.y_stop]];
 	}
@@ -3419,7 +3419,7 @@ function rotatePoint(point, anchor, theta) {
 //https://mathjs.org/docs/reference/
 	var [x0, y0] = anchor.float();
 	var [x1, y1] = point.float();
-	
+
 	if (!theta.isArray)
 		theta = rotationMatrix(theta);
 
@@ -3429,7 +3429,7 @@ function rotatePoint(point, anchor, theta) {
 function rotateLeft(point, anchor) {
 	var [x0, y0] = anchor;
 	var [x1, y1] = point;
-	
+
 	var vector = [x1.sub(x0), y1.sub(y0)];
 	var theta = [[0, 1], [-1, 0]];
 	return theta.matmul(vector).add(anchor);
@@ -3438,7 +3438,7 @@ function rotateLeft(point, anchor) {
 function rotateRight(point, anchor) {
 	var [x0, y0] = anchor;
 	var [x1, y1] = point;
-	
+
 	var vector = [x1.sub(x0), y1.sub(y0)];
 	var theta = [[0, -1], [1, 0]];
 	return theta.matmul(vector).add(anchor);
@@ -3455,65 +3455,65 @@ class Triangle extends Polygon {
 			this.args = [[x[0], y[0]], [x[1], y[1]], [x[2], y[2]]];
 		}
 	}
-	
+
 	get x_min() {
 		return this.x[0];
 	}
-	
+
 	get x_max() {
 		return max(this.x[1], this.x[2]);
 	}
-	
+
 	get y_min() {
 		return min(this.y[0], this.y[1], this.y[2]);
 	}
-	
+
 	get y_max() {
 		return max(this.y[0], this.y[1], this.y[2]);
 	}
-	
+
 	_eval_bbox() {
 		var {x_min, x_max, y_min, y_max} = this;
 		return new Rectangle(x_min, y_min, x_max - x_min, y_max - y_min);
 	}
-	
+
 	contains(x, y) {
 		var delta0 = new Triangle(this.p[0], this.p[1], [x, y]).direction();
 		var delta1 = new Triangle(this.p[1], this.p[2], [x, y]).direction();
 		var delta2 = new Triangle(this.p[2], this.p[1], [x, y]).direction();
 		return delta0.is_positive || delta1.is_positive || delta2.is_positive;
 	}
-	
+
 	is_straight_line() {
 		return this.direction().is_zero;
 	}
-	
+
 	direction() {
 		var [x0, y0] = this.p[0];
 		var [x1, y1] = this.p[1];
 		var [x, y] = this.p[2];
 		return x1.sub(x0).mul(y.sub(y0)).sub(y1.sub(y0).mul(x.sub(x0)));
 	}
-	
+
 	_eval_p() {
 		var args = this.args;
 		if (!args.isArray)
 			args = [...args];
 		return args;
 	}
-	
+
 	get x() {
 		if (this._x == null)
 			this._x = this.p.map(pt => pt[0]);
 		return this._x;
 	}
-	
+
 	get y() {
 		if (this._y == null)
 			this._y = this.p.map(pt => pt[1]);
 		return this._y;
 	}
-	
+
 	get card() {
 		var [x0, y0] = this.p[0];
 		var [x1, y1] = this.p[1];
@@ -3521,7 +3521,7 @@ class Triangle extends Polygon {
 		//(x0 * (y1 - y2) + y0 * (x2 - x1) + x1 * y2 - x2 * y1) / 2;
 		return x0.mul(y1.sub(y2)).add(y0.mul(x2.sub(x1))).add(x1.mul(y2).sub(x2.mul(y1))).div(2);
 	}
-	
+
 	offset(dx, dy) {
 		var [x0, y0] = this.p[0];
 		var [x1, y1] = this.p[1];
@@ -3548,58 +3548,58 @@ class Parallelogram extends Tetragon {
 	get is_Parallelogram() {
 		return true;
 	}
-	
+
 	static new(p0, p1, p2) {
 		return new Parallelogram(p0.toRational(), p1.toRational(), p2.toRational());
 	}
-	
+
 	//preconditio: p0 is the leftmost point;
 	constructor(p0, p1, p2) {
 		super();
 		this.args = [p0, p1, p2];
 	}
-	
+
 	_eval_bbox() {
 		var {x, y} = this;
 		var x_min = min(x[0], x[2], x[3]);
 		var x_max = max(x[0], x[1], x[2]);
 		return new Rectangle(x_min, y[0], x_max.sub(x_min), y[2].sub(y[0]));
 	}
-	
+
 	_eval_p() {
 		var p = this.args;
 		return [p[0], p[1], p[2], p[0].sub(p[1]).add(p[2])];
 	}
-	
+
 	get x() {
 		if (this._x == null)
 			this._x = this.p.map(pt => pt[0]);
 		return this._x;
 	}
-	
+
 	get y() {
 		if (this._y == null)
 			this._y = this.p.map(pt => pt[1]);
 		return this._y;
 	}
-	
+
 	offset(dx, dy) {
 		var [x0, y0] = this.p[0];
 		var [x1, y1] = this.p[1];
 		var [x2, y2] = this.p[2];
 		return new Parallelogram([x0.add(dx), y0.add(dy)], [x1.add(dx), y1.add(dy)], [x2.add(dx), y2.add(dy)]);
 	}
-	
+
 	compareTo(rhs) {
 		if (rhs.is_Parallelogram)
 			return this.p.compareTo(that.p)
-		
+
 		if (rhs.is_Rectangle)
 			return 1;
-			
+
 		return -1;
 	}
-	
+
 }
 
 class Trapezoid extends Tetragon {
@@ -3613,33 +3613,33 @@ class Trapezoid extends Tetragon {
 		if (y.length == 4)
 			return new TrapezoidV(x, y);
 	}
-	
+
 	constructor(x, y){
 		super();
 		Object.assign(this, {x, y});
 	}
-	
+
 	offset(dx, dy) {
 		return new this.constructor(this.x.map(x => x.add(dx)), this.y.map(y => y.add(dy)));
 	}
-	
+
 	get args() {
 		return [this.x, this.y];
 	}
-	
+
 	complement(that) {
 		return Tetragon.prototype.complement.apply(this, arguments);
 	}
-	
+
 	intersects(that) {
 		if (that.is_Parallelogram || that.is_Rectangle) {
 			if (that.is_nonoverlapping(this))
 				return new EmptySet;
 		}
-		
+
 		return Tetragon.prototype.intersects.apply(this, arguments);
 	}
-	
+
 }
 
 //horizontal Trapezoid
@@ -3648,27 +3648,27 @@ class TrapezoidH extends Trapezoid {
 	get is_TrapezoidH() {
 		return true;
 	}
-	
+
 	simplify() {
 		if (this.x[0] == this.x[3] && this.x[2] == this.x[1])
 			return new Rectangle(this.x[0], this.y[0], this.width[0], this.height)
 		return this;
 	}
-	
+
 	constructor(x, y){
 		super(x, y);
 	}
-	
+
 	equals(that){
 		if (that && that.is_TrapezoidH){
 			return this.x.equals(that.x) && this.y.equals(that.y);
 		}
 	}
-	
+
 	get height() {
 		return this.y[1].sub(this.y[0]);
 	}
-	
+
 	get width() {
 		return [this.x[1].sub(this.x[0]), this.x[2].sub(this.x[3])];
 	}
@@ -3677,11 +3677,11 @@ class TrapezoidH extends Trapezoid {
 		var {width: [w0, w1], height} = this;
 		return height.mul(w0.add(w1)).div(2);
 	}
-	
+
 	union(that) {
 		if (that.is_Rectangle) {
 			if (that.y == this.y[0] && that.y_stop == this.y[1]) {
-				
+
 				if (this.x[0] == this.x[3]) {
 					if (that.x_stop == this.x[0])
 						return new TrapezoidH([that.x, this.x[1], this.x[2], that.x], this.y);
@@ -3691,10 +3691,10 @@ class TrapezoidH extends Trapezoid {
 						return new TrapezoidH([this.x[0], that.x_stop, that.x_stop, this.x[3]], this.y);
 				}
 			}
-			
+
 			return new Union(that, this);
 		}
-		
+
 		if (that.is_EmptySet)
 			return this;
 
@@ -3702,12 +3702,12 @@ class TrapezoidH extends Trapezoid {
 			var index = that.args.binary_search(this);
 			return new Union(...that.args.slice(0, index), this, ...that.args.slice(index));
 		}
-		
+
 		if (that.is_TrapezoidH) {
 			var cmp = this.compareTo(that);
 			if (cmp > 0)
 				return that.union(this);
-				
+
 			if (this.y[1].equals(that.y[0])) {
 				if (that.x[0].equals(this.x[3]) && that.x[1].equals(this.x[2])) {
 					if (new Triangle(this.p[0], that.p[0], that.p[3]).is_straight_line() &&
@@ -3723,23 +3723,23 @@ class TrapezoidH extends Trapezoid {
 			return new Union(this, that);
 		}
 		else {
-			
+
 		}
 	}
-	
+
 	intersects(that) {
 		if (that.is_Rectangle) {
 			if (this.y.equals([that.y, that.y_stop])) {
 				if (that.x_stop.le(min(this.x[0], this.x[3])))
 					return new EmptySet;
-					
+
 				if (that.x_stop.le(this.x[0]))
 					return new Triangle(this.p[3], [that.x_stop, solve_y(that.x_stop, this.p[0], this.p[3])], [that.x_stop, this.y[1]]);
-					
+
 				if (that.x_stop.le(this.x[3]))
 					return new Triangle(this.p[0], [that.x_stop, [that.x_stop, this.y[0]], solve_y(that.x_stop, this.p[0], this.p[3])]);
-					
-				
+
+
 				if (that.x_stop.le(min(this.x[1], this.x[2]))) {
 					if (that.x.le(min(this.x[0], this.x[3])))
 						return new TrapezoidH(this.p[0], [that.x_stop, this.y[0]], [that.x_stop, this.y[1]], this.p[3]);
@@ -3747,11 +3747,11 @@ class TrapezoidH extends Trapezoid {
 				}
 			}
 		}
-		
+
 		return Trapezoid.prototype.intersects.apply(this, arguments);
-		
+
 	}
-	
+
 	complement(that) {
 		if (that.is_TrapezoidH) {
 			if (this.y[0].equals(that.y[0])) {
@@ -3807,7 +3807,7 @@ class TrapezoidH extends Trapezoid {
 							//emptyset;
 						}
 					}
-					
+
 					if (this.x[1].gt(that.x[1])) {
 						if (this.x[2].gt(that.x[2])) {
 							if (this.x[0].ge(that.x[1])) {
@@ -3851,7 +3851,7 @@ class TrapezoidH extends Trapezoid {
 							//emptySet;
 						}
 					}
-					
+
 					return Union.new(...args);
 				}
 			}
@@ -3867,61 +3867,61 @@ class TrapezoidH extends Trapezoid {
 					return new TrapezoidH([this.x[0], this.x[1], x1, x0], [this.y[0], that.y[0]]).union(new TrapezoidH([x0, x1, this.x[2], this.x[3]], [that.y[0], this.y[1]]).complement(that));
 				}
 				else {
-					
+
 				}
 			}
 		}
-		
+
 	    return Trapezoid.prototype.complement.apply(this, arguments);
 	}
-	
+
 	_eval_bbox() {
 		var {x, y} = this;
 		var x_min = min(x[0], x[3]);
 		var x_max = max(x[2], x[1]);
 		return new Rectangle(x_min, y[0], x_max.sub(x_min), this.height);
 	}
-	
+
 	// the anchor point is defined to be the point that is closest to the target point;
 	anchorPoint(x0, y0){
 		if (y0.lt(this.y[0])) {
 			if (x0.ge(this.x[0]) && x0.le(this.x[1]))
 				return [x0, this.y[0]];
 			//now that x0 < this.x[0] || x0 > this.x[1]
-			
+
 			if (x0.lt(this.x[0])) {
 				if (this.x[0].le(this.x[3]))
 					return this.p[0];
-					
+
 				var p3 = rotateRight(this.p[3], this.p[0]);
 				var _x0 = solve_x(y0, this.p[0], p3);
-				
+
 				if (x0.ge(_x0))
 					return this.p[0];
-					
+
 				var p0 = this.p[3].add(p3).sub(this.p[0]);
 				_x3 = solve_x(y0, this.p[3], p0);
 				if (x0.gt(_x3))
 					return mean(this.p[0], this.p[3], x0.sub(_x0).div_x3.sub(_x0));
-				
+
 				return this.p[3];
 			}
 			else {
 				//now that y0 > this.y[3]
 				if (this.x[2].le(this.x[3]))
 					return this.p[3];
-					
+
 				var p2 = rotateLeft(this.p[2], this.p[3]);
 				var _x3 = solve_x(y0, this.p[3], p2);
-				
+
 				if (x0.le(_x3))
 					return this.p[3];
-					
+
 				var p3 = this.p[2].add(p2).sub(this.p[3]);
 				_x2 = solve_x(y0, this.p[2], p3);
 				if (x0.lt(_x2))
 					return mean(this.p[3], this.p[2], x0.sub(_x3).div(_x2.sub(_x3)));
-				
+
 				return this.p[2];
 			}
 		}
@@ -3929,53 +3929,53 @@ class TrapezoidH extends Trapezoid {
 			if (x0.ge(this.x[3]) && x0.le(this.x[2]))
 				return [x0, this.y[1]];
 			//now that y0 < this.y[1] || y0 > this.y[2]
-			
+
 			if (x0.lt(this.x[3])) {
 				if (this.x[0].ge(this.x[3]))
 					return this.p[3];
-					
+
 				var p0 = rotateLeft(this.p[0], this.p[1]);
 				var _x1 = solve_x(y0, this.p[1], p0);
-				
+
 				if (x0.ge(_x1))
 					return this.p[1];
-					
+
 				var p1 = this.p[0].add(p0).sub(this.p[1]);
 				_x0 = solve_x(y0, this.p[0], p1);
 				if (x0.gt(_x0))
 					return mean(this.p[1], this.p[0], x0.sub(_x1).div(_x0.sub(_x1)));
-				
+
 				return this.p[0];
 			}
 			else {
 				//now that y0 > this.y[3]
 				if (this.x[2].ge(this.x[1]))
 					return this.p[2];
-					
+
 				var p2 = rotateLeft(this.p[2], this.p[1]);
 				var _x1 = solve_x(y0, this.p[1], p2);
-				
+
 				if (x0.ge(_x1))
 					return this.p[1];
-					
+
 				var p1 = this.p[2].add(p2).sub(this.p[1]);
 				var _x2 = solve_x(y0, this.p[2], p1);
 				if (x0.gt(_x2))
 					return mean(this.p[2], this.p[1], x0.sub(_x2).div(_x1.sub(_x2)));
-				
+
 				return this.p[2];
 			}
 		}
 		else {
 			var xLeft = solve_x(y0, this.p[0], this.p[3]);
 			if (x0.lt(xLeft)) {
-				
+
 				if (this.x[3].lt(this.x[0])) {
 					var p0 = rotateLeft(this.p[0], this.p[3]);
 					var _x = solve_x(y0, this.p[3], p0);
 					if (x0.le(_x))
 						return this.p[3];
-						
+
 					return mean([xLeft, y0], this.p[3], x0.sub(xLeft).div(_x.sub(xLeft)));
 				}
 				else if (this.x[3].gt(this.x[0])) {
@@ -3983,7 +3983,7 @@ class TrapezoidH extends Trapezoid {
 					var _x = solve_x(y0, this.p[0], p3);
 					if (x0.le(_x))
 						return this.p[0];
-						
+
 					return mean([xLeft, y0], this.p[0], x0.sub(xLeft).div(_x.sub(xLeft)));
 				}
 				else
@@ -3992,13 +3992,13 @@ class TrapezoidH extends Trapezoid {
 
 			var xRight = solve_x(y0, this.p[1], this.p[2]);
 			if (x0.gt(xRight)) {
-				
+
 				if (this.x[2].lt(this.x[1])) {
 					var p2 = rotateLeft(this.p[2], this.p[1]);
 					var _x = solve_x(y0, this.p[1], p2);
 					if (x0.ge(_x))
 						return this.p[1];
-						
+
 					return mean([xRight, y0], this.p[1], x0.sub(xRight).div(_x.sub(xRight)));
 				}
 				else if (this.x[2].gt(this.x[1])) {
@@ -4006,7 +4006,7 @@ class TrapezoidH extends Trapezoid {
 					var _x = solve_x(y0, this.p[2], p1);
 					if (x0.ge(_x))
 						return this.p[2];
-						
+
 					return mean([xRight, y0], this.px, x0.sub(xRight).div(_x.sub(xRight)));
 				}
 				else
@@ -4016,7 +4016,7 @@ class TrapezoidH extends Trapezoid {
 			return [x0, y0];
 		}
 	}
-	
+
 	compareTo(that) {
 		if (that.is_TrapezoidH) {
 			var cmp = this.y.compareTo(that.y);
@@ -4024,13 +4024,13 @@ class TrapezoidH extends Trapezoid {
 				return cmp;
 			return this.x.compareTo(that.x);
 		}
-		
+
 		if (that.is_TrapezoidV)
 			return -1;
-		
+
 		return 1;
 	}
-	
+
 	_eval_p() {
 		var {x, y} = this;
 		return [[x[0], y[0]], [x[1], y[0]], [x[2], y[1]], [x[3], y[1]]];
@@ -4045,54 +4045,54 @@ class TrapezoidV extends Trapezoid {
 			return new Rectangle(this.x[0], this.y[0], this.width, this.height[0])
 		return this;
 	}
-	
+
 	constructor(x, y){
 		super(x, y);
 	}
-	
+
 	get is_TrapezoidV() {
 		return true;
 	}
-		
+
 	get p0() {
 		return [this.x[0], this.y[0]];
 	}
-	
+
 	get p1() {
 		return [this.x[1], this.y[1]];
 	}
-	
+
 	get p2() {
 		return [this.x[1], this.y[2]];
 	}
-	
+
 	get p3() {
 		return [this.x[0], this.y[3]];
 	}
-	
+
 	equals(that){
 		if (that && that.is_TrapezoidV) {
 			return this.x.equals(that.x) && this.y.equals(that.y);
 		}
 	}
-		
+
 	get width() {
 		return this.x[1] - this.x[0];
 	}
-	
+
 	get height() {
 		return [this.y[3].sub(this.y[0]), this.y[2].sub(this.y[1])];
 	}
-	
+
 	get card() {
 		var {width, height: [h0, h1]} = this;
 		return width.mul(h0.add(h1)).div(2);
 	}
-	
+
 	union(that) {
 		if (that.is_Rectangle) {
 			if (that.x == this.x[0] && that.x_stop == this.x[1]) {
-				
+
 				if (this.y[0] == this.y[1]) {
 					if (that.y_stop == this.y[0])
 						return new TrapezoidV(this.x, [that.y, that.y, this.y[2], this.y[3]]);
@@ -4104,10 +4104,10 @@ class TrapezoidV extends Trapezoid {
 			}
 			return new Union(that, this);
 		}
-		
+
 		if (that.is_EmptySet)
 			return this;
-		
+
 		if (that.is_Union) {
 			var index = that.args.binary_search(this);
 			return new Union(...that.args.slice(0, index), this, ...that.args.slice(index));
@@ -4117,7 +4117,7 @@ class TrapezoidV extends Trapezoid {
 			var cmp = this.compareTo(that);
 			if (cmp > 0)
 				return that.union(this);
-				
+
 			if (this.x[1].equals(that.x[0])) {
 				if (new Triangle(this.p[0], that.p[0], that.p[1]).is_straight_line() &&
 					new Triangle(this.p[3], this.p[2], that.p[2]).is_straight_line())
@@ -4130,20 +4130,20 @@ class TrapezoidV extends Trapezoid {
 			return new Union(this, that);
 		}
 		else {
-			
+
 		}
 	}
-	
+
 	intersects(that) {
 		if (that.is_Rectangle) {
 			if (this.y.equals([that.y, that.y_stop])) {
 				//unfinished work!
 			}
 		}
-		
+
 		return Trapezoid.prototype.intersects.apply(this, arguments);
 	}
-	
+
 	complement(that) {
 		if (that.is_TrapezoidH) {
 			if (this.x[0].equals(that.x[0])) {
@@ -4156,112 +4156,112 @@ class TrapezoidV extends Trapezoid {
 				}
 			}
 		}
-		
+
 		return Trapezoid.prototype.complement(this, arguments);
 	}
-	
+
 	_eval_bbox() {
 		var {x, y} = this;
 		var y_min = min(y[0], y[1]);
 		var y_max = max(y[2], y[3]);
 		return new Rectangle(x[0], y_min, this.width, y_max.sub(y_min));
 	}
-	
+
 	// the anchor point is defined to be the point that is closest to the target point;
 	anchorPoint(x0, y0){
 		if (x0.lt(this.x[0])) {
 			if (y0.ge(this.y[0]) && y0.le(this.y[3]))
 				return [this.x[0], y0];
 			//now that y0 < this.y[0] || y0 > this.y[3]
-			
+
 			if (y0.lt(this.y[0])) {
 				if (this.y[0].le(this.y[1]))
 					return this.p[0];
-					
+
 				var p1 = rotateLeft(this.p[1], this.p[0]);
 				var _y0 = solve_y(x0, this.p[0], p1);
-				
+
 				if (y0.ge(_y0))
 					return this.p[0];
-					
+
 				var p0 = this.p[1].add(p1).sub(this.p[0]);
 				_y1 = solve_y(x0, this.p[1], p0);
 				if (y0.gt(_y1))
 					return mean(this.p[0], this.p[1], y0.sub(_y0).div(_y1.sub(_y0)));
-				
+
 				return this.p[1];
 			}
 			else {
 				//now that y0 > this.y[3]
 				if (this.y[2].le(this.y[3]))
 					return this.p[3];
-					
+
 				var p2 = rotateRight(this.p[2], this.p[3]);
 				var _y3 = solve_y(x0, this.p[3], p2);
-				
+
 				if (y0.le(_y3))
 					return this.p[3];
-					
+
 				var p3 = this.p[2].add(p2).sub(this.p[3]);
 				_y2 = solve_y(x0, this.p[2], p3);
 				if (y0.lt(_y2))
 					return mean(this.p[3], this.p[2], y0.sub(_y3).div(_y2.sub(_y3)));
-				
+
 				return this.p[2];
-					
+
 			}
 		}
 		else if (x0.gt(this.x[1])) {
 			if (y0.ge(this.y[1]) && y0.le(this.y[2]))
 				return [this.x[1], y0];
 			//now that y0 < this.y[1] || y0 > this.y[2]
-			
+
 			if (y0.lt(this.y[1])) {
 				if (this.y[0].ge(this.y[1]))
 					return this.p[1];
-					
+
 				var p0 = rotateRight(this.p[0], this.p[1]);
 				var _y1 = solve_y(x0, this.p[1], p0);
-				
+
 				if (y0.ge(_y1))
 					return this.p[1];
-					
+
 				var p1 = this.p[0].add(p0).sub(this.p[1]);
 				_y0 = solve_y(x0, this.p[0], p1);
 				if (y0.gt(_y0))
 					return mean(this.p[1], this.p[0], y0.sub(_y1).div(_y0.sub(_y1)));
-				
+
 				return this.p[0];
 			}
 			else {
 				//now that y0 > this.y[3]
 				if (this.y[2].ge(this.y[3]))
 					return this.p[2];
-					
+
 				var p3 = rotateLeft(this.p[3], this.p[2]);
 				var _y2 = solve_y(x0, this.p[2], p3);
-				
+
 				if (y0.le(_y2))
 					return this.p[2];
-					
+
 				var p2 = this.p[3].add(p3).sub(this.p[2]);
 				_y3 = solve_y(x0, this.p[3], p2);
 				if (y0.lt(_y3))
 					return mean(this.p[2], this.p[3], y0.sub(_y2).div(_y3.sub(_y2)));
-				
+
 				return this.p[3];
 			}
 		}
 		else {
 			var yUp = solve_y(x0, this.p[0], this.p[1]);
 			if (y0.lt(yUp)) {
-				
+
 				if (this.y[0].lt(this.y[1])) {
 					var p1 = rotateLeft(this.p[1], this.p[0]);
 					var _y = solve_y(x0, this.p[0], p1);
 					if (y0.le(_y))
 						return this.p[0];
-						
+
 					return mean([x0, yUp], this.p[0], y0.sub(yUp).div(_y.sub(yUp)));
 				}
 				else if (this.y[0].gt(this.y[1])) {
@@ -4269,7 +4269,7 @@ class TrapezoidV extends Trapezoid {
 					var _y = solve_y(x0, this.p[1], p0);
 					if (y0.le(_y))
 						return this.p[1];
-						
+
 					return mean([x0, yUp], this.p[1], y0.sub(yUp).div(_y.sub(yUp)));
 				}
 				else
@@ -4278,13 +4278,13 @@ class TrapezoidV extends Trapezoid {
 
 			var yDown = solve_y(x0, this.p[2], this.p[3]);
 			if (y0.gt(yDown)) {
-				
+
 				if (this.y[3].lt(this.y[2])) {
 					var p3 = rotateLeft(this.p[3], this.p[2]);
 					var _y = solve_y(x0, this.p[2], p3);
 					if (y0.ge(_y))
 						return this.p[2];
-						
+
 					return mean([x0, yDown], this.p[2], y0.sub(yDown).div(_y.sub(yDown)));
 				}
 				else if (this.y[3].gt(this.y[2])) {
@@ -4292,7 +4292,7 @@ class TrapezoidV extends Trapezoid {
 					var _y = solve_y(x0, this.p[3], p2);
 					if (y0.ge(_y))
 						return this.p[3];
-						
+
 					return mean([x0, yDown], this.p[3], y0.sub(yDown).div(_y.sub(yDown)));
 				}
 				else
@@ -4302,7 +4302,7 @@ class TrapezoidV extends Trapezoid {
 			return [x0, y0];
 		}
 	}
-	
+
 	compareTo(that) {
 		if (that.is_TrapezoidV){
 			var cmp = this.x.compareTo(that.x);
@@ -4313,7 +4313,7 @@ class TrapezoidV extends Trapezoid {
 		else
 			return 1;
 	}
-	
+
 	_eval_p() {
 		var {x, y} = this;
 		return [[x[0], y[0]], [x[1], y[1]], [x[1], y[2]], [x[0], y[3]]];
@@ -4321,23 +4321,25 @@ class TrapezoidV extends Trapezoid {
 }
 
 function saveFile(filename, data){
-	if (typeof data != 'string'){
+	if (typeof data != 'string')
 		data = JSON.stringify(data, null, 4);
-	}
-	
-	saveAs(new Blob(
+
+	saveAs(
+		new Blob(
 			[data],
 			{
 				type: "text/plain;charset=utf-8",
 				endings: 'native'
-			}),
-			filename);
+			}
+		),
+		filename
+	);
 }
 
 function isEmpty(obj){
 	if (!obj)
 		return true;
-		
+
     for (var _ in obj) {
         return false;
     }
@@ -4377,7 +4379,7 @@ function majority(arr){
 			value2count[value] = 0;
 		value2count[value] += 1;
 	}
-        
+
     var max_count = -1;
     var majority = null;
     for (var [value, count] of Object.entries(value2count)){
@@ -4386,7 +4388,7 @@ function majority(arr){
             max_count = count;
 		}
     }
-    
+
     return majority
 }
 
@@ -4398,7 +4400,7 @@ function partitionText(text, d){
 			lengths[i] += 1;
 		}
 	}
-	
+
 	var start = 0;
 	var arr = [];
 	for (var length of lengths){
@@ -4406,14 +4408,14 @@ function partitionText(text, d){
 		arr.push(text.slice(start, stop));
 		start = stop;
 	}
-	
+
 	for (var i of range(1, arr.length)){
 		var m0 = arr[i - 1].match(/[a-z]+$/);
 		var m1 = arr[i].match(/^[a-z]+/);
 		if (m0 && m1){
 			m0 = m0[0];
 			m1 = m1[0];
-			
+
 			if (m0.length < m1.length) {
 				arr[i - 1] = arr[i - 1].slice(0, arr[i - 1].length - m0.length);
 				arr[i] = m0 + arr[i];
@@ -4433,13 +4435,13 @@ function *zip() {
     for (var arr of arguments) {
 		size = Math.min(arr.length, size);
 	}
-    
+
     for (var i of range(size)) {
 		var arrs = [];
 		for (var arr of arguments) {
 			arrs.push(arr[i]);
 		}
-		
+
         yield arrs;
     }
 }
@@ -4476,37 +4478,37 @@ class Rational extends Real {
 	get is_Rational() {
 		return true;
 	}
-	
+
 	static new(p, q) {
 		if (!p.isBigInt)
 			p = BigInt(p);
-			
+
 		if (!q.isBigInt)
 			q = BigInt(q);
-			
+
 		var g = gcd(p, q);
 		if (g != 1n) {
 			p /= g;
 			q /= g;
 		}
-		
+
 		if (q < 0n) {
 			p = -p;
 			q = -q;
 		}
-		
+
 		if (q == 1n)
 			return p;
-			
+
 		return new Rational(p, q);
 	}
-	
+
 	constructor(p, q) {
 		super();
 		this.p = p;
 		this.q = q;
 	}
-	
+
 	add(that) {
 		if (that.is_Rational){
 			var {p, q} = that;
@@ -4526,10 +4528,10 @@ class Rational extends Real {
 				var {p, q} = that.toRational();
 			}
 		}
-		
+
 		return Rational.new(this.p * q + this.q * p, q * this.q);
 	}
-	
+
 	sub(that) {
 		if (that.is_Rational){
 			var {p, q} = that;
@@ -4549,10 +4551,10 @@ class Rational extends Real {
 				var {p, q} = that.toRational();
 			}
 		}
-		
+
 		return Rational.new(this.p * q - this.q * p, q * this.q);
 	}
-	
+
 	mul(that) {
 		if (that.is_Rational){
 			var {p, q} = that;
@@ -4572,10 +4574,10 @@ class Rational extends Real {
 				var {p, q} = that.toRational();
 			}
 		}
-		
+
 		return Rational.new(this.p * p, q * this.q);
 	}
-	
+
 	div(that) {
 		if (that.is_Rational){
 			var {p, q} = that;
@@ -4595,123 +4597,123 @@ class Rational extends Real {
 				var {p, q} = that.toRational();
 			}
 		}
-		
+
 		return Rational.new(this.p * q, p * this.q);
 	}
-	
+
 	neg() {
 		return new Rational(-this.p, this.q);
 	}
-	
+
 	inverse() {
 		var {p: q, q: p} = this;
 		if (q < 0n){
 			p = -p;
 			q = -q;
 		}
-			
+
 		if (q == 1n)
 			return p;
-			
+
 		return new Rational(p, q);
 	}
-	
+
 	float() {
 		return this.p.float() / this.q.float();
 	}
-	
+
 	sign() {
 		return this.p.sign();
 	}
-	
+
 	gt(that) {
 		return this.sub(that).is_positive;
 	}
-	
+
 	lt(that) {
 		return this.sub(that).is_negative;
 	}
-	
+
 	ge(that) {
 		return this.sub(that).is_nonnegative;
 	}
-	
+
 	le(that) {
 		return this.sub(that).is_nonpositive;
 	}
-	
+
 	get is_zero() {
 		return false;
 	}
-	
+
 	get is_positive() {
 		return this.p.is_positive;
 	}
-	
+
 	get is_negative() {
 		return this.p.is_negative;
 	}
-	
+
 	get is_nonpositive() {
 		return this.p.is_nonpositive;
 	}
-	
+
 	get is_nonnegative() {
 		return this.p.is_nonnegative;
 	}
-	
+
 	round() {
 		return this.float().round();
 	}
-	
+
 	floor() {
 		if (this.is_negative)
 			return -((-this.p) / this.q) - 1n;
 		return this.p / this.q;
 	}
-	
+
 	ceil() {
 		if (this.is_positive)
 			return this.p / this.q + 1n;
 		return -((-this.p) / this.q);
 	}
-	
+
 	sqrt() {
 		return this.float().sqrt();
 	}
-	
+
 	clip(min, max){
 		if (this.lt(min))
 			return min;
-		
+
 		if (this.gt(max))
 			return max;
-			
+
 		return this;
 	}
-	
+
 	equals(that) {
 		return that.is_Rational && this.p == that.p && this.q == that.q;
 	}
-	
+
 	toRational() {
 		return this;
 	}
-	
+
 	relu() {
 		return this.is_positive? this: 0n;
 	}
-	
+
 	abs() {
 		return this.sign() < 0? this.neg(): this;
 	}
-	
+
 	toString(radix) {
 		if (radix == 10) {
 			var {p, q} = this;
 			return `${p}/${q}`;
 		}
-		
+
 		return this.float().toFixed(2);
 	}
 }
@@ -4726,7 +4728,7 @@ function sleep(time) {
 function convertWithAlignment() {
 	var arr = [...arguments];
     var res = [''].repeat(arr.length);
-    
+
     var size = len(arr[0]);
     for (var j of range(size)) {
         var l = [0].repeat(len(arr))
@@ -4735,20 +4737,20 @@ function convertWithAlignment() {
             res[i] += arr[i][j] + ' ';
             l[i] = strlen(arr[i][j]);
 		}
-		
+
         var maxLength = max(l);
         for (var i of range(len(arr))) {
             res[i] += ' '.repeat(maxLength - l[i]);
         }
 	}
-	
+
     return res;
 }
 
 function *reversed(list) {
 	if (!list.isArray)
 		list = [...list];
-		
+
 	for (var i of range(list.length - 1, -1, -1)) {
 		yield list[i];
 	}
@@ -4766,7 +4768,7 @@ function fromEntries() {
 			obj[key] = value;
 		}
 	}
-	
+
 	return obj;
 }
 
@@ -4827,7 +4829,7 @@ function getitem() {
     for (var key of indices) {
         if (data == null)
             return;
-                
+
         data = data[key];
     }
 
@@ -4846,7 +4848,7 @@ function randrange(start, stop, step) {
 	else {
 		var size = ((stop - start) / step).ceil();
 	}
-	
+
 	return (Math.random() * size).floor() * step + start;
 }
 
@@ -4908,16 +4910,16 @@ function computed(cls, attr) {
 
 function partition(data, divisor) {
 	var size = data.length;
-	
+
 	var quotient = parseInt(size / divisor);
     var batches = [];
-    
+
     var sizes = [quotient].repeat(divisor);
 
     for (var i of range(size % divisor)) {
 		++sizes[i];
 	}
-	
+
 	var start = 0;
     for (var [i, length] of enumerate(sizes)) {
 		var stop = start + length;
@@ -4950,7 +4952,7 @@ function json_extract(obj, path) {
 	for (var m of path.slice(1).matchAll(/\[(\d+)\]|\.([^.\[\]]+)/g)) {
 		paths.push(m[2] || parseInt(m[1]));
 	}
-	
+
 	return getitem(obj, ...paths);
 }
 
@@ -4959,13 +4961,13 @@ function not_any_of(regex) {
 }
 
 
-function parseCSV(data) {
+function parseTSV(data) {
     var {data, meta, errors} = Papa.parse(data, { skipEmptyLines: true });
-    
+
     var [fields, ...data] = data;
     //console.log(fields);
     //console.log(data);
-    
+
     data = data.map(args => {
     	var obj = {};
     	for (var [key, value] of zip(fields, args)) {
@@ -4973,7 +4975,7 @@ function parseCSV(data) {
     	}
     	return obj;
     });
-    
+
     return data;
 }
 
@@ -5075,7 +5077,7 @@ Cookie.instance = new Cookie();
 async function createApp(component, data, id) {
 	const options = {
 		moduleCache: { vue: Vue },
-	
+
 		async getFile(url) {
 			var res;
 			try{
@@ -5099,10 +5101,10 @@ async function createApp(component, data, id) {
 					return getitem(window.vue, ...name.slice(2));
 				}
 			}
-	
+
 			if (!res.ok)
 				throw Object.assign(new Error(res.statusText + ' ' + url), { res });
-			
+
 			if (url.endsWith(".js")) {
 				return res.text().then(text => {
                     return {
@@ -5113,46 +5115,46 @@ async function createApp(component, data, id) {
 					};
                 });
             }
-			
+
 			return res.text();
 		},
-	
+
 		addStyle(textContent) {
 			document.head.insertBefore(
 				Object.assign(document.createElement('style'), { textContent }),
 				document.head.getElementsByTagName('style')[0] || null);
 		},
 	};
-	
+
 	const { loadModule } = window['vue3-sfc-loader'];
-	
+
 	id ||= 'root';
 	var div = document.createElement('div');
 	div.setAttribute('id', id);
-	
+
 	if (document.body == null){
 		document.body = document.createElement('body');
 	}
 	document.body.appendChild(div);
-	
+
 	var components = {};
 	components[component] = await loadModule(`static/components/${component}.vue`, options);
-	
+
 	var args = [];
 	for (let key in data){
 		args.push(`:${key}=${key}`);
 	}
-	
+
 	var App = {
 		components: components,
-		
+
 		data() {
 			return data;
 		},
-		
+
 		template: `<${component} ref=${component} ${args.join(' ')}></${component}>`,
 	};
-	
+
 	var app = Vue.createApp(App);
 	app.mount('#' + id);
 	return app;
@@ -5170,7 +5172,7 @@ function track_mounted(tag){
 		mounted(el, binding){
 			++binding.instance.mounted[tag];
 		},
-		
+
 		unmounted(el, binding){
 			--binding.instance.mounted[tag];
 			console.assert(binding.instance.mounted[tag] >= 0, "binding.instance.mounted[tag] >= 0");
@@ -5180,28 +5182,28 @@ function track_mounted(tag){
 
 const clipboard = {
 	instance: null,
-	mounted(el){
-		// var {tagName, id} = el;
-		// if (id) {
-		// 	id = id.replace(/([.:])/g, '\\$1');
-		// 	tagName += `#${id}`;
-		// }
+
+	contextmenu(event) {
+		event.stopPropagation();
+		event.preventDefault();
+		clipboard.instance.onClick(event);
+	},
+
+	mounted(el) {
+		var {tagName, id} = el;
+		if (id) {
+			id = id.replace(/([.:])/g, '\\$1');
+			tagName += `#${id}`;
+		}
 
 		if (!el.getAttribute('data-clipboard-action'))
 			el.setAttribute('data-clipboard-action', 'copy');
 		el.setAttribute('data-clipboard-target', '[data-clipboard-action="copy"]');
 
-		// el.addEventListener('click', function(event) {
-			// Prevent left-click events from triggering ClipboardJS
-    		// event.stopImmediatePropagation();
-		// });
-		el.addEventListener('contextmenu', function(event) {
-            event.preventDefault();
-            clipboard.instance.onClick(event);
-        });
+		el.addEventListener('contextmenu', clipboard.contextmenu);
 
 		if (!clipboard.instance) {
-			var instance = clipboard.instance = new ClipboardJS('[data-clipboard-action="copy"]');
+			var instance = clipboard.instance = new ClipboardJS(`${tagName}[data-clipboard-action="copy"]`);
 
 			instance.on('success', function(event) {
 				var {trigger} = event;
@@ -5210,7 +5212,7 @@ const clipboard = {
 					range.selectNodeContents(trigger);
 					var selection = window.getSelection();
 					selection.removeAllRanges();
-					selection.addRange(range);				
+					selection.addRange(range);
 				}
 				else
 					console.log(event);
@@ -5281,14 +5283,14 @@ function fetchEventSource(input, _a) {
 			}
 		};
 	}
-	
+
 	function concat(a, b) {
 		const res = new Uint8Array(a.length + b.length);
 		res.set(a);
 		res.set(b, a.length);
 		return res;
 	}
-	
+
 	function newMessage() {
 		return {
 			data: '',
@@ -5297,7 +5299,7 @@ function fetchEventSource(input, _a) {
 			retry: undefined,
 		};
 	}
-	
+
 	function __rest(s, e) {
 		var t = {};
 		for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -5309,7 +5311,7 @@ function fetchEventSource(input, _a) {
 			}
 		return t;
 	};
-	
+
 	async function getBytes(stream, onChunk) {
 		const reader = stream.getReader();
 		let result;
@@ -5317,7 +5319,7 @@ function fetchEventSource(input, _a) {
 			onChunk(result.value);
 		}
 	}
-	
+
 	function getLines(onLine) {
 		let buffer;
 		let position;
@@ -5372,18 +5374,18 @@ function fetchEventSource(input, _a) {
 			}
 		};
 	}
-	
+
 	function defaultOnOpen(response) {
 		const contentType = response.headers.get('content-type');
 		if (!(contentType === null || contentType === void 0 ? void 0 : contentType.startsWith(EventStreamContentType))) {
 			throw new Error(`Expected content-type to be ${EventStreamContentType}, Actual: ${contentType}`);
 		}
 	}
-	
+
 	const EventStreamContentType = 'text/event-stream';
 	const DefaultRetryInterval = 1000;
 	const LastEventId = 'last-event-id';
-	
+
     var { signal: inputSignal, headers: inputHeaders, onopen: inputOnOpen, onmessage, onclose, onerror, openWhenHidden, fetch: inputFetch } = _a, rest = __rest(_a, ["signal", "headers", "onopen", "onmessage", "onclose", "onerror", "openWhenHidden", "fetch"]);
     return new Promise((resolve, reject) => {
         const headers = Object.assign({}, inputHeaders);
@@ -5468,7 +5470,7 @@ function str(obj) {
 			else
 				return '"%s"'.format(obj);
         }
-		else 
+		else
 			return "'%s'".format(obj);
     }
 
@@ -5480,4 +5482,38 @@ function str(obj) {
 }
 
 
+function topologicalSortDepthFirst(graph) {
+    const L = [];
+    const permanentMark = new Set();
+    const temporaryMark = new Set();
+
+    function visit(n) {
+        if (permanentMark.has(n))
+            return;
+        if (temporaryMark.has(n))
+            throw new Error('Cycle detected');
+        temporaryMark.add(n);
+        for (let m of graph[n])
+            visit(m);
+        temporaryMark.delete(n);
+        permanentMark.add(n);
+        L.push(n);
+    }
+
+    try {
+        for (let n in graph)
+            visit(n);
+    } catch (e) {
+        return;
+    }
+
+    return L;
+}
+
+
+function get_class(obj) {
+	if (obj == null)
+		return null;
+	return obj.constructor.name;
+}
 console.log("import std.js");

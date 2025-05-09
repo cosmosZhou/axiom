@@ -5,7 +5,7 @@ import Axiom.Basic
 private lemma main
   {s : List (List α)} :
 -- imply
-  s.join.length = (s.map fun s => s.length).sum := by
+  s.flatten.length = (s.map fun s => s.length).sum := by
 -- proof
   induction s <;> simp
 

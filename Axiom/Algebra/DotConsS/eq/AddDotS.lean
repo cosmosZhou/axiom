@@ -1,3 +1,4 @@
+import stdlib.List.Vector
 import Axiom.Basic
 
 
@@ -5,11 +6,11 @@ import Axiom.Basic
 private lemma main
   [Add α] [Zero α] [Mul α]
   {a a' : α}
-  {s s' : Vector α n} :
+  {s s' : List.Vector α n} :
 -- imply
   (a ::ᵥ s) ⬝ (a' ::ᵥ s') = a * a' + s ⬝ s' := by
 -- proof
-  simp [Mathlib.Vector.dot]
+  rfl
 
 
 -- created on 2024-07-01

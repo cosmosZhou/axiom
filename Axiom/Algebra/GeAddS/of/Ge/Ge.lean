@@ -1,5 +1,5 @@
 import Axiom.Algebra.GeAddS.of.Ge
-import Axiom.Algebra.Ge.of.Ge.Ge.trans
+import Axiom.Algebra.Ge.of.Ge.Ge
 open Algebra
 
 
@@ -17,8 +17,8 @@ private lemma main
   a + x ≥ b + y := by
 -- proof
   have h₂ := GeAddS.of.Ge h₀ x
-  have h₃ := GeAddS.of.Ge h₁ b true
-  apply Ge.of.Ge.Ge.trans h₂ h₃
+  have h₃ := GeAddS.of.Ge.left h₁ b
+  apply Ge.of.Ge.Ge h₂ h₃
 
 
 -- created on 2024-11-25

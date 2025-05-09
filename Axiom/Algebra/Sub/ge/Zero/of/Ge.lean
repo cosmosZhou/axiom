@@ -4,6 +4,17 @@ open Algebra
 
 
 @[main]
+private lemma nat
+  {x y : ℕ}
+-- given
+  (h : x ≥ y) :
+-- imply
+  (x : ℤ) - (y : ℤ) ≥ 0 := by
+-- proof
+  linarith
+
+
+@[main]
 private lemma main
   [OrderedAddCommGroup α]
   {x y : α}

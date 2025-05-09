@@ -18,7 +18,7 @@ private lemma main
   | true => a ≠ 0
   | false => b ≠ 0 := by
 -- proof
-  cases left with
+  match left with
   | true =>
     by_contra h'
     rw [h'] at h

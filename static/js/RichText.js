@@ -1,4 +1,4 @@
-import {XMLNodeCaret, XMLNodeBinaryTag, XMLNodeUnbalancedTag} from "./XMLNode.js"
+import {XMLNodeCaret, XMLNodeContainerTag, XMLNodeUnbalancedTag} from "./XMLNode.js"
 
 function compile(infix) {
     var caret = new XMLNodeCaret();
@@ -7,7 +7,7 @@ function compile(infix) {
     for (var text of infix) {
         if (text.is_TagBegin) {
 			caret = caret.append_left_tag(text);
-			
+
 			if (!leftTagCount[text.tag])
 				leftTagCount[text.tag] = [];
 			leftTagCount[text.tag].push(caret.parent);
@@ -20,7 +20,7 @@ function compile(infix) {
                 if (caret) {
 	                root = caret;
 	                caret = caret.parent;
-	                if (caret instanceof XMLNodeBinaryTag && caret.tag == text.tag) {
+	                if (caret instanceof XMLNodeContainerTag && caret.tag == text.tag) {
 	                    caret.tagEnd = text;
 						while (true) {
 							var _caret = leftTagCount[text.tag].pop();
@@ -36,7 +36,7 @@ function compile(infix) {
 					var caret = new XMLNodeUnbalancedTag(text, parent);
 					while (parent.stop < root.stop)
 						parent = parent.parent;
-						
+
 					caret = parent.append_tag(caret);
                     break;
 				}
@@ -47,24 +47,24 @@ function compile(infix) {
 				}
             }
         }
-        else if (text.is_TagSingle || text.is_HTMLEntity)
+        else if (text.is_VoidTag || text.is_HTMLEntity)
             caret = caret.append_single_tag(text);
         else
             caret = caret.append_text_node(text);
 	}
-	
+
 	for (var tag in leftTagCount) {
 		while (leftTagCount[tag].length) {
 			leftTagCount[tag].pop().reduceToNodeText();
 		}
 	}
-	
+
     return caret.root;
 }
 
 export function construct_rich_text(text){
 	var start = 0;
-	
+
 	var richTexts = [];
 	var leftTagCount = {};
 	for (let m of text.matchAll(/<([a-z][-:_a-z]*\d*)(?:\s+:?[a-z][-:_a-z]*(?:=(?:"[^"]*"|'[^']*'))?)*\s*>(?=[\s\S]*?<\/\1>)|<\/([a-z][-:_a-z]*\d*)>|<(img|mspace|br|input|span|meta|link)(?:\s+:?[a-z][-:_a-z]*(?:=(?:"[^"]*"|'[^']*'))?)*\s*\/>|&(#[0-9]+|#x[0-9a-f]+|[^\t\n\f <&#;]{1,32});/ig)) {
@@ -72,7 +72,7 @@ export function construct_rich_text(text){
 		var prevText = text.slice(start, m.index);
 		if (prevText)
 			richTexts.push(new PlainText(text, start, m.index));
-		
+
 		var end = m.index + m[0].length;
 		var richText;
 		if (m[1]) {
@@ -96,18 +96,18 @@ export function construct_rich_text(text){
 				richText = new PlainText(text, m.index, end);
 		}
 		else if (m[3])
-			richText = new TagSingle(text, m.index, end, m[3]);
+			richText = new VoidTag(text, m.index, end, m[3]);
 		else
 			richText = new HTMLEntity(text, m.index, end, m[4]);
-		
+
 		richTexts.push(richText);
 		start = end;
 	}
-	
+
 	var restText = text.slice(start);
 	if (restText)
 		richTexts.push(new PlainText(text, start, len(text)));
-	
+
 	return compile(richTexts);
 }
 
@@ -115,15 +115,15 @@ class XMLText {
 	constructor(src, start, stop){
 		Object.assign(this, {src, start, stop});
 	}
-	
+
     toString(){
 		return this.src.slice(this.start, this.stop);
 	}
-	
+
     get length() {
 		return this.stop - this.start;
 	}
-	
+
 	reduceToNodeText() {
 		return new PlainText(this.src, this.start, this.stop);
 	}
@@ -145,8 +145,8 @@ class TagEnd extends XMLText {
 	}
 }
 
-class TagSingle extends XMLText {
-	is_TagSingle = true;
+class VoidTag extends XMLText {
+	is_VoidTag = true;
 	constructor(src, start, stop, tag){
 		super(src, start, stop);
 		var text;
@@ -163,7 +163,7 @@ class TagSingle extends XMLText {
 		default:
 			text = '?';
 		}
-		
+
 		Object.assign(this, {text ,tag});
 	}
 
@@ -180,7 +180,7 @@ class HTMLEntity extends XMLText {
 		var text = he.unescape(`&${tag};`);
 		if (text.length != 1)
 			text = '?';
-		
+
 		tag = 'entity-' + tag;
 		Object.assign(this, {text, tag});
 	}
@@ -188,11 +188,11 @@ class HTMLEntity extends XMLText {
 
 class PlainText extends XMLText {
 	is_PlainText = true;
-	
+
 	constructor(src, start, stop){
 		super(src, start, stop);
 	}
-	
+
 	get text() {
 		return this.src.slice(this.start, this.stop);
 	}
@@ -209,22 +209,22 @@ function style_type(ptr, style){
 	var style_intersected = {};
 	for (var tag in style){
 		var set = style[tag];
-		
+
 		var intersection = set.intersects(this_set);
 		if (intersection.is_EmptySet)
 			continue;
-			
+
 		style_intersected[tag] = intersection;
 	}
 
 	if (isEmpty(style_intersected))
 		return;
-	
+
 	var indicator = [];
 	for (var i of range(offsetStop - offsetStart)){
 		indicator[i] = {className: ptr.className};
 	}
-	
+
 	function processRangeObject(set, tag) {
 		var {start, stop} = set;
 		for (var i of range(start, stop)) {
@@ -235,11 +235,11 @@ function style_type(ptr, style){
 				indicator[i].className = tag;
 		}
 	}
-	
+
 	for (var tag in style_intersected) {
 		var set = style_intersected[tag];
 		set = set.add(-offsetStart);
-		
+
 		var args = set.is_Range? [set]: set.args;
 		for (var [i, s] of enumerate(args)) {
 			if (i && args[i - 1].stop == s.start)
@@ -247,7 +247,7 @@ function style_type(ptr, style){
 			processRangeObject(s, tag);
 		}
 	}
-	
+
 	var interval = [];
 	var i = 0;
 	while (i < indicator.length){
@@ -255,7 +255,7 @@ function style_type(ptr, style){
 			if (indicator[j].className != indicator[i].className)
 				break;
 		}
-		
+
 		var className = indicator[i].className;
 		if (!className)
 			className = ptr.className;
@@ -277,7 +277,7 @@ export function split_interval_by_entity(self, clazzName, entity) {
 
 		style[className] = style[className].union(new Range(offsetStart, offsetStop));
 	}
-	
+
 	return detect_style(self.interval(clazzName), style);
 }
 
@@ -288,7 +288,7 @@ export function interval(self, className) {
 export function detect_style(interval, style){
 	for (var i = 0; i < interval.length; ++i){
 		var ptr = interval[i];
-		
+
 		var stype = style_type(ptr, style);
 		if (Array.isArray(stype)){
 			interval.splice(i, 1, ...stype);
@@ -298,7 +298,7 @@ export function detect_style(interval, style){
 			ptr.className += ` ${stype}`;
 		}
 	}
-	
+
 	return interval;
 }
 

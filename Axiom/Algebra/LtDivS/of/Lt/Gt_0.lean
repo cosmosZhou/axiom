@@ -4,6 +4,10 @@ import Axiom.Algebra.Inv.gt.Zero.of.Gt_0
 open Algebra
 
 
+/--
+Given elements `a`, `b`, and `x` in a partially ordered group with zero, if `a < b` and `x > 0`, then dividing both `a` and `b` by `x` preserves the strict inequality, i.e., `a / x < b / x`. 
+This result follows from the positivity of the inverse `x⁻¹` and the strict monotonicity of multiplication by positive elements.
+-/
 @[main]
 private lemma main
   [GroupWithZero α]
@@ -13,17 +17,19 @@ private lemma main
   [MulPosStrictMono α]
   {x a b : α}
 -- given
-  (h1 : a < b)
-  (h2 : x > 0) :
+  (h₀ : a < b)
+  (h₁ : x > 0) :
 -- imply
   a / x < b / x := by
 -- proof
-  have h3 : x⁻¹ > 0 := Inv.gt.Zero.of.Gt_0 h2
-  have h4 := LtMulS.of.Lt.Gt_0 h1 h3
+  have : x⁻¹ > 0 := Inv.gt.Zero.of.Gt_0 h₁
+  have := LtMulS.of.Lt.Gt_0 h₀ this
   rw [
-    Mul_Inv.eq.Div, Mul_Inv.eq.Div
-  ] at h4
-  exact h4
+    Mul_Inv.eq.Div,
+    Mul_Inv.eq.Div
+  ] at this
+  exact this
 
 
 -- created on 2024-11-25
+-- updated on 2025-04-04

@@ -5,7 +5,7 @@ open Algebra
 @[main]
 private lemma main
   [Add β] [Zero β] [Mul β]
-  {s : Vector α n}
+  {s : List.Vector α n}
   {f₁ f₂ : α → β} :
 -- imply
   (s.map fun x => (f₁ x) * (f₂ x)).sum = (s.map f₁) ⬝ (s.map f₂) :=

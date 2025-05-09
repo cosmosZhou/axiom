@@ -44,7 +44,7 @@ class QueueIterator implements Iterator
     // Move forward to next element
     public function next(): void
     {
-        ++ $this->_index;
+        ++$this->_index;
         // return $this;
     }
 
@@ -132,7 +132,7 @@ class Queue implements JsonSerializable, IteratorAggregate
 
         $this->_array[$this->_stop % $this->_capacity] = $elem;
 
-        ++ $this->_stop;
+        ++$this->_stop;
     }
 
     private function expand()
@@ -162,7 +162,7 @@ class Queue implements JsonSerializable, IteratorAggregate
 
         $elem = $this->_array[$this->_start];
 
-        ++ $this->_start;
+        ++$this->_start;
 
         if ($this->_start == $this->_capacity) {
             $this->_start = 0;
@@ -275,7 +275,7 @@ class SetIterator implements Iterator
     public function next(): void
     {
         $this->_valid = next($this->_array) === false ? false : true;
-        ++ $this->_index;
+        ++$this->_index;
         // return $this;
     }
 
@@ -385,6 +385,8 @@ class Graph implements JsonSerializable, IteratorAggregate
 
     private $temporary_mark;
 
+    private $L;
+
     function visit($n)
     {
         // error_log("visiting key = $n");
@@ -409,6 +411,7 @@ class Graph implements JsonSerializable, IteratorAggregate
         }
 
         $this->permanent_mark->add($n);
+        $this->L[] = $n;
         return null;
     }
 
@@ -555,7 +558,7 @@ class GraphIterator implements Iterator
                 $this->set_iterator = current($this->_array)->getIterator();
             }
         }
-        ++ $this->_key;
+        ++$this->_key;
         // return $this;
     }
 
@@ -818,7 +821,7 @@ class Text implements IteratorAggregate
                 $lines[] = $newLine;
             else
                 $lines[] = $line;
-            ++ $i;
+            ++$i;
         }
 
         $this->rewind();
@@ -841,7 +844,7 @@ class Text implements IteratorAggregate
             }
 
             $lines[] = $line;
-            ++ $i;
+            ++$i;
         }
 
         $this->rewind();
@@ -858,7 +861,7 @@ class Text implements IteratorAggregate
         foreach ($this as $line) {
             if ($i != $index)
                 $lines[] = $line;
-            ++ $i;
+            ++$i;
         }
 
         $this->rewind();
@@ -988,7 +991,7 @@ class TextIterator implements Iterator
     public function next(): void
     {
         // error_log("public function next()");
-        ++ $this->line;
+        ++$this->line;
         // return $this;
     }
 
@@ -1198,13 +1201,12 @@ function slice(&$s, $start, $stop = null, $step = 1)
 
             // return (new CString($s))->slice($start, $stop);
             return mb_substr($s, $start, $stop - $start, "utf8");
-        }
-        else {
+        } else {
             if ($stop === null)
                 $stop = len($s);
             elseif ($stop < 0)
                 $stop += len($s);
-                    
+
             return implode('', array_map(fn($i) => slice($s, $i, $i + 1), ranged($start, $stop, $step)));
         }
     } else {
@@ -1216,8 +1218,7 @@ function slice(&$s, $start, $stop = null, $step = 1)
                 $stop += count($s);
 
             return array_slice($s, $start, $stop - $start);
-        }
-        else {
+        } else {
             if ($stop === null)
                 $stop = count($s);
             elseif ($stop < 0)
@@ -1315,14 +1316,13 @@ function json_post($url, $data = NULL, $header = NULL, $stream_id = null)
 
     if (is_array($header)) {
         $decode = null;
-    }
-    else {
+    } else {
         $header = [];
         $decode = true;
     }
-    
+
     $header[] = 'Content-Type: application/json; charset=utf-8';
-    $header[] = 'Content-Length:' . strlen($data);
+    $header[] = 'Content-Length: ' . strlen($data);
     $header[] = 'Cache-Control: no-cache';
     $header[] = 'Pragma: no-cache';
     curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
@@ -1338,12 +1338,12 @@ function json_post($url, $data = NULL, $header = NULL, $stream_id = null)
         // https://github.com/qiayue/php-openai-gpt-stream-chat-api-webui
         // ob_start();
         $buffer = '';
-        curl_setopt($curl, CURLOPT_WRITEFUNCTION, function($curl, $data) use ($stream_id, &$buffer){
+        curl_setopt($curl, CURLOPT_WRITEFUNCTION, function ($curl, $data) use ($stream_id, &$buffer) {
             $size = strlen($data);
             // error_log('$data = '. $data);
 
             if ($buffer) {
-                $data = $buffer.$data;
+                $data = $buffer . $data;
                 $buffer = '';
             }
 
@@ -1379,33 +1379,31 @@ function json_post($url, $data = NULL, $header = NULL, $stream_id = null)
 
     curl_close($curl);
     // if ($stream_id !== null) {
-        // ob_end_clean();
+    // ob_end_clean();
     // }
     return $decode ? decode($res) : $res;
 }
 
-function json_post_native($url, $data, $header = null, $stream_id = null) {
+function json_post_native($url, $data, $header = null, $stream_id = null)
+{
     if (is_array($data))
         $data = json_encode($data);
-    
-    if (is_array($header))
-        $decode = null;
-    else {
+
+    if (!is_array($header))
         $header = [];
-        $decode = true;
-    }
+
     $header[] = 'Content-Type: application/json; charset=utf-8';
-    $header[] = 'Content-Length:' . strlen($data);
+    $header[] = 'Content-Length: ' . strlen($data);
     $header[] = 'Cache-Control: no-cache';
     $header[] = 'Pragma: no-cache';
     $options = [
         'http' => [
             'method'  => 'POST',
-            'header'  => implode("\n", $header),
+            'header'  => implode("\r\n", $header),
             'content' => $data
         ]
     ];
-    
+
     $context = stream_context_create($options);
     if ($stream_id !== null) {
         // Set SSE headers
@@ -1413,12 +1411,12 @@ function json_post_native($url, $data, $header = null, $stream_id = null) {
         header('Cache-Control: no-cache');
         header('Connection: keep-alive');
         header('X-Accel-Buffering: no');
-        
+
         // Disable output buffering
         while (ob_get_level() > 0) {
             ob_end_flush();
         }
-        
+
         // Open the stream
         $handle = fopen($url, 'r', false, $context);
         if (!$handle) {
@@ -1427,19 +1425,19 @@ function json_post_native($url, $data, $header = null, $stream_id = null) {
             flush();
             exit;
         }
-        
+
         $buffer = '';
         while (!feof($handle)) {
             $chunk = fread($handle, 8192);
             if ($chunk === false) break;
-            
+
             $buffer .= $chunk;
-            
+
             // Split by "\n\n"
             while (($pos = strpos($buffer, "\n\n")) !== false) {
                 $event = substr($buffer, 0, $pos);
                 $buffer = substr($buffer, $pos + 2);
-                
+
                 // Format with stream ID
                 $output = ($stream_id !== null ? "id: $stream_id\n" : "") . "$event\n\n";
                 echo $output;
@@ -1459,7 +1457,7 @@ function json_post_native($url, $data, $header = null, $stream_id = null) {
         $result = file_get_contents($url, false, $context);
         if ($result === false)
             throw new Exception("HTTP request failed: " . error_get_last()['message']);
-        return $decode ? json_decode($result, true) : $result;
+        return $result;
     }
 }
 
@@ -1826,21 +1824,20 @@ class HttpClient
     }
 }
 
-function zip(&$arr0, &$arr1, &$arr2=null)
+function zip(&$arr0, &$arr1, &$arr2 = null)
 {
     if ($arr2 !== null) {
         $size = min(count($arr0), count($arr1), count($arr2));
-        for ($i = 0; $i < $size; ++ $i) {
+        for ($i = 0; $i < $size; ++$i) {
             yield [
                 $arr0[$i],
                 $arr1[$i],
                 $arr2[$i]
             ];
         }
-    }
-    else {
+    } else {
         $size = min(count($arr0), count($arr1));
-        for ($i = 0; $i < $size; ++ $i) {
+        for ($i = 0; $i < $size; ++$i) {
             yield [
                 $arr0[$i],
                 $arr1[$i]
@@ -1849,7 +1846,7 @@ function zip(&$arr0, &$arr1, &$arr2=null)
     }
 }
 
-function zipped($arr0, $arr1, $arr2=null)
+function zipped($arr0, $arr1, $arr2 = null)
 {
     return iterator_to_array(zip($arr0, $arr1, $arr2));
 }
@@ -2116,7 +2113,7 @@ class Union extends SymbolicSet
 
     public function add($offset)
     {
-        return new Union(...array_map(fn ($el) => $el->add($offset), $this->args));
+        return new Union(...array_map(fn($el) => $el->add($offset), $this->args));
     }
 
     public function union($that)
@@ -2149,7 +2146,7 @@ class Union extends SymbolicSet
             ];
             $index = binary_search($args, $that, function ($a, $b) {
                 if ($a->stop <= $b->start)
-                    return - 1;
+                    return -1;
 
                 if ($b->stop <= $a->start)
                     return 1;
@@ -2184,25 +2181,25 @@ class Union extends SymbolicSet
 
             $index = binary_search($args, $that, function ($lhs, $rhs) {
                 if ($lhs->x < $rhs->x)
-                    return - 1;
+                    return -1;
 
                 if ($lhs->x > $rhs->x)
                     return 1;
 
                 if ($lhs->y < $rhs->y)
-                    return - 1;
+                    return -1;
 
                 if ($lhs->y > $rhs->y)
                     return 1;
 
                 if ($lhs->width < $rhs->width)
-                    return - 1;
+                    return -1;
 
                 if ($lhs->width > $rhs->width)
                     return 1;
 
                 if ($lhs->height < $rhs->height)
-                    return - 1;
+                    return -1;
 
                 if ($lhs->height > $rhs->height)
                     return 1;
@@ -2246,7 +2243,7 @@ class Union extends SymbolicSet
             ];
 
             foreach ($that as &$that)
-                array_insert($args, binary_search($args, $that, fn ($lhs, $rhs) => $lhs->compareTo($rhs)), $that);
+                array_insert($args, binary_search($args, $that, fn($lhs, $rhs) => $lhs->compareTo($rhs)), $that);
 
             return new Union(...$args);
         }
@@ -2262,7 +2259,7 @@ class Union extends SymbolicSet
 
     public function sliced($obj)
     {
-        return implode('\t', array_map(fn ($domain) => $domain->sliced($obj), $this->args));
+        return implode('\t', array_map(fn($domain) => $domain->sliced($obj), $this->args));
     }
 
     public function jsonSerialize(): mixed
@@ -2301,8 +2298,8 @@ class Union extends SymbolicSet
             case 'bbox':
                 $x_min = INF;
                 $y_min = INF;
-                $x_max = - INF;
-                $y_max = - INF;
+                $x_max = -INF;
+                $y_max = -INF;
                 foreach ($this->args as $rect) {
                     $x_min = min($x_min, $rect->x);
                     $y_min = min($y_min, $rect->y);
@@ -2319,7 +2316,7 @@ class Union extends SymbolicSet
 
     public function __toString()
     {
-        return implode(" | ", array_map(fn ($arg) => "$arg", $this->args));
+        return implode(" | ", array_map(fn($arg) => "$arg", $this->args));
     }
 }
 
@@ -2475,7 +2472,7 @@ class Range extends SymbolicSet
     public function compareTo($that)
     {
         if ($this->stop <= $that->start)
-            return - 1;
+            return -1;
 
         if ($that->stop <= $this->start)
             return 1;
@@ -2488,11 +2485,11 @@ class Range extends SymbolicSet
         return "[$this->start; $this->stop)";
     }
 
-    public function contains($pt) {
+    public function contains($pt)
+    {
         if (is_float($pt)) {
             return $pt >= $this->start && $pt < $this->stop;
-        }
-        else {
+        } else {
             return $pt->start >= $this->start && $pt->stop <= $this->stop;
         }
     }
@@ -2769,7 +2766,7 @@ function binary_search(&$arr, &$value, $compareTo)
 function equal_range(&$self, &$value, $compareTo)
 {
     if (! $compareTo)
-        $compareTo = fn ($a, $b) => $a - $b;
+        $compareTo = fn($a, $b) => $a - $b;
 
     $begin = 0;
     $end = count($self);
@@ -2788,7 +2785,7 @@ function equal_range(&$self, &$value, $compareTo)
             $stop = $begin - 1;
             $begin = $mid;
             for (;;) {
-                $pivot = - (- $begin - $stop >> 1);
+                $pivot = - (-$begin - $stop >> 1);
                 if ($pivot == $begin)
                     break;
 
@@ -2865,7 +2862,7 @@ function array_any($fn, $array)
 
 function hump($str)
 {
-    return preg_replace_callback("/_[a-z]/", fn ($s) => strtoupper(substring($s[0], 1)), $str);
+    return preg_replace_callback("/_[a-z]/", fn($s) => strtoupper(substring($s[0], 1)), $str);
 }
 
 function contains($str, $char)
@@ -2876,7 +2873,7 @@ function contains($str, $char)
 function range_cmp(&$lhs, &$rhs)
 {
     if ($lhs['end'] <= $rhs['start'])
-        return - 1;
+        return -1;
 
     if ($lhs['start'] >= $rhs['end'])
         return 1;
@@ -2950,7 +2947,7 @@ class CString implements IteratorAggregate
                 $end
             ] = $lhs;
             if ($end <= $rhs)
-                return - 1;
+                return -1;
 
             if ($start > $rhs)
                 return 1;
@@ -2987,7 +2984,7 @@ class CString implements IteratorAggregate
         $len = 0;
         $mask = 0x80;
         while ($byte & $mask) {
-            ++ $len;
+            ++$len;
             if ($len > 6) {
                 println(__FUNCTION__);
                 println("illegal char encountered" . $byte);
@@ -3012,9 +3009,9 @@ class CString implements IteratorAggregate
         if (is_string($wc)) {
             return $wc;
         }
-        
+
         $pText = [];
-        
+
         if (is_array($wc)) {
             foreach (range(count($wc)) as $i) {
                 $pText[] = self::unicode2utf($wc[$i]);
@@ -3023,29 +3020,29 @@ class CString implements IteratorAggregate
             return implode('', $pText);
         }
 
-        if (! ($wc & ~ 0x0000007F)) {
+        if (! ($wc & ~0x0000007F)) {
             // U-00000000 - U-0000007F: 0xxxxxxx
             $pText[] = $wc;
             // $pText[] = 0;
-        } else if (! ($wc & ~ 0x000007FF)) {
+        } else if (! ($wc & ~0x000007FF)) {
             // U-00000080 - U-000007FF: 110xxxxx 10xxxxxx
             $pText[] = 0xC0 | (($wc >> 6) & 0x1F);
             $pText[] = 0x80 | ($wc & 0x3F);
             // $pText[] = 0;
-        } else if (! ($wc & ~ 0x0000FFFF)) {
+        } else if (! ($wc & ~0x0000FFFF)) {
             // U-00000800 - U-0000FFFF: 1110xxxx 10xxxxxx 10xxxxxx
             $pText[] = 0xE0 | (($wc >> 12) & 0x0F);
             $pText[] = 0x80 | (($wc >> 6) & 0x3F);
             $pText[] = 0x80 | ($wc & 0x3F);
             // $pText[3] = 0;
-        } else if (! ($wc & ~ 0x001FFFFF)) {
+        } else if (! ($wc & ~0x001FFFFF)) {
             // U-00010000 - U-001FFFFF: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
             $pText[] = 0xF0 | (($wc >> 18) & 0x07);
             $pText[] = 0x80 | (($wc >> 12) & 0x3F);
             $pText[] = 0x80 | (($wc >> 6) & 0x3F);
             $pText[] = 0x80 | ($wc & 0x3F);
             // $pText[4] = 0;
-        } else if (! ($wc & ~ 0x03FFFFFF)) {
+        } else if (! ($wc & ~0x03FFFFFF)) {
             // U-00200000 - U-03FFFFFF: 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
             $pText[] = 0xF8 | (($wc >> 24) & 0x03);
             $pText[] = 0x80 | (($wc >> 18) & 0x3F);
@@ -3064,7 +3061,7 @@ class CString implements IteratorAggregate
             // $pText[6] = 0;
         }
 
-        return implode("", array_map(fn ($ch) => chr($ch), $pText));
+        return implode("", array_map(fn($ch) => chr($ch), $pText));
     }
 }
 
@@ -3145,8 +3142,7 @@ function delitem(&$data, $index, ...$indices)
                     unset($data[$index]);
             }
         }
-    }
-    else
+    } else
         delitem($data[$index], ...$indices);
 }
 
@@ -3164,7 +3160,7 @@ function sample(&$data, $count)
     if ($data && $count) {
         $sample = array_rand($data, $count);
         if ($count > 1)
-            return array_map(fn ($i) => $data[$i], $sample);
+            return array_map(fn($i) => $data[$i], $sample);
 
         return [
             $data[$sample]
@@ -3188,7 +3184,8 @@ function fullmatch($regexp, $str)
     return null;
 }
 
-function is_unicode_match(&$regex) {
+function is_unicode_match(&$regex)
+{
     foreach (range(strrpos($regex, $regex[0]) + 1, strlen($regex)) as $i) {
         if ($regex[$i] == 'u') {
             return true;
@@ -3196,7 +3193,7 @@ function is_unicode_match(&$regex) {
     }
 }
 
-function &matchAll($regex, $str, $captureIndex=0, $postprocess_match=true)
+function &matchAll($regex, $str, $captureIndex = 0, $postprocess_match = false)
 {
     $matches = [];
     preg_match_all($regex, $str, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE | PREG_UNMATCHED_AS_NULL);
@@ -3205,45 +3202,43 @@ function &matchAll($regex, $str, $captureIndex=0, $postprocess_match=true)
     return $matches;
 }
 
-function &matchAllExtended($regex, $str, $captureIndex=0)
+function &matchAllExtended($regex, $str, $captureIndex = 0)
 {
     $start = 0;
     $matches = [];
     $strlen = strlen($str);
     do {
-        if (preg_match($regex, $start? substring($str, $start): $str, $m, PREG_OFFSET_CAPTURE)) {
+        if (preg_match($regex, $start ? substring($str, $start) : $str, $m, PREG_OFFSET_CAPTURE)) {
             [$mText, $index] = $m[0];
-            
+
             if ($start) {
                 foreach ($m as &$tuple) {
                     $tuple[1] += $start;
                 }
             }
-            
+
             $matches[] = $m;
             $start += $index + strlen($mText);
-        }
-        else
+        } else
             break;
-    }
-    while ($i < $strlen);
-    
+    } while ($i < $strlen);
+
     postprocess_match($matches, $str, $captureIndex, is_unicode_match($regex));
     return $matches;
 }
 
-function postprocess_match(&$matches, &$str, &$captureIndex, $utf8) {
+function postprocess_match(&$matches, &$str, &$captureIndex, $utf8)
+{
     foreach ($matches as &$m) {
         if (is_array($captureIndex)) {
             $index = [];
             foreach ($captureIndex as $indexCaptured) {
                 $index[] = $utf8 ? len(substring($str, 0, $m[$indexCaptured][1])) : $m[$indexCaptured][1];
             }
-        }
-        else {
+        } else {
             $index = $utf8 ? len(substring($str, 0, $m[$captureIndex][1])) : $m[$captureIndex][1];
         }
-        
+
         foreach (range(count($m)) as $i) {
             if ($m[$i][1] < 0) {
                 $m[$i] = null;
@@ -3251,7 +3246,7 @@ function postprocess_match(&$matches, &$str, &$captureIndex, $utf8) {
                 $m[$i] = $m[$i][0];
             }
         }
-        
+
         $m = [
             $m,
             $index
@@ -3264,27 +3259,27 @@ function replaceAll($regex, $fn, $str, $join = true)
     $newText = [];
     $start = 0;
     $utf8 = is_unicode_match($regex);
-    
+
     foreach (matchAll($regex, $str) as &$matches) {
         [&$m, $index] = $matches;
         if ($start < $index) {
             if ($join)
-                $newText[] = $utf8? slice($str, $start, $index) : substring($str, $start, $index);
+                $newText[] = $utf8 ? slice($str, $start, $index) : substring($str, $start, $index);
             else
                 $newText[] = [
-                    "text" => $utf8? slice($str, $start, $index): substring($str, $start, $index),
+                    "text" => $utf8 ? slice($str, $start, $index) : substring($str, $start, $index),
                     "start" => $start,
                     "end" => $index
                 ];
         }
-        
-        $start = $index + ($utf8? len($m[0]): strlen($m[0]));
+
+        $start = $index + ($utf8 ? len($m[0]) : strlen($m[0]));
         $newText[] = $fn($matches);
     }
 
-    $end = $utf8? len($str): strlen($str);
+    $end = $utf8 ? len($str) : strlen($str);
     if ($start < $end) {
-        $rest = $utf8? slice($str, $start): substring($str, $start);
+        $rest = $utf8 ? slice($str, $start) : substring($str, $start);
         if ($join)
             $newText[] = $rest;
         else
@@ -3300,10 +3295,12 @@ function replaceAll($regex, $fn, $str, $join = true)
 
 function indexOf($array, $element)
 {
-    foreach (enumerate($array) as [
-        $index,
-        $match
-    ]) {
+    foreach (
+        enumerate($array) as [
+            $index,
+            $match
+        ]
+    ) {
         if ($match == $element)
             return $index;
     }
@@ -3365,7 +3362,7 @@ function len($s)
 
 function add(&$array, $val)
 {
-    return array_map(fn ($x) => $x + $val, $array);
+    return array_map(fn($x) => $x + $val, $array);
 }
 
 function isspace($s)
@@ -3379,73 +3376,83 @@ function entries(&$list)
     foreach ($list as $key => &$value) {
         $result[] = [$key, $value];
     }
-    
+
     return $result;
 }
 
-function halve(&$s, $index) {
+function halve(&$s, $index)
+{
     return [substring($s, 0, $index), substring($s, $index)];
 }
 
-function is_list(&$arr) {
+function is_list(&$arr)
+{
     return is_array($arr) && array_key_exists(0, $arr);
 }
 
-function not(&$str) {
+function not(&$str)
+{
     return $str === 0 || $str === '' || $str === null;
 }
 
-function json_extract(&$obj, $path) {
+function json_extract(&$obj, $path)
+{
     $paths = [];
     foreach (matchAll(substring($path, 1), '/\[(\d+)\]|\.([^.\[\]]+)/') as $m) {
         $paths[] = ($m[2] || (int)$m[1]);
     }
-    
+
     return getitem($obj, ...$paths);
 }
 
-function json_remove(&$obj, $path) {
+function json_remove(&$obj, $path)
+{
     $paths = [];
     foreach (matchAll('/\[(\d+)\]|\.([^.\[\]]+)/', substring($path, 1)) as [$m, $index]) {
-        $paths[] = $m[2]? $m[2]: (int)$m[1];
+        $paths[] = $m[2] ? $m[2] : (int)$m[1];
     }
-    
+
     delitem($obj, ...$paths);
 }
 
-function boolval($bool) {
+function boolval($bool)
+{
     if ($bool == null || $bool === false)
         return false;
 
     if ($bool === true)
         return true;
-    
+
     switch ($bool) {
-    case 'True':
-    case 'true':
-        return true;
-    case 'False':
-    case 'false':
-        return false;
-        
-    default:
-        return !!$bool;
+        case 'True':
+        case 'true':
+            return true;
+        case 'False':
+        case 'false':
+            return false;
+
+        default:
+            return !!$bool;
     }
 }
 
-function capitalize($s) {
-    return strtoupper($s[0]).strtolower(substring($s, 1));
+function capitalize($s)
+{
+    return strtoupper($s[0]) . strtolower(substring($s, 1));
 }
 
-class Timer {
+class Timer
+{
     private $start, $message;
 
-    public function __construct($message = null) {
+    public function __construct($message = null)
+    {
         $this->start = microtime(true); // Start timer
-        $this->message = $message?? '';
+        $this->message = $message ?? '';
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         $end = microtime(true);
         $duration = $end - $this->start;
         $message = $this->message;
@@ -3454,4 +3461,93 @@ class Timer {
         error_log("Time cost$message: " . number_format($duration, 2) . " seconds\n");
     }
 }
-?>
+
+function exec($cmd, &$output_array, $env = null)
+{
+// translation of the python script:
+/*
+import os, subprocess
+
+userProfile = "C:\\Users\\admin"
+lakePath = f"{userProfile}\\.elan\\bin\\lake.exe"
+cwd = os.getcwd()
+leanEchoFile = f"{cwd}/Axiom/Algebra/Ceil/eq/FloorDivSub_Sign.echo.lean"
+cmd = f"{lakePath} env lean {leanEchoFile}"
+
+# Launch the command and capture stdout line by line
+proc = subprocess.Popen(
+    cmd,
+    shell=True,
+    stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE,
+    # Use universal_newlines=False to get bytes output
+    universal_newlines=False
+)
+
+# Read each line from stdout and decode with 'utf-8', handling errors
+for line in iter(proc.stdout.readline, b''):
+    try:
+        decoded_line = line.decode('utf-8').rstrip()
+    except UnicodeDecodeError:
+        decoded_line = line.decode('utf-8', errors='replace').rstrip()
+    print(decoded_line)
+
+# Wait for the process to finish and check for errors
+proc.wait()
+if proc.returncode != 0:
+    error = proc.stderr.read().decode('utf-8', errors='replace')
+    print(f"Error occurred: {error}")
+*/
+    $descriptorspec = [
+        0 => ["pipe", "r"], // stdin
+        1 => ["pipe", "w"], // stdout
+        2 => ["pipe", "w"]  // stderr
+    ];
+    $process = proc_open($cmd, $descriptorspec, $pipes, null, $env);
+    if (is_resource($process)) {
+        fclose($pipes[0]); // Close stdin immediately
+
+        $stdout = $pipes[1];
+        $stderr = $pipes[2];
+
+        // Process stdout
+        while (($line = fgets($stdout)) !== false) {
+            // Handle UTF-8 decoding with error replacement
+            $decodedLine = @mb_convert_encoding($line, 'UTF-8', 'UTF-8');
+            if ($decodedLine === false)
+                $decodedLine = mb_convert_encoding($line, 'UTF-8', 'ISO-8859-1');
+            $output_array[] = rtrim($decodedLine);
+        }
+
+        fclose($stdout);
+
+        // Process stderr after stdout is closed
+        $errorOutput = stream_get_contents($stderr);
+        fclose($stderr);
+
+        $exitCode = proc_close($process);
+
+        if ($exitCode !== 0 && $errorOutput) {
+            $errorOutput = @mb_convert_encoding($errorOutput, 'UTF-8', 'UTF-8') ?:
+                mb_convert_encoding($errorOutput, 'UTF-8', 'ISO-8859-1');
+            $output_array[] =  $errorOutput;
+        }
+    } else
+        $output_array[] =  "Failed to start process.";
+}
+
+
+function listdir($cwd) {
+    $dir = [];
+    foreach (scandir($cwd) as $file) {
+        switch ($file) {
+            case '.':
+            case '..':
+                break;
+            default:
+                if (is_dir($cwd . DIRECTORY_SEPARATOR . $file))
+                    $dir[] = $file;
+        }
+    }
+    return $dir;
+}

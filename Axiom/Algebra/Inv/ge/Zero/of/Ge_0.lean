@@ -1,4 +1,4 @@
-import Axiom.Algebra.GeInv_0.equ.Ge_0
+import Axiom.Algebra.Inv.ge.Zero.is.Ge_0
 open Algebra
 
 
@@ -14,7 +14,7 @@ private lemma main
 -- imply
   a⁻¹ ≥ 0 :=
 -- proof
-  GeInv_0.equ.Ge_0.mpr h
+  Inv.ge.Zero.is.Ge_0.mpr h
 
 
 -- created on 2025-01-14

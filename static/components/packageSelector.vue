@@ -109,9 +109,9 @@ export default {
                 case 'ArrowDown':
                     break;
                 case 'ArrowUp':
-                    break;    
+                    break;
                 case 'Home':
-                    break;                        
+                    break;
                 case 'End':
                     break;
                 case 'Backspace':

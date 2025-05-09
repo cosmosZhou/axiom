@@ -11,10 +11,10 @@ private lemma main
 -- imply
   (s.map f).headD default = f s[0] := by
 -- proof
-  cases s with
-  | nil =>
+  match s with
+  | .nil =>
     contradiction
-  | cons hd tl =>
+  | .cons hd tl =>
     simp
 
 

@@ -24,10 +24,10 @@ private lemma main
     unfold List.replicate
     simp [IsConstant.is_constant] at h
     have h_eq' : List.replicate xs.length (xs.headD default) = List.replicate xs.length x := by
-      cases xs with
-      | nil =>
+      match xs with
+      | .nil =>
         simp
-      | cons y ys =>
+      | .cons y ys =>
         simp
         apply FunGet_0.of.NeLength_0.All_Fun (h_all := h)
         simp

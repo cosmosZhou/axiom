@@ -11,7 +11,7 @@ private lemma main
   [Add β] [Zero β] [Mul β]
   {f₁ f₂ : α → β} :
 -- imply
-  ∀ {s : Vector α n}, (s.map fun x => f₁ x * f₂ x).sum = s.map f₁ ⬝ s.map f₂ := by
+  ∀ {s : List.Vector α n}, (s.map fun x => f₁ x * f₂ x).sum = s.map f₁ ⬝ s.map f₂ := by
 -- proof
   induction n with
   | zero =>

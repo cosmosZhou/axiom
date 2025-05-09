@@ -14,7 +14,7 @@ export function style_font(inst, j){
 	if (inst.focusedIndex == j)
 		return `background: #ccc;`
 }
-		
+
 export function blur(inst, event){
 	inst.$parent.codonContextmenu = '';
 }
@@ -30,7 +30,7 @@ export function keydown(inst, event){
 		}
 		event.preventDefault();
 		break;
-		
+
 	case 'ArrowUp':
 		--inst.focusedIndex;
 		if (inst.focusedIndex < 0){
@@ -38,12 +38,12 @@ export function keydown(inst, event){
 		}
 		event.preventDefault();
 		break;
-		
+
 	case 'Enter':
 		inst.$el.children[inst.focusedIndex].click();
 		event.preventDefault();
 		break;
-		
+
 	default:
 		if (key.length == 1){
 			key = key.toLowerCase();
@@ -63,7 +63,7 @@ export function click(inst, event){
 	inst.$parent.codonContextmenu = '';
 	eval(`this.${self.textContent.replace(/ /g, '_')}`)();
 }
-		
+
 export function mouseover(inst, event){
     var li = event.target;
     var focusedIndex = inst.$el.children.indexOf(li);
@@ -71,7 +71,7 @@ export function mouseover(inst, event){
     	inst.focusedIndex = focusedIndex;
     }
 }
-	
+
 export const directives = {
 	focus: {
 	    // after dom is inserted into the document

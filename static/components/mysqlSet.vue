@@ -7,16 +7,16 @@
 						<option v-for="value of cmds" :value=value>{{value}}</option>
 					</select>
 				</td>
-				
+
 				<td rowspan=2>
 					&nbsp;
 					<select class=password name=set[eq][0] :value=value.set.eq[0]>
 						<option value=password>password</option>
 					</select>
 				</td>
-				
+
 				<td rowspan=2 color=red>&nbsp;=&nbsp;</td>
-				
+
 				<td>
 					<input v-focus type=password v-model=password :size=size_input title="reset your password" @keydown=keydown />
 				</td>
@@ -27,7 +27,7 @@
 				</td>
 			</tr>
 		</table>
-		
+
 		<p v-if=error>the password confirmed is not the same as the first input, resetting to ''</p>
 	</span>
 </template>
@@ -38,9 +38,9 @@ console.log('import mysqlSet.vue');
 
 export default {
 	components: {},
-	
+
 	props : ['kwargs'],
-	
+
 	data() {
 		var {$data} = this.$parent;
 		$data.password_confirmed = '';
@@ -52,30 +52,30 @@ export default {
 		var {data} = this.$parent.$parent;
 		if (data && data.isArray)
 			data.clear();
-		
+
 		if (this.$parent.sql && !this.$parent.sql.match(/^set /))
 			setAttribute(this, 'sql', '');
 	},
-	
+
 	computed: {
 		password: {
 			get() {
 				return this.value.set.eq[1]?? '';
 			},
-			
+
 			set(password) {
 				this.value.set.eq[1] = password;
 			},
 		},
-		
+
 		size_input() {
 			return Math.max(8, this.password.length, this.password_confirmed.length);
 		},
-		
+
 		change_table() {
 			return this.$parent.change_table;
 		},
-		
+
 		change_database() {
 			return this.$parent.change_database;
 		},
@@ -87,11 +87,11 @@ export default {
 		host() {
 			return this.$parent.host;
 		},
-		
+
 		user() {
 			return this.$parent.user;
 		},
-		
+
 		token() {
 			return this.$parent.token;
 		},
@@ -99,11 +99,11 @@ export default {
 		is_leaf() {
 			return this.$parent.is_leaf;
 		},
-		
+
 		numericFields() {
 			return this.$parent.numericFields;
 		},
-		
+
 		textualFields() {
 			return this.$parent.textualFields;
 		},
@@ -111,7 +111,7 @@ export default {
 		numeric_function_regexp() {
 			return this.$parent.numeric_function_regexp;
 		},
-		
+
 		jsonobj_function_regexp() {
 			return this.$parent.jsonobj_function_regexp;
 		},
@@ -131,7 +131,7 @@ export default {
 		value() {
 			return this.kwargs;
 		},
-		
+
 		autoLabellingType() {
 			var {transform} = this.kwargs;
 
@@ -142,44 +142,44 @@ export default {
 						labellingType[field] = 'syntax';
 				}
 			}
-			
+
 			var {style} = this;
 			for (var field in style) {
 				labellingType[field] = 'entity';
 			}
-			
+
 			return labellingType;
 		},
-		
+
 		fieldsForLabelling() {
 			return Object.keys(this.autoLabellingType);
 		},
-		
+
 		change_input() {
 			return this.$parent.change_input;
 		},
-		
+
 		style_select_table() {
 			return this.$parent.style_select_table;
 		},
-		
+
 		style_select() {
 			return this.$parent.style_select;
 		},
-		
+
 		style_input() {
 			return this.$parent.style_input;
 		},
-		
+
 		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
-		
+
 		PRI() {
 			return this.$parent.PRI;
 		},
 	},
-	
+
 	methods: {
 		keydown(event) {
 			switch (event.key) {
@@ -189,7 +189,7 @@ export default {
 					this.password_confirmed = '';
 					event.preventDefault();
 				}
-					
+
 				break;
 			}
 		},
@@ -201,7 +201,7 @@ export default {
 			}
 		},
 	},
-	
+
 	mounted() {
 	},
 

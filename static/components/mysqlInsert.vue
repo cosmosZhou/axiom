@@ -3,7 +3,7 @@
 		<select class=cmd v-model=$parent.cmd>
 			<option v-for="value of cmds" :value=value>{{value}}</option>
 		</select>
-		<font color=blue> into </font><mysqlDot :name="'into'" :value=value.into :noSpace=true></mysqlDot>({{args.join(", ")}}) 
+		<font color=blue> into </font><mysqlDot :name="'into'" :value=value.into :noSpace=true></mysqlDot>({{args.join(", ")}})
 		values(<template v-for="{Field, Type}, i of desc">
 			<select v-if="Array.isArray(dtype[Field])" :name=Field :value=get_initial_value(Field) @input=input_kwargs>
 				<option value=''>{{'_'.repeat(Math.max(...dtype[Field].map(el => el.length)))}}</option>
@@ -27,9 +27,9 @@ console.log('import mysqlInsert.vue');
 
 export default {
 	components: {mysqlDot},
-	
+
 	props : ['kwargs'],
-	
+
 	data() {
 		var data = this.$parent.$data;
 		data.files = {};
@@ -57,7 +57,7 @@ export default {
 
 	async created() {
 		var self = this;
-		
+
 		var {body} = document;
 
 		body.addEventListener("drop", event => {
@@ -71,16 +71,16 @@ export default {
 			event.preventDefault();
 		});
 	},
-	
+
 	computed: {
 		change_table() {
 			return this.$parent.change_table;
 		},
-		
+
 		change_database() {
 			return this.$parent.change_database;
 		},
-		
+
 		cmds() {
 			return this.$parent.cmds;
 		},
@@ -88,27 +88,27 @@ export default {
 		host() {
 			return this.$parent.host;
 		},
-		
+
 		user() {
 			return this.$parent.user;
 		},
-		
+
 		token() {
 			return this.$parent.token;
 		},
-		
+
 		value() {
 			return this.kwargs;
 		},
-		
+
 		database() {
 			return this.$parent.database;
 		},
-		
+
 		table() {
 			return this.$parent.table;
 		},
-		
+
 		desc() {
 			var desc = [...this.$parent.desc];
 			var index = 0;
@@ -119,10 +119,10 @@ export default {
 				}
 				index++;
 			}
-			
+
 			return desc;
 		},
-		
+
 		change_input() {
 			return this.$parent.change_input;
 		},
@@ -130,19 +130,19 @@ export default {
 		style_select_table() {
 			return this.$parent.style_select_table;
 		},
-		
+
 		style_select() {
 			return this.$parent.style_select;
 		},
-		
+
 		style_input() {
 			return this.$parent.style_input;
 		},
-		
+
 		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
-		
+
 		args() {
 			var args = [];
 			for (var {Field} of this.desc){
@@ -152,7 +152,7 @@ export default {
 			return args;
 		},
 	},
-	
+
 	methods: {
 		get_initial_value(Field) {
 			var obj = getParameterByName(Field);
@@ -160,7 +160,7 @@ export default {
 				return JSON.stringify(obj);
 			return obj || this.kwargs[Field];
 		},
-		
+
 		input_size(Field) {
 			var value = this.get_initial_value(Field);
 			if (value) {
@@ -169,26 +169,26 @@ export default {
 			}
 			return 4;
 		},
-		
+
 		drop(event){
 			this.process_files(event.dataTransfer.files);
 		},
-		
+
 		dragover(event){
 		},
-		
+
 		process(name, text){
 			var self = this.$root.$refs[this.table.hump] || this.$root.$refs.mysqlTable;
 			self.process(name, text);
 			if (self.download_option)
 				self.download_option.file = name;
 		},
-		
+
 		process_files(files){
 			//console.log(files);
 			var self = this;
 			var duplicates = [];
-			
+
 			var {progress} = self;
 			for (let file of files){
 				if (this.files[file.name]){
@@ -196,15 +196,15 @@ export default {
 					continue;
 				}
 				console.log('file.name = ' + file.name);
-				
+
 				this.files[file.name] = true;
-				
+
 				var reader = new FileReader();
-				
+
 				reader.onload = function(event) {
 					self.process(file.name, this.result);
 				};
-				
+
 	            progress.max = file.size;
 	            progress.value = 0;
                 reader.onprogress = event => {
@@ -216,7 +216,7 @@ export default {
 				case 'image/png':
 					reader.readAsDataURL(file);
 					break;
-					
+
 				case 'application/pdf':
 				case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
 					reader.readAsArrayBuffer(file);
@@ -227,15 +227,15 @@ export default {
 					break;
 				}
 			}
-			
+
 			if (duplicates.length)
 				alert(`files already uploaded:\n${duplicates.join('\n')}`);
 		},
-		
+
 		change_file(event){
 			this.process_files(event.target.files);
 		},
-		
+
 		keydown(event) {
 			if (event.key == 'Enter'){
 				if (event.target.tagName == 'TEXTAREA') {
@@ -248,9 +248,9 @@ export default {
 				for (var name of this.args){
 					data[name] = this.get_initial_value(name);
 				}
-				
+
 				console.log("insert data", data);
-				
+
 				if (data.training == null) {
 					var training = getParameterByName('training');
 					training = training? parseInt(training): randrange(2);
@@ -261,17 +261,17 @@ export default {
 					if (training >= 0)
 						data.training = ~training;
 				}
-				
+
 				this.process('.json', data);
 			}
 		},
 	},
-	
-	mounted(){
+
+	mounted() {
 		var {rowcount} = this.$parent;
 		console.log('rowcount = ' + rowcount);
 	},
-	
+
 	directives: {
 		focus: {
 		    // after dom is inserted into the document
@@ -279,7 +279,7 @@ export default {
 		    	var {instance} = binding;
 		    	if (instance.$parent.focus == false)
 		    		return;
-		    	
+
 	    		el.focus();
 		    },
 		},
@@ -290,19 +290,19 @@ export default {
 <style scoped>
 input[type=file] {
 	color: transparent;
-	
+
 	height: 130%;
 	width: 6.4em;
-	
+
 	position: absolute;
-	
+
 	bottom:0;
 	left:0;
 	right: 0;
 	top: 0;
-	
+
 	font-size: 100px;
-	
+
 	z-index:1;
 	opacity:0;
 	filter: alpha(opacity=0);
@@ -313,19 +313,19 @@ input[type=file] {
 	position: relative;
 	display: inline-block;
 	overflow: hidden;
-	
+
 	width:100px;
 	height:30px;
 	line-height:30px;
-	
+
 	top: 10px;
-	
+
 	border:1px solid #ddd;
 	background:#f6f6f6;
 	text-align:center;
-	
+
 	color:#333;
-	
+
 	font-size: 25px;
 }
 

@@ -4,6 +4,18 @@ open Algebra
 
 
 @[main]
+private lemma nat
+  {x y : ℕ}
+-- given
+  (h : x ≤ y)
+  (z : ℕ) :
+-- imply
+  x - z ≤ y - z := by
+-- proof
+  apply Nat.sub_le_sub_right h
+
+
+@[main]
 private lemma main
   [OrderedAddCommGroup α]
   {x y : α}

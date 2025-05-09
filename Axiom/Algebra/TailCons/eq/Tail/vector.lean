@@ -1,9 +1,12 @@
+import stdlib.List.Vector
 import Axiom.Basic
 
 
-@[simp, main]
+@[main]
 private lemma main
-  {l : Vector α n} :
+-- given
+  (l : List.Vector α n)
+  (a : α):
 -- imply
   (a ::ᵥ l.tail).tail = l.tail := by
 -- proof

@@ -1,4 +1,4 @@
-import Axiom.Algebra.Ge.of.Gt.relax
+import Axiom.Algebra.Ge.of.Gt
 import Axiom.Algebra.GeMulS.of.Ge.Ge_0
 open Algebra
 
@@ -8,13 +8,13 @@ private lemma main
   [Mul α] [Zero α] [Preorder α] [MulPosMono α]
   {x a b : α}
 -- given
-  (h1 : a > b)
-  (h2 : x ≥ 0) :
+  (h₀ : a > b)
+  (h₁ : x ≥ 0) :
 -- imply
   a * x ≥ b * x := by
 -- proof
-  have h := Ge.of.Gt.relax h1
-  apply GeMulS.of.Ge.Ge_0 h h2
+  have h := Ge.of.Gt h₀
+  apply GeMulS.of.Ge.Ge_0 h h₁
 
 
 -- created on 2024-07-01

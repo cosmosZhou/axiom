@@ -1,16 +1,16 @@
 import Mathlib.Tactic
 open Lean
 
-def __file__ : IO String := do
-  let __file__ ← IO.Process.run {
+def filename : IO String := do
+  let filename ← IO.Process.run {
     cmd := "sh",
     args := #["-c", "ps -o args= -p $PPID | awk '{print $3}'"],
   }
-  return __file__.trimRight
+  return filename.trimRight
 
 
 def lean2ilean (filePath : System.FilePath ) : System.FilePath :=
-  ".lake/build/lib" / filePath.withExtension "ilean"
+  ".lake/build/lib/lean" / filePath.withExtension "ilean"
 
 
 def getFileMap (fileName : String) : IO FileMap :=

@@ -11,6 +11,7 @@ $token2classname = [
     '*' => 'LMul',
     '/' => 'LDiv',
     '÷' => 'LEDiv',  // euclidean division
+    '//' => 'LFDiv', // floor division
     '%' => 'LMod',
     '×' => 'L_times',
     '•' => 'L_bullet',
@@ -43,10 +44,17 @@ $token2classname = [
     '∧' => 'L_land',
     '∪' => 'L_cup',
     '∩' => 'L_cap',
+    "\\" => 'L_setminus',
     '|>.' => 'LMethodChaining',
     '⊆' => 'L_subseteq',
     '⊇' => 'L_supseteq',
+    '⊔' => 'L_sqcup',
+    '⊓' => 'L_sqcap',
+    '++' => 'LAppend',
 ];
+
+preg_match_all("/'(\w+)'/", file_get_contents(dirname(__FILE__) . '/../../static/codemirror/mode/lean/tactics.js'), $tactics);
+[, $tactics] = $tactics;
 
 abstract class Lean implements JsonSerializable
 {
@@ -59,6 +67,16 @@ abstract class Lean implements JsonSerializable
     {
         $this->indent = $indent;
         $this->parent = $parent;
+    }
+
+    public function is_comment()
+    {
+        return false;
+    }
+
+    public function tokens_space_separated()
+    {
+        return [];
     }
 
     public function is_outsider()
@@ -84,15 +102,23 @@ abstract class Lean implements JsonSerializable
         return ($this->is_indented() ? str_repeat(' ', $this->indent) : '') . $this->toString();
     }
 
-    abstract public function latexFormat();
-    public function latexArgs()
+    public function latexFormat()
     {
-        return array_map(fn($arg) => $arg->toLatex(), $this->args);
+        return $this->strFormat();
+    }
+    public function latexArgs(&$syntax = null)
+    {
+        return array_map(
+            function ($arg) use (&$syntax) {
+                return $arg->toLatex($syntax);
+            },
+            $this->args
+        );
     }
 
-    public function toLatex()
+    public function toLatex(&$syntax = null)
     {
-        return sprintf($this->latexFormat(), ...$this->latexArgs());
+        return sprintf($this->latexFormat(), ...$this->latexArgs($syntax));
     }
 
     public function isProp($vars)
@@ -116,18 +142,10 @@ abstract class Lean implements JsonSerializable
         return $line;
     }
 
-    public function insert($caret, $func)
+    public function insert($caret, $func, $type)
     {
-        return $this->parent->insert($this, $func);
-    }
-
-    public function insert_tactic($caret, $type)
-    {
-        if ($caret instanceof LCaret) {
-            $caret->parent->replace($caret, new LTactic($type, $caret, $this->indent));
-            return $caret;
-        }
-        throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
+        if ($this->parent)
+            return $this->parent->insert($this, $func, $type);
     }
 
     public function insert_space($caret)
@@ -137,22 +155,26 @@ abstract class Lean implements JsonSerializable
 
     public function insert_newline($caret, $newline_count, $indent, $next_token)
     {
-        return $this->parent->insert_newline($this, $newline_count, $indent, $next_token);
+        if ($this->parent)
+            return $this->parent->insert_newline($this, $newline_count, $indent, $next_token);
     }
 
     public function insert_end($caret)
     {
-        return $this->parent->insert_end($this);
+        if ($this->parent)
+            return $this->parent->insert_end($this);
     }
 
-    public function append($new)
+    public function append($new, $type)
     {
-        return $this->parent->append($new);
+        if ($this->parent)
+            return $this->parent->append($new, $type);
     }
 
     public function append_accessibility($new, $accessibility)
     {
-        return $this->parent->append_accessibility($new, $accessibility);
+        if ($this->parent)
+            return $this->parent->append_accessibility($new, $accessibility);
     }
 
     public function __clone()
@@ -162,13 +184,14 @@ abstract class Lean implements JsonSerializable
 
     public function append_binary($type)
     {
-        $parent = $this->parent;
-        if ($type::$input_priority > $parent->stack_priority) {
-            $new = new LCaret($this->indent);
-            $parent->replace($this, new $type($this, $new, $this->indent));
-            return $new;
-        } else
-            return $this->parent->append_binary($type);
+        if ($parent = $this->parent) {
+            if ($type::$input_priority > $parent->stack_priority) {
+                $new = new LCaret($this->indent);
+                $parent->replace($this, new $type($this, $new, $this->indent));
+                return $new;
+            }
+            return $parent->append_binary($type);
+        }
     }
 
     public function append_arithmetic($token)
@@ -195,7 +218,7 @@ abstract class Lean implements JsonSerializable
 
     public function push_token($word)
     {
-        return $this->append(new LToken($word, $this->indent));
+        return $this->append(new LToken($word, $this->indent), "token");
     }
 
     public function insert_token($caret, $word)
@@ -205,12 +228,14 @@ abstract class Lean implements JsonSerializable
 
     public function insert_comma($caret)
     {
-        return $this->parent->insert_comma($this);
+        if ($this->parent)
+            return $this->parent->insert_comma($this);
     }
 
     public function append_semicolon()
     {
-        return $this->parent->append_semicolon();
+        if ($this->parent)
+            return $this->parent->append_semicolon();
     }
 
     public function insert_colon($caret)
@@ -222,24 +247,28 @@ abstract class Lean implements JsonSerializable
     {
         return $caret->append_binary('LAssign');
     }
-    public function insert_vconcat($caret)
+    public function insert_vconstruct($caret)
     {
-        return $caret->append_binary('LVConcat');
+        return $caret->append_binary('LVConstruct');
     }
-    public function insert_concat($caret)
+    public function insert_construct($caret)
     {
-        return $caret->append_binary('LConcat');
+        return $caret->append_binary('LConstruct');
     }
     public function insert_bar($caret, $prev_token, $next_token)
     {
-        if ($next_token == ' ') {
-            if ($prev_token == ' ')
-                return $caret->append_arithmetic('|');
-            return $this->append_right('LAbs');
+        switch ($next_token) {
+            case ' ':
+                if ($prev_token == ' ')
+                    return $caret->append_arithmetic('|');
+                return $this->append_right('LAbs');
+            case ')':
+                return $this->append_right('LAbs');
+            default:
+                if (!$next_token)
+                    return $this->append_right('LAbs');
+                return $this->insert_unary($caret, 'LAbs');
         }
-        if (!$next_token)
-            return $this->append_right('LAbs');
-        return $this->insert_unary($caret, 'LAbs');
     }
 
     public function insert_unary($self, $func)
@@ -251,7 +280,7 @@ abstract class Lean implements JsonSerializable
         } else {
             $caret = new LCaret($self->indent);
             $new = new $func($caret, $self->indent);
-            $new = new LArgumentsSpaceSeparated([$self, $new], $self->indent);
+            $new = new LArgsSpaceSeparated([$self, $new], $self->indent);
         }
         $parent->replace($self, $new);
         return $caret;
@@ -268,13 +297,17 @@ abstract class Lean implements JsonSerializable
             return $parent->append_post_unary($func);
     }
 
-    public function append_left($Type)
+    public function append_left($Type, $prev_token)
     {
         switch ($Type) {
             case 'LParenthesis':
             case 'LBracket':
             case 'LBrace':
             case 'LAngleBracket':
+            case 'LFloor':
+            case 'LCeil':
+            case 'LNorm':
+            case 'LDoubleAngleQuotation':
                 $indent = $this->indent;
                 $caret = new LCaret($indent);
                 $LGetElem = false;
@@ -284,24 +317,24 @@ abstract class Lean implements JsonSerializable
                     while ($parent) {
                         if ($parent instanceof L_equiv || $parent instanceof LNotEquiv) {
                             $new = new $Type($caret, $indent);
-                            $parent->replace($self, new LArgumentsSpaceSeparated([$self, $new], $indent));
+                            $parent->replace($self, new LArgsSpaceSeparated([$self, $new], $indent));
                             return $caret;
                         }
                         $self = $parent;
                         $parent = $parent->parent;
                     }
-                    if ($this instanceof LToken || $this instanceof LAttr)
-                        $LGetElem = true;
+                    if ($this instanceof LToken || $this instanceof LAttr || $this instanceof LParenthesis)
+                        $LGetElem = $prev_token != ' ';
                 }
 
                 if ($LGetElem) {
                     $this->parent->replace($this, new LGetElem($this, $caret, $indent));
                 } else {
                     $new = new $Type($caret, $indent);
-                    if ($this->parent instanceof LArgumentsSpaceSeparated)
+                    if ($this->parent instanceof LArgsSpaceSeparated)
                         $this->parent->push($new);
                     else
-                        $this->parent->replace($this, new LArgumentsSpaceSeparated([$this, $new], $indent));
+                        $this->parent->replace($this, new LArgsSpaceSeparated([$this, $new], $indent));
                 }
                 return $caret;
             default:
@@ -309,14 +342,15 @@ abstract class Lean implements JsonSerializable
         }
     }
 
-    public function insert_left($caret, $func)
+    public function insert_left($caret, $func, $prev_token = '')
     {
-        return $caret->append_left($func);
+        return $caret->append_left($func, $prev_token);
     }
 
     public function append_right($func)
     {
-        return $this->parent->append_right($func);
+        if ($this->parent)
+            return $this->parent->append_right($func);
     }
 
     public function append_attr($caret)
@@ -329,7 +363,7 @@ abstract class Lean implements JsonSerializable
         throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
     }
 
-    public function append_quote()
+    public function append_quote($quote)
     {
         throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
     }
@@ -339,17 +373,20 @@ abstract class Lean implements JsonSerializable
         switch ($vname) {
             case 'root':
                 return $this->parent->root;
+            case 'stack_priority':
+                return static::$input_priority;
         }
     }
 
     public function insert_sequential_tactic_combinator($caret)
     {
-        return $this->parent->insert_sequential_tactic_combinator($this);
+        if ($this->parent)
+            return $this->parent->insert_sequential_tactic_combinator($this);
     }
 
-    public function relocate_last_line_comment() {}
+    public function relocate_last_comment() {}
 
-    public function split()
+    public function split(&$syntax = null)
     {
         return [$this];
     }
@@ -360,18 +397,20 @@ abstract class Lean implements JsonSerializable
 
     public function insert_then($caret)
     {
-        return $this->parent->insert_then($this);
+        if ($this->parent)
+            return $this->parent->insert_then($this);
     }
     public function insert_else($caret)
     {
-        return $this->parent->insert_else($this);
+        if ($this->parent)
+            return $this->parent->insert_else($this);
     }
 
     public function is_indented()
     {
         $parent = $this->parent;
-        return $parent instanceof LArgumentsCommaNewLineSeparated ||
-            $parent instanceof LArgumentsNewLineSeparated ||
+        return $parent instanceof LArgsCommaNewLineSeparated ||
+            $parent instanceof LArgsNewLineSeparated ||
             $parent instanceof LITE && ($this === $parent->then || $this === $parent->else);
     }
 
@@ -379,13 +418,18 @@ abstract class Lean implements JsonSerializable
     {
         return false;
     }
+
+    public function insert_line_comment($caret, $comment)
+    {
+        return $caret->append_line_comment($comment);
+    }
 }
 
 class LCaret extends Lean
 {
     public function is_indented()
     {
-        return $this->parent instanceof LArgumentsNewLineSeparated;
+        return $this->parent instanceof LArgsNewLineSeparated;
     }
     public function __get($vname)
     {
@@ -405,12 +449,21 @@ class LCaret extends Lean
     public function append_line_comment($comment)
     {
         $parent = $this->parent;
-        $parent->replace($this, new LLineComment($comment, $this->indent));
+        $new = new LLineComment($comment, $this->indent);
+        $parent->replace($this, $new);
+        return $new;
+    }
+
+    public function append_block_comment($comment, $docstring)
+    {
+        $parent = $this->parent;
+        $func = $docstring ? 'LDocString' : 'LBlockComment';
+        $parent->replace($this, new $func($comment, $this->indent));
         $parent->push($this);
         return $this;
     }
 
-    public function append($new)
+    public function append($new, $type)
     {
         if (is_string($new)) {
             $this->parent->replace($this, new $new($this, $this->indent));
@@ -432,7 +485,7 @@ class LCaret extends Lean
         return "";
     }
 
-    public function append_left($Type)
+    public function append_left($Type, $prev_token)
     {
         $this->parent->replace($this, new $Type($this, $this->indent));
         return $this;
@@ -459,9 +512,9 @@ class LToken extends Lean
         $this->arg = $arg;
     }
 
-    public function append_quote()
+    public function append_quote($quote)
     {
-        $this->arg .= "'";
+        $this->arg .= $quote;
         return $this;
     }
 
@@ -537,9 +590,9 @@ class LToken extends Lean
         return '%s';
     }
 
-    public function latexArgs()
+    public function latexArgs(&$syntax = null)
     {
-        $text = latex_token($this->arg);
+        $text = escape_specials($this->arg);
         if ($text == $this->arg) {
             $text = preg_replace_callback(
                 LToken::$subscript_keys,
@@ -558,16 +611,27 @@ class LToken extends Lean
         return [$text];
     }
 
+    public function starts_with_2_letters()
+    {
+        return preg_match("/^[a-zA-Z]{2,}/", $this->arg);
+    }
+
+    public function ends_with_2_letters()
+    {
+        return preg_match("/[a-zA-Z]{2,}$/", $this->arg);
+    }
+
     public function push_token($word)
     {
         $new = new LToken($word, $this->indent);
-        $this->parent->replace($this, new LArgumentsSpaceSeparated([$this, $new], $this->indent));
+        $this->parent->replace($this, new LArgsSpaceSeparated([$this, $new], $this->indent));
         return $new;
     }
 
-    public function append($new)
+    public function append($new, $type)
     {
-        return $this->parent->insert($this, $new);
+        if ($this->parent)
+            return $this->parent->insert($this, $new, $type);
     }
 
     public function jsonSerialize(): mixed
@@ -599,6 +663,16 @@ class LToken extends Lean
                 return parent::__get($vname);
         }
     }
+
+    public function tokens_space_separated()
+    {
+        return [$this];
+    }
+
+    public function isProp($vars)
+    {
+        return ($vars[$this->arg] ?? null) == 'Prop';
+    }
 }
 
 LToken::$subscript_keys = '/[' . implode('', array_keys(LToken::$subscript)) . ']+/u';
@@ -621,7 +695,37 @@ class LLineComment extends Lean
 
     public function is_indented()
     {
-        return false;
+        switch ($this->arg) {
+            case 'given':
+                if (($parent = $this->parent) instanceof LArgsNewLineSeparated &&
+                    ($parent = $parent->parent) instanceof LArgsIndented &&
+                    ($parent = $parent->parent) instanceof LColon &&
+                    ($parent = $parent->parent) instanceof LAssign &&
+                    $parent->parent instanceof L_lemma
+                )
+                    return false;
+                break;
+
+            case 'proof';
+                if (($parent = $this->parent) instanceof LStatements) {
+                    if ($parent->parent instanceof L_by)
+                        $parent = $parent->parent;
+                    if (($parent = $parent->parent) instanceof LAssign && $parent->parent instanceof L_lemma)
+                        return false;
+                } elseif (($parent = $this->parent) instanceof LArgsNewLineSeparated) {
+                    if (($parent = $parent->parent) instanceof LAssign && $parent->parent instanceof L_lemma)
+                        return false;
+                }
+            case 'imply':
+                if (($parent = $this->parent) instanceof LStatements &&
+                    ($parent = $parent->parent) instanceof LColon &&
+                    ($parent = $parent->parent) instanceof LAssign &&
+                    $parent->parent instanceof L_lemma
+                )
+                    return false;
+                break;
+        }
+        return true;
     }
     public function sep()
     {
@@ -658,11 +762,101 @@ class LLineComment extends Lean
         }
     }
 
-    public function latexArgs()
+    public function latexArgs(&$syntax = null)
     {
         return $this->args;
     }
+
+    public function is_comment()
+    {
+        return true;
+    }
 }
+
+class LBlockComment extends Lean
+{
+    public $arg;
+
+    public function __construct($arg, $indent, $parent = null)
+    {
+        parent::__construct($indent, $parent);
+        $this->arg = $arg;
+    }
+
+    public function is_indented()
+    {
+        return true;
+    }
+    public function sep()
+    {
+        return '';
+    }
+    public function strFormat()
+    {
+        return "/-%s-/";
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [$this->func => $this->arg];
+    }
+
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case 'args':
+                return [$this->arg];
+            default:
+                return parent::__get($vname);
+        }
+    }
+
+    public function latexArgs(&$syntax = null)
+    {
+        return $this->args;
+    }
+
+    public function set_line($line)
+    {
+        $this->line = $line;
+        $line += substr_count($this->arg, "\n");
+        return $line;
+    }
+
+    public function is_comment()
+    {
+        return true;
+    }
+}
+
+class LDocString extends LBlockComment
+{
+    public $arg;
+
+    public function strFormat()
+    {
+        return "/--\n%s\n-/";
+    }
+
+    public function is_indented()
+    {
+        return false;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [$this->func => $this->arg];
+    }
+    public function set_line($line)
+    {
+        $this->line = $line;
+        ++$line;
+        $line += substr_count($this->arg, "\n");
+        ++$line;
+        return $line;
+    }
+}
+
 
 trait LMultipleLine
 {
@@ -679,12 +873,10 @@ trait LMultipleLine
 
 abstract class LArgs extends Lean
 {
-    public static $input_priority = 2;
+    public static $input_priority = 47;
     public function __get($vname)
     {
         switch ($vname) {
-            case 'stack_priority':
-                return 2;
             case 'command':
                 return "\\$this->func";
             case 'func':
@@ -798,11 +990,20 @@ abstract class LArgs extends Lean
     {
         return array_map(fn($arg) => $arg instanceof LParenthesis && !($arg->arg instanceof LMethodChaining) ? $arg->arg : $arg, $this->args);
     }
+
+    public function insert_tactic($caret, $type)
+    {
+        if ($caret instanceof LCaret) {
+            $this->replace($caret, new LTactic($type, $caret, $this->indent));
+            return $caret;
+        }
+        throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
+    }
 }
 
 abstract class LUnary extends LArgs
 {
-    public static $input_priority = 2;
+    public static $input_priority = 47;
     public function __construct($arg, $indent, $parent = null)
     {
         parent::__construct([], $indent, $parent);
@@ -812,8 +1013,6 @@ abstract class LUnary extends LArgs
     public function __get($vname)
     {
         switch ($vname) {
-            case 'stack_priority':
-                return 2;
             case 'arg':
                 return $this->args[0];
             default:
@@ -843,18 +1042,28 @@ abstract class LUnary extends LArgs
     {
         return $this->arg->jsonSerialize();
     }
+
+    public function insert_if($caret)
+    {
+        if ($this->arg === $caret) {
+            if ($caret instanceof LCaret) {
+                $this->arg = new LITE($caret, $caret->indent);
+                return $caret;
+            }
+        }
+        throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
+    }
 }
 
 
 abstract class LPairedGroup extends LUnary
 {
-    public static $input_priority = 3.3;
+    public static $input_priority = 60;
     public function is_indented()
     {
         $parent = $this->parent;
-        if ($parent instanceof LTactic || $parent instanceof LArgumentsCommaSeparated || $parent instanceof LAssign || $parent instanceof LArgumentsSpaceSeparated || $parent instanceof LRelational || $parent instanceof LRightarrow || $parent instanceof LUnaryArithmeticPre)
+        if ($parent instanceof LTactic || $parent instanceof LArgsCommaSeparated || $parent instanceof LAssign || $parent instanceof LArgsSpaceSeparated || $parent instanceof LRelational || $parent instanceof LRightarrow || $parent instanceof LUnaryArithmeticPre || $parent instanceof LArithmetic || $parent instanceof LAttr)
             return false;
-
         return true;
     }
 
@@ -865,7 +1074,7 @@ abstract class LPairedGroup extends LUnary
                 if ($indent == $this->indent)
                     $indent = $this->indent + 2;
                 $caret->indent = $indent;
-                $this->arg = new LArgumentsCommaNewLineSeparated([$caret], $indent);
+                $this->arg = new LArgsCommaNewLineSeparated([$caret], $indent);
                 return $caret;
             } else {
                 if ($indent == $this->indent)
@@ -879,10 +1088,10 @@ abstract class LPairedGroup extends LUnary
     public function insert_comma($caret)
     {
         $caret = new LCaret($this->indent);
-        if ($caret instanceof LArgumentsCommaSeparated)
+        if ($caret instanceof LArgsCommaSeparated)
             $this->arg->push($caret);
         else
-            $this->arg = new LArgumentsCommaSeparated([$this->arg, $caret], $this->indent);
+            $this->arg = new LArgsCommaSeparated([$this->arg, $caret], $this->indent);
         return $caret;
     }
 
@@ -896,7 +1105,7 @@ abstract class LPairedGroup extends LUnary
     public function set_line($line)
     {
         $this->line = $line;
-        if ($has_newline = $this->arg instanceof LArgumentsCommaNewLineSeparated)
+        if ($has_newline = $this->arg instanceof LArgsCommaNewLineSeparated)
             ++$line;
         $line = $this->arg->set_line($line);
         if ($has_newline)
@@ -906,10 +1115,20 @@ abstract class LPairedGroup extends LUnary
 
     public function append_right($func)
     {
-        return get_class($this) == $func ? $this : $this->parent->append_right($func);
+        if (get_class($this) == $func) {
+            if (($lt = $this->arg) instanceof L_lt && $lt->lhs instanceof LToken) {
+                $new = new LLamda($lt, $this->indent);
+                $caret = new LCaret($this->indent);
+                $new->scope = $caret;
+                $this->parent->replace($this, $new);
+                return $caret;
+            }
+            return $this;
+        }
+        return $this->parent->append_right($func);
     }
 
-    public function insert($caret, $func)
+    public function insert($caret, $func, $type)
     {
         if ($this->arg === $caret) {
             if ($caret instanceof LCaret) {
@@ -925,37 +1144,57 @@ class LParenthesis extends LPairedGroup
 {
     public function is_indented()
     {
-        return $this->parent instanceof LArgumentsNewLineSeparated;
+        return ($parent = $this->parent) instanceof LArgsNewLineSeparated || $parent instanceof LArgsCommaNewLineSeparated;
     }
 
     public function strFormat()
     {
+        $arg = $this->arg;
+        if ($arg instanceof L_by && ($stmt = $arg->arg) instanceof LStatements && ($end = end($stmt->args)) instanceof LCaret) {
+            $indent = str_repeat(' ', $this->indent);
+            return "(%s$indent)";
+        }
         return "(%s)";
     }
     public function latexFormat()
     {
+        $arg = $this->arg;
+        if ($arg instanceof LColon && $arg->lhs instanceof LBrace)
+            return $arg->lhs->latexFormat();
         return '\left( {%s} \right)';
     }
+
+    public function latexArgs(&$syntax = null)
+    {
+        $arg = $this->arg;
+        if ($arg instanceof LColon && $arg->lhs instanceof LBrace)
+            return $arg->lhs->latexArgs($syntax);
+        return parent::latexArgs($syntax);
+    }
+
     public function __get($vname)
     {
         switch ($vname) {
             case 'stack_priority':
-                return -0.5;
+                return 10;
             default:
                 return parent::__get($vname);
         }
     }
 
-    public function append($new)
+    public function append($new, $type)
     {
         $indent = $this->indent;
         $caret = new LCaret($indent);
         if (is_string($new)) {
             $new = new $new($caret, $indent);
-            $this->arg = new LArgumentsSpaceSeparated([$this->arg, $new], $indent);
+            if ($this->parent instanceof LArgsSpaceSeparated)
+                $this->parent->push($new);
+            else
+                $this->arg = new LArgsSpaceSeparated([$this->arg, $new], $indent);
             return $caret;
         } else {
-            $this->parent->replace($this, new LArgumentsSpaceSeparated([$this, $new], $indent));
+            $this->parent->replace($this, new LArgsSpaceSeparated([$this, $new], $indent));
             return $new;
         }
     }
@@ -964,12 +1203,19 @@ class LParenthesis extends LPairedGroup
     {
         if ($this->indent <= $indent) {
             if ($caret === $this->arg) {
-                if ($this->indent == $indent)
-                    $indent = $this->indent + 2;
-                $caret = new LCaret($indent);
-                $new = new LArgumentsNewLineSeparated([$caret], $indent);
-                $caret = $new->push_newlines($newline_count - 1);
-                $this->arg = new LArgumentsIndented($this->arg, $new, $this->indent);
+                if ($caret instanceof L_by && $this->indent == $indent) {
+                    $caret = new LCaret($indent);
+                    $new = new LArgsNewLineSeparated([$this->arg, $caret], $indent);
+                    $caret = $new->push_newlines($newline_count - 1);
+                    $this->arg = $new;
+                } else {
+                    if ($this->indent == $indent)
+                        $indent = $this->indent + 2;
+                    $caret = new LCaret($indent);
+                    $new = new LArgsNewLineSeparated([$caret], $indent);
+                    $caret = $new->push_newlines($newline_count - 1);
+                    $this->arg = new LArgsIndented($this->arg, $new, $this->indent);
+                }
                 return $caret;
             }
         }
@@ -984,7 +1230,7 @@ class LParenthesis extends LPairedGroup
                 $new = new $func($caret, $indent);
             else {
                 $caret = new LCaret($indent);
-                $new = new LArgumentsSpaceSeparated([$this->arg, new $func($caret, $indent)], $indent);
+                $new = new LArgsSpaceSeparated([$this->arg, new $func($caret, $indent)], $indent);
             }
             $this->arg = $new;
             return $caret;
@@ -997,15 +1243,9 @@ class LParenthesis extends LPairedGroup
         return $this->arg->regexp();
     }
 
-    public function insert_if($caret)
+    public function isProp($vars)
     {
-        if ($this->arg === $caret) {
-            if ($caret instanceof LCaret) {
-                $this->arg = new LITE($caret, $caret->indent);
-                return $caret;
-            }
-        }
-        throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
+        return $this->arg->isProp($vars);
     }
 }
 
@@ -1015,7 +1255,7 @@ class LAngleBracket extends LPairedGroup
     public function strArgs()
     {
         $arg = $this->arg;
-        if ($arg instanceof LArgumentsCommaNewLineSeparated)
+        if ($arg instanceof LArgsCommaNewLineSeparated)
             $arg = "\n$arg\n" . str_repeat(' ', $this->indent);
         return [$arg];
     }
@@ -1024,7 +1264,7 @@ class LAngleBracket extends LPairedGroup
     {
         switch ($vname) {
             case 'stack_priority':
-                return -0.5;
+                return 10;
             default:
                 return parent::__get($vname);
         }
@@ -1037,6 +1277,17 @@ class LAngleBracket extends LPairedGroup
     {
         return '\langle {%s} \rangle';
     }
+
+    public function tokens_comma_separated()
+    {
+        $tokens = [];
+        $arg  = $this->arg;
+        if ($arg instanceof LArgsCommaSeparated)
+            $tokens = $arg->tokens_comma_separated();
+        else
+            $tokens = [$arg];
+        return $tokens;
+    }
 }
 
 class LBracket extends LPairedGroup
@@ -1044,7 +1295,7 @@ class LBracket extends LPairedGroup
     public function strArgs()
     {
         $arg = $this->arg;
-        if ($arg instanceof LArgumentsCommaNewLineSeparated)
+        if ($arg instanceof LArgsCommaNewLineSeparated)
             $arg = "\n$arg\n" . str_repeat(' ', $this->indent);
         return [$arg];
     }
@@ -1053,7 +1304,7 @@ class LBracket extends LPairedGroup
     {
         switch ($vname) {
             case 'stack_priority':
-                return -1;
+                return 17;
             default:
                 return parent::__get($vname);
         }
@@ -1073,14 +1324,15 @@ class LBrace extends LPairedGroup
 {
     public function is_indented()
     {
-        return !($this->parent instanceof LQuantifier);
+        $parent = $this->parent;
+        return !($parent instanceof LQuantifier || $parent instanceof LBinaryBoolean || $parent instanceof LColon);
     }
 
     public function __get($vname)
     {
         switch ($vname) {
             case 'stack_priority':
-                return -1;
+                return 17;
             default:
                 return parent::__get($vname);
         }
@@ -1098,12 +1350,12 @@ class LBrace extends LPairedGroup
 
 class LAbs extends LPairedGroup
 {
-    // public static $input_priority = 3.3;
+    // public static $input_priority = 60;
     public function __get($vname)
     {
         switch ($vname) {
             case 'stack_priority':
-                return -1;
+                return 17;
             default:
                 return parent::__get($vname);
         }
@@ -1120,12 +1372,12 @@ class LAbs extends LPairedGroup
 
 class LNorm extends LPairedGroup
 {
-    // public static $input_priority = 3.3;
+    // public static $input_priority = 60;
     public function __get($vname)
     {
         switch ($vname) {
             case 'stack_priority':
-                return -1;
+                return 17;
             default:
                 return parent::__get($vname);
         }
@@ -1142,12 +1394,12 @@ class LNorm extends LPairedGroup
 
 class LCeil extends LPairedGroup
 {
-    public static $input_priority = 4.5;
+    public static $input_priority = 72;
     public function __get($vname)
     {
         switch ($vname) {
             case 'stack_priority':
-                return -0.5;
+                return 22;
             default:
                 return parent::__get($vname);
         }
@@ -1164,12 +1416,12 @@ class LCeil extends LPairedGroup
 
 class LFloor extends LPairedGroup
 {
-    public static $input_priority = 4.5;
+    public static $input_priority = 72;
     public function __get($vname)
     {
         switch ($vname) {
             case 'stack_priority':
-                return -0.5;
+                return 22;
             default:
                 return parent::__get($vname);
         }
@@ -1184,10 +1436,32 @@ class LFloor extends LPairedGroup
     }
 }
 
+class LDoubleAngleQuotation extends LPairedGroup
+{
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case 'stack_priority':
+                return 22;
+            default:
+                return parent::__get($vname);
+        }
+    }
+
+    public function is_indented()
+    {
+        return false;
+    }
+
+    public function strFormat()
+    {
+        return '«%s»';
+    }
+}
 
 abstract class LBinary extends LArgs
 {
-    public static $input_priority = 2;
+    public static $input_priority = 47;
 
     public function __construct($lhs, $rhs, $indent, $parent = null)
     {
@@ -1201,8 +1475,6 @@ abstract class LBinary extends LArgs
                 return $this->args[0];
             case 'rhs':
                 return $this->args[1];
-            case 'stack_priority':
-                return 2;
             default:
                 return parent::__get($vname);
         }
@@ -1244,11 +1516,22 @@ abstract class LBinary extends LArgs
     {
         return "{%s} $this->command {%s}";
     }
+
+    public function insert_if($caret)
+    {
+        if ($this->rhs === $caret) {
+            if ($caret instanceof LCaret) {
+                $this->rhs = new LITE($caret, $caret->indent);
+                return $caret;
+            }
+        }
+        throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
+    }
 }
 
 class LAttr extends LBinary
 {
-    public static $input_priority = 4.4;
+    public static $input_priority = 81; // LPow::$input_priority + 1
     public function append_attr($caret)
     {
         return parent::append_attr($caret);
@@ -1261,9 +1544,9 @@ class LAttr extends LBinary
     public function is_indented()
     {
         $parent = $this->parent;
-        return $parent instanceof LArgumentsCommaNewLineSeparated ||
-            $parent instanceof LArgumentsNewLineSeparated ||
-            ($parent instanceof LArgumentsIndented && $parent->rhs === $this) ||
+        return $parent instanceof LArgsCommaNewLineSeparated ||
+            $parent instanceof LArgsNewLineSeparated ||
+            ($parent instanceof LArgsIndented && $parent->rhs === $this) ||
             ($parent instanceof LITE && $parent->else === $this);
     }
 
@@ -1293,18 +1576,22 @@ class LAttr extends LBinary
             $command = $rhs->arg;
             switch ($command) {
                 case 'exp':
-                    return "{\\color{RoyalBlue} e} ^ {%s}";
+                    return '{\color{RoyalBlue} e} ^ {%s}';
                 case 'cos':
                 case 'sin':
                 case 'tan':
                 case 'log':
                     return "\\$command {%s}";
+                case 'fmod':
+                    return '{%s} \textcolor{red}{\%%}';
+                case 'card':
+                    return '\left|{%s}\right|';
             }
         }
         return "{%s}$this->command{%s}";
     }
 
-    public function latexArgs()
+    public function latexArgs(&$syntax = null)
     {
         $rhs = $this->rhs;
         if ($rhs instanceof LToken) {
@@ -1314,21 +1601,23 @@ class LAttr extends LBinary
                     if ($exponent instanceof LParenthesis) {
                         $exponent = $exponent->arg;
                     }
-                    return [$exponent->toLatex()];
+                    return [$exponent->toLatex($syntax)];
                 case 'cos':
                 case 'sin':
                 case 'tan':
                 case 'log':
-                    return [$this->lhs->toLatex()];
+                case 'fmod':
+                case 'card':
+                    return [$this->lhs->toLatex($syntax)];
             }
         }
-        return parent::latexArgs();
+        return parent::latexArgs($syntax);
     }
     public function __get($vname)
     {
         switch ($vname) {
             case 'stack_priority':
-                return 6;
+                return 87;
             case 'operator':
             case 'command':
                 return '.';
@@ -1337,22 +1626,26 @@ class LAttr extends LBinary
         }
     }
 
-    public function insert_left($caret, $func)
+    public function insert_left($caret, $func, $prev_token = '')
     {
-        return $this->parent->insert_left($this, $func);
+        if ($func == 'LDoubleAngleQuotation')
+            return $caret->append_left($func, $prev_token);
+        if ($this->parent)
+            return $this->parent->insert_left($this, $func, $prev_token);
     }
 
     public function insert_token($caret, $word)
     {
         if ($caret instanceof LCaret)
             return parent::insert_token($caret, $word);
-        return $this->parent->insert_token($this, $word);
+        if ($this->parent)
+            return $this->parent->insert_token($this, $word);
     }
 
     public function push_token($word)
     {
         $new = new LToken($word, $this->indent);
-        $this->parent->replace($this, new LArgumentsSpaceSeparated([$this, $new], $this->indent));
+        $this->parent->replace($this, new LArgsSpaceSeparated([$this, $new], $this->indent));
         return $new;
     }
 
@@ -1372,35 +1665,60 @@ class LAttr extends LBinary
 
     public function insert_unary($caret, $func)
     {
-        return $this->parent->insert_unary($this, $func);
+        if ($this->parent)
+            return $this->parent->insert_unary($this, $func);
     }
 
-    public function insert($caret, $func)
+    public function insert($caret, $func, $type)
     {
         if ($this->rhs === $caret) {
-            $caret = new LCaret($this->indent);
-            $this->parent->replace(
-                $this,
-                new LArgumentsSpaceSeparated(
-                    [
-                        $this,
-                        new $func($caret, $caret->indent)
-                    ],
-                    $this->indent
-                )
-            );
+            if ($caret instanceof LCaret) {
+                if (str_starts_with($func, 'L_'))
+                    $caret = $this->insert_token($caret, substr($func, 2));
+            } else if ($type == 'modifier') {
+                return $this->parent->insert($this, $func, $type);
+            } else {
+                $caret = new LCaret($this->indent);
+                $this->parent->replace(
+                    $this,
+                    new LArgsSpaceSeparated(
+                        [
+                            $this,
+                            new $func($caret, $caret->indent)
+                        ],
+                        $this->indent
+                    )
+                );
+            }
             return $caret;
         }
         throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
+    }
+
+    public function insert_newline($caret, $newline_count, $indent, $next_token)
+    {
+        if ($this->parent instanceof LTactic && $indent > $this->indent) {
+            $caret = new LCaret($indent);
+            $newline = new LArgsNewLineSeparated([$caret], $indent);
+            $caret = $newline->push_newlines($newline_count - 1);
+            $this->parent->replace($this, new LArgsIndented(
+                $this,
+                $newline,
+                $this->indent
+            ));
+            return $caret;
+        }
+
+        return $this->parent->insert_newline($this, $newline_count, $indent, $next_token);
     }
 }
 
 class LColon extends LBinary
 {
-    public static $input_priority = 0.3;
+    public static $input_priority = 20;
     public function sep()
     {
-        return $this->rhs instanceof LStatements ? "\n" : " ";
+        return $this->rhs instanceof LStatements ? "\n" : ' ';
     }
 
     public function is_indented()
@@ -1416,7 +1734,7 @@ class LColon extends LBinary
     public function strArgs()
     {
         [$lhs, $rhs] = $this->args;
-        if ($lhs instanceof LArgumentsNewLineSeparated) {
+        if ($lhs instanceof LArgsNewLineSeparated) {
             $args = array_map(fn($arg) => "$arg", array_slice($lhs->args, 1));
             array_unshift($args, "{$lhs->args[0]}");
             $lhs = implode("\n", $args);
@@ -1427,8 +1745,6 @@ class LColon extends LBinary
     public function __get($vname)
     {
         switch ($vname) {
-            case 'stack_priority':
-                return 0.8;
             case 'operator':
             case 'command':
                 return ':';
@@ -1454,21 +1770,21 @@ class LColon extends LBinary
 
 class LAssign extends LBinary
 {
-    public static $input_priority = -0.4;
+    public static $input_priority = 19;
 
     public function sep()
     {
         $rhs = $this->rhs;
-        if ($rhs instanceof LArgumentsNewLineSeparated) {
+        if ($rhs instanceof LArgsNewLineSeparated) {
             $lines = $rhs->args;
-            if (count($lines) > 2 || !($lines[1] ?? null instanceof LArgumentsNewLineSeparated))
+            if (count($lines) > 2 || !($lines[1] ?? null instanceof LArgsNewLineSeparated) || $lines[0] ?? null instanceof LLineComment)
                 return "\n";
         }
         return ' ';
     }
     public function is_indented()
     {
-        return $this->parent instanceof LArgumentsNewLineSeparated;
+        return $this->parent instanceof LArgsNewLineSeparated;
     }
 
     public function strFormat()
@@ -1480,8 +1796,6 @@ class LAssign extends LBinary
     public function __get($vname)
     {
         switch ($vname) {
-            case 'stack_priority':
-                return 2;
             case 'operator':
             case 'command':
                 return ':=';
@@ -1490,10 +1804,10 @@ class LAssign extends LBinary
         }
     }
 
-    public function relocate_last_line_comment()
+    public function relocate_last_comment()
     {
         $rhs = $this->rhs;
-        $rhs->relocate_last_line_comment();
+        $rhs->relocate_last_comment();
     }
 
     public function insert_newline($caret, $newline_count, $indent, $next_token)
@@ -1502,20 +1816,21 @@ class LAssign extends LBinary
             if ($caret === $this->rhs) {
                 if ($caret instanceof LCaret) {
                     $caret->indent = $indent;
-                    $this->rhs = new LArgumentsNewLineSeparated([$caret], $indent);
+                    $this->rhs = new LArgsNewLineSeparated([$caret], $indent);
                     $caret = $this->rhs->push_newlines($newline_count - 1);
-                } else if ($caret instanceof LArgumentsNewLineSeparated)
-                    return $this->parent->insert_newline($this, $newline_count, $indent, $next_token);
-                else {
+                } else if ($caret instanceof LArgsNewLineSeparated) {
+                    if ($this->parent)
+                        return $this->parent->insert_newline($this, $newline_count, $indent, $next_token);
+                } else {
                     $caret = new LCaret($indent);
-                    $new = new LArgumentsNewLineSeparated([$caret], $indent);
+                    $new = new LArgsNewLineSeparated([$caret], $indent);
                     $caret = $new->push_newlines($newline_count - 1);
-                    $this->rhs = new LArgumentsIndented($this->rhs, $new, $this->indent);
+                    $this->rhs = new LArgsIndented($this->rhs, $new, $this->indent);
                 }
                 return $caret;
             }
             throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
-        } else
+        } elseif ($this->parent)
             return $this->parent->insert_newline($this, $newline_count, $indent, $next_token);
     }
 
@@ -1525,11 +1840,11 @@ class LAssign extends LBinary
         return $this;
     }
 
-    public function insert($caret, $func)
+    public function insert($caret, $func, $type)
     {
         if ($this->rhs === $caret) {
             if ($caret instanceof LCaret) {
-                $this->rhs = new $func($caret, $caret->indent);
+                $this->replace($caret, new $func($caret, $caret->indent));
                 return $caret;
             }
         }
@@ -1549,7 +1864,7 @@ abstract class LBinaryBoolean extends LBinary
 {
     public function sep()
     {
-        return $this->rhs instanceof LStatements ? "\n" : " ";
+        return $this->rhs instanceof LStatements ? "\n" : ' ';
     }
     public function is_indented()
     {
@@ -1562,16 +1877,16 @@ abstract class LBinaryBoolean extends LBinary
         return "%s $this->operator$sep%s";
     }
 
-    public function append($new)
+    public function append($new, $type)
     {
         $indent = $this->indent;
         $caret = new LCaret($indent);
         if (is_string($new)) {
             $new = new $new($caret, $indent);
-            $this->rhs = new LArgumentsSpaceSeparated([$this->rhs, $new], $indent);
+            $this->rhs = new LArgsSpaceSeparated([$this->rhs, $new], $indent);
             return $caret;
         } else {
-            $this->parent->replace($this, new LArgumentsSpaceSeparated([$this, $new], $indent));
+            $this->parent->replace($this, new LArgsSpaceSeparated([$this, $new], $indent));
             return $new;
         }
     }
@@ -1591,21 +1906,16 @@ abstract class LBinaryBoolean extends LBinary
 
 abstract class LRelational extends LBinaryBoolean
 {
-    public static $input_priority = 3.2;
-    public function latexArgs()
+    public static $input_priority = 51;
+    public function latexArgs(&$syntax = null)
     {
         [$lhs, $rhs] = $this->strip_parenthesis();
-        return [$lhs->toLatex(), $rhs->toLatex()];
+        return [$lhs->toLatex($syntax), $rhs->toLatex($syntax)];
     }
-    public function insert_if($caret)
+
+    public function insert_tactic($caret, $token)
     {
-        if ($this->rhs === $caret) {
-            if ($caret instanceof LCaret) {
-                $this->rhs = new LITE($caret, $caret->indent);
-                return $caret;
-            }
-        }
-        throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
+        return $this->insert_token($caret, $token);
     }
 }
 
@@ -1625,7 +1935,7 @@ class L_gt extends LRelational
 
 class L_ge extends LRelational
 {
-    // public static $input_priority = 3.2;
+    // public static $input_priority = 51;
     public function __get($vname)
     {
         switch ($vname) {
@@ -1639,7 +1949,7 @@ class L_ge extends LRelational
 
 class L_lt extends LRelational
 {
-    // public static $input_priority = 3.2;
+    // public static $input_priority = 51;
     public function __get($vname)
     {
         switch ($vname) {
@@ -1653,7 +1963,7 @@ class L_lt extends LRelational
 
 class L_le extends LRelational
 {
-    // public static $input_priority = 3.2;
+    // public static $input_priority = 51;
     public function __get($vname)
     {
         switch ($vname) {
@@ -1667,7 +1977,7 @@ class L_le extends LRelational
 
 class LEq extends LRelational
 {
-    // public static $input_priority = 3.2;
+    // public static $input_priority = 51;
     public function __get($vname)
     {
         switch ($vname) {
@@ -1682,7 +1992,7 @@ class LEq extends LRelational
 
 class L_ne extends LRelational
 {
-    // public static $input_priority = 3.2;
+    // public static $input_priority = 51;
     public function __get($vname)
     {
         switch ($vname) {
@@ -1696,7 +2006,7 @@ class L_ne extends LRelational
 
 class L_equiv extends LRelational
 {
-    public static $input_priority = 3.2;
+    public static $input_priority = 32;
     public function __get($vname)
     {
         switch ($vname) {
@@ -1710,7 +2020,7 @@ class L_equiv extends LRelational
 
 class LNotEquiv extends LRelational
 {
-    public static $input_priority = 3.2;
+    public static $input_priority = 32;
     public function __get($vname)
     {
         switch ($vname) {
@@ -1727,7 +2037,7 @@ class LNotEquiv extends LRelational
 
 class L_in extends LBinaryBoolean
 {
-    public static $input_priority = 3.9;
+    public static $input_priority = 51;
     public function __get($vname)
     {
         switch ($vname) {
@@ -1737,11 +2047,22 @@ class L_in extends LBinaryBoolean
                 return parent::__get($vname);
         }
     }
+
+    public function latexArgs(&$syntax = null)
+    {
+        [$lhs, $rhs] = $this->args;
+        if ($lhs instanceof LParenthesis) {
+            $lhs = $lhs->arg;
+        }
+        $lhs = $lhs->toLatex($syntax);
+        $rhs = $rhs->toLatex($syntax);
+        return [$lhs, $rhs];
+    }
 }
 
 class L_notin extends LBinaryBoolean
 {
-    public static $input_priority = 3.9;
+    public static $input_priority = 51;
 
     public function __get($vname)
     {
@@ -1752,19 +2073,28 @@ class L_notin extends LBinaryBoolean
                 return parent::__get($vname);
         }
     }
+
+    public function latexArgs(&$syntax = null)
+    {
+        [$lhs, $rhs] = $this->args;
+        if ($lhs instanceof LParenthesis) {
+            $lhs = $lhs->arg;
+        }
+        $lhs = $lhs->toLatex($syntax);
+        $rhs = $rhs->toLatex($syntax);
+        return [$lhs, $rhs];
+    }
 }
 
 class L_leftrightarrow extends LBinaryBoolean
 {
-    public static $input_priority = 0.8;
+    public static $input_priority = 21;
 
     public function __get($vname)
     {
         switch ($vname) {
             case 'operator':
                 return '↔';
-            case 'stack_priority':
-                return 0.3;
             default:
                 return parent::__get($vname);
         }
@@ -1773,20 +2103,10 @@ class L_leftrightarrow extends LBinaryBoolean
 
 abstract class LArithmetic extends LBinary
 {
-    public static $input_priority = 4.0;
+    public static $input_priority = 67;
     public function sep()
     {
         return ' ';
-    }
-
-    public function __get($vname)
-    {
-        switch ($vname) {
-            case 'stack_priority':
-                return 3.2;
-            default:
-                return parent::__get($vname);
-        }
     }
 
     public function strFormat()
@@ -1799,8 +2119,7 @@ abstract class LArithmetic extends LBinary
 
 class LAdd extends LArithmetic
 {
-    public static $input_priority = 4.2;
-    // stack_priority = 3.2
+    public static $input_priority = 66;
     public function __get($vname)
     {
         switch ($vname) {
@@ -1815,7 +2134,7 @@ class LAdd extends LArithmetic
 
 class LSub extends LArithmetic
 {
-    public static $input_priority = 4.2;
+    public static $input_priority = 66;
 
     public function __get($vname)
     {
@@ -1832,7 +2151,7 @@ class LSub extends LArithmetic
 
 class LMul extends LArithmetic
 {
-    public static $input_priority = 4.3;
+    public static $input_priority = 71;
 
     public function __get($vname)
     {
@@ -1845,12 +2164,15 @@ class LMul extends LArithmetic
                     $rhs instanceof LMul && $rhs->command ||
                     $lhs instanceof LMul && $lhs->command ||
                     $lhs->is_space_separated() ||
+                    $lhs instanceof LFDiv ||
                     $rhs instanceof LPow
                 )
                     return '\cdot';
                 if (
-                    $lhs instanceof LToken && $rhs->is_space_separated() ||
-                    ($lhs instanceof LAttr || $rhs instanceof LAttr)
+                    $lhs instanceof LToken && ($rhs->is_space_separated() || $rhs instanceof LToken && $rhs->starts_with_2_letters()) ||
+                    $lhs instanceof LToken && $lhs->ends_with_2_letters() && $rhs instanceof LToken ||
+                    $lhs instanceof LAttr || 
+                    $rhs instanceof LAttr
                 )
                     return '\ ';
 
@@ -1858,8 +2180,6 @@ class LMul extends LArithmetic
 
             case 'operator':
                 return '*';
-            case 'stack_priority':
-                return 4.3;
             default:
                 return parent::__get($vname);
         }
@@ -1869,7 +2189,7 @@ class LMul extends LArithmetic
     {
         return "%s $this->command %s";
     }
-    public function latexArgs()
+    public function latexArgs(&$syntax = null)
     {
         [$lhs, $rhs] = $this->args;
         if ($rhs instanceof LParenthesis && $rhs->arg instanceof LDiv) {
@@ -1878,8 +2198,8 @@ class LMul extends LArithmetic
             $rhs = new LParenthesis($rhs, $this->indent);
         elseif ($lhs instanceof LNeg)
             $lhs = new LParenthesis($lhs, $this->indent);
-        $lhs = $lhs->toLatex();
-        $rhs = $rhs->toLatex();
+        $lhs = $lhs->toLatex($syntax);
+        $rhs = $rhs->toLatex($syntax);
         return [$lhs, $rhs];
     }
 }
@@ -1887,7 +2207,7 @@ class LMul extends LArithmetic
 
 class L_times extends LArithmetic
 {
-    public static $input_priority = 4.5;
+    public static $input_priority = 72;
 
     public function __get($vname)
     {
@@ -1902,7 +2222,7 @@ class L_times extends LArithmetic
 
 class L_bullet extends LArithmetic
 {
-    public static $input_priority = 4.6;
+    public static $input_priority = 73;
 
     public function __get($vname)
     {
@@ -1917,7 +2237,7 @@ class L_bullet extends LArithmetic
 
 class L_odot extends LArithmetic
 {
-    public static $input_priority = 4.6;
+    public static $input_priority = 73;
 
     public function __get($vname)
     {
@@ -1932,7 +2252,7 @@ class L_odot extends LArithmetic
 
 class L_otimes extends LArithmetic
 {
-    public static $input_priority = 4.6;
+    public static $input_priority = 32;
 
     public function __get($vname)
     {
@@ -1948,7 +2268,7 @@ class L_otimes extends LArithmetic
 
 class L_oplus extends LArithmetic
 {
-    public static $input_priority = 4.5;
+    public static $input_priority = 31;
 
     public function __get($vname)
     {
@@ -1963,15 +2283,13 @@ class L_oplus extends LArithmetic
 
 class LDiv extends LArithmetic
 {
-    public static $input_priority = 4.0;
+    public static $input_priority = 71;
 
     public function __get($vname)
     {
         switch ($vname) {
             case 'operator':
                 return '/';
-            case 'stack_priority':
-                return 4.3;
             default:
                 return parent::__get($vname);
         }
@@ -1986,7 +2304,7 @@ class LDiv extends LArithmetic
             return '\frac {%s} {%s}';
         }
     }
-    public function latexArgs()
+    public function latexArgs(&$syntax = null)
     {
         $lhs = $this->lhs;
         $rhs = $this->rhs;
@@ -1997,16 +2315,32 @@ class LDiv extends LArithmetic
             if ($rhs instanceof LParenthesis)
                 $rhs = $rhs->arg;
         }
-        $lhs = $lhs->toLatex();
-        $rhs = $rhs->toLatex();
+        $lhs = $lhs->toLatex($syntax);
+        $rhs = $rhs->toLatex($syntax);
         return [$lhs, $rhs];
     }
 }
 
+class LFDiv extends LArithmetic
+{
+    public static $input_priority = 70;
+
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case 'command':
+                return '/\!\!/';
+            case 'operator':
+                return '//';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
 
 class LBitAnd extends LArithmetic
 {
-    public static $input_priority = 4.1;
+    public static $input_priority = 68;
 
     public function __get($vname)
     {
@@ -2024,6 +2358,24 @@ class LBitAnd extends LArithmetic
 
 class LBitOr extends LArithmetic
 {
+    // used in the syntax:
+    // rcases lt_trichotomy 0 a with ha | h_0 | ha
+    public function is_indented()
+    {
+        return false;
+    }
+
+    public function insert_bar($caret, $prev_token, $next_token)
+    {
+        if ($caret instanceof LToken) {
+            $new = new LCaret($this->indent);
+            $this->replace($caret, new LBitOr($caret, $new, $this->indent));
+            return $new;
+        }
+
+        throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
+    }
+
     public function __get($vname)
     {
         switch ($vname) {
@@ -2034,12 +2386,72 @@ class LBitOr extends LArithmetic
                 return parent::__get($vname);
         }
     }
+
+    public function tokens_bar_separated()
+    {
+        $tokens = [];
+        foreach ($this->args as $arg) {
+            if ($arg instanceof LBitOr)
+                $tokens[] = [...$tokens, ...$arg->tokens_bar_separated()];
+            elseif ($arg instanceof LAngleBracket)
+                $tokens[] = $arg->tokens_comma_separated();
+            else
+                $tokens[] = $arg;
+        }
+        return $tokens;
+    }
+
+    public function unique_token($indent)
+    {
+        $tokens = $this->tokens_bar_separated();
+        foreach ($tokens as &$token) {
+            if (is_array($token)) {
+                $token = array_filter($token, fn($token) => $token->arg != 'rfl');
+                $token = [...$token];
+            }
+        }
+        if (count(
+            array_unique(
+                array_map(
+                    fn($token) =>
+                    $token instanceof LToken ?
+                        $token->arg :
+                        implode(',', array_map(fn($token) => $token->arg, $token)),
+                    $tokens
+                )
+            )
+        ) == 1) {
+            $token = $tokens[0];
+            if (is_array($token) && count($token) == 1)
+                $token = $token[0];
+            if (is_array($token))
+                $token = new LArgsCommaSeparated(array_map(
+                    function ($token) use ($indent) {
+                        $token = clone $token;
+                        $token->indent = $indent;
+                    },
+                    $token
+                ), $indent);
+            else {
+                $token = clone $token;
+                $token->indent = $indent;
+            }
+            return $token;
+        }
+    }
+
+    public function latexArgs(&$syntax = null)
+    {
+        if ($this->parent instanceof LQuantifier)
+            $syntax['setOf'] = true;
+        return parent::latexArgs($syntax);
+    }
 }
 
 
 class LPow extends LArithmetic
 {
-    public static $input_priority = 4.4;
+    public static $input_priority = 80;
     public function __get($vname)
     {
         switch ($vname) {
@@ -2047,18 +2459,23 @@ class LPow extends LArithmetic
             case 'command':
                 return '^';
             case 'stack_priority':
-                return 4.3;
+                return 79;
             default:
                 return parent::__get($vname);
         }
     }
 
-    public function latexArgs()
+    public function latexArgs(&$syntax = null)
     {
-        $rhs = $this->rhs;
+        [$lhs, $rhs] = $this->args;
+        if ($lhs instanceof LParenthesis) {
+            if ($lhs->arg instanceof L_sqrt || $lhs->arg instanceof LPairedGroup || $lhs->arg instanceof LArgsSpaceSeparated && ($lhs->arg->is_Abs() || $lhs->arg->is_Bool()))
+                $lhs = $lhs->arg;
+        }
+
         if ($rhs instanceof LParenthesis)
             $rhs = $rhs->arg;
-        return [$this->lhs->toLatex(), $rhs->toLatex()];
+        return [$lhs->toLatex($syntax), $rhs->toLatex($syntax)];
     }
 }
 
@@ -2093,6 +2510,7 @@ class L_gg extends LArithmetic
 
 class LMod extends LArithmetic
 {
+    public static $input_priority = 71;
     public function __get($vname)
     {
         switch ($vname) {
@@ -2106,9 +2524,9 @@ class LMod extends LArithmetic
     }
 }
 
-class LConcat extends LArithmetic
+class LConstruct extends LArithmetic
 {
-    // public static $input_priority = 4.0;
+    public static $input_priority = 68;
     public function __get($vname)
     {
         switch ($vname) {
@@ -2121,9 +2539,9 @@ class LConcat extends LArithmetic
     }
 }
 
-class LVConcat extends LArithmetic
+class LVConstruct extends LArithmetic
 {
-    // public static $input_priority = 4.0;
+    public static $input_priority = 68;
     public function __get($vname)
     {
         switch ($vname) {
@@ -2137,13 +2555,60 @@ class LVConcat extends LArithmetic
     }
 }
 
+class LAppend extends LArithmetic
+{
+    public static $input_priority = 66;
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case 'command':
+                return '+\!\!+';
+            case 'operator':
+                return '++';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+class L_sqcup extends LArithmetic
+{
+    public static $input_priority = 68;
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case 'operator':
+                return '⊔';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+class L_sqcap extends LArithmetic
+{
+    public static $input_priority = 69;
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case 'operator':
+                return '⊓';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
 class L_cdotp extends LArithmetic
 {
+    public static $input_priority = 71;
     public function __get($vname)
     {
         switch ($vname) {
             case 'operator':
                 return '⬝';
+            case 'command':
+                return '{\color{red}\cdotp}';
             default:
                 return parent::__get($vname);
         }
@@ -2152,7 +2617,7 @@ class L_cdotp extends LArithmetic
 
 class L_circ extends LArithmetic
 {
-    // public static $input_priority = 4.0;
+    public static $input_priority = 91;
     public function __get($vname)
     {
         switch ($vname) {
@@ -2178,7 +2643,7 @@ class L_blacktriangleright  extends LArithmetic
 
     public function is_indented()
     {
-        return $this->parent instanceof LArgumentsNewLineSeparated;
+        return $this->parent instanceof LArgsNewLineSeparated;
     }
 }
 
@@ -2186,12 +2651,12 @@ abstract class LUnaryArithmetic extends LUnary {}
 
 abstract class LUnaryArithmeticPost extends LUnaryArithmetic
 {
-    public static $input_priority = 3.1;
+    public static $input_priority = 58;
     public function __get($vname)
     {
         switch ($vname) {
             case 'stack_priority':
-                return 3.3;
+                return 60;
             default:
                 return parent::__get($vname);
         }
@@ -2204,7 +2669,7 @@ abstract class LUnaryArithmeticPre extends LUnaryArithmetic
     {
         switch ($vname) {
             case 'stack_priority':
-                return 4.0;
+                return 67;
             default:
                 return parent::__get($vname);
         }
@@ -2213,7 +2678,7 @@ abstract class LUnaryArithmeticPre extends LUnaryArithmetic
 
 class LNeg extends LUnaryArithmeticPre
 {
-    public static $input_priority = 4.1;
+    public static $input_priority = 68;
     public function sep()
     {
         if ($this->arg instanceof LNeg)
@@ -2230,7 +2695,7 @@ class LNeg extends LUnaryArithmeticPre
     {
         return "$this->command{%s}";
     }
-    public function latexArgs()
+    public function latexArgs(&$syntax = null)
     {
         $arg = $this->arg;
         if ($arg instanceof LParenthesis) {
@@ -2240,7 +2705,7 @@ class LNeg extends LUnaryArithmeticPre
             )
                 $arg = $arg->arg;
         }
-        $arg = $arg->toLatex();
+        $arg = $arg->toLatex($syntax);
         return [$arg];
     }
 
@@ -2248,7 +2713,7 @@ class LNeg extends LUnaryArithmeticPre
     {
         switch ($vname) {
             case 'stack_priority':
-                return 4.3;
+                return 70;
             case 'operator':
             case 'command':
                 return '-';
@@ -2272,8 +2737,6 @@ class LPlus extends LUnaryArithmeticPre
     public function __get($vname)
     {
         switch ($vname) {
-            // case 'stack_priority':
-            // return 4.3;
             case 'operator':
             case 'command':
                 return '+';
@@ -2285,7 +2748,7 @@ class LPlus extends LUnaryArithmeticPre
 
 class LInv extends LUnaryArithmeticPost
 {
-    public static $input_priority = 4.4;
+    public static $input_priority = 71;
     public function strFormat()
     {
         return "%s$this->operator";
@@ -2298,8 +2761,6 @@ class LInv extends LUnaryArithmeticPost
     public function __get($vname)
     {
         switch ($vname) {
-            // case 'stack_priority':
-            // return 4.3;
             case 'operator':
                 return '⁻¹';
             case 'command':
@@ -2312,7 +2773,7 @@ class LInv extends LUnaryArithmeticPost
 
 class L_sqrt extends LUnaryArithmeticPre
 {
-    public static $input_priority = 4.5;
+    public static $input_priority = 72;
     public function strFormat()
     {
         return "$this->operator%s";
@@ -2322,12 +2783,12 @@ class L_sqrt extends LUnaryArithmeticPre
     {
         return "$this->command{%s}";
     }
-    public function latexArgs()
+    public function latexArgs(&$syntax = null)
     {
         $arg = $this->arg;
         if ($arg instanceof LParenthesis)
             $arg = $arg->arg;
-        $arg = $arg->toLatex();
+        $arg = $arg->toLatex($syntax);
         return [$arg];
     }
 
@@ -2335,7 +2796,7 @@ class L_sqrt extends LUnaryArithmeticPre
     {
         switch ($vname) {
             case 'stack_priority':
-                return 4.4;
+                return 71;
             case 'operator':
                 return '√';
             default:
@@ -2355,23 +2816,21 @@ class LSquare extends LUnaryArithmeticPost
     {
         return "{%s}$this->command";
     }
-    public function latexArgs()
+    public function latexArgs(&$syntax = null)
     {
         $arg = $this->arg;
         if ($arg instanceof LParenthesis) {
-            if ($arg->arg instanceof L_sqrt || $arg->arg instanceof LPairedGroup || $arg->arg instanceof LArgumentsSpaceSeparated && $arg->arg->is_Abs())
+            if ($arg->arg instanceof L_sqrt || $arg->arg instanceof LPairedGroup || $arg->arg instanceof LArgsSpaceSeparated && ($arg->arg->is_Abs() || $arg->arg->is_Bool()))
                 $arg = $arg->arg;
         }
-
-        $arg = $arg->toLatex();
+        $syntax['²'] = true; //³⁴
+        $arg = $arg->toLatex($syntax);
         return [$arg];
     }
 
     public function __get($vname)
     {
         switch ($vname) {
-            // case 'stack_priority':
-            // return 4.3;
             case 'operator':
                 return '²';
             case 'command':
@@ -2397,7 +2856,7 @@ class LCubicRoot extends LUnaryArithmeticPre
     {
         switch ($vname) {
             case 'stack_priority':
-                return 4.4;
+                return 71;
             case 'operator':
                 return '∛';
             case 'command':
@@ -2410,7 +2869,7 @@ class LCubicRoot extends LUnaryArithmeticPre
 
 class L_uparrow extends LUnaryArithmeticPre
 {
-    public static $input_priority = 4.5;
+    public static $input_priority = 72;
     public function strFormat()
     {
         return "$this->operator%s";
@@ -2421,19 +2880,19 @@ class L_uparrow extends LUnaryArithmeticPre
         return "$this->command %s";
     }
 
-    public function latexArgs()
+    public function latexArgs(&$syntax = null)
     {
         $arg = $this->arg;
-        if ($arg instanceof LParenthesis && $arg->arg instanceof LArgumentsSpaceSeparated && $arg->arg->is_Abs())
+        if ($arg instanceof LParenthesis && $arg->arg instanceof LArgsSpaceSeparated && $arg->arg->is_Abs())
             $arg = $arg->arg;
-        return [$arg->toLatex()];
+        return [$arg->toLatex($syntax)];
     }
 
     public function __get($vname)
     {
         switch ($vname) {
             case 'stack_priority':
-                return 4.3;
+                return 70;
             case 'operator':
                 return '↑';
             default:
@@ -2444,7 +2903,7 @@ class L_uparrow extends LUnaryArithmeticPre
 
 class LUparrow extends LUnaryArithmeticPre
 {
-    public static $input_priority = 4.5;
+    public static $input_priority = 72;
     public function strFormat()
     {
         return "$this->operator%s";
@@ -2459,7 +2918,7 @@ class LUparrow extends LUnaryArithmeticPre
     {
         switch ($vname) {
             case 'stack_priority':
-                return 4.3;
+                return 71;
             case 'operator':
                 return '⇑';
             default:
@@ -2483,8 +2942,6 @@ class LCube extends LUnaryArithmeticPost
     public function __get($vname)
     {
         switch ($vname) {
-            // case 'stack_priority':
-            // return 4.3;
             case 'operator':
                 return '³';
             case 'command':
@@ -2511,7 +2968,7 @@ class LQuarticRoot extends LUnaryArithmeticPre
     {
         switch ($vname) {
             case 'stack_priority':
-                return 4.4;
+                return 71;
             case 'operator':
                 return '∜';
             case 'command':
@@ -2537,8 +2994,6 @@ class LTesseract extends LUnaryArithmeticPost
     public function __get($vname)
     {
         switch ($vname) {
-            // case 'stack_priority':
-            // return 4.3;
             case 'operator':
                 return '⁴';
             case 'command':
@@ -2564,8 +3019,6 @@ class LPipeForward extends LUnaryArithmeticPost
     public function __get($vname)
     {
         switch ($vname) {
-            // case 'stack_priority':
-            // return 4.3;
             case 'operator':
                 return '|>';
             case 'command':
@@ -2578,7 +3031,7 @@ class LPipeForward extends LUnaryArithmeticPost
 
 class LMethodChaining extends LBinary
 {
-    public static $input_priority = 4.0;
+    public static $input_priority = 67;
     public function sep()
     {
         return '';
@@ -2588,7 +3041,7 @@ class LMethodChaining extends LBinary
     {
         switch ($vname) {
             case 'stack_priority':
-                return 3.2;
+                return 59;
             default:
                 return parent::__get($vname);
         }
@@ -2606,7 +3059,7 @@ class LMethodChaining extends LBinary
 
 class LGetElem extends LBinary
 {
-    public static $input_priority = 4.0;
+    public static $input_priority = 67;
     public function sep()
     {
         return '';
@@ -2616,7 +3069,7 @@ class LGetElem extends LBinary
     {
         switch ($vname) {
             case 'stack_priority':
-                return 3.2;
+                return 59;
             default:
                 return parent::__get($vname);
         }
@@ -2628,7 +3081,7 @@ class LGetElem extends LBinary
     }
     public function latexFormat()
     {
-        return '%s_%s';
+        return '%s_{%s}';
     }
 
     public function append_right($func)
@@ -2637,11 +3090,18 @@ class LGetElem extends LBinary
             return $this;
         return parent::append_right($func);
     }
+
+    public function insert_comma($caret)
+    {
+        $new = new LCaret($this->indent);
+        $this->rhs = new LArgsCommaSeparated([$caret, $new], $this->indent);
+        return $new;
+    }
 }
 
 class L_is extends LBinary
 {
-    public static $input_priority = 3.5;
+    public static $input_priority = 62;
     public function sep()
     {
         return ' ';
@@ -2681,7 +3141,7 @@ class L_is extends LBinary
 
 class L_is_not extends LBinary
 {
-    public static $input_priority = 3.5;
+    public static $input_priority = 62;
     public function sep()
     {
         return ' ';
@@ -2714,9 +3174,33 @@ class L_is_not extends LBinary
     }
 }
 
+class L_setminus extends LBinary
+{
+    public static $input_priority = 71;
+    public function sep()
+    {
+        return ' ';
+    }
+
+    public function strFormat()
+    {
+        return "%s $this->operator %s";
+    }
+
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case 'operator':
+                return "\\";
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
 class L_cup extends LBinary
 {
-    public static $input_priority = 3.3;
+    public static $input_priority = 66;
     public function sep()
     {
         return ' ';
@@ -2740,7 +3224,7 @@ class L_cup extends LBinary
 
 class L_cap extends LBinary
 {
-    public static $input_priority = 3.4;
+    public static $input_priority = 71;
     public function sep()
     {
         return ' ';
@@ -2785,7 +3269,7 @@ abstract class LLogic extends LBinaryBoolean
 
 class LLogicAnd extends LLogic
 {
-    public static $input_priority = 1;
+    public static $input_priority = 37;
 
     public function strFormat()
     {
@@ -2796,7 +3280,7 @@ class LLogicAnd extends LLogic
     {
         switch ($vname) {
             case 'stack_priority':
-                return 3;
+                return 50;
             case 'command':
                 return '\&\&';
             case 'operator':
@@ -2821,7 +3305,7 @@ class LLogicAnd extends LLogic
 
 class LLogicOr extends LLogic
 {
-    public static $input_priority = 1;
+    public static $input_priority = 37;
 
     public function strFormat()
     {
@@ -2832,7 +3316,7 @@ class LLogicOr extends LLogic
     {
         switch ($vname) {
             case 'stack_priority':
-                return 0.9;
+                return 36;
             case 'command':
             case 'operator':
                 return '||';
@@ -2855,13 +3339,13 @@ class LLogicOr extends LLogic
 
 class L_lor extends LLogic
 {
-    public static $input_priority = 0.9;
+    public static $input_priority = 30;
 
     public function __get($vname)
     {
         switch ($vname) {
             case 'stack_priority':
-                return 0.9;
+                return 29;
             case 'operator':
                 return '∨';
             default:
@@ -2878,7 +3362,7 @@ class L_lor extends LLogic
 
     public function insert_newline($caret, $newline_count, $indent, $next_token)
     {
-        if ($caret === $this->rhs) {
+        if ($caret === $this->rhs && $caret instanceof LCaret) {
             if ($indent >= $this->indent) {
                 if ($indent == $this->indent)
                     $indent = $this->indent + 2;
@@ -2887,18 +3371,18 @@ class L_lor extends LLogic
                 return $caret;
             }
         }
-        throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
+        return parent::insert_newline($caret, $newline_count, $indent, $next_token);
     }
 }
 
 class L_land extends LLogic
 {
-    public static $input_priority = 1;
+    public static $input_priority = 35;
     public function __get($vname)
     {
         switch ($vname) {
             case 'stack_priority':
-                return 0.9;
+                return 34;
             case 'operator':
                 return '∧';
 
@@ -2918,13 +3402,11 @@ class L_land extends LLogic
 
 class L_subseteq extends LBinaryBoolean
 {
-    public static $input_priority = 2;
+    public static $input_priority = 51;
 
     public function __get($vname)
     {
         switch ($vname) {
-            case 'stack_priority':
-                return 0.9;
             case 'operator':
                 return '⊆';
             default:
@@ -2935,12 +3417,10 @@ class L_subseteq extends LBinaryBoolean
 
 class L_supseteq extends LLogic
 {
-    public static $input_priority = 2;
+    public static $input_priority = 51;
     public function __get($vname)
     {
         switch ($vname) {
-            case 'stack_priority':
-                return 0.9;
             case 'operator':
                 return '⊇';
             default:
@@ -2958,15 +3438,14 @@ class LStatements extends LArgs
         if ($this->indent > $indent)
             return parent::insert_newline($caret, $newline_count, $indent, $next_token);
 
-        if ($this->indent < $indent) {
+        if ($this->indent < $indent)
             throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
-        } else {
-            for ($i = 0; $i < $newline_count; ++$i) {
-                $caret = new LCaret($indent);
-                $this->push($caret);
-            }
-            return $caret;
+
+        for ($i = 0; $i < $newline_count; ++$i) {
+            $caret = new LCaret($indent);
+            $this->push($caret);
         }
+        return $caret;
     }
 
     public function insert_if($caret)
@@ -2984,7 +3463,7 @@ class LStatements extends LArgs
     {
         switch ($vname) {
             case 'stack_priority':
-                return -0.4;
+                return LColon::$input_priority;
             default:
                 return parent::__get($vname);
         }
@@ -3013,7 +3492,7 @@ class LStatements extends LArgs
         return $args;
     }
 
-    public function relocate_last_line_comment()
+    public function relocate_last_comment()
     {
         for ($index = count($this->args) - 1; $index >= 0; --$index) {
             $end = $this->args[$index];
@@ -3033,27 +3512,45 @@ class LStatements extends LArgs
                         $last
                     );
                     $last->parent = $parent;
-                    $parent->relocate_last_line_comment();
+                    $parent->relocate_last_comment();
                     break;
                 }
             } else {
-                if ($index && $end instanceof LLineComment) {
-                    $lemma = $this->args[$index - 1];
-                    if ($lemma instanceof L_lemma) {
+                if ($end->is_comment()) {
+                    $lemma = null;
+                    for ($j = $index - 1; $j >= 0; --$j) {
+                        $stmt = $this->args[$j];
+                        if ($stmt instanceof L_lemma) {
+                            $lemma = $stmt;
+                            break;
+                        }
+                        if ($stmt->is_comment())
+                            continue;
+                        else
+                            break;
+                    }
+                    if ($lemma) {
                         $assignment = $lemma->assignment;
                         if ($assignment instanceof LAssign) {
                             $proof = $assignment->rhs;
-                            if ($proof instanceof L_by) {
+                            if ($proof instanceof L_by || $proof instanceof L_calc) {
                                 $proof = $proof->arg;
                                 if ($proof instanceof LStatements) {
-                                    $proof->push($end);
-                                    std\array_delete($this->args, $index);
+                                    for ($i = $j + 1; $i <= $index; ++$i)
+                                        $proof->push($this->args[$i]);
+                                    array_splice($this->args, $j + 1, $index - $j);
+                                    break;
                                 }
+                            } elseif ($proof instanceof LArgsNewLineSeparated) {
+                                for ($i = $j + 1; $i <= $index; ++$i)
+                                    $proof->push($this->args[$i]);
+                                array_splice($this->args, $j + 1, $index - $j);
+                                break;
                             }
                         }
                     }
-                } else
-                    $end->relocate_last_line_comment();
+                }
+                $end->relocate_last_comment();
                 break;
             }
         }
@@ -3065,20 +3562,29 @@ class LStatements extends LArgs
         for ($index = 0; $index < count($args) - 1; ++$index) {
             $result = $args[$index]->echo();
             if (is_array($result)) {
-                [, $echo] = $result;
-                std\array_insert($args, ++$index, $echo);
-                $echo->parent = $this;
+                foreach ($result as $echo)
+                    $echo->parent = $this;
+                array_splice($args, $index, 1, $result);
+                $index += count($result) - 1;
             }
         }
 
         $tactic = $args[$index];
         if ($tactic instanceof LTactic || $tactic instanceof L_match) {
-            if (($with = $tactic->with) && $with->sep() == "\n") {
-                foreach ($with->args as $case)
-                    $case->echo();
+            if (($with = $tactic->with)) {
+                if ($with->sep() == "\n") {
+                    foreach ($with->args as $case)
+                        $case->echo();
+                } elseif ($sequential_tactic_combinator = $tactic->sequential_tactic_combinator) {
+                    if (($block = $sequential_tactic_combinator->arg) instanceof LTacticBlock)
+                        $block->echo();
+                    else
+                        $sequential_tactic_combinator->echo();
+                }
             } elseif ($sequential_tactic_combinator = $tactic->sequential_tactic_combinator)
                 $sequential_tactic_combinator->echo();
-        }
+        } elseif ($tactic instanceof LTacticBlock)
+            $tactic->echo();
         return $this;
     }
 
@@ -3106,7 +3612,7 @@ class LModule extends LStatements
         }
     }
 
-    static function merge_proof($proof, $echo)
+    static function merge_proof($proof, $echo, &$syntax = null)
     {
         $proof = $proof->args;
         if ($proof[0] instanceof LLineComment && $proof[0]->arg == 'proof')
@@ -3115,11 +3621,11 @@ class LModule extends LStatements
         $proof = array_filter($proof, fn($stmt) => !($stmt instanceof LCaret));
         $code = [];
         $last = [];
-        if ($echo) {
-            $statements = [];
-            foreach ($proof as $stmt)
-                array_push($statements, ...$stmt->split());
+        $statements = [];
+        foreach ($proof as $s)
+            array_push($statements, ...$s->split($syntax));
 
+        if ($echo) {
             foreach ($statements as $stmt) {
                 if ($echo = $stmt->getEcho()) {
                     $code[] = [$last, is_int($echo->line) ? null : $echo->line];
@@ -3128,7 +3634,7 @@ class LModule extends LStatements
                     $last[] = $stmt;
             }
         } else {
-            foreach ($proof as $stmt) {
+            foreach ($statements as $stmt) {
                 if ($stmt instanceof L_have || $stmt instanceof LTactic) {
                     $last[] = $stmt;
                     $code[] = [$last, null];
@@ -3147,6 +3653,17 @@ class LModule extends LStatements
             ],
             $code
         );
+    }
+
+    public function insert($caret, $func, $type)
+    {
+        if (end($this->args) === $caret) {
+            if ($caret instanceof LCaret) {
+                $this->push(new $func($caret, $this->indent));
+                return $caret;
+            }
+        }
+        return $caret;
     }
 
     public function decode(&$json, &$latex)
@@ -3178,72 +3695,89 @@ class LModule extends LStatements
         chdir(dirname(dirname(dirname(__FILE__))));
         $imports = array_filter(
             $leanCode->args,
-            fn($import) => $import instanceof L_import && !file_exists(
-                ".lake/build/lib/" . str_replace('.', '/', "$import->arg") . ".olean"
-            )
+            fn($import) =>
+            $import instanceof L_import &&
+                str_starts_with($package = "$import->arg", 'Axiom.') &&
+                (
+                    !file_exists($olean = ".lake/build/lib/lean/" . ($module = str_replace('.', '/', $package)) . ".olean") || 
+                    filemtime($olean) < filemtime($module. ".lean")
+                )
         );
+        $lakePath = get_lake_path();
         if ($imports) {
-            $imports = implode("\n", array_map(fn($import) => "$import", $imports));
-            // $cmd = "~/.elan/bin/lake build $imports";
-            $cmd = "~/.elan/bin/lake setup-file $leanEchoFile Init $imports";
+            $imports = implode(' ', array_map(fn($import) => "$import", $imports));
+            // $cmd = "$lakePath build $imports";
+            $cmd = $lakePath . " setup-file \"$leanEchoFile\" Init $imports";
             error_log("executing cmd = $cmd");
-            shell_exec($cmd);
+            if (std\is_linux())
+                shell_exec($cmd);
+            else
+                std\exec($cmd, $_, get_lean_env());
         }
-
-        $cmd = "~/.elan/bin/lake env lean -Dlinter.unusedTactic=false -Dlinter.dupNamespace=false $leanEchoFile";
-        error_log("executing cmd = $cmd");
-        exec($cmd, $output_array);
-
+        $cmd = $lakePath . ' env lean -D"linter.unusedTactic=false" -D"linter.dupNamespace=false" -D"diagnostics.threshold=1000" '. escapeshellarg($leanEchoFile);
+        if (std\is_linux())
+            exec($cmd, $output_array);
+        else
+            std\exec($cmd, $output_array, get_lean_env());
         $latex = [];
         $error = [];
         $leanCode->set_line(1);
         $end = end($leanCode->args);
         if ($end->line != substr_count("$leanCode", "\n") + 1) {
             $error[] = [
-                'file' => $leanFile,
                 'code' => '',
                 'line' => $end->line,
                 'type' => 'error',
                 'info' => 'the line count of *.echo.lean file is not correct'
             ];
         }
-        $jsonHistory = null;
         foreach ($output_array as $jsonline) {
             $json = std\decode($jsonline);
             if ($json)
                 $this->decode($json, $latex);
             elseif (preg_match('#([/\w]+)\.lean:(\d+):(\d+): (\w+): (.+)#', $jsonline, $matches)) {
                 $line = intval($matches[2]);
+                $col = intval($matches[3]);
                 if (!isset($echo_codes))
                     $echo_codes = file($leanEchoFile);
+                $code = $echo_codes[$line - 1];
+                $info = $matches[5];
                 $error[] = [
-                    'file' => $leanFile,
-                    'code' => $echo_codes[$line - 1],
-                    'line' => $line,
+                    'code' => $code,
+                    'line' => $line, // later I will adjust this value.
+                    'col' => $col - 2,
                     'type' => $matches[4],
-                    'info' => $matches[5]
+                    'info' => $info
                 ];
-            } elseif (preg_match("/^\{/", $jsonline))
-                $jsonHistory = $jsonline;
-            elseif ($jsonHistory) {
-                $jsonHistory .= $jsonline;
-                if (preg_match("/\}$/", $jsonline)) {
-                    $json = std\decode($jsonHistory);
-                    if ($json)
-                        $this->decode($json, $latex);
-                    else
-                        $error[count($error) - 1]['info'] .= "\n" . $jsonHistory;
-                    $jsonHistory = null;
-                }
             } else
                 $error[count($error) - 1]['info'] .= "\n" . $jsonline;
         }
 
-        if ($latex) {
-            foreach ($leanCode->traverse() as $node) {
-                if ($node instanceof LTactic && $node->func == 'echo')
-                    $node->line = $latex[$node->line] ?? null;
+        foreach ($leanCode->traverse() as $node) {
+            if ($node instanceof LTactic && $node->func == 'echo')
+                if (is_int($node->line)) {
+                    if (!array_key_exists($node->line, $latex))
+                        $latex[$node->line] = null;
+                    $node->line = $latex[$node->line];
+                } else {
+                    error_log("unexpected node = $node");
+                }
+        }
+
+        $keys = array_keys($latex);
+        $indicesToDelete = [];
+        foreach (std\range(count($error)) as $i) {
+            $err = &$error[$i];
+            if (preg_match("/^ +echo /", $err['code']))
+                $indicesToDelete[] = $i;
+            else {
+                $line = $err['line'];
+                $err['line'] = $line - count(array_filter($keys, fn($key) => $key < $line)) - 1;
             }
+        }
+        if ($indicesToDelete) {
+            foreach (array_reverse($indicesToDelete) as $i)
+                array_splice($error, $i, 1);
         }
 
         array_shift($leanCode->args);
@@ -3259,7 +3793,7 @@ class LModule extends LStatements
             while (($end = end($args)) instanceof L_rightarrow)
                 array_splice($args, count($args) - 1, 2, [$end->lhs, $end->rhs]);
             $vars[] = $args;
-        } elseif ($lhs instanceof LArgumentsSpaceSeparated) {
+        } elseif ($lhs instanceof LArgsSpaceSeparated) {
             foreach ($lhs->args as $lhs)
                 $this->array_push($vars, $lhs, $rhs);
         }
@@ -3297,9 +3831,9 @@ class LModule extends LStatements
         return $vars;
     }
 
-    public function render2vue($echo)
+    public function render2vue($echo, &$modify = null, &$syntax = null)
     {
-        $this->relocate_last_line_comment();
+        $this->relocate_last_comment();
         $import = [];
         $open = [];
         $def = [];
@@ -3317,10 +3851,13 @@ class LModule extends LStatements
                     if ($declspec instanceof LColon) {
                         if ($attribute = $stmt->attribute) {
                             $attribute = $attribute->arg;
-                            if ($attribute instanceof LToken)
-                                $attribute = ["$attribute"];
-                            else
-                                $attribute = array_map(fn($arg) => "$arg", $attribute->args);
+                            if ($attribute instanceof LBracket) {
+                                $attribute = $attribute->arg;
+                                if ($attribute instanceof LArgsCommaSeparated)
+                                    $attribute = array_map(fn($arg) => "$arg", $attribute->args);
+                                elseif ($attribute instanceof LToken)
+                                    $attribute = ["$attribute"];
+                            }
                         }
                         $imply = $declspec->rhs->args;
                         if ($imply[0] instanceof LLineComment && $imply[0]->arg == 'imply')
@@ -3331,11 +3868,26 @@ class LModule extends LStatements
                         $implyLean = preg_replace("/^  /m", "", implode("\n", array_map(fn($stmt) => "$stmt", $imply)));
 
                         if (count($imply) > 1 && $imply[0] instanceof L_let) {
-                            $implyLatex = implode("\\\\\n", array_map(fn($stmt) => "&" . $stmt->toLatex() . "&& ",  $imply));
+                            $implyLatex = implode(
+                                "\\\\\n",
+                                array_map(
+                                    function ($stmt) use (&$syntax) {
+                                        return "&" . $stmt->toLatex($syntax) . "&& ";
+                                    },
+                                    $imply
+                                )
+                            );
                             $implyLatex = "\\begin{align}\n$implyLatex\n\\end{align}";
                         } else
-                            $implyLatex = implode("\n", array_map(fn($stmt) => $stmt->toLatex(), $imply));
-
+                            $implyLatex = implode(
+                                "\n",
+                                array_map(
+                                    function ($stmt) use (&$syntax) {
+                                        return $stmt->toLatex($syntax);
+                                    },
+                                    $imply
+                                )
+                            );
                         $assignment = ' :=' . ($by ? " $by" : '');
                         $implyLatex .= "\\tag*{{$assignment}}";
 
@@ -3355,28 +3907,34 @@ class LModule extends LStatements
                         $implicit = [];
                         $given = null;
                         $explicit = [];
+                        $decidables = [];
                         foreach ($declspec as $i => &$stmt) {
-                            if ($stmt instanceof LBracket)
+                            if ($stmt instanceof LBracket) {
                                 $instImplicit[] = "$stmt";
-
-                            elseif ($stmt instanceof LBrace)
+                                if ($stmt->arg instanceof LArgsSpaceSeparated) {
+                                    if (count($stmt->arg->args) == 2) {
+                                        [$lhs, $rhs] = $stmt->arg->args;
+                                        if ($lhs instanceof LToken && $lhs->arg == "Decidable" && $rhs instanceof LToken)
+                                            $decidables[] = "$rhs";
+                                    }
+                                }
+                            } elseif ($stmt instanceof LBrace) {
+                                $stmt->toLatex($syntax);
                                 $implicit[] = $stmt;
-
-                            elseif ($stmt instanceof LArgumentsSpaceSeparated) {
+                            } elseif ($stmt instanceof LArgsSpaceSeparated) {
                                 if ($stmt->args[0] instanceof LBracket)
                                     $instImplicit[] = "$stmt";
                                 elseif ($stmt->args[0] instanceof LBrace)
                                     $implicit[] = $stmt;
                                 else
                                     $error[] = [
-                                        'file' => '__file__',
                                         'code' => "$stmt",
                                         'line' => 0,
                                         'info' => "lemma $name is not well-defined",
                                         'type' => 'linter'
                                     ];
                             } elseif ($stmt instanceof LLineComment) {
-                                if ($stmt instanceof LLineComment && $stmt->arg == 'given') {
+                                if ($stmt->arg == 'given') {
                                     $given = $i + 1;
                                     break;
                                 }
@@ -3385,6 +3943,12 @@ class LModule extends LStatements
                                 else
                                     $instImplicit[] = "$stmt";
                             } elseif ($stmt instanceof LParenthesis) {
+                                // the given comment is missing, try to add one
+                                if ($stmt->arg instanceof LColon) {
+                                    std\array_insert($stmt->parent->args, $i, new LLineComment('given', $stmt->indent, $stmt->parent));
+                                    $modify = true;
+                                    ++$i;
+                                }
                                 $given = $i;
                                 break;
                             }
@@ -3395,34 +3959,47 @@ class LModule extends LStatements
                             $latex = [];
                             $pivot = null;
                             $vars = null;
-                            foreach ($given as &$stmt) {
+                            $indicesToDelete = [];
+                            foreach (std\enumerate($given) as [$i, $stmt]) {
                                 if ($stmt instanceof LParenthesis) {
                                     $colon = $stmt->arg;
                                     if ($colon instanceof LColon) {
                                         $prop = $colon->rhs;
-                                        if (!isset($vars))
+                                        if (!isset($vars)) {
                                             $vars = $this->parse_vars($implicit);
+                                            foreach ($decidables as $p)
+                                                $vars[$p] = "Prop";
+                                        }
                                         if ($prop->isProp($vars))
-                                            $latex[] = [$prop->toLatex(), latex_tag("$colon->lhs")];
+                                            $latex[] = [$prop->toLatex($syntax), latex_tag("$colon->lhs")];
                                         else {
-                                            $pivot = std\index($given, $stmt);
+                                            $pivot = $i;
                                             break;
                                         }
                                     } elseif ($colon instanceof LAssign) {
-                                        $pivot = std\index($given, $stmt);
+                                        $pivot = $i;
                                         break;
                                     }
-                                } elseif ($stmt instanceof LLineComment) {
+                                } elseif ($stmt->is_comment())
                                     $latex[] = null;
+                                elseif ($stmt instanceof LBrace) {
+                                    $pivot = $i;
+                                    $given[$pivot] = new LParenthesis($stmt->arg, $stmt->indent, $stmt->parent);
+                                    break;
+                                } elseif ($stmt instanceof LCaret) {
+                                    $indicesToDelete[] = $i;
                                 } else {
                                     $error[] = [
-                                        'file' => '__file__',
                                         'code' => "$stmt",
                                         'line' => 0,
                                         'info' => "given statement must be of LParenthesis Type",
                                         'type' => 'linter'
                                     ];
                                 }
+                            }
+                            if ($indicesToDelete) {
+                                foreach (array_reverse($indicesToDelete) as $index)
+                                    array_splice($given, $index, 1);
                             }
                             $given = array_map(fn($stmt) => preg_replace("/^  /m", "", "$stmt"), $given);
                             if ($pivot === null) {
@@ -3435,7 +4012,7 @@ class LModule extends LStatements
                             } else {
                                 $explicit = $given;
                                 $explicit[count($explicit) - 1] .= ' :';
-                                $given = null;
+                                $given = [];
                             }
 
                             if ($given) {
@@ -3453,7 +4030,7 @@ class LModule extends LStatements
                                 );
                             }
                         }
-                        $proof = $by ? ["$by" => self::merge_proof($proof->arg, $echo)] : self::merge_proof($proof, $echo);
+                        $proof = $by ? ["$by" => self::merge_proof($proof->arg, $echo, $syntax)] : self::merge_proof($proof, $echo, $syntax);
                         $implicit = array_map(fn($stmt) => "$stmt", $implicit);
                         $lemma[] = [
                             'comment' => $comment,
@@ -3470,7 +4047,6 @@ class LModule extends LStatements
                         $comment = null;
                     } else
                         $error[] = [
-                            'file' => '__file__',
                             'code' => "$declspec",
                             'line' => 0,
                             'info' => "declspec of lemma must be of LColon Type",
@@ -3478,7 +4054,6 @@ class LModule extends LStatements
                         ];
                 } else
                     $error[] = [
-                        'file' => '__file__',
                         'code' => "$stmt",
                         'line' => 0,
                         'info' => "lemma must be of LAssign Type",
@@ -3488,12 +4063,12 @@ class LModule extends LStatements
                 $def[] = "$stmt";
             elseif ($stmt instanceof L_open) {
                 $stmt = $stmt->arg;
-                if ($stmt instanceof LArgumentsSpaceSeparated) {
+                if ($stmt instanceof LArgsSpaceSeparated) {
                     if (count($stmt->args) == 2 && $stmt->args[1] instanceof LParenthesis) {
                         $defs = $stmt->args[1]->arg;
                         $open[] = [
                             $stmt->args[0]->__toString() =>
-                            $defs instanceof LArgumentsSpaceSeparated ?
+                            $defs instanceof LArgsSpaceSeparated ?
                                 array_map(fn($arg) => "$arg", $defs->args) :
                                 ["$defs->arg"]
                         ];
@@ -3506,7 +4081,8 @@ class LModule extends LStatements
                     $date[$matches[1]] = $matches[2];
                 else
                     $comment = "$stmt->arg";
-            }
+            } elseif ($stmt instanceof LBlockComment)
+                $comment = "$stmt->arg";
         }
 
         return [
@@ -3519,21 +4095,27 @@ class LModule extends LStatements
         ];
     }
 
-    public function echo()
+    public function import($module)
     {
-        $args = &$this->args;
-        // import sympy.Basic
         $this->unshift(new L_import(
-            new LAttr(
-                new LToken('sympy', 0),
-                new LToken('Basic', 0),
-                0
+            array_reduce(
+                preg_split('/\./', $module),
+                function ($carry, $token) {
+                    $token = new LToken($token, 0);
+                    return $carry ? new LAttr($carry, $token, 0) : $token;
+                },
             ),
             0
         ));
-        for ($index = 0; $index < count($args); ++$index) {
+    }
+
+    public function echo()
+    {
+        $args = &$this->args;
+        $this->import('sympy.Basic');
+        for ($index = 0; $index < count($args); ++$index)
             $args[$index] = $args[$index]->echo();
-        }
+
         return $this;
     }
 }
@@ -3578,7 +4160,7 @@ class L_import extends LCommand
     {
         switch ($vname) {
             case 'stack_priority':
-                return 0;
+                return 27;
             case 'operator':
             case 'command':
                 return 'import';
@@ -3588,15 +4170,14 @@ class L_import extends LCommand
         }
     }
 
-    public function append($type)
+    public function append($func, $type)
     {
-        if (is_string($type)) {
+        if (is_string($func)) {
             $new = new LCaret($this->indent);
-            $this->sql = new $type($new);
+            $this->sql = new $func($new);
             $this->sql->parent = $this;
             return $new;
         }
-
         throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
     }
 }
@@ -3617,7 +4198,7 @@ class L_open extends LCommand
     {
         switch ($vname) {
             case 'stack_priority':
-                return 0;
+                return 27;
             case 'operator':
             case 'command':
                 return 'open';
@@ -3626,11 +4207,11 @@ class L_open extends LCommand
         }
     }
 
-    public function append($type)
+    public function append($func, $type)
     {
-        if (is_string($type)) {
+        if (is_string($func)) {
             $new = new LCaret($this->indent);
-            $this->sql = new $type($new);
+            $this->sql = new $func($new);
             $this->sql->parent = $this;
             return $new;
         }
@@ -3675,7 +4256,8 @@ class LBar extends LUnary
     {
         switch ($vname) {
             case 'stack_priority':
-                return -0.4;
+                //must be >= LAssign::$input_priority
+                return LAssign::$input_priority;
             case 'operator':
             case 'command':
                 return '|';
@@ -3690,20 +4272,18 @@ class LBar extends LUnary
         return $this;
     }
 
-    public function split()
+    public function split(&$syntax = null)
     {
         $arrow = $this->arg;
         if ($arrow instanceof LRightarrow) {
-            $statements = [];
-            $statements[] = $this;
-            $arrow = $this->arg;
+            $self = clone $this;
+            $statements[] = $self;
+            $arrow = $self->arg;
             $stmts = $arrow->rhs;
             if ($stmts instanceof LStatements) {
                 $arrow->rhs = new LCaret($arrow->indent);
-
-                foreach ($stmts->args as $stmt) {
-                    array_push($statements, ...$stmt->split());
-                }
+                foreach ($stmts->args as $stmt)
+                    array_push($statements, ...$stmt->split($syntax));
             }
 
             return $statements;
@@ -3715,7 +4295,7 @@ class LBar extends LUnary
     {
         if ($caret === end($this->args)) {
             $new = new LCaret($this->indent);
-            $this->replace($caret, new LArgumentsCommaSeparated([$caret, $new], $this->indent));
+            $this->replace($caret, new LArgsCommaSeparated([$caret, $new], $this->indent));
             return $new;
         }
         throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
@@ -3724,10 +4304,10 @@ class LBar extends LUnary
 
 class LRightarrow extends LBinary
 {
-    public static $input_priority = -0.39;
+    public static $input_priority = 20; // same as LColon::$input_priority;
     public function sep()
     {
-        return $this->rhs instanceof LStatements ? "\n" : " ";
+        return $this->rhs instanceof LStatements ? "\n" : ($this->rhs instanceof LCaret ? '' : ' ');
     }
 
     public function is_indented()
@@ -3738,7 +4318,10 @@ class LRightarrow extends LBinary
     public function strFormat()
     {
         $sep = $this->sep();
-        return "%s $this->operator$sep%s";
+        $lhs = "%s";
+        if (!($this->lhs instanceof LCaret))
+            $lhs .= ' ';
+        return "$lhs$this->operator$sep%s";
     }
 
     public function insert_newline($caret, $newline_count, $indent, $next_token)
@@ -3761,8 +4344,6 @@ class LRightarrow extends LBinary
     public function __get($vname)
     {
         switch ($vname) {
-            case 'stack_priority':
-                return -0.4;
             case 'operator':
                 return '=>';
             default:
@@ -3770,18 +4351,37 @@ class LRightarrow extends LBinary
         }
     }
 
-    public function relocate_last_line_comment()
+    public function relocate_last_comment()
     {
-        $this->rhs->relocate_last_line_comment();
+        $this->rhs->relocate_last_comment();
     }
 
     public function echo()
     {
-        $expr = $this->lhs;
         $token = [];
-        if ($expr instanceof LArgumentsSpaceSeparated) {
-            switch ($expr->args[0]->arg) {
+        if (($parent = $this->parent) instanceof LBar && ($parent = $parent->parent) instanceof L_with && (($parent = $parent->parent) instanceof L_match || $parent instanceof LTactic && $parent->func == 'induction')) {
+            $token[] = new LToken('main', $this->rhs->indent);
+            $subject = $parent->args[0];
+            if ($subject instanceof LArgsCommaSeparated) {
+                foreach ($subject->args as $sujet) {
+                    if ($sujet instanceof LColon)
+                        $token[] = $sujet->lhs;
+                }
+            } else if ($subject instanceof LColon)
+                $token[] = $subject->lhs;
+        }
+        $expr = $this->lhs;
+        if ($expr instanceof LArgsSpaceSeparated) {
+            if ($expr->args[0] instanceof LToken)
+                $func = $expr->args[0]->arg;
+            elseif ($expr->args[0] instanceof LAttr && $expr->args[0]->lhs instanceof LCaret && $expr->args[0]->rhs instanceof LToken)
+                $func = $expr->args[0]->rhs->arg;
+            else
+                $func = null;
+            switch ($func) {
                 case 'succ':
+                case 'ofNat':
+                case 'negSucc':
                     $start = 2;
                     break;
                 case 'cons':
@@ -3791,57 +4391,66 @@ class LRightarrow extends LBinary
                     $start = 1;
                     break;
             }
-            $token = array_slice($expr->args, $start);
+            array_push($token, ...array_slice($expr->args, $start));
         } elseif ($expr instanceof LAngleBracket) {
-            if ($expr->arg instanceof LArgumentsCommaSeparated) {
+            if ($expr->arg instanceof LArgsCommaSeparated)
                 // | ⟨v, property⟩ =>
-                $token = array_slice($expr->arg->args, 1);
-            }
-        } elseif ($expr instanceof LArgumentsCommaSeparated) {
+                array_push($token, ...array_slice($expr->arg->args, 1));
+        } elseif ($expr instanceof LArgsCommaSeparated) {
             // | ⟨x, xProperty⟩, ⟨y, yProperty⟩ =>
             foreach ($expr->args as $arg) {
-                if ($arg instanceof LAngleBracket && $arg->arg instanceof LArgumentsCommaSeparated)
+                if ($arg instanceof LAngleBracket && $arg->arg instanceof LArgsCommaSeparated)
                     $token[] = $arg->arg->args[1];
             }
         }
 
         $stmt = $this->rhs;
         $stmt->echo();
-        if ($token) {
-            if ($stmt instanceof LStatements) {
-                $indent = $stmt->args[0]->indent;
-                if (count($token) > 1)
-                    $token = new LArgumentsCommaSeparated(
-                        array_map(
-                            function ($arg) use ($indent) {
-                                $arg = clone $arg;
-                                $arg->indent = $indent;
-                                return $arg;
-                            },
-                            $token
-                        ),
-                        $indent
-                    );
-                else
-                    [$token] = $token;
-                $stmt->unshift(new LTactic('echo', $token, $indent));
-            }
+        if ($token && $stmt instanceof LStatements) {
+            $indent = $stmt->args[0]->indent;
+            if (count($token) > 1)
+                $token = new LArgsCommaSeparated(
+                    array_map(
+                        function ($arg) use ($indent) {
+                            $arg = clone $arg;
+                            $arg->indent = $indent;
+                            return $arg;
+                        },
+                        $token
+                    ),
+                    $indent
+                );
+            else
+                [$token] = $token;
+            $stmt->unshift(new LTactic('echo', $token, $indent));
         }
         return $this;
+    }
+
+    public function insert($caret, $func, $type)
+    {
+        if ($this->rhs === $caret) {
+            if ($caret instanceof LCaret) {
+                $this->replace($caret, new $func($caret, $caret->indent));
+                return $caret;
+            }
+        }
+        if ($this->parent)
+            return $this->parent->insert($this, $func, $type);
     }
 }
 
 class L_rightarrow extends LBinary
 {
-    public static $input_priority = 0.9;
+    public static $input_priority = 25; // right associative operator
     public function sep()
     {
-        return $this->rhs instanceof LStatements ? "\n" : " ";
+        return $this->rhs instanceof LStatements ? "\n" : ' ';
     }
 
     public function is_indented()
     {
-        return false;
+        return $this->parent instanceof LStatements;
     }
 
     public function strFormat()
@@ -3871,7 +4480,7 @@ class L_rightarrow extends LBinary
     {
         switch ($vname) {
             case 'stack_priority':
-                return -0.4;
+                return 24;
             case 'operator':
                 return '→';
             default:
@@ -3882,8 +4491,8 @@ class L_rightarrow extends LBinary
     public function isProp($vars)
     {
         [$lhs, $rhs] = $this->args;
-        return ($lhs instanceof LToken && (($vars["$lhs"] ?? null) == 'Prop') || $lhs->isProp($vars)) &&
-            ($rhs instanceof LToken && (($vars["$rhs"] ?? null) == 'Prop') || $rhs->isProp($vars));
+        return ($lhs instanceof LToken && (($vars["$lhs"] ?? 'Prop') == 'Prop') || $lhs->isProp($vars)) &&
+            ($rhs instanceof LToken && (($vars["$rhs"] ?? 'Prop') == 'Prop') || $rhs->isProp($vars));
     }
 }
 
@@ -3891,7 +4500,7 @@ class L_mapsto extends LBinary
 {
     public function sep()
     {
-        return $this->rhs instanceof LStatements ? "\n" : " ";
+        return $this->rhs instanceof LStatements ? "\n" : ' ';
     }
     public function is_indented()
     {
@@ -3925,7 +4534,7 @@ class L_mapsto extends LBinary
     {
         switch ($vname) {
             case 'stack_priority':
-                return -0.4;
+                return 23;
             case 'operator':
                 return '↦';
             default:
@@ -3959,7 +4568,12 @@ class L_leftarrow extends LUnary
 
 class L_lnot extends LUnary
 {
-    public static $input_priority = 3.8;
+    public static $input_priority = 50;
+    public function is_indented()
+    {
+        return $this->parent instanceof LStatements;
+    }
+
     public function strFormat()
     {
         return "$this->operator%s";
@@ -3990,7 +4604,7 @@ class L_match extends LArgs
         parent::__construct([$subject], $indent, $parent);
     }
 
-    public function insert($caret, $func)
+    public function insert($caret, $func, $type)
     {
         if (!$this->with && $func == 'L_with') {
             $caret = new LCaret($this->indent);
@@ -4008,32 +4622,40 @@ class L_match extends LArgs
 
     public function strFormat()
     {
-        return "$this->operator %s %s";
+        if ($this->with)
+            return "$this->operator %s %s";
+        return "$this->operator %s";
     }
 
     public function latexFormat()
     {
-        $cases = $this->with->args;
-        $cases = implode("\\\\", array_fill(0, count($cases), "%s"));
-        return "\\begin{cases} $cases \\end{cases}";
+        if ($this->with) {
+            $cases = $this->with->args;
+            $cases = implode("\\\\", array_fill(0, count($cases), "%s"));
+            return "\\begin{cases} $cases \\end{cases}";
+        }
+        return "match\\ %s";
     }
-    public function latexArgs()
+    public function latexArgs(&$syntax = null)
     {
-        $subject = $this->subject->toLatex();
-        $cases = $this->with->args;
-        return array_map(function ($arg) use ($subject) {
-            $arg = $arg->arg;
-            $type = $arg->lhs->toLatex();
-            $value = $arg->rhs->toLatex();
-            return "{{$value}} & {\\color{blue}\\text{if}}\\ \\: $subject\\ =\\ $type";
-        }, $cases);
+        $subject = $this->subject->toLatex($syntax);
+        if ($this->with) {
+            $cases = $this->with->args;
+            return array_map(function ($arg) use ($subject, &$syntax) {
+                $arg = $arg->arg;
+                $type = $arg->lhs->toLatex($syntax);
+                $value = $arg->rhs->toLatex($syntax);
+                return "{{$value}} & {\\color{blue}\\text{if}}\\ \\: $subject\\ =\\ $type";
+            }, $cases);
+        }
+        return [$subject];
     }
 
     public function __get($vname)
     {
         switch ($vname) {
             case 'stack_priority':
-                return -0.4;
+                return LColon::$input_priority - 1;
             case 'subject':
                 return $this->args[0];
             case 'with':
@@ -4064,17 +4686,18 @@ class L_match extends LArgs
     {
         if ($caret === $this->subject) {
             $caret = new LCaret($this->indent);
-            $this->subject = new LArgumentsCommaSeparated([$this->subject, $caret], $this->indent);
+            $this->subject = new LArgsCommaSeparated([$this->subject, $caret], $this->indent);
             return $caret;
         }
-        return $this->parent->insert_comma($this);
+        if ($this->parent)
+            return $this->parent->insert_comma($this);
     }
 
-    public function relocate_last_line_comment()
+    public function relocate_last_comment()
     {
         $with = $this->with;
         if ($with instanceof L_with)
-            $with->relocate_last_line_comment();
+            $with->relocate_last_comment();
     }
 
     public function insert_tactic($caret, $token)
@@ -4084,18 +4707,14 @@ class L_match extends LArgs
         return parent::insert_tactic($caret, $token);
     }
 
-    public function split()
+    public function split(&$syntax = null)
     {
         if ($with = $this->with) {
-            $statements = [];
-            $with = $this->with;
-            $cases = $with->args;
-            $with->args = [];
-            $statements[] = $this;
-
-            foreach ($cases as $stmt) {
-                array_push($statements, ...$stmt->split());
-            }
+            $self = clone $this;
+            $self->with->args = [];
+            $statements[] = $self;
+            foreach ($with->args as $stmt)
+                array_push($statements, ...$stmt->split($syntax));
             return $statements;
         }
         return [$this];
@@ -4115,7 +4734,7 @@ class L_match extends LArgs
 
 class LITE extends LArgs
 {
-    public static $input_priority = 3.3;
+    public static $input_priority = 60;
     public function __construct($if, $indent, $parent = null)
     {
         parent::__construct([$if], $indent, $parent);
@@ -4137,7 +4756,8 @@ class LITE extends LArgs
             $this->else = $caret;
             return $caret;
         }
-        return $this->parent->insert_else($this);
+        if ($this->parent)
+            return $this->parent->insert_else($this);
     }
 
     public function insert_if($caret)
@@ -4157,10 +4777,10 @@ class LITE extends LArgs
 
     public function insert_newline($caret, $newline_count, $indent, $next_token)
     {
-        if ($caret == $this->then || $caret === $this->else) {
+        if ($caret === $this->then || $caret === $this->else && $caret instanceof LCaret)
             return $caret;
-        }
-        return $this->parent->insert_newline($this, $newline_count, $indent, $next_token);
+        if ($this->parent)
+            return $this->parent->insert_newline($this, $newline_count, $indent, $next_token);
     }
 
     public function is_indented()
@@ -4173,7 +4793,7 @@ class LITE extends LArgs
     {
         $else = $this->else;
         $indent_else = str_repeat(' ', $this->indent);
-        $sep = $else instanceof LITE ? " " : "\n";
+        $sep = $else instanceof LITE ? ' ' : "\n";
         return "if %s then\n%s\n{$indent_else}else$sep%s";
     }
 
@@ -4196,21 +4816,21 @@ class LITE extends LArgs
         return "\\begin{cases} $cases \\\\ {%s} & {\\color{blue}\\text{else}} \\end{cases}";
     }
 
-    public function latexArgs()
+    public function latexArgs(&$syntax = null)
     {
         $cases = [];
         $else = $this;
         while (true) {
             [$if, $then, $else] = $else->strip_parenthesis();
-            $if = $if->toLatex();
-            $then = $then->toLatex();
+            $if = $if->toLatex($syntax);
+            $then = $then->toLatex($syntax);
             $cases[] = "{{$then}} & {\\color{blue}\\text{if}}\\ $if ";
 
             if (!($else instanceof LITE))
                 break;
         }
 
-        $else = $else->toLatex();
+        $else = $else->toLatex($syntax);
         return array_merge($cases, [$else]);
     }
 
@@ -4218,7 +4838,7 @@ class LITE extends LArgs
     {
         switch ($vname) {
             case 'stack_priority':
-                return -0.4;
+                return 23;
             case 'if':
                 return $this->args[0];
             case 'then':
@@ -4262,19 +4882,38 @@ class LITE extends LArgs
     }
 }
 
-class LArgumentsSpaceSeparated extends LArgs
+class LArgsSpaceSeparated extends LArgs
 {
+    public static $input_priority = 72;
     public function is_space_separated()
     {
         return true;
+    }
+
+    public function tokens_space_separated()
+    {
+        if (std\array_all(fn($arg) => $arg instanceof LToken, $this->args))
+            return $this->args;
+        return [];
+    }
+
+    public function unique_token($indent)
+    {
+        if ($tokens = $this->tokens_space_separated()) {
+            if (count(array_unique(array_map(fn($token) => $token->arg, $tokens))) == 1) {
+                $token = clone $tokens[0];
+                $token->indent = $indent;
+                return $token;
+            }
+        }
     }
 
     public function is_indented()
     {
         $parent = $this->parent;
         return $parent instanceof LStatements ||
-            $parent instanceof LArgumentsCommaNewLineSeparated ||
-            $parent instanceof LArgumentsNewLineSeparated ||
+            $parent instanceof LArgsCommaNewLineSeparated ||
+            $parent instanceof LArgsNewLineSeparated ||
             $parent instanceof LITE && ($this === $parent->then || $this === $parent->else);
     }
 
@@ -4287,6 +4926,8 @@ class LArgumentsSpaceSeparated extends LArgs
     {
         $args = $this->args;
         $func = $args[0];
+        if ($this->is_Abs())
+            return '\left|{%s}\right|';
         if ($func instanceof LToken) {
             switch (count($args)) {
                 case 2:
@@ -4294,8 +4935,6 @@ class LArgumentsSpaceSeparated extends LArgs
                         case 'exp':
                         case 'cexp':
                             return '{\color{RoyalBlue} e} ^ {%s}';
-                        case 'abs':
-                            return '\left|{%s}\right|';
                         case 'arcsin':
                         case 'arccos':
                         case 'arctan':
@@ -4312,6 +4951,20 @@ class LArgumentsSpaceSeparated extends LArgs
                         case 'arctanh':
                         case 'arccoth':
                             return "$func->arg\\ {%s}";
+
+                        case 'Ici':
+                            return '\left[%s, \infty\right)';
+                        case 'Iic':
+                            return '\left(-\infty, %s\right]';
+                        case 'Ioi':
+                            return '\left(%s, \infty\right)';
+                        case 'Iio':
+                            return '\left(-\infty, %s\right)';
+
+                        case 'Zeros':
+                            return '\mathbf{0}_{%s}';
+                        case 'Ones':
+                            return '\mathbf{1}_{%s}';
                     }
                     break;
                 case 3:
@@ -4327,14 +4980,14 @@ class LArgumentsSpaceSeparated extends LArgs
                     }
                     break;
             }
+        } elseif ($this->is_Bool()) {
+            return '\left|{%s}\right|';
         } elseif ($func instanceof LAttr) {
-            if ($func->lhs instanceof LToken && $func->rhs instanceof LToken) {
-                switch ($func->lhs->arg) {
-                    case 'Complex':
-                        switch ($func->rhs->arg) {
-                            case 'abs':
-                                return '\left|{%s}\right|';
-                        }
+            if ($func->rhs instanceof LToken) {
+                switch ($func->rhs->arg) {
+                    case 'fmod':
+                        if (count($args) == 2)
+                            return '{%s}{%s}';
                         break;
                 }
             }
@@ -4346,42 +4999,34 @@ class LArgumentsSpaceSeparated extends LArgs
     {
         $args = $this->args;
         $func = $args[0];
-        if ($func instanceof LToken) {
-            switch (count($args)) {
-                case 2:
-                    switch ($func->arg) {
-                        case 'abs':
-                            return true;
-                    }
-                    break;
-            }
-        } elseif ($func instanceof LAttr) {
-            if ($func->lhs instanceof LToken && $func->rhs instanceof LToken) {
-                switch ($func->lhs->arg) {
-                    case 'Complex':
-                        switch ($func->rhs->arg) {
-                            case 'abs':
-                                return true;
-                        }
-                        break;
-                }
-            }
-        }
+        return $func instanceof LToken && count($args) == 2 && $func->arg == 'abs';
     }
-
-    public function latexArgs()
+    public function is_Bool()
     {
         $args = $this->args;
         $func = $args[0];
+        return $func instanceof LAttr && $func->rhs instanceof LToken && $func->rhs->arg == 'toNat' && $func->lhs instanceof LToken && $func->lhs->arg == 'Bool';
+    }
+
+    public function latexArgs(&$syntax = null)
+    {
+        $args = $this->args;
+        $func = $args[0];
+        if ($this->is_Abs()) {
+            $args = $this->strip_parenthesis();
+            $arg = $args[1]->toLatex($syntax);
+            return [$arg];
+        }
         if ($func instanceof LToken) {
+            $func = $func->arg;
+            $syntax[$func] = true;
             switch (count($args)) {
                 case 2:
-                    switch ($func->arg) {
+                    switch ($func) {
                         case 'exp':
                         case 'cexp':
-                        case 'abs':
                             $args = $this->strip_parenthesis();
-                            $arg = $args[1]->toLatex();
+                            $arg = $args[1]->toLatex($syntax);
                             return [$arg];
                         case 'arcsin':
                         case 'arccos':
@@ -4400,38 +5045,39 @@ class LArgumentsSpaceSeparated extends LArgs
                             $arg = $args[1];
                             if ($arg instanceof LParenthesis && $arg->arg instanceof LDiv)
                                 $arg = $arg->arg;
-                            $arg = $arg->toLatex();
+                            $arg = $arg->toLatex($syntax);
+                            return [$arg];
+
+                        case 'Ici':
+                        case 'Iic':
+                        case 'Ioi':
+                        case 'Iio':
+                        case 'Zeros':
+                        case 'Ones':
+                            $args = $this->strip_parenthesis();
+                            $arg = $args[1]->toLatex($syntax);
                             return [$arg];
                     }
                     break;
                 case 3:
-                    switch ($func->arg) {
+                    switch ($func) {
                         case 'Ioc':
                         case 'Ioo':
                         case 'Icc':
                         case 'Ico':
                             $args = $this->strip_parenthesis();
-                            $lhs = $args[1]->toLatex();
-                            $rhs = $args[2]->toLatex();
+                            $lhs = $args[1]->toLatex($syntax);
+                            $rhs = $args[2]->toLatex($syntax);
                             return [$lhs, $rhs];
                     }
                     break;
             }
-        } elseif ($func instanceof LAttr) {
-            if ($func->lhs instanceof LToken && $func->rhs instanceof LToken) {
-                switch ($func->lhs->arg) {
-                    case 'Complex':
-                        switch ($func->rhs->arg) {
-                            case 'abs':
-                                $args = $this->strip_parenthesis();
-                                $arg = $args[1]->toLatex();
-                                return [$arg];
-                        }
-                        break;
-                }
-            }
+        } elseif ($this->is_Bool()) {
+            $args = $this->strip_parenthesis();
+            $arg = $args[1]->toLatex($syntax);
+            return [$arg];
         }
-        return parent::latexArgs();
+        return parent::latexArgs($syntax);
     }
 
     public function insert_token($caret, $word)
@@ -4445,7 +5091,7 @@ class LArgumentsSpaceSeparated extends LArgs
     {
         switch ($vname) {
             case 'stack_priority':
-                return 4.5;
+                return 72;
             default:
                 return parent::__get($vname);
         }
@@ -4472,7 +5118,7 @@ class LArgumentsSpaceSeparated extends LArgs
     {
         if ($arg instanceof LToken)
             return $vars["$arg"] ?? '';
-        if ($arg instanceof LArgumentsSpaceSeparated) {
+        if ($arg instanceof LArgsSpaceSeparated) {
             $args = array_map(fn($arg) => $this->get_type($vars, $arg), $arg->args);
             return std\getitem($vars, ...$args);
         }
@@ -4488,9 +5134,19 @@ class LArgumentsSpaceSeparated extends LArgs
         if (is_array($type))
             return std\getitem($type, ...array_slice($args, 1)) == 'Prop';
     }
+
+    public function insert($caret, $func, $type)
+    {
+        if ($caret === end($this->args) && !$caret instanceof LCaret && $type != 'modifier') {
+            $caret = new LCaret($this->indent);
+            $this->push(new $func($caret, $caret->indent));
+            return $caret;
+        } else if ($this->parent)
+            return $this->parent->insert($this, $func, $type);
+    }
 }
 
-class LArgumentsNewLineSeparated extends LArgs
+class LArgsNewLineSeparated extends LArgs
 {
     use LMultipleLine;
     public function is_indented()
@@ -4517,13 +5173,13 @@ class LArgumentsNewLineSeparated extends LArgs
             if ($end instanceof LToken || $end instanceof LAttr) {
                 // function call
                 $caret = new LCaret($indent);
-                $new = new LArgumentsNewLineSeparated([$caret], $indent);
+                $new = new LArgsNewLineSeparated([$caret], $indent);
                 $caret = $new->push_newlines($newline_count - 1);
-                $this->replace($end, new LArgumentsIndented($end, $new, $this->indent));
+                $this->replace($end, new LArgsIndented($end, $new, $this->indent));
                 return $caret;
             }
             throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
-        } elseif ($this->parent instanceof LAssign)
+        } elseif ($this->parent instanceof LAssign && !($caret instanceof LLineComment))
             return parent::insert_newline($caret, $newline_count, $indent, $next_token);
         else {
 
@@ -4543,18 +5199,18 @@ class LArgumentsNewLineSeparated extends LArgs
         switch ($vname) {
             case 'stack_priority':
                 if ($this->parent instanceof L_calc)
-                    return -1;
-                return 2;
+                    return 17;
+                return 47;
             default:
                 return parent::__get($vname);
         }
     }
 
-    public function relocate_last_line_comment()
+    public function relocate_last_comment()
     {
         for ($index = count($this->args) - 1; $index >= 0; --$index) {
             $end = $this->args[$index];
-            if ($end instanceof LCaret || $end instanceof LLineComment) {
+            if ($end instanceof LCaret || $end->is_comment()) {
                 $self = $this;
                 while ($self) {
                     $parent = $self->parent;
@@ -4570,10 +5226,10 @@ class LArgumentsNewLineSeparated extends LArgs
                         $last
                     );
                     $last->parent = $parent;
-                    return $parent->relocate_last_line_comment();
+                    return $parent->relocate_last_comment();
                 }
             } else
-                return $end->relocate_last_line_comment();
+                return $end->relocate_last_comment();
         }
     }
 
@@ -4586,7 +5242,7 @@ class LArgumentsNewLineSeparated extends LArgs
     }
 }
 
-class LArgumentsIndented extends LBinary
+class LArgsIndented extends LBinary
 {
     public function sep()
     {
@@ -4619,9 +5275,9 @@ class LArgumentsIndented extends LBinary
             if ($end instanceof LToken || $end instanceof LAttr) {
                 // function call
                 $caret = new LCaret($indent);
-                $new = new LArgumentsNewLineSeparated([$caret], $indent);
+                $new = new LArgsNewLineSeparated([$caret], $indent);
                 $caret = $new->push_newlines($newline_count - 1);
-                $this->replace($end, new LArgumentsIndented($end, $new, $this->indent));
+                $this->replace($end, new LArgsIndented($end, $new, $this->indent));
                 return $caret;
             }
             throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
@@ -4645,18 +5301,18 @@ class LArgumentsIndented extends LBinary
         switch ($vname) {
             case 'stack_priority':
                 if ($this->parent instanceof L_calc)
-                    return -1;
-                return 2;
+                    return 17;
+                return 47;
             default:
                 return parent::__get($vname);
         }
     }
 
-    public function relocate_last_line_comment()
+    public function relocate_last_comment()
     {
         for ($index = count($this->args) - 1; $index >= 0; --$index) {
             $end = $this->args[$index];
-            if ($end instanceof LCaret || $end instanceof LLineComment) {
+            if ($end instanceof LCaret || $end->is_comment()) {
                 $self = $this;
                 while ($self) {
                     $parent = $self->parent;
@@ -4672,15 +5328,15 @@ class LArgumentsIndented extends LBinary
                         $last
                     );
                     $last->parent = $parent;
-                    return $parent->relocate_last_line_comment();
+                    return $parent->relocate_last_comment();
                 }
             } else
-                return $end->relocate_last_line_comment();
+                return $end->relocate_last_comment();
         }
     }
 }
 
-class LArgumentsCommaSeparated extends LArgs
+class LArgsCommaSeparated extends LArgs
 {
     public function is_indented()
     {
@@ -4702,8 +5358,8 @@ class LArgumentsCommaSeparated extends LArgs
         switch ($vname) {
             case 'stack_priority':
                 if ($this->parent instanceof LBar)
-                    return -0.39;
-                return -0.5;
+                    return LColon::$input_priority;
+                return LColon::$input_priority - 1;
             default:
                 return parent::__get($vname);
         }
@@ -4723,20 +5379,31 @@ class LArgumentsCommaSeparated extends LArgs
         throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
     }
 
-    public function insert($caret, $func)
+    public function insert($caret, $func, $type)
     {
         if (end($this->args) === $caret) {
             if ($caret instanceof LCaret) {
                 $this->replace($caret, new $func($caret, $caret->indent));
                 return $caret;
-            } else
-                return $this->parent->insert($this, $func);
+            } elseif ($this->parent)
+                return $this->parent->insert($this, $func, $type);
         }
-        throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
+    }
+
+    public function tokens_comma_separated()
+    {
+        $tokens = [];
+        foreach ($this->args as $arg) {
+            if ($arg instanceof LToken)
+                $tokens[] = $arg;
+            elseif ($arg instanceof LAngleBracket)
+                array_push($tokens, ...$arg->tokens_comma_separated());
+        }
+        return $tokens;
     }
 }
 
-class LArgumentsCommaNewLineSeparated extends LArgs
+class LArgsCommaNewLineSeparated extends LArgs
 {
     use LMultipleLine;
     public function is_indented()
@@ -4776,7 +5443,7 @@ class LArgumentsCommaNewLineSeparated extends LArgs
     {
         switch ($vname) {
             case 'stack_priority':
-                return -1;
+                return 17;
             default:
                 return parent::__get($vname);
         }
@@ -4790,7 +5457,7 @@ class LArgumentsCommaNewLineSeparated extends LArgs
     }
 
 
-    public function insert($caret, $func)
+    public function insert($caret, $func, $type)
     {
         if (end($this->args) === $caret) {
             if ($caret instanceof LCaret) {
@@ -4817,7 +5484,7 @@ abstract class LSyntax extends LArgs
         $val->parent = $this;
     }
 
-    public function insert($caret, $func)
+    public function insert($caret, $func, $type)
     {
         if ($caret === end($this->args)) {
             $caret = new LCaret($this->indent);
@@ -4839,6 +5506,18 @@ class LTactic extends LSyntax
         $this->func = $func;
     }
 
+    public function insert_line_comment($caret, $comment)
+    {
+        return $this->append_line_comment($comment);
+    }
+
+    public function append_line_comment($comment)
+    {
+        $new = new LLineComment($comment, $this->indent);
+        $this->push($new);
+        return $new;
+    }
+
     public function getEcho()
     {
         if ($this->func == 'echo')
@@ -4852,8 +5531,8 @@ class LTactic extends LSyntax
         switch ($vname) {
             case 'stack_priority':
                 if ($this->parent instanceof L_by)
-                    return 0.3;
-                return 0.2;
+                    return LColon::$input_priority;
+                return LAssign::$input_priority;
             case 'arg':
                 return $this->args[0];
             case 'modifiers':
@@ -4887,7 +5566,7 @@ class LTactic extends LSyntax
     public function is_indented()
     {
         $parent = $this->parent;
-        return $parent instanceof LStatements;
+        return !$parent || $parent instanceof LStatements || $parent instanceof LSequentialTacticCombinator && $this->indent > $parent->indent;
     }
 
     public function strFormat()
@@ -4896,8 +5575,8 @@ class LTactic extends LSyntax
         if ($this->only)
             $func .= " only";
         if (!($this->arg instanceof LCaret))
-            $func .= " ";
-        return $func . implode(" ", array_fill(0, count($this->args), "%s"));
+            $func .= ' ';
+        return $func . implode(' ', array_fill(0, count($this->args), "%s"));
     }
 
     public function latexFormat()
@@ -4914,11 +5593,11 @@ class LTactic extends LSyntax
         ];
     }
 
-    public function relocate_last_line_comment()
+    public function relocate_last_comment()
     {
         $arg = end($this->args);
         if ($arg instanceof LRightarrow || $arg instanceof L_with)
-            $arg->relocate_last_line_comment();
+            $arg->relocate_last_comment();
     }
 
     public function insert_only($caret)
@@ -4930,60 +5609,123 @@ class LTactic extends LSyntax
         throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
     }
 
+    public function has_tactic_block_followed()
+    {
+        // check the next statement:
+        // if the next statement is a tactic block, skipping echoing main since it will be done in the next tactic block
+        // if the next statement isn't a tactic block, echo main as usual
+        if ($this->parent instanceof LStatements) {
+            $stmts = $this->parent->args;
+            for ($index = std\index($stmts, $this) + 1; $index < count($stmts); ++$index) {
+                $stmt = $stmts[$index];
+                if ($stmt instanceof LTacticBlock)
+                    return true;
+                if (!$stmt->is_comment())
+                    break;
+            }
+        }
+    }
+
     public function get_echo_token()
     {
         if ($this->at) {
             $token = $this->at->arg;
-            if ($token instanceof LArgumentsSpaceSeparated)
-                $token = new LArgumentsCommaSeparated(
+            if ($token instanceof LArgsSpaceSeparated)
+                $token = new LArgsCommaSeparated(
                     array_map(fn($arg) => clone $arg, $token->args),
                     $this->indent
                 );
         } else {
             $token = [];
+            $main = "main";
             switch ($this->func) {
                 case 'intro':
                 case 'by_contra':
                     $arg = $this->arg;
                     if ($arg instanceof LToken)
-                        $token[] = "$arg";
-                    else if ($arg instanceof LArgumentsSpaceSeparated)
-                        $token = array_map(fn($arg) => "$arg", $arg->args);
+                        $token[] = clone $arg;
+                    else if ($arg instanceof LArgsSpaceSeparated)
+                        $token = array_map(fn($arg) => clone $arg, $arg->args);
                     else if ($arg instanceof LAngleBracket) {
                         $arg = $arg->arg;
                         if ($arg instanceof LToken)
-                            $token[] = "$arg";
-                        else if ($arg instanceof LArgumentsCommaSeparated)
-                            $token = array_map(fn($arg) => "$arg", $arg->args);
+                            $token[] = clone $arg;
+                        else if ($arg instanceof LArgsCommaSeparated)
+                            $token = array_map(fn($arg) => clone $arg, $arg->args);
                     }
-                    $token = array_filter($token, fn($token) => $token !== '_');
+                    break;
+                case 'denote':
+                case "denote'":
+                    if ($this->arg instanceof LColon) {
+                        $var = $this->arg->lhs;
+                        if ($var instanceof LToken)
+                            $token[] = clone $var;
+                    }
+                    $main = null;
                     break;
                 case 'by_cases':
                     if ($this->arg instanceof LColon) {
                         $var = $this->arg->lhs;
-                        if ($var instanceof LToken)
-                            $token[] = "$var";
+                        if ($var instanceof LToken) {
+                            if ($this->has_tactic_block_followed())
+                                return;
+                            $token[] = clone $var;
+                        }
                     }
                     break;
                 case 'split_ifs':
                     if (($with = $this->with) && $with->sep() == ' ') {
                         $var = $with->args[0];
-                        if ($var instanceof LToken)
-                            $token[] = "$var";
+                        $var = $var->tokens_space_separated();
+                        if ($var) {
+                            if ($this->has_tactic_block_followed())
+                                return;
+                            $token[] = clone $var[0];
+                        }
+                    }
+                    break;
+                case "cases'":
+                    if (($with = $this->with) && $with->sep() == ' ') {
+                        if ($this->sequential_tactic_combinator) {
+                            $var = $with->args[0];
+                            $var = $var->unique_token($this->indent);
+                            if ($var)
+                                $token[] = $var;
+                        }
+                    }
+                    break;
+                case 'rcases':
+                    if (($with = $this->with) && ($tokens = $with->tokens_bar_separated())) {
+                        if ($this->has_tactic_block_followed())
+                            return;
+                        foreach ($tokens as $arg) {
+                            if (is_array($arg))
+                                array_push($token, ...array_filter($arg, fn($token) => $token->arg != 'rfl'));
+                            else if ($arg->arg != 'rfl')
+                                $token[] = $arg;
+                            break;
+                        }
                     }
                     break;
                 case 'sorry':
                     return;
             }
 
-            $token[] = "main";
-            if (count($token) > 1)
-                $token = new LArgumentsCommaSeparated(
-                    array_map(fn($token) => new LToken($token, $this->indent), $token),
-                    $this->indent
-                );
-            else
-                $token = new LToken($token[0], $this->indent);
+            if ($this->has_tactic_block_followed() || $this->parent instanceof LSequentialTacticCombinator);
+            else if ($main)
+                $token[] = new LToken($main, $this->indent);
+            switch (count($token)) {
+                case 0:
+                    break;
+                case 1:
+                    $token = $token[0];
+                    break;
+                default:
+                    $token = new LArgsCommaSeparated(
+                        $token,
+                        $this->indent
+                    );
+            }
         }
         return $token;
     }
@@ -4993,30 +5735,32 @@ class LTactic extends LSyntax
         if ($token)
             return [
                 $this,
-                new LTactic('echo', $this->get_echo_token(), $this->indent)
+                new LTactic('echo', $token, $this->indent)
             ];
         return $this;
     }
 
-    public function split()
+    public function split(&$syntax = null)
     {
+        $syntax[$this->func] = true;
         if (($with = $this->with) && $with->sep() == "\n") {
-            $statements = [];
-            $cases = $with->args;
-            $with->args = [];
-            $statements[] = $this;
-
-            foreach ($cases as $stmt) {
-                array_push($statements, ...$stmt->split());
-            }
+            $self = clone $this;
+            $self->with->args = [];
+            $statements[] = $self;
+            foreach ($with->args as $stmt)
+                array_push($statements, ...$stmt->split($syntax));
             return $statements;
         }
         if ($sequential_tactic_combinator = $this->sequential_tactic_combinator) {
-            if ($sequential_tactic_combinator->arg instanceof LTacticBlock) {
-                if ($sequential_tactic_combinator->arg->arg instanceof LStatements) {
-                    $statements = $sequential_tactic_combinator->arg->arg->args;
-                    $sequential_tactic_combinator->arg->arg = new LCaret($sequential_tactic_combinator->arg->indent);
-                    return [$this, ...$statements];
+            $block = $sequential_tactic_combinator->arg;
+            if ($block instanceof LTacticBlock) {
+                if ($block->arg instanceof LStatements) {
+                    $statements = $block->arg->args;
+                    $block->arg = new LCaret($block->indent);
+                    $array = [$this];
+                    foreach ($statements as $stmt)
+                        array_push($array, ...$stmt->split($syntax));
+                    return $array;
                 }
             }
         }
@@ -5044,13 +5788,111 @@ class LTactic extends LSyntax
         }
         throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
     }
+
+    public function insert_newline($caret, $newline_count, $indent, $next_token)
+    {
+        if ($this->indent < $indent) {
+            if ($caret === $this->arg && $caret instanceof LArgsSpaceSeparated) {
+                $new = new LCaret($this->indent);
+                $caret->push($new);
+                return $new;
+            }
+        }
+        return parent::insert_newline($caret, $newline_count, $indent, $next_token);
+    }
+
+    public function insert_comma($caret)
+    {
+        if ($caret === $this->arg) {
+            if ($caret instanceof LToken) {
+                $new = new LCaret($this->indent);
+                $this->replace($caret, new LArgsCommaSeparated([$caret, $new], $this->indent));
+                return $new;
+            }
+            if ($caret instanceof LArgsCommaSeparated) {
+                $new = new LCaret($this->indent);
+                $caret->push($new);
+                return $new;
+            }
+        }
+        return parent::insert_comma($caret);
+    }
 }
 
 class L_by extends LUnary
 {
     public function is_indented()
     {
-        return $this->parent instanceof LArgumentsCommaNewLineSeparated;
+        return $this->parent instanceof LArgsCommaNewLineSeparated;
+    }
+    public function sep()
+    {
+        return $this->arg instanceof LStatements ? "\n" : ' ';
+    }
+
+    public function strFormat()
+    {
+        $sep = $this->sep();
+        return "$this->operator$sep%s";
+    }
+    public function latexFormat()
+    {
+        $sep = $this->sep();
+        return "$this->command\\ %s";
+    }
+    public function insert_newline($caret, $newline_count, $indent, $next_token)
+    {
+        if ($this->indent <= $indent && $caret instanceof LCaret && $caret === $this->arg) {
+            if ($indent == $this->indent)
+                $indent = $this->indent + 2;
+            $caret->indent = $indent;
+            $this->arg = new LStatements([$caret], $indent);
+            for ($i = 1; $i < $newline_count; ++$i) {
+                $caret = new LCaret($indent);
+                $this->arg->push($caret);
+            }
+            return $caret;
+        }
+
+        return parent::insert_newline($caret, $newline_count, $indent, $next_token);
+    }
+
+    public function relocate_last_comment()
+    {
+        $this->arg->relocate_last_comment();
+    }
+
+    public function echo()
+    {
+        $this->arg = $this->arg->echo();
+        return $this;
+    }
+
+    public function set_line($line)
+    {
+        $this->line = $line;
+        if ($this->arg instanceof LStatements)
+            ++$line;
+        return $this->arg->set_line($line);
+    }
+
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case 'operator':
+            case 'command':
+                return 'by';
+            default:
+                return parent::__get($vname);
+        }
+    }
+}
+
+class L_from extends LUnary
+{
+    public function is_indented()
+    {
+        return $this->parent instanceof LArgsCommaNewLineSeparated;
     }
     public function sep()
     {
@@ -5084,9 +5926,9 @@ class L_by extends LUnary
         return parent::insert_newline($caret, $newline_count, $indent, $next_token);
     }
 
-    public function relocate_last_line_comment()
+    public function relocate_last_comment()
     {
-        $this->arg->relocate_last_line_comment();
+        $this->arg->relocate_last_comment();
     }
 
     public function echo()
@@ -5108,7 +5950,7 @@ class L_by extends LUnary
         switch ($vname) {
             case 'operator':
             case 'command':
-                return 'by';
+                return 'from';
             default:
                 return parent::__get($vname);
         }
@@ -5124,7 +5966,7 @@ class L_calc extends LUnary
 
     public function sep()
     {
-        return $this->arg instanceof LArgumentsNewLineSeparated ? "\n" : ' ';
+        return $this->arg instanceof LArgsNewLineSeparated ? "\n" : ' ';
     }
 
     public function strFormat()
@@ -5145,16 +5987,16 @@ class L_calc extends LUnary
             if ($indent == $this->indent)
                 $indent = $this->indent + 2;
             $caret->indent = $indent;
-            $this->arg = new LArgumentsNewLineSeparated([$caret], $indent);
+            $this->arg = new LArgsNewLineSeparated([$caret], $indent);
             return $this->arg->push_newlines($newline_count - 1);
         }
 
         return parent::insert_newline($caret, $newline_count, $indent, $next_token);
     }
 
-    public function relocate_last_line_comment()
+    public function relocate_last_comment()
     {
-        $this->arg->relocate_last_line_comment();
+        $this->arg->relocate_last_comment();
     }
 
     public function __get($vname)
@@ -5171,7 +6013,7 @@ class L_calc extends LUnary
     public function set_line($line)
     {
         $this->line = $line;
-        if ($this->arg instanceof LArgumentsNewLineSeparated)
+        if ($this->arg instanceof LArgsNewLineSeparated)
             ++$line;
         return $this->arg->set_line($line);
     }
@@ -5409,7 +6251,7 @@ class LSequentialTacticCombinator extends LUnary
 
     public function sep()
     {
-        return $this->arg instanceof LTacticBlock ? "\n" : ' ';
+        return $this->arg instanceof LTacticBlock || $this->arg->indent > $this->indent ? "\n" : ' ';
     }
     public function strFormat()
     {
@@ -5436,7 +6278,7 @@ class LSequentialTacticCombinator extends LUnary
     public function insert_tactic($caret, $type)
     {
         if ($caret instanceof LCaret) {
-            $this->arg = new LTactic($type, $caret, $this->indent);
+            $this->arg = new LTactic($type, $caret, $caret->indent);
             return $caret;
         }
         throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
@@ -5445,7 +6287,13 @@ class LSequentialTacticCombinator extends LUnary
     public function insert_newline($caret, $newline_count, $indent, $next_token)
     {
         if ($caret instanceof LCaret && $caret === $this->arg) {
-            if ($next_token == "·" && $indent == $this->indent) {
+            if ($next_token == '·') {
+                if ($indent == $this->indent)
+                    return $caret;
+            } else {
+                if ($indent == $this->indent)
+                    $indent += 2;
+                $caret->indent = $indent;
                 return $caret;
             }
         }
@@ -5462,7 +6310,7 @@ class LSequentialTacticCombinator extends LUnary
     public function set_line($line)
     {
         $this->line = $line;
-        if ($this->arg instanceof LTacticBlock)
+        if ($this->arg instanceof LTacticBlock || $this->arg->indent > $this->indent)
             ++$line;
         return $this->arg->set_line($line);
     }
@@ -5520,6 +6368,17 @@ class LTacticBlock extends LUnary
         return parent::insert_newline($caret, $newline_count, $indent, $next_token);
     }
 
+    public function insert_line_comment($caret, $comment)
+    {
+        if ($caret instanceof LCaret) {
+            $indent = $this->indent + 2;
+            $new = new LLineComment($comment, $indent);
+            $this->arg = new LStatements([$new], $indent);
+            return $new;
+        }
+        throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
+    }
+
     public function __get($vname)
     {
         switch ($vname) {
@@ -5537,11 +6396,137 @@ class LTacticBlock extends LUnary
         $statements = $this->arg;
         $this->arg = $statements->echo();
         if ($statements instanceof LStatements) {
-            $statements->unshift(new LTactic(
-                'echo',
-                new LToken("main", $statements->indent),
-                $statements->indent,
-            ));
+            if ($this->parent instanceof LSequentialTacticCombinator) {
+                if (
+                    $this->parent->parent instanceof LTactic &&
+                    ($with = $this->parent->parent->with) &&
+                    ($token = $with->unique_token($statements->indent))
+                );
+                else
+                    $token = new LToken('main', $statements->indent);
+                $statements->unshift(new LTactic('echo', $token, $statements->indent));
+            } elseif ($this->parent instanceof LStatements) {
+                $index = std\index($this->parent->args, $this);
+                $tacticBlockCount = 0;
+                for ($i = $index - 1; $i >= 0; --$i) {
+                    $stmt = $this->parent->args[$i];
+                    if ($stmt->is_comment())
+                        continue;
+
+                    if ($stmt instanceof LTacticBlock) {
+                        ++$tacticBlockCount;
+                        continue;
+                    }
+
+                    if ($stmt instanceof LTactic) {
+                        if ($stmt->func == 'echo')
+                            continue;
+                        switch ($stmt->func) {
+                            case 'rcases':
+                                if (($with = $stmt->with) instanceof L_with && ($tokens = $with->tokens_bar_separated())) {
+                                    $token = $tokens[$tacticBlockCount];
+                                    $indent = $statements->indent;
+                                    if (is_array($token)) {
+                                        $token = array_filter($token, fn($token) => $token->arg != 'rfl');
+                                        $token = [...$token];
+                                        $token = array_map(function ($token) use ($indent) {
+                                            $token = clone $token;
+                                            $token->indent = $indent;
+                                            return $token;
+                                        }, $token);
+                                        if (count($token) == 1)
+                                            [$token] = $token;
+                                        else
+                                            $token = new LArgsCommaSeparated($token, $indent);
+                                    } else {
+                                        $token = clone $token;
+                                        $token->indent = $indent;
+                                    }
+                                    $statements->unshift(new LTactic(
+                                        'echo',
+                                        $token,
+                                        $indent,
+                                    ));
+                                }
+                                break;
+                            case "cases'":
+                                if (($with = $stmt->with) instanceof L_with && ($tokens = $with->tokens_space_separated())) {
+                                    $token = $tokens[$tacticBlockCount];
+                                    $token = clone $token;
+                                    $token->indent = $statements->indent;
+                                    $statements->unshift(new LTactic(
+                                        'echo',
+                                        $token,
+                                        $statements->indent,
+                                    ));
+                                }
+                                break;
+                            case 'split_ifs':
+                                if (($with = $stmt->with) instanceof L_with && count($with->args) == 1 && (($tokens = $with->args[0]) instanceof LArgsSpaceSeparated || $tokens instanceof LToken)) {
+                                    $statements->unshift(new LTactic(
+                                        'echo',
+                                        new LToken(
+                                            'main',
+                                            $statements->indent
+                                        ),
+                                        $statements->indent,
+                                    ));
+                                    $tokens = $tokens->tokens_space_separated();
+                                    $token = $tokens[$tacticBlockCount] ?? null;
+                                    if ($token) {
+                                        $token = clone $token;
+                                        $token->indent = $this->indent;
+                                        $echo = new LTactic(
+                                            'echo',
+                                            $token,
+                                            $this->indent
+                                        );
+                                        return [$echo, $this, clone $echo];
+                                    }
+                                }
+                                break;
+
+                            case 'by_cases':
+                                if (($colon = $stmt->arg) instanceof LColon && ($token = $colon->lhs) instanceof LToken) {
+                                    $tokens = $token->tokens_space_separated();
+                                    $token = $tokens[$tacticBlockCount] ?? null;
+                                    if ($token) {
+                                        $token = clone $token;
+                                        $token->indent = $this->indent;
+                                        $echo = new LTactic(
+                                            'echo',
+                                            $token,
+                                            $this->indent
+                                        );
+                                        return [$echo, $this, clone $echo];
+                                    }
+                                }
+                                break;
+                            default:
+                                $token = new LToken('main', $statements->indent);
+                                $sequential_tactic_combinator = $stmt->sequential_tactic_combinator;
+                                if ($sequential_tactic_combinator) {
+                                    $tactic = $sequential_tactic_combinator->arg;
+                                    $tactic_token = $tactic->get_echo_token();
+                                    if ($tactic_token) {
+                                        if ($tactic_token instanceof LArgsCommaSeparated) {
+                                            $tactic_token->push($token);
+                                            $token = $tactic_token;
+                                        } else
+                                            $token = new LArgsCommaSeparated([$tactic_token, $token], $statements->indent);
+                                    }
+                                }
+                                $statements->unshift(new LTactic(
+                                    'echo',
+                                    $token,
+                                    $statements->indent,
+                                ));
+                                break;
+                        }
+                    }
+                    break;
+                }
+            }
         }
         return $this;
     }
@@ -5551,6 +6536,20 @@ class LTacticBlock extends LUnary
         $this->line = $line;
         ++$line;
         return $this->arg->set_line($line);
+    }
+
+    public function split(&$syntax = null)
+    {
+        if ($this->arg instanceof LStatements) {
+            $statements = $this->arg->args;
+            $self = clone $this;
+            $self->arg = new LCaret($this->indent);
+            $array = [$self];
+            foreach ($statements as $stmt)
+                array_push($array, ...$stmt->split($syntax));
+            return $array;
+        }
+        return [$this];
     }
 }
 
@@ -5572,8 +6571,9 @@ class L_with extends LArgs
         if (!count($this->args))
             return "";
         [$caret] = $this->args;
-        return ($caret instanceof LCaret || $caret instanceof LToken) ? " " : "\n";
+        return $caret instanceof LCaret || $caret->tokens_space_separated() || $caret instanceof LBitOr ? ' ' : "\n";
     }
+
     public function strFormat()
     {
         $sep = $this->sep();
@@ -5585,9 +6585,9 @@ class L_with extends LArgs
         return $this->strFormat();
     }
 
-    public function relocate_last_line_comment()
+    public function relocate_last_comment()
     {
-        end($this->args)->relocate_last_line_comment();
+        end($this->args)->relocate_last_comment();
     }
 
     public function insert_newline($caret, $newline_count, $indent, $next_token)
@@ -5601,10 +6601,12 @@ class L_with extends LArgs
             if ($caret instanceof LCaret)
                 return $caret;
 
-            if ($caret instanceof LBar && $next_token == '|') {
-                $caret = new LCaret($this->indent);
-                $this->push($caret);
-                return $caret;
+            if ($next_token == '|') {
+                if ($caret instanceof LBar || $caret->is_comment()) {
+                    $caret = new LCaret($this->indent);
+                    $this->push($caret);
+                    return $caret;
+                }
             }
         }
         return parent::insert_newline($caret, $newline_count, $indent, $next_token);
@@ -5612,15 +6614,17 @@ class L_with extends LArgs
 
     public function insert_bar($caret, $prev_token, $next_token)
     {
-        if (count($this->args) > 0) {
-            $cases = $this->args;
-            $caret = end($cases);
+        $cases = $this->args;
+        if (end($cases) === $caret) {
             if ($caret instanceof LCaret) {
                 $this->replace($caret, new LBar($caret, $this->indent));
                 return $caret;
+            } else {
+                $new = new LCaret($this->indent);
+                $this->replace($caret, new LBitOr($caret, $new, $this->indent));
+                return $new;
             }
         }
-
         throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
     }
 
@@ -5636,8 +6640,8 @@ class L_with extends LArgs
         switch ($vname) {
             case 'stack_priority':
                 if ($this->parent instanceof L_match)
-                    return -0.4;
-                return -1;
+                    return 23;
+                return 17;
             default:
                 return parent::__get($vname);
         }
@@ -5647,7 +6651,7 @@ class L_with extends LArgs
     {
         if ($caret === end($this->args)) {
             $new = new LCaret($this->indent);
-            $this->replace($caret, new LArgumentsCommaSeparated([$caret, $new], $this->indent));
+            $this->replace($caret, new LArgsCommaSeparated([$caret, $new], $this->indent));
             return $new;
         }
         throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
@@ -5661,6 +6665,29 @@ class L_with extends LArgs
         foreach ($this->args as $arg)
             $line = $arg->set_line($line) + 1;
         return $line - 1;
+    }
+
+    public function tokens_bar_separated()
+    {
+        if (count($this->args) == 1 && $this->args[0] instanceof LBitOr)
+            return $this->args[0]->tokens_bar_separated();
+        return [];
+    }
+
+    public function unique_token($indent)
+    {
+        if (count($this->args) == 1) {
+            $stmt = $this->args[0];
+            if ($stmt instanceof LBitOr || $stmt instanceof LArgsSpaceSeparated)
+                return $stmt->unique_token($indent);
+        }
+    }
+
+    public function tokens_space_separated()
+    {
+        if (count($this->args) == 1 && $this->args[0] instanceof LArgsSpaceSeparated)
+            return $this->args[0]->tokens_space_separated();
+        return [];
     }
 }
 
@@ -5691,7 +6718,7 @@ class LAttribute extends LUnary
         return $caret;
     }
 
-    public function append($new)
+    public function append($new, $type)
     {
         return $this->append_accessibility($new, "public");
     }
@@ -5728,8 +6755,13 @@ class LAttribute extends LUnary
 class L_def extends LArgs
 {
     public $accessibility;
-    public function __construct($accessibility, $name, $indent, $parent = null)
+    public function __construct($accessibility, $name, $indent = null, $parent = null)
     {
+        if ($indent === null) {
+            $indent = $name;
+            $name = $accessibility;
+            $accessibility = 'public';
+        }
         parent::__construct([$name], $indent, $parent);
         array_unshift($this->args, null);
         $this->accessibility = $accessibility;
@@ -5778,9 +6810,9 @@ class L_def extends LArgs
             if ($caret === $this->assignment) {
                 if ($caret instanceof LToken || $caret instanceof LAttr) {
                     $caret = new LCaret($indent);
-                    $new = new LArgumentsNewLineSeparated([$caret], $indent);
+                    $new = new LArgsNewLineSeparated([$caret], $indent);
                     $caret = $new->push_newlines($newline_count - 1);
-                    $this->assignment = new LArgumentsIndented(
+                    $this->assignment = new LArgsIndented(
                         $this->assignment,
                         $new,
                         $this->indent
@@ -5813,7 +6845,7 @@ class L_def extends LArgs
     {
         switch ($vname) {
             case 'stack_priority':
-                return -2;
+                return 7;
             case 'attribute':
                 return $this->args[0] ?? null;
             case 'assignment':
@@ -5838,11 +6870,11 @@ class L_def extends LArgs
         $val->parent = $this;
     }
 
-    public function relocate_last_line_comment()
+    public function relocate_last_comment()
     {
         $assignment = $this->assignment;
         if ($assignment instanceof LAssign)
-            $assignment->relocate_last_line_comment();
+            $assignment->relocate_last_comment();
     }
 
     public function set_line($line)
@@ -5875,7 +6907,7 @@ class L_lemma extends L_def
                 $statements = &$statement->args;
                 for ($i = count($statements) - 1; $i >= 0; --$i) {
                     $stmt = $statements[$i];
-                    if ($stmt instanceof LLineComment)
+                    if ($stmt->is_comment())
                         continue;
                     if ($stmt instanceof LTactic || $stmt instanceof L_have || $stmt instanceof L_let) {
                         $token = $stmt->get_echo_token();
@@ -5937,7 +6969,7 @@ class L_have extends LUnary
     {
         switch ($vname) {
             case 'stack_priority':
-                return -2;
+                return 7;
             case 'operator':
             case 'command':
                 return 'have';
@@ -5957,12 +6989,12 @@ class L_have extends LUnary
                 $token = new LToken('this', $this->indent);
             if (
                 $token instanceof LAngleBracket &&
-                $token->arg instanceof LArgumentsCommaSeparated &&
+                $token->arg instanceof LArgsCommaSeparated &&
                 std\array_all(fn($arg) => $arg instanceof LToken, $token->arg->args)
             )
                 $token = $token->arg;
 
-            if ($token instanceof LToken || $token instanceof LArgumentsCommaSeparated)
+            if ($token instanceof LToken || $token instanceof LArgsCommaSeparated)
                 return $token;
         }
     }
@@ -5970,12 +7002,34 @@ class L_have extends LUnary
     public function echo()
     {
         $token = $this->get_echo_token();
-        if ($token)
+        if ($token) {
+            $by = $this->arg->rhs;
+            if ($by instanceof L_by) {
+                $stmt = $by->arg;
+                if ($stmt instanceof LStatements)
+                    $stmt->echo();
+            }
             return [
                 $this,
                 new LTactic('echo', $token, $this->indent)
             ];
+        }
         return $this;
+    }
+
+    public function split(&$syntax = null)
+    {
+        $assign = $this->arg;
+        if ($assign instanceof LAssign && ($by = $assign->rhs) instanceof L_by && ($stmts = $by->arg) instanceof LStatements) {
+            $self = clone $this;
+            $self->arg->rhs->arg = new LCaret($by->indent);
+            $statements[] = $self;
+            foreach ($stmts->args as $stmt)
+                array_push($statements, ...$stmt->split($syntax));
+
+            return $statements;
+        }
+        return [$this];
     }
 }
 
@@ -6009,7 +7063,7 @@ class L_let extends LUnary
     {
         switch ($vname) {
             case 'stack_priority':
-                return -2;
+                return 7;
             case 'operator':
             case 'command':
                 return 'let';
@@ -6024,9 +7078,10 @@ class L_let extends LUnary
         if ($assign instanceof LAssign) {
             $angleBracket = $assign->lhs;
             if ($angleBracket instanceof LAngleBracket) {
-                $token = $angleBracket->arg;
-                if ($token instanceof LToken || $token instanceof LArgumentsCommaSeparated)
-                    return $token;
+                $token = $angleBracket->tokens_comma_separated();
+                if (count($token) == 1)
+                    return $token[0];
+                return new LArgsCommaSeparated($token, $this->indent);
             }
         }
     }
@@ -6052,12 +7107,12 @@ class L_show extends LSyntax
     public function is_indented()
     {
         $parent = $this->parent;
-        return $parent instanceof LStatements;
+        return $parent instanceof LStatements || $parent instanceof LArgsNewLineSeparated;
     }
 
     public function strFormat()
     {
-        return "$this->func " . implode(" ", array_fill(0, count($this->args), "%s"));
+        return "$this->func " . implode(' ', array_fill(0, count($this->args), "%s"));
     }
 
     public function latexFormat()
@@ -6076,7 +7131,7 @@ class L_show extends LSyntax
     {
         switch ($vname) {
             case 'stack_priority':
-                return -2;
+                return 7;
             default:
                 return parent::__get($vname);
         }
@@ -6085,10 +7140,11 @@ class L_show extends LSyntax
 
 class L_fun extends LUnary
 {
+    public static $input_priority = 19;
     public function is_indented()
     {
         $parent = $this->parent;
-        return $parent instanceof LArgumentsNewLineSeparated || $parent instanceof LStatements;
+        return $parent instanceof LArgsNewLineSeparated || $parent instanceof LStatements;
     }
 
     public function strFormat()
@@ -6111,8 +7167,6 @@ class L_fun extends LUnary
     public function __get($vname)
     {
         switch ($vname) {
-            case 'stack_priority':
-                return -0.4;
             case 'operator':
                 return 'fun';
             case 'command':
@@ -6125,7 +7179,6 @@ class L_fun extends LUnary
 
 class LbigOperator extends LArgs
 {
-    public static $input_priority = 3.3;
     public function __construct($bound, $indent, $parent = null)
     {
         parent::__construct([$bound], $indent, $parent);
@@ -6140,9 +7193,6 @@ class LbigOperator extends LArgs
             case 'scope':
                 // body or scope of the quantifier.
                 return $this->args[1] ?? null;
-
-            case 'stack_priority':
-                return 0.1;
 
             default:
                 return parent::__get($vname);
@@ -6172,6 +7222,8 @@ class LbigOperator extends LArgs
 
     public function strFormat()
     {
+        if (count($this->args) == 1)
+            return "$this->operator %s,";
         return "$this->operator %s, %s";
     }
 
@@ -6196,17 +7248,28 @@ class LbigOperator extends LArgs
         }
         throw new Exception(__METHOD__ . " is unexpected for " . get_class($this));
     }
-
-    use LProp;
 }
 
 
 class LQuantifier extends LbigOperator
 {
-    public static $input_priority = 2;
+    use LProp;
+    public static $input_priority = 24;
     public function latexFormat()
     {
+        if (count($this->args) == 1)
+            return "$this->command\\ {%s},";
         return "$this->command\\ {%s}, {%s}";
+    }
+
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case 'stack_priority':
+                return LColon::$input_priority - 1;
+            default:
+                return parent::__get($vname);
+        }
     }
 }
 
@@ -6242,11 +7305,14 @@ class L_exists extends LQuantifier
 
 class L_sum extends LbigOperator
 {
+    public static $input_priority = 52;
     public function __get($vname)
     {
         switch ($vname) {
             case 'operator':
                 return '∑';
+            case 'stack_priority':
+                return 28;
             default:
                 return parent::__get($vname);
         }
@@ -6255,26 +7321,65 @@ class L_sum extends LbigOperator
 
 class L_prod extends LbigOperator
 {
+    public static $input_priority = 52;
     public function __get($vname)
     {
         switch ($vname) {
             case 'operator':
                 return '∏';
+            case 'stack_priority':
+                return 28;
             default:
                 return parent::__get($vname);
         }
     }
 }
 
+class LLamda extends LbigOperator
+{
+    public static $input_priority = 52;
+    public function __get($vname)
+    {
+        switch ($vname) {
+            case 'operator':
+                return 'lamda';
+            case 'command':
+                return 'lamda';
+            case 'stack_priority':
+                return 28;
+            default:
+                return parent::__get($vname);
+        }
+    }
+
+    public function strFormat()
+    {
+        return "[%s] %s";
+    }
+
+    public function latexFormat()
+    {
+        return "\left[{%s}\\right]{%s}";
+    }
+
+    public function latexArgs(&$syntax = null)
+    {
+        $syntax[get_class($this)] = true;
+        return parent::latexArgs($syntax);
+    }
+}
+
 function compile($code)
 {
+    global $tactics;
     $caret = new LCaret(0);
     $root = new LModule([$caret], 0);
     assert(str_ends_with($code, "\n"));
-    $tokens = array_map(fn($args) => $args[0][0], std\matchAll('/\w+|\W/u', $code, 0, false));
+    $tokens = array_map(fn($args) => $args[0][0], std\matchAll('/\w+|\W/u', $code));
     $i = 0;
     $count = count($tokens);
-    $tokens[] = ""; // prevent out of bounds error
+    $tokens[] = ''; // prevent out of bounds error
+    $indent = 0;
     while ($i < $count) {
         $token = $tokens[$i];
         switch ($token) {
@@ -6284,17 +7389,22 @@ function compile($code)
             case 'def':
             case 'theorem':
             case 'lemma':
-            case 'match':
-            case 'have':
+                $caret = $caret->append("L_$token", "delspec");
+                break;
             case 'fun':
+            case 'match':
+                $caret = $caret->append("L_$token", "expr");
+                break;
+            case 'have':
             case 'let':
             case 'show':
-                $caret = $caret->append("L_$token");
+                $caret = $caret->append("L_$token", "tactic");
                 break;
 
             case 'public':
             case 'private':
             case 'protected':
+            case 'noncomputable':
                 while ($tokens[++$i] == ' ');
                 $caret = $caret->append_accessibility("L_$tokens[$i]", $token);
                 break;
@@ -6339,18 +7449,28 @@ function compile($code)
                 break;
 
             case '.':
-                $caret = $caret->append_binary("LAttr");
+                if ($caret instanceof LCaret && $caret->parent instanceof LStatements)
+                    $caret = $caret->parent->insert_unary($caret, 'LTacticBlock');
+                else
+                    // $caret instanceof LToken ||
+                    // $caret instanceof LPairedGroup ||
+                    // $caret instanceof LAttr ||
+                    // $caret instanceof LCaret && ($caret->parent instanceof LPairedGroup || $caret->parent instanceof LBar                
+                    $caret = $caret->append_binary("LAttr");
                 break;
 
             case 'is':
-                $Type = "L_$token";
-                $not = $i + 2 < $count && std\isspace($tokens[$i + 1]) && strtolower($tokens[$i + 2]) == 'not';
-                if ($not) {
-                    $i += 2;
-                    $Type .= '_not';
+                if ($caret instanceof LCaret && $caret->parent instanceof LAttr)
+                    $caret = $caret->parent->insert_token($caret, $token);
+                else {
+                    $Type = "L_$token";
+                    $not = $i + 2 < $count && std\isspace($tokens[$i + 1]) && strtolower($tokens[$i + 2]) == 'not';
+                    if ($not) {
+                        $i += 2;
+                        $Type .= '_not';
+                    }
+                    $caret = $caret->append_binary($Type);
                 }
-
-                $caret = $caret->append_binary($Type);
                 break;
 
             case '(':
@@ -6362,7 +7482,7 @@ function compile($code)
                 break;
 
             case '[':
-                $caret = $caret->parent->insert_left($caret, 'LBracket');
+                $caret = $caret->parent->insert_left($caret, 'LBracket', $i ? $tokens[$i - 1] : '');
                 break;
 
             case ']':
@@ -6398,9 +7518,18 @@ function compile($code)
                 $caret = $caret->parent->append_right('LFloor');
                 break;
 
-            case '\\':
-                $word = "\\" . $tokens[++$i];
-                $caret = $caret->push_token($word);
+            case '«':
+                $caret = $caret->parent->insert_left($caret, 'LDoubleAngleQuotation');
+                break;
+            case '»':
+                $caret = $caret->parent->append_right('LDoubleAngleQuotation');
+                break;
+            case '?':
+                if ($tokens[$i + 1] == '_') {
+                    ++$i;
+                    $token .= '_';
+                }
+                $caret = $caret->parent->insert_token($caret, $token);
                 break;
 
             case '<':
@@ -6470,9 +7599,9 @@ function compile($code)
                     ++$i;
                     if ($tokens[$i + 1] == 'ᵥ') {
                         ++$i;
-                        $caret = $caret->parent->insert_vconcat($caret);
+                        $caret = $caret->parent->insert_vconstruct($caret);
                     } else
-                        $caret = $caret->parent->insert_concat($caret);
+                        $caret = $caret->parent->insert_construct($caret);
                 } else
                     $caret = $caret->parent->insert_colon($caret);
                 break;
@@ -6487,7 +7616,8 @@ function compile($code)
                     $comment = "";
                     while ($tokens[++$i] != "\n")
                         $comment .= $tokens[$i];
-                    $caret = $caret->append_line_comment(trim($comment));
+                    $caret = $caret->parent->insert_line_comment($caret, trim($comment));
+                    --$i; // now $tokens[++$i] must be a new line;
                 } elseif ($caret instanceof LCaret)
                     $caret = $caret->parent->insert_unary($caret, 'LNeg');
                 else
@@ -6526,16 +7656,52 @@ function compile($code)
                 break;
 
             case "'":
-                $caret = $caret->append_quote();
+                while (preg_match("/['\w]/", $tokens[$i + 1]))
+                    $token .= $tokens[++$i];
+                $caret = $caret->append_quote($token);
                 break;
 
             case '+':
-                if ($caret instanceof LCaret) {
+                if ($caret instanceof LCaret)
                     $caret = $caret->parent->insert_unary($caret, 'LPlus');
+                else {
+                    if ($tokens[$i + 1] == '+') {
+                        ++$i;
+                        $token .= '+';
+                    }
+                    $caret = $caret->append_arithmetic($token);
+                }
+                break;
+            case '/':
+                if ($tokens[$i + 1] == '-') {
+                    ++$i;
+                    if ($tokens[$i + 1] == '-') {
+                        $docstring = true;
+                        ++$i;
+                    } else
+                        $docstring = false;
+                    $comment = "";
+                    while (true) {
+                        ++$i;
+                        if ($tokens[$i] == '-' && $tokens[$i + 1] == '/') {
+                            ++$i;
+                            break;
+                        }
+                        $comment .= $tokens[$i];
+                    }
+                    $comment = preg_replace('/(?<=\n) +$/', '', $comment);
+                    $comment = trim($comment, "\n");
+                    $caret = $caret->append_block_comment($comment, $docstring);
+                    if ($tokens[$i + 1] == "\n")
+                        ++$i;
                     break;
                 }
 
-            case '/':
+                if ($tokens[$i + 1] == '/') {
+                    $caret = $caret->append_arithmetic('//');
+                    ++$i;
+                    break;
+                }
             case '%':
             case '^':
             case '<<':
@@ -6560,6 +7726,11 @@ function compile($code)
             case '∈':
             case '∉':
             case '▸':
+            case '∪':
+            case '∩':
+            case '⊔':
+            case '⊓':
+            case "\\":
                 $caret = $caret->append_arithmetic($token);
                 break;
 
@@ -6580,19 +7751,19 @@ function compile($code)
                 break;
 
             case '∀':
-                $caret = $caret->append('L_forall');
+                $caret = $caret->append('L_forall', 'operator');
                 break;
 
             case '∃':
-                $caret = $caret->append('L_exists');
+                $caret = $caret->append('L_exists', 'operator');
                 break;
 
             case '∑':
-                $caret = $caret->append('L_sum');
+                $caret = $caret->append('L_sum', 'operator');
                 break;
 
             case '∏':
-                $caret = $caret->append('L_prod');
+                $caret = $caret->append('L_prod', 'operator');
                 break;
 
             case '∧':
@@ -6659,56 +7830,16 @@ function compile($code)
             case 'in':
             case 'generalizing':
             case 'MOD':
-                $caret = $caret->parent->insert($caret, "L_$token");
-                break;
-
-            # tactics
-            case 'apply':
-            case 'assumption':
-            case 'by_contra':
-            case 'by_cases':
-            case 'cases':
-            case 'case':
-            case 'congr':
-            case 'contradiction':
-            case 'exact':
-            case 'induction':
-            case 'intro':
-            case 'interval_cases':
-            case 'left':
-            case 'exists':
-            case 'constructor':
-            case 'positivity':
-            case 'rfl':
-            case 'right':
-            case 'rw':
-            case 'split':
-            case 'split_ifs':
-            case 'simp':
-            case 'simpa':
-            case 'simp_all':
-            case 'sorry':
-            case 'symm':
-            case 'specialize':
-            case 'subst':
-            case 'linarith':
-            case 'norm_num':
-            case 'norm_cast':
-            case 'ring':
-            case 'ring_nf':
-            case 'ring1':
-            case 'ring_exp':
-            case 'exfalso':
-            case 'try':
-            case 'omega':
-            case 'push_neg':
-            case 'unfold':
-            case 'use':
-                $caret = $caret->parent->insert_tactic($caret, $token);
+            case 'from':
+                $caret = $caret->parent->insert($caret, "L_$token", "modifier");
                 break;
 
             case '·':
-                $caret = $caret->parent->insert_unary($caret, 'LTacticBlock');
+                if ($caret->parent instanceof LStatements || $caret->parent instanceof LSequentialTacticCombinator)
+                    $caret = $caret->parent->insert_unary($caret, 'LTacticBlock');
+                else
+                    //Middle Dot token
+                    $caret = $caret->parent->insert_token($caret, $token);
                 break;
 
             case '@':
@@ -6743,19 +7874,35 @@ function compile($code)
                 break;
 
             default:
-                $caret = $caret->parent->insert_token($caret, $token);
+                $token_orig = $token;
+                $index = std\binary_search($tactics, $token_orig, "strcmp");
+                $next_char = $tokens[$i + 1];
+                if ($next_char == "'" || $next_char == "!" || $next_char == "?") {
+                    ++$i;
+                    $token .= $next_char;
+                }
+                if ($index < count($tactics) && $tactics[$index] == $token_orig)
+                    $caret = $caret->parent->insert_tactic($caret, $token);
+                else
+                    $caret = $caret->parent->insert_token($caret, $token);
         }
+        if (!$caret)
+            break;
         ++$i;
     }
 
     return $root;
 }
 
-function latex_token($token)
+function escape_specials($token)
 {
     return preg_replace_callback(
-        '/^(\w+_)(.+)/',
-        fn($m) => $m[1] . '{' . preg_replace("/[{}_]/", "\\\\$0", $m[2]) . '}',
+        '/^(\w+?)_(.+)/',
+        function($m) {
+            $head = $m[1];
+            $tail = preg_replace("/[{}_]/", "\\\\$0", $m[2]);
+            return strlen($m[1]) == 1 ? "{$head}_{{$tail}}": "$head\\_$tail";
+        },
         $token
     );
 }
@@ -6765,8 +7912,35 @@ function latex_tag($tag)
     return implode(
         '.',
         array_map(
-            fn($tag) => latex_token($tag),
+            fn($tag) => escape_specials($tag),
             explode(".", $tag)
         )
     );
+}
+
+function get_lake_path() {
+    return std\is_linux() ? "~/.elan/bin/lake": escapeshellcmd(getenv('USERPROFILE') . "\\.elan\\bin\\lake.exe");
+}
+
+function get_lean_env()
+{
+    // add to the file D:\wamp64\bin\apache\apache2.4.54.2\conf\extra\httpd-vhosts.conf
+    // SetEnv USERPROFILE "C:\Users\admin"
+    // Configure Git environment variables to trust the directory
+    $cwd = getcwd();
+    $repository = scandir("$cwd/.lake/packages");
+    $repository = array_slice($repository, 2); // Remove . and ..
+    $env = [
+        'GIT_CONFIG_COUNT' => count($repository),
+        // Preserve other important environment variables
+        'PATH' => getenv('PATH'),
+        'SystemRoot' => getenv('SystemRoot'),
+        'HOME' => getenv('HOME')
+    ];
+    $cwd = str_replace("\\", "/", $cwd);
+    foreach ($repository as $index => $directory) {
+        $env["GIT_CONFIG_KEY_$index"] = "safe.directory";
+        $env["GIT_CONFIG_VALUE_$index"] = "$cwd/.lake/packages/$directory";
+    }
+    return $env;
 }

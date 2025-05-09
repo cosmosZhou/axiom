@@ -1,6 +1,6 @@
 import Axiom.Algebra.LeInvS.of.Gt_0.Ge
 import Axiom.Algebra.Ge_Add_1.of.Gt
-open Set Algebra
+open Algebra
 
 
 @[main]

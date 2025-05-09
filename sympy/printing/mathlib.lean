@@ -45,5 +45,3 @@ def hasStrValLiteral: Expr → Bool
   -- let msgs ← Core.getMessageLog
   -- for msg in msgs.toArray do
     -- println! ← msg.data.toString
-
--- #check Mathlib.Vector.nil

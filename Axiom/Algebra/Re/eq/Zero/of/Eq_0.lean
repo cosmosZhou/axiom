@@ -1,5 +1,5 @@
+import sympy.functions.elementary.complexes
 import Axiom.Basic
-open Algebra
 
 
 @[main]

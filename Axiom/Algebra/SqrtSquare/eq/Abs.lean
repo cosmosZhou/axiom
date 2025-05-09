@@ -1,13 +1,13 @@
+import sympy.core.power
 import Axiom.Basic
 
 
-@[simp, main]
+@[main]
 private lemma main
   {x : ℝ} :
 -- imply
   √x² = |x| := by
 -- proof
-  simp [Root.sqrt]
   rw [Real.sqrt_sq_eq_abs]
 
 

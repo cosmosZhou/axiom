@@ -163,14 +163,16 @@ export default {
 				case 'Backspace':
 					var search = location.search;
 					var index = search.lastIndexOf('.', search.length - 2);
-					if (index < 0)
+					if (index < 0) {
 						index = search.lastIndexOf('/', search.length - 2);
-					
+						if (index < 0)
+							index = search.lastIndexOf('=');
+					}
 					if (index > 0){
 						var hash = search.endsWith('.') || search.endsWith('/')?
 								search.slice(index + 1, -1):
-									search.slice(index + 1);
-						
+								search.slice(index + 1);
+
 						location.hash = hash;
 						location.search = search.substring(0, index + 1);
 					}

@@ -1,3 +1,4 @@
+import sympy.core.relational
 import Axiom.Algebra.FloorAdd.eq.Add_Floor
 open Algebra Real
 
@@ -12,8 +13,7 @@ private lemma main
 -- imply
   ⌊x + y⌋ = x +   ⌊y⌋ := by
 -- proof
-  let d : ℤ := ⌊x⌋
-  have h_Eq : d = ⌊x⌋ := rfl
+  denote h_Eq : d = ⌊x⌋
   rw [← h_Eq] at h
   rw [← h]
   norm_cast

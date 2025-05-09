@@ -10,7 +10,7 @@ open Algebra
 @[main]
 private lemma main
   [Add α] [MulZeroClass α] [RightDistribClass α]
-  {s s' : Vector α n}
+  {s s' : List.Vector α n}
 -- given
   (h: s is constant)
   (default : α) :

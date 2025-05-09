@@ -12,7 +12,7 @@ private lemma main
 -- imply
   (n % d : ℤ) / (d : ℚ) < 1 := by
 -- proof
-  have := LtMod.of.Gt_0 (n := n) h
+  have := LtMod.of.Gt_0 h n
   have : ((n % d) : ℤ) < (d : ℚ) := by
     simp [this]
   have h : (d : ℚ) > 0 := by simp [h]
@@ -22,3 +22,4 @@ private lemma main
 
 
 -- created on 2025-03-20
+-- updated on 2025-03-29

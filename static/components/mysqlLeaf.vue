@@ -3,7 +3,7 @@
 		<select v-if="option && !insert" :name=name :value=value :style="style_select(value, color)" @input=input_select @keydown=keydown_select>
 			<option value=''>___</option>
 			<template v-for="option of option">
-				<option v-if=option.isString :value=option>{{option}}</option>
+				<option v-if=option?.isString :value=option>{{option}}</option>
 				<optgroup v-else v-for="(option, label) of option" :label=label>
 					<option v-for="option of option" :value=option>{{option}}</option>
 				</optgroup>
@@ -19,9 +19,9 @@ console.log('import mysqlLeaf.vue');
 
 export default {
 	components: {},
-	
+
 	props : ['name', 'value', 'option', 'color', 'noSpace'],
-	
+
 	data() {
 		return {
 			insert: null,
@@ -32,7 +32,7 @@ export default {
 		//var {value, name, option} = this;
 		//console.log({value, name, option});
 	},
-	
+
 	computed: {
 		cmds() {
 			return this.$parent.cmds;
@@ -41,15 +41,15 @@ export default {
 		host() {
 			return this.$parent.host;
 		},
-		
+
 		user() {
 			return this.$parent.user;
 		},
-		
+
 		token() {
 			return this.$parent.token;
 		},
-		
+
 		option() {
 			var {value, option} = this.$props;
 			if (option) {
@@ -61,7 +61,7 @@ export default {
 				return option;
 			}
 		},
-		
+
 		input_size() {
 			var {value} = this;
 			if (value) {
@@ -70,31 +70,31 @@ export default {
 			}
 			return 4;
 		},
-		
+
 		style_select() {
 			return this.$parent.style_select;
 		},
-		
+
 		kwargs() {
 			return this.$parent.kwargs;
 		},
-		
+
 		PRI() {
 			return this.$parent.PRI;
 		},
-		
+
 		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
-		
+
 		is_textual_function() {
 			return this.$parent.is_textual_function;
 		},
-		
+
 		is_numeric_function() {
 			return this.$parent.is_numeric_function;
 		},
-		
+
 		is_jsonobj_function() {
 			return this.$parent.is_jsonobj_function;
 		},
@@ -102,11 +102,11 @@ export default {
 		is_aggregate_function() {
 			return this.$parent.is_aggregate_function;
 		},
-		
+
 		numeric_functions() {
 			return this.$parent.numeric_functions;
 		},
-		
+
 		jsonobj_functions() {
 			return this.$parent.jsonobj_functions;
 		},
@@ -130,19 +130,19 @@ export default {
 			return value;
 		},
 	},
-	
+
 	methods: {
 		input_select(event) {
 			var {target} = event
 			var {_value, value} = target;
 			if (_value == value)
 				return;
-			
+
 			var {name, parentElement} = target;
 			if (this.is_textual_function) {
 				if (this.is_textual_function(value) || this.is_jsonobj_function(value)) {
 					name += `[${value}]`;
-					
+
 					if (this.is_aggregate_function(value)) {
 						var {value} = this.$parent;
 						if (value.select) {
@@ -170,9 +170,9 @@ export default {
 							else {
 								value = [Object.keys(this.value)[0], this.value];
 							}
-	
+
 							break;
-	
+
 						case 'regexp_replace':
 							if (this.value.isString) {
 								if (this.value == '*') {
@@ -188,9 +188,9 @@ export default {
 							else {
 								value = [Object.keys(this.value)[0], '', ''];
 							}
-	
+
 							break;
-							
+
 						case 'regexp_substr':
 						case 'substring':
 						case 'left':
@@ -210,7 +210,7 @@ export default {
 								value = [Object.keys(this.value)[0], ''];
 							}
 							break;
-							
+
 						case '*':
 							value = this.value;
 							break;
@@ -225,9 +225,9 @@ export default {
 							else {
 								value = [this.value, "$."];
 							}
-	
+
 							break;
-							
+
 						case 'json_valid':
 							if (this.value.isArray) {
 								value = [this.value[0]];
@@ -235,17 +235,17 @@ export default {
 							else {
 								value = [this.value];
 							}
-	
+
 							break;
-							
+
 						default:
 							value = this.PRI;
 							break;
 						}
 					}
-	
+
 					this.input_kwargs({target : {name, value}});
-					
+
 					this.$parent.$nextTick(()=>{
 						mysql.querySelector(`select[name="${name}"]`).focus();
 					});
@@ -253,7 +253,7 @@ export default {
 				else if (this.is_numeric_function(value)) {
 					name += `[${value}]`;
 					this.input_kwargs({target : {name, value : this.PRI}});
-					
+
 					this.$parent.$nextTick(()=>{
 						parentElement.querySelector(`select[name="${name}"]`).focus();
 					});
@@ -263,7 +263,7 @@ export default {
 					case 'distinct':
 						name += `[${value}]`;
 						this.input_kwargs({target : {name, value : this.PRI}});
-						
+
 						this.$parent.$nextTick(()=>{
 							parentElement.querySelector(`select[name="${name}"]`).focus();
 						});
@@ -271,25 +271,25 @@ export default {
 					case 'if':
 						name += `[${value}]`;
 						this.input_kwargs({target : {name, value : [{eq: [this.PRI, 0]}, 1, 0]}});
-						
+
 						this.$parent.$nextTick(()=>{
 							parentElement.querySelector(`select[class="${name}"]`).focus();
 						});
 						break;
-						
+
 					case 'tables':
 						name += `[in]`;
 						this.input_kwargs({target : {name, value : ['tables', 'corpus']}});
-						
+
 						this.$parent.$nextTick(()=>{
 							parentElement.querySelector(`select[class="${name}"]`).focus();
 						});
 						break;
-						
+
 					case 'create':
 						name += `[create]`;
 						this.input_kwargs({target : {name, value : {table : {corpus: 'markush'}}}});
-						
+
 						this.$parent.$nextTick(()=>{
 							parentElement.querySelector(`select[class="${name}"]`).focus();
 						});
@@ -302,7 +302,7 @@ export default {
 							parentElement.querySelector(`select[name="${name}"]`).focus();
 						});
 						break;
-						
+
 					default:
 						this.input_kwargs(event);
 					}
@@ -318,17 +318,17 @@ export default {
 				}
 			}
 		},
-		
+
 		nextElementSibling(element) {
 			var next = element.nextElementSibling;
 			while (next) {
 				if (next.name)
 					return next;
-				
+
 				next = next.nextElementSibling;
 			}
 		},
-		
+
 		keydown_select(event) {
 			var select = event.target;
 			switch (event.key) {
@@ -362,13 +362,13 @@ export default {
 					}
 					break;
 				}
-				
+
 				var m = select.name.fullmatch(/(select)/);
 				if (m) {
 					select.previousElementSibling.focus();
 					break;
 				}
-				
+
 				break;
 			case 'ArrowRight':
 				event.preventDefault();
@@ -386,7 +386,7 @@ export default {
 							func_args = [func_args];
 							this.$parent.value[func] = func_args;
 						}
-						
+
 						if (func_args[index + 1]) {
 							this.nextElementSibling(select).focus();
 						}
@@ -407,10 +407,10 @@ export default {
 								});
 							}
 						}
-						
+
 						break;
 					}
-					
+
 					var m = select.name.match(/select(?:\[(\d)\])?$/);
 					if (m) {
 						if (m[1]) {
@@ -422,7 +422,7 @@ export default {
 							var name = select.name + '[1]';
 							this.$parent.value.select = [this.$parent.value.select, deepCopy(this.$parent.value.select)];
 						}
-							
+
 						var {parentElement} = select;
 						this.$parent.$nextTick(()=>{
 							parentElement.querySelector(`select[name="${name}"]`).focus();
@@ -430,7 +430,7 @@ export default {
 
 						break;
 					}
-					
+
 					var m = select.name.match(/(\[order\]|order)(\[0\])?$/);
 					if (m) {
 						if (this.$parent.value.order.isArray) {
@@ -472,7 +472,7 @@ export default {
 						break;
 					}
 				}
-				
+
 				break;
 
 			case 'Insert':
@@ -515,7 +515,7 @@ export default {
 				break;
 			}
 		},
-		
+
 		keydown_input(event) {
 			var {target} = event;
 			var {parentElement} = target;
@@ -560,7 +560,7 @@ export default {
 							func_args = [func_args];
 							this.$parent.value[func] = func_args;
 						}
-						
+
 						if (func_args[index + 1]) {
 							this.nextElementSibling(target).focus();
 						}
@@ -588,10 +588,10 @@ export default {
 								break;
 							}
 						}
-						
+
 						break;
 					}
-					
+
 					var m = target.name.match(/select(?:\[(\d)\])?$/);
 					if (m) {
 						if (m[1]) {
@@ -603,7 +603,7 @@ export default {
 							var name = target.name + '[1]';
 							this.$parent.value.select = [this.$parent.value.select, deepCopy(this.$parent.value.select)];
 						}
-							
+
 						var {parentElement} = target;
 						this.$parent.$nextTick(()=>{
 							parentElement.querySelector(`select[name="${name}"]`).focus();
@@ -611,13 +611,13 @@ export default {
 
 						break;
 					}
-					
+
 					var m = target.name.match(/\[order\]$/);
 					if (m) {
 						this.$parent.value.order = [this.$parent.value.order, 'desc'];
 						break;
 					}
-					
+
 					var m = target.name.match(/(\[from\]|from)$/);
 					if (m) {
 						var {PRI} = this;
@@ -630,9 +630,9 @@ export default {
 						break;
 					}
 				}
-				
+
 				break;
-				
+
 			default:
 				break;
 			}

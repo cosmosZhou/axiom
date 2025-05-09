@@ -2,27 +2,27 @@ import Axiom.Basic
 
 -- define the circled plus operator
 class OPlus (α : Type u) where
-  f : α → α → α
-  associative : ∀ x y z : α, f (f x y) z = f x (f y z)
+  oplus : α → α → α
+  associative : ∀ x y z : α, oplus (oplus x y) z = oplus x (oplus y z)
 
-infixl:60 "⊕" => OPlus.f
+infixl:60 "⊕" => OPlus.oplus
 
 
 -- define the circled times operator
 class OTimes (α : Type u) [OPlus α] where
-  f : α → α → α
-  distributive : ∀ a b c : α, f (a ⊕ b) c = (f a c) ⊕ (f b c)
+  otimes : α → α → α
+  distributive : ∀ a b c : α, otimes (a ⊕ b) c = (otimes a c) ⊕ (otimes b c)
 
-infixl:70 "⊗" => OTimes.f
+infixl:70 "⊗" => OTimes.otimes
 
 
 -- define the circled dot operator, the companion operator of ⊗
 class ODot (α : Type u) [OPlus α] [OTimes α] where
-  f : α → α → α
-  semiassociative : ∀ x y z : α, ((x ⊗ y) ⊗ z) = (x ⊗ (f y z))
-  associative : ∀ x y z : α, f (f x y) z = f x (f y z)
+  odot : α → α → α
+  semiassociative : ∀ x y z : α, ((x ⊗ y) ⊗ z) = (x ⊗ (odot y z))
+  associative : ∀ x y z : α, odot (odot x y) z = odot x (odot y z)
 
-infixl:65 "⊙" => ODot.f
+infixl:65 "⊙" => ODot.odot
 
 -- Define the all-prefix-sums function
 def all_prefix_sums [Inhabited α] [OPlus α] (a : List α) (t : α := default) : List α :=
@@ -32,10 +32,10 @@ def all_prefix_sums [Inhabited α] [OPlus α] (a : List α) (t : α := default) 
 
 
 class Bullet (α : Type u) [OPlus α] [OTimes α] [ODot α] where
-  f : α × α → α × α → α × α
-  property : ∀ cᵢ c_j : α × α, f cᵢ c_j = ⟨cᵢ.fst ⊙ c_j.fst, (cᵢ.snd ⊗ c_j.fst) ⊕ c_j.snd⟩
+  bullet : α × α → α × α → α × α
+  property : ∀ cᵢ c_j : α × α, bullet cᵢ c_j = ⟨cᵢ.fst ⊙ c_j.fst, (cᵢ.snd ⊗ c_j.fst) ⊕ c_j.snd⟩
 
 -- define bullet operator
-infixl:65 "•" => Bullet.f
+infixl:65 "•" => Bullet.bullet
 
 -- http://shelf2.library.cmu.edu/Tech/23445461.pdf

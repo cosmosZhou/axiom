@@ -1,6 +1,10 @@
 import Axiom.Basic
 
 
+/--
+This lemma establishes the transitivity of the less-than relation in a preorder. 
+Given elements `a < b` and `b < c`, it concludes `a < c` by applying the transitivity property of the preorder's ordering relation.
+-/
 @[main]
 private lemma main
   [Preorder α]
@@ -15,3 +19,4 @@ private lemma main
 
 
 -- created on 2024-11-25
+-- updated on 2025-04-04

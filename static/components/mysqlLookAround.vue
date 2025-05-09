@@ -20,33 +20,33 @@ console.log('import mysqlLookAround.vue');
 
 export default {
 	components: {},
-	
+
 	props : ['Field'],
-	
+
 	data() {
 		return this.$parent.$data;
 	},
 
 	created() {
 	},
-	
+
 	computed: {
 		operator_value() {
 			return this.$parent.operator_value;
 		},
-		
+
 		primary_key() {
 			return this.$parent.primary_key;
 		},
-		
+
 		style_input() {
 			return this.$parent.style_input;
 		},
-		
+
 		kwargs() {
 			return this.$parent.kwargs;
 		},
-		
+
 		change_input() {
 			return this.$parent.change_input;
 		},
@@ -54,39 +54,39 @@ export default {
 		operator() {
 			return this.$parent.operator;
 		},
-		
+
 		value_name() {
 			return this.$parent.value_name;
 		},
-		
+
 		input_operator() {
 			return this.$parent.input_operator;
 		},
-		
+
 		look_behind() {
 			return this.$parent.look_behind;
 		},
-		
+
 		look_ahead() {
 			return this.$parent.look_ahead;
 		},
-		
+
 		look_behind_operator_name() {
 			var {Field, primary_key} = this;
 			if (primary_key)
 				return `operator[look_behind]${primary_key}[${Field}]`;
-				
+
 			return `operator[look_behind][${Field}]`;
 		},
-		
+
 		look_ahead_operator_name() {
 			var {Field, primary_key} = this;
 			if (primary_key)
 				return `operator[look_ahead]${primary_key}[${Field}]`;
-				
+
 			return `operator[look_ahead][${Field}]`;
 		},
-		
+
 		look_behind_value_name() {
 			var {Field, primary_key} = this;
 			if (primary_key)
@@ -94,17 +94,17 @@ export default {
 
 			return `look_behind[${Field}]`;
 		},
-		
+
 		look_ahead_value_name() {
 			var {Field, primary_key} = this;
 			if (primary_key)
 				return `look_ahead[${primary_key}][${Field}]`;
-				
+
 			return `look_ahead[${Field}]`;
 		},
-		
+
 	},
-	
+
 	methods: {
 		keydown_select_look_behind(event) {
 			switch (event.key) {
@@ -114,7 +114,7 @@ export default {
 				break;
 			}
 		},
-		
+
 		keydown_look_behind(event) {
 			switch (event.key) {
 			case 'ArrowLeft':
@@ -132,7 +132,7 @@ export default {
 				break;
 			}
 		},
-		
+
 		keydown_select_look_ahead(event) {
 			switch (event.key) {
 			case 'ArrowLeft':
@@ -147,7 +147,7 @@ export default {
 				break;
 			}
 		},
-		
+
 		keydown_look_ahead(event) {
 			switch (event.key) {
 			case 'ArrowLeft':
@@ -158,23 +158,23 @@ export default {
 				break;
 			}
 		},
-		
+
 		keydown(event) {
 			switch (event.key) {
 			case 'ArrowLeft':
 				var input = event.target;
 				if (!input.selectionStart && !input.selectionEnd) {
-					
+
 					var {name} = input;
 					if (!this.operator_value[name] || !this.operator_value[name].match(/regexp/))
 						break;
-					
+
 					var {look_behind} = this.kwargs;
 					if (!look_behind) {
 						look_behind = {};
 						this.kwargs.look_behind = look_behind;
 					}
-					
+
 					if (look_behind[name]) {
 						input.previousElementSibling.focus();
 					}
@@ -182,10 +182,10 @@ export default {
 						look_behind[name] = '.*';//(?<=.*) or (?<!.*);
 						if (!this.operator.look_behind)
 							this.operator.look_behind = {};
-						
+
 						if (!this.operator.look_behind[name])
 							this.operator.look_behind[name] = '=';
-						
+
 						this.$nextTick(() => {
 							input.previousElementSibling.focus();
 						});
@@ -199,14 +199,14 @@ export default {
 					var {name} = input;
 					if (!this.operator_value[name] || !this.operator_value[name].match(/regexp/))
 						break;
-					
+
 					if (this.operator_value[name] == 'regexp_like') {
 						if (!this.operator.regexp_like)
 							this.operator.regexp_like = {};
 
 						if (!this.operator.regexp_like[name])
 							this.operator.regexp_like[name] = 'c';
-						
+
 						this.$nextTick(() => {
 							input.nextElementSibling.focus();
 						});
@@ -225,7 +225,7 @@ export default {
 							look_ahead[name] = '.*';//(?=.*) or (?!.*) ;
 							if (!this.operator.look_ahead)
 								this.operator.look_ahead = {};
-							
+
 							if (!this.operator.look_ahead[name])
 								this.operator.look_ahead[name] = '=';
 
@@ -238,9 +238,9 @@ export default {
 				break;
 			}
 		},
-		
+
 	},
-	
+
 	directives: {
 		focus: {
 		    // after dom is inserted into the document
@@ -253,8 +253,8 @@ export default {
 		    	}
 		    },
 		},
-		
-		listen:{
+
+		listen: {
 		    // after dom is inserted into the document
 		    beforeUnmount(el, binding) {
 		    	do {
@@ -266,7 +266,7 @@ export default {
 		    		}
 		    	}
 		    	while (el.tagName != 'INPUT');
-		    	
+
 	    		el.focus();
 		    },
 		},

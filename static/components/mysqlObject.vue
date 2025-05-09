@@ -77,18 +77,18 @@ export default {
     components: {},
 
 	props: ['value', 'name', 'order'],
-	
+
     data() {
         return {
         	mounted: {},
         };
     },
-    
+
     computed: {
     	keys() {
     		return [...this.dict_key, ...this.list_key];
     	},
-    	
+
 		values() {
 			var values = Object.entries(this.value);
 			switch (this.order) {
@@ -109,11 +109,11 @@ export default {
     	dict_key() {
     		return this.list_dict_split.dict_key;
     	},
-    	
+
     	list_key() {
     		return this.list_dict_split.list_key;
     	},
-    	
+
     	list_dict_split() {
     		var {value} = this;
     		var dict_key = [];
@@ -127,7 +127,7 @@ export default {
     				dict_key.push(key);
     			}
     		}
-			
+
     		if (list_key.length > 1 && is_same(list_key.map(key => value[key].length)))
     			return {rows: value[list_key[0]].length, dict_key, list_key};
 
@@ -137,29 +137,33 @@ export default {
     	database() {
     		return this.mysql.database;
     	},
-    	
+
+    	table() {
+    		return this.mysql.table;
+    	},
+
     	PRI() {
     		return this.mysql.PRI;
     	},
-    	
+
     	mysql() {
     		return this.mounted.mysql? this.$refs.mysql: {};
     	},
-    	
+
     	desc() {
     		var desc = this.mysql.desc;
     		if (desc)
     			return desc;
     		return [];
     	},
-    	
+
     	api() {
     		var api = this.mysql.api;
     		if (api)
     			return api;
     		return {};
     	},
-    	
+
     	api_parameters() {
     		var api = this.api;
     		for (var Field in api) {
@@ -169,30 +173,30 @@ export default {
 
     		return {};
     	},
-    	
+
     	api_url() {
     		return this.api_parameters.api_url;
     	},
-    	
+
     	api_inputs() {
     		return this.api_parameters.api_inputs;
     	},
-    	
+
     	api_output() {
     		return this.api_parameters.api_output;
     	},
-    	
+
     	dtype() {
     		var dtype = this.mysql.dtype;
     		if (dtype)
     			return dtype;
     		return {};
     	},
-    	
+
 		is_torch() {
 			return getParameterByName('torch') || this.kwargs.kwargs && this.kwargs.kwargs.torch;
 		},
-		
+
 		is_mysql() {
 			return getParameterByName('mysql') || getParameterByName('cmd') == 'select' || this.cmd == 'update';
 		},
@@ -202,10 +206,10 @@ export default {
 				return 'torch';
 		},
     },
-    
+
     created() {
     },
-    
+
     methods: {
 		node_name(name, i) {
 			if (name) {
@@ -213,21 +217,21 @@ export default {
 				if (this.name) {
 					if (i == null)
 						return `${this.name}[${name}]`;
-						
+
 					if (i == 0 && values.length == 1 && (!values[0] || !values[0].isArray)) {
 						return `${this.name}[${name}]`;
 					}
-					
+
 					return `${this.name}[${name}][${i}]`;
 				}
 
 				if (i == null)
 					return name;
-				
+
 				if (i == 0 && values.length == 1 && (!values[0] || !values[0].isArray)) {
 					return name;
 				}
-				
+
 				return `${name}[${i}]`;
 			}
 			else {
@@ -239,11 +243,11 @@ export default {
 					return `${this.name}[${i}]`;
 			}
 		},
-    	
+
     	get_string(value) {
     		return value.toString().replace('\n', '\\n');
     	},
-    	
+
     	get_size(value) {
     		return this.get_string(value).strlen();
     	},
@@ -259,7 +263,7 @@ export default {
     		}
     		return [-1, -1];
     	},
-    	
+
     	focus(row, col, offset, table){
     		table ||= this.$refs.table;
     		var tr = table.children[row];
@@ -270,12 +274,12 @@ export default {
     			if (offset < 0){
     				offset.value.length;
     			}
-    			
+
     			input.selectionStart = offset;
     			input.selectionEnd = offset;
     		}
     	},
-    	
+
     	keydown_table(event){
 			var self = event.target;
 			var key = event.key;
@@ -285,21 +289,21 @@ export default {
 				if (!event.ctrlKey)
 					break;
 				event.preventDefault();
-				
+
 				this.$nextTick(()=>{
 					form.submit();
 				});
-			
+
 				break;
-				
+
 			case 'Z':
 			case 'z':
 				if (!event.ctrlKey)
 					break;
-				
+
 				this.undoer.undo();
 				break;
-				
+
 			case 'ArrowUp':
 				if (self.tagName == 'TEXTAREA') {
 					var selectionStart = head_line_offset(self);
@@ -312,7 +316,7 @@ export default {
 					var {selectionStart} = self;
 					var table = null;
 				}
-				
+
 				event.preventDefault();
 				var self = event.target;
 				var [row, col] = this.coordinate(self);
@@ -320,7 +324,7 @@ export default {
 					--row;
 					this.focus(row, col, selectionStart, table);
 				}
-				
+
 				break;
 			case 'ArrowDown':
 				var self = event.target;
@@ -335,17 +339,17 @@ export default {
 					var {selectionStart} = self;
 					var table = null;
 				}
-				
+
 				event.preventDefault();
 				var [row, col, rows] = this.coordinate(self);
 				if (row + 1 < rows){
 					++row;
 					this.focus(row, col, selectionStart, table);
 				}
-				
+
 				break;
 			case 'ArrowLeft':
-				
+
 				var self = event.target;
 				if (self.tagName == 'SELECT' || !self.selectionStart){
 					event.preventDefault();
@@ -359,10 +363,10 @@ export default {
 					}
 					this.focus(row, col, -1);
 				}
-				
+
 				break;
 			case 'ArrowRight':
-				
+
 				var self = event.target;
 				if (self.tagName == 'SELECT' || self.selectionStart == self.value.length){
 					event.preventDefault();
@@ -376,7 +380,7 @@ export default {
 					}
 					this.focus(row, col, 0);
 				}
-				
+
 				break;
 			}
     	},
@@ -388,11 +392,11 @@ export default {
 			case 'Enter':
 				if (!event.ctrlKey)
 					break;
-				
+
 				var input = event.target;
 				var value = input.value;
 				var {selectionStart} = input;
-				
+
 				var former = value.slice(0, selectionStart).trim();
 				var latter = value.slice(selectionStart).trim();
 
@@ -422,7 +426,7 @@ export default {
 				break;
 			}
 		},
-		
+
         async process(name, data) {
     		var [name, ext] = split_filename(name);
     		var array = [];
@@ -439,6 +443,7 @@ export default {
 
     		case 'txt':
     		case 'csv':
+			case 'tsv':
             	for (var line of data.split('\n')){
             		var obj = {};
             		for (var [{Field, Type}, value] of zip(this.desc, line.split('\t'))) {
@@ -447,7 +452,7 @@ export default {
             		array.push(obj);
             	}
             	break;
-                
+
 			case 'xlsx':
 				var workbook = XLSX.read(data, {type: 'array'});
 		        for (var sheet in workbook.Sheets) {
@@ -494,7 +499,7 @@ export default {
 
     		this.insert(array);
         },
-        
+
     	async insert(data) {
         	var database = this.database;
         	var table = this.table;
@@ -511,7 +516,7 @@ export default {
 					obj.training = ~obj.training;
 				}
 			}
-			
+
 			var {PRI} = this;
 			if (this.dtype[PRI] == 'int') {
 	        	var [ret] = await query(this.host, this.token, `select max(${PRI}) as id from ${database}.${table}`);
@@ -547,25 +552,25 @@ export default {
 				for (var _ of range(paths.length)) {
 					self = self.$parent;
 				}
-				
+
 				if (self[attr] === undefined)
 					self = self.data[index];
 				setitem(self[attr], ...paths, event.target.value);
 			}
     		this.set_training();
         },
-        
+
         set_training() {
         	this.$parent.set_training(this);
         },
     },
-    
+
     mounted() {
     },
-    
+
     unmounted() {
     },
-    
+
 	directives: {
 		focus: {
 		    // after dom is inserted into the document

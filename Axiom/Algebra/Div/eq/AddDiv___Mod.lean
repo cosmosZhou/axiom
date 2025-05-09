@@ -1,4 +1,4 @@
-import Axiom.Algebra.Mod.eq.Sub_Mul_Div
+import Axiom.Algebra.Mod.eq.Sub_MulDiv
 import Axiom.Algebra.DivSub.eq.SubDivS
 import Axiom.Algebra.EqDivMul.of.Ne_0
 import Axiom.Algebra.EqAdd_Sub
@@ -11,7 +11,7 @@ private lemma main
 -- imply
   n / (d : ℚ) = (n / d : ℤ) + (n % d : ℤ) / (d : ℚ) := by
 -- proof
-  have h_Eq := Mod.eq.Sub_Mul_Div (n := n) (d := d)
+  have h_Eq := Mod.eq.Sub_MulDiv (n := n) (d := d)
   rw [h_Eq]
   simp
   rw [DivSub.eq.SubDivS]

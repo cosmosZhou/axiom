@@ -5,7 +5,7 @@ open Algebra
 
 @[main]
 private lemma main
-  [Field α]
+  [LinearOrderedRing α]
   {x : α}
 -- given
   (h : x² = 0) :
@@ -18,3 +18,4 @@ private lemma main
 
 
 -- created on 2025-01-26
+-- updated on 2025-04-06

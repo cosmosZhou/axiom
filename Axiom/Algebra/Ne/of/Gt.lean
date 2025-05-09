@@ -2,6 +2,10 @@ import Axiom.Algebra.Ne.of.Lt
 open Algebra
 
 
+/--
+Given that `x > y` in a preorder, this lemma deduces that `x` and `y` are distinct. 
+It serves as the symmetric counterpart to `Ne.of.Lt`, utilizing the antisymmetry property inherent in the order relation to establish inequality.
+-/
 @[main]
 private lemma main
   [Preorder α]
@@ -10,7 +14,9 @@ private lemma main
   (h : x > y) :
 -- imply
   x ≠ y :=
+-- proof
   (Ne.of.Lt h).symm
 
 
 -- created on 2024-07-01
+-- updated on 2025-04-04

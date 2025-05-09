@@ -2,7 +2,7 @@
 	<div>
 		<hierarchyInformation :key-input=keyInput :deep=!deep></hierarchyInformation>
 		<br>
-		<hierarchyModule ref=hierarchyModule :module=module></hierarchyModule>			
+		<hierarchyModule ref=hierarchyModule :module=module></hierarchyModule>
 	</div>
 </template>
 
@@ -19,7 +19,7 @@ export default {
 
 	computed: {
 		deep() {
-			var hash = location.hash;			
+			var hash = location.hash;
 			if (hash){
 				hash = hash.slice(1);
 				if (hash == 'deep')

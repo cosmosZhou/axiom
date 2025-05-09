@@ -11,10 +11,10 @@ console.log('import newTheorem.vue');
 
 export default {
 	components: { render, newInput },
-	props : [ 'imports', 'open', 'lemma', 'error', 'date'],
+	props : [ 'name', 'imports', 'open', 'lemma', 'error', 'date'],
 	
 	data() {
-		var module = getParameterByName('new');
+		var module = this.name;
 		var module = module.replace(/[/\\]/g, '.');
 		return {
 			module
@@ -43,6 +43,18 @@ export default {
 	},
 	
 	methods: {
+        async save() {
+			var {module} = this;
+			var sql = `
+select * from lemma where module = "${module}";
+`
+			var lemma = await form_post('php/request/execute.php', {sql});
+			if (lemma.length)
+				alert(`Lemma ${module} already exists!`);
+			else 
+				form.submit();
+        },
+
 		update_action() {
 			this.$refs.render.action = this.action;
 		},

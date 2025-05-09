@@ -63,12 +63,11 @@ export default {
             return document.querySelector('title').textContent;
         },
         
-        hash:{
+        hash: {
         	get() {
-            	var hash = location.hash;			
-        		if (hash){
+            	var hash = location.hash;
+        		if (hash)
         			return hash.slice(1);
-        		}   		
         	},
         	
         	set(hash){

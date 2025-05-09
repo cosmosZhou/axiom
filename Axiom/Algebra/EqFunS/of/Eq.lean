@@ -1,19 +1,16 @@
 import Axiom.Basic
-open Algebra
 
 
 @[main]
 private lemma main
-  {α : Sort u}
-  {β : Sort v}
-  {a₁ a₂ : α}
+  {f : α → β}
+  {a b : α}
 -- given
-  (h : a₁ = a₂)
-  (f : α → β) :
+  (h : a = b) :
 -- imply
-  f a₁ = f a₂ :=
+  f a = f b := by
 -- proof
-  congrArg f h
+  rw [h]
 
 
--- created on 2025-03-04
+-- created on 2025-04-27

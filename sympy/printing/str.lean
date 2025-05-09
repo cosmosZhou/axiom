@@ -1,8 +1,19 @@
 import sympy.core.expr
-import std.String
-import std.Level
+import stdlib.Lean.Name
+import stdlib.Lean.Level
 open Lean (FVarId Name)
 
+def Expr.is_Propositional : Expr → Bool
+  | Symbol _ (sort u) =>
+    match u with
+    | .param _
+    | .succ _ =>
+      true
+    | _ =>
+      false
+  | sort u =>
+    u == .zero
+  | _ => false
 
 def Expr.strFormat : Expr → String
   | nil => ""
@@ -15,35 +26,53 @@ def Expr.strFormat : Expr → String
   | Basic func args =>
     let opStr := func.operator
     match func with
-    | .BinaryInfix _ =>
+    | .BinaryInfix ⟨op⟩ =>
       match args with
       | [left, right] =>
-        let left :=
-          if func.priority > left.priority then
-            "(%s)"
-          else
-            "%s"
-        let right :=
-          if func.priority ≥ right.priority then
-            "(%s)"
-          else
-            "%s"
-        s!"{left} {opStr} {right}"
-
+        match op with
+        | `And
+        | `Or
+        | `HPow.hPow =>
+          let left :=
+            -- right associative operators
+            if func.priority ≥ left.priority then
+              "(%s)"
+            else
+              "%s"
+          let right :=
+            if func.priority > right.priority then
+              "(%s)"
+            else
+              "%s"
+          s!"{left} {opStr} {right}"
+        | `Membership.mem
+        | `List.Mem
+        | _ =>
+          -- left associative operators
+          let left :=
+            if func.priority > left.priority then
+              "(%s)"
+            else
+              "%s"
+          let right :=
+            if func.priority ≥ right.priority then
+              "(%s)"
+            else
+              "%s"
+          s!"{left} {opStr} {right}"
       | _ =>
         opStr
 
-    | .UnaryPrefix _ =>
-      let arg :=
-        match args with
-        | [arg] =>
+    | .UnaryPrefix ⟨op⟩ =>
+      if let [arg] := args then
+        let arg :=
           if func.priority > arg.priority then
             "(%s)"
           else
             "%s"
-        | _ =>
-          "%s"
-      s!"{opStr}{arg}"
+        s!"{opStr}{arg}"
+      else
+        op.toString
 
     | .UnaryPostfix _ =>
       match args with
@@ -58,24 +87,34 @@ def Expr.strFormat : Expr → String
         s!"%s{opStr}"
 
     | .ExprWithLimits op =>
-      match op, args with
-      | .L_forall, [Symbol _ (sort u), _] =>
-        match u with
-        | .param _
-        | .succ _ =>
-          "%s → %s"
+      let opStr' :=
+        match op with
+        | .L_forall =>
+          match args with
+          | [_, Binder .given _ _ nil] =>
+            "%s → %s"
+          | [expr, _] =>
+            if expr.is_Propositional then
+              -- α → Prop
+              "%s → %s"
+            else
+              ""
+          | _ =>
+            ""
+        | .L_lambda =>
+          opStr ++ " %s".repeat (args.length - 1) ++ " ↦ %s"
         | _ =>
-          opStr ++ " %s".repeat (args.length - 1) ++ ", %s"
-      | .L_lambda, _ =>
-        opStr ++ " %s".repeat (args.length - 1) ++ " ↦ %s"
-      | _, _ =>
+          ""
+      if opStr' == "" then
         opStr ++ " %s".repeat (args.length - 1) ++ ", %s"
+      else
+        opStr'
 
-    | .Special op =>
-      match op.name with
+    | .Special ⟨op⟩ =>
+      match op with
       | .anonymous =>
-        let args := args.map fun arg =>
-          if func.priority ≥ arg.priority then
+        let args := args.zipIdx.map fun ⟨arg, i⟩ =>
+          if i > 0 && arg.priority ≤ func.priority || i == 0 && arg.priority < func.priority then
             "(%s)"
           else
             "%s"
@@ -85,7 +124,11 @@ def Expr.strFormat : Expr → String
       | `Prod.mk
       | `abs
       | `Norm.norm
+      | `List.get
+      | `List.Vector.get
       | `GetElem.getElem
+      | `Singleton.singleton
+      | `setOf
       | _ =>
         opStr
 
@@ -114,23 +157,30 @@ def Expr.strFormat : Expr → String
             else
               "%s"
           s!"{obj}.{attr} {fn}"
-        | _, [obj, arg] =>
-          let arg :=
-            if func.priority > arg.priority then
-              "(%s)"
-            else
-              "%s"
+        | _, obj :: args =>
           let obj :=
             if func.priority ≥ obj.priority then
               "(%s)"
             else
               "%s"
-          s!"{obj}.{attr} {arg}"
+          let args := args.map fun arg =>
+            if func.priority > arg.priority then
+              "(%s)"
+            else
+              "%s"
+          let args := " ".intercalate args
+          s!"{obj}.{attr} {args}"
         | _, _ =>
           opStr
       | .L_typeclass _ =>
-        opStr ++ " %s".repeat args.length
-      | .LAttr _ =>
+        let args := args.map fun arg =>
+          if func.priority ≥ arg.priority then
+            "\\left(%s\\right)"
+          else
+            "%s"
+        let args := "\\ ".intercalate args
+        s!"{opStr}\\ {args}"
+      | .LAttr name =>
         match args with
         | [arg] =>
           let arg :=
@@ -139,12 +189,13 @@ def Expr.strFormat : Expr → String
             else
               "%s"
           s!"{arg}{opStr}"
+        | .nil =>
+          name.toString
         | _ =>
           s!"%s{opStr}"
 
-
   | Binder binder binderName _ value =>
-    let binderName := " ".intercalate (binderName.components.map Name.toString)
+    let binderName := binderName.escape_specials " "
     match binder with
     | .instImplicit =>
       binder.func.operator
@@ -186,7 +237,9 @@ where
               [binderType.toString, returnType.toString]
             | _ =>
               []
-          | [returnType, Binder .given _ binderType@(Basic (.BinaryInfix ⟨`Membership.mem⟩) _) nil] =>
+          | [returnType@((sort .zero)), Binder .default name binderType nil] =>
+            [" → ".intercalate (List.replicate name.components.length binderType.toString), returnType.toString]
+          | [returnType, Binder .given _ binderType nil] =>
             [binderType.toString, returnType.toString]
           | _ =>
             []

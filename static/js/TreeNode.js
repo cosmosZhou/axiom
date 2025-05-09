@@ -6,7 +6,7 @@ class TreeNode {
 	Lexeme(){
 		return new TreeNodeLexeme(...arguments);
 	}
-	
+
     static compile(infix) {
         var caret = new TreeNodeCaret();
         for (let i = 0; i < infix.length;) {
@@ -86,7 +86,7 @@ class TreeNodeCaret extends TreeNode {
 	constructor(parent){
 		super(parent);
 	}
-	
+
     append_left_brace() {
 		var parent = this.parent;
         var caret = new TreeNodeCaret();
@@ -211,7 +211,7 @@ class TreeNodeBrace extends TreeNode {
 
     append_left_brace() {
 		var parent = this.parent;
-		
+
         if (parent != null && parent instanceof TreeNodeArray) {
             return parent.append_left_brace();
         }
@@ -220,7 +220,7 @@ class TreeNodeBrace extends TreeNode {
         var args = [];
         args.push(this);
         args.push(new TreeNodeBrace(caret));
-        
+
         var mul = new TreeNodeArray(args, parent);
         if (parent != null) {
             parent.replace(this, mul);
@@ -255,7 +255,7 @@ class TreeNodeArray extends TreeNode {
 	get is_TreeNodeArray(){
 		return true;
 	}
-	
+
     constructor(args, parent) {
 		super(parent);
         this.args = args;
@@ -293,10 +293,10 @@ class TreeNodeArray extends TreeNode {
 					if (node)
 		            	list.push(node);
 		        }
-		
+
 				if (!tree.rhs)
 					tree.rhs = [];
-					
+
 		        tree.rhs.push(...list);
 		        return tree;
 			}
@@ -337,7 +337,7 @@ class TreeNodeBinary extends TreeNodeLexeme {
 	get is_TreeNodeBinary(){
 		return true;
 	}
-	
+
     constructor(lexeme, lhs, rhs, parent) {
         super(lexeme, parent);
         this.lhs = lhs;
@@ -382,7 +382,7 @@ class TreeNodePrefix extends TreeNodeLexeme {
 	get is_TreeNodePrefix(){
 		return true;
 	}
-	
+
     constructor(lexeme, caret, parent) {
         super(lexeme, parent);
         this.ptr = caret;

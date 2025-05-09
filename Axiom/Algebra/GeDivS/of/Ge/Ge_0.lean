@@ -13,18 +13,19 @@ private lemma main
   [MulPosStrictMono α]
   {x a b : α}
 -- given
-  (h1 : a ≥ b)
-  (h2 : x ≥ 0) :
+  (h₀ : a ≥ b)
+  (h₁ : x ≥ 0) :
 -- imply
   a / x ≥ b / x := by
 -- proof
-  have h3 : x⁻¹ ≥ 0 := Inv.ge.Zero.of.Ge_0 h2
-  have h4 := GeMulS.of.Ge.Ge_0 h1 h3
+  have : x⁻¹ ≥ 0 := Inv.ge.Zero.of.Ge_0 h₁
+  have := GeMulS.of.Ge.Ge_0 h₀ this
   rw [
     Mul_Inv.eq.Div,
     Mul_Inv.eq.Div
-  ] at h4
-  exact h4
+  ] at this
+  exact this
 
 
 -- created on 2025-01-14
+-- updated on 2025-03-30

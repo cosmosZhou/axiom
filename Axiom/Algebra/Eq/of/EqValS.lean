@@ -1,15 +1,17 @@
+import stdlib.List.Vector
 import Axiom.Basic
 
 
 @[main]
 private lemma main
-  {s : Vector α n}
+  {a b: List.Vector α n}
 -- given
-  (h: s.val = s'.val) :
+  (h : a.val = b.val) :
 -- imply
-  s = s' := by
+  a = b := by
 -- proof
-  apply Mathlib.Vector.eq s s' h
+  apply List.Vector.eq a b h
 
 
 -- created on 2024-07-01
+-- updated on 2025-05-08

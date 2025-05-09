@@ -1,5 +1,5 @@
 export class Command {
-	
+
 	constructor(func, ...args) {
 		this.func = func;
 		this.args = args;
@@ -15,14 +15,14 @@ export function modify_training(training, refresh_all){
 		if (training < 0) {
 			training = ~training;
 		}
-		
+
 		training |= 64;
 	}
 	else {
 		if (training < 0)
 			return training;
 	}
-	
+
 	return ~training;
 }
 
@@ -41,17 +41,17 @@ export function command(self, refresh_all){
 	this.undoer.push(new Command(self=>{
 		while (cmds.length)
 			cmds.pop().run();
-			
+
 		if (self.async_render)
 			self.async_render();
-		
+
 		self.$nextTick(()=>{
 			self.focus();
 		})
 	}, self));
-	
+
 	self.undoes = [];
-	
+
 	set_training(self, refresh_all);
 }
 

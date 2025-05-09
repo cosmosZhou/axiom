@@ -1,6 +1,5 @@
 import sympy.polys.domains
 import Axiom.Basic
-open Algebra
 
 
 @[main]

@@ -1,7 +1,7 @@
 import Axiom.Basic
 
 
-@[simp, main]
+@[main]
 private lemma main
   [NonAssocSemiring α]
   {a : α} :

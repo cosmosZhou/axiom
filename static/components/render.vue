@@ -5,6 +5,7 @@
             <input type=hidden name=def :value=JSON.stringify(def) />
             <input type=hidden name=open :value=JSON.stringify(open) />
             <input type=hidden name=date :value=JSON.stringify(date) />
+            <def v-for="lean, index in def" :lean=lean :index=index></def>
             <lemma v-for="lemma, index in lemma" :comment=lemma.comment :attribute=lemma.attribute :accessibility=lemma.accessibility :name=lemma.name :instImplicit=lemma.instImplicit :strictImplicit=lemma.strictImplicit :implicit=lemma.implicit :given=lemma.given :explicit=lemma.explicit :imply=lemma.imply :proof=lemma.proof :index=index></lemma>
         </form>
 
@@ -13,51 +14,122 @@
             <h3>Error Information</h3>
         </template>
 
-        <div v-for="(err, index) of error" :title=err.file>
+        <div v-for="err of error">
             <h5>{{err.type}}:</h5>
             <p class="pre-wrap warning">{{err.info}}</p>
-            <h5>code:</h5>
-            <p class="pre-wrap error" @click="click_font(index, err.line)">{{err.code}}</p>
+            <h5>code:{{ err.line }}:{{ err.col }}</h5>
+            <p class="pre-wrap error">{{err.code}}</p>
             <hr>
         </div>
 
-        <div class=bottom-right>
-            <p>
+        <div class=bottom-line>
+            <p class="right">
                 <a :href=href_switch><span class=date>Created on {{date.created}}</span></a>
                 <br>
                 <span v-if=date.updated class=date>Updated on {{date.updated}}</span>
             </p>
+            <p class="left">
+                <button type=button class=transparent @click=click_download :title="`download into a single ${ext} file`"><u>download</u></button> into a
+			    <select v-model=ext>
+				    <option v-for="value of ['lean', 'json']" :value=value>{{value}}</option>
+			    </select> file, or view via 
+                <button type=button class=transparent @click=click_lean4web title="view this lean file via lean4web"><u>lean4web</u></button>
+            </p>
         </div>
-        
     </div>
 </template>
 
 <script>
 import lemma from "./lemma.vue"
-import { mounted, click_left, fetch_code } from "../js/lemma.js"
+import def from "./def.vue"
+import { mounted, click_left, fetch_lemma, has_typeclasses } from "../js/lemma.js"
 import { generate, parse_token } from "../js/prompting.js"
-import { postprocess_word } from "../js/markdown.js"
+import StreamedParser from "../js/markdownParser.js"
+import { tactics } from "../codemirror/mode/lean/tactics.js"
+import { sbd } from "../js/sbd.js"
 console.log('import render.vue');
 
+function postprocess_word(text, word) {
+	for (var char of word)
+		text = postprocess_char(text, char);
+	return text;
+}
+
+function postprocess_char(parser, char) {
+	parser.parse(char);
+	return parser;
+}
+
 export default {
-    components: { lemma },
-    props : [ 'imports', 'open', 'lemma', 'error', 'module', 'date'],
+    components: { lemma, def },
+    props : [ 'imports', 'open', 'def', 'lemma', 'error', 'module', 'date'],
     
     created() {
     },
     
     data() {
+        // const model = 'deepseek-r1';
+        const model = 'deepseek-reasoner';
         return {
         	renderLean: [],
             refresh: false,
             action: '',
-            sections: ['Algebra', 'Calculus', 'Discrete', 'Geometry', 'Neuro', 'Set', 'Probability'],
+            sections: [],
+            typeclass: [
+                // typeclass for: Complex, Real, Rational, Integer with supported operators +-*
+                'CommRing',
+                'IsDomain',
+                // typeclass for: Complex, Real, Rational with supported operators +-*/
+                'Field',
+                // typeclass for: Real, Rational with supported operators +-*/<>≤≥ 
+                'LinearOrderedField', 
+                // typeclass for: Real, Rational, Integer with supported operators +-*<>≤≥ 
+                'LinearOrderedRing',
+                // typeclass for: Integer, Natural with supported operators +-*<>≤≥ 
+                'IntegerRing', 
+                // typeclass for: Complex, Real, Rational, Integer with supported operators +-* 
+                'Ring', 
+
+                'FloorRing', 
+                'AddGroup', 'AddCommGroup', 'OrderedAddCommGroup', 
+                'Inhabited',
+                'GetElem',
+                // Preorder ⊆ PartialOrder ⊆ LinearOrder
+                'Preorder', 'PartialOrder', 'LinearOrder', 
+                'Decidable', 'DecidableEq', 'DecidablePred', 'DecidableRel',
+                'LE', 'LT'
+            ],
+            tactics,
             selectedIndex: [],
-            model : getParameterByName('model', 'deepseek-r1')
+            model : getParameterByName('model', model),
+            ext: 'lean',
+            prequisite: {
+                Mathlib: {
+                    'Mathlib.Tactic': true,
+                },
+                sympy: {},
+                stdlib: {},
+                linter: {},
+                open: {
+                    list: {},
+                    dict: {},
+                },
+            },
         };
     },
-    
+
     computed: {
+        submodules() {
+            return this.imports.flatMap(imp => {
+                var m = imp.match(/^Axiom\.(?!Basic$)(.+)/); 
+                return m? [m[1]] : [];
+            });
+        },
+
+        json() {
+            return this.$parent.$data;
+        },
+
         initial_line() {
             var {imports, open} = this;
             return imports.length + open.length;
@@ -65,13 +137,6 @@ export default {
 
         regexp_section() {
             return new RegExp(this.sections.join('|'));
-        },
-
-        leanFile() {
-            var {module} = this;
-            if (!module)
-                module = getParameterByName('module');
-            return `Axiom/${module.replace(/[.]/g, '/')}.lean`;
         },
 
         open_sections() {
@@ -100,190 +165,728 @@ export default {
 
         href_switch() {
 			var {protocol, host, pathname, search, hash} = location;
-            if (pathname == '/lean/')
+            if (pathname.match(/\/lean\/(index\.php)?/)) {
                 pathname = '/py/';
-            else if (pathname == '/py/')
-                pathname = '/lean/';
+                search = search.replace(/(?<=[.\/\\])(in|is)(?=[.\/\\])/g, m => m.capitalize());
+            }
 			return `${protocol}\/\/${host}${pathname}${search}${hash}`;
         },
     },
 
     updated() {
     },
-    
-    mounted() {
+
+    async mounted() {
+        form_post('php/request/sections.php').then(sections => {
+            this.sections = sections;
+        });
+
+        mounted(this);
         var {module} = this;
         if (!module) {
             var module = getParameterByName('module');
             module = module.replace(/[\/\\]/g, '.');
             this.$parent.$data.module = module;
             this.$props.module = module;
-            this.echo(module);
+            await this.echo(module);
         }
-        mounted(this);
 
         var {hash} = location;
-        if (hash){
-            var line = parseInt(hash.slice(1));
-            if (line) {
-                var indices = this.locate(line);
-                var line = indices.pop();
-                if (line == null) {
-                    var [index, attr] = indices;
-                    switch (attr) {
-                    case 'proof':
-                        var a = this.$el.querySelectorAll('a[title="caller hierarchy"]')[index];
-                        a.focus();
-                        this.select_span(a.firstChild);
-                        break;
-                    case 'given':
-                        var span = this.$el.querySelector(`span.green[data-clipboard-text][index="${index}"]`);
-                        this.select_span(span);
-                        break;
-                    case 'imply':
-                        var a = this.$el.querySelectorAll('a[title="callee hierarchy"]')[index];
-                        a.focus();
-                        this.select_span(a.firstChild);
-                        break;
-                    case 'name':
-                        var input = this.$el.querySelector(`input[name="lemma[${index}][name]"]`);
-                        input.focus();
-                        input.select();
-                        break;
-                    case 'attribute':
-                        var input = this.$el.querySelector(`input[name="lemma[${index}][attribute]"]`);
-                        this.select_span(input.nextElementSibling);
-                        break;
-                    case 'created':
-                        var span = this.$el.querySelector(`a > span.date`);
-                        this.select_span(span);
-                        break;
-                    case 'updated':
-                        var span = this.$el.querySelector(`p > span.date`);
-                        this.select_span(span);
-                        break;
+        if (hash) {
+            hash = hash.slice(1);
+            var [line, col] = hash.split(':');
+            var index;
+            if (line.isInteger) {
+                line = parseInt(line);
+                col = parseInt(col);
+            }
+            else if ((index = this.lemma.findIndex(lem => lem.name == line)) >= 0) {
+                var indices = [index, 'proof'];
+                var {proof} = this.lemma[index];
+                if (proof.calc)
+                    indices.push('calc');
+                else if (proof.by)
+                    indices.push('by');
+                indices.push(0);
+                line = this.indices2line(indices);
+            } else {
+                var indices = this.text2indices(line);
+                if (indices)
+                    line = this.indices2line(indices);
+                else 
+                    line = null;
+            }
+            if (line)
+                this.highlight(line, col);
+        }
+
+        var {error} = this;
+        for (var err of reversed(error)) {
+            var {line, col, info} = err;
+            this.highlight(line, col, info);
+        }
+
+        var model = getParameterByName('model');
+        if (model) {
+            this.model = model;
+            for (var [i, lemma] of enumerate(this.lemma)) {
+                if (lemma.name == 'main') {
+                    var index = [i, 'proof'];
+                    var {proof} = lemma;
+                    var attr = proof.by? 'by' : (proof.calc? 'calc' : null);
+                    if (attr) {
+                        index.push(attr);
+                        proof = proof[attr];
                     }
-                }
-                else if (!this.select(indices, line)) {
-                    var [index, attr] = indices;
-                    switch (attr) {
-                    case 'imply':
-                        this.lemma[index].imply.insert = true;
-                        this.$nextTick(() => {
-                            this.select(indices, line);
-                        });
-                        break;
-                    case 'given':
-                        this.lemma[index].given[indices[2]].insert = true;
-                        this.$nextTick(() => {
-                            this.select(indices, line);
-                        });
-                        break;
-                    }
+                    index.push(proof.length - 1);
+                    this.code_generation(index, proof.back().lean.split("\n").length - 1);
                 }
             }
         }
     },
 
     methods: {
-        async GetAuthorization() {
-            if (this.Authorization)
-                return this.Authorization;
-            switch (this.model) {
-            case 'deepseek-chat':
-            case 'deepseek-reasoner':
-                var company = 'DeepSeek';
-                break;
-            default:
-                var company = 'MyCompany';
-            }
-            var Authorization = await form_post('php/request/authorization.php', {company});
-            this.Authorization = Authorization;
-            return Authorization;
+        leanSourceCode(index) {
+            var {module} = this;
+            if (!module)
+                module = getParameterByName('module');
+            return `Axiom/${module.replace(/[.]/g, '/')}.lean`;
         },
 
-        async code_generation() {
-            // array destructuring of arguments
-            var [code, ...index] = arguments;
-            index.push('think');
-            var {imports, open, lemma, error} = this;
-            setitem(lemma, ...index, '');
-            code = code.rtrim();
-            if (error.length) {
-                console.log(error);
+        async lean() {
+            var {module} = this;
+            var code = await this.piece_together(`
+with topology as (
+    WITH RECURSIVE dependencies AS (
+        SELECT
+            module,
+            0 as depth
+        FROM
+            axiom.lemma
+        WHERE
+            module = "${module}"
+        UNION ALL
+        SELECT
+            SUBSTRING(jt.module, LOCATE('.', jt.module) + 1),
+            dependencies.depth + 1
+        FROM
+            dependencies
+            JOIN axiom.lemma as _t using(module)
+            CROSS JOIN JSON_TABLE(
+                _t.imports,
+                '$[*]' COLUMNS (module text PATH '$')
+            ) AS jt
+        WHERE
+            jt.module LIKE 'Axiom.%'
+    )
+    SELECT
+        module,
+        max(depth) as depth
+    FROM
+        dependencies
+    where 
+        module != "${module}"
+    group by module
+)
+select * from topology
+JOIN axiom.lemma as _t using(module)
+order by depth desc`);
+            return code.join("\n\n\n");
+        },
+
+        async piece_together(sql, axiom) {
+            console.log(sql);
+            var topology = await form_post('php/request/execute.php', {sql, resultType: 1});
+            for (var obj of topology) {
+                var {module, imports, lemma, open, def} = obj;
+                Object.assign(
+                    obj, 
+                    {
+                        imports: JSON.parse(imports),
+                        lemma: JSON.parse(lemma),
+                        open: JSON.parse(open),
+                        def: JSON.parse(def)
+                    }
+                );
             }
-            var m = code.match(/\n +sorry$/);
-            if (!m) {
-                m = code.match(/(\n +).+$/);
-                code += m[1] + 'sorry';
+            topology.push({
+                module: this.module,
+                imports: this.imports,
+                lemma: deepCopy(this.lemma, ['think', 'final']),
+                open: this.open,
+                def: this.def
+            });
+            await this.fetch_lemma_sequentially(topology, axiom);
+            if (axiom)
+                topology.pop();
+            return [await this.fetch_prequisite(topology, axiom), ...this.fetch_dependency(topology)];
+        },
+
+		async click_download(event) {
+            var {ext, module} = this;
+            var data;
+            switch (ext) {
+            case 'lean':
+                data = await this.lean();
+                break;
+            case 'json':
+                data = this.json;
+                break;
             }
-            var import_statements = [];
-            if (imports.length) {
-                for (var name of imports) {
-                    if (m = name.match(/^Axiom\.(.+)/)) {
-                        name = m[1];
-                        var sql = `
-select 
-  *
-from 
-  lemma
-where 
-  module = "${name}"
-`
-                        var lemma = await form_post('php/request/execute.php', {sql, resultType: 1});
-                        if (lemma.length) {
-                            [lemma] = lemma;
-                            lemma = JSON.parse(lemma.lemma);
-                            for (var lemma of lemma) {
-                                if (lemma.attribute.includes('main')) {
-                                    if (lemma.name != 'main')
-                                        lemma.name = name + '.' + lemma.name;
-                                    else
-                                        lemma.name = name;
-                                    delete lemma.proof;
-                                    m = lemma.imply.lean.match(/(.+) ?:=( ?by| ?calc|$)/);
-                                    if (m)
-                                        lemma.imply.lean = m[1];
-                                    var axiom = fetch_code(lemma);
-                                    import_statements.push(axiom);
-                                }
-                            }
+			module = module.replace(/[.\/\\]/g, '.');
+			saveFile(`${module}.${ext}`, data);
+		},
+
+		async click_lean4web(event) {
+            var code = await this.lean();
+            var codez = LZString.compressToEncodedURIComponent(code);
+            codez = codez.replace(/-/g, '/');
+            window.open(
+                `https://live.lean-lang.org/#project=mathlib-stable&codez=${codez}`,
+                '_blank'
+            );
+		},
+
+        highlight(line, col, title) {
+            var indices = this.line2indices(line);
+            var line = indices.pop();
+            if (line == null) {
+                var [index, attr] = indices;
+                switch (attr) {
+                case 'proof':
+                    var a = this.$el.querySelectorAll('a[title="caller hierarchy"]')[index];
+                    a.focus();
+                    this.select_span(a.firstChild);
+                    break;
+                case 'given':
+                    var span = this.$el.querySelector(`span.green[data-clipboard-text][index="${index}"]`);
+                    this.select_span(span);
+                    break;
+                case 'imply':
+                    var a = this.$el.querySelectorAll('a[title="callee hierarchy"]')[index];
+                    a.focus();
+                    this.select_span(a.firstChild);
+                    break;
+                case 'name':
+                    var input = this.$el.querySelector(`input[name="lemma[${index}][name]"]`);
+                    input.focus();
+                    input.select();
+                    break;
+                case 'attribute':
+                    var input = this.$el.querySelector(`input[name="lemma[${index}][attribute]"]`);
+                    this.select_span(input.nextElementSibling);
+                    break;
+                case 'created':
+                    var span = this.$el.querySelector(`a > span.date`);
+                    this.select_span(span);
+                    break;
+                case 'updated':
+                    var span = this.$el.querySelector(`p > span.date`);
+                    this.select_span(span);
+                    break;
+                }
+            }
+            else if (!this.select(indices, line, col, title)) {
+                var [index, attr] = indices;
+                switch (attr) {
+                case 'imply':
+                    this.lemma[index].imply.insert = true;
+                    this.$nextTick(() => {
+                        this.select(indices, line, col, title);
+                    });
+                    break;
+                case 'given':
+                    this.lemma[index].given[indices[2]].insert = true;
+                    this.$nextTick(() => {
+                        this.select(indices, line, col, title);
+                    });
+                    break;
+                }
+            }
+        },
+
+        save() {
+            var {save} = this.$parent;
+            if (save)
+                save();
+            else
+                form.submit();
+        },
+
+        new_file() {
+            var {module} = this;
+            if (module.match(/[.\/\\]$/))
+                module = module.slice(0, -1);
+            window.open(`?new=${module}`);
+        },
+
+        async fetch_prequisite(topology, use_axiom) {
+            var {prequisite} = this;
+            var {stdlib, sympy, linter, open, ...imports_dict} = prequisite;
+            var requisites_stdlib = await this.process_inner_import_given_package(stdlib, topology, use_axiom);
+            var requisites_sympy = await this.process_inner_import_given_package(sympy, topology, use_axiom);
+            var stdlib_code = this.fetch_code_given_package(stdlib, requisites_stdlib);
+            var sympy_code = this.fetch_code_given_package(sympy, requisites_sympy);
+            var imports = [];
+            for (var section in imports_dict)
+                imports.push(...Object.keys(prequisite[section]).map(module => `import ${module}`));
+            return [[...imports, ...Object.values(linter), ...this.fetch_open(open)].join('\n'), ...stdlib_code, ...sympy_code].join("\n\n\n");
+        },
+
+        fetch_code_given_package(pkg, requisites) {
+            var codes = [];
+            for (var module of topologicalSortDepthFirst(
+                Object.fromEntries(
+                    Object.entries(pkg).map(
+                        ([module, code]) => [module, code.imports]
+                    )
+                )
+            )) {
+                var {code, axiom} = pkg[module];
+                if (axiom && axiom.length) {
+                    axiom = axiom.map(name => {
+                        var index = requisites.findIndex(code => code.module == name);
+                        if (index >= 0) {
+                            var {def, lemma} = requisites[index];
+                            return [...def, ...lemma].join("\n\n\n");
                         }
+                    }).filter(code => code);
+                    codes.push(...axiom);
+                }
+                codes.push(code);
+            }
+            return codes;
+        },
+
+        async process_inner_import_given_package(pkg, topology, use_axiom) {
+            var requisites = [];
+            for (var module in pkg) {
+                var {axiom} = pkg[module];
+                if (axiom && axiom.length)
+                    await this.process_inner_import(topology, axiom, use_axiom, requisites, module);
+            }
+            return requisites;
+        },
+
+        async process_inner_import(topology, imports, axiom, requisites, parent) {
+            var indicesToDelete = [];
+            for (var imp of imports) {
+                var index = topology.findIndex(code => code.module == imp);
+                if (index >= 0) {
+                    var codeObject = topology[index];
+                    indicesToDelete.push(index);
+                }
+                else {
+                    var sql = `
+SELECT
+    *
+FROM
+    axiom.lemma
+where
+    module = "${imp}"`;
+                    var data = await form_post('php/request/execute.php', {sql, resultType: 1});
+                    if (data.length) {
+                        var codeObject = data[0];
+                        codeObject.imports = JSON.parse(codeObject.imports);
+                        codeObject.lemma = JSON.parse(codeObject.lemma);
+                        codeObject.open = JSON.parse(codeObject.open);
+                        codeObject.def = JSON.parse(codeObject.def);
+                        await this.fetch_lemma(codeObject, axiom, parent);
+                    }
+                    else {
+                        console.log(`module ${imp} not found`);
+                        continue;
                     }
                 }
+                requisites.push(codeObject);
             }
-            var prelude = code.match(/^  -- \\\[[^\n]+\\\]$/m) ?
-                "Now You're given a partially proven lemma where each intermediate proof-step is annotated with its latex representation:":
-                "Below is the main lemma in question:";
-            open = open.map(name => {
-                if (name.isArray) {
-                    name = name.join(' ');
-                    return `open ${name}`
+            indicesToDelete.reverse();
+            for (var index of indicesToDelete)
+                topology.splice(index, 1);
+        },
+
+        fetch_open(open) {
+            var {list, dict} = open;
+            var keys = Object.keys(list);
+            var open = [];
+            for (let key of keys) {
+                switch (key) {
+                case 'Set':
+                case 'Algebra':
+                case 'Lean':
+                case 'Elab.Tactic':
+                case 'Lean.Meta':
+                case 'Meta':
+                case 'Elab':
+                case 'Tactic':
+                case 'Command':
+                case 'Parser.Term':
+                case 'Parser.Tactic':
+                    break;
+                default:
+                    open.push(`namespace ${key}\nend ${key}`);
                 }
-                [[key, values]] = Object.entries(name);
-                values = values.join(' ');
-                return `open ${key} (${values})`
-            }).join('\n');
-            if (import_statements.length) {
-                if (open)
-                   import_statements.push(open);
-                prelude = `\`\`\`lean4
-${import_statements.join('\n')}
-\`\`\`
-The axioms above are actually lemmas that are proven to be true. Their detailed proofs are omitted here for simplicity. They are listed here to help you prove the current lemma.
-${prelude}`
             }
-            else if (open)
-                code = `${open}\n${code}`
-            var task = `${prelude}
+            keys = keys.join(' ');
+            if (keys)
+                open.push(`open ${keys}`);
+            for (var key in dict) {
+                var value = dict[key];
+                value = Object.keys(value).join(' ');
+                open.push(`open ${key} (${value})`)
+            }
+            return open;
+        },
+
+        async fetch_module_recursively(module, functions, parent) {
+            var {prequisite} = this;
+            var pkg = module.split('.')[0];
+            if (prequisite[pkg][module])
+                return;
+            if (parent && parent.split('.')[0] == pkg)
+                prequisite[pkg][parent].imports.push(module);
+            prequisite[pkg][module] = { imports: [] };
+            var {code} = await form_post('php/request/fetch.php', {module});
+            var m;
+            if (functions) {
+                code = code.trim();
+                var codes = [];
+                for (var f of functions) {
+                    var m = code.match(new RegExp(`(?<=\n)def ${f.replace(/\./g, '\\.')}\\b(?!\\.)[\\s\\S]*`));
+                    if (m) {
+                        codes.push(m[0].split("\n\n\n")[0]);
+                    }
+                }
+                prequisite[pkg][module].code = codes.join("\n\n\n");
+                return;
+            }
+            code = code.split("\n");
+            var index = 0;
+            for (var [i, line] of enumerate(code)) {
+                if (m = line.match(/^import ([\w.]+)(.*)/)) {
+                    var packages = m[1].split('.');
+                    switch (packages[0]) {
+                    case 'sympy':
+                    case 'stdlib':
+                        var match = m[2].trim().match(/^-- using((?: [\w.]+)+)/);
+                        var functions = match? match[1].trim().split() : null;
+                        console.log(`from ${module} import ${m[1]}`);
+                        await this.fetch_module_recursively(m[1], functions, module);
+                        if (!functions && pkg == packages[0]) 
+                            prequisite[pkg][module].imports.push(m[1]);
+                        break;
+                    case 'Axiom':
+                        if (!prequisite[pkg][module].axiom)
+                            prequisite[pkg][module].axiom = [];
+                        prequisite[pkg][module].axiom.push(packages.slice(1).join('.'));
+                        break;
+                    default:
+                        setitem(prequisite, packages[0], m[1], true);
+                        break;
+                    }
+                } 
+                else if (m = line.match(/^open ([\w.' ]+)$/)) {
+                    for (var name of m[1].trim().split(' '))
+                        setitem(prequisite.open.list, name, true);
+                }
+                else if (m = line.match(/^open ([\w.']+) \(([\w.' ]+)\)$/)) {
+                    var name = m[1];
+                    for (var val of m[2].trim().split(' '))
+                        setitem(prequisite.open.dict, name, val, true)
+                }
+                else if (line.length && !line.isspace()) {
+                    index = i;
+                    break;
+                }
+            }
+            code = code.slice(index).join("\n");
+            prequisite[pkg][module].code = code.rtrim();
+        },
+
+        async fetch_lemma(codeObject, axiom, parent) {
+            var {module, imports, lemma, open} = codeObject;
+            // console.log(`fetching ${module}`);
+            var {prequisite} = this;
+            if (module.match(/__/))
+                prequisite.linter['linter.style.nameCheck'] = 'set_option linter.style.nameCheck false';
+            else if (module.match(/(?<=\.|^)([\w']+)\.\1(?=\.|$)/))
+                prequisite.linter['linter.dupNamespace'] = 'set_option linter.dupNamespace false';
+            if (!lemma.length)
+                window.open(
+                    location.origin + location.pathname + `?module=${module}`,
+                    '_blank'
+                );
+            var hit = false;
+            for (var [i, lemma] of enumerate(lemma)) {
+                var {name} = lemma;
+                lemma.name = module;
+                if (name != 'main')
+                    lemma.name += '.' + name;
+                var lemmaType;
+                if (module == this.module && name == 'main')
+                    lemmaType = 'theorem';
+                else if (axiom) {
+                    delete lemma.proof;
+                    delete lemma.comment;
+                    var m = lemma.imply.lean.match(/(.+) ?:=( ?by| ?calc|$)/);
+                    if (m)
+                        lemma.imply.lean = m[1];
+                    lemmaType = 'axiom';
+                }
+                else {
+                    lemmaType = 'lemma';
+                    hit ||= !lemma.comment;
+                }
+                if (lemma.attribute)
+                    lemma.attribute.remove('main');
+                delete lemma.accessibility;
+                lemma = fetch_lemma(lemma, lemmaType, false);
+                codeObject.lemma[i] = lemma;
+                if (lemma.match(/\bmain\]/)) {
+                    console.log(lemma);
+                    window.open(
+                        location.origin + location.pathname + `?module=${module}`,
+                        '_blank'
+                    );
+                }
+            }
+
+            if (hit) {
+                // console.log(module, 'has no comment');
+                if (false) {
+                    window.open(
+                        location.origin + location.pathname + `?module=${module}&model=${this.model}`,
+                        '_blank'
+                    );
+                }
+            }
+            var submodules = [];
+            for (let module of imports) {
+                var section = module.split('.');
+                switch (section[0]) {
+                case 'Axiom':
+                    if (section[1] == 'Basic')
+                        break;
+                    module = section.slice(1).join('.');
+                    submodules.push(module);
+                    break;
+                case 'sympy':
+                case 'stdlib':
+                    console.log(`from ${codeObject.module} import ${module}`);
+                    await this.fetch_module_recursively(module, null, parent);
+                    break;
+                default:
+                    setitem(prequisite, section[0], module, true);
+                    break;
+                }
+            }
+            codeObject.imports = submodules;
+            for (var name of open) {
+                if (name.isArray) {
+                    for (var name of name)
+                        setitem(prequisite.open.list, name, true);
+                }
+                else {
+                    [[key, values]] = Object.entries(name);
+                    for (var val of values)
+                        setitem(prequisite.open.dict, key, val, true)
+                }
+            }
+        },
+
+        async fetch_lemma_sequentially(topology, axiom) {
+            for (var codeObject of topology) {
+                try {
+                    await this.fetch_lemma(codeObject, axiom);
+                }
+                catch (err) {
+                    var {module} = codeObject;
+                    alert(`error fetching ${module}`);
+                    window.open(
+                        location.origin + location.pathname + `?module=${module}`,
+                        '_blank'
+                    );
+                }
+            }
+        },
+
+        fetch_dependency(topology) {
+            var def = [];
+            var lemma = [];
+            for (var codeObject of topology) {
+                def.push(...codeObject.def);
+                lemma.push(...codeObject.lemma);
+            }
+            return [...def, ...lemma];
+        },
+
+        update(indices, value) {
+            if (!value)
+                return;
+            if (value.isArray) {
+                for (var i of range(value.length))
+                    this.update([...indices, i], value[i]);
+            }
+            else if (typeof value == 'object') {
+                if (value._) {
+                    var {editor} = value;
+                    if (editor) {
+                        var value = editor.getValue();
+                        if (value?.isString) {
+                            var oldValue = getitem(this.lemma, ...indices);
+                            if (oldValue?.isString)
+                                setitem(this.lemma, ...indices, value);
+                            else if (oldValue?.lean.isString)
+                                setitem(this.lemma, ...indices, 'lean', value);
+                        }
+                    }
+                    return;
+                }
+                for (var [key, value] of Object.entries(value)) {
+                    this.update([...indices, key], value);
+                }
+            }
+        },
+
+        async code_generation(index, cursor_line) {
+            this.update([], this.renderLean);
+            var line = this.indices2line(index) + cursor_line;
+            var {error, module, imports} = this;
+            var lemma = deepCopy(this.lemma, ['think', 'final']);
+            setitem(this.lemma, ...index, 'think', new StreamedParser);
+            setitem(this.lemma, ...index, 'final', '');
+            var errorIndex = error.findIndex(err => err.line == line);
+            var lemmaType = lemma[index[0]].name == 'main'? 'theorem': 'lemma';
+            if (errorIndex < 0) {
+                if (error.length) {
+                    var codes = ranged(index[0] + 1).map(i => {
+                        lemma[i].attribute.remove('main');
+                        var {name} = lemma[i];
+                        if (name == 'main') {
+                            lemma[i].name = module;
+                            var lemmaType = 'theorem';
+                        }
+                        else {
+                            lemma[i].name = module + '.' + name;
+                            var lemmaType = 'lemma';
+                        }
+                        return fetch_lemma(lemma[i], lemmaType);
+                    });
+                    var code = codes.join("\n\n\n");
+                    code = code.rtrim();
+                    var m = code.match(/^ +sorry *$/m);
+                    if (!m) {
+                        m = code.match(/(\n +).+$/);
+                        var spaces = m ? m[1] : '\n  ';
+                        code += spaces + 'sorry';
+                    }
+                }
+                else {
+                    if (lemma[index[0]].comment)
+                        return;
+                    lemma.forEach(lemma => {
+                        if (lemma.attribute)
+                            lemma.attribute.remove('main');
+                        delete lemma.accessibility;
+                    });
+                    var codes = ranged(index[0] + 1).map(i => {
+                        lemmaType = 'lemma';
+                        if (lemma[i].name == 'main')
+                            lemma[i].name = module;
+                        if (i == index[0])
+                            lemma[i].comment = `Please add the docstring here to describe the purpose of the following ${lemmaType}.`;
+                        return fetch_lemma(lemma[i], lemmaType);
+                    });
+                    var code = codes.join("\n\n\n");
+                    code = code.rtrim();
+                    errorIndex = -2;
+                }
+            }
+            else {
+                var code = getitem(lemma, ...index);
+                var old_lean = code.lean;
+                var old_leans = old_lean.split("\n");
+                var old_lean_head = old_leans.slice(0, cursor_line + 1).join("\n");
+                var old_lean_tail = old_leans.slice(cursor_line + 1).join("\n");
+                code.lean = `${old_lean_head}
+${error.filter(err => err.line == line).sort((a, b) => a.col - b.col).map(err => `/-\n${err.info}\n-/`).join("\n")}
+${old_lean_tail}`;
+                var codes = ranged(index[0] + 1).map(i => {
+                    if (lemma[i].attribute)
+                        lemma[i].attribute.remove('main');
+                    var {name} = lemma[i];
+                    var lemmaType;
+                    if (name == 'main') {
+                        lemma[i].name = module;
+                        lemmaType = 'theorem';
+                    }
+                    else {
+                        lemma[i].name = module + '.' + name;
+                        lemmaType = 'lemma';
+                    }
+                    return fetch_lemma(lemma[i], lemmaType);
+                });
+                var code = codes.join("\n\n\n");
+                code = code.rtrim();
+            }
+            var [prequisite, ...imports] = await this.piece_together(`
+SELECT
+    _t.module,
+    imports,
+    open,
+    def,
+    lemma
+FROM
+    axiom.lemma as _t
+    JOIN JSON_TABLE(
+        ${JSON.stringify(this.submodules).mysqlStr()},
+        '$[*]' COLUMNS (module text PATH '$')
+    ) as jt using (module)`, true);
+            if (imports.length) {
+                if (imports.length > 1)
+                    imports[imports.length - 1] += `\n\n-- The axioms above are actually lemmas proven to be true, with detailed proofs omitted here for simplicity. They are listed here to facilitate proving the current ${lemmaType}.`;
+                else
+                    imports[imports.length - 1] += `\n\n-- The axiom above is actually a lemma proven to be true, with detailed proofs omitted here for simplicity. It is listed here to facilitate proving the current ${lemmaType}.`;
+            }
+            prequisite = [prequisite, ...imports].join("\n\n\n");
+            var has_intermediate_step = code.match(/^  -- (Goals? to prove: |Premises? given: )?\\\[[^\n]+\\\]$/m);
+            if (has_intermediate_step) {
+                var proven = errorIndex == -2 ? '' : 'partially proven ';
+                var prelude = `Now You're given a ${proven}${lemmaType} where each intermediate proof-step is annotated with its latex representation indicating the tactic state:`;
+            }
+            else {
+                var proven = errorIndex == -2 ? 'in question' : 'to prove';
+                var prelude = `Below is the ${lemmaType} ${proven}:`;
+            }
+            if (prequisite)
+                prelude = prequisite + "\n\n-- " + prelude;
+            var task;
+            if (errorIndex >= 0) {
+                task = `At the line \`\`\`${old_leans[cursor_line]}\`\`\`, I got errors from Lean compilor which I wrapped in block comment /- and -/ below the code. Please fix the errors for me. Please don't duplicate my original code. In your final representation, give me only your newly added code which I can easily extract to replace the erroneous line.`;
+                this.taskType = 'error';
+            }
+            else if (errorIndex == -2) {
+                task = `The ${lemmaType} is already proven and verified by the lean compiler. Please add a docstring with about two sentences in between /-- -/ for the ${lemmaType} at the line specified above.\n**Note**: No need to prove the ${lemmaType} above and don't duplicate my original code.`;
+                this.taskType = 'docstring';
+            }
+            else if (has_intermediate_step) {
+                task = "Please complete the proof for me. If you can't solve the problem all at once, give me only the next proof-step that is workable and helpful for further problem-solving. Please don't duplicate my original code. In your final representation, give me only your newly added code which I can easily extract to replace the \`sorry\` tactic.`";
+                this.taskType = 'proof';
+            }
+            else if (has_typeclasses(this.lemma[index[0]])) {
+                task = "Please generate the proof to replace the \`sorry\` tactic. If you can't solve the problem all at once, give me only the next proof-step that is workable and helpful for further problem-solving.";
+                this.taskType = 'proof';
+            }
+            else {
+                task = "Please provide necessary typeclasses to make the code compile and generate the proof to replace the \`sorry\` tactic. If you can't solve the problem all at once, give me only the next proof-step that is workable and helpful for further problem-solving.";
+                this.taskType = 'typeclass';
+            }
+            task = `
 \`\`\`lean4
+${prelude}
 ${code}
 \`\`\`
-Please continue the proof and generate the lean4 code to replace the \`sorry\` tactic. If you can't solve the problem all at once, give me only the next proof-step that is workable and helpful for further problem-solving. Please don't duplicate my original code, give me only the newly added code in your final representation in the lean4 code block below:
-\`\`\`lean4
--- your new code here
-\`\`\`
-since this facilitates the proof-checking process.`
+${task}`;
             console.log(task);
             this.generate(
                 [
@@ -292,17 +895,16 @@ since this facilitates the proof-checking process.`
                 ],
                 {
                     model: this.model,
-                    Authorization: await this.GetAuthorization(),
-                    index: index,
-                    id : this.module
+                    index: [...index, 'think'],
+                    id : module
                 }
             );
+            setitem(this.lemma, ...index, 'prompt', task);
         },
 
     	generate(prompt, kwargs) {
 			var {onmessage, onclose} = this;
-			var {model, id, Authorization} = kwargs;
-			kwargs.status = {};
+			var {model, id} = kwargs;
             var stream = {
                 id,
 
@@ -318,49 +920,86 @@ since this facilitates the proof-checking process.`
                     onclose(kwargs);
                 },
             };
-			return generate(prompt, model, stream, Authorization);
+			return generate(prompt, model, stream);
     	},
 
-		postprocess(text, word, status, postprocess) {
-            if (!text)
+		postprocess(text, word, postprocess) {
+            try {
+                if (!text)
                 word = word.ltrim();
-            text = postprocess(text, word, status);
-			return text;
+                return postprocess(text, word);
+            }
+            catch (err) {
+                console.log(err);
+            }
 		},
 
 		onmessage(message, kwargs) {
 			var {id, data} = message;
-			var {index, status} = kwargs;
+			var {index} = kwargs;
 			if (id && data) {
 				try{
 					// console.log(data);
-					var word = parse_token(data);
+                    var think = {};
+					var word = parse_token(data, think);
 					if (word) {
 						var {lemma} = this;
-						setitem(
-							lemma,
-							...index,
-							this.postprocess(
-								getitem(lemma, ...index), 
-								word,
-								status,
-								postprocess_word
-							)
-						);
+                        setitem(
+                            lemma,
+                            ...index,
+                            this.postprocess(
+                                getitem(lemma, ...index), 
+                                word,
+                                postprocess_word
+                            )
+                        );
+                        if (!think.reasoning_content) {
+                            index = [...index.slice(0, -1), 'final'];
+                            setitem(
+                                lemma,
+                                ...index,
+                                getitem(lemma, ...index) + word,
+                            );
+                        }
 					}
 				}
 				catch(err) {
 					console.log(message);
 					console.log(err);
-					throw new Error(err);
 				}
 			}
 		},
 
 		async onclose(kwargs) {
 			var {index} = kwargs;
-            var lemma = getitem(this.lemma, ...index);
-            console.log(lemma);
+            var {lemma} = this;
+            this.postprocess(
+                getitem(lemma, ...index), 
+                "\n", // add newline at the end of the markdown text
+                postprocess_char
+            );
+            index = [...index.slice(0, -1), 'final'];
+            var final = getitem(lemma, ...index);
+            console.log(final);
+            switch (this.taskType) {
+            case 'error':
+                break;
+            case 'docstring':
+                var docstring = final.match(/(?<=^|\n)\/--([\s\S]*?)-\/(?=\n|$)/);
+                if (docstring) {
+                    docstring = docstring[1].trim("\n");
+                    docstring = sbd(docstring).map(text => text.replace(/^\n+|\n+$/g, '')).join("\n");
+                    console.log(docstring);
+                    var i = index[0];
+                    this.lemma[i].comment = docstring;
+                }
+                break;
+            case 'proof':
+                final = final.replace(/\/-.*?\n/g, '');
+                break;
+            case 'typeclass':
+                break;
+            }
 		},
 
 		keydown(event) {
@@ -380,23 +1019,79 @@ since this facilitates the proof-checking process.`
             selection.addRange(range);
         },
 
-        select(indices, line) {
+        focus(cm, line, start, stop, title) {
+            if (title) {
+                // Mark the text range and apply styling/title
+                var tilde = '~'.repeat(stop - start);
+                const mark = cm.markText(
+                    { line, ch: start },
+                    { line, ch: stop },
+                    {
+                        className: 'erroneous-text', // CSS class for styling
+                        tilde,
+                        title,                       // Tooltip text
+                        attributes: { title, tilde } // Alternative for some setups
+                    }
+                );
+                // cm.removeLineClass(line, "gutter", "panic");
+                cm.addLineClass(line, "gutter", "panic");
+            }
+            else {
+                cm.setCursor(line, start);
+                cm.addSelection({ line, ch : start}, { line, ch: stop });
+            }
+            cm.focus();
+        },
+
+        openContainingFolder() {
+            var search = location.search;
+            var index = search.lastIndexOf('.');
+            if (index < 0)
+                index = search.lastIndexOf('/');
+            ++index;
+            // `search` will end with [./] to ensure it is a folder
+            var hash = search.substring(index);
+            if (hash)
+                location.hash = hash;
+            location.search = search.substring(0, index);
+        },
+
+        select(indices, line, col, title) {
             var cm = getitem(this.renderLean, ...indices);
             if (cm) {
                 var cm = cm.editor;
                 var text = cm.getLine(line);
-                var m = text.match(/^\s*/);
-                var ch = m[0].length;
-                cm.setCursor(line, ch);
-                cm.addSelection({ line, ch }, { line, ch: text.length });
-                cm.focus();
+                if (col) {
+                    // determine the end of the code segment
+                    form_post('php/request/segment_detection.php', {lean: text.slice(col)}).then(data => {
+                        var {lean} = data;
+                        var m = lean.match(/(.*?) *-- .*/);
+                        if (m)
+                            lean = m[1];
+                        this.focus(cm, line, col, col + lean.length, title);
+                    });
+                }
+                else
+                    this.focus(cm, line, text.match(/^\s*/)[0].length, text.length, title);
                 return true;
             }
         },
 
-        locate(find) {
+        line2indices(find) {
             find -= 1;
             var line = this.initial_line;
+            var {def} = this;
+            if (def) {
+                for (let index of range(def.length)) {
+                    line += 2;
+                    // def function_name: (x : α) := ...
+                    var line_def = line;
+                    line += def[index].split("\n").length;
+                    if (find < line)
+                        return ['def', index, find - line_def];
+                }
+            }
+
             for (let index of range(this.lemma.length)) {
                 line += 2;
                 var lemma = this.lemma[index];
@@ -423,7 +1118,7 @@ since this facilitates the proof-checking process.`
                     if (find < line)
                         return [index, 'instImplicit', find - line_instImplicit];
                 }
-                    
+
                 if (strictImplicit) {
                     // strictImplicit: ⦃x : α⦄
                     var line_strictImplicit = line;
@@ -492,6 +1187,167 @@ since this facilitates the proof-checking process.`
             return ['date', find < line? 'created' : 'updated', null];
         },
 
+        indices2line(indices) {
+            var line = this.initial_line + 1;
+            var [i, attr] = indices;
+            for (let index of range(i + 1)) {
+                line += 2;
+                var lemma = this.lemma[index];
+                if (lemma.comment) {
+                    if (index == i && attr == 'comment')
+                        return line;
+                    ++line;
+                }
+
+                if (lemma.attribute) {
+                    if (index == i && attr == 'attribute')
+                        return line;
+                    ++line; // @[main]
+                }
+
+                if (index == i && attr == 'name')
+                    return line;
+                ++line; // private lemma main
+                var {instImplicit, strictImplicit, implicit, given, explicit} = lemma;
+                if (instImplicit) {
+                    if (index == i && attr == 'instImplicit')
+                        return line;
+                    // instImplicit: [Field α]
+                    line += instImplicit.split("\n").length;
+                }
+
+                if (strictImplicit) {
+                    if (index == i && attr == 'strictImplicit')
+                        return line;
+                    // strictImplicit: ⦃x : α⦄
+                    line += strictImplicit.split("\n").length;
+                }
+                    
+                if (implicit) {
+                    if (index == i && attr == 'implicit')
+                        return line;
+                    // implicit: {x : α}
+                    line += implicit.split("\n").length;
+                }
+                if (given) {
+                    if (index == i && attr == 'given' && indices[2] == null)
+                        return line;
+                    ++line; // --given
+                    // given: (h : a = b)
+                    for (var j of range(given.length)) {
+                        if (index == i && attr == 'given' && j == indices[2])
+                            return line;
+                        line += given[j].lean.split("\n").length;
+                    }
+                }
+                if (explicit) {
+                    // explicit: (left : Bool := false)
+                    line += explicit.split("\n").length;
+                    if (index == i && attr == 'explicit')
+                        return line;
+                }
+
+                if (index == i && attr == 'imply' && indices.length == 3 && indices[2] == null)
+                    return line;
+                ++line; // -- imply
+
+                if (index == i && attr == 'imply')
+                    return line;
+                line += lemma.imply.lean.split("\n").length;
+                if (index == i && attr == 'proof' && indices[2] == null)
+                    return line;
+                ++line; // -- proof
+                var {proof} = this.lemma[index];
+                var attr = proof.by? 'by' : (proof.calc? 'calc' : null);
+                const Index = indices[1] == 'proof'? (attr? indices[3]: indices[2]): null;
+                proof = proof.by?? proof.calc?? proof;
+                for (var j of range(proof.length)) {
+                    if (index == i && j == Index)
+                        return line;
+                    line += proof[j].lean.split("\n").length;
+                }
+            }
+
+            if (indices[0] == this.lemma.length)
+                line += 2;
+            return line + 1;
+        },
+
+        text2indices(text) {
+            for (let index of range(this.lemma.length)) {
+                var lemma = this.lemma[index];
+
+                var {instImplicit, strictImplicit, implicit, given, explicit} = lemma;
+                if (instImplicit) {
+                    // instImplicit: [Field α]
+                    for (var [offset, line] of enumerate(instImplicit.split("\n"))) {
+                        if (line.includes(text))
+                            return [index, 'instImplicit', offset];
+                    }
+                }
+
+                if (strictImplicit) {
+                    // strictImplicit: ⦃x : α⦄
+                    for (var [offset, line] of enumerate(strictImplicit.split("\n"))) {
+                        if (line.includes(text))
+                            return [index, 'strictImplicit', offset];
+                    }
+                }
+                    
+                if (implicit) {
+                    // implicit: {x : α}
+                    for (var [offset, line] of enumerate(implicit.split("\n"))) {
+                        if (line.includes(text))
+                            return [index, 'implicit', offset];
+                    }
+                }
+                if (given) {
+                    // given: (h : a = b)
+                    for (var i of range(given.length)) {
+                        for (var [offset, line] of enumerate(given[i].lean.split("\n"))) {
+                            if (line.includes(text))
+                                return [index, 'given', i, offset];
+                        }
+                    }
+                }
+                if (explicit) {
+                    // explicit: (left : Bool := false)
+                    for (var [offset, line] of enumerate(explicit.split("\n"))) {
+                        if (line.includes(text))
+                            return [index, 'explicit', offset];
+                    }
+                }
+
+                for (var [offset, line] of enumerate(lemma.imply.lean.split("\n"))) {
+                    if (line.includes(text))
+                        return [index, 'imply', offset];
+                }
+
+                var {proof} = this.lemma[index];
+                var attr = proof.by? 'by' : (proof.calc? 'calc' : null);
+                proof = proof.by?? proof.calc?? proof;
+                for (var i of range(proof.length)) {
+                    for (var [offset, line] of enumerate(proof[i].lean.split("\n"))) {
+                        if (line.includes(text))
+                            if (attr)
+                                return [index, 'proof', attr, i, offset];
+                            else
+                                return [index, 'proof', i, offset];
+                    }
+                }
+            }
+
+            for (let index of range(this.lemma.length)) {
+                var lemma = this.lemma[index];
+                if (lemma.comment) {
+                    for (var [offset, line] of enumerate(lemma.comment.split("\n"))) {
+                        if (line.includes(text))
+                            return [index, 'comment', offset];
+                    }
+                }
+            }
+        },
+
         click_left,
 
         delete(indices) {
@@ -544,7 +1400,7 @@ replace into
     (user, module, imports, open, def, lemma, error, date) 
     values (
         '${user}',
-        '${module}',
+        "${module}",
         ${JSON.stringify(imports).mysqlStr()},
         ${JSON.stringify(open).mysqlStr()},
         ${JSON.stringify(def).mysqlStr()},
@@ -554,53 +1410,9 @@ replace into
     )
 `;
             console.log(sql);
-            var rowcount = await form_post('php/request/execute.php', {sql});
-            console.log("rowcount =", rowcount);
-        },
-
-        click_font(index, line) {
-        	console.log(`index = ${index}, line = ${line}`);
-        	var error = this.error[index];
-        	switch(error.func){
-        	case 'prove':
-                var line = this.error.line;
-                var sum = 0;
-                
-                console.log("this.renderLean.length = " + this.renderLean.length);
-                for (let cm of this.renderLean) {
-                    cm = cm.editor;
-                    var _sum = sum;
-                    sum += cm.lineCount();
-                    if (sum > line) {
-                        cm.focus();
-                        cm.setCursor(line - _sum, 0);
-                        break;
-                    }
-                }
-            	break;
-        	case 'apply':
-                console.log(error);
-                var module = error.file.match(/Axiom\.([\w.]+)/)[1];
-                if (module == this.module) {
-                }
-                else{
-                    var href = location.href;
-                    href = href.match(/(.+\/(index.php)?\?module=).+/)[1]
-                    href += `${module}#${line}`;
-                    window.open(href);
-                }
-                break;
-            default:
-            	var file = error.file;
-            	var line = error.line;
-            	var href = location.href;
-                href = href.match(/(.+\/(index.php)?\?).+/)[1];
-                var index = file.indexOf('.');
-                var key = file.slice(0, index);
-                var value = file.slice(index + 1);
-                href += `${key}=${value}#${error.line}`;
-                window.open(href);
-            }
+            form_post('php/request/execute.php', {sql}).then(rowcount => {
+                console.log("rowcount =", rowcount);
+            });
         },
     },
     
@@ -635,16 +1447,22 @@ replace into
   display: none !important;
 }
 
-.bottom-right{
+.bottom-line {
   width: auto;
   height: 50px;
   position: relative;
 }
 
-.bottom-right p{
+.bottom-line p.right {
   position: absolute;
   bottom: 0;
   right: 0;
+}
+
+.bottom-line p.left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
 .pre-wrap {
@@ -659,4 +1477,66 @@ div.lemma + div.lemma {
     /* add spaces between two consecutive tags of div.lemma */
     margin-top: 2em;
 }
+
+button.transparent {
+	background-color: inherit;
+	border-style: none;
+	outline: none;
+    font-size: 1.1em;
+}
+
+button.transparent:hover{
+	background-color: red;
+}
+
+</style>
+<style>
+
+.erroneous-text {
+  position: relative;
+  display: inline-block;
+}
+
+.erroneous-text::after {
+  content: attr(tilde);
+  position: absolute;
+  bottom: -9px; /* Adjust vertical position */
+  left: 0;
+  width: 100%; /* Match parent width */
+  white-space: nowrap; /* Keep tildes in single line */
+  overflow: hidden; /* Hide excess tildes */
+  letter-spacing: 1px; /* Adjust spacing between tildes */
+  color: red;
+}
+
+.panic {
+  position: relative;
+}
+
+.panic:before{
+	width: 4px;
+	height: 1.5px;
+	position: absolute;
+	left: 0px;
+	top: 11.5px;
+	content: "";
+	transform: rotate(-45deg);
+	background: red;
+	box-shadow: 1px 1px 0 0 #9da0a0;
+	z-index: 0;
+}
+    
+.panic:after {
+	width: 6px;
+	height: 6px;
+	position: absolute;
+	left: 2.3px;
+	top: 6px;
+	content: "";
+	background: red;
+	border-radius: 50%;
+	box-shadow: 1px 1px 0 0 #9da0a0;
+	z-index: 0;
+}
+
 </style>

@@ -10,8 +10,8 @@ private lemma main
   [Field α]
   {a b x y : α}
 -- given
-  (h0 : a ≠ 0)
-  (h1 : b ≠ 0) :
+  (h₀ : a ≠ 0)
+  (h₁ : b ≠ 0) :
 -- imply
   x / a - y / b = (x * b - y * a) / (a * b) := by
 -- proof
@@ -19,9 +19,9 @@ private lemma main
   rw [Div.eq.Mul_Inv]
   rw [← SubDivS.eq.DivSub]
   rw [DivMul.eq.Mul_Div]
-  rw [Div_Mul.eq.Inv.of.Ne_0 h1 true]
+  rw [Div_Mul.eq.Inv.of.Ne_0 h₁ true]
   rw [DivMul.eq.Mul_Div]
-  rw [Div_Mul.eq.Inv.of.Ne_0 h0]
+  rw [Div_Mul.eq.Inv.of.Ne_0 h₀]
 
 
 -- created on 2024-07-01

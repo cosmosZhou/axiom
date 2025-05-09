@@ -229,8 +229,8 @@ mysqldump -h localhost -uroot -p123456 corpus structure > structure.sql
  #mysqldump -h localhost -uroot -p123456  -d corpus structure > structure.sql  
 
  #export data only  
- #select * from structure into outfile "D:/wamp64/tmp/structure.csv";  
-select * from service into outfile "/var/lib/mysql-files/service-9-25.csv";  
+ #select * from structure into outfile "D:/wamp64/tmp/structure.tsv";  
+select * from service into outfile "/var/lib/mysql-files/service-9-25.tsv";  
 If the following message prompts:  
 The MySQL server is running with the --secure-file-priv option so it cannot execute this statement  
 
@@ -286,14 +286,14 @@ set global local_infile = 1;
  #mysql --local-infile=1 -uroot -Dcorpus  
 
 
-load data local infile "D:/wamp64/tmp/structure.csv" into table structure character set utf8;  
-load data local infile "/var/lib/mysql-files/intent.csv" into table structure character set utf8;  
+load data local infile "D:/wamp64/tmp/structure.tsv" into table structure character set utf8;  
+load data local infile "/var/lib/mysql-files/intent.tsv" into table structure character set utf8;  
 或者：  
-load data local infile "/var/lib/mysql-files/intent.csv" replace into table repertoire character set   utf8;  
-load data local infile "D:/wamp64/tmp/intent-9-18.csv" into table intent character set utf8;  
-load data local infile "D:/wamp64/tmp/service-9-6.csv" into table service character set utf8;  
+load data local infile "/var/lib/mysql-files/intent.tsv" replace into table repertoire character set   utf8;  
+load data local infile "D:/wamp64/tmp/intent-9-18.tsv" into table intent character set utf8;  
+load data local infile "D:/wamp64/tmp/service-9-6.tsv" into table service character set utf8;  
 在执行大数据传输时，比如以下语句，包含了上百万条记录的表：  
-load data local infile "D:/wamp64/tmp/repertoire-9-18.csv" into table repertoire character set utf8;  
+load data local infile "D:/wamp64/tmp/repertoire-9-18.tsv" into table repertoire character set utf8;  
 可能会出现导入失败的问题，作以下处理：  
 alter table `repertoire` drop key text;  
    
@@ -511,8 +511,23 @@ create user prod@localhost identified by 'prod';
 ```
 Access denied; you need (at least one of) the SUPER or SYSTEM_VARIABLES_ADMIN privilege(s) for this operation       
 
-```
-grant create, select, delete, insert, update, drop, file, alter, SYSTEM_VARIABLES_ADMIN, show view on \*.\* to prod@localhost;  
+```sql
+grant 
+    drop, 
+    file, 
+    alter, 
+    create, 
+    select, 
+    delete, 
+    insert, 
+    update, 
+    show view,
+    SYSTEM_VARIABLES_ADMIN,
+    CREATE TEMPORARY TABLES
+on 
+    \*.\* 
+to 
+    prod@localhost;
 ```
 file privilege is needed if error `Access denied; you need (at least one of) the FILE privilege(s) for this operation` is encountered.  
 

@@ -2,7 +2,7 @@ import Axiom.Algebra.Sub.eq.Add_Neg
 open Algebra
 
 
-@[simp, main]
+@[main]
 private lemma main
   [AddCommGroup α]
   {a b : α} :

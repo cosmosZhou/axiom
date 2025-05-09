@@ -13,7 +13,7 @@ private lemma main
   d = y - x := by
 -- proof
   have h := EqSubS.of.Eq h x
-  simp [EqSubAdd] at h
+  rw [EqSubAdd] at h
   exact h
 
 

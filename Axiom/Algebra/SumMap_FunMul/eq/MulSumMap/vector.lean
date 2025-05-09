@@ -7,7 +7,7 @@ open Algebra
 @[main]
 private lemma main
   [Add β] [MulZeroClass β] [RightDistribClass β]
-  {s : Vector α n}
+  {s : List.Vector α n}
   {f : α → β}
   {const : β} :
 -- imply

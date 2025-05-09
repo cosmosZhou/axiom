@@ -1,3 +1,4 @@
+import sympy.functions.elementary.exponential
 import Axiom.Basic
 
 

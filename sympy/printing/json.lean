@@ -1,7 +1,7 @@
 import sympy.parsing.parser
 import sympy.printing.latex
-import std.Json
-import std.Array
+import stdlib.Lean.Json
+import stdlib.Array
 open Lean.Meta
 open Lean (Name Json getConstInfoInduct)
 
@@ -71,7 +71,7 @@ def Expr.toJson (this : Expr) : Json :=
 
 def Name.toJson (name : Name) : MetaM Json := do
   let type ← name.toExpr
-  let expr ← Expr.toExpr type
+  let expr ← Expr.toExpr type []
   let mut json := expr.toJson.setObjVal! "name" name.toString
   json := json.setObjVal! "type" (← ppExpr type).pretty
   for attr in (← getConstInfoInduct `Lean.BinderInfo).ctors do

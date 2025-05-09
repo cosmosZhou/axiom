@@ -2,7 +2,11 @@ import Axiom.Algebra.Div.eq.Mul_Inv
 open Algebra
 
 
-@[simp, main]
+/--
+This lemma establishes the equivalence between multiplication by the inverse and division in a `DivInvMonoid`, serving as the reverse of `Div.eq.Mul_Inv`.
+It simplifies expressions by allowing the interchange of `a * b⁻¹` and `a / b` within the algebraic structure `α`.
+-/
+@[main]
 private lemma main
   [DivInvMonoid α]
   {a b : α} :
@@ -13,3 +17,4 @@ private lemma main
 
 
 -- created on 2024-07-01
+-- updated on 2025-04-04

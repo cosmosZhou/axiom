@@ -4,10 +4,19 @@ require_once '../mysql.php';
 require_once '../init.php';
 
 $user = get_project_name();
-
+chdir("../../");
 function rename_lemma($old, $new)
 {
-    $cmd = "cd ../../sh && bash rename.sh $old $new";
+    if (std\is_linux()) {
+        $cmd = "bash sh/rename.sh";
+        $cmd .= " \"$old\" \"$new\"";
+    }
+    else {
+        $args = "-src " . escapeshellarg($old) . " -dst ". escapeshellarg($new);
+        $cmd = "powershell -ExecutionPolicy Bypass -NoProfile -File ".  escapeshellarg("ps1\\rename.ps1") . " -ArgumentList $args";;
+    }
+
+    error_log("cmd = $cmd");
     exec($cmd, $output_array, $ret);
     
     error_log(implode("\n", $output_array));
@@ -38,7 +47,7 @@ if ($package !== null) {
 
     $newFile = module_to_lean($new);
 
-    if (filesize($newFile))
+    if (file_exists($newFile))
         die("$newFile already exists");
 
     unlink($newFile);

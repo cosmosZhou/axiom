@@ -3,29 +3,36 @@ open Algebra
 
 
 @[main]
-private lemma main
-  -- [OrderedAddCommGroup α]
-  [Add α] [LE α]
+private lemma left
+  [Add α]
+  [LE α]
   [AddLeftMono α]
   [AddRightMono α]
-
   {b c : α}
 -- given
   (h : b ≥ c)
-  (a : α)
-  (left : Bool := false) :
+  (a : α) :
 -- imply
-  match left with
-  | true =>
-    a + b ≥ a + c
-  | false =>
-    b + a ≥ c + a :=
+  a + b ≥ a + c :=
 -- proof
-  match left with
-  | true =>
-    LeAddS.of.Le h a true
-  | false =>
-    LeAddS.of.Le h a
+  LeAddS.of.Le.left h a
+
+
+@[main]
+private lemma main
+  [Add α]
+  [LE α]
+  [AddLeftMono α]
+  [AddRightMono α]
+  {b c : α}
+-- given
+  (h : b ≥ c)
+  (a : α) :
+-- imply
+  b + a ≥ c + a :=
+-- proof
+  LeAddS.of.Le h a
 
 
 -- created on 2024-07-01
+-- updated on 2025-04-30

@@ -34,8 +34,7 @@ export default {
 					search += '/' + text + '/';
 			}
 
-			location.hash = '';
-			location.search = search;
+			location.href = location.origin + location.pathname + search;
 		},
 		
 		remove() {

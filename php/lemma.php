@@ -3,12 +3,15 @@
 require_once 'init.php';
 require_once 'std.php';
 if ($_POST) {
-	$sections = ['Algebra', 'Calculus', 'Discrete', 'Geometry', 'Neuro', 'Set', 'Probability'];
+	$term = "(?:[A-Z][\w']*|(of|eq|ne|gt|lt|ge|le|is|in|to|mod|et|ou)(?=\.)|comm\b)";
+	$sections = std\listdir($root = dirname(dirname(__FILE__)) . "/Axiom/");
 	$sectionRegex = implode('|', $sections);
 
 	$leanCode = [];
 
 	$imports = std\decode($_POST['imports']);
+	if (is_string($imports))
+		$imports = [$imports];
 	$moduleExists = [];
 
 	$open = std\decode($_POST['open']);
@@ -29,16 +32,16 @@ if ($_POST) {
 		}
 	}
 
-	$def = std\decode($_POST['def']);
-	if ($def) {
-		$def = array_map(fn($def) => "$def", $def);
-		$def = implode("\n", $def);
-	}
+	$def = $_POST['def'];
+	if (is_string($def))
+		$def = std\decode($def);
+	if ($def)
+		$def = "\n\n" . implode("\n\n\n", $def);
 
 	$lemmaCode = [];
 	foreach ($_POST['lemma'] as $lemma) {
 		if ($comment = $lemma['comment'] ?? '')
-			$comment .= "\n";
+			$comment = "/--\n$comment\n-/\n";
 
 		if ($attribute = $lemma['attribute'] ?? null) {
 			$attribute = std\decode($attribute);
@@ -69,8 +72,11 @@ if ($_POST) {
 		}
 
 		$explicit = $lemma["explicit"] ?? '';
-		if ($explicit)
+		if ($explicit) {
+			if (!$given)
+				$declspec[] = "-- given";
 			$declspec[] = preg_replace("/^/m", '  ', $explicit);
+		}
 
 		$declspec = implode("\n", $declspec);
 
@@ -82,7 +88,7 @@ if ($_POST) {
 			$proof = $proof[$by];
 
 		foreach ($proof as &$line) {
-			while (preg_match("/\b($sectionRegex)((?:\.\w+)+)/", $line, $matches)) {
+			while (preg_match("/\b($sectionRegex)((?:\.$term)+)/", $line, $matches)) {
 				if (!in_array($matches[1], $open_section))
 					$open_section[] = $matches[1];
 
@@ -90,19 +96,22 @@ if ($_POST) {
 				if (!in_array($module, $imports))
 					$imports[] = $module;
 
-				$line = preg_replace("/\b($sectionRegex)\.(?=\w+)/", '', $line);
+				$line = preg_replace("/\b($sectionRegex)\.(?=$term)/", '', $line);
 			}
 
-			if ($matches = std\matchAll("/\b(?!(?:$sectionRegex)\b)(\w+(?:\.\w+)+)/", $line)) {
+			if ($matches = std\matchAll("/\b(?!(?:$sectionRegex)\b)($term(?:\.$term)*)/", $line)) {
 				foreach ($matches as [[$submodule]]) {
-					foreach ($open_section as $section) {
+					foreach ($sections as $section) {
 						$module = $section . '.' . $submodule;
-						$moduleFile = module_to_lean($module);
-						if (file_exists($moduleFile)) {
+
+						if (file_exists(module_to_lean($module))) {
 							$module = 'Axiom.' . $module;
 							if (!in_array($module, $imports))
 								$imports[] = $module;
 							$moduleExists[$module] = true;
+							if (!in_array($section, $open_section))
+								$open_section[] = $section;
+							break;
 						}
 					}
 				}
@@ -114,8 +123,8 @@ if ($_POST) {
 		$proof = preg_replace("/(?<=\n)\s+\n/", '', $proof);
 		if ($declspec)
 			$declspec = "\n$declspec";
-		else
-			$declspec = ":";
+		if (!str_ends_with($declspec, ':')) 
+			$declspec .= " :";
 		$proof = <<<EOT
 $comment$attribute{$accessibility}lemma $name$declspec
 -- imply
@@ -126,27 +135,38 @@ EOT;
 		$lemmaCode[] = $proof;
 	}
 	$lemmaCode = implode("\n\n\n", $lemmaCode);
-	if (count($imports) > 1 && in_array('Axiom.Basic', $imports))
-		std\array_delete($imports, array_search('Axiom.Basic', $imports));
-
 	$imports = array_filter($imports, function ($import) use ($lemmaCode, $open_section) {
 		$imports = explode('.', $import);
-		if ($imports[0] == 'Axiom') {
+		switch ($imports[0]) {
+		case 'Axiom':
 			array_shift($imports);
 			if (in_array($imports[0], $open_section))
 				array_shift($imports);
 			$import = implode('.', $imports);
+			break;
+		case 'sympy':
+		case 'stdlib':
+		case 'Mathlib':
+			return true;
 		}
 		$import = str_replace('.', '\.', $import);
 		return preg_match("/\b$import\b/", $lemmaCode);
 	});
-	if (!$imports)
+	if (!array_filter($imports, fn($import) => str_starts_with($import, 'Axiom.')))
 		$imports[] = "Axiom.Basic";
+
+	$open_section = array_reduce($imports, function ($carry, $import) use (&$moduleExists) {
+		$module = explode('.', $import);
+		if ($module[0] == 'Axiom' && $module[1] != 'Basic')
+			$carry[$module[1]] = true;
+		return $carry;
+	}, []);
 	$imports = array_map(fn($import) => "import $import", $imports);
 	// find Axiom -name "*.lean" -exec perl -i -0777 -pe 's/(\S+)(?=\n\n@\[\w+)/$1\n/g' {} +
 	// find Axiom -name "*.lean" -exec perl -i -0777 -pe 's/((\S+)\n+)(?=\n\n\n-- created)/$2/g' {} +
 	$leanCode[] = implode("\n", $imports);
 
+	$open_section = array_keys($open_section);
 	$open_section = array_merge($open_section, $open_mathlib);
 	if ($open_section)
 		$leanCode[] = "open " . implode(" ", $open_section);
@@ -196,7 +216,103 @@ if (!file_exists($leanEchoFile) || filemtime($leanFile) < filemtime($leanEchoFil
 
 if (!$code || !$code['lemma'] || !$code['date']) {
 	// $_ = new std\Timer("compile and render2vue");
-	$code = compile(file_get_contents($leanFile))->render2vue(false);
+	$leanCode = compile(file_get_contents($leanFile));
+	$syntax = [];
+	$code = $leanCode->render2vue(false, $modify, $syntax);
+	$import_syntax = function ($import) use ($leanCode, $code) {
+		if (!in_array($import, $imports = $code['imports'])) {
+			$prefix = "Axiom.";
+			$imports = array_filter($imports, fn($module) => str_starts_with($module, $prefix));
+			$imports = [...$imports];
+			$offset = strlen($prefix);
+			$imports = array_map(fn($module) => substr($module, $offset), $imports);
+			$imports = std\encode($imports);
+			$imports = mysql\mysqlStr($imports);
+			$sql = <<<EOF
+WITH RECURSIVE dependencies AS (
+	select 
+		* 
+	from 
+		json_table(
+			$imports,
+			'$[*]' columns(module text path '$')
+		) as jt
+	UNION ALL
+	SELECT
+		SUBSTRING(jt.module, LOCATE('.', jt.module) + 1)
+	FROM
+		dependencies
+		JOIN axiom.lemma as _t using(module)
+		CROSS JOIN JSON_TABLE(
+			_t.imports,
+			'$[*]' COLUMNS (module text PATH '$')
+		) AS jt
+	WHERE
+		jt.module LIKE 'Axiom.%'
+)
+select 
+    count(*)
+from dependencies 
+    JOIN axiom.lemma as _t using(module)
+    cross join json_table(
+        imports,
+        '$[*]' columns(module text path '$')
+    ) as jt
+where 
+	jt.module = "$import"
+EOF;
+			[[$count]] = get_rows($sql, MYSQLI_NUM);
+			if (!intval($count)) {
+				array_unshift($code['imports'], $import);
+				$leanCode->import($import);
+				return true;
+			}
+		}
+		return false;
+	};
+
+	foreach ($syntax as $tac => $_) {
+		switch ($tac) {
+		case 'denote':
+			$modify |= $import_syntax('sympy.core.relational');
+			break;
+		case 'mp':
+		case 'mpr':
+			$modify |= $import_syntax('sympy.core.logic');
+			break;
+		case '²':
+		case '³':
+		case '⁴':
+			$modify |= $import_syntax('sympy.core.power');
+			break;
+		case 'Ici':
+		case 'Iic':
+		case 'Ioi':
+		case 'Iio':
+		case 'Ioc':
+		case 'Ioo':
+		case 'Icc':
+		case 'Ico':
+		case 'range':
+			$modify |= $import_syntax('sympy.sets.sets');
+			break;
+		case 'setOf':
+			$modify |= $import_syntax('sympy.concrete.quantifier');
+			break;
+		case 'LLamda':
+			$modify |= $import_syntax('sympy.concrete.expr_with_limits.lamda');
+			break;
+		case 'Tensor':
+		case 'Ones':
+		case 'Zeros':
+			$modify |= $import_syntax('sympy.tensor.tensor');
+			break;
+		}
+	}
+	if ($modify) {
+		$file = new std\Text($leanFile);
+		$file->write("$leanCode");
+	}
 }
 ?>
 
@@ -205,12 +321,16 @@ if (!$code || !$code['lemma'] || !$code['date']) {
 <link rel=stylesheet href="static/codemirror/theme/eclipse.css">
 <link rel=stylesheet href="static/codemirror/addon/hint/show-hint.css">
 <link rel=stylesheet href="static/unpkg.com/katex@0.16.21/dist/katex.min.css">
+<link rel=stylesheet href="static/unpkg.com/prismjs@1.30.0/themes/prism.min.css" />
 <body></body>
 <?php
 include_once 'script.php';
 ?>
+<script src="static/unpkg.com/lz-string@1.5.0/libs/lz-string.js"></script>
 <script defer src="static/unpkg.com/katex@0.16.21/dist/katex.min.js"></script>
 <script defer src="static/unpkg.com/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+<script src="static/unpkg.com/prismjs@1.30.0/prism.js"></script>
+<script src="static/unpkg.com/prismjs@1.30.0/components/prism-lean.js"></script>
 <script type=module>
 import * as codemirror from "./static/codemirror/lib/codemirror.js"
 import * as lean from "./static/codemirror/mode/lean/lean.js"

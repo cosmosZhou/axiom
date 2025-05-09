@@ -1,4 +1,4 @@
-import Axiom.Algebra.Abs.eq.SqrtAddSqaureS
+import Axiom.Algebra.Norm.eq.SqrtAddSqaureS
 import Axiom.Algebra.EqSquareS.of.Eq
 import Axiom.Algebra.AddSquareS.ge.Zero
 import Axiom.Algebra.EqSquareSqrt.of.Ge_0
@@ -9,9 +9,9 @@ open Algebra
 private lemma main
   {z : ℂ} :
 -- imply
-  (abs z)² = (re z)² + (im z)² := by
+  ‖z‖² = (re z)² + (im z)² := by
 -- proof
-  have := Abs.eq.SqrtAddSqaureS (z := z)
+  have := Norm.eq.SqrtAddSqaureS (z := z)
   have h := EqSquareS.of.Eq this
   have := AddSquareS.ge.Zero (a := re z) (b := im z)
   have := EqSquareSqrt.of.Ge_0 this

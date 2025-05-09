@@ -1,4 +1,4 @@
-import Axiom.Algebra.Eq_0.of.Abs.eq.Zero
+import Axiom.Algebra.Eq_0.of.Norm.eq.Zero
 open Algebra
 
 
@@ -8,10 +8,10 @@ private lemma main
 -- given
   (h : a ≠ 0) :
 -- imply
-  abs a ≠ 0 := by
+  ‖a‖ ≠ 0 := by
 -- proof
   by_contra h_Eq_0
-  have := Eq_0.of.Abs.eq.Zero h_Eq_0
+  have := Eq_0.of.Norm.eq.Zero h_Eq_0
   contradiction
 
 

@@ -12,20 +12,21 @@ private lemma main
 -- proof
   induction s with
   | nil =>
-    cases n with
-    | zero =>
+    match n with
+    | .zero =>
       simp [List.take]
-    | succ n =>
-      have : (Nat.succ n) ≤ 0 := h
+    | .succ n =>
+      have : n.succ ≤ 0 := h
       contradiction
   | cons =>
-    cases n with
-    | zero =>
+    match n with
+    | .zero =>
       simp [List.take]
-    | succ n =>
+    | .succ n =>
       simp [List.take]
       apply Nat.le_of_succ_le_succ
       assumption
 
 
 -- created on 2024-07-01
+-- updated on 2025-03-29

@@ -1,5 +1,4 @@
 import Axiom.Basic
-open Set Algebra
 
 
 @[main]

@@ -153,7 +153,7 @@ export default {
 
 				case 'F3':
 					console.log("F3 is pressed");
-					find_and_jump(event);
+					find_and_jump(event, this.$parent.sections);
 					break;
 
 				case 'F5':

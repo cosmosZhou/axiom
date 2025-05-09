@@ -1,10 +1,13 @@
+import stdlib.List.Vector
 import Axiom.Basic
 
 
-@[simp, main]
+@[main]
 private lemma main
-  {s : Vector α n}
-  {default : α} :
+-- given
+  (s : List.Vector α n)
+  (a : α)
+  (default : α) :
 -- imply
   (a ::ᵥ s).headD default = a := by
 -- proof

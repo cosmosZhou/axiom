@@ -19,7 +19,7 @@ export function	is_int(Type){
 export function	is_float(Type){
 	return Type.match(/double/);
 }
-	
+
 export function	is_enum(Type){
 	var m = Type.match(/enum\((\S+)\)/);
 	if (!m)
@@ -65,7 +65,7 @@ export async function show_full_columns(database, table, host, token){
 		else{
 			dtype[Field] = 'string';
 		}
-		
+
 		if (Comment) {
 			var data = JSON.parse(Comment);
 			if (data.transform) {
@@ -83,13 +83,14 @@ export async function show_full_columns(database, table, host, token){
 			}
 		}
 	}
-	
+
 	dtype.__transform__ = transform;
 	return {desc, dtype, style_entity, api, Comment: comments};
 }
 
 function parse_table(name, kwargs){
 	var entries = Object.entries(kwargs);
+	var database = null;
 	if (entries.length > 1) {
 		if (kwargs.join || kwargs.inner_join) {
 			var using = kwargs.using;
@@ -107,12 +108,16 @@ function parse_table(name, kwargs){
 			var [table, join_table] = table;
 		}
 		else
-			return parse_expression(name, kwargs);
+			database = join_type;
 	}
 	// for cases of table joined
 	var sql = [];
-	if (table.isString)
-		sql.push({name: [...name, join_type, 0], value: table});
+	if (table.isString) {
+		if (database)
+			sql.push({name: [...name, database], value: table});
+		else
+			sql.push({name: [...name, join_type, 0], value: table});
+	}
 	else
 		sql.push(...parse_table([...name, join_type, 0], table));
 
@@ -134,8 +139,8 @@ export function parse_statement(name, kwargs){
 		sql.push(...parse_expression([...name, 'with'], kwargs.with));
 	else if (kwargs.with_recursive)
 		sql.push(...parse_expression([...name, 'with_recursive'], kwargs.with_recursive));
-	
-	var {select, set, from, where, group, order, limit, offset} = kwargs;
+
+	var {select, set, from, where, group, having, order, limit, offset} = kwargs;
 	if (set) {
 		if (set.isArray) {
 			for (var [i, set] of enumerate(set)) {
@@ -144,7 +149,7 @@ export function parse_statement(name, kwargs){
 		}
 		else
 			sql.push(...parse_expression([...name, 'set'], set));
-		
+
 		sql.push(...parse_expression([...name, 'update'], kwargs.update));
 	}
 	else {
@@ -157,7 +162,7 @@ export function parse_statement(name, kwargs){
 			else
 				sql.push(...parse_expression([...name, 'select'], select));
 		}
-	    
+
 		if (!from) {
 			if (kwargs.union)
 				sql.push(...parse_expression([...name, 'union'], kwargs.union));
@@ -175,28 +180,25 @@ export function parse_statement(name, kwargs){
 
 	if (where)
     	sql.push(...parse_expression([...name, 'where'], where));
-    
-    if (group) {
+
+    if (group)
 		sql.push(...parse_expression([...name, 'group'], group));
-		
-		var {having} = kwargs;
-		if (having)
-			sql.push(...parse_expression([...name, 'having'], having));
-    }
-    
-    if (order) {
+
+	if (having)
+		sql.push(...parse_expression([...name, 'having'], having));
+
+	if (order) {
 		if (order.rand && order.rand.isArray && !order.rand.length)
 			order.rand[0] = 0;
 		sql.push(...parse_expression([...name, 'order'], order));
 	}
-    
-    if (limit)
-    	sql.push(...parse_expression([...name, 'limit'], limit));
-    
-    if (offset)
-    	sql.push(...parse_expression([...name, 'offset'], offset));
-        
-   return sql;
+
+    if (limit) {
+		sql.push(...parse_expression([...name, 'limit'], limit));
+		if (offset)
+			sql.push(...parse_expression([...name, 'offset'], offset));
+	}
+    return sql;
 }
 
 function wrap_args(args, name, func) {
@@ -205,12 +207,12 @@ function wrap_args(args, name, func) {
 			arg.name.unshift(...name, func, i);
 		}
 	}
-	
+
 	var ret = [];
 	for (var arg of args) {
 		ret.push(...arg);
 	}
-	
+
 	return ret;
 }
 
@@ -238,12 +240,12 @@ function wrap_args_skip(args, name, func) {
 			arg.name.unshift(...name);
 		}
 	}
-	
+
 	var ret = [];
 	for (var arg of args) {
 		ret.push(...arg);
 	}
-	
+
 	return ret;
 }
 
@@ -262,21 +264,21 @@ export function parse_expression(name, cond){
 
 	if (cond.from)
 		return parse_statement(name, cond);
-	
+
 	if (cond.isArray) {
 		var sql = [];
 		for (var [i, cond] of enumerate(cond)) {
 			sql.push(...parse_expression([...name, i], cond));
 		}
-		
+
 		return sql;
 	}
-	
+
     var [func] = Object.keys(cond);
 
 	if (!func)
 		return [];
-		
+
     if (cond[func].isArray)
 		var args = cond[func].map(cond => parse_expression([], cond));
     else
@@ -287,7 +289,7 @@ export function parse_expression(name, cond){
     case 'or':
     	args = args.filter(arr => arr.length);
     	return wrap_args_skip(args, name, func);
-    	
+
     case 'eq':
     case 'ne':
     case 'gt':
@@ -321,20 +323,20 @@ export function parse_expression(name, cond){
         if (args.any(arr => !arr.length))
 			return [];
 		return wrap_args(args, name, func);
-		
+
     case 'invert':
     case 'distinct':
         if (args.any(arr => !arr.length)) {
 			return [];
 		}
     	return wrap_arg(args[0], name, func);
-        
+
 	case 'find_in_set':
     case 'regexp_like':
     case 'not_regexp_like':
         if (!args[1] || !args[1].length)
         	return [];
-    
+
 	case 'regexp_replace':
 		if (args[2] && args[2].isArray && !args[2].length) {
 			var name = args[1] && args[1].isArray && args[1].length? [...args[1][0].name]: [];
@@ -362,7 +364,7 @@ export var physic2logic = {
 	le: '<=',
 
 	invert: '~',
-			
+
 	add: '+',
 	sub: '-',
 	mul: '*',
@@ -372,10 +374,10 @@ export var physic2logic = {
 	bit_xor: '^',
 	shr: '>>', // shift logical right
 	shl: '<<', // shift logical left
-			
+
 	json_extract: '->',
 	json_extract_unquote: '->>',
-			
+
 	regexp_binary: 'regexp binary',
 	like_binary: 'like binary',
 	not_regexp: 'not regexp',
@@ -399,7 +401,7 @@ export function piece_together(kwargs) {
 		var {name, value} = obj;
 		var [name, ...rest] = name;
 		name += rest.map(arg => `[${arg}]`).join('');
-		
+
 		value = value.encodeURI();
 		return `${name}=${value}`;
 	});
@@ -417,7 +419,7 @@ export function get_cmd(kwargs) {
 		if (kwargs[cmd])
 			return cmd;
 	}
-	
+
 	for (var cmd of ['union', 'union_all']) {
 		if (kwargs[cmd])
 			return 'union';
@@ -428,17 +430,17 @@ export function get_cmd(kwargs) {
 export function simplify_expression(kwargs) {
 	if (!kwargs)
 		return;
-		
+
 	if (kwargs.isString || kwargs.isNumber)
 		return;
-		
+
 	if (kwargs.where) {
 		simplify_expression(kwargs.where);
 		if (!len(kwargs.where))
 			delete kwargs.where;
 		return;
 	}
-	
+
 	var entries = Object.entries(kwargs);
 	if (!entries.length)
 		return;
@@ -452,7 +454,7 @@ export function simplify_expression(kwargs) {
 			simplify_expression(expr);
 			return !len(expr);
 		});
-		
+
 		if (!args.length)
 			hit = true;
 		else if (args.length == 1){
@@ -473,23 +475,23 @@ export function simplify_expression(kwargs) {
         for (var arg of args) {
 			simplify_expression(arg);
 		}
-		
+
         if (!args[1] || !len(args[1]) || !args[0] || !len(args[0]))
 			hit = true;
-        	
+
         break;
     case 'order':
     case 'group_concat':
         for (var arg of args) {
 			simplify_expression(arg);
 		}
-    
+
         if (!args[0] || !len(args[0]))
         	hit = true;
-        	
+
 		break;
 	}
-	
+
 	if (hit)
 		delete kwargs[func];
 }
@@ -506,7 +508,7 @@ export function get_db_table(kwargs) {
 		}
 		return {database: '', table: kwargs};
 	}
-	
+
 	var [database, table] = entries[0];
 	return {database, table};
 }
@@ -523,23 +525,23 @@ export function set_cmd(value, old_cmd, new_cmd) {
 			delete value.update;
 			delete value.set;
 			break;
-			
+
 		case 'insert':
 			var from = value.into;
 			delete value.into;
 			break;
-			
+
 		case 'delete':
 			delete value.delete;
 			var {from} = value;
 			break;
-			
+
 		case 'set':
 			var from = {corpus: 'markush'};
 			delete value.set;
 			break;
 		}
-		
+
 		value.from = from;
 		value.select = '*';
 		break;
@@ -556,13 +558,13 @@ export function set_cmd(value, old_cmd, new_cmd) {
 			var update = value.into;
 			delete value.into;
 			break;
-			
+
 		case 'delete':
 			var update = value.from;
 			delete value.from;
 			delete value.delete;
 			break;
-			
+
 		case 'set':
 			var update = {corpus: 'markush'};
 			break;
@@ -572,35 +574,35 @@ export function set_cmd(value, old_cmd, new_cmd) {
 		if (!value.set)
 			value.set = {eq: ['', '']};
 		break;
-		
+
 	case 'insert':
 		switch (old_cmd) {
 		case 'select':
 			var into = value.from;
 			delete value.from;
 			break;
-			
+
 		case 'update':
 			var into = value.update;
 			delete value.update;
 			delete value.set;
 			break;
-			
+
 		case 'delete':
 			var into = value.from;
 			delete value.delete;
 			delete value.from;
 			break;
-			
+
 		case 'set':
 			var into = {corpus: 'markush'};
 			delete value.set;
 			break;
-			
+
 		}
 		value.into = into;
 		break;
-		
+
 	case 'delete':
 		switch (old_cmd) {
 		case 'select':
@@ -608,25 +610,25 @@ export function set_cmd(value, old_cmd, new_cmd) {
 			delete value.select;
 			value.delete = true;
 			break;
-			
+
 		case 'update':
 			var from = value.update;
 			delete value.update;
 			delete value.set;
 			break;
-			
+
 		case 'insert':
 			var from = value.into;
 			delete value.into;
 			break;
-			
+
 		case 'set':
 			var from = {corpus: 'markush'};
 			delete value.set;
 			value.delete = true;
 			break;
 		}
-		
+
 		value.from = from;
 		break;
 
@@ -656,45 +658,45 @@ export function set_cmd(value, old_cmd, new_cmd) {
 
 			value.alter = from;
 			value.add = [['newField', 'text', '', '']];
-			
+
 			break;
-			
+
 		case 'update':
 			var from = value.update;
 			for (var key of Object.keys(value)) {
 				delete value[key];
 			}
-			
+
 			value.alter = from;
 			value.add = [['newField', 'text', '', '']];
-			
+
 			break;
-			
+
 		case 'delete':
 			var from = value.from;
 			for (var key of Object.keys(value)) {
 				delete value[key];
 			}
-			
+
 			value.alter = from;
 			value.add = [['newField', 'text', '', ]];
 			break;
-			
+
 		case 'insert':
 			var from = value.into;
 			for (var key of Object.keys(value)) {
 				delete value[key];
 			}
-			
+
 			value.alter = from;
 			value.add = [['newField', 'text', '', '']];
 			break;
-			
+
 		case 'set':
 			delete value.set;
 			value.alter = {corpus: 'reward'};
 			value.add = [['newField', 'text', '', '']];
-			
+
 			break;
 		}
 
@@ -719,11 +721,11 @@ export function modify_from_desc(database, table, desc) {
 	var {Field, Type, Null, Comment, Extra, Collation} = desc;
 
 	Null = Null == 'NO'? 'not null': '';
-	
+
 	Comment = Comment? `comment ${Comment.mysqlStr()}`: '';
 
 	Collation = Collation? `COLLATE ${Collation}`: '';
-	
+
 	return `alter table ${database}.${table} modify \`${Field}\` ${Type} ${Null} ${Extra} ${Collation} ${Comment}`;
 }
 
@@ -733,7 +735,7 @@ export function add_column_from_desc(database, table, desc, after) {
 
 	if (Comment)
 		Comment = `comment ${Comment.mysqlStr()}`;
-	
+
 	if (after == null)
 		after = 'first';
 	else
@@ -748,7 +750,7 @@ export function change_from_desc(database, table, OldField, desc) {
 		Null = 'not null';
 	else
 		Null = '';
-	
+
 	if (Comment)
 		Comment = `comment ${Comment.mysqlStr()}`;
 	return `alter table ${database}.${table} change \`${OldField}\` \`${Field}\` ${Type} ${Null} ${Extra} ${Comment}`;
@@ -760,4 +762,4 @@ export function is_numeric_operator(value) {
 }
 
 
-export var props = ['host', 'user', 'token', 'sql', 'data', 'kwargs', 'table'];
+export var props = ['host', 'user', 'token', 'sql', 'data', 'kwargs'];

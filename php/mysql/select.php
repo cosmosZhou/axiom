@@ -93,7 +93,12 @@ if ($download) {
 if ($is_union || $kwargs['select'] && $kwargs['select'] != '*' && $kwargs['select'] != ['*'])
     $dual = true;
 elseif (isset($kwargs['with']) || isset($kwargs['with_recursive']))
-    $dual = !is_string($database) || !is_string($table);
+    if (is_string($database) && is_string($table)) {
+        [[$count]] = get_rows("select count(*) as count from information_schema.tables WHERE table_schema = '$database' and table_name = '$table'", MYSQLI_NUM);
+        $dual = !$count;
+    }
+    else 
+        $dual = true;
 else
     $dual = false;
 ?>

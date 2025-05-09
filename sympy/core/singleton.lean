@@ -1,3 +1,4 @@
+import stdlib.Lean.Name
 open Lean
 
 inductive Constant where
@@ -15,7 +16,7 @@ inductive Constant where
   | ImaginaryUnit
   | Nat
   | Int
-  | Rational
+  | Rat
   | Real
   | Complex
   | true
@@ -40,7 +41,7 @@ def Constant.toString : Constant → String
   | ImaginaryUnit => "ImaginaryUnit"
   | Nat => "ℕ"
   | Int => "ℤ"
-  | Rational => "ℚ"
+  | Rat => "ℚ"
   | Real => "ℝ"
   | Complex => "ℂ"
   | true => "true"
@@ -68,10 +69,13 @@ def Constant.toLatex : Constant → String
   | ImaginaryUnit => "\\color{blue}\\text{I}"
   | Nat => "\\mathbb{N}"
   | Int => "\\mathbb{Z}"
-  | Rational => "\\mathbb{Q}"
+  | Rat => "\\mathbb{Q}"
   | Real => "\\mathbb{R}"
   | Complex => "\\mathbb{C}"
   | true => "true"
   | false => "false"
   | natVal val => s!"{val}"
-  | ident name => name.toString
+  | ident name =>
+    match name with
+    | `EmptyCollection.emptyCollection => "\\emptyset"
+    | _ => name.escape_specials "."

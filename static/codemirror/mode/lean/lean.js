@@ -1,5 +1,6 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
+import { tactics } from "./tactics.js"
 
 (function(mod) {
   if (typeof exports == 'object' && typeof module == 'object') // CommonJS
@@ -18,68 +19,18 @@
   var wordOperators = wordRegexp(['and', 'or', 'not', 'is']);
   var commonKeywords = [
     'assert', 'break', 'class', 'continue',
-    'def', 'else', 'catch', 'finally',
-    'for', 'from', 'global', 'if', 'import',
+    'def', 'else', 'catch', 'finally', 'then',
+    'for', 'from', 'if', 'import',
     'return', 'try', 'with', 'in',
     'lemma', 'theorem', 'example', 'axiom',
-    'constant', 'variable',
+    'constant', 'variable', 
     'have', 'let', 'at', 'using', 'generalizing', 'by', 'show',
-    'private', 'protected', 'public', 'noncomputable', 'unsafe', 'partial', 'fun', 'this'
+    'private', 'protected', 'public', 'noncomputable', 'unsafe', 'partial', 'fun', 'this', 'sorry'
   ];
   var commonBuiltins = [
-    'abs', 'all', 'any', 'bin', 'bool', 'bytearray', 'callable', 'chr',
-    'classmethod', 'compile', 'complex', 'delattr', 'dict', 'dir', 'divmod',
-    'enumerate', 'eval', 'filter', 'float', 'format', 'frozenset',
-    'getattr', 'globals', 'hasattr', 'hash', 'help', 'hex', 'id',
-    'input', 'int', 'isinstance', 'issubclass', 'iter', 'len',
-    'list', 'locals', 'map', 'max', 'memoryview', 'min', 'next',
-    'object', 'oct', 'open', 'ord', 'pow', 'property', 'range',
-    'repr', 'reversed', 'round', 'set', 'setattr', 'slice',
-    'sorted', 'staticmethod', 'str', 'sum', 'super', 'tuple',
-    'type', 'vars', 'zip', '__import__', 'NotImplemented',
-    'Ellipsis', '__debug__',
-    'False', 'True', 
-    // Lean specific tactics
-    'apply', 
-    'by_contra', 
-    'by_cases', 
-    'cases', 
-    'case', 
-    'intro',
-    'interval_cases',
-    'exact', 
-    'rw', 
-    'simp', 
-    'simpa', 
-    'simp_all', 
-    'sorry', 
-    'induction', 
-    'contradiction', 
-    'assumption',
-    'left', 
-    'exists', 
-    'constructor', 
-    'positivity',
-    'right', 
-    'rfl', 
-    'split', 
-    'split_ifs',
-    'symm', 
-    'specialize', 
-    'subst', 
-    'linarith', 
-    'norm_num', 
-    'norm_cast',
-    'ring', 
-    'ring_nf', 
-    'ring1', 
-    'ring_exp', 
-    'exfalso', 
-    'congr', 
-    'omega',
-    'push_neg',
-    'unfold', 
-    'use',
+    'abs', 'eval', 'id', 'map', 'max', 'min',
+    'False', 'True', 'false', 'true', 
+    ...tactics
   ];
   CodeMirror.registerHelper('hintWords', 'lean', commonKeywords.concat(commonBuiltins).concat(['exec', 'print']));
 
@@ -147,11 +98,26 @@
       return tokenBaseInner(stream, state);
     }
 
+    function tokenBlockComment(stream, state) {
+      var ch;
+      while ((ch = stream.next()) != null) {
+        if (ch === '-' && stream.eat('/')) {
+          state.tokenize = tokenBase;
+          break;
+        }
+      }
+      return 'comment';
+    }
+
     function tokenBaseInner(stream, state, inFormat) {
       if (stream.eatSpace()) return null;
 
       // Handle Comments
       if (!inFormat && stream.match(/^ *--.*/)) return 'comment';
+      if (!inFormat && stream.match('/-')) {
+        state.tokenize = tokenBlockComment;
+        return "comment";
+      }
 
       // Handle Number Literals
       if (stream.match(/^[0-9\.]/, false)) {
@@ -431,6 +397,8 @@
 
       electricInput: /^\s*([\}\]\)]|else:|elif |except |finally:)$/,
       closeBrackets: {triples: "'\""},
+      blockCommentStart: "/-",
+      blockCommentEnd: "-/",
       lineComment: "--",
       fold: 'indent'
     };

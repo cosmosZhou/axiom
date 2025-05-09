@@ -1,4 +1,4 @@
-import Axiom.Algebra.EqMul__0.equ.OrEqS_0
+import Axiom.Algebra.Mul.eq.Zero.is.OrEqS_0
 open Algebra
 
 
@@ -11,7 +11,7 @@ private lemma main
 -- imply
   a = 0 ∨ b = 0 := by
 -- proof
-  exact EqMul__0.equ.OrEqS_0.mp h
+  exact Mul.eq.Zero.is.OrEqS_0.mp h
 
 
 -- created on 2024-11-29

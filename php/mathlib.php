@@ -3,12 +3,10 @@ require_once 'std.php';
 require_once 'mysql.php';
 require_once 'init.php';
 
-$name = $_GET["mathlib"];
-$mathlib = [
-    'name' => $name
-];
-foreach (get_rows("select * from mathlib where name = \"$name\"", MYSQLI_NUM) as [$name, $type, $instImplicit, $strictImplicit, $implicit, $given, $explicit, $imply]) {
-    $mathlib = array_merge($mathlib, [
+function get_lemma($args) {
+    [$name, $type, $instImplicit, $strictImplicit, $implicit, $given, $explicit, $imply] = $args;
+    return [
+        'name' => $name,
         'type' => $type,
         'instImplicit' => $instImplicit,
         'strictImplicit' => $strictImplicit,
@@ -16,7 +14,18 @@ foreach (get_rows("select * from mathlib where name = \"$name\"", MYSQLI_NUM) as
         'given' => std\decode($given),
         'explicit' => $explicit,
         'imply' => std\decode($imply)
-    ]);
+    ];
+}
+$name = $_GET["mathlib"];
+$lemma = [];
+foreach (get_rows("select * from mathlib where name = \"$name\"", MYSQLI_NUM) as $args)
+    $lemma[] = get_lemma($args);
+if (!$lemma) {
+    $regexp = str_replace(".", '\.', $name);
+    $limit = $_GET["limit"]?? 40;
+    $binary = 'COLLATE utf8mb4_bin';
+    foreach (get_rows("select * from mathlib where name $binary regexp \"$regexp\" limit $limit", MYSQLI_NUM) as $args)
+        $lemma[] = get_lemma($args);
 }
 ?>
 
@@ -39,5 +48,7 @@ import * as show_hint from "./static/codemirror/addon/hint/show-hint.js"
 import * as matchbrackets from "./static/codemirror/addon/edit/matchbrackets.js"
 import * as comment from "./static/codemirror/addon/comment/comment.js"
 
-createApp('mathlib', <?php echo std\encode($mathlib)?>);
+createApp('mathlib', {
+    lemma: <?php echo std\encode($lemma);?>,
+});
 </script>

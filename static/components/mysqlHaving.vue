@@ -1,5 +1,5 @@
 <template>
-	<font color=blue>having </font> 
+	<font color=blue>having </font>
 	<template v-for="{aggregate, Field, operator, Type}, i of logics">
 		<font v-if=i color=blue> and </font>
 		<select :name="`having[aggregate][${Field}]`" :value=aggregate :style="style_select(aggregate, 'darkCyan')" @input=input_kwargs>
@@ -24,9 +24,9 @@ import {is_numeric, is_string, is_json} from "../js/mysql.js"
 
 export default {
 	components: {},
-	
-	props : [], 
-	
+
+	props : [],
+
 	data() {
 		return {
 		};
@@ -36,7 +36,7 @@ export default {
 		console.log(this.kwargs);
 		console.log(this.logics);
 	},
-	
+
 	computed: {
 		host() {
 			return this.$parent.host;
@@ -45,18 +45,18 @@ export default {
 		user() {
 			return this.$parent.user;
 		},
-		
+
 		style_select() {
 			return this.$parent.style_select;
 		},
-		
+
 		underscore() {
 			var fields = this.desc.map(desc => desc.Field.length);
 			if (fields.length)
 				return '_'.repeat(max(fields));
 			return '';
 		},
-		
+
 		logics() {
 			var logics = [];
 			var {aggregate, operator} = this;
@@ -65,17 +65,17 @@ export default {
 					logics.push({aggregate: aggregate[Field], Field, operator: operator[Field], Type: 'int'});
 				}
 			}
-			
+
 			if (!logics.length) {
 				logics.push({aggregate: 'count', Field: '', operator: '=', Type: 'int'});
 			}
 			return logics;
 		},
-		
+
 		PRI() {
 			return this.$parent.PRI;
 		},
-		
+
 		operator_value() {
 			var operator_value = {};
 			var {Field2Description} = this;
@@ -84,7 +84,7 @@ export default {
 			}
 			return operator_value;
 		},
-		
+
 		Field2Description() {
 			var Field2Description = {};
 			for (var {Field, Type, Null, Key, Default, Extra} of this.desc) {
@@ -92,48 +92,48 @@ export default {
 			}
 			return Field2Description;
 		},
-		
+
 		look_behind() {
 			var {look_behind} = this.kwargs;
 			return look_behind? look_behind: {};
 		},
-		
+
 		look_ahead() {
 			var {look_ahead} = this.kwargs;
 			return look_ahead? look_ahead: {};
 		},
-		
+
 		style() {
 			return this.$parent.style;
 		},
-		
+
 		desc() {
 			return this.$parent.desc;
 		},
-		
+
 		json_extract() {
 			return this.$parent.json_extract;
 		},
-		
+
 		kwargs() {
 			return this.$parent.kwargs.having;
 		},
-		
+
 		dtype() {
 			return this.$parent.dtype;
 		},
-		
+
 		table() {
 			return this.$parent.table;
 		},
-		
+
 		limit: {
 			get() {
 				if (this.primary_key)
 					return this.extra_kwargs.limit;
 				return this.$parent.limit;
 			},
-			
+
 			set(limit) {
 				if (this.primary_key)
 					this.extra_kwargs.limit = limit;
@@ -141,14 +141,14 @@ export default {
 					this.$root.limit = limit;
 			}
 		},
-		
+
 		offset: {
 			get() {
 				if (this.primary_key)
 					return this.extra_kwargs.offset;
 				return this.$parent.offset;
 			},
-			
+
 			set(offset) {
 				if (this.primary_key)
 					this.extra_kwargs.offset = offset;
@@ -156,36 +156,36 @@ export default {
 					this.$root.offset = offset;
 			},
 		},
-		
+
 		change_table() {
 			return this.$parent.change_table;
 		},
-		
+
 		change_input() {
 			return this.$parent.change_input;
 		},
-		
+
 		style_select_table() {
 			return this.$parent.style_select_table;
 		},
-		
+
 		style_input() {
 			return this.$parent.style_input;
 		},
-		
+
 		input_kwargs() {
 			return this.$parent.input_kwargs;
 		},
-		
+
 		operator() {
 			return this.kwargs.operator;
 		},
-		
+
 		aggregate() {
 			return this.kwargs.aggregate;
 		},
 	},
-	
+
 	methods: {
 		input_select(event) {
 			var {target} = event;
@@ -193,10 +193,10 @@ export default {
 			var {kwargs} = this;
 			if (this.kwargs[Field])
 				return;
-			
+
 			var index = parseInt(target.getAttribute('index'));
 			var {Field: oldField} = this.logics[index];
-			
+
 			var {aggregate, operator} = this;
 			if (kwargs[oldField] == null) {
 				kwargs[Field] = '';
@@ -206,10 +206,10 @@ export default {
 			else {
 				kwargs[Field] = kwargs[oldField];
 				delete kwargs[oldField];
-				
+
 				aggregate[Field] = aggregate[oldField];
 				delete aggregate[oldField];
-				
+
 				operator[Field] = operator[oldField];
 				delete operator[oldField];
 			}
@@ -226,14 +226,14 @@ export default {
 					setitem(this.operator.regexp_like, ...name,  'c');
 			}
 		},
-		
+
 		operator_name(Field) {
 			if (this.primary_key)
 				return `operator[${this.primary_key}][${this.value_name(Field)}]`;
-			
+
 			return `operator[${this.value_name(Field)}]`;
 		},
-		
+
 		regexp_like_operator_name(Field) {
 			if (this.primary_key)
 				return `operator[regexp_like]${this.primary_key}[${Field}]`;
@@ -246,11 +246,11 @@ export default {
 
 			return `${Field}${this.normalizeJsonExtract(this.json_extract[Field])}`;
 		},
-		
+
 		operators(Type){
 			if (is_numeric(Type))
 				return ["=", "!=", ">", "<", ">=", "<="];
-			
+
 			var operators = [
 				"regexp", "like", "regexp binary", "like binary", "=", "regexp_like", "find_in_set",
 				"not regexp", "not like", "not regexp binary", "not like binary", "!=", "not regexp_like"
@@ -258,10 +258,10 @@ export default {
 
 			if (!is_json(Type))
 				operators.push('in');
-			
+
 			return operators;
 		},
-		
+
 		get_operator_value(Field, Type){
 			if (this.operator){
 				var value = this.operator[Field];
@@ -271,10 +271,10 @@ export default {
 					return "in";
 				}
 			}
-			
+
 			if (this.kwargs[Field] && !this.kwargs[Field].isString)
 				return "in";
-			
+
 			if (is_string(Type))
 				return 'regexp';
 
@@ -293,25 +293,25 @@ export default {
 			name = name.slice(1, -1);
 			setitem(this.operator, ...name, value);
 		},
-		
+
 		normalizeJsonExtract(s){
 			if (s) {
 				var digits = [];
 				for (var m of s.matchAll(/\[\d+\]/g)) {
 					digits.push(m[0]);
 				}
-				
+
 				if (digits.length) {
 					s = s.replace(/\[\d+\]/g, "%");
 					return `->'$${s}'` + digits.join('');
 				}
-				
+
 				return `->'$${s}'`;
 			}
 			else
 				return '';
 		},
-		
+
 		click(event){
 			var Field = event.target.textContent;
 			if (this.json_extract[Field]){
@@ -322,7 +322,7 @@ export default {
 			}
 		},
 	},
-	
+
 	directives: {
 		focus: {
 		    // after dom is inserted into the document

@@ -103,7 +103,7 @@ class XMLNode
     {
         $parent = $this->parent;
         $caret = new XMLNodeCaret();
-        $node = new XMLNodeBinaryTag($tag, $caret, null, $parent);
+        $node = new XMLNodeContainerTag($tag, $caret, null, $parent);
         if ($parent instanceof XMLNodeArray)
             $parent->args[] = $node;
         else {
@@ -134,7 +134,7 @@ class XMLNode
     function append_single_tag($tag)
     {
         $parent = $this->parent;
-        $node = new XMLNodeSingleTag($tag, $parent);
+        $node = new XMLNodeVoidTag($tag, $parent);
         if ($parent instanceof XMLNodeArray) {
             $parent->args[] = $node;
             return $node;
@@ -300,7 +300,7 @@ class XMLNodeCaret extends XMLNode
     function append_left_tag($tag)
     {
         $caret = new XMLNodeCaret();
-        $node = new XMLNodeBinaryTag($tag, $caret, null, $this->parent);
+        $node = new XMLNodeContainerTag($tag, $caret, null, $this->parent);
         if ($this->parent)
             $this->parent->replace($this, $node);
         return $caret;
@@ -316,7 +316,7 @@ class XMLNodeCaret extends XMLNode
 
     function append_single_tag($tag)
     {
-        $node = new XMLNodeSingleTag($tag, $this->parent);
+        $node = new XMLNodeVoidTag($tag, $this->parent);
         if ($this->parent)
             $this->parent->replace($this, $node);
         return $node;
@@ -435,7 +435,7 @@ class XMLNodeText extends XMLNode
     }
 }
 
-class XMLNodeBinaryTag extends XMLNode
+class XMLNodeContainerTag extends XMLNode
 {
 
     public $tagBegin;
@@ -464,7 +464,7 @@ class XMLNodeBinaryTag extends XMLNode
     public function __get($vname)
     {
         switch ($vname) {
-            case 'is_XMLNodeBinaryTag':
+            case 'is_XMLNodeContainerTag':
                 return true;
 
             case 'tag':
@@ -667,7 +667,7 @@ class XMLNodeBinaryTag extends XMLNode
 
             $parent->args->splice($index, $count, ...$args);
         } else {
-            // $console->assert($parent->is_XMLNodeBinaryTag, "$parent->is_XMLNodeBinaryTag");
+            // $console->assert($parent->is_XMLNodeContainerTag, "$parent->is_XMLNodeContainerTag");
             if ($arg->is_XMLNodeArray) {
                 $args = $arg->args;
                 if ($args[0]->is_XMLNodeText)
@@ -730,7 +730,7 @@ class XMLNodeBinaryTag extends XMLNode
     }
 }
 
-class XMLNodeSingleTag extends XMLNode
+class XMLNodeVoidTag extends XMLNode
 {
 
     public function __construct($arg, $parent = null)
@@ -747,7 +747,7 @@ class XMLNodeSingleTag extends XMLNode
     public function __get($vname)
     {
         switch ($vname) {
-            case 'is_XMLNodeSingleTag':
+            case 'is_XMLNodeVoidTag':
                 return true;
 
             case 'tag':
@@ -814,7 +814,7 @@ class XMLNodeArray extends XMLNode
     function append_left_tag($tag)
     {
         $caret = new XMLNodeCaret();
-        $this->args[] = new XMLNodeBinaryTag($tag, $caret, null, $this);
+        $this->args[] = new XMLNodeContainerTag($tag, $caret, null, $this);
         return $caret;
     }
 
@@ -828,7 +828,7 @@ class XMLNodeArray extends XMLNode
 
     function append_single_tag($tag)
     {
-        $node = new XMLNodeSingleTag($tag, $this);
+        $node = new XMLNodeVoidTag($tag, $this);
         $this->args[] = $node;
         return $node;
     }
@@ -1087,8 +1087,6 @@ class XMLNodeUnbalancedTag extends XMLNode
             default:
                 return parent::__get($vname);
         }
-
-        return null;
     }
 }
 
@@ -1111,7 +1109,7 @@ function compile($infix)
                 if ($caret) {
                     $root = $caret;
                     $caret = $caret->parent;
-                    if ($caret instanceof XMLNodeBinaryTag && $caret->tag == $text->tag) {
+                    if ($caret instanceof XMLNodeContainerTag && $caret->tag == $text->tag) {
                         $caret->tagEnd = $text;
                         while (true) {
                             $_caret = array_pop($leftTagCount[$text->tag]);
@@ -1135,7 +1133,7 @@ function compile($infix)
                     break;
                 }
             }
-        } elseif ($text->is_TagSingle || $text->is_HTMLEntity)
+        } elseif ($text->is_VoidTag || $text->is_HTMLEntity)
             $caret = $caret->append_single_tag($text);
         else
             $caret = $caret->append_text_node($text);
@@ -1187,7 +1185,7 @@ function construct_rich_text($text)
             } else
                 $richText = new PlainText($text, $index, $end);
         } elseif ($m[3])
-            $richText = new TagSingle($text, $index, $end, $m[3]);
+            $richText = new VoidTag($text, $index, $end, $m[3]);
         else
             $richText = new HTMLEntity($text, $index, $end, $m[4]);
 
@@ -1285,7 +1283,7 @@ class TagEnd extends XMLText
     }
 }
 
-class TagSingle extends XMLText
+class VoidTag extends XMLText
 {
 
     public $text;
@@ -1316,7 +1314,7 @@ class TagSingle extends XMLText
     public function __get($vname)
     {
         switch ($vname) {
-            case 'is_TagSingle':
+            case 'is_VoidTag':
                 return true;
             default:
                 return parent::__get($vname);

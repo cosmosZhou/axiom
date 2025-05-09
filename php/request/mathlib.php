@@ -1,5 +1,8 @@
 <?php
 require_once '../std.php';
+if (!std\is_linux())
+    require_once '../lean/compile.php';
+
 $name = $_POST['name'];
 
 $leanFile = "test.$name.lean";
@@ -21,11 +24,12 @@ EOT;
     $file->writelines([$codeStr]);
 }
 
-$cmd = "~/.elan/bin/lake env lean \"$leanFile\"";
-error_log("executing cmd = $cmd");
-exec($cmd, $output_array);
+if (std\is_linux()) {
+    $cmd = "~/.elan/bin/lake env lean \"$leanFile\"";
+    exec($cmd, $output_array);
+} else {
+    $cmd = get_lake_path() . ' env lean ' . escapeshellarg($leanFile);
+    std\exec($cmd, $output_array, get_lean_env());
+}
 echo implode("\n", $output_array);
-
 unlink($leanFile);
-?>
-

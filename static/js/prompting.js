@@ -1,3 +1,4 @@
+import {remove_capture, balanced_matchAll} from "./regexp.js"
 
 export const X_Ai_Engine = {
     deepseek: [
@@ -10,7 +11,7 @@ export const X_Ai_Engine = {
         'gpt-3.5-turbo',
         'gpt-3.5-turbo-1106',
         'gpt-3.5-turbo-16k',
-        'gpt-4', 
+        'gpt-4',
     ],
     openai: [
         'gpt-4-turbo',
@@ -42,15 +43,16 @@ const chat_template = `<|start_header_id|>%s<|end_header_id|>
 
 %s<|eot_id|>`;
 
-function apply_chat_template(message) {
+function apply_chat_template(message, role='assistant') {
     if (!message.isArray)
         message = [{role: 'user', content: message}];
-    return message.map(message => chat_template.format(message.role, message.content)).join('') + chat_template.format('assistant', '%s').split('%s')[0];
+    return message.map(message => chat_template.format(message.role, message.content)).join('') + chat_template.format(role, '%s').split('%s')[0];
 }
 
-function get_url(model, stream, repetition_penalty) {
+function get_url(model, stream, kwargs) {
     var temperature = null;
     var top_p = null;
+    var {repetition_penalty} = kwargs;
     switch(model) {
     case 'o1-preview':
     case 'o1-mini':
@@ -78,9 +80,21 @@ function get_url(model, stream, repetition_penalty) {
     }
 }
 
-export async function generate(message, model, stream, Authorization, repetition_penalty) {
+var Authorization = null;
+export async function generate(message, model, stream, kwargs = {}) {
 	console.log(`${model.toUpperCase()}: ${message.isString? message: JSON.stringify(message, null, 2)}`);
-    var {method, url, data, header} = get_url(model, stream == null? false : true, repetition_penalty);
+    var {method, url, data, header} = get_url(model, stream == null? false : true, kwargs);
+    if (!Authorization) {
+        switch (model) {
+        case 'deepseek-chat':
+        case 'deepseek-reasoner':
+            var company = 'DeepSeek';
+            break;
+        default:
+            var company = 'MyCompany';
+        }
+        Authorization = await form_post('php/request/authorization.php', {company});
+    }
     var headers = {Authorization};
 
     if (header)
@@ -90,14 +104,16 @@ export async function generate(message, model, stream, Authorization, repetition
 }
 
 
-export function parse_token(data) {
+export function parse_token(data, think) {
     if (data == 'finish' || data == '[DONE]')
         return;
-    
+
     data = JSON.parse(data);
     var {choices, generated_text, token} = data;
     if (choices) {
-        var [{delta: {content: text}}] = choices;
+        var [{delta: {content: text, reasoning_content}}] = choices;
+        if (think)
+            think.reasoning_content = reasoning_content;
     }
     else {
         if (generated_text)

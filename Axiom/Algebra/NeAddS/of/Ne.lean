@@ -16,7 +16,7 @@ private lemma main
   | true => d + x ≠ d + y
   | false => x + d ≠ y + d := by
 -- proof
-  cases left with
+  match left with
   | true =>
     intro h'
     have h' := EqSubS.of.Eq h' d
@@ -25,7 +25,7 @@ private lemma main
   | false =>
     intro h'
     have h' := EqSubS.of.Eq h' d
-    simp only [EqSubAdd.right] at h'
+    simp only [EqSubAdd] at h'
     exact h h'
 
 

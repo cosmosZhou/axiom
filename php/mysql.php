@@ -80,7 +80,7 @@ function load_data($table, &$data, $replace = false, $ignore=true, $step = 1000)
     if (is_array($data)) {
         return load_data_from_list($table, $data, $replace, $ignore, $step);
     } else if ($data){
-        return load_data_from_csv($table, $data, $replace, $ignore);
+        return load_data_from_tsv($table, $data, $replace, $ignore);
     }
 }
 
@@ -117,9 +117,9 @@ function load_data_from_list($table, &$array, $replace = true, $ignore = false, 
     $folder = sys_get_temp_dir();
     $rowcount = 0;
     foreach (std\range(0, count($array), $step) as $i) {
-        $csv = $folder . "/$table-$i.csv";
+        $tsv = $folder . "/$table-$i.tsv";
 
-        $file = new std\Text($csv);
+        $file = new std\Text($tsv);
         foreach (array_slice($array, $i, $step) as $args) {
             if (!std\is_list($args))
                 $args = array_map(fn(&$desc) => std\get($args, $desc['Field'], ''), $desc);
@@ -182,24 +182,24 @@ function load_data_from_list($table, &$array, $replace = true, $ignore = false, 
         }
         $file->flush();
 
-        $rowcount += load_data_from_csv($table, $csv, $replace, $ignore);
+        $rowcount += load_data_from_tsv($table, $tsv, $replace, $ignore);
     }
 
     error_log('$rowcount = '.$rowcount);
     return $rowcount;
 }
 
-function load_data_from_csv($table, $csv, $replace = false, $ignore = true, $delete = True)
+function load_data_from_tsv($table, $tsv, $replace = false, $ignore = true, $delete = True)
 {
     $start = time();
-    $csv = str_replace('\\', '/', $csv);
+    $tsv = str_replace('\\', '/', $tsv);
 
     if ($replace)
-        $sql = "load data local infile '$csv' replace into table $table character set utf8mb4";
+        $sql = "load data local infile '$tsv' replace into table $table character set utf8mb4";
     else if ($ignore)
-        $sql = "load data local infile '$csv' ignore into table $table character set utf8mb4";
+        $sql = "load data local infile '$tsv' ignore into table $table character set utf8mb4";
     else
-        $sql = "load data local infile '$csv' into table $table character set utf8mb4";
+        $sql = "load data local infile '$tsv' into table $table character set utf8mb4";
 // add the following line into ~/php/etc/php.ini  / D:\wamp64\bin\apache\apache2.4.39\bin\php.ini (Windows Version);
 // mysqli.allow_local_infile = On
 
@@ -232,9 +232,9 @@ function load_data_from_csv($table, $csv, $replace = false, $ignore = true, $del
 
     error_log('time cost = '.(time() - $start));
     if ($delete) {
-        error_log("os.remove(csv) ".$csv);
+        error_log("os.remove(tsv) ".$tsv);
         try {
-            unlink($csv);
+            unlink($tsv);
         } catch (Exception $e) {
             // error_log($e->getMessage());
             return;

@@ -1,5 +1,5 @@
 <template>
-	<a v-if="mode == 'a'" v-focus v-clipboard tabindex=2 :href=href @contextmenu.prevent=contextmenu @keydown=keydown_a target=search>
+	<a v-if="mode == 'a'" v-focus v-clipboard tabindex=2 :href=href @contextmenu.prevent=contextmenu @keydown=keydown_a target="_blank">
         {{data.replacement ?? data.text?? module}}
        	<searchContextmenu v-if='showContextmenu' :left=left :top=top></searchContextmenu>
     </a>
@@ -17,7 +17,7 @@ console.log('import searchLink.vue');
 var focusedAlready = false;
 export default {
 	components: {searchContextmenu},
-	
+
 	data() {
 		return {
 			mode: 'a',
@@ -26,9 +26,9 @@ export default {
 			top: -1,
 		};
 	},
-	
+
 	props: ['data'],
-	
+
 	computed: {
 		module() {
 			return this.data.module;
@@ -37,20 +37,20 @@ export default {
 		user() {
 			return axiom_user();
 		},
-		
+
 		href() {
 			var {line, module} = this.data;
 			var href = `?module=${module}`;
 			if (line)
 				href += `#${line}`;
 			return href;
-		},			
+		},
 	},
-	
+
 	methods: {
 		async delete_folder(error_msg){
 			while (error_msg){
-				console.log('error_msg = ', error_msg);				
+				console.log('error_msg = ', error_msg);
 				var m = error_msg.matchAll(/rmdir\((\S+)\)/g);
 				error_msg = '';
 				for (var m of m){
@@ -58,21 +58,19 @@ export default {
 					var names = folder.split(/[\/\\]/);
 					var index = names.indexOf('Axiom');
 					names = names.slice(index + 1);
-					var section = names.pop();
-					var parentFolder = names.join('.');
 				}
 			}
 		},
-		
+
 		async set_module(module){
 			var undeletables = '';
 			if (this.module != module){
 				console.log('oldText = ' + this.module);
-				console.log('newText = ' + module);			
-				
+				console.log('newText = ' + module);
+
 				undeletables = await form_post(`php/request/rename.php`, { old: this.module.replace(/\//g, '.'), new: module.replace(/\//g, '.')});
 				console.log('undeletables = ' + undeletables);
-				
+
 				var modules = this.$root.data;
 				if (!modules){
 					console.assert(this.module == this.$root.module, "this.module == this.$root.module");
@@ -80,30 +78,29 @@ export default {
 					delete this.$root.graph[this.module];
 					this.$root.module = module;
 				}
-				else{
-					modules[modules.indexOf(this.module)] = module;	
-				}
+				else
+					modules[modules.findIndex(arg => arg.module == this.module)].module = module;
 			}
 
 			this.mode = 'a';
 			return undeletables;
 		},
-		
+
 		contextmenu(event) {
 			//console.log("contextmenu: function(event)");
-			var self = event.target;				
-			
+			var self = event.target;
+
 			this.left = event.x + self.getScrollLeft();
 			this.top = event.y + self.getScrollTop();
-			
+
 			this.showContextmenu = true;
-			
+
 			setTimeout(()=>{
 				var contextmenu = self.lastElementChild;
-				contextmenu.focus();				
-			}, 100);				
+				contextmenu.focus();
+			}, 100);
 		},
-		
+
 		blur(event){
 			if (this.mode == 'F3'){
 				this.mode = 'input';
@@ -111,31 +108,31 @@ export default {
 			else{
 				this.mode = 'span';
 				focusedAlready = false;
-				this.$nextTick(async ()=>{
+				this.$nextTick(async () => {
 					var undeletables = await this.set_module(event.target.value);
 					console.log("undeletable files = ", undeletables);
-					
+
 					this.delete_folder(undeletables);
 				});
-			}				
+			}
 		},
-		
+
 		async keydown(event){
 			switch(event.key){
 			case 'Enter':
 				var undeletables = await this.set_module(event.target.value);
 				console.log("undeletable files = ", undeletables);
 				this.delete_folder(undeletables);
-				
+
 				break;
 			case 'F3':
 				console.log("F3 is pressed");
 				this.mode = 'F3';
-				find_and_jump(event);
-				break;					
+				find_and_jump(event, await form_post('php/request/sections.php'));
+				break;
 			}
 		},
-		
+
 		keydown_a(event){
 			switch(event.key) {
 			case 'F2':
@@ -154,16 +151,17 @@ export default {
 						});
 				}
 				break;
-			}				
+			}
 		},
 
 		async replace() {
-			var [old, $new] = this.module;
+			var old = this.module;
+			var $new = this.data.replacement;
 			var undeletables = '';
 			if (old != $new){
 				console.log('oldText = ' + old);
-				console.log('newText = ' + $new);			
-				
+				console.log('newText = ' + $new);
+
 				undeletables = await form_post(`php/request/rename.php`, { old, new: $new});
 				console.log('undeletables = ' + undeletables);
 				this.delete_folder(undeletables);
@@ -175,7 +173,7 @@ export default {
 			this.$el.focus();
 		},
 	},
-	
+
 	directives: {
 		focus: {
 		    // after dom is inserted into the document

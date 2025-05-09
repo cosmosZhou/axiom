@@ -1,18 +1,18 @@
+import stdlib.List.Vector
 import Axiom.Basic
-open Mathlib
 
 
-@[simp, main]
+@[main]
 private lemma main
   [Add α] [Zero α]
-  {s : Vector α 0} :
+  {s : List.Vector α 0} :
 -- imply
   s.sum = 0 := by
 -- proof
   match s with
   | ⟨v, property⟩ =>
-    simp [Vector.sum] at property
-    simp [Vector.sum, property]
+    simp [List.Vector.sum] at property
+    simp [List.Vector.sum, property]
 
 
 -- created on 2024-07-01

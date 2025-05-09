@@ -1,7 +1,7 @@
 import Axiom.Basic
 
 
-@[simp, main]
+@[main]
 private lemma main
   [SubNegMonoid α]
   {a : α} :

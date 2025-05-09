@@ -1,4 +1,6 @@
+import stdlib.List
 import Axiom.Algebra.Add.comm
+import Axiom.Algebra.LeSubS.of.Le
 open Algebra
 
 
@@ -12,10 +14,11 @@ private lemma main
   (s.substr i n |>.length) = n := by
 -- proof
   simp [List.substr]
-  have h'' : i + n - i ≤ s.length - i := Nat.sub_le_sub_right h i
+  have h'' : i + n - i ≤ s.length - i := LeSubS.of.Le.nat h i
   rw [Add.comm] at h''
   rw [Nat.add_sub_cancel] at h''
   exact h''
 
 
 -- created on 2024-07-01
+-- updated on 2025-03-31

@@ -27,41 +27,33 @@ function textFocused(text, selectionStart) {
 	return m[0];
 }
 
-function find_and_jump(event) {
+function find_and_jump(event, sections) {
 	var self = event.target;
 
 	var module = textFocused(self.value, self.selectionStart);
 	console.log('module = ' + module);
-	var href;
+	var search;
 	var indexOfDot = module.lastIndexOf('.');
-	var user = axiom_user();
 	if (indexOfDot >= 0) {
 		if (module.slice(indexOfDot + 1) == 'apply') {
 			module = module.slice(0, indexOfDot);
 			module += "&apply=0";
 		}
-		href = `/${user}/?module=${module}`;
+		search = `?module=${module}`;
 	}
 	else {
-		switch (module) {
-			case 'Algebra':
-			case 'Calculus':
-			case 'Discrete':
-			case 'Geometry':
-			case 'Neuro':
-			case 'Set':
-			case 'Probability':
-				href = `/${user}/?module=${module}`;
-				break;
-			default:
-				href = `/${user}/?symbol=${module}`;
-		}
+		if (sections.includes(module))
+			search = `?module=${module}`;
+		else 
+			search = `?mathlib=${module}`;
 	}
 
 	if (event.ctrlKey)
-		location.href = href;
-	else
-		window.open(href);
+		location.search = search;
+	else {
+		var {origin, pathname} = location;
+		window.open(origin + pathname + search, '_blank');
+	}
 }
 
 function getDisplayMode(latex) {

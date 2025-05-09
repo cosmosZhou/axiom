@@ -1,6 +1,5 @@
 import Axiom.Algebra.Add.comm
 import sympy.polys.domains
-import Axiom.Basic
 open Algebra
 
 
@@ -26,32 +25,23 @@ private lemma int
 
 
 @[main]
-private lemma right
+private lemma left
+  [AddCommGroup α]
+  {a b : α} :
+-- imply
+  a + b - a = b := by
+-- proof
+  apply add_sub_cancel_left
+
+
+@[main]
+private lemma main
   [AddGroup α]
   {a b : α} :
 -- imply
   a + b - b = a := by
 -- proof
   apply add_sub_cancel_right
-
-
-@[main]
-private lemma main
-  [AddCommGroup α]
-  {a b : α}
-  (left : Bool := false) :
--- imply
-  match left with
-  | true => a + b - a = b
-  | false => a + b - b = a := by
--- proof
-  match left with
-  | true =>
-    -- AddCommGroup
-    apply add_sub_cancel_left
-  | false =>
-    -- AddGroup
-    apply right
 
 
 -- created on 2024-11-27

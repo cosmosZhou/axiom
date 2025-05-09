@@ -127,7 +127,8 @@ if ($functor) {
         $sql_update .= ' ';
     }
     elseif (($with = $kwargs['with']) && ($as = $with['as']) && ($as[0] == $functor)) {
-        $sql_update = "update $database.$table set $setter = $functor.$setter ";
+        $update = parse_table($kwargs['update'], $Field2Type);
+        $sql_update = "update $update set $setter = $functor.$setter ";
     }
     else {
         $update = parse_table($kwargs['update'], $Field2Type);

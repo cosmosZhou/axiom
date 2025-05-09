@@ -1,5 +1,6 @@
 import sympy.polys.domains
-import Axiom.Basic
+import Axiom.Algebra.Mul.comm
+open Algebra
 
 
 @[main]
@@ -13,4 +14,4 @@ private lemma main
 
 
 -- created on 2025-03-15
--- updated on 2025-03-16
+-- updated on 2025-03-21

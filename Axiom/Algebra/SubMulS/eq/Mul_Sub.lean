@@ -1,22 +1,28 @@
-import Axiom.Algebra.Mul_Add.eq.AddMulS
-import Axiom.Algebra.Sub.eq.Add_Neg
-import Axiom.Algebra.NegMul.eq.Mul_Neg
-open Algebra
+import Axiom.Basic
 
 
 @[main]
+private lemma nat
+  {x a b : ℕ} :
+-- imply
+  x * a - x * b = x * (a - b) := by
+-- proof
+  rw [Nat.mul_sub]
+
+
+/--
+This lemma demonstrates the distributive property of multiplication over subtraction in a non-unital, non-associative ring. 
+Specifically, it shows that for any elements `x`, `a`, and `b` in such a ring, the expression `x * a - x * b` simplifies to `x * (a - b)`, even in the absence of multiplicative identity or associativity.
+-/
+@[main]
 private lemma main
-  [Ring α]
+  [NonUnitalNonAssocRing α]
   {x a b : α} :
 -- imply
   x * a - x * b = x * (a - b) := by
 -- proof
-  rw [
-    Sub.eq.Add_Neg (a := a),
-    Mul_Add.eq.AddMulS,
-    Sub.eq.Add_Neg,
-    NegMul.eq.Mul_Neg
-  ]
+  rw [mul_sub]
 
 
 -- created on 2024-07-01
+-- updated on 2025-04-04

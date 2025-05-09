@@ -1,3 +1,4 @@
+import sympy.core.relational
 import Axiom.Algebra.MulAdd.eq.AddMulS
 import Axiom.Algebra.Mul_Add.eq.AddMulS
 import Axiom.Algebra.EqMulS.of.Eq.Eq
@@ -36,9 +37,8 @@ private lemma main
   let A := (TP + TN) / (P + N)
   (A - TP / P) * (A - TN / N) ≤ 0 := by
 -- proof
+  denote h_A : A = _
   have h_Add_ne_Zero := Add.ne.Zero.of.Mul.gt.Zero h₀
-  let A := (TP + TN) / (P + N)
-  have h_A : A = (TP + TN) / (P + N) := rfl
   have h₁ := EqSubS.of.Eq h_A (TP / P)
   have h_together := SubDivS.eq.Div_Mul__SubMulS.of.Ne_0.Ne_0
     h_Add_ne_Zero

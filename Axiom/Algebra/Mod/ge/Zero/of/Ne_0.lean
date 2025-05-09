@@ -1,12 +1,13 @@
 import Axiom.Basic
-open Algebra
 
 
 @[main]
 private lemma main
-  {n d : ℤ}
+  {d : ℤ}
 -- given
-  (h : d ≠ 0) :
+  (h : d ≠ 0) 
+  (n : ℤ):
+    
 -- imply
   n % d ≥ 0 := by
 -- proof
@@ -16,3 +17,4 @@ private lemma main
 
 
 -- created on 2025-03-18
+-- updated on 2025-03-29

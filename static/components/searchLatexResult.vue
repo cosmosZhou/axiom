@@ -1,5 +1,5 @@
 <template>
-	<searchForm :q=latex :latex=true :regularExpression=false :wholeWord=false :caseSensitive=false></searchForm>
+	<searchForm :q=latex :latex=true :regularExpression=false :wholeWord=false :caseSensitive=false :fullText=false></searchForm>
 	latex in search:
 	<p v-text="`\\[${latex}\\]`"></p>
 	search results:

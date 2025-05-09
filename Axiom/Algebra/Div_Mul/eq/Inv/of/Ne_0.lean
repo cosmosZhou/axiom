@@ -14,7 +14,9 @@ private lemma inv'
   rw [Div_Mul.eq.DivDiv]
   simp [h]
 
-
+/--
+open namespace in
+-/
 @[main]
 private lemma main
   [Field α]
@@ -24,13 +26,13 @@ private lemma main
   (comm : Bool := false) :
 -- imply
   match comm with
-  | true  =>
+  | true =>
     a / (b * a) = b⁻¹
   | false =>
     a / (a * b) = b⁻¹ := by
 -- proof
-  cases comm with
-  | true  =>
+  match comm with
+  | true =>
     simp
     rw [Mul.comm]
     apply inv' h
@@ -40,3 +42,4 @@ private lemma main
 
 
 -- created on 2024-07-01
+-- updated on 2025-04-07

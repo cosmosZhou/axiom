@@ -1,13 +1,10 @@
-# current directory: sh
-source common.sh
+source sh/utility.sh
 
 src=$(normalize $1)
 echo src = $src
 
 dst=$(normalize $2)
 echo dst = $dst
-
-cd ../
 
 srcFile=Axiom/${src//.//}.lean
 echo srcFile = $srcFile
@@ -31,41 +28,55 @@ fi
 
 mv $srcFile $dstFile
 
-src_namespace=${src%.*}
-src_namespace=${src_namespace//./\\.}
-echo src_namespace = $src_namespace
-
-dst_namespace=${dst%.*}
-echo dst_namespace = $dst_namespace
-
-src_theorem=${src##*.}
-echo "src_theorem = $src_theorem"
-
-dst_theorem=${dst##*.}
-echo "dst_theorem = $dst_theorem"
-
 srcReg=${src//./\\.}
 echo srcReg = $srcReg
-symm="(symm|mpr|mp)"
-echo find Axiom -type f -name "*.lean" -exec sed -i -E "s/$srcReg([^.]|\.$symm|$)/$dst\1/g" {} +
-find Axiom -type f -name "*.lean" -exec sed -i -E "s/$srcReg([^.]|\.$symm|$)/$dst\1/g" {} +
+submodule="((\.[a-z]+)?(\b[^.]|$))"
+echo find Axiom -type f -name "*.lean" -not -name "*.echo.lean" -exec sed -i -E "s/$srcReg$submodule/$dst\1/g" {} +
+find Axiom -type f -name "*.lean" -not -name "*.echo.lean" -exec sed -i -E "s/$srcReg$submodule/$dst\1/g" {} +
 
-package=$(echo $src | cut -d'.' -f1)
-echo package = $package
+package_src=$(echo $src | cut -d'.' -f1)
+echo package_src = $package_src
 
-package_=$(echo $dst | cut -d'.' -f1)
-echo package_ = $package_
+package_dst=$(echo $dst | cut -d'.' -f1)
+echo package_dst = $package_dst
 
-if [ $package != $package_ ]; then
-    echo "error: package names do not match"
-    exit
+lemmaNameSrcOrig=$(echo "$src" | cut -d'.' -f2-)
+lemmaNameSrc=${lemmaNameSrcOrig//./\\.}
+echo lemmaNameSrc = $lemmaNameSrc
+
+lemmaNameDstOrig=$(echo "$dst" | cut -d'.' -f2-)
+lemmaNameDst=${lemmaNameDstOrig//\'/\\\'}
+echo lemmaNameDst = $lemmaNameDst
+
+if [ $package_dst != $package_src ]; then
+    echo "package_dst != package_src"
+    find Axiom -type f -name "*.lean" -not -name "*.echo.lean" -print0 | xargs -0 grep -lZP "\b$lemmaNameSrc$submodule" | while IFS= read -r -d $'\0' file; do
+        temp_file="${file}.tmp"
+        awk -v package_src="$package_src" -v package_dst="$package_dst" '
+        $1 == "open" {
+            has_package_src = 0
+            has_package_dst = 0
+            for (i=2; i<=NF; i++) {
+                if ($i == package_src) 
+                    has_package_src = 1
+                else if ($i == package_dst) 
+                    has_package_dst = 1
+            }
+            if (has_package_src && !has_package_dst) {
+                # Append package_dst to existing modules
+                # $0 = $0 " " package_dst
+                $(NF+1) = package_dst
+            }
+        }
+        { print }
+        ' "$file" > "$temp_file" && mv "$temp_file" "$file"
+    done
+
+    if [ $lemmaNameSrcOrig == $lemmaNameDstOrig ]; then
+        echo "lemmaNameSrcOrig == lemmaNameDstOrig, no need to rename"
+        exit
+    fi
 fi
 
-subNameSrc=$(echo "$src" | cut -d'.' -f2-)
-subNameSrc=${subNameSrc//./\\.}
-echo subNameSrc = $subNameSrc
-
-subNameDst=$(echo "$dst" | cut -d'.' -f2-)
-echo subNameDst = $subNameDst
-
-find Axiom -type f -name "*.lean" | xargs grep -lE "(open( [[:alnum:]_.]+)*|namespace) $package" | xargs sed -i -E "s/$subNameSrc([^.]|\.$symm|$)/$subNameDst\1/g"
+# xargs: unmatched single quote; by default quotes are special to xargs unless you use the -0 option
+find Axiom -type f -name "*.lean" -not -name "*.echo.lean" -print0 | xargs -0 grep -lZE "open( [[:alnum:]_.]+)* $package_dst\b" | xargs -0 sed -i -E "s/\b$lemmaNameSrc$submodule/$lemmaNameDst\1/g"

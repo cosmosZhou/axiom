@@ -29,9 +29,6 @@ switch (count($key)) {
     case 1:
         [$key] = $key;
         switch ($key) {
-            case 'mathlib':
-                require_once 'php/mathlib.php';
-                exit();
             case 'module':
                 $module = $_GET['module'];
                 break;
@@ -58,7 +55,6 @@ switch (count($key)) {
                 require_once 'php/search.php';
                 exit();
         }
-        break;
     case 2:
         $module = $_GET['module']?? null;
         if ($module)
@@ -68,6 +64,10 @@ switch (count($key)) {
             require_once 'php/search.php';
             exit();
         }
+        if ($_GET['mathlib']?? null) {
+            require_once 'php/mathlib.php';
+            exit();
+        }        
         break;
 }
 
@@ -85,8 +85,16 @@ $path_info = substr(__FILE__, 0, -9) . "Axiom/" . $title;
 $leanFile = null;
 if (! str_ends_with($path_info, '/')) {
     $leanFile = $path_info . ".lean";
-    if (!file_exists($leanFile) && !$_POST)
-        $leanFile = null;
+    if (!file_exists($leanFile)) {
+        if ($_POST);
+        elseif (file_exists($dirname = dirname($leanFile) . '.lean')) {
+            $lastDotPosition = strrpos($module, '.');
+            $module = substr($module, 0, $lastDotPosition) . '#' . substr($module, $lastDotPosition + 1);
+            header("location:?module=$module");
+        }
+        else
+            $leanFile = null;
+    }
 }
 
 $php = $leanFile ? 'lemma' : 'package';

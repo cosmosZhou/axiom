@@ -1,11 +1,10 @@
-import Axiom.Algebra.All_EqFunS.of.All_Eq
-import Axiom.Algebra.TailCons.eq.Tail
-import Axiom.Algebra.IsConstant.of.All_Eq
+import stdlib.List.Vector
+import Axiom.Basic
 
 
 @[main]
 private lemma main
-  {s : Vector α n}
+  {s : List.Vector α n}
 -- given
   (h: s.val is constant) :
 -- imply

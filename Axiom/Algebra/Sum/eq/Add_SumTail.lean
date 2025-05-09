@@ -8,14 +8,14 @@ open Algebra
 @[main]
 private lemma main
   [AddMonoid α]
-  {l : Vector α n} :
+  {l : List.Vector α n} :
 -- imply
   l.sum = (l.headD 0) + l.tail.sum := by
 -- proof
-  cases n with
-  | zero =>
+  match n with
+  | .zero =>
     simp [EqHeadD, Sum.eq.Zero]
-  | succ n =>
+  | .succ n =>
     have h : l = l.head ::ᵥ l.tail := by simp
     rw [h]
     rw [

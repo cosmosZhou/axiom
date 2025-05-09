@@ -2,18 +2,18 @@ class XMLNode {
     constructor(parent) {
 		this.parent = parent;
     }
-    
+
     get root() {
 		var self = this;
     	while (self.parent)
         	self = self.parent;
         return self;
 	}
-	
+
     append_left_tag(tag) {
         var parent = this.parent;
         var caret = new XMLNodeCaret();
-        var node = new XMLNodeBinaryTag(tag, caret, null, parent);
+        var node = new XMLNodeContainerTag(tag, caret, null, parent);
         if (parent instanceof XMLNodeArray)
             parent.args.push(node);
 		else {
@@ -21,7 +21,7 @@ class XMLNode {
 	        if (parent)
 	            parent.replace(this, node);
 		}
-		
+
 		return caret;
 	}
 
@@ -40,10 +40,10 @@ class XMLNode {
 	        return array;
 		}
 	}
-		
+
     append_single_tag(tag) {
 		var parent = this.parent;
-		var node = new XMLNodeSingleTag(tag, parent);
+		var node = new XMLNodeVoidTag(tag, parent);
         if (parent instanceof XMLNodeArray) {
             parent.args.push(node);
             return node;
@@ -55,15 +55,15 @@ class XMLNode {
 	        return array;
 		}
 	}
-	
+
     get zeros() {
 		return [];
 	}
-	
+
 	get style() {
 		return {};
 	}
-	
+
     modify_style(tag) {
 		if (this.text) {
 			var set = new Range(0, this.text.length);
@@ -74,21 +74,21 @@ class XMLNode {
 	            _style[tag] = set;
 		}
     }
-    
+
     get length() {
 		return this.stop - this.start;
 	}
-	
+
 	sanctity_check() {
 	}
-	
+
 	interval(className){
 		var {text} = this;
 		if (text) {
 			var zeros = this.zeros;
 			if (!zeros.length || zeros[0])
 				zeros.unshift(0);
-			
+
 			if (!zeros.length || zeros.back() < text.length)
 				zeros.push(text.length);
 
@@ -99,7 +99,7 @@ class XMLNode {
 		else
 			return [];
 	}
-	
+
 	getLogicalIndices(segments) {
 		var logicalOffset = [];
 		var start = 0;
@@ -108,7 +108,7 @@ class XMLNode {
 		for (var [index, seg] of enumerate(segments)) {
 			while (logicalText[start] && logicalText[start].isspace())
 				++start;
-			
+
 			if (!logicalText.startsWith(seg, start)) {
 				var sCumulated = '';
 				var hit = false;
@@ -116,17 +116,17 @@ class XMLNode {
 				for (var i of range(start, totalLength)) {
 					if (!logicalText[i])
 					    continue;
-					    
+
 					if (logicalText[i].isspace())
 						continue;
-						
+
 					sCumulated += logicalText[i];
 					if (sCumulated == seg) {
 						hit = true;
 						break;
 					}
 				}
-				
+
 				if (hit)
 					seg = logicalText.slice(start, i + 1);
 				else {
@@ -136,15 +136,15 @@ class XMLNode {
 					segments.delete(index, segments.length - index);
 					break;
 				}
-					
+
 			}
 
 			var end = start + seg.length;
-			
+
 			logicalOffset.push({start, end});
 			start = end;
 		}
-		
+
 		return logicalOffset;
 	}
 }
@@ -157,15 +157,15 @@ export class XMLNodeCaret extends XMLNode {
 	constructor(parent){
 		super(parent);
 	}
-	
+
     append_left_tag(tag) {
         var caret = new XMLNodeCaret();
-        var node = new XMLNodeBinaryTag(tag, caret, null, this.parent);
+        var node = new XMLNodeContainerTag(tag, caret, null, this.parent);
         if (this.parent)
             this.parent.replace(this, node);
         return caret;
 	}
-	
+
     append_text_node(text) {
         var node = new XMLNodeText(text, this.parent);
         if (this.parent)
@@ -174,16 +174,16 @@ export class XMLNodeCaret extends XMLNode {
 	}
 
     append_single_tag(tag) {
-        var node = new XMLNodeSingleTag(tag, this.parent);
+        var node = new XMLNodeVoidTag(tag, this.parent);
         if (this.parent)
             this.parent.replace(this, node);
         return node;
 	}
-	
+
 	get text() {
 		return '';
 	}
-	
+
 	get plainText() {
 		return '';
 	}
@@ -191,15 +191,15 @@ export class XMLNodeCaret extends XMLNode {
 	get logicalLength() {
 		return 0;
 	}
-	
+
 	get texts() {
 		return [];
 	}
-	
+
     toString() {
         return "";
     }
-    
+
     get length() {
 		return 0;
 	}
@@ -218,27 +218,27 @@ class XMLNodeText extends XMLNode {
     toString() {
         return this.arg.toString();
     }
-    
+
     get start() {
 		return this.arg.start;
 	}
-	
+
     get stop() {
 		return this.arg.stop;
 	}
-	
+
     set start(start) {
 		this.arg.start = start;
 	}
-	
+
     set stop(stop) {
 		this.arg.stop = stop;
 	}
-	
+
 	get text() {
 		return this.arg.text;
 	}
-	
+
 	get plainText() {
 		return this.arg.plainText;
 	}
@@ -246,11 +246,11 @@ class XMLNodeText extends XMLNode {
 	get logicalLength() {
 		return this.arg.length;
 	}
-	
+
 	get texts() {
 		return [this.text];
 	}
-	
+
     logical2physical(pos) {
 		return pos;
 	}
@@ -258,7 +258,7 @@ class XMLNodeText extends XMLNode {
     physical2logical(pos) {
 		return pos;
 	}
-	
+
     getPhysicalIndices(start, stop) {
 		return [start, stop];
     }
@@ -270,8 +270,8 @@ class XMLNodeText extends XMLNode {
 	}
 }
 
-export class XMLNodeBinaryTag extends XMLNode {
-    get is_XMLNodeBinaryTag(){
+export class XMLNodeContainerTag extends XMLNode {
+    get is_XMLNodeContainerTag(){
 		return true;
 	}
 
@@ -284,11 +284,11 @@ export class XMLNodeBinaryTag extends XMLNode {
 	get tag() {
 		return this.tagBegin.tag;
 	}
-	
+
     get start() {
 		return this.tagBegin.start;
 	}
-	
+
     get stop() {
 		if (this.is_unbalanced) {
 			if (this.arg.is_XMLNodeCaret)
@@ -298,18 +298,18 @@ export class XMLNodeBinaryTag extends XMLNode {
 
 		return this.tagEnd.stop;
 	}
-	
+
     toString() {
 		var s = this.tagBegin.toString() + this.arg.toString();
 		if (this.is_unbalanced)
 			return s;
         return s + this.tagEnd.toString();
     }
-	
+
 	get text() {
 		return this.arg.text;
 	}
-	
+
 	get plainText() {
 		switch (this.tag) {
 		case 'script':
@@ -335,15 +335,15 @@ export class XMLNodeBinaryTag extends XMLNode {
 	get logicalLength() {
 		return this.arg.logicalLength;
 	}
-	
+
 	get texts() {
 		return this.arg.texts;
 	}
-	
+
     get zeros() {
 		return this.text? this.arg.zeros : [0];
 	}
-        
+
 	get style() {
 		if (!this._style) {
 	        var _style = {};
@@ -370,7 +370,7 @@ export class XMLNodeBinaryTag extends XMLNode {
 						break;
 					}
 				}
-				
+
 				_style[this.tag] = new Range(0, len(this.text));
 		        for (var [tag, set] of Object.entries(this.arg.style)) {
 		            if (tag in _style)
@@ -382,14 +382,14 @@ export class XMLNodeBinaryTag extends XMLNode {
 
 	        this._style = _style;
 		}
-		
+
 		return this._style;
 	}
-	
+
 	get is_unbalanced() {
 		return !this.tagEnd || this.tagEnd.is_XMLNodeUnbalancedTag;
 	}
-	
+
     logical2physical(pos) {
         return this.arg.logical2physical(pos) + this.tagBegin.length;
 	}
@@ -397,26 +397,26 @@ export class XMLNodeBinaryTag extends XMLNode {
     physical2logical(pos) {
         return (this.arg.physical2logical(pos) - this.tagBegin.length).clip(0, len(this.text) - 1);
 	}
-	
+
     getPhysicalIndices(start, stop) {
 		[start, stop] = this.arg.getPhysicalIndices(start, stop);
 		var physicalText = this.arg.toString();
-		
+
         var _stop = stop;
         //ignore white spaces to the end;
         while (physicalText[_stop] && physicalText[_stop].isspace())
         	++_stop;
-        	
+
         if (_stop == len(physicalText)) {
 			_stop += this.tagEnd.length;
             if (!start)
 				stop = _stop;
 		}
-		
+
 		stop += this.tagBegin.length;
 		if (start)
 			start += this.tagBegin.length;
-			
+
 		return [start, stop];
     }
 
@@ -424,13 +424,13 @@ export class XMLNodeBinaryTag extends XMLNode {
         if (this.arg != old)
             throw new Error("arg != old");
         this.arg = node;
-        
+
         if (!node.is_XMLNodeCaret) {
 			console.assert(this.tagBegin.stop == node.start, "this.tagBegin.stop == node.start");
 			if (!this.is_unbalanced)
 				console.assert(node.stop == this.tagEnd.start, "node.stop == this.tagEnd.start");
 		}
-        	
+
         if (node.parent)
             console.assert(node.parent == this, "node.parent == this");
         else
@@ -448,12 +448,12 @@ export class XMLNodeBinaryTag extends XMLNode {
 				args = arg.args;
 				for (var arg of args)
 					arg.parent = parent;
-				
+
 				if (args[0].is_XMLNodeText)
 					args[0].start = tagBegin.start;
 				else
 					args.unshift(new XMLNodeText(tagBegin.reduceToNodeText(), parent));
-					
+
 				if (index && parent.args[index - 1].is_XMLNodeText) {
 					--index;
 					++count;
@@ -466,13 +466,13 @@ export class XMLNodeBinaryTag extends XMLNode {
 					++count;
 					arg.stop = parent.args[index + 1].stop;
 				}
-				
+
 				if (index && parent.args[index - 1].is_XMLNodeText) {
 					--index;
 					++count;
 					arg.start = parent.args[index].start;
 				}
-				
+
 				args = [arg];
 			}
 			else {
@@ -482,7 +482,7 @@ export class XMLNodeBinaryTag extends XMLNode {
 						++count;
 						arg.stop = parent.args[index + 1].stop;
 					}
-					
+
 					if (index && parent.args[index - 1].is_XMLNodeText) {
 						--index;
 						++count;
@@ -490,7 +490,7 @@ export class XMLNodeBinaryTag extends XMLNode {
 					}
 					else
 						arg.start = tagBegin.start;
-					
+
 					args = [arg];
 				}
 				else {
@@ -502,11 +502,11 @@ export class XMLNodeBinaryTag extends XMLNode {
 					}
 				}
 			}
-			
+
 			parent.args.splice(index, count, ...args);
 		}
 		else {
-			console.assert(parent.is_XMLNodeBinaryTag, "parent.is_XMLNodeBinaryTag");
+			console.assert(parent.is_XMLNodeContainerTag, "parent.is_XMLNodeContainerTag");
 			if (arg.is_XMLNodeArray) {
 				var args = arg.args;
 				if (args[0].is_XMLNodeText)
@@ -520,12 +520,12 @@ export class XMLNodeBinaryTag extends XMLNode {
 				arg = new XMLNodeText(tagBegin.reduceToNodeText());
 			else
 				arg = new XMLNodeArray([new XMLNodeText(this.tagBegin.reduceToNodeText()), arg]);
-				
+
 			arg.parent = parent;
 			parent.replace(this, arg);
 		}
 	}
-	
+
     append_tag(node) {
 		var parent = this.parent;
         if (parent instanceof XMLNodeArray) {
@@ -541,7 +541,7 @@ export class XMLNodeBinaryTag extends XMLNode {
 	        return array;
 		}
 	}
-	
+
 	sanctity_check() {
 		var {tagBegin, arg, tagEnd} = this;
 		if (this.is_unbalanced) {
@@ -558,21 +558,21 @@ export class XMLNodeBinaryTag extends XMLNode {
 			else {
 				if (tagBegin.stop != arg.start)
 					return "tagBegin.stop != arg.start";
-					
+
 				if (arg.stop != tagEnd.start)
 					return "arg.stop != tagEnd.start";
 			}
 		}
-		
+
 		return arg.sanctity_check();
 	}
 }
 
-class XMLNodeSingleTag extends XMLNode {
-	get is_XMLNodeSingleTag(){
+class XMLNodeVoidTag extends XMLNode {
+	get is_XMLNodeVoidTag(){
 		return true;
 	}
-	
+
     constructor(arg, parent) {
         super(parent);
         this.arg = arg;
@@ -581,23 +581,23 @@ class XMLNodeSingleTag extends XMLNode {
 	get tag() {
 		return this.arg.tag;
 	}
-	
+
     get start() {
 		return this.arg.start;
 	}
-	
+
     get stop() {
 		return this.arg.stop;
 	}
-	
+
     toString() {
         return this.arg.toString();
     }
-	
+
 	get text() {
 		return this.arg.text;
 	}
-	
+
 	get plainText() {
 		return this.arg.plainText;
 	}
@@ -609,17 +609,17 @@ class XMLNodeSingleTag extends XMLNode {
 	get texts() {
 		return [this.text];
 	}
-	
+
 	get style() {
 		if (!this._style) {
 	        var _style = {};
             _style[this.tag] = new Range(0, len(this.text));
 	        this._style = _style;
 		}
-		
+
 		return this._style;
 	}
-	
+
     logical2physical(pos) {
 		return this.arg.length - 2;
 	}
@@ -627,7 +627,7 @@ class XMLNodeSingleTag extends XMLNode {
     physical2logical(pos) {
         return 0;
 	}
-	
+
 	getPhysicalIndices(start, stop) {
 		return [0, this.arg.length];
     }
@@ -638,7 +638,7 @@ class XMLNodeArray extends XMLNode {
 	get is_XMLNodeArray(){
 		return true;
 	}
-	
+
     constructor(args, parent) {
 		super(parent);
         this.args = args;
@@ -648,7 +648,7 @@ class XMLNodeArray extends XMLNode {
 
     append_left_tag(tag) {
         var caret = new XMLNodeCaret();
-        this.args.push(new XMLNodeBinaryTag(tag, caret, null, this));
+        this.args.push(new XMLNodeContainerTag(tag, caret, null, this));
         return caret;
 	}
 
@@ -658,9 +658,9 @@ class XMLNodeArray extends XMLNode {
         this.args.push(node);
         return node;
 	}
-		
+
     append_single_tag(tag) {
-		var node = new XMLNodeSingleTag(tag, this);
+		var node = new XMLNodeVoidTag(tag, this);
         this.args.push(node);
         return node;
 	}
@@ -671,7 +671,7 @@ class XMLNodeArray extends XMLNode {
         this.args.push(node);
         return node;
 	}
-		
+
     toString() {
         return this.args.map(el => el.toString()).join('');
     }
@@ -679,15 +679,15 @@ class XMLNodeArray extends XMLNode {
     get start() {
 		return this.args[0].start;
 	}
-	
+
     get stop() {
 		return this.args.back().stop;
 	}
-	
+
 	get text() {
 		return this.args.map(el => el.text).join('');
 	}
-	
+
 	get plainText() {
 		return this.args.map(el => el.plainText).join('');
 	}
@@ -695,7 +695,7 @@ class XMLNodeArray extends XMLNode {
 	get logicalLength() {
 		return sum(this.args.map(el => el.logicalLength));
 	}
-	
+
 	get texts() {
 		var texts = [];
 		for (var arg of this.args) {
@@ -703,7 +703,7 @@ class XMLNodeArray extends XMLNode {
 		}
 		return texts;
 	}
-	
+
     get zeros() {
         var zeros = [];
         var length = 0;
@@ -734,7 +734,7 @@ class XMLNodeArray extends XMLNode {
 					while (parent !== this);
 				}
 			}
-			
+
 			var _style = {};
 	        var length = 0;
 	        for (var arg of this.args) {
@@ -747,13 +747,13 @@ class XMLNodeArray extends XMLNode {
 				}
 				length += len(arg.text);
 			}
-			
+
 	        this._style = _style;
 		}
-		
+
 		return this._style;
 	}
-	
+
     replace(old, node) {
         var i = this.args.indexOf(old);
         if (i < 0)
@@ -766,7 +766,7 @@ class XMLNodeArray extends XMLNode {
 			if (node.is_XMLNodeText)
 				console.assert(!this.args[i - 1].is_XMLNodeText, "!this.args[i - 1].is_XMLNodeText");
 		}
-        	
+
         if (this.args[i + 1]) {
 			console.assert (this.args[i + 1].start == node.stop, "this.args[i + 1].start == node.stop");
 			if (node.is_XMLNodeText)
@@ -778,7 +778,7 @@ class XMLNodeArray extends XMLNode {
         else
             node.parent = this;
     }
-    
+
     get logicalOffset() {
 		if (!this._logicalOffset) {
 	        var logicalOffset = [];
@@ -788,13 +788,13 @@ class XMLNodeArray extends XMLNode {
 	            logicalOffset.push([start, stop]);
 	            start = stop;
 	        }
-	        
+
 	        this._logicalOffset = logicalOffset;
 		}
-		
+
 		return this._logicalOffset;
 	}
-	
+
     get physicalOffset() {
 		if (!this._physicalOffset) {
 	        var physicalOffset = [];
@@ -804,12 +804,12 @@ class XMLNodeArray extends XMLNode {
 	            physicalOffset.push([start, stop]);
 	            start = stop;
 	        }
-	        
+
 	        this._physicalOffset = physicalOffset;
 		}
 		return this._physicalOffset;
 	}
-	
+
     get offsets() {
 		if (!this._offsets) {
 			var offsets = [];
@@ -822,7 +822,7 @@ class XMLNodeArray extends XMLNode {
 		}
 		return this._offsets;
 	}
-	
+
     logical2physical(pos) {
         var {logicalOffset, offsets} = this;
         var index = logicalOffset.binary_search(pos, (args, hit) => hit >= args[1] ? -1 : hit < args[0]? 1 : 0);
@@ -836,16 +836,16 @@ class XMLNodeArray extends XMLNode {
         var prev_start = physicalOffset[index][0];
         return this.args[index].physical2logical(pos - prev_start) + prev_start - offsets[index];
 	}
-	
+
 	cmp(args, hit) {
 		return hit >= args[1] ? -1 : hit < args[0]? 1 : 0;
 	}
-	
+
 	getPhysicalIndices(start, stop) {
         var {logicalOffset, offsets} = this;
         var index = logicalOffset.binary_search(start, this.cmp);
         var _index = logicalOffset.binary_search(stop - 1, this.cmp);
-        
+
         if (index == _index) {
 			var prev_start = logicalOffset[index][0];
 	        return this.args[index].getPhysicalIndices(start - prev_start, stop - prev_start).add(prev_start + offsets[index]);
@@ -858,20 +858,20 @@ class XMLNodeArray extends XMLNode {
 	        return [start, stop];
 		}
     }
-	
+
 	sanctity_check() {
 		for (var i of range(this.args.length)) {
 			if (i) {
 				if (this.args[i].is_XMLNodeText && this.args[i - 1].is_XMLNodeText)
 				 	return "this.args[i].is_XMLNodeText && this.args[i - 1].is_XMLNodeText";
-				
+
 				if (this.args[i].start != this.args[i - 1].stop)
 					return "this.args[i].start != this.args[i - 1].stop";
 			}
-			
+
 			if (this.args[i].is_XMLNodeCaret)
 				return "this.args[i].is_XMLNodeCaret";
-				 
+
 			var error = this.args[i].sanctity_check();
 			if (error)
 				return error;
@@ -893,23 +893,23 @@ export class XMLNodeUnbalancedTag extends XMLNode {
 	get tag() {
 		return this.tagEnd.tag;
 	}
-	
+
     get start() {
 		return this.tagEnd.start;
 	}
-	
+
     get stop() {
 		return this.tagEnd.stop;
 	}
-	
+
     toString() {
         return this.tagEnd.toString();
     }
-	
+
 	get text() {
 		return '';
 	}
-	
+
 	get plainText() {
 		return '';
 	}
@@ -917,11 +917,11 @@ export class XMLNodeUnbalancedTag extends XMLNode {
 	get logicalLength() {
 		return 0;
 	}
-	
+
 	get texts() {
 		return [];
 	}
-	
+
     get zeros() {
 		return [0];
 	}

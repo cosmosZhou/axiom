@@ -1,6 +1,7 @@
 import sympy.core.expr
 import sympy.printing.str
-import std.BinderInfo
+import stdlib.Lean.BinderInfo
+import stdlib.Lean.Expr
 open Lean.Meta
 open Lean (Name Level Literal FormatWithInfos PPContext getExprMVarAssignment? getEnv getConstInfo getLCtx BinderInfo)
 set_option linter.unusedVariables false
@@ -44,21 +45,193 @@ def Expr.merge (func : Operator) (expr : List Expr) (limits : List Expr) : Expr 
   | none =>
     Basic func (expr ++ limits)
 
-partial def Expr.toExpr (e : Lean.Expr) (binders : List Expr := []) : MetaM Expr := do
+
+def Expr.joinWithAnd : List Expr → Expr
+  | .nil =>
+    .nil
+  | [head] =>
+    head
+  | head :: tail =>
+    .Basic (.BinaryInfix ⟨`And⟩) [head, Expr.joinWithAnd tail]
+
+
+partial def Expr.toExpr (e : Lean.Expr) (binders : List Expr) : MetaM Expr := do
   match ← Expr.func e Expr.toExpr binders with
   | .Operator func =>
+    let res ← match_condition_set e binders
+    if res != nil then
+      return res
+
     let full_args ← get_args e binders func
-    let args ← Expr.filter_default func full_args
+    let ⟨args, extra_args⟩ ← Expr.filter_default func full_args
 /-
     if e.toString == "" then
       println! s!"Expr.toExpr.Operator :
-e = {e}, e = {← ppExpr e}, e.ctorName = {e.ctorName}
+e = {e}
+e = {← ppExpr e}, e.ctorName = {e.ctorName}
 func = {func}, func.ctorName = {func.ctorName}
 binders = {binders}
-full_args = {full_args}, full_args.length = {full_args.length}
-args = {args}, args.length = {args.length}
+full_args.length = {full_args.length} :
+{"\n".intercalate (full_args.map fun arg => arg.toString)}
+args.length = {args.length} :
+{"\n".intercalate (args.map fun arg => arg.toString)}
 "
 -/
+    let expr ← construct_from_args e binders func args
+    if extra_args == .nil then
+      return expr
+    return Basic (.Special ⟨.anonymous⟩) (expr :: extra_args)
+  | .const expr =>
+/-
+    if e.toString == "" then
+      println! s!"Expr.toExpr.const :
+e = {e}, e = {← ppExpr e}, e.ctorName = {e.ctorName}
+expr = {expr}, expr.ctorName = {expr.ctorName}
+"
+-/
+    return expr
+where
+  get_args (e : Lean.Expr) (binders : List Expr) (func : Operator) : MetaM (List Expr) := do
+    match e with
+    | .bvar deBruijnIndex  =>
+      match func, binders[deBruijnIndex]? with
+      | .Special ⟨.anonymous⟩, some e@(Symbol _ (Basic (.ExprWithLimits .L_forall) _)) =>
+        return [e]
+      | _, _ =>
+        return []
+
+    | .fvar fvarId =>
+      match func with
+      | .Special ⟨.anonymous⟩ =>
+        match ← fvarId.findDecl? with
+        | some decl =>
+          return [Symbol decl.userName (← Expr.toExpr decl.type [])]
+        | none =>
+          panic! s!"fvarId.findDecl? failed for {fvarId}"
+      | _ =>
+        return []
+
+    | .mvar mvarId  =>
+      get_args (← getExprMVarAssignment mvarId) binders func
+
+    | .const ..  =>
+      return []
+
+    | .app e_fn e_arg =>
+      let args ← get_args e_fn binders func
+      let arg ← Expr.toExpr e_arg binders
+/-
+      if e.toString == "" then
+        println! s!"Expr.toExpr.get_args.app :
+func = {func}
+e = {e}
+e = {← ppExpr e}
+e_fn = {e_fn}
+e_fn = {← ppExpr e_fn}
+e_fn.args :
+{"\n".intercalate (args.map fun arg => arg.toString)}
+e_arg = {e_arg}
+e_arg = {← ppExpr e_arg}
+e_arg = {arg}
+binders = {binders}
+"
+-/
+      return args ++ [arg]
+
+    | .lam binderName binderType body binderInfo
+    | .forallE binderName binderType body binderInfo =>
+      args_from_binders binderName binderType body binderInfo nil
+
+    | .letE binderName binderType value body _    =>
+      -- binderName : binderType := value; body
+      args_from_binders binderName binderType body BinderInfo.default (← Expr.toExpr value binders)
+
+    | .mdata _ e =>
+      get_args e binders func
+
+    | _     =>
+      return []
+
+  args_from_binders (binderName : Name) (binderType : Lean.Expr) (body : Lean.Expr) (binderInfo : BinderInfo) (value : Expr) : MetaM (List Expr) := do
+    let binderType ← Expr.toExpr binderType binders
+    let binderName ←
+      if ← body.contains binderName then
+        pure (Name.anonymous.str (binderName.toString ++ "'"))
+      else
+        pure binderName
+    let binders := Expr.Symbol binderName binderType :: binders
+    let body' ← Expr.toExpr body binders
+    let binderName := binderName.head
+    let binderInfo := Binder.mk binderInfo binderType
+/-
+      if e.toString == "" then
+        println! s!"Expr.toExpr.args_from_binders :
+e = {e}
+e = {← ppExpr e}
+binders = {binders}
+binderName = {binderName}
+binderType = {binderType}
+binderInfo = {binderInfo}
+body = {body}
+body' = {body'}
+"
+-/
+
+    return [body', Expr.Binder binderInfo binderName binderType value]
+
+  match_condition_set (e : Lean.Expr) (binders : List Expr) : MetaM Expr := do
+    if let .app (.app (.const `setOf _) type) (.lam var type' cond .default) := e then
+      if type' == type then
+/-
+        println! s!"Expr.toExpr.setOf.app :
+type = {type}
+cond = {cond}
+cond = {← ppExpr cond}
+"
+-/
+        if let .app
+            (.app
+              (.app
+                (.const (.str _ match_d) _)
+                (.lam var' type' (.sort .zero) .default)
+              )
+              (.bvar .zero)
+            )
+            (.lam arg0 type0 (.lam arg1 type1 cond .default) .default) := cond then
+/-
+        println! s!"Expr.toExpr.setOf.app :
+var' = {var'}
+var = {var}
+type' = {type'}
+type = {type}
+cond = {cond}
+cond = {← ppExpr cond}
+"
+-/
+          -- var', var might not be the same
+          match match_d with
+          | "match_1"
+          | "match_2" =>
+            if type' == type then -- && var' == var
+              if let (.app (.app (.const `Prod _) type0') type1') := type then
+                if type0' == type0 && type1' == type1 then
+                  let type0 ← Expr.toExpr type0 binders
+                  let type ← Expr.toExpr type binders
+                  let type1 ← Expr.toExpr type1 binders
+                  let symbols := [Symbol arg0 type0, Symbol arg1 type1]
+                  let expr := Basic (.Special ⟨`Prod.mk⟩) symbols
+                  let cond ← Expr.toExpr cond ((Symbol var type :: symbols).reverse ++ binders)
+                  return Basic (.Special ⟨`setOf⟩) [expr, cond]
+          | _ =>
+            pure ()
+        else
+          let type ← Expr.toExpr type binders
+          let expr := Symbol var type
+          let cond ← Expr.toExpr cond (expr :: binders)
+          return Basic (.Special ⟨`setOf⟩) [expr, cond]
+    return nil
+
+  construct_from_args (e : Lean.Expr) (binders : List Expr) (func : Operator) (args : List Expr) : MetaM Expr := do
     match func with
     | .UnaryPrefix ⟨name⟩ =>
       match name with
@@ -67,7 +240,7 @@ args = {args}, args.length = {args.length}
           return arg
       | `DFunLike.coe =>
         if let const (.ident name) :: args@(.cons ..) := args then
-            return Basic (.ExprWithAttr (.L_operatorname name)) args
+          return Basic (.ExprWithAttr (.L_operatorname name)) args
       | _ =>
         pure ()
     | .ExprWithLimits op =>
@@ -117,30 +290,26 @@ args = {args}, args.length = {args.length}
           return Basic func [Basic (.ExprWithLimits .L_lambda) [expr, limit], arg]
         | _ =>
           pure ()
-      | .str _ "match_1" =>
+      | .str _ "match_1"
+      | .str _ "match_2" =>
         -- transform match expression into if-then-else structure
-        if let subject :: values := args.drop 1 then
-          if let .forallE `motive (.forallE name subjectType@(.app (.app (.const `optParam _) _) subject') _ .default) (.forallE name' subjectType' body .default) .default ← op.toExpr then
-            -- this may not hold true: subject == (← Expr.toExpr subject' binders)
-            if subjectType == subjectType' && name == name' then
-              let mut body := body
-              let mut cases : Array (Expr × Expr) := #[]
-              for expr in values do
-                if let Basic (.ExprWithLimits .L_lambda) [expr, Binder .default (.str _ "_") _ nil] := expr then
-                  if let .forallE _ (.forallE .anonymous (.const `Unit _) (.app _ caseValue) .default) body' .default := body then
-                    let case ← Expr.toExpr caseValue binders
-                    let cond := Basic (.BinaryInfix ⟨`Eq⟩) [subject, ← Expr.toExpr caseValue binders]
-                    cases := cases.push ⟨cond, expr⟩
-                    body := body'
-
-              let mut ite : Expr := nil
-              for ⟨cond, expr⟩ in cases.reverse do
-                if ite == nil then
-                  ite := expr
-                else
-                  ite := Basic (.Special ⟨`ite⟩) [cond, expr, ite]
-
-              return ite
+        let args' := args.drop 1
+        if let some index := args'.findIdx? fun arg =>
+          match arg with
+          | Basic (.ExprWithLimits .L_lambda) _ => true
+          | _ => false then
+          let subject := args'.take index
+          let values := args'.drop index
+          if let .forallE name type body _  ← op.toExpr then
+            let binders := Expr.Symbol name (← Expr.toExpr type binders) :: binders
+            let ⟨body, binders⟩ : Lean.Expr × List Expr :=
+              if let (.forallE name type body .default) := body then
+                ⟨body, Expr.Symbol name (← Expr.toExpr type binders) :: binders⟩
+              else
+                ⟨body, binders⟩
+            return ← construct_ite e body binders subject values
+          else
+            pure ()
       | _ =>
         pure ()
     | .ExprWithAttr (.L_operatorname name) =>
@@ -152,95 +321,61 @@ args = {args}, args.length = {args.length}
     | _ =>
       pure ()
     return Basic func args
-  | .const expr =>
-/-
-    if e.toString == "" then
-      println! s!"Expr.toExpr.const :
-e = {e}, e = {← ppExpr e}, e.ctorName = {e.ctorName}
-expr = {expr}, expr.ctorName = {expr.ctorName}
-"
--/
-    return expr
-where
-  get_args (e : Lean.Expr) (binders : List Expr) (func : Operator) : MetaM (List Expr) := do
-    match e with
-    | .bvar deBruijnIndex  =>
-      match func, binders[deBruijnIndex]? with
-      | .Special ⟨.anonymous⟩, some e@(Symbol _ (Basic (.ExprWithLimits .L_forall) _)) =>
-        return [e]
-      | _, _ =>
-        return []
 
-    | .fvar fvarId =>
-      match func with
-      | .Special ⟨.anonymous⟩ =>
-        match ← fvarId.findDecl? with
-        | some decl =>
-          let type := decl.type
-          return [Symbol decl.userName (← Expr.toExpr type)]
-        | none =>
-          panic! s!"fvarId.findDecl? failed for {fvarId}"
-      | _ =>
-        return []
-
-    | .mvar mvarId  =>
-      get_args (← getExprMVarAssignment mvarId) binders func
-
-    | .const ..  =>
-      return []
-
-    | .app e_fn e_arg =>
-      let args ← get_args e_fn binders func
-      let arg ← Expr.toExpr e_arg binders
-/-
-      if e.toString == "" then
-        println! s!"Expr.toExpr.get_args.app :
-func = {func}
-e = {e}, e = {← ppExpr e}
-e_fn = {e_fn}, e_fn = {← ppExpr e_fn}
-e_fn.args = {args}
-e_arg = {e_arg}, e_arg = {← ppExpr e_arg}, e_arg = {arg}
-binders = {binders}
-"
--/
-      return args ++ [arg]
-
-    | .lam binderName binderType body binderInfo
-    | .forallE binderName binderType body binderInfo =>
-      args_from_binders binderName binderType body binderInfo nil
-
-    | .letE binderName binderType value body _    =>
-      -- binderName : binderType := value; body
-      args_from_binders binderName binderType body BinderInfo.default (← Expr.toExpr value binders)
-
-    | .mdata _ e =>
-      get_args e binders func
-
-    | _     =>
-      return []
-
-  args_from_binders (binderName : Name) (binderType : Lean.Expr) (body : Lean.Expr) (binderInfo : BinderInfo) (value : Expr) : MetaM (List Expr) := do
-    let binderType ← Expr.toExpr binderType binders
-    let binderName ←
-      if ← body.contains binderName then
-        pure (Name.anonymous.str (binderName.toString ++ "'"))
+  construct_ite (e body : Lean.Expr) (binders subject values : List Expr) : MetaM Expr := do
+    let mut body := body
+    let mut cases : Array (Expr × Expr) := #[]
+    let mut localBinders := binders
+    for expr in values do
+      if let Basic (.ExprWithLimits .L_lambda) (expr :: expr_tail) := expr then
+        if let .forallE name binderType body' _ := body then
+          localBinders := Expr.Symbol name (← Expr.toExpr binderType localBinders) :: localBinders
+          body := body'
+          match binderType with
+          | .forallE .anonymous (.const `Unit _) (.app _ caseValue) .default =>
+            cases := cases.push ⟨
+              Basic (.BinaryInfix ⟨`Eq⟩) [subject.head!, ← Expr.toExpr caseValue binders],
+              expr
+            ⟩
+          | .const declName _ =>
+            if let .forallE _ binderType body' .default := body then
+              body := body'
+              let caseValue := binderType.extract_conditions subject.length
+              if let .forallE var type binderType .default := binderType then
+                localBinders := Expr.Symbol var (← Expr.toExpr type localBinders) :: localBinders
+                cases := cases.push ⟨
+                  Expr.joinWithAnd (List.zipWith
+                    (fun key val => Basic (.BinaryInfix ⟨`Eq⟩) [key, val])
+                    subject
+                    (← caseValue.mapM fun cond => Expr.toExpr cond localBinders)
+                  ),
+                  expr
+                ⟩
+          | .forallE var type binderType .default =>
+            let mut binderType := binderType
+            let type ← Expr.toExpr type localBinders
+            localBinders := Expr.Symbol var type :: localBinders
+            let mut caseValue := .nil
+            if let .forallE var type binderType' .default := binderType then
+              let type ← Expr.toExpr type localBinders
+              localBinders := Expr.Symbol var type :: localBinders
+              binderType := binderType'
+            caseValue := binderType.extract_conditions_recursively subject.length []
+            cases := cases.push ⟨
+              Expr.joinWithAnd (List.zipWith
+                (fun key val => Basic (.BinaryInfix ⟨`Eq⟩) [key, val])
+                subject
+                (← caseValue.mapM fun cond => Expr.toExpr cond localBinders)
+              ),
+              expr
+            ⟩
+          | _ =>
+            break
+    let mut ite : Expr := nil
+    for ⟨cond, expr⟩ in cases.reverse do
+      if ite == nil then
+        ite := expr
       else
-        pure binderName
-    let binders := Expr.Symbol binderName binderType :: binders
-    let body' ← Expr.toExpr body binders
-    let binderName := binderName.head
-    let binderInfo := Binder.mk binderInfo binderType
-/-
-      if e.toString == "" then
-        println! s!"Expr.toExpr.args_from_binders :
-e = {e}, e = {← ppExpr e}
-binders = {binders}
-binderName = {binderName}
-binderType = {binderType}
-body = {body}
-binderInfo = {binderInfo}
-body' = {body'}
-"
--/
+        ite := Basic (.Special ⟨`ite⟩) [cond, expr, ite]
 
-    return [body', Expr.Binder binderInfo binderName binderType value]
+    return ite

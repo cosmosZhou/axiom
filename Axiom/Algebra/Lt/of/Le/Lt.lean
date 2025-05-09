@@ -1,6 +1,10 @@
 import Axiom.Basic
 
 
+/--
+This lemma states that in a preorder, if `a` is less than or equal to `b` (`a ≤ b`) and `b` is strictly less than `c` (`b < c`), then `a` is strictly less than `c` (`a < c`). 
+It demonstrates the transitivity of the strict less-than relation under the given preorder constraints.
+-/
 @[main]
 private lemma main
   [Preorder α]
@@ -15,3 +19,4 @@ private lemma main
 
 
 -- created on 2025-03-04
+-- updated on 2025-04-04
