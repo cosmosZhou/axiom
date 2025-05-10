@@ -14,7 +14,7 @@ for entry in "${modules[@]}"; do
     # Escape dots in the module name for regex
     escaped_module="${module//./\\.}"
     # Find files importing the module, then filter those not containing the pattern
-    grep -rlZ --include='*.lean' --exclude='*.echo.lean' -E "^import $escaped_module$" Axiom \
+    grep -rlZ --include='*.lean' --exclude='*.echo.lean' -E "^import $escaped_module$" Lemma \
     | xargs -0 grep -LZ -E "$pattern" \
     | while IFS= read -r -d $'\0' file; do
         echo "Processing file: $file"

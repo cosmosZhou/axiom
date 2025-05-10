@@ -1,14 +1,14 @@
 # List of package names to process
-$packages = Get-ChildItem -Path "Axiom" -Directory | Select-Object -ExpandProperty Name
+$packages = Get-ChildItem -Path "Lemma" -Directory | Select-Object -ExpandProperty Name
 
 # Loop over each package
 foreach ($package in $packages) {
     $escapedPackage = [regex]::Escape($package)
     $patternOpen = "open ([\w]+ )*$escapedPackage\b"
-    $importPattern = "import Axiom\.$escapedPackage\."
+    $importPattern = "import Lemma\.$escapedPackage\."
 
     # Find files with open statement but without import
-    $filesWithOpen = Get-ChildItem -Path Axiom -Recurse -Include '*.lean' -Exclude '*.echo.lean' | Where-Object {
+    $filesWithOpen = Get-ChildItem -Path Lemma -Recurse -Include '*.lean' -Exclude '*.echo.lean' | Where-Object {
         (Select-String -Path $_.FullName -Pattern $patternOpen -Quiet)
     }
     

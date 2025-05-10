@@ -1,9 +1,9 @@
 # List of package names to process
-packages=$(find Axiom -mindepth 1 -maxdepth 1 -type d -printf '%f\n')
+packages=$(find Lemma -mindepth 1 -maxdepth 1 -type d -printf '%f\n')
 # Loop over each package
 for package in $packages; do
     # Find files meeting the criteria for the current package
-    grep -rlZ --include='*.lean' --exclude='*.echo.lean' -E "open ([[:alnum:]_]+ )*$package\b" Axiom | xargs -0 grep -LZ "import Axiom.$package\." \
+    grep -rlZ --include='*.lean' --exclude='*.echo.lean' -E "open ([[:alnum:]_]+ )*$package\b" Lemma | xargs -0 grep -LZ "import Lemma.$package\." \
     | while IFS= read -r -d $'\0' file; do
         echo "Processing file: $file"
         echo "The following lines will be modified (removing '$package' from 'open' statements):"

@@ -6,10 +6,10 @@ echo src = $src
 dst=$(normalize $2)
 echo dst = $dst
 
-srcFile=Axiom/${src//.//}.lean
+srcFile=Lemma/${src//.//}.lean
 echo srcFile = $srcFile
 
-dstFile=Axiom/${dst//.//}.lean
+dstFile=Lemma/${dst//.//}.lean
 echo dstFile = $dstFile
 
 parent_path=$(dirname $dstFile)
@@ -31,8 +31,8 @@ mv $srcFile $dstFile
 srcReg=${src//./\\.}
 echo srcReg = $srcReg
 submodule="((\.[a-z]+)?(\b[^.]|$))"
-echo find Axiom -type f -name "*.lean" -not -name "*.echo.lean" -exec sed -i -E "s/$srcReg$submodule/$dst\1/g" {} +
-find Axiom -type f -name "*.lean" -not -name "*.echo.lean" -exec sed -i -E "s/$srcReg$submodule/$dst\1/g" {} +
+echo find Lemma -type f -name "*.lean" -not -name "*.echo.lean" -exec sed -i -E "s/$srcReg$submodule/$dst\1/g" {} +
+find Lemma -type f -name "*.lean" -not -name "*.echo.lean" -exec sed -i -E "s/$srcReg$submodule/$dst\1/g" {} +
 
 package_src=$(echo $src | cut -d'.' -f1)
 echo package_src = $package_src
@@ -50,7 +50,7 @@ echo lemmaNameDst = $lemmaNameDst
 
 if [ $package_dst != $package_src ]; then
     echo "package_dst != package_src"
-    find Axiom -type f -name "*.lean" -not -name "*.echo.lean" -print0 | xargs -0 grep -lZP "\b$lemmaNameSrc$submodule" | while IFS= read -r -d $'\0' file; do
+    find Lemma -type f -name "*.lean" -not -name "*.echo.lean" -print0 | xargs -0 grep -lZP "\b$lemmaNameSrc$submodule" | while IFS= read -r -d $'\0' file; do
         temp_file="${file}.tmp"
         awk -v package_src="$package_src" -v package_dst="$package_dst" '
         $1 == "open" {
@@ -79,4 +79,4 @@ if [ $package_dst != $package_src ]; then
 fi
 
 # xargs: unmatched single quote; by default quotes are special to xargs unless you use the -0 option
-find Axiom -type f -name "*.lean" -not -name "*.echo.lean" -print0 | xargs -0 grep -lZE "open( [[:alnum:]_.]+)* $package_dst\b" | xargs -0 sed -i -E "s/\b$lemmaNameSrc$submodule/$lemmaNameDst\1/g"
+find Lemma -type f -name "*.lean" -not -name "*.echo.lean" -print0 | xargs -0 grep -lZE "open( [[:alnum:]_.]+)* $package_dst\b" | xargs -0 sed -i -E "s/\b$lemmaNameSrc$submodule/$lemmaNameDst\1/g"

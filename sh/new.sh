@@ -3,7 +3,7 @@ source utility.sh
 full_theorem=$(normalize $1)
 echo full_theorem = $full_theorem
 
-dst=Axiom/${full_theorem//.//}.lean
+dst=Lemma/${full_theorem//.//}.lean
 echo dst = $dst
 
 if [ -f $dst ]; then
@@ -13,7 +13,7 @@ fi
 
 install /dev/null -D $dst
 
-echo -e "import Axiom.Basic\n" >> $dst
+echo -e "import Lemma.Basic\n" >> $dst
 
 # Extract the all tokens before the last token
 namespace=${full_theorem%.*}

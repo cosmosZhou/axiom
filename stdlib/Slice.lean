@@ -1,4 +1,4 @@
-import Axiom.Algebra.LtSub_1.of.Le.Gt_0
+import Lemma.Algebra.LtSub_1.of.Le.Gt_0
 open Algebra
 
 

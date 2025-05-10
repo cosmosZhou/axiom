@@ -80,7 +80,7 @@ args.length = {args.length} :
     let expr ← construct_from_args e binders func args
     if extra_args == .nil then
       return expr
-    return Basic (.Special ⟨.anonymous⟩) (expr :: extra_args)
+    return Basic (.Special ⟨default⟩) (expr :: extra_args)
   | .const expr =>
 /-
     if e.toString == "" then
@@ -308,8 +308,9 @@ cond = {← ppExpr cond}
               else
                 ⟨body, binders⟩
             return ← construct_ite e body binders subject values
-          else
-            pure ()
+      | `dite =>
+        if let [_, Basic (.ExprWithLimits .L_lambda) [thenBranch, ifBranch], Basic (.ExprWithLimits .L_lambda) (elseBranch :: _)] := args then
+          return Basic (.Special ⟨`ite⟩) [ifBranch, thenBranch, elseBranch]
       | _ =>
         pure ()
     | .ExprWithAttr (.L_operatorname name) =>

@@ -13,7 +13,7 @@ function echo_import {
   module=${lemma////.}
   echo "import $module" >> test.lean
   # extract import statements from the lean file
-  module=${module#Axiom.}
+  module=${module#Lemma.}
   mapfile -t lines < <(grep -E '^import[[:space:]]+' $file | sed -E 's/^import[[:space:]]+//')
   if [ ${#lines[@]} -eq 0 ]; then
     imports_dict[$module]="[]"
@@ -24,7 +24,7 @@ function echo_import {
 
 while read -r file; do
   echo_import "$file"
-done < <(find Axiom -type f -name "*.lean" -not -name "*.echo.lean" -not -name "Basic.lean") 
+done < <(find Lemma -type f -name "*.lean" -not -name "*.echo.lean" -not -name "Basic.lean") 
 
 imports=$(cat test.lean)
 
@@ -47,7 +47,7 @@ touch test.sql
 echo "INSERT INTO lemma (user, module, imports, open, def, lemma, error, date) VALUES " > test.sql
 for module in ${imports[*]}; do
   # echo "${module//.//}.lean"
-  module=${module#Axiom.}
+  module=${module#Lemma.}
   if [ -z "${imports_dict[$module]}" ]; then
     echo "imports_dict[$module] = " ${imports_dict[$module]}
     continue
@@ -62,7 +62,7 @@ echo "plausible:"
 sorryModules=($(grep -P "^warning: (\./)*[\w/]+\.lean:\d+:\d+: declaration uses 'sorry'" test.log | sed -E 's#^warning: ([.]/)*##' | sed -E "s/\.lean:[0-9]+:[0-9]+: declaration uses 'sorry'//" | sed 's#/#.#g' | sort -u))
 for module in ${sorryModules[*]}; do
   echo "${module//.//}.lean"
-  module=${module#Axiom.}
+  module=${module#Lemma.}
   if [[ $module =~ ^sympy ]] || [[ $module =~ ^Basic ]]; then
     continue
   fi
@@ -73,7 +73,7 @@ echo "failed:"
 failingModules=($(awk '/Some required builds logged failures:/{flag=1;next}/^[^-]/{flag=0}flag' test.log | sed 's/^- //'))
 for module in ${failingModules[*]}; do
   echo "${module//.//}.lean"
-  module=${module#Axiom.}
+  module=${module#Lemma.}
   if [[ $module =~ ^sympy ]] || [[ $module =~ ^Basic ]]; then
     continue
   fi
@@ -169,7 +169,7 @@ function remove_invalid_echo_file {
   fi
 }
 
-find Axiom -type f -regex '.*\.echo\.lean$' | while read -r file; do
+find Lemma -type f -regex '.*\.echo\.lean$' | while read -r file; do
     remove_invalid_echo_file $file
 done
 

@@ -22,7 +22,7 @@ def Lean.Name.normalized (name : Name) : Name :=
       if h : index < components.length then
         let last := components[index]
         let last := last.toString ++ "✝"
-        let pre := (components.take index).foldl (fun acc n => acc ++ n) .anonymous
+        let pre := (components.take index).foldl (· ++ ·) default
         .str pre last
       else
         name

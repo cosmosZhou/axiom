@@ -1,0 +1,14 @@
+import Lemma.Basic
+
+
+@[main]
+private lemma main
+-- given
+  (h : p ∧ q) :
+-- imply
+  q ∧ p :=
+-- proof
+  ⟨h.right, h.left⟩
+
+
+-- created on 2024-07-01

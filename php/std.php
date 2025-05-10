@@ -3471,7 +3471,7 @@ import os, subprocess
 userProfile = "C:\\Users\\admin"
 lakePath = f"{userProfile}\\.elan\\bin\\lake.exe"
 cwd = os.getcwd()
-leanEchoFile = f"{cwd}/Axiom/Algebra/Ceil/eq/FloorDivSub_Sign.echo.lean"
+leanEchoFile = f"{cwd}/Lemma/Algebra/Ceil/eq/FloorDivSub_Sign.echo.lean"
 cmd = f"{lakePath} env lean {leanEchoFile}"
 
 # Launch the command and capture stdout line by line

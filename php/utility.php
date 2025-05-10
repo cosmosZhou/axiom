@@ -18,7 +18,7 @@ function lean_to_module($lean)
     for (;;) {
         $dirname = dirname($lean);
         $basename = basename($lean);
-        if (std\equals($basename, 'Axiom')) {
+        if (std\equals($basename, 'Lemma')) {
             break;
         }
 
@@ -42,7 +42,7 @@ function module_to_path($theorem)
 {
     $theorem = str_replace(".", "/", $theorem);
 
-    return dirname(dirname(__file__)) . "/Axiom/$theorem";
+    return dirname(dirname(__file__)) . "/Lemma/$theorem";
 }
 
 function reference(&$value)
@@ -421,7 +421,7 @@ function fetch_codes($module)
 
 function axiom_directory()
 {
-    return dirname(dirname(__file__)) . "/Axiom/";
+    return dirname(dirname(__file__)) . "/Lemma/";
 }
 
 function select_lemma_by_type($user, $type, $limit = 100)
@@ -548,13 +548,13 @@ function fetch_from_mysql($user, $module)
 function select_hierarchy($user, $module, $reverse = false)
 {
     if ($reverse) {
-        foreach (get_rows("select module from lemma where user = '$user' and json_contains(imports, '\"Axiom.$module\"')", MYSQLI_NUM) as [$result])
+        foreach (get_rows("select module from lemma where user = '$user' and json_contains(imports, '\"Lemma.$module\"')", MYSQLI_NUM) as [$result])
             yield $result;
     }
     else {
         foreach (get_rows("select imports from lemma where user = '$user' and module = \"$module\"", MYSQLI_NUM) as [$result])
             foreach (json_decode($result) as &$result) {
-                if (preg_match('/^Axiom\.(.+)/', $result, $matches)) {
+                if (preg_match('/^Lemma\.(.+)/', $result, $matches)) {
                     $result = $matches[1];
                     if ($result != 'Basic')
                         yield $result;

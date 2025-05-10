@@ -13,8 +13,8 @@ Write-Host "src = $src"
 Write-Host "dst = $dst"
 
 # Construct source and destination file paths
-$srcFile = "Axiom/" + ($src -replace '\.', '/') + ".lean"
-$dstFile = "Axiom/" + ($dst -replace '\.', '/') + ".lean"
+$srcFile = "Lemma/" + ($src -replace '\.', '/') + ".lean"
+$dstFile = "Lemma/" + ($dst -replace '\.', '/') + ".lean"
 
 Write-Host "srcFile = $srcFile"
 Write-Host "dstFile = $dstFile"
@@ -44,7 +44,7 @@ $srcReg = [regex]::Escape($src)
 $submodule = '((\.[a-z]+)?(\b[^.]|$))'
 
 # Replace all occurrences of the old namespace with the new one
-Get-ChildItem -Path Axiom -Recurse -File -Filter *.lean | Where-Object { $_.Name -notlike "*.echo.lean" } | ForEach-Object {
+Get-ChildItem -Path Lemma -Recurse -File -Filter *.lean | Where-Object { $_.Name -notlike "*.echo.lean" } | ForEach-Object {
     $content = [System.IO.File]::ReadAllText($_.FullName, [System.Text.Encoding]::UTF8)
     $newContent = $content -replace "$srcReg$submodule", "$dst`$1"
     if ($newContent -ne $content) {
@@ -60,7 +60,7 @@ $lemmaNameDstOrig = if ($dst.Contains('.')) { $dst.Substring($dst.IndexOf('.') +
 
 # Update 'open' statements if package changed
 if ($package_dst -ne $package_src) {
-    Get-ChildItem -Path Axiom -Recurse -File -Filter *.lean | Where-Object { $_.Name -notlike "*.echo.lean" } | ForEach-Object {
+    Get-ChildItem -Path Lemma -Recurse -File -Filter *.lean | Where-Object { $_.Name -notlike "*.echo.lean" } | ForEach-Object {
         $file = $_.FullName
         $tempFile = "$file.tmp"
         $content = Get-Content $file
@@ -89,7 +89,7 @@ if ($package_dst -ne $package_src) {
 # Final replacement for lemma names in files with the destination package
 $lemmaNameSrc = [regex]::Escape($lemmaNameSrcOrig)
 
-$filesWithOpenPackageDst = Get-ChildItem -Path Axiom -Recurse -File -Filter *.lean | Where-Object { 
+$filesWithOpenPackageDst = Get-ChildItem -Path Lemma -Recurse -File -Filter *.lean | Where-Object { 
     $_.Name -notlike "*.echo.lean" -and 
     (Select-String -Path $_.FullName -Pattern "open( [\w\.]+)* $package_dst\b" -Quiet)
 }

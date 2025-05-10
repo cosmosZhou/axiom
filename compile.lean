@@ -45,7 +45,7 @@ def compileLeanFiles (dir : System.FilePath) : IO Unit := do
     ".lake/packages/Qq/.lake/build/lib"
   ]
 
-  let _ ← compile (System.FilePath.mk "." / "Axiom" / "Basic.lean")
+  let _ ← compile (System.FilePath.mk "." / "Lemma" / "Basic.lean")
 
   for filePath in ← (System.FilePath.walkDir dir) do
     if filePath.extension == some "lean" then
@@ -81,5 +81,5 @@ def findUnprovenTheorems : MetaM (List Name) :=
 #eval findUnprovenTheorems
 
 def main : IO Unit := do
-  let dir := System.FilePath.mk "." / "Axiom" -- Change this to the directory containing your Lean files
+  let dir := System.FilePath.mk "." / "Lemma" -- Change this to the directory containing your Lean files
   compileLeanFiles dir

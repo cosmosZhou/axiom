@@ -1,4 +1,4 @@
-import Axiom.Algebra.Eq_Length_ProdConsSumMap.of.NeLength_0
+import Lemma.Algebra.Eq_Length_ProdConsSumMap.of.NeLength_0
 open Algebra
 
 

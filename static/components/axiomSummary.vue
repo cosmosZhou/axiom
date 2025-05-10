@@ -1,7 +1,6 @@
 <template>
 	<div tabindex=1 @keydown=keydown>
 		the whole math repertoire is composed of the following sections:
- 
 		<searchForm v-if="issearch" :q=q :caseSensitive=caseSensitive :wholeWord=wholeWord :regularExpression=regularExpression :latex=latex :fullText=fullText></searchForm>		
 		<ul>
 			<li v-for="(content, section) in repertoire">
@@ -28,16 +27,14 @@
 		in summary, the following is the total count of each type for all lemmas:
 		<br>
 		<table tabindex=2 border=1>
-	
 			<tr>
 				<th>type</th>
 				<th>count</th>
 			</tr>
-	
 			<tr v-for="tuple of state_count_pairs">
 				<td><a :href="href_state(tuple.type)">{{tuple.type}}</a></td>
 				<td>{{tuple.count}}</td>
-			</tr>	
+			</tr>
 		</table>
 		most recent <input size=2 v-model=topk @change=change_input>axioms updated:
 		<a v-for="axiom of recentAxioms" :href=href_module(axiom)>

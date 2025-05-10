@@ -159,7 +159,7 @@ def ExprWithLimits.func : ExprWithLimits → Func
 
 
 def ExprWithLimits.name : ExprWithLimits → Name
-  | L_forall => .anonymous
+  | L_forall => default
   | L_exists => `Exists
   | L_sum => `Finset.sum
   | L_prod => `Finset.prod
@@ -172,7 +172,7 @@ def ExprWithLimits.name : ExprWithLimits → Name
   | L_max name
   | L_min name
   | L_lambda
-  | L_let => .anonymous
+  | L_let => default
 
 
 def Binder.func : Binder → Func
@@ -200,10 +200,12 @@ def Special.func : Special → Func
     | `Int.ceil => ⟨72, "⌈%s⌉", "\\left\\lceil%s\\right\\rceil"⟩  -- LCeil
     | `Int.floor => ⟨72, "⌊%s⌋", "\\left\\lfloor%s\\right\\rfloor"⟩  -- LFloor
     | `ite => ⟨60, "ite", "ite"⟩  -- LITE
+    | `dite => ⟨60, "ite", "ite"⟩  -- LITE
     | `Prod.mk => ⟨117, "⟨%s, %s⟩", "\\langle %s, %s \\rangle"⟩  -- LAngleBracket
     | `List.get
     | `List.Vector.get
     | `GetElem.getElem => ⟨99, "%s[%s]", "%s_%s"⟩  -- LGetElem
+    | `GetElem?.getElem? => ⟨99, "%s[%s]?", "%s_{%s?}"⟩  -- LGetElemQue
     | `Nat.ModEq => ⟨32, "%s ≡ %s [MOD %s]", "%s \\equiv %s\\ \\left[\\operatorname{MOD}\\ %s\\right]"⟩  -- L_equiv
     | `Singleton.singleton
     | `Insert.insert => ⟨72, "{%s}", "\\left\\{%s\\right\\}"⟩  -- LBrace
@@ -484,6 +486,7 @@ e = {e}, e = {← ppExpr e}, e.type = {← inferType e}"
     | `List.Vector.sum
     | `List.Vector.toList
     | `List.Vector.flatten
+    | `List.Vector.unflatten
     | `Nat.pred
     | `Nat.succ
     | `Complex.cos
@@ -542,7 +545,9 @@ e = {e}, e = {← ppExpr e}, e.type = {← inferType e}"
     | `List.get
     | `List.Vector.get
     | `GetElem.getElem     -- LGetElem
+    | `GetElem?.getElem?   -- LGetElemQue
     | `ite                 -- LITE
+    | `dite                -- LITE
     | `Singleton.singleton -- LBrace
     | `Insert.insert       -- LBrace
     | `setOf               -- LSetOf
@@ -637,7 +642,7 @@ func = {func}
 -/
       match func with
       | .ExprWithLimits .L_lambda =>
-        return .Operator (.Special ⟨.anonymous⟩)
+        return .Operator (.Special ⟨default⟩)
 
       | .UnaryPrefix ⟨`DFunLike.coe⟩ =>
         if arg.ctorName == "const" then
@@ -663,11 +668,11 @@ c.ctorName = {c.ctorName}
 -/
       match c with
       | Symbol _ (Basic (.ExprWithLimits .L_forall) _) =>
-        return .Operator (.Special ⟨.anonymous⟩)
+        return .Operator (.Special ⟨default⟩)
       | const .EmptyList =>
         return .const c
       | _ =>
-        return .const (.Basic (.Special ⟨.anonymous⟩) [c, ← toExpr arg binders])
+        return .const (.Basic (.Special ⟨default⟩) [c, ← toExpr arg binders])
 
   | .lam ..  =>
     return .Operator (.ExprWithLimits .L_lambda)

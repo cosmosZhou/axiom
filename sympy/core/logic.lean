@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Axiom.Logic.Or.of.Or.Imp
-import Axiom.Logic.And.of.And.Imp
-import Axiom.Logic.ImpNotS.of.Imp
-import Axiom.Logic.Imp.of.Imp.Imp
+import Lemma.Logic.Or.of.Or.Imp
+import Lemma.Logic.And.of.And.Imp
+import Lemma.Logic.ImpNotS.of.Imp
+import Lemma.Logic.Imp.of.Imp.Imp
 import stdlib.Lean.Expr -- using Lean.Expr.is_Prop
 import stdlib.Lean.FVarId
 open Lean Elab.Tactic Meta Parser.Tactic

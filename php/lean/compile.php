@@ -310,7 +310,7 @@ abstract class Lean implements JsonSerializable
             case 'LDoubleAngleQuotation':
                 $indent = $this->indent;
                 $caret = new LCaret($indent);
-                $LGetElem = false;
+                $indexed = false;
                 if ($Type == 'LBracket') {
                     $self = $this;
                     $parent = $self->parent;
@@ -324,12 +324,12 @@ abstract class Lean implements JsonSerializable
                         $parent = $parent->parent;
                     }
                     if ($this instanceof LToken || $this instanceof LAttr || $this instanceof LParenthesis)
-                        $LGetElem = $prev_token != ' ';
+                        $indexed = $prev_token != ' ';
                 }
 
-                if ($LGetElem) {
+                if ($indexed)
                     $this->parent->replace($this, new LGetElem($this, $caret, $indent));
-                } else {
+                else {
                     $new = new $Type($caret, $indent);
                     if ($this->parent instanceof LArgsSpaceSeparated)
                         $this->parent->push($new);
@@ -3057,7 +3057,7 @@ class LMethodChaining extends LBinary
     }
 }
 
-class LGetElem extends LBinary
+abstract class LGetElemBase extends LBinary
 {
     public static $input_priority = 67;
     public function sep()
@@ -3075,15 +3075,6 @@ class LGetElem extends LBinary
         }
     }
 
-    public function strFormat()
-    {
-        return '%s[%s]';
-    }
-    public function latexFormat()
-    {
-        return '%s_{%s}';
-    }
-
     public function append_right($func)
     {
         if ($func == 'LBracket')
@@ -3098,6 +3089,31 @@ class LGetElem extends LBinary
         return $new;
     }
 }
+
+class LGetElem extends LGetElemBase
+{
+    public function strFormat()
+    {
+        return '%s[%s]';
+    }
+    public function latexFormat()
+    {
+        return '%s_{%s}';
+    }
+}
+
+class LGetElemQue extends LGetElemBase
+{
+    public function strFormat()
+    {
+        return '%s[%s]?';
+    }
+    public function latexFormat()
+    {
+        return '%s_{%s?}';
+    }
+}
+
 
 class L_is extends LBinary
 {
@@ -3697,7 +3713,7 @@ class LModule extends LStatements
             $leanCode->args,
             fn($import) =>
             $import instanceof L_import &&
-                str_starts_with($package = "$import->arg", 'Axiom.') &&
+                str_starts_with($package = "$import->arg", 'Lemma.') &&
                 (
                     !file_exists($olean = ".lake/build/lib/lean/" . ($module = str_replace('.', '/', $package)) . ".olean") || 
                     filemtime($olean) < filemtime($module. ".lean")
@@ -4892,9 +4908,16 @@ class LArgsSpaceSeparated extends LArgs
 
     public function tokens_space_separated()
     {
-        if (std\array_all(fn($arg) => $arg instanceof LToken, $this->args))
-            return $this->args;
-        return [];
+        $tokens = [];
+        foreach ($this->args as $arg) {
+            if ($arg instanceof LToken)
+                $tokens[] = $arg;
+            elseif ($arg instanceof LAngleBracket)
+                $tokens[] = $arg->tokens_comma_separated();
+            else
+                return [];
+        }
+        return $tokens;
     }
 
     public function unique_token($indent)
@@ -5644,8 +5667,16 @@ class LTactic extends LSyntax
                     $arg = $this->arg;
                     if ($arg instanceof LToken)
                         $token[] = clone $arg;
-                    else if ($arg instanceof LArgsSpaceSeparated)
-                        $token = array_map(fn($arg) => clone $arg, $arg->args);
+                    else if ($arg instanceof LArgsSpaceSeparated) {
+                        foreach ($arg->tokens_space_separated() as $arg) {
+                            if ($arg instanceof LToken)
+                                $token[] = clone $arg;
+                            else if (is_array($arg)) {
+                                foreach ($arg as $a)
+                                    $token[] = clone $a;
+                            }
+                        }
+                    }
                     else if ($arg instanceof LAngleBracket) {
                         $arg = $arg->arg;
                         if ($arg instanceof LToken)
@@ -7525,13 +7556,21 @@ function compile($code)
                 $caret = $caret->parent->append_right('LDoubleAngleQuotation');
                 break;
             case '?':
-                if ($tokens[$i + 1] == '_') {
-                    ++$i;
-                    $token .= '_';
+                if ($caret instanceof LGetElem) {
+                    $parent = $caret->parent;
+                    [$lhs, $rhs] = $caret->args;
+                    $new = new LGetElemQue($lhs, $rhs, $caret->indent);
+                    $parent->replace($caret, $new);
+                    $caret = $new;
                 }
-                $caret = $caret->parent->insert_token($caret, $token);
+                else {
+                    if ($tokens[$i + 1] == '_') {
+                        ++$i;
+                        $token .= '_';
+                    }
+                    $caret = $caret->parent->insert_token($caret, $token);
+                }
                 break;
-
             case '<':
                 if ($tokens[$i + 1] == '=') {
                     ++$i;

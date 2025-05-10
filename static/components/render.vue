@@ -68,8 +68,8 @@ export default {
     },
     
     data() {
-        // const model = 'deepseek-r1';
-        const model = 'deepseek-reasoner';
+        const model = 'deepseek-r1';
+        // const model = 'deepseek-reasoner';
         return {
         	renderLean: [],
             refresh: false,
@@ -121,7 +121,7 @@ export default {
     computed: {
         submodules() {
             return this.imports.flatMap(imp => {
-                var m = imp.match(/^Axiom\.(?!Basic$)(.+)/); 
+                var m = imp.match(/^Lemma\.(?!Basic$)(.+)/); 
                 return m? [m[1]] : [];
             });
         },
@@ -250,7 +250,7 @@ export default {
             var {module} = this;
             if (!module)
                 module = getParameterByName('module');
-            return `Axiom/${module.replace(/[.]/g, '/')}.lean`;
+            return `Lemma/${module.replace(/[.]/g, '/')}.lean`;
         },
 
         async lean() {
@@ -277,7 +277,7 @@ with topology as (
                 '$[*]' COLUMNS (module text PATH '$')
             ) AS jt
         WHERE
-            jt.module LIKE 'Axiom.%'
+            jt.module LIKE 'Lemma.%'
     )
     SELECT
         module,
@@ -575,7 +575,7 @@ where
                         if (!functions && pkg == packages[0]) 
                             prequisite[pkg][module].imports.push(m[1]);
                         break;
-                    case 'Axiom':
+                    case 'Lemma':
                         if (!prequisite[pkg][module].axiom)
                             prequisite[pkg][module].axiom = [];
                         prequisite[pkg][module].axiom.push(packages.slice(1).join('.'));
@@ -664,7 +664,7 @@ where
             for (let module of imports) {
                 var section = module.split('.');
                 switch (section[0]) {
-                case 'Axiom':
+                case 'Lemma':
                     if (section[1] == 'Basic')
                         break;
                     module = section.slice(1).join('.');
@@ -758,7 +758,7 @@ where
             var errorIndex = error.findIndex(err => err.line == line);
             var lemmaType = lemma[index[0]].name == 'main'? 'theorem': 'lemma';
             if (errorIndex < 0) {
-                if (error.length) {
+                if (error.length || getitem(lemma, ...index).lean.match(/^ *sorry *$/m)) {
                     var codes = ranged(index[0] + 1).map(i => {
                         lemma[i].attribute.remove('main');
                         var {name} = lemma[i];
@@ -774,7 +774,7 @@ where
                     });
                     var code = codes.join("\n\n\n");
                     code = code.rtrim();
-                    var m = code.match(/^ +sorry *$/m);
+                    var m = code.match(/^ *sorry *$/m);
                     if (!m) {
                         m = code.match(/(\n +).+$/);
                         var spaces = m ? m[1] : '\n  ';

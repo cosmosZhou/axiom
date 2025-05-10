@@ -1,0 +1,17 @@
+import sympy.polys.domains
+import Lemma.Basic
+
+
+@[main]
+private lemma main
+  [IntegerRing α]
+  {x y : α}
+-- given
+  (h : x < y) :
+-- imply
+  x + 1 ≤ y :=
+-- proof
+  IntegerRing.succ_le_of_lt h
+
+
+-- created on 2024-07-01

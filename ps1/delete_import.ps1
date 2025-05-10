@@ -11,7 +11,7 @@ foreach ($entry in $modules) {
     $escapedModule = $module -replace '\.', '\.'
     
     # Find files importing the module
-    $files = Get-ChildItem -Path Axiom -Recurse -Include '*.lean' -Exclude '*.echo.lean' |
+    $files = Get-ChildItem -Path Lemma -Recurse -Include '*.lean' -Exclude '*.echo.lean' |
         Where-Object { !$_.PSIsContainer } |
         Where-Object {
             Select-String -Path $_.FullName -Pattern "^import $escapedModule`$" -CaseSensitive -Quiet

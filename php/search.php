@@ -59,13 +59,13 @@ if ($fullText) {
     }
     $fullText = str_replace("\"", "\\\"", $fullText);
     if (std\is_linux()) {
-        // the following command is used to search for all typeclass names in the Axiom directory
-        // grep -rhP --include="*.lean" --exclude="*.echo.lean" -o "(?<=\[)\w+(?= \p{L}\])" Axiom | sort -u        
-        exec("grep -rn$P --include=*.lean --exclude=*.echo.lean \"$fullText\" Axiom | head -n $limit", $output_array);
+        // the following command is used to search for all typeclass names in the Lemma directory
+        // grep -rhP --include="*.lean" --exclude="*.echo.lean" -o "(?<=\[)\w+(?= \p{L}\])" Lemma | sort -u        
+        exec("grep -rn$P --include=*.lean --exclude=*.echo.lean \"$fullText\" Lemma | head -n $limit", $output_array);
         $sep = '/';
     }
     else {
-        exec("powershell.exe -Command \"[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8; \$OutputEncoding = [System.Text.Encoding]::UTF8; Get-ChildItem -Path Axiom -Recurse -Include *.lean -Exclude *.echo.lean | Select-String -CaseSensitive -Pattern '" . addslashes($fullText) . "' -AllMatches | Select-Object -First $limit\"", $output_array);
+        exec("powershell.exe -Command \"[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8; \$OutputEncoding = [System.Text.Encoding]::UTF8; Get-ChildItem -Path Lemma -Recurse -Include *.lean -Exclude *.echo.lean | Select-String -CaseSensitive -Pattern '" . addslashes($fullText) . "' -AllMatches | Select-Object -First $limit\"", $output_array);
         $sep = '\\\\';
     }
 
@@ -73,7 +73,7 @@ if ($fullText) {
     foreach ($output_array as &$item) {
         [$file, $line, $text] = explode(":", $item, 3);
 
-        if (preg_match("#^Axiom$sep(.*)\.lean$#", $file, $matches)) {
+        if (preg_match("#^Lemma$sep(.*)\.lean$#", $file, $matches)) {
             $data[] = [
                 'module' => str_replace($sep, ".", $matches[1]),
                 'line' => $line,

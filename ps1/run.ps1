@@ -21,7 +21,7 @@ function echo_import {
     $module = $lemma -replace '\\', '.'
     Add-Content -Path test.lean -Value "import $module"
     
-    $module = $module -replace '^Axiom\.', ''
+    $module = $module -replace '^Lemma\.', ''
     $lines = @(Get-Content -Path $file | Where-Object { $_ -match '^import\s+' } | ForEach-Object { $_ -replace '^import\s+', '' })
     
     if ($lines.Count -eq 0) {
@@ -31,7 +31,7 @@ function echo_import {
     }
 }
 
-Get-ChildItem -Path "Axiom" -Recurse -File -Filter "*.lean" |
+Get-ChildItem -Path "Lemma" -Recurse -File -Filter "*.lean" |
 Where-Object { $_.Name -notlike "*.echo.lean" -and $_.Name -ne "Basic.lean" } |
 ForEach-Object {
     echo_import $_.FullName
@@ -70,8 +70,8 @@ Write-Output "modules:"
 
 # Process each module in the imports array
 foreach ($module in $imports) {
-    # Remove the 'Axiom.' prefix from the module name
-    $module = $module -replace '^Axiom\.', ''
+    # Remove the 'Lemma.' prefix from the module name
+    $module = $module -replace '^Lemma\.', ''
 
     # Skip processing if the module is not present in imports_dict or has an empty value
     if (-not $imports_dict.ContainsKey($module) -or [string]::IsNullOrEmpty($imports_dict[$module])) {
@@ -105,8 +105,8 @@ foreach ($module in $sorryModules) {
     # Output the .lean file path with slashes
     ($module -replace '\.', '/') + ".lean" | Write-Output
     
-    # Remove 'Axiom.' prefix from module name
-    $module = $module -replace '^Axiom\.', ''
+    # Remove 'Lemma.' prefix from module name
+    $module = $module -replace '^Lemma\.', ''
     
     # Skip modules starting with 'sympy' or 'Basic'
     if ($module -match '^sympy' -or $module -match '^Basic') {
@@ -149,8 +149,8 @@ foreach ($module in $failingModules) {
     $leanPath = $module -replace '\.', '/'
     Write-Output "$leanPath.lean"
 
-    # Remove 'Axiom.' prefix
-    $modifiedModule = $module -replace '^Axiom\.', ''
+    # Remove 'Lemma.' prefix
+    $modifiedModule = $module -replace '^Lemma\.', ''
 
     # Skip modules starting with sympy or Basic
     if ($modifiedModule -like "sympy*" -or $modifiedModule -like "Basic*") {
@@ -310,8 +310,8 @@ function remove_invalid_echo_file {
     }
 }
 
-# Process .echo.lean files under Axiom
-Get-ChildItem -Path Axiom -Recurse -File | 
+# Process .echo.lean files under Lemma
+Get-ChildItem -Path Lemma -Recurse -File | 
     Where-Object { $_.Name -match '\.echo\.lean$' } | 
     ForEach-Object { remove_invalid_echo_file -file $_.FullName }
 

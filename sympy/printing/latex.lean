@@ -43,7 +43,6 @@ def Expr.countCases : Expr → Nat
 
 def Expr.latexFormat : Expr → String
   | nil => ""
-
   | const _
   | sort _
   | Symbol .. => "%s"
@@ -101,7 +100,6 @@ def Expr.latexFormat : Expr → String
               "{\\left(%s\\right)}"
 
           s!"{left} {opStr} {right}"
-
       | _ =>
         op.toString
 
@@ -191,6 +189,18 @@ def Expr.latexFormat : Expr → String
             else
               "{\\left(%s\\right)}"
           s!"{list}_%s"
+        | _ =>
+          opStr
+      | `GetElem?.getElem? =>
+        match args with
+        | list :: _ =>
+          let list :=
+            if func.priority < list.priority || list.is_Abs || list.is_Bool || list.is_Card then
+              "%s"
+            else
+              "{\\left(%s\\right)}"
+          let index := "{%s?}"
+          s!"{list}_{index}"
         | _ =>
           opStr
       | _ =>
@@ -443,7 +453,13 @@ where
   | Basic (.Special ⟨`ite⟩) args, cases =>
     match args with
     | [ifBranch, thenBranch, elseBranch] =>
-      let cases := cases.concat ("{{%s}} & {\\color{blue}\\text{if}}\\ %s ".format thenBranch.toLatex, ifBranch.toLatex)
+      let ifBranch :=
+        match ifBranch with
+        | Binder .given name type nil =>
+          "{%s} : {%s}".format name.toString, type.toLatex
+        | _ =>
+          ifBranch.toLatex
+      let cases := cases.concat ("{{%s}} & {\\color{blue}\\text{if}}\\ %s ".format thenBranch.toLatex, ifBranch)
       merge_ite elseBranch cases
     | _=>
       cases

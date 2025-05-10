@@ -147,7 +147,7 @@ where
 			var prefix = text.slice(0, cursor.ch) + text.slice(cursor.ch).match(/^[\w']*/)[0];
 		    var m = prefix.match(/([\w']+)(?:\.[\w']+)*$/);
 		    var module = m[0];
-			m = module.match(/^Axiom\.(.+)/);
+			m = module.match(/^Lemma\.(.+)/);
 			if (m)
 				module = m[1];
 

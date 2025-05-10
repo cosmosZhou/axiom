@@ -1,12 +1,12 @@
 import stdlib.List.Vector
-import Axiom.Algebra.Eq_DivProd_ProdTail.of.GtLength_0.Gt_0
-import Axiom.Algebra.Eq_Mul_ProdTail_Prod.of.GtLength_0.Gt_0
-import Axiom.Algebra.EqHeadD.of.GtLength_0
-import Axiom.Algebra.EqHeadD.of.EqLength_0
-import Axiom.Algebra.Length.le.One.of.Tail.eq.Nil
-import Axiom.Algebra.TailTail.eq.Drop_2
-import Axiom.Algebra.LengthDrop_1.ge.Sub_1.of.GeLength.Gt_1
-import Axiom.Algebra.EqMin_SubMulS
+import Lemma.Algebra.Eq_DivProd_ProdTail.of.GtLength_0.Gt_0
+import Lemma.Algebra.Eq_Mul_ProdTail_Prod.of.GtLength_0.Gt_0
+import Lemma.Algebra.EqHeadD.of.GtLength_0
+import Lemma.Algebra.EqHeadD.of.EqLength_0
+import Lemma.Algebra.Length.le.One.of.Tail.eq.Nil
+import Lemma.Algebra.TailTail.eq.Drop_2
+import Lemma.Algebra.LengthDrop_1.ge.Sub_1.of.GeLength.Gt_1
+import Lemma.Algebra.EqMin_SubMulS
 open Algebra
 
 /--

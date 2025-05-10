@@ -1,19 +1,19 @@
 function normalize() {
     case "$1" in
         *.lean) 
-            src=${1#*Axiom/}
+            src=${1#*Lemma/}
             src=${src%.lean}
             src=(${src//// })
-            # if the first element is "Axiom", remove it
-            if [ ${src[0]} == "Axiom" ]; then
+            # if the first element is "Lemma", remove it
+            if [ ${src[0]} == "Lemma" ]; then
                 src=("${src[@]:1}")
             fi
             # join the array with "."
             src=${src[*]}
             echo "${src// /.}"
             ;;
-        Axiom.*)
-            echo ${1#Axiom.}
+        Lemma.*)
+            echo ${1#Lemma.}
             ;;
         *) 
             echo $1
@@ -50,7 +50,7 @@ get_lean_path() {
 
 build_object() {
     theorem=$(normalize $1)
-    baseFile=Axiom/${theorem//./\/}
+    baseFile=Lemma/${theorem//./\/}
     leanFile=${baseFile}.lean
     oleanFile=.lake/build/lib/${baseFile}.olean
     ileanFile=.lake/build/lib/${baseFile}.ilean

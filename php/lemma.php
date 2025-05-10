@@ -4,7 +4,7 @@ require_once 'init.php';
 require_once 'std.php';
 if ($_POST) {
 	$term = "(?:[A-Z][\w']*|(of|eq|ne|gt|lt|ge|le|is|in|to|mod|et|ou)(?=\.)|comm\b)";
-	$sections = std\listdir($root = dirname(dirname(__FILE__)) . "/Axiom/");
+	$sections = std\listdir($root = dirname(dirname(__FILE__)) . "/Lemma/");
 	$sectionRegex = implode('|', $sections);
 
 	$leanCode = [];
@@ -92,7 +92,7 @@ if ($_POST) {
 				if (!in_array($matches[1], $open_section))
 					$open_section[] = $matches[1];
 
-				$module = "Axiom." . $matches[0];
+				$module = "Lemma." . $matches[0];
 				if (!in_array($module, $imports))
 					$imports[] = $module;
 
@@ -105,7 +105,7 @@ if ($_POST) {
 						$module = $section . '.' . $submodule;
 
 						if (file_exists(module_to_lean($module))) {
-							$module = 'Axiom.' . $module;
+							$module = 'Lemma.' . $module;
 							if (!in_array($module, $imports))
 								$imports[] = $module;
 							$moduleExists[$module] = true;
@@ -138,7 +138,7 @@ EOT;
 	$imports = array_filter($imports, function ($import) use ($lemmaCode, $open_section) {
 		$imports = explode('.', $import);
 		switch ($imports[0]) {
-		case 'Axiom':
+		case 'Lemma':
 			array_shift($imports);
 			if (in_array($imports[0], $open_section))
 				array_shift($imports);
@@ -152,18 +152,18 @@ EOT;
 		$import = str_replace('.', '\.', $import);
 		return preg_match("/\b$import\b/", $lemmaCode);
 	});
-	if (!array_filter($imports, fn($import) => str_starts_with($import, 'Axiom.')))
-		$imports[] = "Axiom.Basic";
+	if (!array_filter($imports, fn($import) => str_starts_with($import, 'Lemma.')))
+		$imports[] = "Lemma.Basic";
 
 	$open_section = array_reduce($imports, function ($carry, $import) use (&$moduleExists) {
 		$module = explode('.', $import);
-		if ($module[0] == 'Axiom' && $module[1] != 'Basic')
+		if ($module[0] == 'Lemma' && $module[1] != 'Basic')
 			$carry[$module[1]] = true;
 		return $carry;
 	}, []);
 	$imports = array_map(fn($import) => "import $import", $imports);
-	// find Axiom -name "*.lean" -exec perl -i -0777 -pe 's/(\S+)(?=\n\n@\[\w+)/$1\n/g' {} +
-	// find Axiom -name "*.lean" -exec perl -i -0777 -pe 's/((\S+)\n+)(?=\n\n\n-- created)/$2/g' {} +
+	// find Lemma -name "*.lean" -exec perl -i -0777 -pe 's/(\S+)(?=\n\n@\[\w+)/$1\n/g' {} +
+	// find Lemma -name "*.lean" -exec perl -i -0777 -pe 's/((\S+)\n+)(?=\n\n\n-- created)/$2/g' {} +
 	$leanCode[] = implode("\n", $imports);
 
 	$open_section = array_keys($open_section);
@@ -221,7 +221,7 @@ if (!$code || !$code['lemma'] || !$code['date']) {
 	$code = $leanCode->render2vue(false, $modify, $syntax);
 	$import_syntax = function ($import) use ($leanCode, $code) {
 		if (!in_array($import, $imports = $code['imports'])) {
-			$prefix = "Axiom.";
+			$prefix = "Lemma.";
 			$imports = array_filter($imports, fn($module) => str_starts_with($module, $prefix));
 			$imports = [...$imports];
 			$offset = strlen($prefix);
@@ -248,7 +248,7 @@ WITH RECURSIVE dependencies AS (
 			'$[*]' COLUMNS (module text PATH '$')
 		) AS jt
 	WHERE
-		jt.module LIKE 'Axiom.%'
+		jt.module LIKE 'Lemma.%'
 )
 select 
     count(*)

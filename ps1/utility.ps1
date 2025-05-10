@@ -5,19 +5,19 @@ function normalize {
 
     switch -Wildcard ($inputString) {
         "*.lean" {
-            $src = $inputString -replace "^.*?Axiom/", ""
+            $src = $inputString -replace "^.*?Lemma/", ""
             $src = $src -replace "\.lean$", ""
             $parts = $src -split "/"
             
-            if ($parts[0] -eq "Axiom") {
+            if ($parts[0] -eq "Lemma") {
                 $parts = $parts[1..($parts.Length-1)]
             }
             
             return $parts -join "."
         }
         
-        "Axiom.*" {
-            return $inputString -replace "^Axiom\.", ""
+        "Lemma.*" {
+            return $inputString -replace "^Lemma\.", ""
         }
         
         default {
@@ -52,7 +52,7 @@ function build_object {
     )
 
     $theorem = normalize $theoremInput
-    $baseFile = "Axiom/" + ($theorem -replace '\.', '/')
+    $baseFile = "Lemma/" + ($theorem -replace '\.', '/')
     $leanFile = "$baseFile.lean"
     $oleanFile = ".lake/build/lib/$baseFile.olean"
     $ileanFile = ".lake/build/lib/$baseFile.ilean"

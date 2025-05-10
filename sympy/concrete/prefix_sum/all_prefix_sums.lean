@@ -1,4 +1,4 @@
-import Axiom.Basic
+import Lemma.Basic
 
 -- define the circled plus operator
 class OPlus (α : Type u) where

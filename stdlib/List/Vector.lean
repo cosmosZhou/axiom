@@ -1,5 +1,5 @@
-import Axiom.Algebra.LengthToList.eq.Length
-import Axiom.Algebra.EqMin_SubMulS
+import Lemma.Algebra.LengthToList.eq.Length
+import Lemma.Algebra.EqMin_SubMulS
 open Algebra
 
 

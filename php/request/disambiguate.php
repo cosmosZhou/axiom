@@ -2,7 +2,7 @@
 require_once '../std.php';
 require_once '../lean/compile.php';
 $module = $_POST['module'];
-$root = dirname(dirname(dirname(__FILE__))) . "/Axiom/";
+$root = dirname(dirname(dirname(__FILE__))) . "/Lemma/";
 $sections = std\listdir($root);
 $module = "/" . str_replace('.', '/', $module);
 

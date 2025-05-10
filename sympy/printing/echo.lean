@@ -35,7 +35,7 @@ def evalEcho : Tactic := fun stx => do
               if ← (← hypType).is_Prop then
                 logInfo decl.userName hypType
         -- Print the main target
-        logInfo Name.anonymous getMainTarget true
+        logInfo default getMainTarget true
       else if hypId == "main" then
         if sepArgs.size > 1 then
           -- Print the main target

@@ -17,7 +17,7 @@ function rename {
     prev=$2
     # echo "Processing replacement from $curr to $prev"
     # Find files containing 'curr' but not 'prev' and process them
-    grep -rlZ --include='*.lean' --exclude='*.echo.lean' -E "\\b$curr" Axiom \
+    grep -rlZ --include='*.lean' --exclude='*.echo.lean' -E "\\b$curr" Lemma \
     | xargs -0 grep -LZ -E "\\b$prev" \
     | while IFS= read -r -d $'\0' file; do
         echo "Processing file: $file, Renaming $curr to $prev in:"

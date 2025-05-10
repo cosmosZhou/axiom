@@ -56,7 +56,7 @@ export default {
 				for (var m of m){
 					var folder = m[1];
 					var names = folder.split(/[\/\\]/);
-					var index = names.indexOf('Axiom');
+					var index = names.indexOf('Lemma');
 					names = names.slice(index + 1);
 				}
 			}
