@@ -45,6 +45,9 @@ def Tensor.shape (_ : Tensor α s)  : List ℕ :=
   s
 
 
+instance [Inhabited α] : Inhabited (Tensor α shape) where
+  default := ⟨List.replicate shape.prod default, by simp⟩
+
 
 def Tensor.toVector (t : Tensor α s) : List.Vector (Tensor α s.tail) (s.headD 0) :=
   if h_GtLength_0 : s.length > 0 then
